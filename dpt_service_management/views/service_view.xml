@@ -1,0 +1,49 @@
+<!-- custom_service_management/views/service_view.xml -->
+
+<odoo>
+    <record id="view_service_form" model="ir.ui.view">
+        <field name="name">service.form</field>
+        <field name="model">service.management</field>
+        <field name="arch" type="xml">
+            <form string="Service Form">
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="service_type"/>
+                        <field name="department"/>
+                        <field name="cost_account"/>
+                        <field name="revenue_account"/>
+                        <field name="steps"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_service_tree" model="ir.ui.view">
+        <field name="name">service.tree</field>
+        <field name="model">service.management</field>
+        <field name="arch" type="xml">
+            <tree string="Service List">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="service_type"/>
+                <field name="department"/>
+                <field name="cost_account"/>
+                <field name="revenue_account"/>
+                <field name="steps"/>
+            </tree>
+        </field>
+    </record>
+
+    <menuitem id="menu_service_management" name="Service Management" sequence="1"/>
+    <menuitem id="submenu_service_management" name="Services" parent="menu_service_management"
+              action="action_service_management"/>
+
+    <record id="action_service_management" model="ir.actions.act_window">
+        <field name="name">Services</field>
+        <field name="res_model">service.management</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>
