@@ -3,7 +3,7 @@
 <odoo>
     <record id="view_service_form" model="ir.ui.view">
         <field name="name">service.form</field>
-        <field name="model">service.management</field>
+        <field name="model">dpt.service.management</field>
         <field name="arch" type="xml">
             <form string="Service Form">
                 <sheet>
@@ -23,7 +23,7 @@
 
     <record id="view_service_tree" model="ir.ui.view">
         <field name="name">service.tree</field>
-        <field name="model">service.management</field>
+        <field name="model">dpt.service.management</field>
         <field name="arch" type="xml">
             <tree string="Service List">
                 <field name="code"/>
@@ -43,7 +43,7 @@
 
     <record id="action_service_management" model="ir.actions.act_window">
         <field name="name">Services</field>
-        <field name="res_model">service.management</field>
+        <field name="res_model">dpt.service.management</field>
         <field name="view_mode">tree,form</field>
     </record>
 </odoo>
