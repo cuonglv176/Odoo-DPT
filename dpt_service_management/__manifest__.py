@@ -7,7 +7,7 @@
     'author': 'CuongLV',
     'maintainer': 'Your Name',
     'website': 'http://dpt.com',
-    'depends': ['base', 'account'],
+    'depends': ['base', 'account', 'hr'],
     'data': [
         'data/service_sequence.xml',
         'views/service_view.xml',
