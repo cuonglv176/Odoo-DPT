@@ -10,11 +10,11 @@
                     <group>
                         <field name="code"/>
                         <field name="name"/>
-                        <field name="service_type"/>
+                        <field name="service_type_id"/>
                         <field name="department"/>
-                        <field name="cost_account"/>
-                        <field name="revenue_account"/>
-                        <field name="steps"/>
+                        <field name="cost_account_id"/>
+                        <field name="revenue_account_id"/>
+                        <field name="steps_count"/>
                     </group>
                 </sheet>
             </form>
@@ -28,22 +28,22 @@
             <tree string="Service List">
                 <field name="code"/>
                 <field name="name"/>
-                <field name="service_type"/>
+                <field name="service_type_id"/>
                 <field name="department"/>
-                <field name="cost_account"/>
-                <field name="revenue_account"/>
-                <field name="steps"/>
+                <field name="cost_account_id"/>
+                <field name="revenue_account_id"/>
+                <field name="steps_count"/>
             </tree>
         </field>
     </record>
-
-    <menuitem id="menu_service_management" name="Service Management" sequence="1"/>
-    <menuitem id="submenu_service_management" name="Services" parent="menu_service_management"
-              action="action_service_management"/>
 
     <record id="action_service_management" model="ir.actions.act_window">
         <field name="name">Services</field>
         <field name="res_model">dpt.service.management</field>
         <field name="view_mode">tree,form</field>
     </record>
+
+    <menuitem id="menu_service_management" name="Service Management" sequence="1"/>
+    <menuitem id="submenu_service_management" name="Services" parent="menu_service_management"
+              action="action_service_management"/>
 </odoo>
