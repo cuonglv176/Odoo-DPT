@@ -6,9 +6,14 @@ class ProductPricelistItemDetail(models.Model):
 
     item_id = fields.Many2one('product.pricelist.item', 'Pricelist Item')
     pricelist_id = fields.Many2one('product.pricelist', 'Pricelist')
-    version = fields.Integer('Version', default=1)
-    percent_based_on = fields.Selection([
-        ('product_total_amount', 'Product Total Amount'),
-        ('declaration_total_amount', 'Declaration Total Amount')
-    ], 'Based On')
-    min_amount = fields.Float(string="Min Amount", digits='Product Price')
+    amount = fields.Float(string="Amount", digits='Product Price')
+    compute_price = fields.Selection(
+        selection=[
+            ('fixed', "Fixed Price"),
+            ('percentage', "Percentage"),
+            # ('formula', "Formula"),
+            ('table', "Table"),
+        ],
+        index=True, default='fixed', required=True)
+    uom_id = fields.Many2one('uom.uom', string="UoM")
+    description = fields.Char('Description')
