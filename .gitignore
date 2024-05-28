@@ -50,3 +50,6 @@ odoo-server.conf
 # log file
 *.log
 
+# Macos file
+.DS_Store
+
