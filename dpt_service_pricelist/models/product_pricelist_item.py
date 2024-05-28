@@ -39,23 +39,27 @@ class ProductPricelistItem(models.Model):
             partner_id = vals.get('partner_id', False)
             currency_id = vals.get('currency_id', False)
             if partner_id:
-                pricelist_id = self.env['product.pricelist'].sudo().search(
-                    [('partner_id', '=', partner_id), ('currency_id', '=', currency_id)], limit=1)
+                pricelist_id = self.env['product.pricelist'].search(
+                    [('partner_id', '=', partner_id), ('currency_id', '=', currency_id),
+                     ('company_id', '=', self.env.company.id)], limit=1)
                 if not pricelist_id:
                     partner_obj_id = self.env['res.partner'].sudo().browse(partner_id)
-                    pricelist_id = self.env['product.pricelist'].sudo().create({
+                    pricelist_id = self.env['product.pricelist'].create({
                         'name': 'Bảng giá khách hàng %s' % partner_obj_id.name,
                         'partner_id': partner_id,
                         'currency_id': currency_id,
+                        'company_id': self.env.company.id
                     })
                     vals['pricelist_id'] = pricelist_id.id
             else:
-                pricelist_id = self.env['product.pricelist'].sudo().search(
-                    [('partner_id', '=', False), ('currency_id', '=', currency_id)], limit=1)
+                pricelist_id = self.env['product.pricelist'].search(
+                    [('partner_id', '=', False), ('currency_id', '=', currency_id),
+                     ('company_id', '=', self.env.company.id)], limit=1)
                 if not pricelist_id:
-                    pricelist_id = self.env['product.pricelist'].sudo().create({
+                    pricelist_id = self.env['product.pricelist'].create({
                         'name': 'Bảng giá chung',
                         'currency_id': currency_id,
+                        'company_id': self.env.company.id
                     })
                 vals['pricelist_id'] = pricelist_id.id
         return super().create(vals)
