@@ -7,8 +7,10 @@
     'author': 'CuongLV',
     'maintainer': 'Your Name',
     'website': 'http://dpt.com',
-    'depends': ['base'],
+    'depends': ['base', 'account', 'hr', 'sale', 'sales_team'],
     'data': [
+        'security/ir.model.access.csv',
+        'data/service_sequence.xml',
         'views/service_view.xml',
     ],
     'installable': True,

@@ -3,47 +3,103 @@
 <odoo>
     <record id="view_service_form" model="ir.ui.view">
         <field name="name">service.form</field>
-        <field name="model">service.management</field>
+        <field name="model">dpt.service.management</field>
         <field name="arch" type="xml">
             <form string="Service Form">
                 <sheet>
+                    <label for="name"/>
+                    <h1>
+                        <field name="name" placeholder="e.g .Household purchasing service"/>
+                    </h1>
                     <group>
-                        <field name="code"/>
-                        <field name="name"/>
-                        <field name="service_type"/>
-                        <field name="department"/>
-                        <field name="cost_account"/>
-                        <field name="revenue_account"/>
-                        <field name="steps"/>
+                        <group>
+                            <field name="code"/>
+                            <field name="service_type_id"/>
+                            <field name="cost_account_id"/>
+                            <field name="revenue_account_id"/>
+                            <field name="currency_id" column_invisible="True"/>
+                            <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"
+                                   sum="Price"/>
+                            <field name="uom_id" domain="[('id','in',uom_ids)]"/>
+                        </group>
+                        <group>
+                            <field name="department_id"/>
+                            <field name="is_create_ticket" widget="boolean_toggle"/>
+                            <field name="employee_id" widget="many2one_avatar_user"
+                                   domain="[('department_id','=',department_id)]"/>
+                            <field name="steps_count"/>
+                        </group>
+
                     </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description" widget="html"/>
+                        </page>
+                        <page string="Steps" name="steps">
+                            <field name="steps_ids" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="department_id"/>
+                                    <field name="employee_id" widget="many2one_avatar_user"
+                                           domain="[('department_id','=',department_id)]"/>
+                                    <field name="description" widget="html"/>
+                                    <field name="is_create_ticket" widget="boolean_toggle"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Required Fields" name="required_fields">
+                            <field name="required_fields_ids" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="fields_id" domain="[('relation','=','sale.order')]"/>
+                                    <field name="description" widget="html"/>
+                                    <field name="type" widget="radio"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Units" name="units">
+                            <field name="uom_ids" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="category_id"/>
+                                    <field name="description" widget="html"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>
 
     <record id="view_service_tree" model="ir.ui.view">
         <field name="name">service.tree</field>
-        <field name="model">service.management</field>
+        <field name="model">dpt.service.management</field>
         <field name="arch" type="xml">
             <tree string="Service List">
                 <field name="code"/>
                 <field name="name"/>
-                <field name="service_type"/>
-                <field name="department"/>
-                <field name="cost_account"/>
-                <field name="revenue_account"/>
-                <field name="steps"/>
+                <field name="service_type_id"/>
+                <field name="department_id"/>
+                <field name="cost_account_id"/>
+                <field name="revenue_account_id"/>
+                <field name="steps_count"/>
             </tree>
         </field>
     </record>
 
-    <menuitem id="menu_service_management" name="Service Management" sequence="1"/>
-    <menuitem id="submenu_service_management" name="Services" parent="menu_service_management"
-              action="action_service_management"/>
-
     <record id="action_service_management" model="ir.actions.act_window">
         <field name="name">Services</field>
-        <field name="res_model">service.management</field>
+        <field name="res_model">dpt.service.management</field>
         <field name="view_mode">tree,form</field>
     </record>
+
+
+    <menuitem id="submenu_service_management" name="Services" parent="sale.sale_order_menu"
+              action="action_service_management"
+              sequence="15"/>
 </odoo>
