@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="product.product_pricelist_view_tree"/>
             <field name="arch" type="xml">
                 <field name="discount_policy" position="replace">
-                    <field name="partner_id"/>
+                    <field name="partner_id" options="{'no_create': True}" />
                 </field>
             </field>
         </record>
@@ -19,7 +19,7 @@
             <field name="inherit_id" ref="product.product_pricelist_view"/>
             <field name="arch" type="xml">
                 <field name="currency_id" position="before">
-                    <field name="partner_id"/>
+                    <field name="partner_id" options="{'no_create': True}" />
                 </field>
                 <xpath expr="//page[@name='pricelist_rules']" position="attributes">
                     <attribute name="invisible">1</attribute>
