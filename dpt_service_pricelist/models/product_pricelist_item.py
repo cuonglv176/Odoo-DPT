@@ -8,6 +8,7 @@ class ProductPricelistItem(models.Model):
 
     partner_id = fields.Many2one('res.partner', 'Customer', domain=[('customer_rank', '>', 0)])
     service_id = fields.Many2one('dpt.service.management', 'Service')
+    service_uom_ids = fields.Many2many(related='service_id.uom_ids')
     uom_id = fields.Many2one('uom.uom', string='Unit')
     version = fields.Integer('Version', default=1)
     percent_based_on = fields.Selection([
@@ -31,3 +32,30 @@ class ProductPricelistItem(models.Model):
         return {
             'domain': {'uom_id': [('id', 'in', self.service_id.uom_ids.ids)]}
         }
+
+    @api.model
+    def create(self, vals):
+        if not vals.get('pricelist_id', False):
+            partner_id = vals.get('partner_id', False)
+            currency_id = vals.get('currency_id', False)
+            if partner_id:
+                pricelist_id = self.env['product.pricelist'].sudo().search(
+                    [('partner_id', '=', partner_id), ('currency_id', '=', currency_id)], limit=1)
+                if not pricelist_id:
+                    partner_obj_id = self.env['res.partner'].sudo().browse(partner_id)
+                    pricelist_id = self.env['product.pricelist'].sudo().create({
+                        'name': 'Bảng giá khách hàng %s' % partner_obj_id.name,
+                        'partner_id': partner_id,
+                        'currency_id': currency_id,
+                    })
+                    vals['pricelist_id'] = pricelist_id.id
+            else:
+                pricelist_id = self.env['product.pricelist'].sudo().search(
+                    [('partner_id', '=', False), ('currency_id', '=', currency_id)], limit=1)
+                if not pricelist_id:
+                    pricelist_id = self.env['product.pricelist'].sudo().create({
+                        'name': 'Bảng giá chung',
+                        'currency_id': currency_id,
+                    })
+                vals['pricelist_id'] = pricelist_id.id
+        return super().create(vals)
