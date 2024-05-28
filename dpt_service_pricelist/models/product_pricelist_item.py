@@ -19,11 +19,12 @@ class ProductPricelistItem(models.Model):
     compute_price = fields.Selection(
         selection=[
             ('fixed', "Fixed Price"),
-            ('percentage', "Discount"),
+            ('percentage', "Percentage"),
             # ('formula', "Formula"),
             ('table', "Table"),
         ],
         index=True, default='fixed', required=True)
+    pricelist_table_detail_ids = fields.One2many('product.pricelist.item.detail', 'item_id', string='Pricelist Table')
 
     @api.onchange('service_id')
     def onchange_service(self):
