@@ -36,9 +36,9 @@
                     </field>
                     <group col="6" class="mt-2 mt-md-0">
                         <group class="oe_subtotal_footer" colspan="2">
-                            <field name="service_total_untax_amount" string="Số tiền trước thuế" colspan="2" readonly="1"/>
-                            <field name="service_tax_amount" string="Thuế" colspan="2" readonly="1"/>
-                            <field name="service_total_amount" string="Tổng" colspan="2" readonly="1"/>
+                            <field name="service_total_untax_amount" colspan="2" readonly="1"/>
+                            <field name="service_tax_amount" colspan="2" readonly="1"/>
+                            <field name="service_total_amount" colspan="2" readonly="1"/>
                         </group>
                         <div class="clearfix"/>
                     </group>
