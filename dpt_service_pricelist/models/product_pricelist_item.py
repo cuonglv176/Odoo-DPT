@@ -9,7 +9,6 @@ class ProductPricelistItem(models.Model):
     partner_id = fields.Many2one('res.partner', 'Customer', domain=[('customer_rank', '>', 0)])
     service_id = fields.Many2one('dpt.service.management', 'Service')
     uom_id = fields.Many2one('uom.uom', string='Unit')
-    uom_domain = fields.Char('UoM Domain', compute="_compute_uom_domain")
     version = fields.Integer('Version', default=1)
     percent_based_on = fields.Selection([
         ('product_total_amount', 'Product Total Amount'),
