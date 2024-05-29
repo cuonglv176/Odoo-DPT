@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+dpt_sale_service_management,dpt.sale.service.management.user,model_dpt_sale_service_management,sales_team.group_sale_salesman,1,1,1,1
+dpt_sale_change_price,dpt.sale.change.price,model_dpt_sale_change_price,,1,1,1,1
+dpt_sale_change_price_servie_line,dpt.sale.change.price.servie.line,model_dpt_sale_change_price_servie_line,,1,1,1,1
+dpt_sale_change_price_product_line,dpt.sale.change.price.product.line,model_dpt_sale_change_price_product_line,,1,1,1,1
+dpt_sale_calculation,dpt.sale.calculation,model_dpt_sale_calculation,,1,1,1,1
+dpt_sale_calculation_line,dpt.sale.calculation.line,model_dpt_sale_calculation_line,,1,1,1,1
