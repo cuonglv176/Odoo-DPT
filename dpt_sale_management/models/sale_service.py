@@ -20,7 +20,16 @@ class DPTSaleServiceManagement(models.Model):
     sequence = fields.Integer()
 
     def action_calculation(self):
-        pass
+        return {
+            'name': "Calculation Service",
+            'type': 'ir.actions.act_window',
+            'res_model': 'dpt.sale.calculation',
+            'target': 'new',
+            'views': [[False, 'form']],
+            'context': {
+                'default_service_id': self.service_id.id,
+            },
+        }
 
     @api.onchange('price', 'qty')
     def onchange_amount_total(self):
@@ -124,4 +133,26 @@ class DPTSaleChangePriceProductLine(models.Model):
     change_price = fields.Monetary(currency_field='currency_id', string='Change Price')
     currency_id = fields.Many2one('res.currency', string='Currency')
     amount_total = fields.Float(string="Amount Total")
+
+
+class DPTSaleCalculattion(models.Model):
+    _name = 'dpt.sale.calculation'
+
+    def _default_service_id(self):
+        return self.env.context.get('active_id') or self.env.context.get('default_service_id')
+
+    service_id = fields.Many2one('dpt.service.management', default=_default_service_id)
+    service_ids = fields.One2many('dpt.sale.calculation.line', 'parent_id')
+
+
+class DPTSaleCalculattionLine(models.Model):
+    _name = 'dpt.sale.calculation.line'
+
+    parent_id = fields.Many2one('dpt.sale.calculation')
+    qty = fields.Float(string='QTY')
+    uom_id = fields.Many2one('uom.uom')
+    price = fields.Monetary(currency_field='currency_id', string='Price')
+    currency_id = fields.Many2one('res.currency', string='Currency')
+    amount_total = fields.Float(string="Amount Total")
+
 
