@@ -17,7 +17,7 @@
                             <field name="service_type_id"/>
                             <field name="cost_account_id"/>
                             <field name="revenue_account_id"/>
-                            <field name="currency_id" column_invisible="True"/>
+                            <field name="currency_id"/>
                             <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"
                                    sum="Price"/>
                             <field name="uom_id" domain="[('id','in',uom_ids)]"/>
