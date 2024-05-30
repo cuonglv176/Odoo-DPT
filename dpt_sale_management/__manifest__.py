@@ -10,7 +10,9 @@
     'depends': ['sale', 'sale_management', 'dpt_service_management', 'uom'],
     'data': [
         'security/ir.model.access.csv',
-        'views/sale_service_view.xml',
+        'wizards/dpt_sale_calculation.xml',
+        'views/dpt_sale_change_price.xml',
+        'views/sale_order.xml',
     ],
     'installable': True,
     'application': True,
