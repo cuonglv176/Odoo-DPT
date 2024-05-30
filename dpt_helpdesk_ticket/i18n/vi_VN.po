@@ -1,0 +1,168 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* dpt_helpdesk_ticket
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e-20240521\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-05-30 23:54+0000\n"
+"PO-Revision-Date: 2024-05-30 23:54+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_dpt_helpdesk_servie_line__amount_total
+msgid "Amount Total"
+msgstr "Thành tiền"
+
+#. module: dpt_helpdesk_ticket
+#: model_terms:ir.ui.view,arch_db:dpt_helpdesk_ticket.view_helpdesk_ticket_inherit_form
+msgid "Create Purchase Order"
+msgstr "Tạo đơn mua hàng"
+
+#. module: dpt_helpdesk_ticket
+#: model_terms:ir.ui.view,arch_db:dpt_helpdesk_ticket.view_sale_order_inherit_form
+msgid "Create Service Ticket"
+msgstr "Tạo dịch vụ"
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_dpt_helpdesk_servie_line__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_dpt_helpdesk_servie_line__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_dpt_helpdesk_servie_line__currency_id
+msgid "Currency"
+msgstr ""
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_helpdesk_ticket__department_id
+msgid "Department"
+msgstr "Bộ phận"
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_dpt_helpdesk_servie_line__description
+msgid "Description"
+msgstr "Diễn giải"
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_dpt_helpdesk_servie_line__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model,name:dpt_helpdesk_ticket.model_helpdesk_ticket
+msgid "Helpdesk Ticket"
+msgstr "Phiếu hỗ trợ"
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_dpt_helpdesk_servie_line__id
+msgid "ID"
+msgstr ""
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model.fields.selection,name:dpt_helpdesk_ticket.selection__helpdesk_ticket__type_service__import_export
+msgid "Import Export"
+msgstr ""
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_dpt_helpdesk_servie_line__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_dpt_helpdesk_servie_line__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_dpt_helpdesk_servie_line__parent_id
+msgid "Parent"
+msgstr ""
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_dpt_helpdesk_servie_line__price
+msgid "Price"
+msgstr "Đơn giá"
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_helpdesk_ticket__purchase_id
+msgid "Purchase Order"
+msgstr "Đơn mua hàng"
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_helpdesk_ticket__purchase_status
+msgid "Purchase Status"
+msgstr "Trạng thái đơn mua hàng"
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_dpt_helpdesk_servie_line__qty
+msgid "QTY"
+msgstr "Số lượng"
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_helpdesk_ticket__sale_id
+msgid "Sale"
+msgstr ""
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model.fields.selection,name:dpt_helpdesk_ticket.selection__helpdesk_ticket__type_service__sale_order
+msgid "Sale Order"
+msgstr ""
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model,name:dpt_helpdesk_ticket.model_sale_order
+msgid "Sales Order"
+msgstr "Đơn bán hàng"
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_dpt_helpdesk_servie_line__sequence
+msgid "Sequence"
+msgstr ""
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_dpt_helpdesk_servie_line__service_id
+#: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_helpdesk_ticket__service_lines_ids
+#: model_terms:ir.ui.view,arch_db:dpt_helpdesk_ticket.view_helpdesk_ticket_inherit_form
+msgid "Service"
+msgstr "Dịch vụ"
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_dpt_helpdesk_servie_line__status
+msgid "Status"
+msgstr "Trạng thái"
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model.fields.selection,name:dpt_helpdesk_ticket.selection__helpdesk_ticket__type_service__stock
+msgid "Stock"
+msgstr ""
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_helpdesk_ticket__name
+msgid "Subject"
+msgstr "Tiêu đề"
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_helpdesk_ticket__type_service
+msgid "Type Service"
+msgstr ""
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_dpt_helpdesk_servie_line__uom_id
+msgid "Uom"
+msgstr "Đơn vị tính"
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model,name:dpt_helpdesk_ticket.model_dpt_helpdesk_servie_line
+msgid "dpt.helpdesk.servie.line"
+msgstr ""
