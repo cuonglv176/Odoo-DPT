@@ -6,11 +6,14 @@
         <field name="model">dpt.sale.calculation</field>
         <field name="arch" type="xml">
             <form string="Calculation Service">
-                <field name="service_id" nolabel="1" readonly="1" force_save="1"/>
+                <field name="service_id" readonly="1" force_save="1"/>
+                <field name="min_amount_total"/>
                 <notebook>
                     <page string="Service">
-                        <field name="service_ids">
+                        <field name="calculation_line_ids">
                             <tree editable="bottom">
+                                <field name="currency_id" column_invisible="1"/>
+                                <field name="service_uom_ids" column_invisible="1"/>
                                 <field name="uom_id"/>
                                 <field name="qty"/>
                                 <field name="price"/>
@@ -20,7 +23,7 @@
                     </page>
                 </notebook>
                 <footer>
-                    <button string="Confirm" special="save" class="btn-primary"/>
+                    <button string="Confirm" type="object" class="btn-primary" name="action_save"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>

@@ -7,7 +7,7 @@
     'author': 'CuongLV',
     'maintainer': 'Your Name',
     'website': 'http://dpt.com',
-    'depends': ['sale', 'sale_management', 'dpt_service_management', 'uom'],
+    'depends': ['sale', 'sale_management', 'dpt_service_management', 'uom', 'dpt_service_pricelist'],
     'data': [
         'security/ir.model.access.csv',
         'wizards/dpt_sale_calculation.xml',

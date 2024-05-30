@@ -10,9 +10,7 @@ class ProductPricelistItemDetail(models.Model):
     compute_price = fields.Selection(
         selection=[
             ('fixed', "Fixed Price"),
-            ('percentage', "Percentage"),
-            # ('formula', "Formula"),
-            ('table', "Table"),
+            ('percentage', "Percentage")
         ],
         index=True, default='fixed', required=True)
     uom_id = fields.Many2one('uom.uom', string="UoM")
