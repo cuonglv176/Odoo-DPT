@@ -6,6 +6,12 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" type="object" name="get_tickets"
+                    icon="fa-car">
+                    <field string="Tickets" name="count_ticket" widget="statinfo"/>
+                </button>
+            </div>
             <button name="action_quotation_send" position="before">
                 <button string="Send Quotation Department" name="send_quotation_department" type="object"/>
                 <button string="Change Price" name="action_change_price" type="object"/>

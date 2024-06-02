@@ -9,6 +9,22 @@ class SaleOrder(models.Model):
     service_tax_amount = fields.Float(compute='_compute_service_amount')
     service_total_amount = fields.Float(compute='_compute_service_amount')
     update_pricelist = fields.Boolean('Update Pricelist')
+    count_ticket = fields.Integer(compute='_compute_count_ticket')
+
+    def get_tickets(self):
+        return {
+            'name': "Service Ticket",
+            'type': 'ir.actions.act_window',
+            'res_model': 'helpdesk.ticket',
+            'target': 'self',
+            'views': [[False, 'tree']],
+            'domain': [('sale_id', '=', self.id)],
+            'context': "{'create': False}"
+        }
+
+    def _compute_count_ticket(self):
+        for record in self:
+            record.count_ticket = self.env['helpdesk.ticket'].search_count([('sale_id', '=', record.id)])
 
     def send_quotation_department(self):
         pass
