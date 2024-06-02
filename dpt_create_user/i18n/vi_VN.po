@@ -1,0 +1,174 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* dpt_create_user
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-02 17:39+0000\n"
+"PO-Revision-Date: 2024-06-02 17:39+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: dpt_create_user
+#: model:ir.model.fields,field_description:dpt_create_user.field_dpt_reseller_users_template__name
+msgid "Account Type"
+msgstr "Loại tài khoản"
+
+#. module: dpt_create_user
+#: model:ir.model.fields,field_description:dpt_create_user.field_dpt_reseller_users__login
+msgid "Account User"
+msgstr "Tài khoản"
+
+#. module: dpt_create_user
+#: model:ir.model.fields,field_description:dpt_create_user.field_dpt_reseller_users__user_template_id
+msgid "Account type"
+msgstr "Loại tài khoản"
+
+#. module: dpt_create_user
+#: model_terms:ir.ui.view,arch_db:dpt_create_user.dpt_reseller_users_form_view
+msgid "Active"
+msgstr "Hoạt động"
+
+#. module: dpt_create_user
+#: model_terms:ir.ui.view,arch_db:dpt_create_user.dpt_reseller_users_form_view
+msgid "Close User"
+msgstr "Đóng tài khoản"
+
+#. module: dpt_create_user
+#: model:ir.model.fields.selection,name:dpt_create_user.selection__dpt_reseller_users__state__close
+msgid "Closed"
+msgstr "Đã đóng"
+
+#. module: dpt_create_user
+#: model:ir.ui.menu,name:dpt_create_user.dpt_reseller_users_menu
+#: model_terms:ir.ui.view,arch_db:dpt_create_user.dpt_reseller_users_form_view
+msgid "Create User"
+msgstr "Tạo tài khoản"
+
+#. module: dpt_create_user
+#: model:ir.model.fields.selection,name:dpt_create_user.selection__dpt_reseller_users__state__done
+msgid "Created"
+msgstr "Đã tạo"
+
+#. module: dpt_create_user
+#: model:ir.model.fields,field_description:dpt_create_user.field_dpt_reseller_users__create_uid
+#: model:ir.model.fields,field_description:dpt_create_user.field_dpt_reseller_users_template__create_uid
+msgid "Created by"
+msgstr "Tạo bởi"
+
+#. module: dpt_create_user
+#: model:ir.model.fields,field_description:dpt_create_user.field_dpt_reseller_users__create_date
+#: model:ir.model.fields,field_description:dpt_create_user.field_dpt_reseller_users_template__create_date
+msgid "Created on"
+msgstr "Tạo vào"
+
+#. module: dpt_create_user
+#: model:ir.model.fields,field_description:dpt_create_user.field_dpt_reseller_users__display_name
+#: model:ir.model.fields,field_description:dpt_create_user.field_dpt_reseller_users_template__display_name
+msgid "Display Name"
+msgstr "Tên hiển thị"
+
+#. module: dpt_create_user
+#: model:ir.model.fields.selection,name:dpt_create_user.selection__dpt_reseller_users__state__draft
+msgid "Draft"
+msgstr "Nháp"
+
+#. module: dpt_create_user
+#: model:ir.model.fields,field_description:dpt_create_user.field_dpt_reseller_users__employee_id
+msgid "Employee"
+msgstr "Nhân viên"
+
+#. module: dpt_create_user
+#: model:ir.model.fields,field_description:dpt_create_user.field_dpt_reseller_users__name
+msgid "Full Name"
+msgstr "Họ và tên"
+
+#. module: dpt_create_user
+#: model:ir.model.fields,field_description:dpt_create_user.field_dpt_reseller_users__id
+#: model:ir.model.fields,field_description:dpt_create_user.field_dpt_reseller_users_template__id
+msgid "ID"
+msgstr ""
+
+#. module: dpt_create_user
+#: model:ir.model.fields,field_description:dpt_create_user.field_dpt_reseller_users__write_uid
+#: model:ir.model.fields,field_description:dpt_create_user.field_dpt_reseller_users_template__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: dpt_create_user
+#: model:ir.model.fields,field_description:dpt_create_user.field_dpt_reseller_users__write_date
+#: model:ir.model.fields,field_description:dpt_create_user.field_dpt_reseller_users_template__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: dpt_create_user
+#: model_terms:ir.ui.view,arch_db:dpt_create_user.dpt_reseller_users_form_view
+msgid "Not Active"
+msgstr "Chưa kích hoạt"
+
+#. module: dpt_create_user
+#: model_terms:ir.ui.view,arch_db:dpt_create_user.dpt_reseller_users_form_view
+msgid "Open User"
+msgstr "Mở tài khoản"
+
+#. module: dpt_create_user
+#: model:ir.model.fields,field_description:dpt_create_user.field_dpt_reseller_users__password
+msgid "Password"
+msgstr "Mật khẩu"
+
+#. module: dpt_create_user
+#: model:ir.model.fields,field_description:dpt_create_user.field_dpt_reseller_users__phone
+msgid "Phone"
+msgstr "Số điện thoại"
+
+#. module: dpt_create_user
+#: model:ir.model,name:dpt_create_user.model_dpt_reseller_users
+msgid "Reseller users"
+msgstr ""
+
+#. module: dpt_create_user
+#: model_terms:ir.ui.view,arch_db:dpt_create_user.dpt_reseller_users_form_view
+msgid "Reset Password"
+msgstr "Reset Mật khẩu"
+
+#. module: dpt_create_user
+#: model:ir.model.fields,field_description:dpt_create_user.field_dpt_reseller_users__state
+msgid "State"
+msgstr "Trạng thái"
+
+#. module: dpt_create_user
+#: model:ir.model.fields,field_description:dpt_create_user.field_dpt_reseller_users__state_users
+msgid "Status User"
+msgstr "Trạng thái Tài khoản"
+
+#. module: dpt_create_user
+#: model:ir.model.fields,field_description:dpt_create_user.field_dpt_reseller_users__user_id
+msgid "User"
+msgstr "Tài khoản"
+
+#. module: dpt_create_user
+#: model:ir.actions.act_window,name:dpt_create_user.dpt_reseller_users_action
+#: model_terms:ir.ui.view,arch_db:dpt_create_user.dpt_reseller_users_tree_view
+msgid "User List"
+msgstr "Danh sách tài khoản"
+
+#. module: dpt_create_user
+#: model:ir.model.fields,field_description:dpt_create_user.field_dpt_reseller_users_template__user_id
+msgid "User Template"
+msgstr "Tài khoản mẫu"
+
+#. module: dpt_create_user
+#: model_terms:ir.ui.view,arch_db:dpt_create_user.dpt_reseller_users_form_view
+msgid "dpt list reseller"
+msgstr ""
+
+#. module: dpt_create_user
+#: model:ir.model,name:dpt_create_user.model_dpt_reseller_users_template
+msgid "dpt.reseller.users.template"
+msgstr ""

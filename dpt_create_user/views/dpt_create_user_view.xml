@@ -1,0 +1,73 @@
+<odoo>
+    <data>
+        <record id="dpt_reseller_users_form_view" model="ir.ui.view">
+            <field name="name">dpt.reseller.users.form</field>
+            <field name="model">dpt.reseller.users</field>
+            <field name="arch" type="xml">
+                <form string="dpt list reseller">
+                    <header>
+                        <button name="action_create_user" type="object" invisible="state != 'draft'" string="Create User"
+                                class="oe_highlight"/>
+                        <button name="action_close_user" type="object" invisible="state != 'done'"  string="Close User"
+                                class="oe_highlight"/>
+                        <button name="action_open_user" type="object" invisible="state != 'close'" string="Open User"
+                                class="oe_highlight"/>
+                        <button name="action_reset_password" type="object" invisible="state not in ('running', 'done')"  string="Reset Password"
+                                class="oe_highlight"/>
+                        <field name="state" readonly="1"
+                               statusbar_visible="draft,done,running,close" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <field name="state_users" invisible="1"/>
+                        <widget name="web_ribbon" title="Not Active" bg_color="bg-danger"
+                               invisible="state_users == 'active'"/>
+                        <widget name="web_ribbon" title="Active" bg_color="bg-primary"
+                                invisible="state_users != 'active'"/>
+                        <group>
+                            <group>
+                                <field name="employee_id" domain="[('user_id','=',False)]"/>
+                                <field name="name" readonly="1" force_save="1"/>
+                                <field name="phone" readonly="1" force_save="1"/>
+                                <field name="user_template_id" create="0"/>
+                            </group>
+                            <group>
+                                <field name="login" widget="email" readonly="1" force_save="1"/>
+                                <field name="password" password="True" invisible="1"/>
+                                <field name="user_id" readonly="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="dpt_reseller_users_tree_view" model="ir.ui.view">
+            <field name="name">dpt.reseller.users.tree</field>
+            <field name="model">dpt.reseller.users</field>
+            <field name="arch" type="xml">
+                <tree string="User List" decoration-danger="state == 'close'"
+                      decoration-success="state == 'done'">
+                    <field name="name"/>
+                    <field name="login"/>
+                    <field name="phone"/>
+                    <field name="user_template_id"/>
+                    <field name="state_users"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="dpt_reseller_users_action" model="ir.actions.act_window">
+            <field name="name">User List</field>
+            <field name="res_model">dpt.reseller.users</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="dpt_reseller_users_tree_view"/>
+        </record>
+
+        <menuitem id="dpt_reseller_users_menu" name="Create User"
+                  action="dpt_reseller_users_action"
+                  sequence="40"
+                  web_icon="dpt_create_user,static/description/icon.png"/>
+    </data>
+</odoo>
