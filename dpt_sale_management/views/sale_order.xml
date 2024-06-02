@@ -7,8 +7,10 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <button name="action_quotation_send" position="before">
-                <button string="Send Quotation Department" name="send_quotation_department" type="object"/>
-                <button string="Change Price" name="action_change_price" type="object"/>
+                <button string="Send Quotation Department" name="send_quotation_department" type="object"
+                        invisible="state != 'draft'"/>
+                <button string="Change Price" name="action_change_price" type="object"
+                        invisible="state != 'draft'"/>
             </button>
             <button name="action_quotation_send" position="attributes">
                 <attribute name="invisible">1</attribute>

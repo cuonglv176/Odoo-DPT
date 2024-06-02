@@ -1,6 +1,7 @@
 from odoo import models, fields, api, _
 from datetime import datetime
 
+
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
@@ -43,4 +44,3 @@ class SaleOrder(models.Model):
         self.service_total_untax_amount = untax_amount
         self.service_tax_amount = tax_amount
         self.service_total_amount = untax_amount + tax_amount
-
