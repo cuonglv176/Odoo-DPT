@@ -24,7 +24,7 @@ Editions Supported
     'support': "",
     'category': 'Other',
     'version': '0.1.0',
-    'depends': ['mail'],
+    'depends': ['mail','hr'],
 
     'data': [
         'security/ir.model.access.csv',
