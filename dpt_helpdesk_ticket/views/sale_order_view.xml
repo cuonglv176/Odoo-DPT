@@ -8,6 +8,12 @@
             <button name="action_quotation_send" position="before">
                 <button string="Create Service Ticket" name="action_create_ticket" type="object"/>
             </button>
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" type="object" name="get_tickets"
+                    icon="fa-car">
+                    <field string="Tickets" name="count_ticket" widget="statinfo"/>
+                </button>
+            </div>
         </field>
     </record>
 </odoo>
