@@ -6,13 +6,15 @@
             <field name="arch" type="xml">
                 <form string="dpt list reseller">
                     <header>
-                        <button name="action_create_user" type="object" invisible="state != 'draft'" string="Create User"
+                        <button name="action_create_user" type="object" invisible="state != 'draft'"
+                                string="Create User"
                                 class="oe_highlight"/>
-                        <button name="action_close_user" type="object" invisible="state != 'done'"  string="Close User"
+                        <button name="action_close_user" type="object" invisible="state != 'done'" string="Close User"
                                 class="oe_highlight"/>
                         <button name="action_open_user" type="object" invisible="state != 'close'" string="Open User"
                                 class="oe_highlight"/>
-                        <button name="action_reset_password" type="object" invisible="state not in ('running', 'done')"  string="Reset Password"
+                        <button name="action_reset_password" type="object" invisible="state not in ('running', 'done')"
+                                string="Reset Password"
                                 class="oe_highlight"/>
                         <field name="state" readonly="1"
                                statusbar_visible="draft,done,running,close" widget="statusbar"/>
@@ -20,7 +22,7 @@
                     <sheet>
                         <field name="state_users" invisible="1"/>
                         <widget name="web_ribbon" title="Not Active" bg_color="bg-danger"
-                               invisible="state_users == 'active'"/>
+                                invisible="state_users == 'active'"/>
                         <widget name="web_ribbon" title="Active" bg_color="bg-primary"
                                 invisible="state_users != 'active'"/>
                         <group>
@@ -66,8 +68,37 @@
         </record>
 
         <menuitem id="dpt_reseller_users_menu" name="Create User"
-                  action="dpt_reseller_users_action"
                   sequence="40"
                   web_icon="dpt_create_user,static/description/icon.png"/>
+
+        <menuitem id="dpt_reseller_create_users_menu" name="Create User"
+                  action="dpt_reseller_users_action"
+                  parent="dpt_reseller_users_menu"
+                  sequence="1"/>
+
+
+        <record id="dpt_reseller_users_template_tree_view" model="ir.ui.view">
+            <field name="name">dpt.reseller.users.template.tree</field>
+            <field name="model">dpt.reseller.users.template</field>
+            <field name="arch" type="xml">
+                <tree string="User template" editable="top">
+                    <field name="name"/>
+                    <field name="user_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="dpt_reseller_users_template_action" model="ir.actions.act_window">
+            <field name="name">User Template</field>
+            <field name="res_model">dpt.reseller.users.template</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="dpt_reseller_users_template_tree_view"/>
+        </record>
+
+        <menuitem id="dpt_reseller_create_users_template_menu" name="User Template"
+                  action="dpt_reseller_users_template_action"
+                  parent="dpt_reseller_users_menu"
+                  sequence="2"/>
     </data>
 </odoo>
