@@ -6,3 +6,4 @@ from . import dpt_sale_change_price_product_line
 from . import dpt_sale_change_price_service_line
 from . import dpt_sale_service_management
 from . import sale_order
+from . import sale_order_line

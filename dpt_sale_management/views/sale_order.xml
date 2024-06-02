@@ -23,17 +23,21 @@
                         <tree editable="bottom">
                             <!--                            <field name="sale_id" invisible="1"/>-->
                             <field name="sequence" widget="handle"/>
+                            <field name="currency_id" column_invisible="1" force_save="1"/>
                             <field name="service_id"/>
                             <field name="description"/>
                             <field name="qty" readonly="1" force_save="1"/>
+                            <field name="uom_ids" column_invisible="1"/>
                             <field name="uom_id"/>
                             <field name="price" readonly="1" force_save="1"/>
                             <!--                            <field name="currency_id" invisible="1"/>-->
                             <field name="department_id"/>
                             <field name="amount_total" readonly="1" force_save="1"/>
-                            <field name="price_status"/>
-                            <button string="Tính giá" name="action_calculation" type="object"
-                                    style="background-color: purple, color: white"/>
+                            <field name="price_status" readonly="1" force_save="1"/>
+                            <field name="show_action_calculation" column_invisible="1"/>
+                            <button string="Calculation" name="action_calculation" type="object"
+                                    style="background-color: purple, color: white"
+                                    invisible="not show_action_calculation"/>
                         </tree>
                     </field>
                     <group col="6" class="mt-2 mt-md-0">
@@ -46,6 +50,15 @@
                     </group>
                 </page>
             </page>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal']" position="after">
+                <field name="price_declaration"/>
+            </xpath>
+            <field name="pricelist_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="pricelist_id" position="after">
+                <field name="update_pricelist"/>
+            </field>
         </field>
     </record>
 
