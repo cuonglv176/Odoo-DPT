@@ -23,6 +23,7 @@
                         <tree editable="bottom">
                             <!--                            <field name="sale_id" invisible="1"/>-->
                             <field name="sequence" widget="handle"/>
+                            <field name="currency_id" column_invisible="1" force_save="1"/>
                             <field name="service_id"/>
                             <field name="description"/>
                             <field name="qty" readonly="1" force_save="1"/>
@@ -49,6 +50,15 @@
                     </group>
                 </page>
             </page>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal']" position="after">
+                <field name="price_declaration"/>
+            </xpath>
+            <field name="pricelist_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="pricelist_id" position="after">
+                <field name="update_pricelist"/>
+            </field>
         </field>
     </record>
 

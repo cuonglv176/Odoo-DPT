@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0-20240521\n"
+"Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-29 00:18+0000\n"
-"PO-Revision-Date: 2024-05-29 00:18+0000\n"
+"POT-Creation-Date: 2024-06-02 10:15+0000\n"
+"PO-Revision-Date: 2024-06-02 10:15+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,6 +16,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation_line__amount_total
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price_product_line__amount_total
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price_service_line__amount_total
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__amount_total
@@ -23,6 +24,27 @@ msgid "Amount Total"
 msgstr "Thành tiền"
 
 #. module: dpt_sale_management
+#: model:ir.model.fields.selection,name:dpt_sale_management.selection__dpt_sale_service_management__price_status__approved
+msgid "Approved"
+msgstr "Đã Duyệt"
+
+#. module: dpt_sale_management
+#: model_terms:ir.ui.view,arch_db:dpt_sale_management.view_sale_order_inherit_form
+msgid "Calculation"
+msgstr "Tính giá"
+
+#. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__calculation_line_ids
+msgid "Calculation Line"
+msgstr ""
+
+#. module: dpt_sale_management
+#: model_terms:ir.ui.view,arch_db:dpt_sale_management.view_sale_calculation_form
+msgid "Calculation Service"
+msgstr "Tính giá Dịch vụ"
+
+#. module: dpt_sale_management
+#: model_terms:ir.ui.view,arch_db:dpt_sale_management.view_sale_calculation_form
 #: model_terms:ir.ui.view,arch_db:dpt_sale_management.view_sale_change_price_form
 msgid "Cancel"
 msgstr "Hủy"
@@ -36,6 +58,13 @@ msgid "Change Price"
 msgstr "Điều chỉnh giá"
 
 #. module: dpt_sale_management
+#: model_terms:ir.ui.view,arch_db:dpt_sale_management.view_sale_calculation_form
+msgid "Confirm"
+msgstr "Xác nhận"
+
+#. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__create_uid
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation_line__create_uid
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price__create_uid
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price_product_line__create_uid
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price_service_line__create_uid
@@ -44,6 +73,8 @@ msgid "Created by"
 msgstr ""
 
 #. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__create_date
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation_line__create_date
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price__create_date
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price_product_line__create_date
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price_service_line__create_date
@@ -52,6 +83,8 @@ msgid "Created on"
 msgstr ""
 
 #. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__currency_id
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation_line__currency_id
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price_product_line__currency_id
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price_service_line__currency_id
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__currency_id
@@ -64,9 +97,9 @@ msgid "DPT Sale Service Management"
 msgstr ""
 
 #. module: dpt_sale_management
-#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__uom_id
-msgid "Default Unit"
-msgstr "Đơn vị tính"
+#: model:ir.model.fields,field_description:dpt_sale_management.field_sale_order_line__price_declaration
+msgid "Declaration"
+msgstr "Giá khai báo"
 
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__description
@@ -74,6 +107,8 @@ msgid "Description"
 msgstr "Diễn giải"
 
 #. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__display_name
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation_line__display_name
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price__display_name
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price_product_line__display_name
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price_service_line__display_name
@@ -87,6 +122,8 @@ msgid "Executing Department"
 msgstr "Bộ phận"
 
 #. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__id
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation_line__id
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price__id
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price_product_line__id
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price_service_line__id
@@ -95,6 +132,8 @@ msgid "ID"
 msgstr ""
 
 #. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__write_uid
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation_line__write_uid
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price__write_uid
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price_product_line__write_uid
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price_service_line__write_uid
@@ -103,6 +142,8 @@ msgid "Last Updated by"
 msgstr ""
 
 #. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__write_date
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation_line__write_date
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price__write_date
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price_product_line__write_date
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price_service_line__write_date
@@ -111,17 +152,39 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__min_amount_total
+msgid "Min Amount"
+msgstr "Giá tối thiểu"
+
+#. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation_line__min_amount_total
+msgid "Min Amount Total"
+msgstr "Giá tối thiểu"
+
+#. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation_line__min_price
+msgid "Min Price"
+msgstr "Đơn giá tối thiểu"
+
+#. module: dpt_sale_management
+#: model:ir.model.fields.selection,name:dpt_sale_management.selection__dpt_sale_service_management__price_status__no_price
+msgid "No Price"
+msgstr "Chưa có giá"
+
+#. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price__order_id
 msgid "Order"
 msgstr ""
 
 #. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation_line__parent_id
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price_product_line__parent_id
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price_service_line__parent_id
 msgid "Parent"
 msgstr ""
 
 #. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation_line__price
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price_product_line__price
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price_service_line__price
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__price
@@ -129,12 +192,19 @@ msgid "Price"
 msgstr "Đơn giá"
 
 #. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price_product_line__price_in_pricelist
+msgid "Price In Pricelist"
+msgstr "Giá trong bảng giá"
+
+#. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price__product_ids
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price_product_line__product_id
 #: model_terms:ir.ui.view,arch_db:dpt_sale_management.view_sale_change_price_form
 msgid "Product"
 msgstr "Sản phẩm"
 
 #. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation_line__qty
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price_product_line__qty
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price_service_line__qty
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__qty
@@ -147,9 +217,19 @@ msgid "Sale"
 msgstr ""
 
 #. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__sale_service_id
+msgid "Sale Service"
+msgstr ""
+
+#. module: dpt_sale_management
 #: model:ir.model,name:dpt_sale_management.model_sale_order
 msgid "Sales Order"
 msgstr "Đơn bán hàng"
+
+#. module: dpt_sale_management
+#: model:ir.model,name:dpt_sale_management.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Dòng đơn bán hàng"
 
 #. module: dpt_sale_management
 #: model_terms:ir.ui.view,arch_db:dpt_sale_management.view_sale_change_price_form
@@ -167,11 +247,13 @@ msgid "Sequence"
 msgstr ""
 
 #. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__service_id
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation_line__service_id
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price__service_ids
-#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price_product_line__product_id
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_change_price_service_line__service_id
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__service_id
 #: model:ir.model.fields,field_description:dpt_sale_management.field_sale_order__sale_service_ids
+#: model_terms:ir.ui.view,arch_db:dpt_sale_management.view_sale_calculation_form
 #: model_terms:ir.ui.view,arch_db:dpt_sale_management.view_sale_change_price_form
 #: model_terms:ir.ui.view,arch_db:dpt_sale_management.view_sale_order_inherit_form
 msgid "Service"
@@ -193,13 +275,45 @@ msgid "Service Total Untax Amount"
 msgstr "Số tiền trước thuế"
 
 #. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__show_action_calculation
+msgid "Show Action Calculation"
+msgstr ""
+
+#. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__price_status
 msgid "Status"
 msgstr "Trạng thái"
 
 #. module: dpt_sale_management
-#: model_terms:ir.ui.view,arch_db:dpt_sale_management.view_sale_order_inherit_form
-msgid "Tính giá"
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation_line__uom_id
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__uom_id
+msgid "Unit"
+msgstr "Đơn vị tính"
+
+#. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation_line__service_uom_ids
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__uom_ids
+msgid "Units"
+msgstr ""
+
+#. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_sale_order__update_pricelist
+msgid "Update Pricelist"
+msgstr "Cập nhật giá lần sau"
+
+#. module: dpt_sale_management
+#: model:ir.model.fields.selection,name:dpt_sale_management.selection__dpt_sale_service_management__price_status__wait_approve
+msgid "Wait Approve"
+msgstr "Chờ duyệt"
+
+#. module: dpt_sale_management
+#: model:ir.model,name:dpt_sale_management.model_dpt_sale_calculation
+msgid "dpt.sale.calculation"
+msgstr ""
+
+#. module: dpt_sale_management
+#: model:ir.model,name:dpt_sale_management.model_dpt_sale_calculation_line
+msgid "dpt.sale.calculation.line"
 msgstr ""
 
 #. module: dpt_sale_management

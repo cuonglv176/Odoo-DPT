@@ -6,8 +6,13 @@
         <field name="model">dpt.sale.calculation</field>
         <field name="arch" type="xml">
             <form string="Calculation Service">
-                <field name="service_id" readonly="1" force_save="1"/>
-                <field name="min_amount_total"/>
+                <group>
+                    <group>
+                        <field name="sale_service_id" invisible="1" force_save="1"/>
+                        <field name="service_id" readonly="1" force_save="1"/>
+                        <field name="min_amount_total"/>
+                    </group>
+                </group>
                 <notebook>
                     <page string="Service">
                         <field name="calculation_line_ids">
@@ -18,6 +23,7 @@
                                 <field name="qty"/>
                                 <field name="price"/>
                                 <field name="amount_total"/>
+                                <field name="min_amount_total"/>
                             </tree>
                         </field>
                     </page>

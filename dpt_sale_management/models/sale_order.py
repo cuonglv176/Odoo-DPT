@@ -8,6 +8,7 @@ class SaleOrder(models.Model):
     service_total_untax_amount = fields.Float(compute='_compute_service_amount')
     service_tax_amount = fields.Float(compute='_compute_service_amount')
     service_total_amount = fields.Float(compute='_compute_service_amount')
+    update_pricelist = fields.Boolean('Update Pricelist')
 
     def send_quotation_department(self):
         pass
