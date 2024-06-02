@@ -22,6 +22,7 @@ class DPTSaleServiceManagement(models.Model):
     ], string='Status', default='no_price')
     sequence = fields.Integer()
     show_action_calculation = fields.Boolean('Show Action Calculation', compute='compute_show_action_calculation')
+    pricelist_item_id = fields.Many2one('product.pricelist.item', 'Pricelist Item')
 
     def _compute_amount_total(self):
         for item in self:
@@ -47,7 +48,8 @@ class DPTSaleServiceManagement(models.Model):
                         company=self.env.company,
                         date=fields.Date.today(),
                     ),
-                    'min_price': pricelist_item_id.min_amount
+                    'min_price': pricelist_item_id.min_amount,
+                    'pricelist_item_id': pricelist_item_id.id,
                 }))
             elif pricelist_item_id.compute_price == 'percentage':
                 price_base = 0
@@ -64,7 +66,8 @@ class DPTSaleServiceManagement(models.Model):
                             company=self.env.company,
                             date=fields.Date.today(),
                         ),
-                        'min_price': pricelist_item_id.min_amount
+                        'min_price': pricelist_item_id.min_amount,
+                        'pricelist_item_id': pricelist_item_id.id,
                     }))
             elif pricelist_item_id.compute_price == 'table':
                 for detail_id in pricelist_item_id.pricelist_table_detail_ids:
@@ -77,7 +80,8 @@ class DPTSaleServiceManagement(models.Model):
                                 company=self.env.company,
                                 date=fields.Date.today(),
                             ),
-                            'min_price': pricelist_item_id.min_amount
+                            'min_price': pricelist_item_id.min_amount,
+                            'pricelist_item_id': pricelist_item_id.id,
                         }))
         return {
             'name': "Calculation Service",

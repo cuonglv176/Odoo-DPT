@@ -17,6 +17,7 @@
                     <page string="Service">
                         <field name="calculation_line_ids">
                             <tree editable="bottom">
+                                <field name="pricelist_item_id" column_invisible="1"/>
                                 <field name="currency_id" column_invisible="1"/>
                                 <field name="service_uom_ids" column_invisible="1"/>
                                 <field name="uom_id"/>

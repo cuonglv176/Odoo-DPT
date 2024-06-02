@@ -35,7 +35,7 @@
                             <field name="price" readonly="1" force_save="1"/>
 <!--                            <field name="currency_id" invisible="1"/>-->
                             <field name="amount_total" readonly="1" force_save="1"/>
-                            <field name="status"/>
+                            <field name="price_status"/>
                         </tree>
                     </field>
                 </page>
