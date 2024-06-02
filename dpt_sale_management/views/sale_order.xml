@@ -10,7 +10,7 @@
                 <button string="Send Quotation Department" name="send_quotation_department" type="object"
                         invisible="state != 'draft'"/>
                 <button string="Change Price" name="action_change_price" type="object"
-                        invisible="state != 'draft'"/>
+                        invisible="state != 'wait_price'"/>
             </button>
             <button name="action_quotation_send" position="attributes">
                 <attribute name="invisible">1</attribute>
@@ -66,6 +66,21 @@
             </xpath>
             <field name="pricelist_id" position="after">
                 <field name="update_pricelist"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_quotation_tree_with_onboarding_inherit" model="ir.ui.view">
+        <field name="name">view_quotation_tree_with_onboarding_inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="arch" type="xml">
+            <field name="state" position="replace">
+                <field name="state"
+                       decoration-success="state == 'sale'"
+                       decoration-info="state in ('draft', 'wait_price')"
+                       decoration-primary="state == 'sent'"
+                       widget="badge" optional="show"/>
             </field>
         </field>
     </record>
