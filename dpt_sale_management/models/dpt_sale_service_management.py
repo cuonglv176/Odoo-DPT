@@ -9,18 +9,76 @@ class DPTSaleServiceManagement(models.Model):
     service_id = fields.Many2one('dpt.service.management', string='Service')
     description = fields.Html(string='Description')
     qty = fields.Float(string='QTY')
-    uom_id = fields.Many2one(related='service_id.uom_id')
+    uom_ids = fields.Many2many(related='service_id.uom_ids')
+    uom_id = fields.Many2one('uom.uom', string='Unit', domain="[('id', 'in', uom_ids)]")
     price = fields.Monetary(currency_field='currency_id', string='Price')
-    currency_id = fields.Many2one('res.currency', string='Currency')
+    currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
     department_id = fields.Many2one(related='service_id.department_id')
-    amount_total = fields.Float(string="Amount Total")
+    amount_total = fields.Monetary(currency_field='currency_id', string="Amount Total", compute="_compute_amount_total")
     price_status = fields.Selection([
+        ('no_price', 'No Price'),
         ('wait_approve', 'Wait Approve'),
         ('approved', 'Approved'),
-    ], string='Status', default='wait_approve')
+    ], string='Status', default='no_price')
     sequence = fields.Integer()
+    show_action_calculation = fields.Boolean('Show Action Calculation', compute='compute_show_action_calculation')
+
+    def _compute_amount_total(self):
+        for item in self:
+            item.amount_total = item.qty * item.price
+
+    def compute_show_action_calculation(self):
+        # only show action calculation when current user is in the same department
+        for item in self:
+            item.show_action_calculation = (self.env.user.employee_ids and item.department_id and
+                                            self.env.user.employee_ids[:1].department_id.id == item.department_id.id)
 
     def action_calculation(self):
+        # get default based on pricelist
+        calculation_line = []
+        for pricelist_item_id in self.service_id.get_active_pricelist().filtered(
+                lambda p: not p.partner_id or (p.partner_id and p.partner_id.id == self.sale_id.partner_id.id)):
+            if pricelist_item_id.compute_price == 'fixed':
+                calculation_line.append((0, 0, {
+                    'uom_id': pricelist_item_id.uom_id.id,
+                    'price': pricelist_item_id.currency_id._convert(
+                        from_amount=pricelist_item_id.fixed_price,
+                        to_currency=self.env.company.currency_id,
+                        company=self.env.company,
+                        date=fields.Date.today(),
+                    ),
+                    'min_price': pricelist_item_id.min_amount
+                }))
+            elif pricelist_item_id.compute_price == 'percentage':
+                price_base = 0
+                if pricelist_item_id.percent_based_on == 'product_total_amount':
+                    price_base = sum(self.sale_id.order_lines.mapped('price_total'))
+                elif pricelist_item_id.percent_based_on == 'declaration_total_amount':
+                    price_base = sum(self.sale_id.order_lines.mapped('price_declaration'))
+                if price_base:
+                    calculation_line.append((0, 0, {
+                        'uom_id': pricelist_item_id.uom_id.id,
+                        'price': pricelist_item_id.currency_id._convert(
+                            from_amount=price_base * pricelist_item_id.percent_price / 100,
+                            to_currency=self.env.company.currency_id,
+                            company=self.env.company,
+                            date=fields.Date.today(),
+                        ),
+                        'min_price': pricelist_item_id.min_amount
+                    }))
+            elif pricelist_item_id.compute_price == 'table':
+                for detail_id in pricelist_item_id.pricelist_table_detail_ids:
+                    if detail_id.compute_price == 'fixed':
+                        calculation_line.append((0, 0, {
+                            'uom_id': pricelist_item_id.uom_id.id,
+                            'price': pricelist_item_id.currency_id._convert(
+                                from_amount=detail_id.amount,
+                                to_currency=self.env.company.currency_id,
+                                company=self.env.company,
+                                date=fields.Date.today(),
+                            ),
+                            'min_price': pricelist_item_id.min_amount
+                        }))
         return {
             'name': "Calculation Service",
             'type': 'ir.actions.act_window',
@@ -29,6 +87,8 @@ class DPTSaleServiceManagement(models.Model):
             'views': [[False, 'form']],
             'context': {
                 'default_service_id': self.service_id.id,
+                'default_sale_service_id': self.id,
+                'default_calculation_line_ids': calculation_line,
             },
         }
 
@@ -36,3 +96,8 @@ class DPTSaleServiceManagement(models.Model):
     def onchange_amount_total(self):
         if self.price and self.qty:
             self.amount_total = self.price * self.qty
+
+    @api.onchange('service_id')
+    def onchange_service(self):
+        if self.service_id:
+            self.uom_id = self.service_id.uom_id

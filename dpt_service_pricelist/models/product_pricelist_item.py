@@ -21,7 +21,6 @@ class ProductPricelistItem(models.Model):
         selection=[
             ('fixed', "Fixed Price"),
             ('percentage', "Percentage"),
-            # ('formula', "Formula"),
             ('table', "Table"),
         ],
         index=True, default='fixed', required=True)
