@@ -10,6 +10,14 @@ class SaleOrder(models.Model):
     service_total_amount = fields.Float(compute='_compute_service_amount')
     update_pricelist = fields.Boolean('Update Pricelist')
 
+    def action_confirm(self):
+        res = super(SaleOrder, self).action_confirm()
+        # for order_id in self:
+        #     if not order_id.update_pricelist:
+        #         continue
+
+        return res
+
     def send_quotation_department(self):
         pass
 

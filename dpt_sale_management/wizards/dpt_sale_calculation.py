@@ -25,4 +25,5 @@ class DPTSaleCalculation(models.Model):
             'qty': max_amount.qty,
             'price': max_amount.price,
             'price_status': 'approved',
+            'pricelist_item_id': max_amount.pricelist_item_id.id if max_amount.pricelist_item_id else None,
         })

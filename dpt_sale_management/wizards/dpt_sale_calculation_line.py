@@ -16,6 +16,7 @@ class DPTSaleCalculattionLine(models.Model):
     amount_total = fields.Monetary(currency_field='currency_id', string="Amount Total", compute="_compute_amount_total")
     min_amount_total = fields.Monetary(currency_field='currency_id', string="Min Amount Total",
                                        compute="_compute_amount_total")
+    pricelist_item_id = fields.Many2one('product.pricelist.item', 'Pricelist Item')
 
     def _compute_amount_total(self):
         for item in self:
