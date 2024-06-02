@@ -8,7 +8,7 @@
         <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
         <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
-        <field name="domain">[('sale_service_ids', '!=', False)]</field>
+        <field name="domain">[('sale_service_ids', '!=', False),('state','!=', 'draft')]</field>
         <field name="context">{'search_default_my_quotation': 1, 'separate_for_department': True}</field>
     </record>
 
@@ -22,7 +22,7 @@
         <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
         <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
-        <field name="domain">[('sale_service_ids', '!=', False)]</field>
+        <field name="domain">[('sale_service_ids', '!=', False),('state','!=', 'draft')]</field>
         <field name="context">{'search_default_my_quotation': 1, 'separate_for_department': True}</field>
     </record>
 

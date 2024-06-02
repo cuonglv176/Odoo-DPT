@@ -1,10 +1,25 @@
 from odoo import models, fields, api, _
 from datetime import datetime
 
+SALE_ORDER_STATE = [
+    ('draft', "Quotation"),
+    ('wait_price', "Wait Price"),
+    ('sent', "Quotation Sent"),
+    ('sale', "Sales Order"),
+    ('cancel', "Cancelled"),
+]
+
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    # re-define
+    state = fields.Selection(
+        selection=SALE_ORDER_STATE,
+        string="Status",
+        readonly=True, copy=False, index=True,
+        tracking=3,
+        default='draft')
     sale_service_ids = fields.One2many('dpt.sale.service.management', 'sale_id', string='Service')
     service_total_untax_amount = fields.Float(compute='_compute_service_amount')
     service_tax_amount = fields.Float(compute='_compute_service_amount')
@@ -20,7 +35,7 @@ class SaleOrder(models.Model):
         return res
 
     def send_quotation_department(self):
-        pass
+        self.state = 'wait_price'
 
     def action_change_price(self):
         return {
