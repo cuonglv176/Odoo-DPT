@@ -20,7 +20,7 @@ class SaleOrder(models.Model):
                 'price': r.price,
                 'currency_id': r.currency_id,
                 'amount_total': r.amount_total,
-                'status': r.status,
+                'status': r.price_status,
             }))
         return {
             'name': "Service Ticket",
