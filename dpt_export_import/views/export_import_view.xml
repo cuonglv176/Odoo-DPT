@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <menuitem id="dpt_export_import_menu" name="Export/Import"
+              sequence="40"
+              web_icon="dpt_export_import,static/description/icon.png"/>
+
+</odoo>
