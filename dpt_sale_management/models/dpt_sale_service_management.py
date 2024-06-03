@@ -54,9 +54,9 @@ class DPTSaleServiceManagement(models.Model):
             elif pricelist_item_id.compute_price == 'percentage':
                 price_base = 0
                 if pricelist_item_id.percent_based_on == 'product_total_amount':
-                    price_base = sum(self.sale_id.order_lines.mapped('price_total'))
+                    price_base = sum(self.sale_id.order_line.mapped('price_total'))
                 elif pricelist_item_id.percent_based_on == 'declaration_total_amount':
-                    price_base = sum(self.sale_id.order_lines.mapped('price_declaration'))
+                    price_base = sum(self.sale_id.order_line.mapped('price_declaration'))
                 if price_base:
                     calculation_line.append((0, 0, {
                         'uom_id': pricelist_item_id.uom_id.id,
