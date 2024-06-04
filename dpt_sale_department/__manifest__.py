@@ -8,7 +8,7 @@
     'maintainer': 'Your Name',
     'website': 'http://dpt.com',
     'depends': ['sale', 'sale_management', 'dpt_service_management', 'hr', 'purchase', 'stock', 'dpt_sale_management',
-                'dpt_export_import'],
+                'dpt_import_export'],
     'data': [
         'views/sale_order.xml',
     ],

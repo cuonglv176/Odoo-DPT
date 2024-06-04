@@ -29,9 +29,8 @@
     <menuitem id="quotation_for_stock_menu" name="Service Quotation" parent="stock.menu_stock_root"
               action="service_quotation_for_stock_action" sequence="10"/>
 
-
-    <!--    quotation for Export/Import department-->
-    <record id="service_quotation_for_dpt_export_import_action" model="ir.actions.act_window">
+    <!--    quotation for import-export department-->
+    <record id="service_quotation_for_import_export_action" model="ir.actions.act_window">
         <field name="name">Service Quotation</field>
         <field name="res_model">sale.order</field>
         <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/>
@@ -41,7 +40,7 @@
         <field name="context">{'search_default_my_quotation': 1, 'separate_for_department': True}</field>
     </record>
 
-    <menuitem id="quotation_for_dpt_export_import_menu" name="Service Quotation" parent="dpt_export_import.dpt_export_import_menu"
-              action="service_quotation_for_dpt_export_import_action" sequence="10"/>
+    <menuitem id="service_quotation_for_import_export_menu" name="Service Quotation" sequence="10"
+              parent="dpt_import_export.import_export_root_menu" action="service_quotation_for_import_export_action"/>
 
 </odoo>
