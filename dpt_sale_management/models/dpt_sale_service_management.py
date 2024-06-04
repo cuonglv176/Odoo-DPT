@@ -24,6 +24,33 @@ class DPTSaleServiceManagement(models.Model):
     show_action_calculation = fields.Boolean('Show Action Calculation', compute='compute_show_action_calculation')
     pricelist_item_id = fields.Many2one('product.pricelist.item', 'Pricelist Item')
 
+    # compute show input field
+    is_show_address = fields.Boolean('Is show address', compute="compute_show_field")
+    is_show_weight = fields.Boolean('Is show weight', compute="compute_show_field")
+    is_show_volume = fields.Boolean('Is show volume', compute="compute_show_field")
+    is_show_distance = fields.Boolean('Is show distance', compute="compute_show_field")
+
+    is_required_address = fields.Boolean('Is required address', compute="compute_show_field")
+    is_required_weight = fields.Boolean('Is required weight', compute="compute_show_field")
+    is_required_volume = fields.Boolean('Is required volume', compute="compute_show_field")
+    is_required_distance = fields.Boolean('Is required distance', compute="compute_show_field")
+
+    @api.depends('service_id')
+    def compute_show_field(self):
+        for item in self:
+            for field in item.service_id.required_fields_ids:
+                item.is_show_address = field.field == 'address'
+                item.is_required_address = field.field == 'address' and field.type == 'required'
+
+                item.is_show_weight = field.field == 'weight'
+                item.is_required_weight = field.field == 'weight' and field.type == 'required'
+
+                item.is_show_volume = field.field == 'volume'
+                item.is_required_volume = field.field == 'volume' and field.type == 'required'
+
+                item.is_show_distance = field.field == 'distance'
+                item.is_required_distance = field.field == 'distance' and field.type == 'required'
+
     def _compute_amount_total(self):
         for item in self:
             item.amount_total = item.qty * item.price

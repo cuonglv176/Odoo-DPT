@@ -78,6 +78,12 @@ class RequiredField(models.Model):
     _order = 'create_date DESC'
 
     fields_id = fields.Many2one('ir.model.fields', string='Field')
+    field = fields.Selection([
+        ('address', 'Address'),
+        ('weight', 'Weight'),
+        ('volume', 'Volume'),
+        ('distance', 'Distance'),
+    ], string='Field')
     description = fields.Html(string='Description')
     type = fields.Selection(selection=[
         ("required", "Required"),
