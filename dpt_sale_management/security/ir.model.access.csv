@@ -5,3 +5,4 @@ dpt_sale_change_price_service_line,dpt.sale.change.price.service.line,model_dpt_
 dpt_sale_change_price_product_line,dpt.sale.change.price.product.line,model_dpt_sale_change_price_product_line,,1,1,1,1
 dpt_sale_calculation,dpt.sale.calculation,model_dpt_sale_calculation,,1,1,1,1
 dpt_sale_calculation_line,dpt.sale.calculation.line,model_dpt_sale_calculation_line,,1,1,1,1
+sale_order_fields,sale_order_fields,model_dpt_sale_order_fields,,1,1,1,1

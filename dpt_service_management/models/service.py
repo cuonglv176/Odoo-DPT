@@ -83,8 +83,15 @@ class RequiredField(models.Model):
         ('weight', 'Weight'),
         ('volume', 'Volume'),
         ('distance', 'Distance'),
-    ], string='Field')
+        ('other', 'Other'),
+    ], string='Field Mapping', default='other')
+    name = fields.Char(string='Name')
     description = fields.Html(string='Description')
+    fields_type = fields.Selection([
+        ('char', 'Char'),
+        ('integer', 'Integer'),
+        ('date', 'Date'),
+    ], string='Fields type', default='char')
     type = fields.Selection(selection=[
         ("required", "Required"),
         ("options", "Options")
