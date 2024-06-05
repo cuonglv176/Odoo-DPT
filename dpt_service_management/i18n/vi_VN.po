@@ -6,16 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-28 16:20+0000\n"
-"PO-Revision-Date: 2024-05-28 23:27+0700\n"
+"POT-Creation-Date: 2024-06-05 01:44+0000\n"
+"PO-Revision-Date: 2024-06-05 01:44+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.4\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__message_needaction
@@ -40,6 +38,11 @@ msgstr ""
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__activity_type_icon
 msgid "Activity Type Icon"
+msgstr ""
+
+#. module: dpt_service_management
+#: model:ir.model.fields.selection,name:dpt_service_management.selection__dpt_service_management_required_fields__field__address
+msgid "Address"
 msgstr ""
 
 #. module: dpt_service_management
@@ -137,6 +140,11 @@ msgid "Display Name"
 msgstr "Tên hiển thị"
 
 #. module: dpt_service_management
+#: model:ir.model.fields.selection,name:dpt_service_management.selection__dpt_service_management_required_fields__field__distance
+msgid "Distance"
+msgstr "Khoảng cách"
+
+#. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__employee_id
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__employee_id
 msgid "Employee Default"
@@ -148,6 +156,7 @@ msgid "Executing Department"
 msgstr "Bộ phận"
 
 #. module: dpt_service_management
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__field
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__fields_id
 msgid "Field"
 msgstr "Trường"
@@ -405,8 +414,8 @@ msgstr "Các bước"
 #. module: dpt_service_management
 #: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management__campaign_id
 msgid ""
-"This is a name that helps you keep track of your different campaign "
-"efforts, e.g. Fall_Drive, Christmas_Special"
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
 msgstr ""
 
 #. module: dpt_service_management
@@ -438,6 +447,11 @@ msgid "Units"
 msgstr "Đơn vị"
 
 #. module: dpt_service_management
+#: model:ir.model.fields.selection,name:dpt_service_management.selection__dpt_service_management_required_fields__field__volume
+msgid "Volume"
+msgstr "Thể tích"
+
+#. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__website_message_ids
 msgid "Website Messages"
 msgstr ""
@@ -446,6 +460,11 @@ msgstr ""
 #: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management__website_message_ids
 msgid "Website communication history"
 msgstr ""
+
+#. module: dpt_service_management
+#: model:ir.model.fields.selection,name:dpt_service_management.selection__dpt_service_management_required_fields__field__weight
+msgid "Weight"
+msgstr "Cân nặng"
 
 #. module: dpt_service_management
 #: model_terms:ir.ui.view,arch_db:dpt_service_management.view_service_form
