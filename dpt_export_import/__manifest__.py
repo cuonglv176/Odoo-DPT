@@ -2,7 +2,7 @@
 {
     'name': 'DPT Export Import',
     'version': '1.0',
-    'summary': 'Manage Sale Information for each department',
+    'summary': 'Manage Export Import Information',
     'category': 'Services',
     'author': 'CuongLV',
     'maintainer': 'Your Name',
