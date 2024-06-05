@@ -50,8 +50,9 @@
                         <page string="Required Fields" name="required_fields">
                             <field name="required_fields_ids" nolabel="1">
                                 <tree editable="bottom">
-                                    <field name="fields_id" domain="[('relation','=','sale.order')]" invisible="1"/>
-                                    <field name="field"/>
+                                    <field name="fields_id" domain="[('relation','=','sale.order')]"
+                                           column_invisible="1"/>
+                                    <field name="field" required="1"/>
                                     <field name="description" widget="html"/>
                                     <field name="type" widget="radio"/>
                                 </tree>

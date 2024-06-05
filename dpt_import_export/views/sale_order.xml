@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<odoo>
-
-    <menuitem id="import_export_root_menu" name="Import-Export" sequence="10"
-              web_icon="dpt_sale_department,static/description/import-export-menu.jpg"/>
-
-</odoo>

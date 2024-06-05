@@ -43,8 +43,9 @@
                             <page string="Table" name="table" invisible="compute_price != 'table'">
                                 <field name="pricelist_table_detail_ids">
                                     <tree editable="bottom">
+                                        <field name="currency_id" column_invisible="1" force_save="1"/>
                                         <field name="uom_id" options="{'no_create': True}"
-                                               required="compute_price == 'table'"/>
+                                               required="parent.compute_price == 'table'"/>
                                         <field name="min_value"/>
                                         <field name="max_value"/>
                                         <field name="amount"/>

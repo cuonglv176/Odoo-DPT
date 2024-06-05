@@ -6,11 +6,31 @@
         <field name="model">dpt.sale.calculation</field>
         <field name="arch" type="xml">
             <form string="Calculation Service">
-                <group>
+                <field name="is_show_address" invisible="1"/>
+                <field name="is_show_weight" invisible="1"/>
+                <field name="is_show_volume" invisible="1"/>
+                <field name="is_show_distance" invisible="1"/>
+                <field name="is_required_address" invisible="1"/>
+                <field name="is_required_weight" invisible="1"/>
+                <field name="is_required_volume" invisible="1"/>
+                <field name="is_required_distance" invisible="1"/>
+                <group string="Information">
                     <group>
                         <field name="sale_service_id" invisible="1" force_save="1"/>
                         <field name="service_id" readonly="1" force_save="1"/>
                         <field name="min_amount_total"/>
+                        <field name="address" invisible="not is_show_address" required="is_required_address"/>
+                    </group>
+                    <group>
+                        <field name="weight" invisible="not is_show_weight" required="is_required_weight"/>
+                        <field name="weight_uom_id" options="{'no_create': True, 'no_open': True}"
+                               invisible="not is_show_weight" required="is_required_weight"/>
+                        <field name="volume" invisible="not is_show_volume" required="is_required_volume"/>
+                        <field name="volume_uom_id" options="{'no_create': True, 'no_open': True}"
+                               invisible="not is_show_volume" required="is_required_volume"/>
+                        <field name="distance" invisible="not is_show_distance" required="is_required_distance"/>
+                        <field name="distance_uom_id" options="{'no_create': True, 'no_open': True}"
+                               invisible="not is_show_distance" required="is_required_distance"/>
                     </group>
                 </group>
                 <notebook>
