@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-28 16:30+0000\n"
-"PO-Revision-Date: 2024-05-28 16:30+0000\n"
+"POT-Creation-Date: 2024-06-05 01:45+0000\n"
+"PO-Revision-Date: 2024-06-05 01:45+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,12 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: dpt_service_pricelist
+#: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist_item_detail__amount
+msgid "Amount"
+msgstr "Đơn giá"
+
+#. module: dpt_service_pricelist
 #: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist_item__percent_based_on
-#: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist_item_detail__percent_based_on
 msgid "Based On"
 msgstr "Tính theo"
 
@@ -37,6 +41,11 @@ msgid "Created on"
 msgstr "Ngày tạo"
 
 #. module: dpt_service_pricelist
+#: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist_item_detail__currency_id
+msgid "Currency"
+msgstr "Tiền t"
+
+#. module: dpt_service_pricelist
 #: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist__partner_id
 #: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist_item__partner_id
 msgid "Customer"
@@ -45,19 +54,17 @@ msgstr "Khách hàng"
 #. module: dpt_service_pricelist
 #: model:ir.model,name:dpt_service_pricelist.model_dpt_service_management
 msgid "DPT Service Management"
-msgstr ""
+msgstr "Quản lý dịch vụ DPT"
 
 #. module: dpt_service_pricelist
 #: model:ir.model.fields.selection,name:dpt_service_pricelist.selection__product_pricelist_item__percent_based_on__declaration_total_amount
-#: model:ir.model.fields.selection,name:dpt_service_pricelist.selection__product_pricelist_item_detail__percent_based_on__declaration_total_amount
 msgid "Declaration Total Amount"
 msgstr "Tổng giá trị kê khai"
 
 #. module: dpt_service_pricelist
-#: model:ir.model.fields.selection,name:dpt_service_pricelist.selection__product_pricelist_item__compute_price__percentage
-#: model_terms:ir.ui.view,arch_db:dpt_service_pricelist.product_pricelist_item_view_form_service_pricelist
-msgid "Discount"
-msgstr "Giá trị %"
+#: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist_item_detail__description
+msgid "Description"
+msgstr "Mô tả"
 
 #. module: dpt_service_pricelist
 #: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist_item_detail__display_name
@@ -85,10 +92,25 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: dpt_service_pricelist
+#: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist_item_detail__max_value
+msgid "Max Value"
+msgstr "Định mức trên"
+
+#. module: dpt_service_pricelist
 #: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist_item__min_amount
-#: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist_item_detail__min_amount
 msgid "Min Amount"
 msgstr "Giá tối thiểu"
+
+#. module: dpt_service_pricelist
+#: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist_item_detail__min_value
+msgid "Min Value"
+msgstr "Định mức duới"
+
+#. module: dpt_service_pricelist
+#: model:ir.model.fields.selection,name:dpt_service_pricelist.selection__product_pricelist_item__compute_price__percentage
+#: model_terms:ir.ui.view,arch_db:dpt_service_pricelist.product_pricelist_item_view_form_service_pricelist
+msgid "Percentage"
+msgstr "Giá trị %"
 
 #. module: dpt_service_pricelist
 #: model_terms:ir.ui.view,arch_db:dpt_service_pricelist.product_pricelist_view_tree_inherit
@@ -116,10 +138,19 @@ msgid "Pricelist Rule"
 msgstr "Quy tắc bảng giá"
 
 #. module: dpt_service_pricelist
+#: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist_item__pricelist_table_detail_ids
+msgid "Pricelist Table"
+msgstr "Bảng định mư"
+
+#. module: dpt_service_pricelist
 #: model:ir.model.fields.selection,name:dpt_service_pricelist.selection__product_pricelist_item__percent_based_on__product_total_amount
-#: model:ir.model.fields.selection,name:dpt_service_pricelist.selection__product_pricelist_item_detail__percent_based_on__product_total_amount
 msgid "Product Total Amount"
-msgstr "Tổng giá trị Sản phẩm"
+msgstr "Tổng giá trị Saản phẩm"
+
+#. module: dpt_service_pricelist
+#: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist_item_detail__uom_id
+msgid "Product Units"
+msgstr "Đơn vị Sản phẩm"
 
 #. module: dpt_service_pricelist
 #: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist_item__service_id
@@ -128,6 +159,7 @@ msgstr "Dịch vụ"
 
 #. module: dpt_service_pricelist
 #: model:ir.model.fields.selection,name:dpt_service_pricelist.selection__product_pricelist_item__compute_price__table
+#: model_terms:ir.ui.view,arch_db:dpt_service_pricelist.product_pricelist_item_view_form_service_pricelist
 msgid "Table"
 msgstr "Bảng định mức"
 
@@ -137,8 +169,12 @@ msgid "Unit"
 msgstr "Đơn vị"
 
 #. module: dpt_service_pricelist
+#: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist_item__service_uom_ids
+msgid "Units"
+msgstr "Đơn vị"
+
+#. module: dpt_service_pricelist
 #: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist_item__version
-#: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist_item_detail__version
 msgid "Version"
 msgstr ""
 
