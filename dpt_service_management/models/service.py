@@ -2,6 +2,7 @@
 
 from odoo import models, fields, api, _
 from datetime import datetime
+from odoo.exceptions import ValidationError
 
 
 class DPTServiceType(models.Model):
@@ -97,3 +98,4 @@ class RequiredField(models.Model):
         ("options", "Options")
     ], string='Type Fields', default='options')
     service_id = fields.Many2one('dpt.service.management', string='Service', ondelete='cascade')
+    using_calculation_price = fields.Boolean('Using Calculation Price')
