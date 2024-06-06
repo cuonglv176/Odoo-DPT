@@ -57,6 +57,7 @@
                                     <field name="fields_type" required="1"/>
                                     <field name="description" widget="html"/>
                                     <field name="type" widget="radio"/>
+                                    <field name="using_calculation_price"/>
                                 </tree>
                             </field>
                         </page>

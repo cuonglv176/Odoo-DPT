@@ -11,6 +11,10 @@
                         invisible="state != 'draft'"/>
                 <button string="Change Price" name="action_change_price" type="object"
                         invisible="state != 'wait_price'"/>
+                <field name="show_action_calculation" column_invisible="1"/>
+                <button string="Calculation" name="action_calculation" type="object"
+                        style="background-color: purple, color: white"
+                        invisible="not show_action_calculation"/>
             </button>
             <button name="action_quotation_send" position="attributes">
                 <attribute name="invisible">1</attribute>
@@ -28,7 +32,7 @@
                             <field name="currency_id" column_invisible="1" force_save="1"/>
                             <field name="service_id"/>
                             <field name="description"/>
-                            <field name="qty" readonly="1" force_save="1"/>
+                            <field name="qty" column_invisible="1" force_save="1"/>
                             <field name="uom_ids" column_invisible="1"/>
                             <field name="uom_id"/>
                             <field name="price" readonly="1" force_save="1"/>
@@ -36,10 +40,6 @@
                             <field name="department_id"/>
                             <field name="amount_total" readonly="1" force_save="1"/>
                             <field name="price_status" readonly="1" force_save="1"/>
-                            <field name="show_action_calculation" column_invisible="1"/>
-                            <button string="Calculation" name="action_calculation" type="object"
-                                    style="background-color: purple, color: white"
-                                    invisible="not show_action_calculation"/>
                         </tree>
                     </field>
                     <group col="6" class="mt-2 mt-md-0">
@@ -57,13 +57,19 @@
                 <page name="sale_field" string="Other Fields">
                     <field name="fields_ids">
                         <tree editable="bottom">
+                            <field name="using_calculation_price" column_invisible="1"/>
                             <field name="sequence" widget="handle"/>
                             <field name="fields_id"/>
                             <field name="type" column_invisible="1"/>
                             <field name="fields_type" column_invisible="1"/>
-                            <field name="value_char" invisible="fields_type != 'char'" required="type == 'required' and fields_type == 'char'"/>
-                            <field name="value_integer" invisible="fields_type != 'integer'" required="type == 'required' and fields_type == 'integer'"/>
-                            <field name="value_date" invisible="fields_type != 'date'" required="type == 'required' and fields_type == 'date'"/>
+                            <field name="value_char" invisible="fields_type != 'char'"
+                                   required="type == 'required' and fields_type == 'char'"/>
+                            <field name="value_integer" invisible="fields_type != 'integer'"
+                                   required="type == 'required' and fields_type == 'integer'"/>
+                            <field name="value_date" invisible="fields_type != 'date'"
+                                   required="type == 'required' and fields_type == 'date'"/>
+                            <field name="uom_id" invisible="not using_calculation_price"
+                                   required="using_calculation_price" options="{'no_create': True, 'no_open': True}"/>
                         </tree>
                     </field>
                 </page>

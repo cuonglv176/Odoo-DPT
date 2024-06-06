@@ -1,5 +1,6 @@
 from odoo import models, fields, api, _
 from datetime import datetime
+from odoo.exceptions import ValidationError
 
 SALE_ORDER_STATE = [
     ('draft', "Quotation"),
@@ -26,6 +27,7 @@ class SaleOrder(models.Model):
     service_tax_amount = fields.Float(compute='_compute_service_amount')
     service_total_amount = fields.Float(compute='_compute_service_amount')
     update_pricelist = fields.Boolean('Update Pricelist')
+    show_action_calculation = fields.Boolean('Show Action Calculation', compute='compute_show_action_calculation')
 
     @api.onchange('sale_service_ids')
     def onchange_sale_service_ids(self):
@@ -82,6 +84,66 @@ class SaleOrder(models.Model):
         self.service_tax_amount = tax_amount
         self.service_total_amount = untax_amount + tax_amount
 
+    def compute_show_action_calculation(self):
+        # only show action calculation when current user is in the same department
+        for item in self:
+            not_compute_price_service_ids = item.sale_service_ids.filtered(
+                lambda ss: ss.department_id.id in self.env.user.employee_ids.mapped('department_id').ids)
+            item.show_action_calculation = True if not_compute_price_service_ids else False
+
+    def action_calculation(self):
+        # get default based on pricelist
+        for sale_service_id in self.sale_service_ids.filtered(
+                lambda ss: ss.department_id.id == self.env.user.employee_ids[:1].department_id.id):
+            # compute_price_field_ids = self.fields_ids.filtered(lambda f: f.fields_id.using_calculation_price and f.fields_id.service_id.id == service_id.id)
+            # for compute_price_field_id in compute_price_field_ids:
+            #     if not compute_price_field_id.uom_id:
+            #         raise ValidationError(_('Please adding Units for field: %s') % compute_price_field_id.field_id.name)
+            service_price_ids = sale_service_id.service_id.get_active_pricelist()
+            max_price = 0
+            price_list_item_id = None
+            for service_price_id in service_price_ids:
+                if service_price_id.compute_price == 'fixed_price':
+                    price = max(service_price_id.currency_id._convert(service_price_id.fixed_price,
+                                                                  to_currency=self.env.company.currency_id,
+                                                                  company=self.env.company,
+                                                                  date=fields.Date.today()), service_price_id.min_amount)
+                    if price > max_price:
+                        max_price = price
+                        price_list_item_id = service_price_id
+                elif service_price_id.compute_price == 'percentage':
+                    price_base = 0
+                    price = 0
+                    if service_price_id.percent_based_on == 'product_total_amount':
+                        price_base = sum(self.sale_id.order_line.mapped('price_total'))
+                    elif service_price_id.percent_based_on == 'declaration_total_amount':
+                        price_base = sum(self.sale_id.order_line.mapped('price_declaration'))
+                    if price_base:
+                        price = max(service_price_id.currency_id._convert(
+                            from_amount=price_base * service_price_id.percent_price / 100,
+                            to_currency=self.env.company.currency_id,
+                            company=self.env.company,
+                            date=fields.Date.today(),
+                        ), service_price_id.min_amount)
+                    if price and price > max_price:
+                        max_price = price
+                        price_list_item_id = service_price_id
+                elif service_price_id.compute_price == 'table':
+                    compute_field_ids = self.fields_ids.filtered(lambda f: f.using_calculation_price)
+                    for compute_field_id in compute_field_ids:
+                        detail_price_ids = service_price_id.pricelist_table_detail_ids.filtered(lambda
+                                                                                                    ptd: ptd.uom_id.id == compute_field_id.uom_id.id and compute_field_id.value_integer >= ptd.min_value and compute_field_id.value_integer <= ptd.max_value)
+                        for detail_price_id in detail_price_ids:
+                            price = max(compute_field_id.value_integer * detail_price_id.amount if service_price_id.is_price else detail_price_id.amount, service_price_id.min_amount)
+                            if price > max_price:
+                                max_price = price
+                                price_list_item_id = service_price_id
+                sale_service_id.write({
+                    'uom_id': price_list_item_id.uom_id.id if price_list_item_id else None,
+                    'price': max_price,
+                    'qty': 1,
+                    'price_status': 'approved',
+                })
 
 class SaleOrderField(models.Model):
     _name = 'dpt.sale.order.fields'
@@ -101,3 +163,5 @@ class SaleOrderField(models.Model):
         ('integer', 'Integer'),
         ('date', 'Date'),
     ], string='Fields type', default='char', related='fields_id.fields_type')
+    using_calculation_price = fields.Boolean(related='fields_id.using_calculation_price')
+    uom_id = fields.Many2one('uom.uom', 'Units')

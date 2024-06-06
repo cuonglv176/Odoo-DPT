@@ -18,7 +18,7 @@ msgstr ""
 #. module: dpt_service_pricelist
 #: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist_item_detail__amount
 msgid "Amount"
-msgstr "Đơn giá"
+msgstr "Giá"
 
 #. module: dpt_service_pricelist
 #: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist_item__percent_based_on

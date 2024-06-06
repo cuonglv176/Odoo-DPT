@@ -25,6 +25,7 @@ class ProductPricelistItem(models.Model):
         ],
         index=True, default='fixed', required=True)
     pricelist_table_detail_ids = fields.One2many('product.pricelist.item.detail', 'item_id', string='Pricelist Table')
+    is_price = fields.Boolean('Is Price')
 
     @api.onchange('service_id')
     def onchange_service(self):

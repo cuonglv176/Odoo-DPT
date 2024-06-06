@@ -6,7 +6,7 @@ class ProductPricelistItemDetail(models.Model):
 
     item_id = fields.Many2one('product.pricelist.item', 'Pricelist Item')
     pricelist_id = fields.Many2one('product.pricelist', 'Pricelist')
-    amount = fields.Monetary(currency_field='currency_id',string="Amount", digits='Product Price')
+    amount = fields.Monetary(currency_field='currency_id', string="Amount", digits='Product Price')
     uom_id = fields.Many2one('uom.uom', 'Product Units')
     description = fields.Char('Description')
     min_value = fields.Float('Min Value')

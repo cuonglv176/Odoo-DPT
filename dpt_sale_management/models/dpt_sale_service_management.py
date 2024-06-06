@@ -21,90 +21,11 @@ class DPTSaleServiceManagement(models.Model):
         ('approved', 'Approved'),
     ], string='Status', default='no_price')
     sequence = fields.Integer()
-    show_action_calculation = fields.Boolean('Show Action Calculation', compute='compute_show_action_calculation')
     pricelist_item_id = fields.Many2one('product.pricelist.item', 'Pricelist Item')
-
-    address = fields.Char('Address')
-    weight = fields.Char('Weight')
-    volume = fields.Char('Volume')
-    distance = fields.Char('Distance')
-
-    weight_uom_id = fields.Many2one('uom.uom', 'Weight Unit')
-    volume_uom_id = fields.Many2one('uom.uom', 'Volume Unit')
-    distance_uom_id = fields.Many2one('uom.uom', 'Distance Unit')
 
     def _compute_amount_total(self):
         for item in self:
             item.amount_total = item.qty * item.price
-
-    def compute_show_action_calculation(self):
-        # only show action calculation when current user is in the same department
-        for item in self:
-            item.show_action_calculation = (self.env.user.employee_ids and item.department_id and
-                                            self.env.user.employee_ids[
-                                            :1].department_id.id == item.department_id.id) and item.price_status != 'approved'
-
-    def action_calculation(self):
-        # get default based on pricelist
-        calculation_line = []
-        # for pricelist_item_id in self.service_id.get_active_pricelist().filtered(
-        #         lambda p: not p.partner_id or (p.partner_id and p.partner_id.id == self.sale_id.partner_id.id)):
-        #     if pricelist_item_id.compute_price == 'fixed':
-        #         calculation_line.append((0, 0, {
-        #             'uom_id': pricelist_item_id.uom_id.id,
-        #             'price': pricelist_item_id.currency_id._convert(
-        #                 from_amount=pricelist_item_id.fixed_price,
-        #                 to_currency=self.env.company.currency_id,
-        #                 company=self.env.company,
-        #                 date=fields.Date.today(),
-        #             ),
-        #             'min_price': pricelist_item_id.min_amount,
-        #             'pricelist_item_id': pricelist_item_id.id,
-        #         }))
-        #     elif pricelist_item_id.compute_price == 'percentage':
-        #         price_base = 0
-        #         if pricelist_item_id.percent_based_on == 'product_total_amount':
-        #             price_base = sum(self.sale_id.order_line.mapped('price_total'))
-        #         elif pricelist_item_id.percent_based_on == 'declaration_total_amount':
-        #             price_base = sum(self.sale_id.order_line.mapped('price_declaration'))
-        #         if price_base:
-        #             calculation_line.append((0, 0, {
-        #                 'uom_id': pricelist_item_id.uom_id.id,
-        #                 'price': pricelist_item_id.currency_id._convert(
-        #                     from_amount=price_base * pricelist_item_id.percent_price / 100,
-        #                     to_currency=self.env.company.currency_id,
-        #                     company=self.env.company,
-        #                     date=fields.Date.today(),
-        #                 ),
-        #                 'min_price': pricelist_item_id.min_amount,
-        #                 'pricelist_item_id': pricelist_item_id.id,
-        #             }))
-        #     elif pricelist_item_id.compute_price == 'table':
-        #         for detail_id in pricelist_item_id.pricelist_table_detail_ids:
-        #             if detail_id.compute_price == 'fixed':
-        #                 calculation_line.append((0, 0, {
-        #                     'uom_id': pricelist_item_id.uom_id.id,
-        #                     'price': pricelist_item_id.currency_id._convert(
-        #                         from_amount=detail_id.amount,
-        #                         to_currency=self.env.company.currency_id,
-        #                         company=self.env.company,
-        #                         date=fields.Date.today(),
-        #                     ),
-        #                     'min_price': pricelist_item_id.min_amount,
-        #                     'pricelist_item_id': pricelist_item_id.id,
-        #                 }))
-        return {
-            'name': "Calculation Service",
-            'type': 'ir.actions.act_window',
-            'res_model': 'dpt.sale.calculation',
-            'target': 'new',
-            'views': [[False, 'form']],
-            'context': {
-                'default_service_id': self.service_id.id,
-                'default_sale_service_id': self.id,
-                'default_calculation_line_ids': calculation_line,
-            },
-        }
 
     @api.onchange('price', 'qty')
     def onchange_amount_total(self):
