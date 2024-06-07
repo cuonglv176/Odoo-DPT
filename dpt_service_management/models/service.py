@@ -5,6 +5,19 @@ from datetime import datetime
 from odoo.exceptions import ValidationError
 
 
+class MailMessage(models.Model):
+    _inherit = 'mail.message'
+
+    @api.model
+    def create(self, vals_list):
+        res = super(MailMessage, self).create(vals_list)
+        if res.model in ('dpt.service.management.steps', 'dpt.service.management.required.fields'):
+            obj_data = self.env[res.model].browse(res.res_id)
+            res.res_id = obj_data.service_id.id
+            res.model = 'dpt.service.management'
+        return res
+
+
 class DPTServiceType(models.Model):
     _name = 'dpt.service.management.type'
     _description = 'DPT Service Management Type'
@@ -32,12 +45,11 @@ class DPTService(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', tracking=True)
     price = fields.Monetary(currency_field='currency_id', string='Price', tracking=True)
     uom_id = fields.Many2one('uom.uom', string='Default Unit', tracking=True)
-    uom_ids = fields.Many2many('uom.uom', string='Units', tracking=True)
+    uom_ids = fields.Many2many('uom.uom', string='Units')
     is_create_ticket = fields.Boolean('Create Ticket', tracking=True)
-    steps_ids = fields.One2many('dpt.service.management.steps', 'service_id', string='Steps', copy=True, auto_join=True,
-                                tracking=True)
+    steps_ids = fields.One2many('dpt.service.management.steps', 'service_id', string='Steps', copy=True, auto_join=True)
     required_fields_ids = fields.One2many('dpt.service.management.required.fields', 'service_id',
-                                          string='Required Fields', copy=True, auto_join=True, tracking=True)
+                                          string='Required Fields', copy=True, auto_join=True)
     active = fields.Boolean('Active', default='True')
 
     _sql_constraints = [
@@ -63,46 +75,48 @@ class DPTService(models.Model):
 
 class DPTServiceSteps(models.Model):
     _name = 'dpt.service.management.steps'
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin']
     _description = 'DPT Service Management Steps'
     _order = 'sequence ASC'
 
-    sequence = fields.Integer(string='Sequence')
-    department_id = fields.Many2one('hr.department', string='Department')
-    employee_id = fields.Many2one('hr.employee', string='Employee Default')
+    sequence = fields.Integer(string='Sequence', tracking=True)
+    department_id = fields.Many2one('hr.department', string='Department', tracking=True)
+    employee_id = fields.Many2one('hr.employee', string='Employee Default', tracking=True)
     description = fields.Html(string='Description')
-    is_create_ticket = fields.Boolean('Create Ticket')
-    service_id = fields.Many2one('dpt.service.management', string='Service', ondelete='cascade')
+    is_create_ticket = fields.Boolean('Create Ticket', tracking=True)
+    service_id = fields.Many2one('dpt.service.management', string='Service', ondelete='cascade', tracking=True)
 
 
 class RequiredField(models.Model):
     _name = 'dpt.service.management.required.fields'
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin']
     _description = 'DPT Service Management required fields'
     _order = 'create_date DESC'
 
-    fields_id = fields.Many2one('ir.model.fields', string='Field')
+    fields_id = fields.Many2one('ir.model.fields', string='Field', tracking=True)
     field = fields.Selection([
         ('address', 'Address'),
         ('weight', 'Weight'),
         ('volume', 'Volume'),
         ('distance', 'Distance'),
         ('other', 'Other'),
-    ], string='Field Mapping', default='other')
-    name = fields.Char(string='Name')
+    ], string='Field Mapping', default='other', tracking=True)
+    name = fields.Char(string='Name', tracking=True)
     description = fields.Html(string='Description')
     fields_type = fields.Selection([
         ('char', 'Char'),
         ('integer', 'Integer'),
         ('date', 'Date'),
         ('selection', 'Selection')
-    ], string='Fields type', default='char')
-    selection_value_ids = fields.One2many('dpt.sale.order.fields.selection','fields_id', string='Selection Value')
+    ], string='Fields type', default='char', tracking=True)
+    selection_value_ids = fields.One2many('dpt.sale.order.fields.selection','fields_id', string='Selection Value', tracking=True)
     type = fields.Selection(selection=[
         ("required", "Required"),
         ("options", "Options")
-    ], string='Type Fields', default='options')
-    service_id = fields.Many2one('dpt.service.management', string='Service', ondelete='cascade')
-    using_calculation_price = fields.Boolean('Using Calculation Price')
-    uom_id = fields.Many2one('uom.uom', 'Unit')
+    ], string='Type Fields', default='options', tracking=True)
+    service_id = fields.Many2one('dpt.service.management', string='Service', ondelete='cascade', tracking=True)
+    using_calculation_price = fields.Boolean('Using Calculation Price', tracking=True)
+    uom_id = fields.Many2one('uom.uom', 'Unit', tracking=True)
 
 
 class SaleOrderFieldSelection(models.Model):
