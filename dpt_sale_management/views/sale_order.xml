@@ -71,6 +71,9 @@
                                    required="type == 'required' and fields_type == 'integer'"/>
                             <field name="value_date" invisible="fields_type != 'date'"
                                    required="type == 'required' and fields_type == 'date'"/>
+                            <field name="selection_value_id" invisible="fields_type != 'selection'"
+                                   required="type == 'required' and fields_type == 'selection'" domain="[('fields_id','=',fields_id)]"/>
+
                             <field name="uom_id" invisible="not using_calculation_price"
                                    required="using_calculation_price" options="{'no_create': True, 'no_open': True}"/>
                         </tree>

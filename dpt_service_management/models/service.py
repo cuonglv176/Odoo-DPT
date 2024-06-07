@@ -93,10 +93,19 @@ class RequiredField(models.Model):
         ('char', 'Char'),
         ('integer', 'Integer'),
         ('date', 'Date'),
+        ('selection', 'Selection')
     ], string='Fields type', default='char')
+    selection_value_ids = fields.One2many('dpt.sale.order.fields.selection','fields_id', string='Selection Value')
     type = fields.Selection(selection=[
         ("required", "Required"),
         ("options", "Options")
     ], string='Type Fields', default='options')
     service_id = fields.Many2one('dpt.service.management', string='Service', ondelete='cascade')
     using_calculation_price = fields.Boolean('Using Calculation Price')
+
+
+class SaleOrderFieldSelection(models.Model):
+    _name = 'dpt.sale.order.fields.selection'
+
+    fields_id = fields.Many2one('dpt.service.management.required.fields', string='Fields')
+    name = fields.Char('Selection Value')

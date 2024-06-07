@@ -57,6 +57,7 @@
                                     <field name="field" required="1"/>
                                     <field name="fields_type" required="1"/>
                                     <field name="description" widget="html"/>
+                                    <field name="selection_value_ids" widget="many2many_tags"/>
                                     <field name="type" widget="radio"/>
                                     <field name="using_calculation_price"/>
                                 </tree>

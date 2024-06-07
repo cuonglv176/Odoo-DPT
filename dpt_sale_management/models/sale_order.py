@@ -106,9 +106,10 @@ class SaleOrder(models.Model):
             for service_price_id in service_price_ids:
                 if service_price_id.compute_price == 'fixed_price':
                     price = max(service_price_id.currency_id._convert(service_price_id.fixed_price,
-                                                                  to_currency=self.env.company.currency_id,
-                                                                  company=self.env.company,
-                                                                  date=fields.Date.today()), service_price_id.min_amount)
+                                                                      to_currency=self.env.company.currency_id,
+                                                                      company=self.env.company,
+                                                                      date=fields.Date.today()),
+                                service_price_id.min_amount)
                     if price > max_price:
                         max_price = price
                         price_list_item_id = service_price_id
@@ -135,7 +136,9 @@ class SaleOrder(models.Model):
                         detail_price_ids = service_price_id.pricelist_table_detail_ids.filtered(lambda
                                                                                                     ptd: ptd.uom_id.id == compute_field_id.uom_id.id and compute_field_id.value_integer >= ptd.min_value and compute_field_id.value_integer <= ptd.max_value)
                         for detail_price_id in detail_price_ids:
-                            price = max(compute_field_id.value_integer * detail_price_id.amount if service_price_id.is_price else detail_price_id.amount, service_price_id.min_amount)
+                            price = max(
+                                compute_field_id.value_integer * detail_price_id.amount if service_price_id.is_price else detail_price_id.amount,
+                                service_price_id.min_amount)
                             if price > max_price:
                                 max_price = price
                                 price_list_item_id = service_price_id
@@ -146,6 +149,7 @@ class SaleOrder(models.Model):
                     'price_status': 'approved',
                 })
 
+
 class SaleOrderField(models.Model):
     _name = 'dpt.sale.order.fields'
 
@@ -155,6 +159,7 @@ class SaleOrderField(models.Model):
     value_char = fields.Char(string='Value Char')
     value_integer = fields.Integer(string='Value Integer')
     value_date = fields.Integer(string='Value Date')
+    selection_value_id = fields.Many2one('dpt.sale.order.fields.selection', string='Selection Value')
     type = fields.Selection(selection=[
         ("required", "Required"),
         ("options", "Options")
@@ -163,6 +168,8 @@ class SaleOrderField(models.Model):
         ('char', 'Char'),
         ('integer', 'Integer'),
         ('date', 'Date'),
+        ('selection', 'Selection'),
     ], string='Fields type', default='char', related='fields_id.fields_type')
     using_calculation_price = fields.Boolean(related='fields_id.using_calculation_price')
     uom_id = fields.Many2one('uom.uom', 'Units')
+
