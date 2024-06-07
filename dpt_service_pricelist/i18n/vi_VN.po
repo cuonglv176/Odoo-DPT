@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-05 01:45+0000\n"
-"PO-Revision-Date: 2024-06-05 01:45+0000\n"
+"POT-Creation-Date: 2024-06-06 08:02+0000\n"
+"PO-Revision-Date: 2024-06-06 08:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: dpt_service_pricelist
 #: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist_item_detail__amount
 msgid "Amount"
-msgstr "Giá"
+msgstr "Đơn giá"
 
 #. module: dpt_service_pricelist
 #: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist_item__percent_based_on
@@ -80,6 +80,11 @@ msgstr "Giá cố định"
 #: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist_item_detail__id
 msgid "ID"
 msgstr ""
+
+#. module: dpt_service_pricelist
+#: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist_item__is_price
+msgid "Is Price"
+msgstr "Là đơn giá"
 
 #. module: dpt_service_pricelist
 #: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist_item_detail__write_uid

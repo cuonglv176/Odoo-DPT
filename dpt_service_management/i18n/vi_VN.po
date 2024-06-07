@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-05 01:44+0000\n"
-"PO-Revision-Date: 2024-06-05 01:44+0000\n"
+"POT-Creation-Date: 2024-06-06 08:01+0000\n"
+"PO-Revision-Date: 2024-06-06 08:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -53,6 +53,11 @@ msgstr ""
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__campaign_id
 msgid "Campaign"
+msgstr ""
+
+#. module: dpt_service_management
+#: model:ir.model.fields.selection,name:dpt_service_management.selection__dpt_service_management_required_fields__fields_type__char
+msgid "Char"
 msgstr ""
 
 #. module: dpt_service_management
@@ -113,6 +118,11 @@ msgid "DPT Service Management required fields"
 msgstr "Quản lý trường bắt buộc dịch vụ DPT"
 
 #. module: dpt_service_management
+#: model:ir.model.fields.selection,name:dpt_service_management.selection__dpt_service_management_required_fields__fields_type__date
+msgid "Date"
+msgstr ""
+
+#. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__uom_id
 msgid "Default Unit"
 msgstr "Đơn vị mặc định"
@@ -156,10 +166,19 @@ msgid "Executing Department"
 msgstr "Bộ phận"
 
 #. module: dpt_service_management
-#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__field
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__fields_id
 msgid "Field"
 msgstr "Trường"
+
+#. module: dpt_service_management
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__field
+msgid "Field Mapping"
+msgstr "Trường"
+
+#. module: dpt_service_management
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__fields_type
+msgid "Fields type"
+msgstr ""
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__message_follower_ids
@@ -216,6 +235,11 @@ msgid "Index on code and name"
 msgstr ""
 
 #. module: dpt_service_management
+#: model:ir.model.fields.selection,name:dpt_service_management.selection__dpt_service_management_required_fields__fields_type__integer
+msgid "Integer"
+msgstr ""
+
+#. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__message_is_follower
 msgid "Is Follower"
 msgstr ""
@@ -257,6 +281,7 @@ msgid "My Activity Deadline"
 msgstr ""
 
 #. module: dpt_service_management
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__name
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_type__name
 msgid "Name"
 msgstr "Tên"
@@ -305,6 +330,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:dpt_service_management.selection__dpt_service_management_required_fields__type__options
 msgid "Options"
 msgstr "Tuỳ chọn"
+
+#. module: dpt_service_management
+#: model:ir.model.fields.selection,name:dpt_service_management.selection__dpt_service_management_required_fields__field__other
+msgid "Other"
+msgstr ""
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__price
@@ -445,6 +475,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:dpt_service_management.view_service_form
 msgid "Units"
 msgstr "Đơn vị"
+
+#. module: dpt_service_management
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__using_calculation_price
+msgid "Using Calculation Price"
+msgstr ""
 
 #. module: dpt_service_management
 #: model:ir.model.fields.selection,name:dpt_service_management.selection__dpt_service_management_required_fields__field__volume
