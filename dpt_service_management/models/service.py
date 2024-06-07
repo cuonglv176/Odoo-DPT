@@ -28,7 +28,7 @@ class DPTService(models.Model):
     cost_account_id = fields.Many2one('account.account', string='Cost Account', tracking=True)
     revenue_account_id = fields.Many2one('account.account', string='Revenue Account', tracking=True)
     steps_count = fields.Integer(string='Steps', compute="_compute_count_steps")
-    description = fields.Html(string='Description', tracking=True)
+    description = fields.Html(string='Descriptions', tracking=True)
     currency_id = fields.Many2one('res.currency', string='Currency', tracking=True)
     price = fields.Monetary(currency_field='currency_id', string='Price', tracking=True)
     uom_id = fields.Many2one('uom.uom', string='Default Unit', tracking=True)
