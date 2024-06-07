@@ -36,7 +36,7 @@ class SaleOrder(models.Model):
         for sale_service_id in self.sale_service_ids:
             for required_fields_id in sale_service_id.service_id.required_fields_ids:
                 if val:
-                    result = [item for item in val if item['fields_id'] == required_fields_id.fields_id.id]
+                    result = [item for item in val if item['fields_id'] == required_fields_id.id]
                     if not result:
                         val.append({
                             'sequence': sequence,
@@ -48,6 +48,7 @@ class SaleOrder(models.Model):
                         'fields_id': required_fields_id.id,
                     })
         if val:
+            self.fields_ids = None
             self.fields_ids = [(0, 0, item) for item in val]
 
     def action_confirm(self):
