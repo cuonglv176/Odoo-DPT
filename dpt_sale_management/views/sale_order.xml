@@ -11,7 +11,7 @@
                         invisible="state != 'draft'"/>
                 <button string="Change Price" name="action_change_price" type="object"
                         invisible="state != 'wait_price'"/>
-                <field name="show_action_calculation" column_invisible="1"/>
+                <field name="show_action_calculation" invisible="1"/>
                 <button string="Calculation" name="action_calculation" type="object"
                         style="background-color: purple, color: white"
                         invisible="not show_action_calculation"/>
@@ -22,6 +22,9 @@
             <button name="action_preview_sale_order" position="attributes">
                 <attribute name="invisible">1</attribute>
             </button>
+            <page name="optional_products" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </page>
             <!--            <button name="action_cancel" position="replace"/>-->
             <page name="order_lines" position="before">
                 <page name="sale_service" string="Service">
@@ -37,9 +40,9 @@
                             <field name="uom_id"/>
                             <field name="price" readonly="1" force_save="1"/>
                             <!--                            <field name="currency_id" invisible="1"/>-->
-                            <field name="department_id"/>
                             <field name="amount_total" readonly="1" force_save="1"/>
                             <field name="price_status" readonly="1" force_save="1"/>
+                            <field name="department_id"/>
                         </tree>
                     </field>
                     <group col="6" class="mt-2 mt-md-0">
@@ -68,6 +71,9 @@
                                    required="type == 'required' and fields_type == 'integer'"/>
                             <field name="value_date" invisible="fields_type != 'date'"
                                    required="type == 'required' and fields_type == 'date'"/>
+                            <field name="selection_value_id" invisible="fields_type != 'selection'"
+                                   required="type == 'required' and fields_type == 'selection'" domain="[('fields_id','=',fields_id)]"/>
+
                             <field name="uom_id" invisible="not using_calculation_price"
                                    required="using_calculation_price" options="{'no_create': True, 'no_open': True}"/>
                         </tree>

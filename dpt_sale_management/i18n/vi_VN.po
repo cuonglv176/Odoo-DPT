@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-05 17:11+0000\n"
-"PO-Revision-Date: 2024-06-05 17:11+0000\n"
+"POT-Creation-Date: 2024-06-07 17:34+0000\n"
+"PO-Revision-Date: 2024-06-07 17:34+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,6 @@ msgstr ""
 
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__address
-#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__address
 msgid "Address"
 msgstr "Địa chỉ"
 
@@ -132,13 +131,11 @@ msgstr ""
 
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__distance
-#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__distance
 msgid "Distance"
 msgstr "Khoảng cách"
 
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__distance_uom_id
-#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__distance_uom_id
 msgid "Distance Unit"
 msgstr "Đơn vị khoảng cách"
 
@@ -388,7 +385,7 @@ msgid "Service Total Untax Amount"
 msgstr "Số tiền trước thuế"
 
 #. module: dpt_sale_management
-#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__show_action_calculation
+#: model:ir.model.fields,field_description:dpt_sale_management.field_sale_order__show_action_calculation
 msgid "Show Action Calculation"
 msgstr ""
 
@@ -405,6 +402,7 @@ msgstr "Loại trường"
 
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation_line__uom_id
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_order_fields__uom_id
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__uom_id
 msgid "Unit"
 msgstr "Đơn vị tính"
@@ -419,6 +417,11 @@ msgstr "Đơn vị tính"
 #: model:ir.model.fields,field_description:dpt_sale_management.field_sale_order__update_pricelist
 msgid "Update Pricelist"
 msgstr "Cập nhật giá lần sau"
+
+#. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_order_fields__using_calculation_price
+msgid "Using Calculation Price"
+msgstr "Sử dụng tính giá"
 
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_order_fields__value_char
@@ -437,13 +440,11 @@ msgstr "Kiểu số"
 
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__volume
-#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__volume
 msgid "Volume"
 msgstr "Thể tích"
 
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__volume_uom_id
-#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__volume_uom_id
 msgid "Volume Unit"
 msgstr "Đơn vị Thể tích"
 
@@ -459,13 +460,11 @@ msgstr "Chờ báo giá"
 
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__weight
-#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__weight
 msgid "Weight"
 msgstr "Cân nặng"
 
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__weight_uom_id
-#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__weight_uom_id
 msgid "Weight Unit"
 msgstr "Đơn vị Cân nặng"
 
