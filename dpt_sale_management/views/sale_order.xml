@@ -11,7 +11,7 @@
                         invisible="state != 'draft'"/>
                 <button string="Change Price" name="action_change_price" type="object"
                         invisible="state != 'wait_price'"/>
-                <field name="show_action_calculation" column_invisible="1"/>
+                <field name="show_action_calculation" invisible="1"/>
                 <button string="Calculation" name="action_calculation" type="object"
                         style="background-color: purple, color: white"
                         invisible="not show_action_calculation"/>
