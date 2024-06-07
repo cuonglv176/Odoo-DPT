@@ -28,6 +28,7 @@
                             <field name="employee_id" widget="many2one_avatar_user"
                                    domain="[('department_id','=',department_id)]"/>
                             <field name="steps_count"/>
+                            <field name="active" widget="boolean_toggle"/>
                         </group>
 
                     </group>
@@ -56,6 +57,7 @@
                                     <field name="field" required="1"/>
                                     <field name="fields_type" required="1"/>
                                     <field name="description" widget="html"/>
+                                    <field name="selection_value_ids" widget="many2many_tags"/>
                                     <field name="type" widget="radio"/>
                                     <field name="uom_id" invisible="not using_calculation_price"
                                            options="{'no_create': True, 'no_create_edit': True}"/>
