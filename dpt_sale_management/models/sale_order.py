@@ -88,14 +88,16 @@ class SaleOrder(models.Model):
     def compute_show_action_calculation(self):
         # only show action calculation when current user is in the same department
         for item in self:
-            not_compute_price_service_ids = item.sale_service_ids.filtered(
+            not_compute_price_service_ids = True or item.sale_service_ids.filtered(
                 lambda ss: ss.department_id.id in self.env.user.employee_ids.mapped('department_id').ids)
             item.show_action_calculation = True if not_compute_price_service_ids else False
 
     def action_calculation(self):
         # get default based on pricelist
-        for sale_service_id in self.sale_service_ids.filtered(
-                lambda ss: ss.department_id.id == self.env.user.employee_ids[:1].department_id.id):
+        # for sale_service_id in self.sale_service_ids.filtered(
+        #         lambda ss: ss.department_id.id == self.env.user.employee_ids[:1].department_id.id):
+
+        for sale_service_id in self.sale_service_ids:
             # compute_price_field_ids = self.fields_ids.filtered(lambda f: f.fields_id.using_calculation_price and f.fields_id.service_id.id == service_id.id)
             # for compute_price_field_id in compute_price_field_ids:
             #     if not compute_price_field_id.uom_id:
@@ -106,9 +108,10 @@ class SaleOrder(models.Model):
             for service_price_id in service_price_ids:
                 if service_price_id.compute_price == 'fixed_price':
                     price = max(service_price_id.currency_id._convert(service_price_id.fixed_price,
-                                                                  to_currency=self.env.company.currency_id,
-                                                                  company=self.env.company,
-                                                                  date=fields.Date.today()), service_price_id.min_amount)
+                                                                      to_currency=self.env.company.currency_id,
+                                                                      company=self.env.company,
+                                                                      date=fields.Date.today()),
+                                service_price_id.min_amount)
                     if price > max_price:
                         max_price = price
                         price_list_item_id = service_price_id
@@ -135,7 +138,13 @@ class SaleOrder(models.Model):
                         detail_price_ids = service_price_id.pricelist_table_detail_ids.filtered(lambda
                                                                                                     ptd: ptd.uom_id.id == compute_field_id.uom_id.id and compute_field_id.value_integer >= ptd.min_value and compute_field_id.value_integer <= ptd.max_value)
                         for detail_price_id in detail_price_ids:
-                            price = max(compute_field_id.value_integer * detail_price_id.amount if service_price_id.is_price else detail_price_id.amount, service_price_id.min_amount)
+                            price = compute_field_id.value_integer * detail_price_id.amount if service_price_id.is_price else detail_price_id.amount
+                            price = max(service_price_id.currency_id._convert(
+                                from_amount=price,
+                                to_currency=self.env.company.currency_id,
+                                company=self.env.company,
+                                date=fields.Date.today(),
+                            ), service_price_id.min_amount)
                             if price > max_price:
                                 max_price = price
                                 price_list_item_id = service_price_id
@@ -145,6 +154,7 @@ class SaleOrder(models.Model):
                     'qty': 1,
                     'price_status': 'approved',
                 })
+
 
 class SaleOrderField(models.Model):
     _name = 'dpt.sale.order.fields'
@@ -165,4 +175,4 @@ class SaleOrderField(models.Model):
         ('date', 'Date'),
     ], string='Fields type', default='char', related='fields_id.fields_type')
     using_calculation_price = fields.Boolean(related='fields_id.using_calculation_price')
-    uom_id = fields.Many2one('uom.uom', 'Units')
+    uom_id = fields.Many2one(related="fields_id.uom_id")

@@ -99,3 +99,4 @@ class RequiredField(models.Model):
     ], string='Type Fields', default='options')
     service_id = fields.Many2one('dpt.service.management', string='Service', ondelete='cascade')
     using_calculation_price = fields.Boolean('Using Calculation Price')
+    uom_id = fields.Many2one('uom.uom', 'Unit')
