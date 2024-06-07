@@ -22,6 +22,9 @@
             <button name="action_preview_sale_order" position="attributes">
                 <attribute name="invisible">1</attribute>
             </button>
+            <page name="optional_products" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </page>
             <!--            <button name="action_cancel" position="replace"/>-->
             <page name="order_lines" position="before">
                 <page name="sale_service" string="Service">
@@ -37,9 +40,9 @@
                             <field name="uom_id"/>
                             <field name="price" readonly="1" force_save="1"/>
                             <!--                            <field name="currency_id" invisible="1"/>-->
-                            <field name="department_id"/>
                             <field name="amount_total" readonly="1" force_save="1"/>
                             <field name="price_status" readonly="1" force_save="1"/>
+                            <field name="department_id"/>
                         </tree>
                     </field>
                     <group col="6" class="mt-2 mt-md-0">

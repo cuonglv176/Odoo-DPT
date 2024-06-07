@@ -28,7 +28,7 @@ class DPTService(models.Model):
     cost_account_id = fields.Many2one('account.account', string='Cost Account', tracking=True)
     revenue_account_id = fields.Many2one('account.account', string='Revenue Account', tracking=True)
     steps_count = fields.Integer(string='Steps', compute="_compute_count_steps")
-    description = fields.Html(string='Description', tracking=True)
+    description = fields.Html(string='Description')
     currency_id = fields.Many2one('res.currency', string='Currency', tracking=True)
     price = fields.Monetary(currency_field='currency_id', string='Price', tracking=True)
     uom_id = fields.Many2one('uom.uom', string='Default Unit', tracking=True)
@@ -38,6 +38,7 @@ class DPTService(models.Model):
                                 tracking=True)
     required_fields_ids = fields.One2many('dpt.service.management.required.fields', 'service_id',
                                           string='Required Fields', copy=True, auto_join=True, tracking=True)
+    active = fields.Boolean('Active', default='True')
 
     _sql_constraints = [
         ('code_name_index', 'CREATE INDEX code_name_index ON dpt_service_management (code, name)',
