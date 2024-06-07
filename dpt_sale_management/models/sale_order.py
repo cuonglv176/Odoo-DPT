@@ -29,6 +29,25 @@ class SaleOrder(models.Model):
     update_pricelist = fields.Boolean('Update Pricelist')
     show_action_calculation = fields.Boolean('Show Action Calculation', compute='compute_show_action_calculation')
 
+    @api.model
+    def create(self, vals_list):
+        res = super(SaleOrder, self).create(vals_list)
+        self.check_required_fields()
+        return res
+
+    def write(self, vals):
+        res = super(SaleOrder, self).write(vals)
+        self.check_required_fields()
+        return res
+
+    def check_required_fields(self):
+        for r in self.fields_ids:
+            if r.fields_id.type == 'required' and (r.value_char or r.value_integer or r.value_date):
+                continue
+            else:
+                raise ValidationError(_("Please fill required fields!!!"))
+
+
     @api.onchange('sale_service_ids')
     def onchange_sale_service_ids(self):
         val = []
