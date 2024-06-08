@@ -9,8 +9,6 @@
             <button name="action_quotation_send" position="before">
                 <button string="Send Quotation Department" name="send_quotation_department" type="object"
                         invisible="state != 'draft'"/>
-                <button string="Change Price" name="action_change_price" type="object"
-                        invisible="state != 'wait_price'"/>
                 <field name="show_action_calculation" invisible="1"/>
                 <button string="Calculation" name="action_calculation" type="object"
                         style="background-color: purple, color: white"
@@ -41,7 +39,6 @@
                             <field name="price" readonly="1" force_save="1"/>
                             <!--                            <field name="currency_id" invisible="1"/>-->
                             <field name="amount_total" readonly="1" force_save="1"/>
-                            <field name="price_status" readonly="1" force_save="1"/>
                             <field name="department_id"/>
                         </tree>
                     </field>

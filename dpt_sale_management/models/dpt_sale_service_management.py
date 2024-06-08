@@ -15,11 +15,6 @@ class DPTSaleServiceManagement(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
     department_id = fields.Many2one(related='service_id.department_id')
     amount_total = fields.Monetary(currency_field='currency_id', string="Amount Total", compute="_compute_amount_total")
-    price_status = fields.Selection([
-        ('no_price', 'No Price'),
-        ('wait_approve', 'Wait Approve'),
-        ('approved', 'Approved'),
-    ], string='Status', default='no_price')
     sequence = fields.Integer()
     pricelist_item_id = fields.Many2one('product.pricelist.item', 'Pricelist Item')
 

@@ -83,17 +83,7 @@ class SaleOrder(models.Model):
     def send_quotation_department(self):
         self.state = 'wait_price'
 
-    def action_change_price(self):
-        return {
-            'name': "Change Price",
-            'type': 'ir.actions.act_window',
-            'res_model': 'dpt.sale.change.price',
-            'target': 'new',
-            'views': [[False, 'form']],
-            'context': {
-                'default_order_id': self.id,
-            },
-        }
+
 
     @api.depends('sale_service_ids.amount_total')
     def _compute_service_amount(self):

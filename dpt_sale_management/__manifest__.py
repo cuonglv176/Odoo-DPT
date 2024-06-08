@@ -11,7 +11,6 @@
     'data': [
         'security/ir.model.access.csv',
         'wizards/dpt_sale_calculation.xml',
-        'views/dpt_sale_change_price.xml',
         'views/sale_order.xml',
     ],
     'installable': True,
