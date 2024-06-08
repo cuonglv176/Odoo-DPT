@@ -40,6 +40,7 @@ class ProductPricelistItem(models.Model):
         index=True, default='fixed', required=True, tracking=True)
     pricelist_table_detail_ids = fields.One2many('product.pricelist.item.detail', 'item_id', string='Pricelist Table', tracking=True)
     is_price = fields.Boolean('Is Price', tracking=True)
+    is_accumulated = fields.Boolean('Is Accumulated', tracking=True)
 
     @api.onchange('service_id')
     def onchange_service(self):
