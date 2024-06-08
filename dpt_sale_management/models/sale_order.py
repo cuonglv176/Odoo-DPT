@@ -205,6 +205,7 @@ class SaleOrderField(models.Model):
 
     sequence = fields.Integer()
     sale_id = fields.Many2one('sale.order', string='Sale Order')
+    service_id = fields.Many2one(related='fields_id.service_id')
     fields_id = fields.Many2one('dpt.service.management.required.fields', string='Fields')
     value_char = fields.Char(string='Value Char')
     value_integer = fields.Integer(string='Value Integer')

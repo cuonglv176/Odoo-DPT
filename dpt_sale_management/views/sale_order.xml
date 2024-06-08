@@ -59,9 +59,10 @@
             <page name="order_lines" position="after">
                 <page name="sale_field" string="Other Fields">
                     <field name="fields_ids">
-                        <tree editable="bottom">
+                        <tree editable="bottom" decoration-danger="type=='required'">
                             <field name="using_calculation_price" column_invisible="1"/>
                             <field name="sequence" widget="handle"/>
+                            <field name="service_id"/>
                             <field name="fields_id"/>
                             <field name="type" column_invisible="1"/>
                             <field name="fields_type" column_invisible="1"/>
