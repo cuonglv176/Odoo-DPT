@@ -117,6 +117,21 @@ class RequiredField(models.Model):
     service_id = fields.Many2one('dpt.service.management', string='Service', ondelete='cascade', tracking=True)
     using_calculation_price = fields.Boolean('Using Calculation Price', tracking=True)
     uom_id = fields.Many2one('uom.uom', 'Unit', tracking=True)
+    default_compute_from = fields.Selection([
+        ('weight_in_so', 'Weight in SO'),
+        ('volume_in_so', 'Volume in SO')
+    ], string='Default From')
+
+    def get_default_value(self, so):
+        if self.default_compute_from == 'weight_in_so' and self.fields_type == 'integer':
+            return {
+                'value_integer': so.weight
+            }
+        if self.default_compute_from == 'volume_in_so' and self.fields_type == 'integer':
+            return {
+                'value_integer': so.volume
+            }
+        return {}
 
 
 class SaleOrderFieldSelection(models.Model):

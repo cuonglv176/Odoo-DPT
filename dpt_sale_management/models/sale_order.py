@@ -31,6 +31,14 @@ class SaleOrder(models.Model):
     weight = fields.Float('Weight')
     volume = fields.Float('Volume')
 
+    @api.onchange('weight', 'volume')
+    def onchange_weight_volume(self):
+        for fields_id in self.fields_ids:
+            if fields_id.fields_id.default_compute_from == 'weight_in_so' and fields_id.fields_id.fields_type == 'integer':
+                fields_id.value_integer = self.weight
+            if fields_id.fields_id.default_compute_from == 'volume_in_so' and fields_id.fields_id.fields_type == 'integer':
+                fields_id.value_integer = self.volume
+
     @api.model
     def create(self, vals_list):
         res = super(SaleOrder, self).create(vals_list)
@@ -45,7 +53,8 @@ class SaleOrder(models.Model):
     def check_required_fields(self):
         for r in self.fields_ids:
             if r.fields_id.type == 'options' or (
-                    r.fields_id.type == 'required' and (r.value_char or r.value_integer or r.value_date or r.selection_value_id)):
+                    r.fields_id.type == 'required' and (
+                    r.value_char or r.value_integer or r.value_date or r.selection_value_id)):
                 continue
             else:
                 raise ValidationError(_("Please fill required fields!!!"))
@@ -59,31 +68,67 @@ class SaleOrder(models.Model):
                 if val:
                     result = [item for item in val if item['fields_id'] == required_fields_id.id]
                     if not result:
-                        val.append({
+                        x = {
                             'sequence': sequence,
                             'fields_id': required_fields_id.id,
-                        })
+                        }
+                        default_value = required_fields_id.get_default_value(self)
+                        if default_value:
+                            x.update(default_value)
+                        val.append(x)
                 else:
-                    val.append({
+                    x = {
                         'sequence': sequence,
                         'fields_id': required_fields_id.id,
-                    })
+                    }
+                    default_value = required_fields_id.get_default_value(self)
+                    if default_value:
+                        x.update(default_value)
+                    val.append(x)
         if val:
             self.fields_ids = None
             self.fields_ids = [(0, 0, item) for item in val]
 
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
-        # for order_id in self:
-        #     if not order_id.update_pricelist:
-        #         continue
-
+        for order_id in self:
+            # if order_id.sale_service_ids.filtered(lambda ss: ss.price_status != 'approved'):
+            #     raise ValidationError(_('Please approve new price!'))
+            if not order_id.update_pricelist:
+                continue
+            for sale_service_id in order_id.sale_service_ids.filtered(lambda ss: ss.price_in_pricelist != ss.price):
+                if not sale_service_id.uom_id:
+                    raise ValidationError(_("Please insert Units"))
+                pricelist_id = self.env['product.pricelist'].sudo().search([('partner_id', '=', self.partner_id.id)])
+                if not pricelist_id:
+                    pricelist_id = self.env['product.pricelist'].sudo().create({
+                        'name': 'Bảng giá của khách hàng %s' % self.partner_id.name,
+                        'partner_id': self.partner_id.id,
+                        'currency_id': sale_service_id.currency_id.id,
+                    })
+                price_list_item_id = self.env['product.pricelist.item'].sudo().search(
+                    [('pricelist_id', '=', pricelist_id.id), ('service_id', '=', sale_service_id.service_id.id),
+                     ('uom_id', '=', sale_service_id.uom_id.id), ('partner_id', '=', self.partner_id.id)])
+                if not price_list_item_id:
+                    self.env['product.pricelist.item'].sudo().create({
+                        'partner_id': self.partner_id.id,
+                        'pricelist_id': pricelist_id.id,
+                        'service_id': sale_service_id.service_id.id,
+                        'uom_id': sale_service_id.uom_id.id,
+                        'compute_price': 'fixed',
+                        'fixed_price': sale_service_id.price,
+                        'is_price': False,
+                    })
+                else:
+                    price_list_item_id.write({
+                        'compute_price': 'fixed',
+                        'fixed_price': sale_service_id.price,
+                        'is_price': False,
+                    })
         return res
 
     def send_quotation_department(self):
         self.state = 'wait_price'
-
-
 
     @api.depends('sale_service_ids.amount_total')
     def _compute_service_amount(self):
@@ -115,6 +160,8 @@ class SaleOrder(models.Model):
                 service_price_ids = service_price_ids.filtered(lambda sp: sp.uom_id.id == current_uom_id.id)
             max_price = 0
             price_list_item_id = None
+            compute_value = 0
+            compute_uom_id = None
             for service_price_id in service_price_ids:
                 if service_price_id.compute_price == 'fixed_price':
                     price = max(service_price_id.currency_id._convert(service_price_id.fixed_price,
@@ -159,6 +206,8 @@ class SaleOrder(models.Model):
                                 if price > max_price:
                                     max_price = price
                                     price_list_item_id = service_price_id
+                                    compute_value = compute_field_id.value_integer
+                                    compute_uom_id = compute_field_id.uom_id.id
                         else:
                             detail_price_ids = service_price_id.pricelist_table_detail_ids.filtered(
                                 lambda ptd: ptd.uom_id.id == compute_field_id.uom_id.id)
@@ -171,7 +220,7 @@ class SaleOrder(models.Model):
                                                  detail_price_id.max_value) - detail_price_id.min_value + 1) * detail_price_id.amount if service_price_id.is_price else detail_price_id.amount
                                 else:
                                     price = (
-                                                        compute_field_id.value_integer - detail_price_id.min_value + 1) * detail_price_id.amount if service_price_id.is_price else detail_price_id.amount
+                                                    compute_field_id.value_integer - detail_price_id.min_value + 1) * detail_price_id.amount if service_price_id.is_price else detail_price_id.amount
                                 total_price += service_price_id.currency_id._convert(
                                     from_amount=price,
                                     to_currency=self.env.company.currency_id,
@@ -181,12 +230,17 @@ class SaleOrder(models.Model):
                             if max(total_price, service_price_id.min_amount) > max_price:
                                 max_price = max(total_price, service_price_id.min_amount)
                                 price_list_item_id = service_price_id
+                                compute_value = compute_field_id.value_integer
+                                compute_uom_id = compute_field_id.uom_id.id
 
-                sale_service_id.write({
+                sale_service_id.with_context(from_pricelist=True).write({
                     'uom_id': price_list_item_id.uom_id.id if price_list_item_id else None,
                     'price': max_price,
                     'qty': 1,
-                    'price_status': 'approved',
+                    'pricelist_item_id': price_list_item_id.id if price_list_item_id else None,
+                    'price_in_pricelist': max_price,
+                    'compute_value': compute_value,
+                    'compute_uom_id': compute_uom_id,
                 })
 
 

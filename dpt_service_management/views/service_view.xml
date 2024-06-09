@@ -62,6 +62,7 @@
                                     <field name="uom_id" invisible="not using_calculation_price"
                                            options="{'no_create': True, 'no_create_edit': True}"/>
                                     <field name="using_calculation_price" widget="boolean_toggle"/>
+                                    <field name="default_compute_from"/>
                                 </tree>
                             </field>
                         </page>
