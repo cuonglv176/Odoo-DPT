@@ -19,8 +19,7 @@
                         invisible="price_status != 'approved'"/>
             </div>
             <xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal']" position="after">
-                <field name="price_status"
-                       invisible="price_status == 'no_price'"
+                <field name="price_status" force_save="1" readonly="1"
                        decoration-success="price_status == 'approved'"
                        decoration-warning="price_status == 'wait_approve'"
                        widget="badge"/>
@@ -28,7 +27,7 @@
 
             <xpath expr="//field[@name='sale_service_ids']/tree/field[@name='department_id']" position="after">
                 <field name="price_status"
-                       invisible="price_status == 'no_price'"
+                        force_save="1" readonly="1"
                        decoration-success="price_status == 'approved'"
                        decoration-warning="price_status == 'wait_approve'"
                        widget="badge"/>

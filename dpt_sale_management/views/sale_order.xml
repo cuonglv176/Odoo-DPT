@@ -33,6 +33,8 @@
                             <field name="currency_id" column_invisible="1" force_save="1"/>
                             <field name="service_id"/>
                             <field name="description"/>
+                            <field name="compute_value" readonly="1" force_save="1"/>
+                            <field name="compute_uom_id" readonly="1" force_save="1"/>
                             <field name="qty" column_invisible="0" force_save="1"/>
                             <field name="uom_ids" column_invisible="1"/>
                             <field name="uom_id"/>
@@ -92,7 +94,7 @@
                 <label for="update_pricelist"/>
             </xpath>
             <field name="pricelist_id" position="after">
-                <field name="update_pricelist"/>
+                <field name="update_pricelist" readonly="state in ('sale', 'cancel')" force_save="1"/>
             </field>
             <field name="payment_term_id" position="after">
                 <label for="weight"/>

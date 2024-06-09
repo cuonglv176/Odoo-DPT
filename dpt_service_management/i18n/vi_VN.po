@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-07 17:36+0000\n"
-"PO-Revision-Date: 2024-06-07 17:36+0000\n"
+"POT-Creation-Date: 2024-06-09 15:10+0000\n"
+"PO-Revision-Date: 2024-06-09 15:10+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -17,26 +17,41 @@ msgstr ""
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__message_needaction
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__message_needaction
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__message_needaction
 msgid "Action Needed"
 msgstr ""
 
 #. module: dpt_service_management
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__active
+msgid "Active"
+msgstr ""
+
+#. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__activity_ids
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__activity_ids
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__activity_ids
 msgid "Activities"
 msgstr ""
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__activity_exception_decoration
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__activity_exception_decoration
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__activity_exception_decoration
 msgid "Activity Exception Decoration"
 msgstr ""
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__activity_state
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__activity_state
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__activity_state
 msgid "Activity State"
 msgstr ""
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__activity_type_icon
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__activity_type_icon
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__activity_type_icon
 msgid "Activity Type Icon"
 msgstr ""
 
@@ -47,11 +62,15 @@ msgstr "Địa chỉ"
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__message_attachment_count
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__message_attachment_count
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__message_attachment_count
 msgid "Attachment Count"
 msgstr ""
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__campaign_id
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__campaign_id
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__campaign_id
 msgid "Campaign"
 msgstr ""
 
@@ -77,6 +96,7 @@ msgid "Create Ticket"
 msgstr "Tạo công việc"
 
 #. module: dpt_service_management
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_sale_order_fields_selection__create_uid
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__create_uid
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__create_uid
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__create_uid
@@ -85,6 +105,7 @@ msgid "Created by"
 msgstr "Được tạo bởi"
 
 #. module: dpt_service_management
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_sale_order_fields_selection__create_date
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__create_date
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__create_date
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__create_date
@@ -123,6 +144,11 @@ msgid "Date"
 msgstr "Ngày"
 
 #. module: dpt_service_management
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__default_compute_from
+msgid "Default From"
+msgstr "Lấy mặc định từ"
+
+#. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__uom_id
 msgid "Default Unit"
 msgstr "Đơn vị mặc định"
@@ -142,6 +168,7 @@ msgid "Description"
 msgstr "Mô tả"
 
 #. module: dpt_service_management
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_sale_order_fields_selection__display_name
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__display_name
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__display_name
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__display_name
@@ -176,31 +203,45 @@ msgid "Field Mapping"
 msgstr "Trường"
 
 #. module: dpt_service_management
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_sale_order_fields_selection__fields_id
+msgid "Fields"
+msgstr ""
+
+#. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__fields_type
 msgid "Fields type"
 msgstr "Kiểu trường"
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__message_follower_ids
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__message_follower_ids
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__message_follower_ids
 msgid "Followers"
 msgstr ""
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__message_partner_ids
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__message_partner_ids
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__message_partner_ids
 msgid "Followers (Partners)"
 msgstr ""
 
 #. module: dpt_service_management
 #: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management__activity_type_icon
+#: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management_required_fields__activity_type_icon
+#: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management_steps__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
 msgstr ""
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__has_message
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__has_message
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__has_message
 msgid "Has Message"
 msgstr ""
 
 #. module: dpt_service_management
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_sale_order_fields_selection__id
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__id
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__id
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__id
@@ -210,22 +251,32 @@ msgstr ""
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__activity_exception_icon
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__activity_exception_icon
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__activity_exception_icon
 msgid "Icon"
 msgstr ""
 
 #. module: dpt_service_management
 #: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management__activity_exception_icon
+#: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management_required_fields__activity_exception_icon
+#: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management_steps__activity_exception_icon
 msgid "Icon to indicate an exception activity."
 msgstr ""
 
 #. module: dpt_service_management
 #: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management__message_needaction
+#: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management_required_fields__message_needaction
+#: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management_steps__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr ""
 
 #. module: dpt_service_management
 #: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management__message_has_error
 #: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management__message_has_sms_error
+#: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management_required_fields__message_has_error
+#: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management_required_fields__message_has_sms_error
+#: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management_steps__message_has_error
+#: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management_steps__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
 
@@ -241,10 +292,13 @@ msgstr "Số"
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__message_is_follower
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__message_is_follower
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__message_is_follower
 msgid "Is Follower"
 msgstr ""
 
 #. module: dpt_service_management
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_sale_order_fields_selection__write_uid
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__write_uid
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__write_uid
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__write_uid
@@ -253,6 +307,7 @@ msgid "Last Updated by"
 msgstr ""
 
 #. module: dpt_service_management
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_sale_order_fields_selection__write_date
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__write_date
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__write_date
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__write_date
@@ -262,21 +317,34 @@ msgstr ""
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__medium_id
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__medium_id
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__medium_id
 msgid "Medium"
 msgstr ""
 
 #. module: dpt_service_management
+#: model:ir.model,name:dpt_service_management.model_mail_message
+msgid "Message"
+msgstr "Tin nhắn"
+
+#. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__message_has_error
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__message_has_error
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__message_has_error
 msgid "Message Delivery error"
 msgstr ""
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__message_ids
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__message_ids
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__message_ids
 msgid "Messages"
 msgstr ""
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__my_activity_date_deadline
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__my_activity_date_deadline
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__my_activity_date_deadline
 msgid "My Activity Deadline"
 msgstr ""
 
@@ -288,41 +356,57 @@ msgstr "Tên"
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__activity_calendar_event_id
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__activity_calendar_event_id
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
 msgstr ""
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__activity_date_deadline
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__activity_date_deadline
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr ""
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__activity_summary
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__activity_summary
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__activity_summary
 msgid "Next Activity Summary"
 msgstr ""
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__activity_type_id
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__activity_type_id
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__activity_type_id
 msgid "Next Activity Type"
 msgstr ""
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__message_needaction_counter
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__message_needaction_counter
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__message_needaction_counter
 msgid "Number of Actions"
 msgstr ""
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__message_has_error_counter
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__message_has_error_counter
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__message_has_error_counter
 msgid "Number of errors"
 msgstr ""
 
 #. module: dpt_service_management
 #: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management__message_needaction_counter
+#: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management_required_fields__message_needaction_counter
+#: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management_steps__message_needaction_counter
 msgid "Number of messages requiring action"
 msgstr ""
 
 #. module: dpt_service_management
 #: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management__message_has_error_counter
+#: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management_required_fields__message_has_error_counter
+#: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management_steps__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr ""
 
@@ -349,6 +433,8 @@ msgstr "Đơn vị tính sản phẩm"
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__rating_ids
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__rating_ids
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__rating_ids
 msgid "Ratings"
 msgstr ""
 
@@ -365,6 +451,8 @@ msgstr "Trường bắt buộc"
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__activity_user_id
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__activity_user_id
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__activity_user_id
 msgid "Responsible User"
 msgstr "Người phụ trách"
 
@@ -375,7 +463,20 @@ msgstr "Tài khoản doanh thu"
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__message_has_sms_error
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__message_has_sms_error
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__message_has_sms_error
 msgid "SMS Delivery error"
+msgstr ""
+
+#. module: dpt_service_management
+#: model:ir.model.fields.selection,name:dpt_service_management.selection__dpt_service_management_required_fields__fields_type__selection
+msgid "Selection"
+msgstr ""
+
+#. module: dpt_service_management
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_sale_order_fields_selection__name
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__selection_value_ids
+msgid "Selection Value"
 msgstr ""
 
 #. module: dpt_service_management
@@ -422,11 +523,15 @@ msgstr "Dịch vụ"
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__source_id
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__source_id
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__source_id
 msgid "Source"
 msgstr "Nguồn"
 
 #. module: dpt_service_management
 #: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management__activity_state
+#: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management_required_fields__activity_state
+#: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management_steps__activity_state
 msgid ""
 "Status based on activities\n"
 "Overdue: Due date is already passed\n"
@@ -443,6 +548,8 @@ msgstr "Các bước"
 
 #. module: dpt_service_management
 #: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management__campaign_id
+#: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management_required_fields__campaign_id
+#: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management_steps__campaign_id
 msgid ""
 "This is a name that helps you keep track of your different campaign efforts,"
 " e.g. Fall_Drive, Christmas_Special"
@@ -450,11 +557,15 @@ msgstr ""
 
 #. module: dpt_service_management
 #: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management__medium_id
+#: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management_required_fields__medium_id
+#: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management_steps__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
 msgstr ""
 
 #. module: dpt_service_management
 #: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management__source_id
+#: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management_required_fields__source_id
+#: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management_steps__source_id
 msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
@@ -467,6 +578,8 @@ msgstr "Loại trường"
 
 #. module: dpt_service_management
 #: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management__activity_exception_decoration
+#: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management_required_fields__activity_exception_decoration
+#: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management_steps__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr ""
 
@@ -492,12 +605,21 @@ msgid "Volume"
 msgstr "Thể tích"
 
 #. module: dpt_service_management
+#: model:ir.model.fields.selection,name:dpt_service_management.selection__dpt_service_management_required_fields__default_compute_from__volume_in_so
+msgid "Volume in SO"
+msgstr "Thể tích trên Báo giá"
+
+#. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__website_message_ids
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__website_message_ids
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__website_message_ids
 msgid "Website Messages"
 msgstr ""
 
 #. module: dpt_service_management
 #: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management__website_message_ids
+#: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management_required_fields__website_message_ids
+#: model:ir.model.fields,help:dpt_service_management.field_dpt_service_management_steps__website_message_ids
 msgid "Website communication history"
 msgstr ""
 
@@ -505,6 +627,16 @@ msgstr ""
 #: model:ir.model.fields.selection,name:dpt_service_management.selection__dpt_service_management_required_fields__field__weight
 msgid "Weight"
 msgstr "Cân nặng"
+
+#. module: dpt_service_management
+#: model:ir.model.fields.selection,name:dpt_service_management.selection__dpt_service_management_required_fields__default_compute_from__weight_in_so
+msgid "Weight in SO"
+msgstr "Cân nặng trên Báo gi"
+
+#. module: dpt_service_management
+#: model:ir.model,name:dpt_service_management.model_dpt_sale_order_fields_selection
+msgid "dpt.sale.order.fields.selection"
+msgstr ""
 
 #. module: dpt_service_management
 #: model_terms:ir.ui.view,arch_db:dpt_service_management.view_service_form
