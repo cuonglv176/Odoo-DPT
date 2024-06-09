@@ -107,6 +107,7 @@ class SaleOrder(models.Model):
                         'fixed_price': sale_service_id.price,
                         'is_price': False,
                     })
+                sale_service_id.price_status = 'approved'
         return res
 
     def send_quotation_department(self):
