@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_sale_order_deposit_inherit_form" model="ir.ui.view">
+        <field name="name">sale.order.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="dpt_sale_management.view_sale_order_inherit_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" type="object" name="action_open_deposit" icon="fa-usd">
+                    <field string="Deposit" name="deposit_amount_total" widget="monetary"
+                           options="{'currency_field': 'currency_id'}"/>
+                    <span class="o_stat_text">Deposit</span>
+                </button>
+            </div>
+        </field>
+    </record>
+
+</odoo>
