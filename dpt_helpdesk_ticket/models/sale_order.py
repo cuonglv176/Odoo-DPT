@@ -22,33 +22,46 @@ class SaleOrder(models.Model):
         for record in self:
             record.count_ticket = self.env['helpdesk.ticket'].search_count([('sale_id', '=', record.id)])
 
+    def action_confirm(self):
+        res = super(SaleOrder, self).action_confirm()
+        self.action_create_ticket()
+        return res
+
     def action_create_ticket(self):
-        if self.sale_service_ids:
-            department = self.sale_service_ids[0].department_id.id
-        else:
-            department = False
-        service_ids = []
+        list_department = []
         for r in self.sale_service_ids:
-            service_ids.append((0, 0, {
-                'service_id': r.service_id.id,
-                'description': r.description,
-                'qty': r.qty,
-                'uom_id': r.uom_id.id,
-                'price': r.price,
-                'currency_id': r.currency_id,
-                'amount_total': r.amount_total,
-                'status': r.price_status,
-            }))
-        return {
-            'name': "Service Ticket",
-            'type': 'ir.actions.act_window',
-            'res_model': 'helpdesk.ticket',
-            'target': 'self',
-            'views': [[False, 'form']],
-            'context': {
-                'default_sale_id': self.id,
-                'default_partner_id': self.partner_id.id,
-                'default_service_lines_ids': service_ids,
-                'default_department_id': department,
-            },
-        }
+            if r.department_id:
+                list_department.append(r.department_id.id)
+        for department in list_department:
+            service_ids = []
+            for service in self.sale_service_ids:
+                if department == service.department_id.id:
+                    service_ids.append((0, 0, {
+                        'service_id': service.service_id.id,
+                        'description': service.description,
+                        'qty': service.qty,
+                        'uom_id': service.uom_id.id,
+                        'price': service.price,
+                        'currency_id': service.currency_id.id,
+                        'amount_total': service.amount_total,
+                        # 'status': r.price_status,
+                    }))
+            self.env['helpdesk.ticket'].create({
+                'sale_id': self.id,
+                'partner_id': self.partner_id.id,
+                'service_lines_ids': service_ids,
+                'department_id': department,
+            })
+        # return {
+        #     'name': "Service Ticket",
+        #     'type': 'ir.actions.act_window',
+        #     'res_model': 'helpdesk.ticket',
+        #     'target': 'self',
+        #     'views': [[False, 'form']],
+        #     'context': {
+        #         'default_sale_id': self.id,
+        #         'default_partner_id': self.partner_id.id,
+        #         'default_service_lines_ids': service_ids,
+        #         'default_department_id': department,
+        #     },
+        # }
