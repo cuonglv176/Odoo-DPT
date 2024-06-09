@@ -45,7 +45,8 @@ class SaleOrder(models.Model):
     def check_required_fields(self):
         for r in self.fields_ids:
             if r.fields_id.type == 'options' or (
-                    r.fields_id.type == 'required' and (r.value_char or r.value_integer or r.value_date or r.selection_value_id)):
+                    r.fields_id.type == 'required' and (
+                    r.value_char or r.value_integer or r.value_date or r.selection_value_id)):
                 continue
             else:
                 raise ValidationError(_("Please fill required fields!!!"))
@@ -74,16 +75,42 @@ class SaleOrder(models.Model):
 
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
-        # for order_id in self:
-        #     if not order_id.update_pricelist:
-        #         continue
-
+        for order_id in self:
+            if not order_id.update_pricelist:
+                continue
+            for sale_service_id in order_id.sale_service_ids.filtered(lambda ss: ss.price_in_pricelist != ss.price):
+                if not sale_service_id.uom_id:
+                    raise ValidationError(_("Please insert Units"))
+                pricelist_id = self.env['product.pricelist'].sudo().search([('partner_id', '=', self.partner_id.id)])
+                if not pricelist_id:
+                    pricelist_id = self.env['product.pricelist'].sudo().create({
+                        'name': 'Bảng giá của khách hàng %s' % self.partner_id.name,
+                        'partner_id': self.partner_id.id,
+                        'currency_id': sale_service_id.currency_id.id,
+                    })
+                price_list_item_id = self.env['product.pricelist.item'].sudo().search(
+                    [('pricelist_id', '=', pricelist_id.id), ('service_id', '=', sale_service_id.service_id.id),
+                     ('uom_id', '=', sale_service_id.uom_id.id), ('partner_id', '=', self.partner_id.id)])
+                if not price_list_item_id:
+                    self.env['product.pricelist.item'].sudo().create({
+                        'partner_id': self.partner_id.id,
+                        'pricelist_id': pricelist_id.id,
+                        'service_id': sale_service_id.service_id.id,
+                        'uom_id': sale_service_id.uom_id.id,
+                        'compute_price': 'fixed',
+                        'fixed_price': sale_service_id.price,
+                        'is_price': False,
+                    })
+                else:
+                    price_list_item_id.write({
+                        'compute_price': 'fixed',
+                        'fixed_price': sale_service_id.price,
+                        'is_price': False,
+                    })
         return res
 
     def send_quotation_department(self):
         self.state = 'wait_price'
-
-
 
     @api.depends('sale_service_ids.amount_total')
     def _compute_service_amount(self):
@@ -171,7 +198,7 @@ class SaleOrder(models.Model):
                                                  detail_price_id.max_value) - detail_price_id.min_value + 1) * detail_price_id.amount if service_price_id.is_price else detail_price_id.amount
                                 else:
                                     price = (
-                                                        compute_field_id.value_integer - detail_price_id.min_value + 1) * detail_price_id.amount if service_price_id.is_price else detail_price_id.amount
+                                                    compute_field_id.value_integer - detail_price_id.min_value + 1) * detail_price_id.amount if service_price_id.is_price else detail_price_id.amount
                                 total_price += service_price_id.currency_id._convert(
                                     from_amount=price,
                                     to_currency=self.env.company.currency_id,
@@ -187,6 +214,8 @@ class SaleOrder(models.Model):
                     'price': max_price,
                     'qty': 1,
                     'price_status': 'approved',
+                    'pricelist_item_id': price_list_item_id.id if price_list_item_id else None,
+                    'price_in_pricelist': max_price,
                 })
 
 

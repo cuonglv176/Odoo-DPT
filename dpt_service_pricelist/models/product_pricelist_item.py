@@ -21,15 +21,15 @@ class ProductPricelistItem(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin', 'product.pricelist.item']
 
     partner_id = fields.Many2one('res.partner', 'Customer', domain=[('customer_rank', '>', 0)], tracking=True)
-    service_id = fields.Many2one('dpt.service.management', 'Service', tracking=True)
-    service_uom_ids = fields.Many2many(related='service_id.uom_ids', tracking=True)
-    uom_id = fields.Many2one('uom.uom', string='Unit', tracking=True)
-    version = fields.Integer('Version', default=1, tracking=True)
+    service_id = fields.Many2one('dpt.service.management', 'Service', tracking=True, copy=True)
+    service_uom_ids = fields.Many2many(related='service_id.uom_ids', tracking=True, copy=True)
+    uom_id = fields.Many2one('uom.uom', string='Unit', tracking=True, copy=True)
+    version = fields.Integer('Version', default=1, tracking=True, copy=True)
     percent_based_on = fields.Selection([
         ('product_total_amount', 'Product Total Amount'),
         ('declaration_total_amount', 'Declaration Total Amount')
-    ], 'Based On', tracking=True)
-    min_amount = fields.Float(string="Min Amount", digits='Product Price', tracking=True)
+    ], 'Based On', tracking=True, copy=True)
+    min_amount = fields.Float(string="Min Amount", digits='Product Price', tracking=True, copy=True)
     # re define
     compute_price = fields.Selection(
         selection=[
@@ -37,10 +37,10 @@ class ProductPricelistItem(models.Model):
             ('percentage', "Percentage"),
             ('table', "Table"),
         ],
-        index=True, default='fixed', required=True, tracking=True)
+        index=True, default='fixed', required=True, tracking=True, copy=True)
     pricelist_table_detail_ids = fields.One2many('product.pricelist.item.detail', 'item_id', string='Pricelist Table', tracking=True)
-    is_price = fields.Boolean('Is Price', tracking=True)
-    is_accumulated = fields.Boolean('Is Accumulated', tracking=True)
+    is_price = fields.Boolean('Is Price', tracking=True, copy=True)
+    is_accumulated = fields.Boolean('Is Accumulated', tracking=True, copy=True)
 
     @api.onchange('service_id')
     def onchange_service(self):

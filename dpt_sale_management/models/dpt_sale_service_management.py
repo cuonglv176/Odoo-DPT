@@ -8,7 +8,7 @@ class DPTSaleServiceManagement(models.Model):
     sale_id = fields.Many2one('sale.order', ondelete='cascade')
     service_id = fields.Many2one('dpt.service.management', string='Service')
     description = fields.Html(string='Description')
-    qty = fields.Float(string='QTY')
+    qty = fields.Float(string='QTY', default=1)
     uom_ids = fields.Many2many(related='service_id.uom_ids')
     uom_id = fields.Many2one('uom.uom', string='Unit', domain="[('id', 'in', uom_ids)]")
     price = fields.Monetary(currency_field='currency_id', string='Price')
@@ -17,6 +17,7 @@ class DPTSaleServiceManagement(models.Model):
     amount_total = fields.Monetary(currency_field='currency_id', string="Amount Total", compute="_compute_amount_total")
     sequence = fields.Integer()
     pricelist_item_id = fields.Many2one('product.pricelist.item', 'Pricelist Item')
+    price_in_pricelist = fields.Monetary(currency_field='currency_id', string='Price in Pricelist')
 
     def _compute_amount_total(self):
         for item in self:
