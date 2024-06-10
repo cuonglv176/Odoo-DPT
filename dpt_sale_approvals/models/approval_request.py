@@ -14,7 +14,7 @@ class ApprovalRequest(models.Model):
     def action_approve(self, approver=None):
         res = super(ApprovalRequest, self).action_approve(approver)
         approver = self.approver_ids.filtered(lambda sp: sp.status == 'approved')
-        if not approver:
+        if not approver or len(approver) == 1:
             for sale_service_id in self.sale_service_ids:
                 sale_service_id.price = sale_service_id.new_price
             for order_line_id in self.order_line_ids:
