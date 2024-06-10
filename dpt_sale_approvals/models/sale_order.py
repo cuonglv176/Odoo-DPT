@@ -29,13 +29,15 @@ class SaleOrder(models.Model):
 
     def action_open_change_price_approval(self):
         view_id = self.env.ref('approvals.approval_request_view_kanban').id
+        view_tree_id = self.env.ref('approvals.approval_request_view_tree').id
+        view_form_id = self.env.ref('approvals.approval_request_view_form').id
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'approval.request',
             'name': _('Approval request'),
             'view_mode': 'kanban,tree,form',
             'domain': [('sale_id', '=', self.id)],
-            'views': [[view_id, 'kanban']],
+            'views': [[view_id, 'kanban'], [view_tree_id, 'tree'], [view_form_id, 'form']],
         }
 
     @api.depends('approval_ids')
