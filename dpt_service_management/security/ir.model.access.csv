@@ -2,6 +2,6 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 dpt_service_management_required_fields,dpt.service.management.required_fields.user,model_dpt_service_management_required_fields,sales_team.group_sale_salesman,1,1,1,1
 dpt_service_management_steps,dpt.service.management.steps.user,model_dpt_service_management_steps,sales_team.group_sale_salesman,1,1,1,1
 dpt_service_management_type,dpt.service.management.user_type,model_dpt_service_management_type,sales_team.group_sale_salesman,1,1,1,1
-dpt_service_management,dpt.service.management.user,model_dpt_service_management,sales_team.group_sale_salesman,1,1,1,0
+dpt_service_management,dpt.service.management.user,model_dpt_service_management,sales_team.group_sale_salesman,1,1,0,0
 dpt_service_management,dpt.service.management.user,model_dpt_service_management,sales_team.group_sale_salesman_all_leads,1,1,1,1
 sale_order_fields_selection,sale_order_fields_selection,model_dpt_sale_order_fields_selection,,1,1,1,1

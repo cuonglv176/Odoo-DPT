@@ -109,7 +109,8 @@
     </record>
 
 
-    <menuitem id="submenu_service_management" name="Services" parent="sale.sale_order_menu"
+    <menuitem id="submenu_service_management" name="Services" parent="sale.menu_sales_config"
               action="action_service_management"
+              groups="sales_team.group_sale_salesman_all_leads"
               sequence="15"/>
 </odoo>
