@@ -252,7 +252,7 @@ class SaleOrderField(models.Model):
     service_id = fields.Many2one(related='fields_id.service_id')
     fields_id = fields.Many2one('dpt.service.management.required.fields', string='Fields')
     value_char = fields.Char(string='Value Char')
-    value_integer = fields.Integer(string='Value Integer')
+    value_integer = fields.Float(string='Value Integer')
     value_date = fields.Integer(string='Value Date')
     selection_value_id = fields.Many2one('dpt.sale.order.fields.selection', string='Selection Value')
     type = fields.Selection(selection=[
