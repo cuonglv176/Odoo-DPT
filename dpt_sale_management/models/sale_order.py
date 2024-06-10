@@ -176,9 +176,9 @@ class SaleOrder(models.Model):
                     price_base = 0
                     price = 0
                     if service_price_id.percent_based_on == 'product_total_amount':
-                        price_base = sum(self.sale_id.order_line.mapped('price_total'))
+                        price_base = sum(self.order_line.mapped('price_total'))
                     elif service_price_id.percent_based_on == 'declaration_total_amount':
-                        price_base = sum(self.sale_id.order_line.mapped('price_declaration'))
+                        price_base = sum(self.order_line.mapped('price_declaration'))
                     if price_base:
                         price = max(service_price_id.currency_id._convert(
                             from_amount=price_base * service_price_id.percent_price / 100,
