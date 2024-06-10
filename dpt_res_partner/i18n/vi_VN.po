@@ -1,0 +1,140 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* dpt_res_partner
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-09 14:49+0000\n"
+"PO-Revision-Date: 2024-06-09 14:49+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: dpt_res_partner
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_partner__company_type
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_users__company_type
+msgid "Company Type"
+msgstr "Loại hình Công ty"
+
+#. module: dpt_res_partner
+#: model:ir.model,name:dpt_res_partner.model_res_partner
+msgid "Contact"
+msgstr "Liên hệ"
+
+#. module: dpt_res_partner
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_partner__dpt_classification
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_users__dpt_classification
+msgid "Customer classification"
+msgstr "Phân loại khách hàng"
+
+#. module: dpt_res_partner
+#: model_terms:ir.ui.view,arch_db:dpt_res_partner.view_partner_inherit_form
+msgid "DPT Information"
+msgstr "Thông tin Khách hàng từ DPT"
+
+#. module: dpt_res_partner
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_partner__dpt_date_of_delivery
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_users__dpt_date_of_delivery
+msgid "Date of delivery"
+msgstr "Ngày giao hàng"
+
+#. module: dpt_res_partner
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_partner__dpt_declare
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_users__dpt_declare
+msgid "Declare"
+msgstr "Khai báo"
+
+#. module: dpt_res_partner
+#: model:ir.model.fields.selection,name:dpt_res_partner.selection__res_partner__dpt_gender__female
+msgid "Female"
+msgstr "Nữ"
+
+#. module: dpt_res_partner
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_partner__dpt_gender
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_users__dpt_gender
+msgid "Gender"
+msgstr "Giới tính"
+
+#. module: dpt_res_partner
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_partner__dpt_get_invoice
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_users__dpt_get_invoice
+msgid "Get an invoice?"
+msgstr "Khách lấy hóa đơn k?"
+
+#. module: dpt_res_partner
+#: model:ir.model.fields.selection,name:dpt_res_partner.selection__res_partner__company_type__household_business
+msgid "Household Business"
+msgstr "Hộ kinh doanh"
+
+#. module: dpt_res_partner
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_partner__dpt_invoice_info
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_users__dpt_invoice_info
+msgid "Invoice Info"
+msgstr "Thông tin xuất hóa đơn"
+
+#. module: dpt_res_partner
+#: model:ir.model.fields.selection,name:dpt_res_partner.selection__res_partner__dpt_gender__male
+msgid "Male"
+msgstr "Name"
+
+#. module: dpt_res_partner
+#: model:ir.model.fields.selection,name:dpt_res_partner.selection__res_partner__dpt_shipping_type__official_rank
+msgid "Official Rank"
+msgstr "Chính ngạch"
+
+#. module: dpt_res_partner
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_partner__dpt_order_status
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_users__dpt_order_status
+msgid "Order status"
+msgstr "Trạng thái lên đơn hàng"
+
+#. module: dpt_res_partner
+#: model:ir.model.fields.selection,name:dpt_res_partner.selection__res_partner__dpt_gender__other
+msgid "Other"
+msgstr "Khác"
+
+#. module: dpt_res_partner
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_partner__dpt_output_status
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_users__dpt_output_status
+msgid "Output Status"
+msgstr "Trạng thái sản lượng"
+
+#. module: dpt_res_partner
+#: model:ir.model.fields.selection,name:dpt_res_partner.selection__res_partner__dpt_shipping_type__petty_rank
+msgid "Petty Rank"
+msgstr "Tiểu ngạch"
+
+#. module: dpt_res_partner
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_partner__dpt_price_list
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_users__dpt_price_list
+msgid "Price list/policies are applicable"
+msgstr "Bảng giá/chính sách đang áp dụng"
+
+#. module: dpt_res_partner
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_partner__dpt_quote
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_users__dpt_quote
+msgid "Quote"
+msgstr "Báo giá"
+
+#. module: dpt_res_partner
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_partner__dpt_shipping_type
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_users__dpt_shipping_type
+msgid "Shipping Type"
+msgstr "Loại vận chuyển"
+
+#. module: dpt_res_partner
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_partner__dpt_ul
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_users__dpt_ul
+msgid "UL"
+msgstr ""
+
+#. module: dpt_res_partner
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_partner__dpt_user_name
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_users__dpt_user_name
+msgid "User Name"
+msgstr "User Khách hàng"

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_partner_inherit_form" model="ir.ui.view">
+        <field name="name">res.partner.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="after">
+                <group string="DPT Information">
+                    <field name="dpt_user_name"/>
+                    <field name="dpt_ul"/>
+                    <field name="dpt_shipping_type"/>
+                    <field name="dpt_gender" widget="radio"/>
+                    <field name="dpt_get_invoice"/>
+                    <field name="dpt_quote"/>
+                    <field name="dpt_declare"/>
+                    <field name="dpt_invoice_info"/>
+                    <field name="dpt_price_list"/>
+                    <field name="dpt_classification"/>
+                    <field name="dpt_output_status"/>
+                    <field name="dpt_order_status"/>
+                    <field name="dpt_date_of_delivery"/>
+                </group>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
