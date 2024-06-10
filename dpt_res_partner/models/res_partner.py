@@ -28,11 +28,12 @@ class ResPartner(models.Model):
     dpt_date_of_delivery = fields.Char('Date of delivery')
     company_type = fields.Selection(selection_add=[('household_business', 'Household Business')])
 
+
     @api.model
-    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
-        args = args or []
-        if operator == 'ilike' and not (name or '').strip():
-            domain = []
-        else:
-            domain = ['|', ('name', operator, name), ('dpt_user_name', operator, name)]
-        return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
+        domain = domain or []
+        if name:
+            name_domain = ['|', ('name', operator, name), ('dpt_user_name', operator, name)]
+
+            domain = expression.AND([name_domain, domain])
+        return self._search(domain, limit=limit, order=order)
