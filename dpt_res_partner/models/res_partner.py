@@ -28,6 +28,16 @@ class ResPartner(models.Model):
     dpt_date_of_delivery = fields.Char('Date of delivery')
     company_type = fields.Selection(selection_add=[('household_business', 'Household Business')])
 
+    @api.depends('complete_name', 'email', 'vat', 'state_id', 'country_id', 'commercial_company_name', 'dpt_user_name')
+    @api.depends_context('show_address', 'partner_show_db_id', 'address_inline', 'show_email', 'show_vat', 'lang')
+    def _compute_display_name(self):
+        for partner in self:
+            if partner.dpt_user_name:
+                name = f'{partner.dpt_user_name} - {partner.name}'
+            else:
+                name = f'{partner.name}'
+            partner.display_name = name
+
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
