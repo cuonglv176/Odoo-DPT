@@ -8,8 +8,7 @@
         <field name="inherit_id" ref="dpt_sale_management.view_sale_order_inherit_form"/>
         <field name="arch" type="xml">
             <button name="send_quotation_department" position="after">
-                <button string="Change Price" name="action_change_price" type="object"
-                        invisible="state != 'wait_price'"/>
+                <button string="Change Price" name="action_change_price" type="object"/>
             </button>
             <div name="button_box" position="before">
                 <field name="price_status" invisible="1"/>
