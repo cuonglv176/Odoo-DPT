@@ -13,6 +13,17 @@ class DPTSaleServiceManagement(models.Model):
     new_amount_total = fields.Monetary(currency_field='currency_id', string="New Amount Total",
                                        compute="_compute_new_amount_total")
     approval_id = fields.Many2one('approval.request', string='Approval Change Price')
+    is_edit_new_price = fields.Boolean(string='Edit new price', compute="_compute_is_edit_new_price", default=False)
+
+    @api.depends('approval_id')
+    def _compute_is_edit_new_price(self):
+        for rec in self:
+            is_edit_new_price = False
+            if rec.approval_id:
+               for approver_id in rec.approval_id.approver_ids:
+                   if self.env.user.id == approver_id.user_id.id:
+                       is_edit_new_price = True
+            rec.is_edit_new_price = is_edit_new_price
 
     @api.depends('approval_id')
     def _compute_price_status(self):

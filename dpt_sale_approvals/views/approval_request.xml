@@ -21,7 +21,8 @@
                             <field name="description"/>
                             <field name="uom_id" readonly="1"/>
                             <field name="price" readonly="1" force_save="1"/>
-                            <field name="new_price"/>
+                            <field name="new_price" readonly="is_edit_new_price != True"/>
+                            <field name="is_edit_new_price" column_invisible="1"/>
                             <field name="amount_total" readonly="1" force_save="1"/>
                             <field name="new_amount_total" readonly="1" force_save="1"/>
                             <field name="price_status" readonly="1" force_save="1"/>
