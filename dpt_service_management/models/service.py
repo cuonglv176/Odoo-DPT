@@ -33,7 +33,7 @@ class DPTService(models.Model):
     _description = 'DPT Service Management'
     _order = 'create_date DESC'
 
-    code = fields.Char(string='Service Code', default='NEW', readonly=True, copy=False, index=True, tracking=True)
+    code = fields.Char(string='Service Code', default='NEW', copy=False, index=True, tracking=True)
     name = fields.Char(string='Service Name', required=True, tracking=True)
     service_type_id = fields.Many2one('dpt.service.management.type', string='Service Type', index=True, tracking=True)
     department_id = fields.Many2one('hr.department', string='Executing Department', index=True, tracking=True)
