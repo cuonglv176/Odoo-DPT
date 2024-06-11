@@ -243,6 +243,13 @@ class SaleOrder(models.Model):
                     'compute_uom_id': compute_uom_id,
                 })
 
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        sale = super(SaleOrder, self).copy(default)
+        sale.sale_service_ids = self.sale_service_ids
+        sale.fields_ids = self.fields_ids
+        return sale
+
 
 class SaleOrderField(models.Model):
     _name = 'dpt.sale.order.fields'
