@@ -6,10 +6,11 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <div name="button_box" position="inside">
-                <button name="action_create_purchase_order" strin="Create PO" type="object" class="oe_stat_button"
-                        icon="fa-file-text-o"/>
-            </div>
+            <button name="action_quotation_send" position="before">
+                <field name="show_create_po" invisible="1"/>
+                <button name="action_create_purchase_order" string="Create PO" type="object"
+                        invisible="not show_create_po"/>
+            </button>
         </field>
     </record>
 
