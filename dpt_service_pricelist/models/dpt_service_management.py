@@ -10,6 +10,6 @@ class DPTServiceManagement(models.Model):
         valid_pricelist_ids = self.pricelist_item_ids.filtered(lambda p: not p.date_end or (
                 p.date_start and p.date_end and p.date_start <= fields.Date.today() and p.date_end >= fields.Date.today()))
         valid_partner_pricelist_ids = valid_pricelist_ids.filtered(lambda p: p.partner_id == partner_id)
-        valid_pricelist_ids -= valid_partner_pricelist_ids.filtered(
+        valid_pricelist_ids -= valid_pricelist_ids.filtered(
             lambda p: not p.partner_id and p.uom_id.id in valid_partner_pricelist_ids.mapped('uom_id').ids)
         return valid_pricelist_ids
