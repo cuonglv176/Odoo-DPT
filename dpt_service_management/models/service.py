@@ -54,7 +54,8 @@ class DPTService(models.Model):
 
     _sql_constraints = [
         ('code_name_index', 'CREATE INDEX code_name_index ON dpt_service_management (code, name)',
-         'Index on code and name')
+         'Index on code and name'),
+        ('code_uniq', 'unique (code)', "Code already exists!")
     ]
 
     @api.depends('steps_ids')
