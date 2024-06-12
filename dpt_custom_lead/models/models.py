@@ -176,6 +176,10 @@ class CRMLEAD(models.Model):
                 lead_id.partner_id.user_id = user_new_id
             return res
 
+    def check_lead_log_note_action(self, lead_id, stage_id):
+        note = self.env['crm.lead.log.note'].search([('lead_id', '=', lead_id.id), ('stage_id', '=', stage_id.id)])
+        return note
+
 class CRMLEADexist(models.Model):
     _name = 'crm.lead.exist'
 
