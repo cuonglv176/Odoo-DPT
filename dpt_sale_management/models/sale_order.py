@@ -52,6 +52,8 @@ class SaleOrder(models.Model):
 
     def check_required_fields(self):
         for r in self.fields_ids:
+            if r.env.context.get('onchange_sale_service_ids', False):
+                continue
             if r.fields_id.type == 'options' or (
                     r.fields_id.type == 'required' and (
                     r.value_char or r.value_integer or r.value_date or r.selection_value_id)):
@@ -59,39 +61,69 @@ class SaleOrder(models.Model):
             else:
                 raise ValidationError(_("Please fill required fields!!!"))
 
-    # 13/06/2024
-    # Binhdh comment đoạn code này vì khi onchange như này thì sửa bất kỳ trường nào ở sale_service_ids cũng sẽ reset
-    # lại giá trị ở tab field_ids. Follow up theo task 'http://14.225.210.140:8069/web#id=41&menu_id=363&cids=1&action=497&active_id=1&model=project.task&view_type=form'
-    # Sẽ viết lại hàm onchange ở model dpt.sale.servie.management, chỉ reset khi thay đổi service_id
-    # @api.onchange('sale_service_ids')
-    # def onchange_sale_service_ids(self):
-    #     val = []
-    #     sequence = 0
-    #     for sale_service_id in self.sale_service_ids:
-    #         for required_fields_id in sale_service_id.service_id.required_fields_ids:
-    #             if val:
-    #                 result = [item for item in val if item['fields_id'] == required_fields_id.id]
-    #                 if not result:
-    #                     x = {
-    #                         'sequence': sequence,
-    #                         'fields_id': required_fields_id.id,
-    #                     }
-    #                     default_value = required_fields_id.get_default_value(self)
-    #                     if default_value:
-    #                         x.update(default_value)
-    #                     val.append(x)
-    #             else:
-    #                 x = {
-    #                     'sequence': sequence,
-    #                     'fields_id': required_fields_id.id,
-    #                 }
-    #                 default_value = required_fields_id.get_default_value(self)
-    #                 if default_value:
-    #                     x.update(default_value)
-    #                 val.append(x)
-    #     if val:
-    #         self.fields_ids = None
-    #         self.fields_ids = [(0, 0, item) for item in val]
+    @api.onchange('sale_service_ids')
+    def onchange_sale_service_ids(self):
+        val = []
+        sequence = 0
+        list_exist = self.env['sale.order'].browse(self.id.origin).fields_ids.fields_id.ids
+        list_onchange = [item.fields_id.id for item in self.fields_ids]
+        list_sale_service_id = []
+        for sale_service_id in self.sale_service_ids:
+            if sale_service_id.service_id.id in list_sale_service_id:
+                continue
+            for required_fields_id in sale_service_id.service_id.required_fields_ids:
+                if required_fields_id.id in list_exist:
+                    for field_data in self.env['sale.order'].browse(self.id.origin).fields_ids:
+                        if field_data.fields_id.id == required_fields_id.id:
+                            val.append({
+                                'sequence': field_data.sequence,
+                                'fields_id': required_fields_id.id,
+                                'sale_id': self.id,
+                                'value_char': field_data.value_char,
+                                'value_integer': field_data.value_integer,
+                                'value_date': field_data.value_date,
+                                'selection_value_id': field_data.selection_value_id.id,
+
+                            })
+                elif required_fields_id.id in list_onchange:
+                    for field_data in self.fields_ids:
+                        if field_data.fields_id.id == required_fields_id.id:
+                            val.append({
+                                'sequence': field_data.sequence,
+                                'fields_id': required_fields_id.id,
+                                'sale_id': self.id,
+                                'value_char': field_data.value_char,
+                                'value_integer': field_data.value_integer,
+                                'value_date': field_data.value_date,
+                                'selection_value_id': field_data.selection_value_id.id,
+
+                            })
+                if val:
+                    result = [item for item in val if item['fields_id'] == required_fields_id.id]
+                    if not result:
+                        x = {
+                            'sequence': sequence,
+                            'fields_id': required_fields_id.id,
+                        }
+                        default_value = required_fields_id.get_default_value(self)
+                        if default_value:
+                            x.update(default_value)
+                        val.append(x)
+                else:
+                    x = {
+                        'sequence': sequence,
+                        'fields_id': required_fields_id.id,
+                    }
+                    default_value = required_fields_id.get_default_value(self)
+                    if default_value:
+                        x.update(default_value)
+                    val.append(x)
+            list_sale_service_id.append(sale_service_id.service_id.id)
+        if val:
+            self.fields_ids = None
+            self.fields_ids = [(0, 0, item) for item in val]
+        if not self.sale_service_ids:
+            self.fields_ids = [(5, 0, 0)]
 
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
