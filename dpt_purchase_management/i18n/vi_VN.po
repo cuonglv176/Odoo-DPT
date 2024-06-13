@@ -1,0 +1,206 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* dpt_purchase_management
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-13 16:57+0000\n"
+"PO-Revision-Date: 2024-06-13 16:57+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line__buying_url
+msgid "Buying URL"
+msgstr "Link sản phẩm"
+
+#. module: dpt_purchase_management
+#. odoo-python
+#: code:addons/dpt_purchase_management/models/sale_order.py:0
+#: model_terms:ir.ui.view,arch_db:dpt_purchase_management.view_sale_order_create_po_inherit_form
+#, python-format
+msgid "Create PO"
+msgstr "Tạo Đơn mua hàng"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__create_uid
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package_detail__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__create_date
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package_detail__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: dpt_purchase_management
+#: model:ir.model,name:dpt_purchase_management.model_dpt_service_management
+msgid "DPT Service Management"
+msgstr "Quản lý dịch vụ DPT"
+
+#. module: dpt_purchase_management
+#: model_terms:ir.ui.view,arch_db:dpt_purchase_management.purchase_order_form_package_line_inherit_form
+msgid "Detail"
+msgstr "Chi tiết"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__display_name
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package_detail__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__id
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package_detail__id
+msgid "ID"
+msgstr ""
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_uom_uom__is_package_unit
+msgid "Is Package Unit"
+msgstr "Là Quy cách đóng gói"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_dpt_service_management__is_purchase_service
+msgid "Is Purchase Service"
+msgstr "Là dịch vụ mua hàng"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__write_uid
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package_detail__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__write_date
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package_detail__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__lot_name
+msgid "Lot Name"
+msgstr "Mã lô"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__note
+msgid "Note"
+msgstr "Ghi chú"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package_detail__package_id
+#: model_terms:ir.ui.view,arch_db:dpt_purchase_management.purchase_order_form_package_line_inherit_form
+msgid "Package"
+msgstr "Thông tin kiện"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order__package_line_ids
+msgid "Package Line"
+msgstr "Chi tiết kiện"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__uom_id
+msgid "Package Unit"
+msgstr "Quy cách đóng gói"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__detail_ids
+msgid "Package detail"
+msgstr "Chi tiết sản phẩm"
+
+#. module: dpt_purchase_management
+#. odoo-python
+#: code:addons/dpt_purchase_management/models/purchase_order.py:0
+#, python-format
+msgid "Please config 1 helpdesk stage is finish stage!!"
+msgstr "Vui lòng cấu hình 1 giai đoạn là hoàn thành"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package_detail__product_id
+msgid "Product"
+msgstr "Sản phẩm"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_sale_order__product_order_count
+msgid "Product Order Count"
+msgstr "Số lượng đơn mua"
+
+#. module: dpt_purchase_management
+#: model:ir.model,name:dpt_purchase_management.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "Đơn vị tính sản phẩm"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__purchase_id
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_sale_order__purchase_ids
+#: model_terms:ir.ui.view,arch_db:dpt_purchase_management.view_sale_order_create_po_inherit_form
+msgid "Purchase"
+msgstr "Đơn mua hàng"
+
+#. module: dpt_purchase_management
+#: model:ir.model,name:dpt_purchase_management.model_purchase_order
+msgid "Purchase Order"
+msgstr "Đơn mua hàng"
+
+#. module: dpt_purchase_management
+#: model:ir.model,name:dpt_purchase_management.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Dòng đơn mua hàng"
+
+#. module: dpt_purchase_management
+#: model:ir.model,name:dpt_purchase_management.model_purchase_order_line_package
+msgid "Purchase Package"
+msgstr ""
+
+#. module: dpt_purchase_management
+#: model:ir.model,name:dpt_purchase_management.model_purchase_order_line_package_detail
+msgid "Purchase Package Detail"
+msgstr ""
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__quantity
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package_detail__quantity
+msgid "Quantity"
+msgstr "Số lượng"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order__sale_id
+msgid "Sale"
+msgstr "Đơn bán hàng"
+
+#. module: dpt_purchase_management
+#: model:ir.model,name:dpt_purchase_management.model_sale_order
+msgid "Sales Order"
+msgstr "Đơn bán hàng"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_sale_order__show_create_po
+msgid "Show create PO"
+msgstr ""
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__size
+msgid "Size"
+msgstr "Kích thước"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package_detail__uom_id
+msgid "Unit"
+msgstr "Đơn vị"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__volume
+msgid "Volume (m3)"
+msgstr "Số khối (m3)"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__weight
+msgid "Weight (kg)"
+msgstr "Cân nặng (kg)"

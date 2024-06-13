@@ -414,12 +414,12 @@ msgstr "Kiểu số"
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__volume
 #: model:ir.model.fields,field_description:dpt_sale_management.field_sale_order__volume
 msgid "Volume"
-msgstr "Thể tích"
+msgstr "Số khối"
 
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__volume_uom_id
 msgid "Volume Unit"
-msgstr "Đơn vị Thể tích"
+msgstr "Đơn vị Số khối"
 
 #. module: dpt_sale_management
 #: model:ir.model.fields.selection,name:dpt_sale_management.selection__sale_order__state__wait_price
