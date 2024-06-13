@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="helpdesk_stage_view_form_finish_stage_inherit" model="ir.ui.view">
+        <field name="name">helpdesk_stage_view_form_finish_stage_inherit</field>
+        <field name="model">helpdesk.stage</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_stage_view_form"/>
+        <field name="arch" type="xml">
+            <field name="fold" position="after">
+                <field name="is_done_stage" widget="boolean_toggle"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

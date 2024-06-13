@@ -6,7 +6,8 @@
         <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
-                <button string="Create Purchase Order" name="action_create_po" type="object" class="btn-primary"/>
+                <button string="Create Purchase Order" name="action_create_po" type="object" class="btn-primary"
+                        invisible="purchase_id"/>
             </xpath>
             <field name="team_id" position="before">
                 <field name="sale_id"/>
@@ -26,14 +27,14 @@
                 <page name="service_lines_ids" string="Service">
                     <field name="service_lines_ids">
                         <tree editable="bottom">
-<!--                            <field name="sale_id" invisible="1"/>-->
+                            <!--                            <field name="sale_id" invisible="1"/>-->
                             <field name="sequence" widget="handle"/>
                             <field name="service_id"/>
                             <field name="description"/>
                             <field name="qty" readonly="1" force_save="1"/>
                             <field name="uom_id"/>
                             <field name="price" readonly="1" force_save="1"/>
-<!--                            <field name="currency_id" invisible="1"/>-->
+                            <!--                            <field name="currency_id" invisible="1"/>-->
                             <field name="amount_total" readonly="1" force_save="1"/>
                             <field name="status"/>
                         </tree>

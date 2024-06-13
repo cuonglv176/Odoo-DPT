@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="service_purchase_form_view_inherit" model="ir.ui.view">
+        <field name="name">service_purchase_form_view_inherit</field>
+        <field name="model">dpt.service.management</field>
+        <field name="inherit_id" ref="dpt_service_management.view_service_form"/>
+        <field name="arch" type="xml">
+            <field name="is_create_ticket" position="after">
+                <field name="is_purchase_service" widget="boolean_toggle"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
