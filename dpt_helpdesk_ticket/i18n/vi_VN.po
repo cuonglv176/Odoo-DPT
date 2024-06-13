@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e-20240521\n"
+"Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-30 23:54+0000\n"
-"PO-Revision-Date: 2024-05-30 23:54+0000\n"
+"POT-Creation-Date: 2024-06-13 16:57+0000\n"
+"PO-Revision-Date: 2024-06-13 16:57+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,14 +21,14 @@ msgid "Amount Total"
 msgstr "Thành tiền"
 
 #. module: dpt_helpdesk_ticket
+#: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_sale_order__count_ticket
+msgid "Count Ticket"
+msgstr ""
+
+#. module: dpt_helpdesk_ticket
 #: model_terms:ir.ui.view,arch_db:dpt_helpdesk_ticket.view_helpdesk_ticket_inherit_form
 msgid "Create Purchase Order"
 msgstr "Tạo đơn mua hàng"
-
-#. module: dpt_helpdesk_ticket
-#: model_terms:ir.ui.view,arch_db:dpt_helpdesk_ticket.view_sale_order_inherit_form
-msgid "Create Service Ticket"
-msgstr "Tạo dịch vụ"
 
 #. module: dpt_helpdesk_ticket
 #: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_dpt_helpdesk_servie_line__create_uid
@@ -61,6 +61,11 @@ msgid "Display Name"
 msgstr ""
 
 #. module: dpt_helpdesk_ticket
+#: model:ir.model,name:dpt_helpdesk_ticket.model_helpdesk_stage
+msgid "Helpdesk Stage"
+msgstr "Giai đoạn hỗ trợ"
+
+#. module: dpt_helpdesk_ticket
 #: model:ir.model,name:dpt_helpdesk_ticket.model_helpdesk_ticket
 msgid "Helpdesk Ticket"
 msgstr "Phiếu hỗ trợ"
@@ -74,6 +79,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:dpt_helpdesk_ticket.selection__helpdesk_ticket__type_service__import_export
 msgid "Import Export"
 msgstr ""
+
+#. module: dpt_helpdesk_ticket
+#: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_helpdesk_stage__is_done_stage
+msgid "Is Done Stage"
+msgstr "Giai đoạn Hoàn thành"
 
 #. module: dpt_helpdesk_ticket
 #: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_dpt_helpdesk_servie_line__write_uid
@@ -151,6 +161,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_helpdesk_ticket__name
 msgid "Subject"
 msgstr "Tiêu đề"
+
+#. module: dpt_helpdesk_ticket
+#: model_terms:ir.ui.view,arch_db:dpt_helpdesk_ticket.view_sale_order_inherit_form
+msgid "Tickets"
+msgstr ""
 
 #. module: dpt_helpdesk_ticket
 #: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_helpdesk_ticket__type_service

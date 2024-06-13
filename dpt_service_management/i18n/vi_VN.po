@@ -602,12 +602,12 @@ msgstr "Sử dụng để tính giá"
 #. module: dpt_service_management
 #: model:ir.model.fields.selection,name:dpt_service_management.selection__dpt_service_management_required_fields__field__volume
 msgid "Volume"
-msgstr "Thể tích"
+msgstr "Số khối"
 
 #. module: dpt_service_management
 #: model:ir.model.fields.selection,name:dpt_service_management.selection__dpt_service_management_required_fields__default_compute_from__volume_in_so
 msgid "Volume in SO"
-msgstr "Thể tích trên Báo giá"
+msgstr "Số khối trên Báo giá"
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__website_message_ids

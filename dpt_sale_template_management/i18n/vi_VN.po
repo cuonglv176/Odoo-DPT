@@ -232,12 +232,12 @@ msgstr "Đơn vị tính"
 #. module: dpt_sale_template_management
 #: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__volume
 msgid "Volume"
-msgstr "Thể tích"
+msgstr "Số khối"
 
 #. module: dpt_sale_template_management
 #: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__volume_uom_id
 msgid "Volume Unit"
-msgstr "Đơn vị Thể tích"
+msgstr "Đơn vị Số khối"
 
 #. module: dpt_sale_template_management
 #: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__weight
