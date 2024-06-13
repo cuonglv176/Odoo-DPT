@@ -8,6 +8,7 @@
         <field name="arch" type="xml">
             <page name="products" position="after">
                 <page string="Package" name="package">
+                    <field name="sale_id" invisible="1" force_save="1"/>
                     <field name="package_line_ids" readonly="state in ('done', 'cancel')">
                         <tree>
                             <field name="purchase_id" column_invisible="1"/>

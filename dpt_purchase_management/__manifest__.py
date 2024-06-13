@@ -13,5 +13,6 @@
         'views/dpt_service_management.xml',
         'views/purchase_order.xml',
         'views/sale_order.xml',
+        'views/uom_uom.xml',
     ],
 }

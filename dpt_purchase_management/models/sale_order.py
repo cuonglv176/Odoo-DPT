@@ -15,7 +15,7 @@ class SaleOrder(models.Model):
 
     def _compute_product_order_count(self):
         for item in self:
-            item.product_order_count = len(item.order_line)
+            item.product_order_count = len(item.purchase_ids)
 
     def action_create_purchase_order(self):
         default_order_line = []
@@ -37,8 +37,15 @@ class SaleOrder(models.Model):
             'view_mode': 'form',
             'views': [(self.env.ref('purchase.purchase_order_form').sudo().id, "form")],
             'context': {
+                'default_sale_id': self.id,
                 'default_order_line': default_order_line,
                 'default_date_planned': fields.Datetime.now(),
                 'no_compute_price': True,
+                'create_from_so': True
             }
         }
+
+    def action_open_po(self):
+        purchase_action = self.env.ref('purchase.purchase_rfq').sudo().read()[0]
+        purchase_action['domain'] = [('id', 'in', self.purchase_ids.ids)]
+        return purchase_action
