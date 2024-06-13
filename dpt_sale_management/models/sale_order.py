@@ -92,7 +92,7 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
         for order_id in self:
-            if order_id.sale_service_ids.filtered(lambda ss: ss.price_status != 'approved'):
+            if order_id.sale_service_ids.filtered(lambda ss: ss.price_in_pricelist != ss.price):
                 raise ValidationError(_('Please approve new price!'))
             if not order_id.update_pricelist:
                 continue

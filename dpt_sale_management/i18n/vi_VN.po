@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-09 15:07+0000\n"
-"PO-Revision-Date: 2024-06-09 15:07+0000\n"
+"POT-Creation-Date: 2024-06-13 17:22+0000\n"
+"PO-Revision-Date: 2024-06-13 17:22+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -62,6 +62,13 @@ msgid "Cancelled"
 msgstr "Hủy"
 
 #. module: dpt_sale_management
+#. odoo-python
+#: code:addons/dpt_sale_management/models/dpt_sale_service_management.py:0
+#, python-format
+msgid "Cannot lower price, only increase price."
+msgstr ""
+
+#. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__compute_uom_id
 msgid "Compute Unit"
 msgstr "Đơn vị tính giá"
@@ -108,6 +115,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:dpt_sale_management.field_sale_order_line__price_declaration
 msgid "Declaration"
 msgstr "Giá khai báo"
+
+#. module: dpt_sale_management
+#: model:ir.model,name:dpt_sale_management.model_hr_department
+msgid "Department"
+msgstr "Bộ phận"
 
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__description
@@ -246,6 +258,13 @@ msgstr "Cha"
 #. odoo-python
 #: code:addons/dpt_sale_management/models/sale_order.py:0
 #, python-format
+msgid "Please approve new price!"
+msgstr "Vui lòng duyệt giá mới!"
+
+#. module: dpt_sale_management
+#. odoo-python
+#: code:addons/dpt_sale_management/models/sale_order.py:0
+#, python-format
 msgid "Please fill required fields!!!"
 msgstr ""
 
@@ -377,7 +396,7 @@ msgstr "Loại trường"
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_order_fields__uom_id
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__uom_id
 msgid "Unit"
-msgstr "Chi tiết dịch vụ"
+msgstr "Đơn vị tính"
 
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation_line__service_uom_ids
@@ -451,12 +470,3 @@ msgstr ""
 #: model:ir.model,name:dpt_sale_management.model_dpt_sale_order_fields
 msgid "dpt.sale.order.fields"
 msgstr ""
-
-#. module: sale_management
-#: model:ir.model,name:sale_management.model_sale_order_template
-#: model:ir.model.fields,field_description:sale_management.field_sale_order__sale_order_template_id
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__name
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_tree
-msgid "Quotation Template"
-msgstr "Combo dịch vụ"

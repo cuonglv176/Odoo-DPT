@@ -13,7 +13,7 @@
             </button>
             <div name="button_box" position="inside">
                 <button class="oe_stat_button" type="object" name="action_open_po" icon="fa-book">
-                    <field string="Purchase" name="product_order_count"/>
+                    <field string="Purchase" name="product_order_count" widget="statinfo"/>
                 </button>
             </div>
         </field>
