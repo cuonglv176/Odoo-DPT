@@ -4,7 +4,7 @@ from odoo import fields, models, api, _
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    product_order_count = fields.Boolean('Product Order Count', compute="_compute_product_order_count")
+    product_order_count = fields.Integer('Product Order Count', compute="_compute_product_order_count")
     show_create_po = fields.Boolean('Show create PO', compute="_compute_show_create_po")
     purchase_ids = fields.One2many('purchase.order', 'sale_id', 'Purchase')
 

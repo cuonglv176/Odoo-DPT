@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 
+    <record id="product_uom_form_view_packing_inherit" model="ir.ui.view">
+        <field name="name">product_uom_form_view_packing_inherit</field>
+        <field name="model">uom.uom</field>
+        <field name="inherit_id" ref="uom.product_uom_form_view"/>
+        <field name="arch" type="xml">
+            <field name="active" position="after">
+                <field name="is_package_unit" widget="boolean_toggle"/>
+            </field>
+        </field>
+    </record>
 
 </odoo>
