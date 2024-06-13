@@ -233,15 +233,15 @@ class SaleOrder(models.Model):
                                 compute_value = compute_field_id.value_integer
                                 compute_uom_id = compute_field_id.uom_id.id
 
-                sale_service_id.with_context(from_pricelist=True).write({
-                    'uom_id': price_list_item_id.uom_id.id if price_list_item_id else None,
-                    'price': max_price,
-                    'qty': 1,
-                    'pricelist_item_id': price_list_item_id.id if price_list_item_id else None,
-                    'price_in_pricelist': max_price,
-                    'compute_value': compute_value,
-                    'compute_uom_id': compute_uom_id,
-                })
+            sale_service_id.with_context(from_pricelist=True).write({
+                'uom_id': price_list_item_id.uom_id.id if price_list_item_id else (service_price_ids[:1].uom_id.id if service_price_ids and service_price_ids[:1].uom_id else None),
+                'price': max_price,
+                'qty': 1,
+                'pricelist_item_id': price_list_item_id.id if price_list_item_id else (service_price_ids[:1].id if service_price_ids else None),
+                'price_in_pricelist': max_price,
+                'compute_value': compute_value,
+                'compute_uom_id': compute_uom_id,
+            })
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
