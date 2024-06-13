@@ -12,17 +12,23 @@ class SaleOrder(models.Model):
         ('no_price', 'No Price'),
         ('wait_approve', 'Wait Approve'),
         ('approved', 'Approved'),
-    ], string='Status', default='no_price', compute="_compute_price_status")
+    ], string='Status', default='no_price', compute="_compute_price_status", stote=True)
 
-    @api.depends('approval_ids')
+    @api.depends('approval_ids', 'approval_ids.request_status')
     def _compute_price_status(self):
         for rec in self:
             if rec.approval_ids:
-                not_approved = rec.approval_ids.filtered(lambda approval: approval.request_status != 'approved')
+                not_approved = rec.approval_ids.filtered(lambda approval: approval.request_status in ('pending', 'new'))
                 if not_approved:
                     price_status = 'wait_approve'
                 else:
-                    price_status = 'approved'
+                    # latest_approved = max(rec.approval_ids.mapped('date'))
+                    latest_approved = max(rec.approval_ids, key=lambda line: line.date)
+
+                    if latest_approved.request_status in ('refused', 'cancel'):
+                        price_status = 'no_price'
+                    else:
+                        price_status = 'approved'
             else:
                 price_status = 'no_price'
             rec.price_status = price_status

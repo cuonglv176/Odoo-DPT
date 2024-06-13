@@ -3,3 +3,4 @@
 from . import dpt_sale_service_management
 from . import sale_order
 from . import sale_order_line
+from . import hr_department

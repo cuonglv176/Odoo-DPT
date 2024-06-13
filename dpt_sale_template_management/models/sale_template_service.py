@@ -53,12 +53,55 @@ class DPTSaleTemplateService(models.Model):
             self.uom_id = self.service_id.uom_id
 
 
-
-
 class SaleOrderTemplate(models.Model):
-    _inherit = 'sale.order.template'
+    _name = 'sale.order.template'
+    _inherit = ['sale.order.template', 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
 
     sale_service_ids = fields.One2many('dpt.sale.template.service', 'sale_id', string='Service')
+    active = fields.Boolean(
+        default=True, tracking=True,
+        help="If unchecked, it will allow you to hide the quotation template without removing it.")
+    name = fields.Char(string="Quotation Template", tracking=True, required=True)
+    note = fields.Html(string="Terms and conditions", tracking=True, translate=True)
+
+    mail_template_id = fields.Many2one(
+        comodel_name='mail.template', tracking=True,
+        string="Confirmation Mail",
+        domain=[('model', '=', 'sale.order')],
+        help="This e-mail template will be sent on confirmation. Leave empty to send nothing.")
+    number_of_days = fields.Integer(
+        string="Quotation Duration", tracking=True,
+        help="Number of days for the validity date computation of the quotation")
+
+    require_signature = fields.Boolean(
+        string="Online Signature",
+        compute='_compute_require_signature',
+        store=True, readonly=False, tracking=True,
+        help="Request a online signature to the customer in order to confirm orders automatically.")
+    require_payment = fields.Boolean(
+        string="Online Payment",
+        compute='_compute_require_payment',
+        store=True, readonly=False, tracking=True,
+        help="Request an online payment to the customer in order to confirm orders automatically.")
+    prepayment_percent = fields.Float(
+        string="Prepayment percentage",
+        compute="_compute_prepayment_percent",
+        store=True, readonly=False, tracking=True,
+        help="The percentage of the amount needed to be paid to confirm quotations.")
+
+    journal_id = fields.Many2one(
+        'account.journal', string="Invoicing Journal",
+        domain=[('type', '=', 'sale')], company_dependent=True, check_company=True, tracking=True,
+        help="If set, SO with this template will invoice in this journal; "
+             "otherwise the sales journal with the lowest sequence is used.")
+
+    plan_id = fields.Many2one('sale.subscription.plan', string='Recurring Plan', tracking=True)
+
+    # Duration, user duration property for access to the timedelta
+    is_unlimited = fields.Boolean('Last Forever', tracking=True, default=True)  # old recurring_rule_boundary
+    duration_value = fields.Integer(string="End After", default=1, tracking=True, required=True)  # old recurring_rule_count
+    duration_unit = fields.Selection([('month', 'Months'), ('year', 'Years')], help="Contract duration",
+                                     default='month', tracking=True, required=True)  # old duration_unit
 
 
 class SaleOrder(models.Model):

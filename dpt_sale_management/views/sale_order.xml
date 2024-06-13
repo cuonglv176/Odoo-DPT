@@ -32,22 +32,22 @@
                             <field name="sequence" widget="handle"/>
                             <field name="currency_id" column_invisible="1" force_save="1"/>
                             <field name="service_id"/>
-                            <field name="description"/>
+                            <field name="uom_id"/>
+<!--                            <field name="description"/>-->
                             <field name="compute_value" readonly="1" force_save="1"/>
                             <field name="compute_uom_id" readonly="1" force_save="1"/>
-                            <field name="qty" column_invisible="0" force_save="1"/>
+                            <field name="qty" column_invisible="1" force_save="1"/>
                             <field name="uom_ids" column_invisible="1"/>
-                            <field name="uom_id"/>
                             <field name="price" readonly="0" force_save="1"/>
                             <!--                            <field name="currency_id" invisible="1"/>-->
                             <field name="amount_total" readonly="1" force_save="1"/>
-                            <field name="department_id"/>
+                            <field name="department_id" context="{'dpt_sale_management': 1}"/>
                         </tree>
                     </field>
                     <group col="6" class="mt-2 mt-md-0">
                         <group class="oe_subtotal_footer" colspan="2">
-                            <field name="service_total_untax_amount" colspan="2" readonly="1"/>
-                            <field name="service_tax_amount" colspan="2" readonly="1"/>
+<!--                            <field name="service_total_untax_amount" colspan="2" readonly="1"/>-->
+<!--                            <field name="service_tax_amount" colspan="2" readonly="1"/>-->
                             <field name="service_total_amount" colspan="2" readonly="1"/>
                         </group>
                         <div class="clearfix"/>

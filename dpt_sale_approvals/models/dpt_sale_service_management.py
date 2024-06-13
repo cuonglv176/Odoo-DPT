@@ -25,15 +25,33 @@ class DPTSaleServiceManagement(models.Model):
                        is_edit_new_price = True
             rec.is_edit_new_price = is_edit_new_price
 
-    @api.depends('approval_id')
+    # @api.depends('approval_id')
+    # def _compute_price_status(self):
+    #     for rec in self:
+    #         if rec.approval_id:
+    #             not_approved = rec.approval_id.filtered(lambda approval: approval.request_status != 'approved')
+    #             if not_approved:
+    #                 price_status = 'wait_approve'
+    #             else:
+    #                 price_status = 'approved'
+    #         else:
+    #             price_status = 'no_price'
+    #         rec.price_status = price_status
+
+    @api.depends('approval_id', 'approval_id.request_status')
     def _compute_price_status(self):
         for rec in self:
             if rec.approval_id:
-                not_approved = rec.approval_id.filtered(lambda approval: approval.request_status != 'approved')
+                not_approved = rec.approval_id.filtered(lambda approval: approval.request_status in ('pending', 'new'))
                 if not_approved:
                     price_status = 'wait_approve'
                 else:
-                    price_status = 'approved'
+                    latest_approved = max(rec.approval_id, key=lambda line: line.date)
+
+                    if latest_approved.request_status in ('refused', 'cancel'):
+                        price_status = 'no_price'
+                    else:
+                        price_status = 'approved'
             else:
                 price_status = 'no_price'
             rec.price_status = price_status

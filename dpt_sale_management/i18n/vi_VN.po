@@ -377,7 +377,7 @@ msgstr "Loại trường"
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_order_fields__uom_id
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__uom_id
 msgid "Unit"
-msgstr "Đơn vị tính"
+msgstr "Chi tiết dịch vụ"
 
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation_line__service_uom_ids
@@ -451,3 +451,12 @@ msgstr ""
 #: model:ir.model,name:dpt_sale_management.model_dpt_sale_order_fields
 msgid "dpt.sale.order.fields"
 msgstr ""
+
+#. module: sale_management
+#: model:ir.model,name:sale_management.model_sale_order_template
+#: model:ir.model.fields,field_description:sale_management.field_sale_order__sale_order_template_id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__name
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_tree
+msgid "Quotation Template"
+msgstr "Combo dịch vụ"
