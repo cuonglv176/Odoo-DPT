@@ -15,7 +15,7 @@ class SaleOrder(models.Model):
 
     def _compute_product_order_count(self):
         for item in self:
-            item.product_order_count = len(item.purchase_ids)
+            item.product_order_count = len(item.sudo().purchase_ids)
 
     def action_create_purchase_order(self):
         default_order_line = []
@@ -40,6 +40,7 @@ class SaleOrder(models.Model):
                 'default_sale_id': self.id,
                 'default_order_line': default_order_line,
                 'default_date_planned': fields.Datetime.now(),
+                'default_import_package_stock': True,
                 'no_compute_price': True,
                 'create_from_so': True
             }

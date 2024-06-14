@@ -6,9 +6,12 @@
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
+            <field name="date_order" position="before">
+                <field name="sale_id" readonly="1" force_save="1" invisible="sale_id"/>
+            </field>
             <page name="products" position="after">
                 <page string="Package" name="package">
-                    <field name="sale_id" invisible="1" force_save="1"/>
+                    <field name="import_package_stock" invisible="1"/>
                     <field name="package_line_ids" readonly="state in ('done', 'cancel')">
                         <tree>
                             <field name="purchase_id" column_invisible="1"/>
