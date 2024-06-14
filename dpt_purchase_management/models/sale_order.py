@@ -15,7 +15,7 @@ class SaleOrder(models.Model):
 
     def _compute_product_order_count(self):
         for item in self:
-            item.product_order_count = len(item.purchase_ids)
+            item.product_order_count = len(item.sudo().purchase_ids)
 
     def action_create_purchase_order(self):
         default_order_line = []
