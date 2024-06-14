@@ -586,7 +586,7 @@ msgstr ""
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_required_fields__uom_id
 msgid "Unit"
-msgstr ""
+msgstr "Đơn vị tính giá"
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__uom_ids

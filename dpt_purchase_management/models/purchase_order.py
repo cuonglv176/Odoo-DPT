@@ -7,6 +7,7 @@ class PurchaseOrder(models.Model):
 
     sale_id = fields.Many2one('sale.order', 'Sale')
     package_line_ids = fields.One2many('purchase.order.line.package', 'purchase_id', 'Package Line')
+    import_package_stock = fields.Boolean('Import Package to Stock')
 
     @api.model
     def create(self, vals):
@@ -46,5 +47,5 @@ class PurchaseOrder(models.Model):
             'partner_id': self.sale_id.partner_id.id if self.sale_id else None,
             'department_id': department_id,
             'service_lines_ids': service_lines_ids,
-            'stage_id': helpdesk_stage_id.id
+            'stage_id': helpdesk_stage_id.id,
         }

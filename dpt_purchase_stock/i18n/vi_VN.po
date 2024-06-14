@@ -1,0 +1,78 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* dpt_purchase_stock
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-14 17:45+0000\n"
+"PO-Revision-Date: 2024-06-14 17:45+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: dpt_purchase_stock
+#: model_terms:ir.ui.view,arch_db:dpt_purchase_stock.purchase_order_form_confirm_with_package_inherit_form
+msgid "Confirm Order"
+msgstr "Xác nhận đơn hàng"
+
+#. module: dpt_purchase_stock
+#: model:ir.model.fields,field_description:dpt_purchase_stock.field_purchase_order_line_package__move_ids
+msgid "Move"
+msgstr ""
+
+#. module: dpt_purchase_stock
+#: model:ir.model.fields,field_description:dpt_purchase_stock.field_stock_move__package_line_id
+msgid "Package Line"
+msgstr "Kiện hàng"
+
+#. module: dpt_purchase_stock
+#. odoo-python
+#: code:addons/dpt_purchase_stock/models/purchase_order.py:0
+#, python-format
+msgid "Please add Units to Package line with lot name: %s !"
+msgstr "Vui lòng thêm Quy cách đóng gói với kiện có mã: %s !"
+
+#. module: dpt_purchase_stock
+#. odoo-python
+#: code:addons/dpt_purchase_stock/models/purchase_order.py:0
+#, python-format
+msgid "Please add some Package line!"
+msgstr "Vui lòng bổ sung thông tin kiện"
+
+#. module: dpt_purchase_stock
+#. odoo-python
+#: code:addons/dpt_purchase_stock/models/purchase_order.py:0
+#, python-format
+msgid ""
+"Please configurate Product to Units of Package line with lot name: %s !"
+msgstr "Vui lòng cấu hình sản phẩm cho Quy cách đóng gói của Kiện hàng có mã: %s!"
+
+#. module: dpt_purchase_stock
+#: model:ir.model.fields,field_description:dpt_purchase_stock.field_uom_uom__product_id
+msgid "Product"
+msgstr "Sản phẩm"
+
+#. module: dpt_purchase_stock
+#: model:ir.model,name:dpt_purchase_stock.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "Đơn vị tính sản phẩm"
+
+#. module: dpt_purchase_stock
+#: model:ir.model,name:dpt_purchase_stock.model_purchase_order
+msgid "Purchase Order"
+msgstr "Đơn mua hàng"
+
+#. module: dpt_purchase_stock
+#: model:ir.model,name:dpt_purchase_stock.model_purchase_order_line_package
+msgid "Purchase Package"
+msgstr ""
+
+#. module: dpt_purchase_stock
+#: model:ir.model,name:dpt_purchase_stock.model_stock_move
+msgid "Stock Move"
+msgstr "Dịch chuyển tồn kho"

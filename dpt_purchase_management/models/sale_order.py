@@ -40,6 +40,7 @@ class SaleOrder(models.Model):
                 'default_sale_id': self.id,
                 'default_order_line': default_order_line,
                 'default_date_planned': fields.Datetime.now(),
+                'default_import_package_stock': True,
                 'no_compute_price': True,
                 'create_from_so': True
             }

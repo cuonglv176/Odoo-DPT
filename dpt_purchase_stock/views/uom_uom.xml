@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="product_uom_form_view_packing_product_inherit" model="ir.ui.view">
+        <field name="name">product_uom_form_view_packing_product_inherit</field>
+        <field name="model">uom.uom</field>
+        <field name="inherit_id" ref="dpt_purchase_management.product_uom_form_view_packing_inherit"/>
+        <field name="arch" type="xml">
+            <field name="is_package_unit" position="after">
+                <field name="product_id" invisible="not is_package_unit" required="is_package_unit"
+                       domain="[('detailed_type','=','product')]" options="{'no_create': True}"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
