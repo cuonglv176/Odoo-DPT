@@ -39,7 +39,7 @@ class PurchaseOrderLinePackage(models.Model):
             'move_line_ids': [(0, 0, {
                 'company_id': self.env.company.id,
                 'product_id': self.uom_id.product_id.id,
-                'lot_name': self.purchase_id.name + self.lot_name,
+                'lot_name': f'{self.purchase_id.name}_{self.lot_name}',
                 'quantity': self.quantity,
             })]
         }]

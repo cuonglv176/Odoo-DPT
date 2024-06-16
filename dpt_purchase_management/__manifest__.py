@@ -11,6 +11,7 @@
                 'dpt_helpdesk_ticket'],
     'data': [
         'security/ir.model.access.csv',
+        'data/res_partner.xml',
         'views/dpt_service_management.xml',
         'views/purchase_order.xml',
         'views/sale_order.xml',

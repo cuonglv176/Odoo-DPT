@@ -1,4 +1,5 @@
 from odoo import fields, models, api, _
+from odoo.exceptions import ValidationError
 
 
 class SaleOrder(models.Model):
@@ -17,6 +18,20 @@ class SaleOrder(models.Model):
         for item in self:
             item.product_order_count = len(item.sudo().purchase_ids)
 
+    def action_confirm(self):
+        res = super().action_confirm()
+        for order in self:
+            have_purchase_service = (any(order.sale_service_ids.mapped('service_id').mapped(
+                'is_purchase_service')) if order.sale_service_ids else False)
+            if not have_purchase_service:
+                continue
+            if have_purchase_service and not order.order_line:
+                raise ValidationError(_("Please add some Order line for creating PO!"))
+            order.action_create_purchase_order()
+            # delete stock_picking of SO:
+            order.sudo().picking_ids.unlink()
+        return res
+
     def action_create_purchase_order(self):
         default_order_line = []
         for order_line in self.order_line:
@@ -28,23 +43,37 @@ class SaleOrder(models.Model):
                 'product_qty': order_line.product_uom_qty,
                 'product_uom': order_line.product_uom.id,
                 'price_unit': order_line.price_unit,
+                'date_planned': fields.Datetime.now(),
             }))
-        return {
-            'name': _('Create PO'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'purchase.order',
-            'target': 'new',
-            'view_mode': 'form',
-            'views': [(self.env.ref('purchase.purchase_order_form').sudo().id, "form")],
-            'context': {
-                'default_sale_id': self.id,
-                'default_order_line': default_order_line,
-                'default_date_planned': fields.Datetime.now(),
-                'default_import_package_stock': True,
-                'no_compute_price': True,
-                'create_from_so': True
-            }
-        }
+        po_id = self.env['purchase.order'].with_context({'no_compute_price': True, 'create_from_so': True}).create({
+            'sale_id': self.id,
+            'order_line': default_order_line,
+            'date_planned': fields.Datetime.now(),
+            'import_package_stock': True,
+            'partner_id': self.env.ref('dpt_purchase_management.partner_default_supplier').id,
+        })
+        default_package_unit_id = self.env['uom.uom'].sudo().search([('is_default_package_unit', '=', True)], limit=1)
+        po_id.package_line_ids = [(0, 0, {
+            'uom_id': default_package_unit_id.id if default_package_unit_id else None,
+            'lot_name': f'{po_id.name}_{self.name}',
+            'quantity': 1,
+        })]
+        # return {
+        #     'name': _('Create PO'),
+        #     'type': 'ir.actions.act_window',
+        #     'res_model': 'purchase.order',
+        #     'target': 'new',
+        #     'view_mode': 'form',
+        #     'views': [(self.env.ref('purchase.purchase_order_form').sudo().id, "form")],
+        #     'context': {
+        #         'default_sale_id': self.id,
+        #         'default_order_line': default_order_line,
+        #         'default_date_planned': fields.Datetime.now(),
+        #         'default_import_package_stock': True,
+        #         'no_compute_price': True,
+        #         'create_from_so': True
+        #     }
+        # }
 
     def action_open_po(self):
         purchase_action = self.env.ref('purchase.purchase_rfq').sudo().read()[0]
