@@ -62,7 +62,7 @@ msgstr ""
 #. module: dpt_purchase_management
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_uom_uom__is_default_package_unit
 msgid "Is Default Package Unit"
-msgstr "Là quy cách đóng gói mặc ịnh"
+msgstr "Là quy cách đóng gói mặc định"
 
 #. module: dpt_purchase_management
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_uom_uom__is_package_unit
