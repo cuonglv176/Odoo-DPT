@@ -26,7 +26,7 @@
             <!--            <button name="action_cancel" position="replace"/>-->
             <page name="order_lines" position="before">
                 <page name="sale_service" string="Service">
-                    <field name="sale_service_ids">
+                    <field name="sale_service_ids" readonly="state == 'cancel' or locked">
                         <tree editable="bottom">
                             <!--                            <field name="sale_id" invisible="1"/>-->
                             <field name="sequence" widget="handle"/>
@@ -57,7 +57,7 @@
 
             <page name="order_lines" position="after">
                 <page name="sale_field" string="Other Fields">
-                    <field name="fields_ids">
+                    <field name="fields_ids" readonly="state == 'cancel' or locked">
                         <tree editable="bottom" decoration-danger="type=='required'">
                             <field name="using_calculation_price" column_invisible="1"/>
                             <field name="sequence" widget="handle"/>
