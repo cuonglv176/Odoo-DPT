@@ -13,7 +13,7 @@ class SaleOrder(models.Model):
         for item in self:
             item.show_create_po = (any(item.sale_service_ids.mapped('service_id').mapped(
                 'is_purchase_service')) if item.sale_service_ids else False) and len(
-                item.order_line) != 0 and item.state == 'sale'
+                item.order_line) != 0 and item.state == 'sale' and item.product_order_count == 0
 
     def _compute_product_order_count(self):
         for item in self:
