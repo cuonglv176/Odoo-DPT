@@ -12,7 +12,8 @@ class SaleOrder(models.Model):
     def _compute_show_create_po(self):
         for item in self:
             item.show_create_po = (any(item.sale_service_ids.mapped('service_id').mapped(
-                'is_purchase_service')) if item.sale_service_ids else False) and len(item.order_line) != 0
+                'is_purchase_service')) if item.sale_service_ids else False) and len(
+                item.order_line) != 0 and item.state == 'sale'
 
     def _compute_product_order_count(self):
         for item in self:
@@ -21,18 +22,22 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         res = super().action_confirm()
         for order in self:
-            have_purchase_service = (any(order.sale_service_ids.mapped('service_id').mapped(
-                'is_purchase_service')) if order.sale_service_ids else False)
-            if not have_purchase_service:
-                continue
-            if have_purchase_service and not order.order_line:
-                raise ValidationError(_("Please add some Order line for creating PO!"))
-            order.action_create_purchase_order()
+            # order.validate_create_po()
+            # order.action_create_purchase_order()
             # delete stock_picking of SO:
             order.sudo().picking_ids.unlink()
         return res
 
+    def validate_create_po(self):
+        have_purchase_service = (any(self.sale_service_ids.mapped('service_id').mapped(
+            'is_purchase_service')) if self.sale_service_ids else False)
+        if not have_purchase_service:
+            return
+        if have_purchase_service and not self.order_line:
+            raise ValidationError(_("Please add some Order line for creating PO!"))
+
     def action_create_purchase_order(self):
+        self.validate_create_po()
         default_order_line = []
         for order_line in self.order_line:
             product_id = self.env['product.product'].search(

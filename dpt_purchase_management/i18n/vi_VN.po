@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-13 16:57+0000\n"
-"PO-Revision-Date: 2024-06-13 16:57+0000\n"
+"POT-Creation-Date: 2024-06-16 17:08+0000\n"
+"PO-Revision-Date: 2024-06-16 17:08+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -19,14 +19,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line__buying_url
 msgid "Buying URL"
 msgstr "Link sản phẩm"
-
-#. module: dpt_purchase_management
-#. odoo-python
-#: code:addons/dpt_purchase_management/models/sale_order.py:0
-#: model_terms:ir.ui.view,arch_db:dpt_purchase_management.view_sale_order_create_po_inherit_form
-#, python-format
-msgid "Create PO"
-msgstr "Tạo Đơn mua hàng"
 
 #. module: dpt_purchase_management
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__create_uid
@@ -61,6 +53,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package_detail__id
 msgid "ID"
 msgstr ""
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order__import_package_stock
+msgid "Import Package to Stock"
+msgstr ""
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_uom_uom__is_default_package_unit
+msgid "Is Default Package Unit"
+msgstr "Là quy cách đóng gói mặc định"
 
 #. module: dpt_purchase_management
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_uom_uom__is_package_unit
@@ -114,6 +116,13 @@ msgstr "Quy cách đóng gói"
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__detail_ids
 msgid "Package detail"
 msgstr "Chi tiết sản phẩm"
+
+#. module: dpt_purchase_management
+#. odoo-python
+#: code:addons/dpt_purchase_management/models/sale_order.py:0
+#, python-format
+msgid "Please add some Order line for creating PO!"
+msgstr "Vui lòng bổ sung Sản phẩm để tạo đơn Mua hàng!"
 
 #. module: dpt_purchase_management
 #. odoo-python
