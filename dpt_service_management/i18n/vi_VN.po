@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-09 15:10+0000\n"
-"PO-Revision-Date: 2024-06-09 15:10+0000\n"
+"POT-Creation-Date: 2024-06-18 16:50+0000\n"
+"PO-Revision-Date: 2024-06-18 16:50+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -85,6 +85,11 @@ msgid "Code"
 msgstr "Mã"
 
 #. module: dpt_service_management
+#: model:ir.model.constraint,message:dpt_service_management.constraint_dpt_service_management_code_uniq
+msgid "Code already exists!"
+msgstr "Mã đã tồn tại!"
+
+#. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__cost_account_id
 msgid "Cost Account"
 msgstr "Tài khoản chi phí"
@@ -152,6 +157,20 @@ msgstr "Lấy mặc định từ"
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__uom_id
 msgid "Default Unit"
 msgstr "Đơn vị mặc định"
+
+#. module: dpt_service_management
+#. odoo-python
+#: code:addons/dpt_service_management/models/service.py:0
+#, python-format
+msgid "Delete Required field: %s"
+msgstr "Xóa Trường bắt buộc: %s"
+
+#. module: dpt_service_management
+#. odoo-python
+#: code:addons/dpt_service_management/models/service.py:0
+#, python-format
+msgid "Delete Step: %s"
+msgstr "Xóa Bước: %s"
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__department_id
