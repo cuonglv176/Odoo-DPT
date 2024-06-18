@@ -67,23 +67,28 @@ class SaleOrder(models.Model):
         }
 
     def send_change_price_request(self):
-        category_id = self.env['approval.category'].search([('sequence_code', '=', 'BAOGIA')])
-        if not category_id:
-            raise ValidationError(_("Please config category approval change price (BAOGIA)"))
-        approval_id = self.env['approval.request'].create({
-            'request_owner_id': self.env.user.id,
-            'category_id': category_id.id,
-            'sale_id': self.id,
-            'date': datetime.now(),
-        })
-        for sale_service_id in self.sale_service_ids:
-            if sale_service_id.new_price != 0 and sale_service_id.new_price != sale_service_id.price:
-                sale_service_id.approval_id = approval_id
-        for line in self.order_line:
-            if line.new_price_unit != 0 and line.new_price_unit != line.price_unit:
-                line.approval_id = approval_id
+        for r in self.sale_service_ids:
+            category_id = self.env['approval.category'].search([('sequence_code', '=', 'BAOGIA')])
+            if not category_id:
+                raise ValidationError(_("Please config category approval change price (BAOGIA)"))
+            approval_id = self.env['approval.request'].create({
+                'request_owner_id': self.env.user.id,
+                'category_id': category_id.id,
+                'sale_id': self.id,
+                'date': datetime.now(),
+            })
+            for sale_service_id in self.sale_service_ids:
+                if sale_service_id.new_price != 0 and sale_service_id.new_price != sale_service_id.price:
+                    sale_service_id.approval_id = approval_id
+            for line in self.order_line:
+                if line.new_price_unit != 0 and line.new_price_unit != line.price_unit:
+                    line.approval_id = approval_id
+            list_approver = self.compute_approver_approval_price_list(r)
+            if list_approver:
+                approval_id.approver_ids = None
+                approval_id.approver_ids = list_approver
+            approval_id.action_confirm()
         view_id = self.env.ref('approvals.approval_request_view_form').id
-        approval_id.action_confirm()
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'approval.request',
@@ -92,6 +97,27 @@ class SaleOrder(models.Model):
             'res_id': approval_id.id,
             'views': [[view_id, 'form']],
         }
+
+    def compute_approver_approval_price_list(self, record):
+        list_approver = []
+        for r in record.service_id.approver_price_list_ids:
+            required = False
+            if not r.type_condition:
+                required = True
+            elif r.type_condition == 'price':
+                required = True
+            elif r.type_condition == 'price_list' and not record.service_id.pricelist_item_ids:
+                required = True
+            elif r.type_condition == 'other':
+                required = False
+            else:
+                required = False
+            list_approver.append((0, 0, {
+                'sequence': r.sequence,
+                'user_id': r.user_id.id,
+                'required': required
+            }))
+        return list_approver
 
 
 class SaleOrderLine(models.Model):

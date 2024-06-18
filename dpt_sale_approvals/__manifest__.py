@@ -14,6 +14,7 @@
         'views/sale_order.xml',
         'views/dpt_sale_change_price.xml',
         'views/approval_request.xml',
+        'views/dpt_service_management_views.xml',
     ],
     'installable': True,
     'application': True,

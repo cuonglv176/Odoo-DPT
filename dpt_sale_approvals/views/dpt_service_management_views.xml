@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_service_form_approval_pricelist_inherit" model="ir.ui.view">
+            <field name="name">view_service_form_approval_pricelist_inherit</field>
+            <field name="model">dpt.service.management</field>
+            <field name="inherit_id" ref="dpt_service_management.view_service_form"/>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Approver" name="approver">
+                        <field name="approver_price_list_ids" nolabel="1">
+                            <tree editable="bottom" create="1">
+                                <field name="service_id" column_invisible="1"/>
+                                <field name="sequence" widget="handle"/>
+                                <field name="user_id"/>
+                                <field name="type_condition"/>
+                                <field name="domain" widget="domain" options="{'model': 'dpt.service.management'}"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+    </data>
+</odoo>
