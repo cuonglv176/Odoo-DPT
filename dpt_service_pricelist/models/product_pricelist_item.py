@@ -1,6 +1,4 @@
-import json
-
-from odoo import fields, models, api
+from odoo import fields, models, api, _
 
 
 class MailMessage(models.Model):
@@ -9,7 +7,7 @@ class MailMessage(models.Model):
     @api.model
     def create(self, vals_list):
         res = super(MailMessage, self).create(vals_list)
-        if res.model == 'product.pricelist.item':
+        if res.model in ('product.pricelist.item'):
             obj_data = self.env[res.model].browse(res.res_id)
             res.res_id = obj_data.service_id.id
             res.model = 'dpt.service.management'
@@ -38,9 +36,15 @@ class ProductPricelistItem(models.Model):
             ('table', "Table"),
         ],
         index=True, default='fixed', required=True, tracking=True, copy=True)
-    pricelist_table_detail_ids = fields.One2many('product.pricelist.item.detail', 'item_id', string='Pricelist Table', tracking=True)
+    pricelist_table_detail_ids = fields.One2many('product.pricelist.item.detail', 'item_id', string='Pricelist Table',
+                                                 tracking=True)
     is_price = fields.Boolean('Is Price', tracking=True, copy=True)
     is_accumulated = fields.Boolean('Is Accumulated', tracking=True, copy=True)
+
+    # re-define for tracking
+    date_start = fields.Datetime(tracking=True)
+    date_end = fields.Datetime(tracking=True)
+    currency_id = fields.Many2one(tracking=True)
 
     @api.onchange('service_id')
     def onchange_service(self):
@@ -78,3 +82,16 @@ class ProductPricelistItem(models.Model):
                     })
                 vals['pricelist_id'] = pricelist_id.id
         return super().create(vals)
+
+    def unlink(self):
+        # log to front end of deleted bookings
+        mapping_delete = {}
+        for item in self:
+            if mapping_delete.get(item.service_id):
+                mapping_delete[item.service_id] = mapping_delete[f'{item.service_id.id}'] | item
+            else:
+                mapping_delete[item.service_id] = item
+        for service_id, pricelist_item_ids in mapping_delete.items():
+            service_id.message_post(
+                body=_("Delete Pricelist: %s") % ','.join(pricelist_item_ids.mapped('uom_id').mapped('name')))
+        return super(ProductPricelistItem, self).unlink()
