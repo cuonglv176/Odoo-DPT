@@ -12,9 +12,9 @@ class DptApprovalSalePrice(models.Model):
     type_condition = fields.Selection([('price', 'Price'),
                                        ('price_list', 'Price List'),
                                        ('other', 'Other')], string='Type', default='other')
-    domain = fields.Text(default=[])
-
-    @api.onchange('type_condition')
-    def _onchange_type_condition(self):
-        if not self.type_condition or self.type_condition == 'other':
-            self.domain = False
+    type_compare = fields.Selection([('higher', 'Higher'),
+                                     ('equal', 'Equal'),
+                                     ('lower', 'Lower')], string='Type Compare', default='equal')
+    type_value = fields.Selection([('numberic', 'Numberic'),
+                                   ('rate', 'Rate %')], string='Type Value')
+    value_compare = fields.Float(string='Value Compare')
