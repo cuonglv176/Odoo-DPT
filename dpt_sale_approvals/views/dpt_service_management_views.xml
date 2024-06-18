@@ -15,7 +15,9 @@
                                 <field name="sequence" widget="handle"/>
                                 <field name="user_id"/>
                                 <field name="type_condition"/>
-                                <field name="domain" widget="domain" options="{'model': 'dpt.service.management'}"/>
+                                <field name="type_compare"/>
+                                <field name="type_value"/>
+                                <field name="value_compare"/>
                             </tree>
                         </field>
                     </page>
