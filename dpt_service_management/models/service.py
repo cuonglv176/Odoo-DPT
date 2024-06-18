@@ -87,6 +87,19 @@ class DPTServiceSteps(models.Model):
     is_create_ticket = fields.Boolean('Create Ticket', tracking=True)
     service_id = fields.Many2one('dpt.service.management', string='Service', ondelete='cascade', tracking=True)
 
+    def unlink(self):
+        # log to front end of deleted bookings
+        mapping_delete = {}
+        for item in self:
+            if mapping_delete.get(item.service_id):
+                mapping_delete[item.service_id] = mapping_delete.get(item.service_id) | item
+            else:
+                mapping_delete[item.service_id] = item
+        for service_id, step_ids in mapping_delete.items():
+            service_id.message_post(
+                body=_("Delete Step: %s") % ','.join(step_ids.mapped('uom_id').mapped('description')))
+        return super(DPTServiceSteps, self).unlink()
+
 
 class RequiredField(models.Model):
     _name = 'dpt.service.management.required.fields'
@@ -133,6 +146,19 @@ class RequiredField(models.Model):
                 'value_integer': so.volume
             }
         return {}
+
+    def unlink(self):
+        # log to front end of deleted bookings
+        mapping_delete = {}
+        for item in self:
+            if mapping_delete.get(item.service_id):
+                mapping_delete[item.service_id] = mapping_delete.get(item.service_id) | item
+            else:
+                mapping_delete[item.service_id] = item
+        for service_id, required_field_ids in mapping_delete.items():
+            service_id.message_post(
+                body=_("Delete Required field: %s") % ','.join(required_field_ids.mapped('uom_id').mapped('name')))
+        return super(RequiredField, self).unlink()
 
 
 class SaleOrderFieldSelection(models.Model):
