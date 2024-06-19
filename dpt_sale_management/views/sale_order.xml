@@ -7,12 +7,13 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <button name="action_quotation_send" position="before">
-                <button string="Send Quotation Department" name="send_quotation_department" type="object"
-                        invisible="state != 'draft'"/>
-                <field name="show_action_calculation" invisible="1"/>
                 <button string="Calculation" name="action_calculation" type="object"
                         style="background-color: purple, color: white"
                         invisible="not show_action_calculation"/>
+                <button string="Send Quotation Department" name="send_quotation_department" type="object"
+                        invisible="state != 'draft'"/>
+                <field name="show_action_calculation" invisible="1"/>
+
             </button>
             <button name="action_quotation_send" position="attributes">
                 <attribute name="invisible">1</attribute>
@@ -33,7 +34,7 @@
                             <field name="currency_id" column_invisible="1" force_save="1"/>
                             <field name="service_id"/>
                             <field name="uom_id"/>
-<!--                            <field name="description"/>-->
+                            <!--                            <field name="description"/>-->
                             <field name="compute_value" readonly="1" force_save="1"/>
                             <field name="compute_uom_id" readonly="1" force_save="1"/>
                             <field name="qty" column_invisible="1" force_save="1"/>
@@ -46,8 +47,8 @@
                     </field>
                     <group col="6" class="mt-2 mt-md-0">
                         <group class="oe_subtotal_footer" colspan="2">
-<!--                            <field name="service_total_untax_amount" colspan="2" readonly="1"/>-->
-<!--                            <field name="service_tax_amount" colspan="2" readonly="1"/>-->
+                            <!--                            <field name="service_total_untax_amount" colspan="2" readonly="1"/>-->
+                            <!--                            <field name="service_tax_amount" colspan="2" readonly="1"/>-->
                             <field name="service_total_amount" colspan="2" readonly="1"/>
                         </group>
                         <div class="clearfix"/>
@@ -100,13 +101,15 @@
                 <label for="weight"/>
                 <div>
                     <field name="weight" class="oe_inline" readonly="state != 'draft'"/>
-                    <span> kg</span>
+                    <span>kg</span>
                 </div>
 
                 <label for="volume"/>
                 <div>
                     <field name="volume" class="oe_inline" readonly="state != 'draft'"/>
-                    <span> m<sup>3</sup></span>
+                    <span>m
+                        <sup>3</sup>
+                    </span>
                 </div>
             </field>
         </field>
