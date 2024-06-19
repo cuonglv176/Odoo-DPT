@@ -19,7 +19,11 @@ class DPTSaleTemplateService(models.Model):
     amount_total = fields.Monetary(currency_field='currency_id', string="Amount Total", compute="_compute_amount_total")
     sequence = fields.Integer()
     pricelist_item_id = fields.Many2one('product.pricelist.item', 'Pricelist Item')
+    name = fields.Char(string='Name', compute="_get_name")
 
+    def _get_name(self):
+        for rec in self:
+            rec.name = rec.service_id.name
 
     def _prepare_order_service_values(self):
         """ Give the values to create the corresponding order line.
@@ -57,7 +61,7 @@ class SaleOrderTemplate(models.Model):
     _name = 'sale.order.template'
     _inherit = ['sale.order.template', 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
 
-    sale_service_ids = fields.One2many('dpt.sale.template.service', 'sale_id', string='Service')
+    sale_service_ids = fields.One2many('dpt.sale.template.service', 'sale_id', string='Service', tracking=True)
     active = fields.Boolean(
         default=True, tracking=True,
         help="If unchecked, it will allow you to hide the quotation template without removing it.")
@@ -99,14 +103,14 @@ class SaleOrderTemplate(models.Model):
 
     # Duration, user duration property for access to the timedelta
     is_unlimited = fields.Boolean('Last Forever', tracking=True, default=True)  # old recurring_rule_boundary
-    duration_value = fields.Integer(string="End After", default=1, tracking=True, required=True)  # old recurring_rule_count
+    duration_value = fields.Integer(string="End After", default=1, tracking=True,
+                                    required=True)  # old recurring_rule_count
     duration_unit = fields.Selection([('month', 'Months'), ('year', 'Years')], help="Contract duration",
                                      default='month', tracking=True, required=True)  # old duration_unit
 
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
-
 
     @api.onchange('sale_order_template_id')
     def _onchange_sale_order_service_template_id(self):
