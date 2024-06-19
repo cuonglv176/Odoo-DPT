@@ -296,7 +296,7 @@ class SaleOrderField(models.Model):
     fields_id = fields.Many2one('dpt.service.management.required.fields', string='Fields')
     value_char = fields.Char(string='Value Char')
     value_integer = fields.Float(string='Value Integer')
-    value_date = fields.Integer(string='Value Date')
+    value_date = fields.Date(string='Value Date')
     selection_value_id = fields.Many2one('dpt.sale.order.fields.selection', string='Selection Value')
     type = fields.Selection(selection=[
         ("required", "Required"),

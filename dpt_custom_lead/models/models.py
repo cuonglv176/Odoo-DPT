@@ -51,6 +51,12 @@ class CRMLEAD(models.Model):
         string='Customer type', default='new', compute="auto_update_type_customer")
     date_buy = fields.Datetime(string='Last date buy', compute="_get_date_order")
 
+    @api.depends('partner_id')
+    def _compute_name(self):
+        for lead in self:
+            if not lead.name and lead.partner_id and lead.partner_id.name:
+                lead.name = _("%s") % lead.partner_id.name
+
     @api.depends('order_ids')
     def _get_date_order(self):
         for s in self:
