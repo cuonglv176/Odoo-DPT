@@ -8,6 +8,10 @@ class PurchaseOrder(models.Model):
     sale_id = fields.Many2one('sale.order', 'Sale')
     package_line_ids = fields.One2many('purchase.order.line.package', 'purchase_id', 'Package Line')
     import_package_stock = fields.Boolean('Import Package to Stock')
+    purchase_type = fields.Selection([
+        ('internal', 'Internal'),
+        ('external', 'External')
+    ], string='Purchase type', default='external', tracking=True)
 
     @api.model
     def create(self, vals):
