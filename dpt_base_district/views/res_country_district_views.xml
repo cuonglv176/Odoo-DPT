@@ -1,0 +1,55 @@
+<odoo>
+	<record id="res_country_district_view_tree" model="ir.ui.view">
+		<field name="name">res.country.district.tree</field>
+		<field name="model">res.country.district</field>
+		<field name="arch" type="xml">
+			<tree string="District Tree">
+				<field name="code" />
+				<field name="name" />
+				<field name="state_id" />
+				<field name="country_id" optional="hide" />
+			</tree>
+		</field>
+	</record>
+
+	<record id="res_country_district_view_form" model="ir.ui.view">
+		<field name="name">res.country.district.form</field>
+		<field name="model">res.country.district</field>
+		<field name="arch" type="xml">
+			<form string="District Form">
+				<group>
+					<group>
+						<field name="name" />
+						<field name="state_id" />
+					</group>
+					<group>
+						<field name="code" />
+						<field name="country_id" />
+					</group>
+				</group>
+			</form>
+		</field>
+	</record>
+
+	<record id="res_country_district_view_search" model="ir.ui.view">
+		<field name="name">res.country.district.search</field>
+		<field name="model">res.country.district</field>
+		<field name="arch" type="xml">
+			<search string="District Search">
+				<field name="name" />
+				<field name="code" />
+				<field name="state_id" />
+				<group expand="0" string="Group By">
+					<filter string="State" name="grp_state_id" context="{'group_by': 'state_id'}" />
+					<filter string="Country" name="grp_country" context="{'group_by': 'country_id'}" />
+				</group>
+			</search>
+		</field>
+	</record>
+
+	<record id="res_country_district_action" model="ir.actions.act_window">
+		<field name="name">Districts</field>
+		<field name="res_model">res.country.district</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+</odoo>
