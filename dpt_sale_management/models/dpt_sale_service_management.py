@@ -26,6 +26,8 @@ class DPTSaleServiceManagement(models.Model):
         old_price = self.price
         res = super(DPTSaleServiceManagement, self).write(vals)
         new_price = self.price
+        if self.env.context.get('final_approved', False):
+            return res
         if old_price > new_price:
             raise UserError(_("Cannot lower price, only increase price."))
         return res

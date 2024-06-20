@@ -16,6 +16,7 @@ class ApprovalRequest(models.Model):
         approver = self.approver_ids.filtered(lambda sp: sp.status == 'approved')
         # if not approver or len(approver) == 1:
         if self.request_status == 'approved':
+            self = self.with_context({'final_approved': True})
             for sale_service_id in self.sale_service_ids:
                 sale_service_id.price = sale_service_id.new_price
             for order_line_id in self.order_line_ids:
