@@ -11,7 +11,7 @@ class MailMessage(models.Model):
     @api.model
     def create(self, vals_list):
         res = super(MailMessage, self).create(vals_list)
-        if res.model in ('dpt.service.management.steps', 'dpt.service.management.required.fields'):
+        if res.model and res.model in ('dpt.service.management.steps', 'dpt.service.management.required.fields'):
             obj_data = self.env[res.model].browse(res.res_id)
             res.res_id = obj_data.service_id.id
             res.model = 'dpt.service.management'
