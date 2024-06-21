@@ -36,6 +36,7 @@
                                 <field name="is_downpayment" column_invisible="True"/>
                                 <field name="product_id" readonly="1" widget="sol_product_many2one"/>
                                 <field name="name" widget="section_and_note_text" optional="show" readonly="1"/>
+                                <field name="department_id"/>
                                 <field name="product_uom_qty" readonly="1"/>
                                 <field name="price_unit" readonly="1"/>
                                 <field name="new_price_unit"/>
