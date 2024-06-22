@@ -1,13 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* viin_base_district
+# 	* dpt_base_district
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.0\n"
+"Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:23+0000\n"
-"PO-Revision-Date: 2021-09-14 10:23+0000\n"
+"POT-Creation-Date: 2024-06-22 17:14+0000\n"
+"PO-Revision-Date: 2024-06-22 17:14+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,3583 +16,3610 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: dpt_base_district
-#: model:ir.model.fields,field_description:viin_base_district.field_res_country_district__code
+#: model:ir.model.fields,field_description:dpt_base_district.field_res_country_district__code
+#: model:ir.model.fields,field_description:dpt_base_district.field_res_country_wards__code
 msgid "Code"
 msgstr "Mã"
 
-#. module: viin_base_district
-#: model:ir.model,name:viin_base_district.model_res_partner
+#. module: dpt_base_district
+#: model:ir.model,name:dpt_base_district.model_res_partner
 msgid "Contact"
-msgstr "Danh bạ"
+msgstr "Khách hàng"
 
-#. module: viin_base_district
-#: model:ir.model.fields,field_description:viin_base_district.field_res_country_district__country_id
-#: model_terms:ir.ui.view,arch_db:viin_base_district.res_country_district_view_search
+#. module: dpt_base_district
+#: model:ir.model.fields,field_description:dpt_base_district.field_res_country_district__country_id
+#: model:ir.model.fields,field_description:dpt_base_district.field_res_country_wards__country_id
+#: model:ir.model.fields,field_description:dpt_base_district.field_res_partner__country_id
+#: model:ir.model.fields,field_description:dpt_base_district.field_res_users__country_id
+#: model_terms:ir.ui.view,arch_db:dpt_base_district.res_country_district_view_search
 msgid "Country"
 msgstr "Quốc gia"
 
-#. module: viin_base_district
-#: model:ir.model.fields,field_description:viin_base_district.field_res_country_district__create_uid
+#. module: dpt_base_district
+#: model:ir.model.fields,field_description:dpt_base_district.field_res_country_district__create_uid
+#: model:ir.model.fields,field_description:dpt_base_district.field_res_country_wards__create_uid
 msgid "Created by"
-msgstr "Được tạo bởi"
+msgstr ""
 
-#. module: viin_base_district
-#: model:ir.model.fields,field_description:viin_base_district.field_res_country_district__create_date
+#. module: dpt_base_district
+#: model:ir.model.fields,field_description:dpt_base_district.field_res_country_district__create_date
+#: model:ir.model.fields,field_description:dpt_base_district.field_res_country_wards__create_date
 msgid "Created on"
-msgstr "Được tạo vào"
+msgstr ""
 
-#. module: viin_base_district
-#: model:ir.model.fields,field_description:viin_base_district.field_res_country_district__display_name
+#. module: dpt_base_district
+#: model:ir.model.fields,field_description:dpt_base_district.field_res_country_district__display_name
+#: model:ir.model.fields,field_description:dpt_base_district.field_res_country_wards__display_name
 msgid "Display Name"
-msgstr "Tên hiển thị"
+msgstr ""
 
-#. module: viin_base_district
-#: model:ir.model,name:viin_base_district.model_res_country_district
-#: model:ir.model.fields,field_description:viin_base_district.field_res_partner__district_id
-#: model:ir.model.fields,field_description:viin_base_district.field_res_users__district_id
-#: model_terms:ir.ui.view,arch_db:viin_base_district.view_partner_form
+#. module: dpt_base_district
+#: model:ir.model,name:dpt_base_district.model_res_country_district
+#: model:ir.model.fields,field_description:dpt_base_district.field_res_country_wards__district_id
+#: model:ir.model.fields,field_description:dpt_base_district.field_res_partner__district_id
+#: model:ir.model.fields,field_description:dpt_base_district.field_res_users__district_id
+#: model_terms:ir.ui.view,arch_db:dpt_base_district.view_partner_form
 msgid "District"
-msgstr "Quận / Huyện"
+msgstr "Quận/Huyện"
 
-#. module: viin_base_district
-#: model_terms:ir.ui.view,arch_db:viin_base_district.res_country_district_view_form
+#. module: dpt_base_district
+#: model:ir.model.fields,field_description:dpt_base_district.field_res_country_wards__district_code
+msgid "District Code"
+msgstr "Mã Quận/Huyện"
+
+#. module: dpt_base_district
+#: model_terms:ir.ui.view,arch_db:dpt_base_district.res_country_district_view_form
 msgid "District Form"
-msgstr "Mẫu quận/huyện"
+msgstr ""
 
-#. module: viin_base_district
-#: model_terms:ir.ui.view,arch_db:viin_base_district.res_country_district_view_search
+#. module: dpt_base_district
+#: model_terms:ir.ui.view,arch_db:dpt_base_district.res_country_district_view_search
 msgid "District Search"
-msgstr "Tìm kiếm quận/huyện"
+msgstr ""
 
-#. module: viin_base_district
-#: model_terms:ir.ui.view,arch_db:viin_base_district.res_country_district_view_tree
+#. module: dpt_base_district
+#: model_terms:ir.ui.view,arch_db:dpt_base_district.res_country_district_view_tree
 msgid "District Tree"
-msgstr "Danh sách quận/huyện"
+msgstr ""
 
-#. module: viin_base_district
-#: model:ir.actions.act_window,name:viin_base_district.res_country_district_action
+#. module: dpt_base_district
+#: model:ir.actions.act_window,name:dpt_base_district.res_country_district_action
 msgid "Districts"
-msgstr "Quận / Huyện"
+msgstr "Quận/Huyện"
 
-#. module: viin_base_district
-#: model_terms:ir.ui.view,arch_db:viin_base_district.res_country_district_view_search
+#. module: dpt_base_district
+#: model_terms:ir.ui.view,arch_db:dpt_base_district.res_country_district_view_search
 msgid "Group By"
-msgstr "Nhóm theo"
+msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVL-859
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVL-859
 msgid "Huyện  Vũng Liêm"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HAL-481
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HAL-481
 msgid "Huyện A Lưới"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HAB-908
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HAB-908
 msgid "Huyện An Biên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HAD-312
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HAD-312
 msgid "Huyện An Dương"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HAL-313
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HAL-542
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HAL-313
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HAL-542
 msgid "Huyện An Lão"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HAM-909
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HAM-909
 msgid "Huyện An Minh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HAP-886
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HAP-886
 msgid "Huyện An Phú"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HAS-424
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HAS-424
 msgid "Huyện Anh Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBB-061
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBB-061
 msgid "Huyện Ba Bể"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBC-202
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBC-202
 msgid "Huyện Ba Chẽ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBT-836
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBT-836
 msgid "Huyện Ba Tri"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBT-535
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBT-535
 msgid "Huyện Ba Tơ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBV-271
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBV-271
 msgid "Huyện Ba Vì"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBD-647
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBD-647
 msgid "Huyện Buôn Đôn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBB-719
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBB-719
 msgid "Huyện Bàu Bàng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBT-386
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBT-386
 msgid "Huyện Bá Thước"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBÁ-584
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBÁ-584
 msgid "Huyện Bác Ái"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBX-082
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBX-082
 msgid "Huyện Bát Xát"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBC-785
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBC-785
 msgid "Huyện Bình Chánh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBG-181
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBG-181
 msgid "Huyện Bình Gia"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBG-296
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBG-296
 msgid "Huyện Bình Giang"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBL-198
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBL-198
 msgid "Huyện Bình Liêu"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBL-352
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBL-352
 msgid "Huyện Bình Lục"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBS-524
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBS-524
 msgid "Huyện Bình Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBT-863
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBT-863
 msgid "Huyện Bình Tân"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBX-249
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBX-249
 msgid "Huyện Bình Xuyên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBD-835
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBD-835
 msgid "Huyện Bình Đại"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBGM-691
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBGM-691
 msgid "Huyện Bù Gia Mập"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBD-696
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBD-696
 msgid "Huyện Bù Đăng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBD-693
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBD-693
 msgid "Huyện Bù Đốp"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBLV-318
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBLV-318
 msgid "Huyện Bạch Long Vĩ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBT-063
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBT-063
 msgid "Huyện Bạch Thông"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBL-042
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBL-680
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBL-042
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBL-680
 msgid "Huyện Bảo Lâm"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBL-043
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBL-043
 msgid "Huyện Bảo Lạc"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBT-086
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBT-086
 msgid "Huyện Bảo Thắng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBY-087
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBY-087
 msgid "Huyện Bảo Yên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBB-596
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBB-596
 msgid "Huyện Bắc Bình"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBH-085
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBH-085
 msgid "Huyện Bắc Hà"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBM-031
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBM-031
 msgid "Huyện Bắc Mê"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBQ-034
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBQ-034
 msgid "Huyện Bắc Quang"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBS-185
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBS-185
 msgid "Huyện Bắc Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBTM-515
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBTM-515
 msgid "Huyện Bắc Trà My"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBTU-726
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBTU-726
 msgid "Huyện Bắc Tân Uyên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBY-121
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBY-121
 msgid "Huyện Bắc Yên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBC-711
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBC-711
 msgid "Huyện Bến Cầu"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBL-803
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBL-803
 msgid "Huyện Bến Lức"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HBT-455
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HBT-455
 msgid "Huyện Bố Trạch"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCL-820
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCL-820
 msgid "Huyện Cai Lậy"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCL-570
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCL-570
 msgid "Huyện Cam Lâm"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCL-468
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCL-468
 msgid "Huyện Cam Lộ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCL-443
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCL-443
 msgid "Huyện Can Lộc"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCL-873
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCL-873
 msgid "Huyện Cao Lãnh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCL-183
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCL-183
 msgid "Huyện Cao Lộc"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCP-154
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCP-154
 msgid "Huyện Cao Phong"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCL-187
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCL-187
 msgid "Huyện Chi Lăng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCH-073
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCH-073
 msgid "Huyện Chiêm Hóa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCP-889
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCP-889
 msgid "Huyện Châu Phú"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCT-708
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCT-808
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCT-821
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCT-831
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCT-847
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCT-877
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCT-892
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCT-905
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCT-933
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCT-942
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCT-708
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCT-808
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCT-821
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCT-831
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCT-847
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCT-877
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCT-892
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCT-905
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCT-933
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCT-942
 msgid "Huyện Châu Thành"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCTA-932
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCTA-932
 msgid "Huyện Châu Thành A"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCD-750
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCD-750
 msgid "Huyện Châu Đức"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCT-697
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCT-697
 msgid "Huyện Chơn Thành"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCP-632
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCP-632
 msgid "Huyện Chư Prông"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCP-627
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCP-627
 msgid "Huyện Chư Păh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCP-639
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCP-639
 msgid "Huyện Chư Pưh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCS-633
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCS-633
 msgid "Huyện Chư Sê"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCM-277
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCM-277
 msgid "Huyện Chương Mỹ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCG-822
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCG-822
 msgid "Huyện Chợ Gạo"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCL-832
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCL-832
 msgid "Huyện Chợ Lách"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCM-065
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCM-893
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCM-065
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCM-893
 msgid "Huyện Chợ Mới"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCD-064
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCD-064
 msgid "Huyện Chợ Đồn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCC-422
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCC-422
 msgid "Huyện Con Cuông"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCL-844
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCL-844
 msgid "Huyện Càng Long"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCB-819
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCB-819
 msgid "Huyện Cái Bè"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCN-969
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCN-969
 msgid "Huyện Cái Nước"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCH-317
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCH-317
 msgid "Huyện Cát Hải"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCT-683
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCT-683
 msgid "Huyện Cát Tiên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCT-207
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCT-207
 msgid "Huyện Cô Tô"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCD-755
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCD-755
 msgid "Huyện Côn Đảo"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCLD-945
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCLD-945
 msgid "Huyện Cù Lao Dung"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCJ-662
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCJ-662
 msgid "Huyện Cư Jút"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCK-657
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCK-657
 msgid "Huyện Cư Kuin"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCM-648
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCM-648
 msgid "Huyện Cư M'gar"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCG-807
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCG-807
 msgid "Huyện Cần Giuộc"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCG-787
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCG-787
 msgid "Huyện Cần Giờ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCD-806
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCD-806
 msgid "Huyện Cần Đước"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCK-845
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCK-845
 msgid "Huyện Cầu Kè"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCN-848
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCN-848
 msgid "Huyện Cầu Ngang"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCG-295
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCG-295
 msgid "Huyện Cẩm Giàng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCK-235
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCK-235
 msgid "Huyện Cẩm Khê"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCM-739
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCM-739
 msgid "Huyện Cẩm Mỹ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCT-390
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCT-390
 msgid "Huyện Cẩm Thủy"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCX-446
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCX-446
 msgid "Huyện Cẩm Xuyên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCC-471
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCC-471
 msgid "Huyện Cồn Cỏ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCD-925
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCD-925
 msgid "Huyện Cờ Đỏ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HCC-783
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HCC-783
 msgid "Huyện Củ Chi"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDL-679
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDL-679
 msgid "Huyện Di Linh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDK-574
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDK-574
 msgid "Huyện Diên Khánh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDC-425
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDC-425
 msgid "Huyện Diễn Châu"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDX-508
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDX-508
 msgid "Huyện Duy Xuyên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDH-850
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDH-850
 msgid "Huyện Duyên Hải"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDMC-707
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDMC-707
 msgid "Huyện Dương Minh Châu"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDT-720
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDT-720
 msgid "Huyện Dầu Tiếng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HEH-645
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HEH-645
 msgid "Huyện Ea H'leo"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HEK-651
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HEK-651
 msgid "Huyện Ea Kar"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HES-646
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HES-646
 msgid "Huyện Ea Súp"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HGB-263
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HGB-263
 msgid "Huyện Gia Bình"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HGL-018
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HGL-018
 msgid "Huyện Gia Lâm"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HGL-297
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HGL-297
 msgid "Huyện Gia Lộc"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HGV-373
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HGV-373
 msgid "Huyện Gia Viễn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HGT-914
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HGT-914
 msgid "Huyện Giang Thành"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HGT-365
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HGT-365
 msgid "Huyện Giao Thủy"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HGL-466
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HGL-466
 msgid "Huyện Gio Linh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HGR-906
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HGR-906
 msgid "Huyện Giồng Riềng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HGT-834
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HGT-834
 msgid "Huyện Giồng Trôm"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HGCT-823
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HGCT-823
 msgid "Huyện Gò Công Tây"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HGCD-824
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HGCD-824
 msgid "Huyện Gò Công Đông"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HGD-710
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HGD-710
 msgid "Huyện Gò Dầu"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HGQ-907
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HGQ-907
 msgid "Huyện Gò Quao"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHH-223
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHH-223
 msgid "Huyện Hiệp Hòa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHD-512
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHD-512
 msgid "Huyện Hiệp Đức"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHL-374
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHL-374
 msgid "Huyện Hoa Lư"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHA-050
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHA-050
 msgid "Huyện Hoà An"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHB-961
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHB-961
 msgid "Huyện Hoà Bình"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHA-544
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHA-544
 msgid "Huyện Hoài Ân"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHD-274
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHD-274
 msgid "Huyện Hoài Đức"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHS-498
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHS-498
 msgid "Huyện Hoàng Sa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHSP-032
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHSP-032
 msgid "Huyện Hoàng Su Phì"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHH-399
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHH-399
 msgid "Huyện Hoằng Hóa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHQ-045
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHQ-045
 msgid "Huyện Hà Quảng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHT-392
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHT-392
 msgid "Huyện Hà Trung"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHTB-597
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHTB-597
 msgid "Huyện Hàm Thuận Bắc"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHTN-598
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHTN-598
 msgid "Huyện Hàm Thuận Nam"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHT-601
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHT-601
 msgid "Huyện Hàm Tân"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHY-074
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHY-074
 msgid "Huyện Hàm Yên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHV-497
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHV-497
 msgid "Huyện Hòa Vang"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHD-903
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHD-903
 msgid "Huyện Hòn Đất"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHM-784
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHM-784
 msgid "Huyện Hóc Môn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHH-339
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHH-339
 msgid "Huyện Hưng Hà"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHN-431
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHN-431
 msgid "Huyện Hưng Nguyên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHK-444
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHK-444
 msgid "Huyện Hương Khê"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHS-439
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHS-439
 msgid "Huyện Hương Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHH-465
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHH-465
 msgid "Huyện Hướng Hóa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHH-231
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHH-231
 msgid "Huyện Hạ Hoà"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHL-048
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHL-048
 msgid "Huyện Hạ Lang"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHH-201
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHH-201
 msgid "Huyện Hải Hà"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHH-366
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHH-366
 msgid "Huyện Hải Hậu"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHL-470
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHL-470
 msgid "Huyện Hải Lăng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHL-400
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHL-400
 msgid "Huyện Hậu Lộc"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHD-956
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHD-956
 msgid "Huyện Hồng Dân"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHN-870
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHN-870
 msgid "Huyện Hồng Ngự"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHQ-694
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHQ-694
 msgid "Huyện Hớn Quản"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HHL-186
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HHL-186
 msgid "Huyện Hữu Lũng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HIG-628
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HIG-628
 msgid "Huyện Ia Grai"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HIHD-618
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HIHD-618
 msgid "Huyện Ia H' Drai"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HIP-635
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HIP-635
 msgid "Huyện Ia Pa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HK-625
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HK-625
 msgid "Huyện KBang"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HKC-330
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HKC-330
 msgid "Huyện Khoái Châu"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HKS-575
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HKS-575
 msgid "Huyện Khánh Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HKV-573
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HKV-573
 msgid "Huyện Khánh Vĩnh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HKB-153
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HKB-153
 msgid "Huyện Kim Bôi"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HKB-350
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HKB-350
 msgid "Huyện Kim Bảng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HKS-376
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HKS-376
 msgid "Huyện Kim Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HKT-293
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HKT-293
 msgid "Huyện Kim Thành"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HKD-331
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HKD-331
 msgid "Huyện Kim Động"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HKH-912
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HKH-912
 msgid "Huyện Kiên Hải"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HKL-902
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HKL-902
 msgid "Huyện Kiên Lương"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HKT-314
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HKT-314
 msgid "Huyện Kiến Thuỵ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HKX-343
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HKX-343
 msgid "Huyện Kiến Xương"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HKP-613
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HKP-613
 msgid "Huyện Kon Plông"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HKR-614
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HKR-614
 msgid "Huyện Kon Rẫy"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HKAN-655
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HKAN-655
 msgid "Huyện Krông A Na"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HKB-653
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HKB-653
 msgid "Huyện Krông Bông"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HKB-649
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HKB-649
 msgid "Huyện Krông Búk"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HKN-664
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HKN-664
 msgid "Huyện Krông Nô"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HKN-650
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HKN-650
 msgid "Huyện Krông Năng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HKP-637
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HKP-637
 msgid "Huyện Krông Pa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HKP-654
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HKP-654
 msgid "Huyện Krông Pắc"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HKC-630
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HKC-630
 msgid "Huyện Kông Chro"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HKS-943
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HKS-943
 msgid "Huyện Kế Sách"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HKA-447
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HKA-447
 msgid "Huyện Kỳ Anh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HKS-417
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HKS-417
 msgid "Huyện Kỳ Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HLV-876
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HLV-876
 msgid "Huyện Lai Vung"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HLC-388
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HLC-388
 msgid "Huyện Lang Chánh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HLH-857
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HLH-857
 msgid "Huyện Long Hồ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HLM-936
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HLM-936
 msgid "Huyện Long Mỹ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HLP-946
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HLP-946
 msgid "Huyện Long Phú"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HLT-740
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HLT-740
 msgid "Huyện Long Thành"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HLD-752
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HLD-752
 msgid "Huyện Long Điền"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HLB-071
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HLB-071
 msgid "Huyện Lâm Bình"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HLH-676
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HLH-676
 msgid "Huyện Lâm Hà"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HLT-237
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HLT-237
 msgid "Huyện Lâm Thao"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HLN-353
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HLN-353
 msgid "Huyện Lý Nhân"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HLS-536
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HLS-536
 msgid "Huyện Lý Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HLS-152
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HLS-152
 msgid "Huyện Lương Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HLT-264
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HLT-264
 msgid "Huyện Lương Tài"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HLD-675
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HLD-675
 msgid "Huyện Lạc Dương"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HLS-157
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HLS-157
 msgid "Huyện Lạc Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HLT-159
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HLT-159
 msgid "Huyện Lạc Thủy"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HLG-217
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HLG-217
 msgid "Huyện Lạng Giang"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HLV-875
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HLV-875
 msgid "Huyện Lấp Vò"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HLT-246
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HLT-246
 msgid "Huyện Lập Thạch"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HL-656
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HL-656
 msgid "Huyện Lắk"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HLT-457
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HLT-457
 msgid "Huyện Lệ Thủy"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HLB-188
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HLB-188
 msgid "Huyện Lộc Bình"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HLH-448
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HLH-448
 msgid "Huyện Lộc Hà"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HLN-692
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HLN-692
 msgid "Huyện Lộc Ninh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HLN-218
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HLN-218
 msgid "Huyện Lục Nam"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HLN-219
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HLN-219
 msgid "Huyện Lục Ngạn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HLY-135
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HLY-135
 msgid "Huyện Lục Yên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HM-652
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HM-652
 msgid "Huyện M'Đrắk"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HMC-156
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HMC-156
 msgid "Huyện Mai Châu"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HMS-125
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HMS-125
 msgid "Huyện Mai Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HMT-858
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HMT-858
 msgid "Huyện Mang Thít"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HMY-629
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HMY-629
 msgid "Huyện Mang Yang"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HMH-452
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HMH-452
 msgid "Huyện Minh Hóa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HML-531
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HML-531
 msgid "Huyện Minh Long"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HMV-027
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HMV-027
 msgid "Huyện Mèo Vạc"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HML-250
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HML-250
 msgid "Huyện Mê Linh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HMCC-137
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HMCC-137
 msgid "Huyện Mù Căng Chải"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HMC-097
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HMC-097
 msgid "Huyện Mường Chà"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HMK-083
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HMK-083
 msgid "Huyện Mường Khương"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HML-120
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HML-120
 msgid "Huyện Mường La"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HML-384
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HML-384
 msgid "Huyện Mường Lát"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HMN-096
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HMN-096
 msgid "Huyện Mường Nhé"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HMT-107
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HMT-107
 msgid "Huyện Mường Tè"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HMA-102
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HMA-102
 msgid "Huyện Mường Ảng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HMCB-838
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HMCB-838
 msgid "Huyện Mỏ Cày Bắc"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HMCN-833
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HMCN-833
 msgid "Huyện Mỏ Cày Nam"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HMD-533
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HMD-533
 msgid "Huyện Mộ Đức"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HMC-123
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HMC-123
 msgid "Huyện Mộc Châu"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HMH-798
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HMH-798
 msgid "Huyện Mộc Hóa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HML-358
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HML-358
 msgid "Huyện Mỹ Lộc"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HMT-944
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HMT-944
 msgid "Huyện Mỹ Tú"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HMX-947
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HMX-947
 msgid "Huyện Mỹ Xuyên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HMD-282
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HMD-282
 msgid "Huyện Mỹ Đức"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNR-066
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNR-066
 msgid "Huyện Na Rì"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNG-510
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNG-510
 msgid "Huyện Nam Giang"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNS-291
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNS-291
 msgid "Huyện Nam Sách"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNTM-516
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNTM-516
 msgid "Huyện Nam Trà My"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNT-362
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNT-362
 msgid "Huyện Nam Trực"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HND-430
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HND-430
 msgid "Huyện Nam Đàn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HND-483
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HND-483
 msgid "Huyện Nam Đông"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNS-401
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNS-401
 msgid "Huyện Nga Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNL-429
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNL-429
 msgid "Huyện Nghi Lộc"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNX-442
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNX-442
 msgid "Huyện Nghi Xuân"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNH-532
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNH-532
 msgid "Huyện Nghĩa Hành"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNH-361
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNH-361
 msgid "Huyện Nghĩa Hưng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HND-419
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HND-419
 msgid "Huyện Nghĩa Đàn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNB-051
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNB-051
 msgid "Huyện Nguyên Bình"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNS-062
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNS-062
 msgid "Huyện Ngân Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNH-973
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNH-973
 msgid "Huyện Ngọc Hiển"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNH-611
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNH-611
 msgid "Huyện Ngọc Hồi"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNL-389
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNL-389
 msgid "Huyện Ngọc Lặc"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNQ-372
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNQ-372
 msgid "Huyện Nho Quan"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNB-786
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNB-786
 msgid "Huyện Nhà Bè"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNT-742
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNT-742
 msgid "Huyện Nhơn Trạch"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNT-403
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNT-403
 msgid "Huyện Như Thanh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNX-402
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNX-402
 msgid "Huyện Như Xuân"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNG-299
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNG-299
 msgid "Huyện Ninh Giang"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNH-586
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNH-586
 msgid "Huyện Ninh Hải"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNP-587
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNP-587
 msgid "Huyện Ninh Phước"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNS-585
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNS-585
 msgid "Huyện Ninh Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNH-072
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNH-072
 msgid "Huyện Nà Hang"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNC-404
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNC-404
 msgid "Huyện Nông Cống"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNS-519
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNS-519
 msgid "Huyện Nông Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNT-517
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNT-517
 msgid "Huyện Núi Thành"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNC-971
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNC-971
 msgid "Huyện Năm Căn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNN-112
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNN-112
 msgid "Huyện Nậm Nhùn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HNP-103
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HNP-103
 msgid "Huyện Nậm Pồ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HPT-109
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HPT-109
 msgid "Huyện Phong Thổ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HPD-476
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HPD-926
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HPD-476
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HPD-926
 msgid "Huyện Phong Điền"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HPC-548
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HPC-548
 msgid "Huyện Phù Cát"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HPC-333
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HPC-333
 msgid "Huyện Phù Cừ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HPM-545
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HPM-545
 msgid "Huyện Phù Mỹ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HPN-233
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HPN-233
 msgid "Huyện Phù Ninh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HPY-122
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HPY-122
 msgid "Huyện Phù Yên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HPB-173
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HPB-173
 msgid "Huyện Phú Bình"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HPG-722
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HPG-722
 msgid "Huyện Phú Giáo"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HPH-563
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HPH-563
 msgid "Huyện Phú Hoà"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HPL-168
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HPL-168
 msgid "Huyện Phú Lương"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HPL-482
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HPL-482
 msgid "Huyện Phú Lộc"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HPN-518
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HPN-518
 msgid "Huyện Phú Ninh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HPQ-602
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HPQ-602
 msgid "Huyện Phú Quí"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HPR-698
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HPR-698
 msgid "Huyện Phú Riềng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HPT-638
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HPT-638
 msgid "Huyện Phú Thiện"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HPT-888
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HPT-972
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HPT-888
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HPT-972
 msgid "Huyện Phú Tân"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HPV-478
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HPV-478
 msgid "Huyện Phú Vang"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HPX-280
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HPX-280
 msgid "Huyện Phú Xuyên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HPT-272
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HPT-272
 msgid "Huyện Phúc Thọ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HPL-957
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HPL-957
 msgid "Huyện Phước Long"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HPS-511
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HPS-511
 msgid "Huyện Phước Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HPH-934
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HPH-934
 msgid "Huyện Phụng Hiệp"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HPN-060
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HPN-060
 msgid "Huyện Pác Nặm"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HQH-385
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HQH-385
 msgid "Huyện Quan Hóa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HQS-387
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HQS-387
 msgid "Huyện Quan Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HQB-035
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HQB-035
 msgid "Huyện Quang Bình"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HQB-029
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HQB-029
 msgid "Huyện Quản Bạ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HQH-049
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HQH-049
 msgid "Huyện Quảng Hòa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HQN-456
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HQN-456
 msgid "Huyện Quảng Ninh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HQT-454
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HQT-454
 msgid "Huyện Quảng Trạch"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HQX-406
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HQX-406
 msgid "Huyện Quảng Xương"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HQD-477
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HQD-477
 msgid "Huyện Quảng Điền"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HQP-415
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HQP-415
 msgid "Huyện Quế Phong"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HQS-509
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HQS-509
 msgid "Huyện Quế Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HQV-259
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HQV-259
 msgid "Huyện Quế Võ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HQO-275
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HQO-275
 msgid "Huyện Quốc Oai"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HQC-416
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HQC-416
 msgid "Huyện Quỳ Châu"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HQH-420
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HQH-420
 msgid "Huyện Quỳ Hợp"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HQL-421
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HQL-421
 msgid "Huyện Quỳnh Lưu"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HQN-118
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HQN-118
 msgid "Huyện Quỳnh Nhai"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HQP-338
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HQP-338
 msgid "Huyện Quỳnh Phụ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HST-616
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HST-616
 msgid "Huyện Sa Thầy"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HSMC-084
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HSMC-084
 msgid "Huyện Si Ma Cai"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HSH-108
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HSH-108
 msgid "Huyện Sìn Hồ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HSS-016
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HSS-016
 msgid "Huyện Sóc Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HSH-561
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HSH-561
 msgid "Huyện Sông Hinh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HSL-253
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HSL-253
 msgid "Huyện Sông Lô"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HSM-126
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HSM-126
 msgid "Huyện Sông Mã"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HSD-076
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HSD-076
 msgid "Huyện Sơn Dương"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HSH-529
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HSH-529
 msgid "Huyện Sơn Hà"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HSH-560
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HSH-560
 msgid "Huyện Sơn Hòa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HST-530
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HST-530
 msgid "Huyện Sơn Tây"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HST-527
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HST-527
 msgid "Huyện Sơn Tịnh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HSD-220
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HSD-220
 msgid "Huyện Sơn Động"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HSC-127
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HSC-127
 msgid "Huyện Sốp Cộp"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTB-860
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTB-860
 msgid "Huyện Tam Bình"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTD-247
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTD-247
 msgid "Huyện Tam Dương"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTN-236
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTN-871
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTN-236
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTN-871
 msgid "Huyện Tam Nông"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTD-106
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTD-106
 msgid "Huyện Tam Đường"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTD-248
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTD-248
 msgid "Huyện Tam Đảo"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTU-110
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTU-110
 msgid "Huyện Than Uyên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTB-232
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTB-232
 msgid "Huyện Thanh Ba"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTB-874
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTB-874
 msgid "Huyện Thanh Bình"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTC-428
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTC-428
 msgid "Huyện Thanh Chương"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTH-294
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTH-294
 msgid "Huyện Thanh Hà"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTL-351
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTL-351
 msgid "Huyện Thanh Liêm"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTM-300
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTM-300
 msgid "Huyện Thanh Miện"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTO-278
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTO-278
 msgid "Huyện Thanh Oai"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTS-238
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTS-238
 msgid "Huyện Thanh Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTT-239
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTT-239
 msgid "Huyện Thanh Thuỷ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTT-020
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTT-020
 msgid "Huyện Thanh Trì"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTH-398
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTH-398
 msgid "Huyện Thiệu Hóa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTS-894
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTS-894
 msgid "Huyện Thoại Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTB-588
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTB-588
 msgid "Huyện Thuận Bắc"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTC-119
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTC-119
 msgid "Huyện Thuận Châu"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTN-589
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTN-589
 msgid "Huyện Thuận Nam"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTT-262
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTT-262
 msgid "Huyện Thuận Thành"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTN-311
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTN-311
 msgid "Huyện Thuỷ Nguyên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTT-341
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTT-341
 msgid "Huyện Thái Thụy"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTM-872
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTM-872
 msgid "Huyện Tháp Mười"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTB-513
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTB-513
 msgid "Huyện Thăng Bình"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTT-279
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTT-279
 msgid "Huyện Thường Tín"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTX-396
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTX-396
 msgid "Huyện Thường Xuân"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTA-052
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTA-052
 msgid "Huyện Thạch An"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTH-445
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTH-445
 msgid "Huyện Thạch Hà"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTT-391
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTT-391
 msgid "Huyện Thạch Thành"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTT-276
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTT-276
 msgid "Huyện Thạch Thất"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTH-800
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTH-800
 msgid "Huyện Thạnh Hóa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTP-837
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTP-837
 msgid "Huyện Thạnh Phú"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTT-949
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTT-949
 msgid "Huyện Thạnh Trị"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTX-395
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTX-395
 msgid "Huyện Thọ Xuân"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTN-738
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTN-738
 msgid "Huyện Thống Nhất"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTB-967
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTB-967
 msgid "Huyện Thới Bình"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTL-927
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTL-927
 msgid "Huyện Thới Lai"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTT-804
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTT-804
 msgid "Huyện Thủ Thừa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTD-260
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTD-260
 msgid "Huyện Tiên Du"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTL-315
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTL-315
 msgid "Huyện Tiên Lãng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTL-332
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTL-332
 msgid "Huyện Tiên Lữ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTP-514
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTP-514
 msgid "Huyện Tiên Phước"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTY-199
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTY-199
 msgid "Huyện Tiên Yên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTH-342
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTH-342
 msgid "Huyện Tiền Hải"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTC-846
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTC-846
 msgid "Huyện Tiểu Cần"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTT-891
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTT-891
 msgid "Huyện Tri Tôn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTP-469
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTP-469
 msgid "Huyện Triệu Phong"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTS-397
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTS-397
 msgid "Huyện Triệu Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTB-525
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTB-525
 msgid "Huyện Trà Bồng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTC-849
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTC-849
 msgid "Huyện Trà Cú"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTO-862
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTO-862
 msgid "Huyện Trà Ôn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTD-180
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTD-180
 msgid "Huyện Tràng Định"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTK-047
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTK-047
 msgid "Huyện Trùng Khánh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTS-576
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTS-576
 msgid "Huyện Trường Sa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTT-139
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTT-139
 msgid "Huyện Trạm Tấu"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTB-737
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTB-737
 msgid "Huyện Trảng Bom"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTY-138
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTY-138
 msgid "Huyện Trấn Yên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTVT-968
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTVT-968
 msgid "Huyện Trần Văn Thời"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTD-951
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTD-951
 msgid "Huyện Trần Đề"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTN-363
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTN-363
 msgid "Huyện Trực Ninh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTMR-617
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTMR-617
 msgid "Huyện Tu Mơ Rông"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTA-559
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTA-559
 msgid "Huyện Tuy An"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTP-595
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTP-595
 msgid "Huyện Tuy Phong"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTP-550
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTP-550
 msgid "Huyện Tuy Phước"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTD-667
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTD-667
 msgid "Huyện Tuy Đức"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTH-453
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTH-453
 msgid "Huyện Tuyên Hóa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTG-099
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTG-099
 msgid "Huyện Tuần Giáo"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTL-599
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTL-599
 msgid "Huyện Tánh Linh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTB-705
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTB-705
 msgid "Huyện Tân Biên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTC-706
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTC-706
 msgid "Huyện Tân Châu"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTH-904
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTH-904
 msgid "Huyện Tân Hiệp"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTH-796
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTH-796
 msgid "Huyện Tân Hưng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTH-869
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTH-869
 msgid "Huyện Tân Hồng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTK-423
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTK-423
 msgid "Huyện Tân Kỳ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTL-155
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTL-155
 msgid "Huyện Tân Lạc"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTP-734
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTP-734
 msgid "Huyện Tân Phú"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTPD-825
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTPD-825
 msgid "Huyện Tân Phú Đông"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTP-818
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTP-818
 msgid "Huyện Tân Phước"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTS-240
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTS-240
 msgid "Huyện Tân Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTT-799
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTT-799
 msgid "Huyện Tân Thạnh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTT-805
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTT-805
 msgid "Huyện Tân Trụ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTU-111
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTU-111
 msgid "Huyện Tân Uyên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTY-216
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTY-216
 msgid "Huyện Tân Yên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTG-504
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTG-504
 msgid "Huyện Tây Giang"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTH-562
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTH-562
 msgid "Huyện Tây Hoà"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTS-547
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTS-547
 msgid "Huyện Tây Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTN-528
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTN-528
 msgid "Huyện Tư Nghĩa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTD-418
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTD-418
 msgid "Huyện Tương Dương"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTB-890
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTB-890
 msgid "Huyện Tịnh Biên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTC-098
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTC-098
 msgid "Huyện Tủa Chùa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HTK-298
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HTK-298
 msgid "Huyện Tứ Kỳ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HUM-966
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HUM-966
 msgid "Huyện U Minh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HUMT-913
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HUMT-913
 msgid "Huyện U Minh Thượng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVY-222
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVY-222
 msgid "Huyện Việt Yên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVC-551
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVC-551
 msgid "Huyện Vân Canh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVH-128
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVH-128
 msgid "Huyện Vân Hồ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVD-203
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVD-203
 msgid "Huyện Vân Đồn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVN-170
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVN-170
 msgid "Huyện Võ Nhai"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVB-089
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVB-089
 msgid "Huyện Văn Bàn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVC-140
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVC-140
 msgid "Huyện Văn Chấn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVG-326
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVG-326
 msgid "Huyện Văn Giang"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVL-325
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVL-325
 msgid "Huyện Văn Lâm"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVL-182
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVL-182
 msgid "Huyện Văn Lãng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVQ-184
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVQ-184
 msgid "Huyện Văn Quan"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVY-136
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVY-136
 msgid "Huyện Văn Yên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVB-316
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVB-316
 msgid "Huyện Vĩnh Bảo"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVC-735
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVC-735
 msgid "Huyện Vĩnh Cửu"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVH-797
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVH-797
 msgid "Huyện Vĩnh Hưng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVL-464
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVL-464
 msgid "Huyện Vĩnh Linh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVL-393
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVL-393
 msgid "Huyện Vĩnh Lộc"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVL-958
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVL-958
 msgid "Huyện Vĩnh Lợi"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVT-910
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVT-910
 msgid "Huyện Vĩnh Thuận"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVT-546
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVT-924
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVT-546
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVT-924
 msgid "Huyện Vĩnh Thạnh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVT-252
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVT-252
 msgid "Huyện Vĩnh Tường"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVQ-441
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVQ-441
 msgid "Huyện Vũ Quang"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVT-344
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVT-344
 msgid "Huyện Vũ Thư"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVN-571
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVN-571
 msgid "Huyện Vạn Ninh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVT-935
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVT-935
 msgid "Huyện Vị Thuỷ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVX-030
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVX-030
 msgid "Huyện Vị Xuyên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HVB-359
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HVB-359
 msgid "Huyện Vụ Bản"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HXM-751
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HXM-751
 msgid "Huyện Xuyên Mộc"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HXL-741
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HXL-741
 msgid "Huyện Xuân Lộc"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HXT-364
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HXT-364
 msgid "Huyện Xuân Trường"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HXM-033
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HXM-033
 msgid "Huyện Xín Mần"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HYB-141
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HYB-141
 msgid "Huyện Yên Bình"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HYC-124
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HYC-124
 msgid "Huyện Yên Châu"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HYD-221
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HYD-221
 msgid "Huyện Yên Dũng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HYK-375
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HYK-375
 msgid "Huyện Yên Khánh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HYL-251
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HYL-251
 msgid "Huyện Yên Lạc"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HYL-234
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HYL-234
 msgid "Huyện Yên Lập"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HYM-028
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HYM-028
 msgid "Huyện Yên Minh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HYM-377
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HYM-377
 msgid "Huyện Yên Mô"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HYM-327
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HYM-327
 msgid "Huyện Yên Mỹ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HYP-258
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HYP-258
 msgid "Huyện Yên Phong"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HYS-075
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HYS-075
 msgid "Huyện Yên Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HYT-426
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HYT-426
 msgid "Huyện Yên Thành"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HYT-215
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HYT-215
 msgid "Huyện Yên Thế"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HYT-158
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HYT-158
 msgid "Huyện Yên Thủy"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HYD-394
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HYD-394
 msgid "Huyện Yên Định"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HAT-329
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HAT-329
 msgid "Huyện Ân Thi"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HYY-360
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HYY-360
 msgid "Huyện Ý Yên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDK-467
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDK-467
 msgid "Huyện Đa Krông"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDR-674
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDR-674
 msgid "Huyện Đam Rông"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDP-273
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDP-273
 msgid "Huyện Đan Phượng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDB-100
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDB-100
 msgid "Huyện Điện Biên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDBD-101
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDBD-101
 msgid "Huyện Điện Biên Đông"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDH-230
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDH-230
 msgid "Huyện Đoan Hùng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDB-150
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDB-150
 msgid "Huyện Đà Bắc"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDL-189
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDL-189
 msgid "Huyện Đình Lập"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDL-427
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDL-427
 msgid "Huyện Đô Lương"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDA-017
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDA-017
 msgid "Huyện Đông Anh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDG-505
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDG-505
 msgid "Huyện Đông Giang"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDH-340
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDH-340
 msgid "Huyện Đông Hưng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDH-960
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDH-960
 msgid "Huyện Đông Hải"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDS-405
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDS-405
 msgid "Huyện Đông Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDG-661
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDG-661
 msgid "Huyện Đăk Glong"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDP-634
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDP-634
 msgid "Huyện Đăk Pơ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDD-626
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDD-626
 msgid "Huyện Đăk Đoa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDD-677
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDD-677
 msgid "Huyện Đơn Dương"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDH-681
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDH-681
 msgid "Huyện Đạ Huoai"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDT-682
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDT-682
 msgid "Huyện Đạ Tẻh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDL-506
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDL-506
 msgid "Huyện Đại Lộc"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDT-171
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDT-171
 msgid "Huyện Đại Từ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDD-753
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDD-753
 msgid "Huyện Đất Đỏ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDD-970
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDD-970
 msgid "Huyện Đầm Dơi"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDH-200
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDH-200
 msgid "Huyện Đầm Hà"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDG-610
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDG-610
 msgid "Huyện Đắk Glei"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDH-615
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDH-615
 msgid "Huyện Đắk Hà"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDM-663
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDM-663
 msgid "Huyện Đắk Mil"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDR-666
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDR-666
 msgid "Huyện Đắk R'Lấp"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDS-665
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDS-665
 msgid "Huyện Đắk Song"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDT-612
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDT-612
 msgid "Huyện Đắk Tô"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDH-167
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDH-167
 msgid "Huyện Định Hóa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDQ-736
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDQ-736
 msgid "Huyện Định Quán"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDH-169
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDH-169
 msgid "Huyện Đồng Hỷ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDP-695
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDP-695
 msgid "Huyện Đồng Phú"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDV-026
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDV-026
 msgid "Huyện Đồng Văn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDX-558
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDX-558
 msgid "Huyện Đồng Xuân"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDC-631
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDC-631
 msgid "Huyện Đức Cơ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDH-801
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDH-801
 msgid "Huyện Đức Huệ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDH-802
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDH-802
 msgid "Huyện Đức Hòa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDL-600
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDL-600
 msgid "Huyện Đức Linh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDT-440
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDT-440
 msgid "Huyện Đức Thọ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HDT-678
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HDT-678
 msgid "Huyện Đức Trọng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-HUH-281
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-HUH-281
 msgid "Huyện Ứng Hòa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:ir.model.fields,field_description:viin_base_district.field_res_country_district__id
+#. module: dpt_base_district
+#: model:ir.model.fields,field_description:dpt_base_district.field_res_country_district__id
+#: model:ir.model.fields,field_description:dpt_base_district.field_res_country_wards__id
 msgid "ID"
 msgstr ""
 
-#. module: viin_base_district
-#: model:ir.model.fields,field_description:viin_base_district.field_res_country_district____last_update
-msgid "Last Modified on"
-msgstr "Sửa lần cuối vào"
-
-#. module: viin_base_district
-#: model:ir.model.fields,field_description:viin_base_district.field_res_country_district__write_uid
+#. module: dpt_base_district
+#: model:ir.model.fields,field_description:dpt_base_district.field_res_country_district__write_uid
+#: model:ir.model.fields,field_description:dpt_base_district.field_res_country_wards__write_uid
 msgid "Last Updated by"
-msgstr "Cập nhật lần cuối bởi"
+msgstr ""
 
-#. module: viin_base_district
-#: model:ir.model.fields,field_description:viin_base_district.field_res_country_district__write_date
+#. module: dpt_base_district
+#: model:ir.model.fields,field_description:dpt_base_district.field_res_country_district__write_date
+#: model:ir.model.fields,field_description:dpt_base_district.field_res_country_wards__write_date
 msgid "Last Updated on"
-msgstr "Cập nhật lần cuối vào"
+msgstr ""
 
-#. module: viin_base_district
-#: model:ir.model.fields,field_description:viin_base_district.field_res_country_district__name
+#. module: dpt_base_district
+#: model:ir.model.fields,field_description:dpt_base_district.field_res_country_district__name
+#: model:ir.model.fields,field_description:dpt_base_district.field_res_country_wards__name
 msgid "Name"
-msgstr "Tên"
+msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-Q1-760
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-Q1-760
 msgid "Quận 1"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-Q1-771
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-Q1-771
 msgid "Quận 10"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-Q1-772
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-Q1-772
 msgid "Quận 11"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-Q1-761
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-Q1-761
 msgid "Quận 12"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-Q3-770
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-Q3-770
 msgid "Quận 3"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-Q4-773
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-Q4-773
 msgid "Quận 4"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-Q5-774
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-Q5-774
 msgid "Quận 5"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-Q6-775
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-Q6-775
 msgid "Quận 6"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-Q7-778
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-Q7-778
 msgid "Quận 7"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-Q8-776
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-Q8-776
 msgid "Quận 8"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QBD-001
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QBD-001
 msgid "Quận Ba Đình"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QBT-918
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QBT-918
 msgid "Quận Bình Thuỷ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QBT-765
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QBT-765
 msgid "Quận Bình Thạnh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QBT-777
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QBT-777
 msgid "Quận Bình Tân"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QBTL-021
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QBTL-021
 msgid "Quận Bắc Từ Liêm"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QCR-919
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QCR-919
 msgid "Quận Cái Răng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QCG-005
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QCG-005
 msgid "Quận Cầu Giấy"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QCL-495
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QCL-495
 msgid "Quận Cẩm Lệ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QDK-309
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QDK-309
 msgid "Quận Dương Kinh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QGV-764
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QGV-764
 msgid "Quận Gò Vấp"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QHBT-007
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QHBT-007
 msgid "Quận Hai Bà Trưng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QHK-002
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QHK-002
 msgid "Quận Hoàn Kiếm"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QHM-008
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QHM-008
 msgid "Quận Hoàng Mai"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QHD-268
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QHD-268
 msgid "Quận Hà Đông"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QHA-306
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QHA-306
 msgid "Quận Hải An"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QHC-492
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QHC-492
 msgid "Quận Hải Châu"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QHB-303
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QHB-303
 msgid "Quận Hồng Bàng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QKA-307
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QKA-307
 msgid "Quận Kiến An"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QLC-490
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QLC-490
 msgid "Quận Liên Chiểu"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QLB-004
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QLB-004
 msgid "Quận Long Biên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QLC-305
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QLC-305
 msgid "Quận Lê Chân"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QNTL-019
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QNTL-019
 msgid "Quận Nam Từ Liêm"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QNQ-304
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QNQ-304
 msgid "Quận Ngô Quyền"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QNHS-494
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QNHS-494
 msgid "Quận Ngũ Hành Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QNK-916
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QNK-916
 msgid "Quận Ninh Kiều"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QPN-768
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QPN-768
 msgid "Quận Phú Nhuận"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QST-493
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QST-493
 msgid "Quận Sơn Trà"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QTK-491
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QTK-491
 msgid "Quận Thanh Khê"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QTX-009
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QTX-009
 msgid "Quận Thanh Xuân"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QTN-923
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QTN-923
 msgid "Quận Thốt Nốt"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QTB-766
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QTB-766
 msgid "Quận Tân Bình"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QTP-767
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QTP-767
 msgid "Quận Tân Phú"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QTH-003
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QTH-003
 msgid "Quận Tây Hồ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QOM-917
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QOM-917
 msgid "Quận Ô Môn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QDD-006
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QDD-006
 msgid "Quận Đống Đa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-QDS-308
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-QDS-308
 msgid "Quận Đồ Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:ir.model.fields,field_description:viin_base_district.field_res_country_district__state_id
-#: model_terms:ir.ui.view,arch_db:viin_base_district.res_country_district_view_search
+#. module: dpt_base_district
+#: model:ir.model.fields,field_description:dpt_base_district.field_res_country_district__state_id
+#: model:ir.model.fields,field_description:dpt_base_district.field_res_country_wards__state_id
+#: model_terms:ir.ui.view,arch_db:dpt_base_district.res_country_district_view_search
 msgid "State"
-msgstr "Bang / Tỉnh"
+msgstr ""
 
-#. module: viin_base_district
-#: model:ir.model.constraint,message:viin_base_district.constraint_res_country_district_code_unique
+#. module: dpt_base_district
+#: model:ir.model.constraint,message:dpt_base_district.constraint_res_country_district_code_unique
+#: model:ir.model.constraint,message:dpt_base_district.constraint_res_country_wards_code_unique
 msgid "The code of the district must be unique per country!"
-msgstr "Mã quận/huyện phải là duy nhất cho mỗi quốc gia!"
+msgstr ""
 
-#. module: viin_base_district
-#: code:addons/viin_base_district/models/res_partner.py:0
+#. module: dpt_base_district
+#. odoo-python
+#: code:addons/dpt_base_district/models/res_partner.py:0
 #, python-format
 msgid ""
 "The district '%s' does not belong to country '%s'. Please select another!"
 msgstr "Quận/Huyện '%s' không thuộc về quốc gia '%s'. Vui lòng chọn cái khác!"
 
-#. module: viin_base_district
-#: code:addons/viin_base_district/models/res_partner.py:0
+#. module: dpt_base_district
+#. odoo-python
+#: code:addons/dpt_base_district/models/res_partner.py:0
 #, python-format
 msgid ""
 "The district '%s' does not belong to state '%s'. Please select another!"
-msgstr "Quận/Huyện '%s' không thuộc về bang/tỉnh '%s'. Vui lòng chọn cái khác!"
+msgstr ""
+"Quận/Huyện '%s' không thuộc về bang/tỉnh '%s'. Vui lòng chọn cái khác!"
 
-#. module: viin_base_district
-#: code:addons/viin_base_district/models/res_country_district.py:0
+#. module: dpt_base_district
+#. odoo-python
+#: code:addons/dpt_base_district/models/res_country_district.py:0
+#: code:addons/dpt_base_district/models/res_country_wards.py:0
 #, python-format
 msgid ""
 "The state '%s' does not belong to the country '%s'. Please select another!"
 msgstr "Bang/Tỉnh '%s' không thuộc về quốc gia '%s'. Vui lòng chọn cái khác!"
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPBK-058
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPBK-058
 msgid "Thành Phố Bắc Kạn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPDH-450
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPDH-450
 msgid "Thành Phố Đồng Hới"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPBH-731
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPBH-731
 msgid "Thành phố Biên Hòa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPBMT-643
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPBMT-643
 msgid "Thành phố Buôn Ma Thuột"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPBR-748
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPBR-748
 msgid "Thành phố Bà Rịa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPBL-954
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPBL-954
 msgid "Thành phố Bạc Liêu"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPBL-673
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPBL-673
 msgid "Thành phố Bảo Lộc"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPBG-213
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPBG-213
 msgid "Thành phố Bắc Giang"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPBN-256
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPBN-256
 msgid "Thành phố Bắc Ninh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPBT-829
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPBT-829
 msgid "Thành phố Bến Tre"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPCR-569
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPCR-569
 msgid "Thành phố Cam Ranh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPCB-040
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPCB-040
 msgid "Thành phố Cao Bằng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPCL-866
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPCL-866
 msgid "Thành phố Cao Lãnh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPCD-884
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPCD-884
 msgid "Thành phố Châu Đốc"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPCL-290
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPCL-290
 msgid "Thành phố Chí Linh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPCM-964
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPCM-964
 msgid "Thành phố Cà Mau"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPCP-195
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPCP-195
 msgid "Thành phố Cẩm Phả"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPDA-724
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPDA-724
 msgid "Thành phố Dĩ An"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPGN-660
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPGN-660
 msgid "Thành phố Gia Nghĩa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPH-474
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPH-474
 msgid "Thành phố Huế"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPHG-024
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPHG-024
 msgid "Thành phố Hà Giang"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPHT-900
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPHT-900
 msgid "Thành phố Hà Tiên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPHT-436
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPHT-436
 msgid "Thành phố Hà Tĩnh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPHB-148
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPHB-148
 msgid "Thành phố Hòa Bình"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPHY-323
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPHY-323
 msgid "Thành phố Hưng Yên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPHL-193
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPHL-193
 msgid "Thành phố Hạ Long"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPHD-288
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPHD-288
 msgid "Thành phố Hải Dương"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPHN-868
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPHN-868
 msgid "Thành phố Hồng Ngự"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPHA-503
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPHA-503
 msgid "Thành phố Hội An"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPKT-608
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPKT-608
 msgid "Thành phố Kon Tum"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPLC-105
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPLC-105
 msgid "Thành phố Lai Châu"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPLK-732
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPLK-732
 msgid "Thành phố Long Khánh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPLX-883
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPLX-883
 msgid "Thành phố Long Xuyên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPLC-080
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPLC-080
 msgid "Thành phố Lào Cai"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPLS-178
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPLS-178
 msgid "Thành phố Lạng Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPMC-194
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPMC-194
 msgid "Thành phố Móng Cái"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPMT-815
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPMT-815
 msgid "Thành phố Mỹ Tho"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPND-356
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPND-356
 msgid "Thành phố Nam Định"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPNB-931
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPNB-931
 msgid "Thành phố Ngã Bảy"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPNT-568
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPNT-568
 msgid "Thành phố Nha Trang"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPNB-369
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPNB-369
 msgid "Thành phố Ninh Bình"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPPRC-582
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPPRC-582
 msgid "Thành phố Phan Rang-Tháp Chàm"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPPT-593
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPPT-593
 msgid "Thành phố Phan Thiết"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPPQ-911
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPPQ-911
 msgid "Thành phố Phú Quốc"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPPY-244
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPPY-244
 msgid "Thành phố Phúc Yên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPPL-347
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPPL-347
 msgid "Thành phố Phủ Lý"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPP-622
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPP-622
 msgid "Thành phố Pleiku"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPQN-540
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPQN-540
 msgid "Thành phố Quy Nhơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPQN-522
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPQN-522
 msgid "Thành phố Quảng Ngãi"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPRG-899
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPRG-899
 msgid "Thành phố Rạch Giá"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPSD-867
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPSD-867
 msgid "Thành phố Sa Đéc"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPST-941
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPST-941
 msgid "Thành phố Sóc Trăng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPSC-165
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPSC-165
 msgid "Thành phố Sông Công"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPSL-116
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPSL-116
 msgid "Thành phố Sơn La"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPSS-382
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPSS-382
 msgid "Thành phố Sầm Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPTK-502
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPTK-502
 msgid "Thành phố Tam Kỳ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPTD-370
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPTD-370
 msgid "Thành phố Tam Điệp"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPTH-380
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPTH-380
 msgid "Thành phố Thanh Hóa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPTA-725
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPTA-725
 msgid "Thành phố Thuận An"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPTB-336
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPTB-336
 msgid "Thành phố Thái Bình"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPTN-164
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPTN-164
 msgid "Thành phố Thái Nguyên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPTDM-718
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPTDM-718
 msgid "Thành phố Thủ Dầu Một"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPTD-769
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPTD-769
 msgid "Thành phố Thủ Đức"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPTV-842
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPTV-842
 msgid "Thành phố Trà Vinh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPTH-555
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPTH-555
 msgid "Thành phố Tuy Hoà"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPTQ-070
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPTQ-070
 msgid "Thành phố Tuyên Quang"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPTA-794
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPTA-794
 msgid "Thành phố Tân An"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPTN-703
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPTN-703
 msgid "Thành phố Tây Ninh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPUB-196
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPUB-196
 msgid "Thành phố Uông Bí"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPV-412
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPV-412
 msgid "Thành phố Vinh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPVT-227
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPVT-227
 msgid "Thành phố Việt Trì"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPVL-855
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPVL-855
 msgid "Thành phố Vĩnh Long"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPVY-243
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPVY-243
 msgid "Thành phố Vĩnh Yên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPVT-747
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPVT-747
 msgid "Thành phố Vũng Tàu"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPVT-930
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPVT-930
 msgid "Thành phố Vị Thanh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPYB-132
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPYB-132
 msgid "Thành phố Yên Bái"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPDBP-094
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPDBP-094
 msgid "Thành phố Điện Biên Phủ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPDL-672
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPDL-672
 msgid "Thành phố Đà Lạt"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPDH-461
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPDH-461
 msgid "Thành phố Đông Hà"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TPDX-689
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TPDX-689
 msgid "Thành phố Đồng Xoài"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXBH-644
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXBH-644
 msgid "Thị Xã Buôn Hồ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXML-095
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXML-095
 msgid "Thị Xã Mường Lay"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXAK-623
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXAK-623
 msgid "Thị xã An Khê"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXAN-549
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXAN-549
 msgid "Thị xã An Nhơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXAP-624
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXAP-624
 msgid "Thị xã Ayun Pa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXBD-458
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXBD-458
 msgid "Thị xã Ba Đồn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXBL-690
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXBL-690
 msgid "Thị xã Bình Long"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXBM-861
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXBM-861
 msgid "Thị xã Bình Minh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXBC-721
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXBC-721
 msgid "Thị xã Bến Cát"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXBS-381
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXBS-381
 msgid "Thị xã Bỉm Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXCL-817
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXCL-817
 msgid "Thị xã Cai Lậy"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXCL-413
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXCL-413
 msgid "Thị xã Cửa Lò"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXDT-349
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXDT-349
 msgid "Thị xã Duy Tiên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXDH-851
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXDH-851
 msgid "Thị xã Duyên Hải"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXGR-959
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXGR-959
 msgid "Thị xã Giá Rai"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXGC-816
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXGC-816
 msgid "Thị xã Gò Công"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXHN-543
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXHN-543
 msgid "Thị xã Hoài Nhơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXHM-432
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXHM-432
 msgid "Thị xã Hoàng Mai"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXHT-709
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXHT-709
 msgid "Thị xã Hòa Thành"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXHT-479
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXHT-479
 msgid "Thị xã Hương Thủy"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXHT-480
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXHT-480
 msgid "Thị xã Hương Trà"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXHL-437
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXHL-437
 msgid "Thị xã Hồng Lĩnh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXKM-292
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXKM-292
 msgid "Thị xã Kinh Môn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXKT-795
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXKT-795
 msgid "Thị xã Kiến Tường"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXKA-449
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXKA-449
 msgid "Thị xã Kỳ Anh"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXLG-594
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXLG-594
 msgid "Thị xã La Gi"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXLM-937
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXLM-937
 msgid "Thị xã Long Mỹ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXMH-328
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXMH-328
 msgid "Thị xã Mỹ Hào"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXNS-407
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXNS-407
 msgid "Thị xã Nghi Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXNL-133
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXNL-133
 msgid "Thị xã Nghĩa Lộ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXNN-948
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXNN-948
 msgid "Thị xã Ngã Năm"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXNH-572
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXNH-572
 msgid "Thị xã Ninh Hòa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXPM-754
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXPM-754
 msgid "Thị xã Phú Mỹ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXPT-228
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXPT-228
 msgid "Thị xã Phú Thọ"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXPL-688
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXPL-688
 msgid "Thị xã Phước Long"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXPY-172
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXPY-172
 msgid "Thị xã Phổ Yên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXQT-462
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXQT-462
 msgid "Thị xã Quảng Trị"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXQY-206
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXQY-206
 msgid "Thị xã Quảng Yên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXSP-088
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXSP-088
 msgid "Thị xã Sa Pa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXSC-557
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXSC-557
 msgid "Thị xã Sông Cầu"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXST-269
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXST-269
 msgid "Thị xã Sơn Tây"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXTH-414
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXTH-414
 msgid "Thị xã Thái Hoà"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXTB-712
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXTB-712
 msgid "Thị xã Trảng Bàng"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXTC-887
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXTC-887
 msgid "Thị xã Tân Châu"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXTU-723
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXTU-723
 msgid "Thị xã Tân Uyên"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXTS-261
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXTS-261
 msgid "Thị xã Từ Sơn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXVC-950
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXVC-950
 msgid "Thị xã Vĩnh Châu"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXDB-507
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXDB-507
 msgid "Thị xã Điện Bàn"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXDH-564
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXDH-564
 msgid "Thị xã Đông Hòa"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXDT-205
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXDT-205
 msgid "Thị xã Đông Triều"
 msgstr ""
 
-#. module: viin_base_district
-#: model:res.country.district,name:viin_base_district.district_vn_VN-TXDP-534
+#. module: dpt_base_district
+#: model:res.country.district,name:dpt_base_district.district_vn_VN-TXDP-534
 msgid "Thị xã Đức Phổ"
 msgstr ""
+
+#. module: dpt_base_district
+#: model:ir.model,name:dpt_base_district.model_res_country_wards
+#: model:ir.model.fields,field_description:dpt_base_district.field_res_partner__wards_id
+#: model:ir.model.fields,field_description:dpt_base_district.field_res_users__wards_id
+#: model_terms:ir.ui.view,arch_db:dpt_base_district.view_partner_form
+msgid "Wards"
+msgstr "Xã/Phường"

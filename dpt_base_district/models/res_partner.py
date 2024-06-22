@@ -6,6 +6,7 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     district_id = fields.Many2one('res.country.district', string='District', domain="[('state_id', '=?', state_id)]")
+    wards_id = fields.Many2one('res.country.wards', string='Wards', domain="[('district_id', '=?', district_id)]")
     country_id = fields.Many2one('res.country', string='Country', ondelete='restrict', default=241)
 
     @api.constrains('district_id', 'state_id')
