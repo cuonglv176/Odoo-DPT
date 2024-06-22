@@ -128,7 +128,7 @@ class SaleOrder(models.Model):
                         required = True
                     else:
                         required = False
-                elif r.type_condition == 'price_list' and not record.service_id.pricelist_item_ids:
+                elif r.type_condition == 'price_list' and not rec.service_id.pricelist_item_ids:
                     required = True
                 elif r.type_condition == 'other':
                     required = True
