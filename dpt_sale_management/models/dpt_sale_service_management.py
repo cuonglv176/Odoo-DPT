@@ -34,12 +34,12 @@ class DPTSaleServiceManagement(models.Model):
 
     def _compute_amount_total(self):
         for item in self:
-            item.amount_total = item.qty * item.price
+            item.amount_total = item.qty * item.price * item.compute_value if item.pricelist_item_id.is_price else item.qty * item.price
 
     @api.onchange('price', 'qty')
     def onchange_amount_total(self):
         if self.price and self.qty:
-            self.amount_total = self.price * self.qty
+            self.amount_total = self.price * self.qty * self.compute_value if self.pricelist_item_id.is_price else self.qty * self.price
 
     @api.onchange('service_id')
     def onchange_service(self):
