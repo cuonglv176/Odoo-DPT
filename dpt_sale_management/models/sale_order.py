@@ -242,7 +242,12 @@ class SaleOrder(models.Model):
                                     date=fields.Date.today(),
                                 ), service_price_id.min_amount)
                                 if price > max_price:
-                                    max_price = price
+                                    max_price = service_price_id.currency_id._convert(
+                                        from_amount=detail_price_id.amount,
+                                        to_currency=self.env.company.currency_id,
+                                        company=self.env.company,
+                                        date=fields.Date.today(),
+                                    )
                                     price_list_item_id = service_price_id
                                     compute_value = compute_field_id.value_integer
                                     compute_uom_id = compute_field_id.uom_id.id
