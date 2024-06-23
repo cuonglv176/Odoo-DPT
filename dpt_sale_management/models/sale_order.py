@@ -196,6 +196,8 @@ class SaleOrder(models.Model):
             service_price_ids = sale_service_id.service_id.get_active_pricelist(partner_id=self.partner_id)
             if current_uom_id:
                 service_price_ids = service_price_ids.filtered(lambda sp: sp.uom_id.id == current_uom_id.id)
+            if not service_price_ids:
+                continue
             max_price = 0
             price_list_item_id = None
             compute_value = 0
