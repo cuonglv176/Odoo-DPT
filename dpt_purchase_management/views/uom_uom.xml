@@ -8,6 +8,7 @@
         <field name="arch" type="xml">
             <field name="active" position="after">
                 <field name="is_package_unit" widget="boolean_toggle"/>
+                <field name="packing_code" invisible="not is_package_unit" required="is_package_unit"/>
                 <field name="is_default_package_unit" invisible="not is_package_unit" widget="boolean_toggle"/>
             </field>
         </field>

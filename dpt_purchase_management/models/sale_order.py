@@ -12,8 +12,7 @@ class SaleOrder(models.Model):
     def _compute_show_create_po(self):
         for item in self:
             item.show_create_po = (any(item.sale_service_ids.mapped('service_id').mapped(
-                'is_purchase_service')) if item.sale_service_ids else False) and len(
-                item.order_line) != 0 and item.state == 'sale' and item.product_order_count == 0
+                'is_purchase_service')) if item.sale_service_ids else False) and len(item.order_line) != 0
 
     def _compute_product_order_count(self):
         for item in self:
@@ -50,35 +49,36 @@ class SaleOrder(models.Model):
                 'price_unit': order_line.price_unit,
                 'date_planned': fields.Datetime.now(),
             }))
-        po_id = self.env['purchase.order'].with_context({'no_compute_price': True, 'create_from_so': True}).create({
-            'sale_id': self.id,
-            'order_line': default_order_line,
-            'date_planned': fields.Datetime.now(),
-            'import_package_stock': True,
-            'partner_id': self.env.ref('dpt_purchase_management.partner_default_supplier').id,
-        })
+        # po_id = self.env['purchase.order'].create({
+        #     'sale_id': self.id,
+        #     'order_line': default_order_line,
+        #     'date_planned': fields.Datetime.now(),
+        #     'import_package_stock': True,
+        #     'partner_id': self.env.ref('dpt_purchase_management.partner_default_supplier').id,
+        # })
         default_package_unit_id = self.env['uom.uom'].sudo().search([('is_default_package_unit', '=', True)], limit=1)
-        po_id.package_line_ids = [(0, 0, {
+        default_package_line_ids = [(0, 0, {
             'uom_id': default_package_unit_id.id if default_package_unit_id else None,
-            'lot_name': f'{po_id.name}_{self.name}',
             'quantity': 1,
         })]
-        # return {
-        #     'name': _('Create PO'),
-        #     'type': 'ir.actions.act_window',
-        #     'res_model': 'purchase.order',
-        #     'target': 'new',
-        #     'view_mode': 'form',
-        #     'views': [(self.env.ref('purchase.purchase_order_form').sudo().id, "form")],
-        #     'context': {
-        #         'default_sale_id': self.id,
-        #         'default_order_line': default_order_line,
-        #         'default_date_planned': fields.Datetime.now(),
-        #         'default_import_package_stock': True,
-        #         'no_compute_price': True,
-        #         'create_from_so': True
-        #     }
-        # }
+        return {
+            'name': _('Create PO'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'purchase.order',
+            'target': 'new',
+            'view_mode': 'form',
+            'views': [(self.env.ref('purchase.purchase_order_form').sudo().id, "form")],
+            'context': {
+                'default_sale_id': self.id,
+                'default_partner_id':  self.env.ref('dpt_purchase_management.partner_default_supplier').id,
+                'default_order_line': default_order_line,
+                'default_package_line_ids': default_package_line_ids,
+                'default_date_planned': fields.Datetime.now(),
+                'default_import_package_stock': True,
+                'no_compute_price': True,
+                'create_from_so': True
+            }
+        }
 
     def action_open_po(self):
         purchase_action = self.env.ref('purchase.purchase_rfq').sudo().read()[0]
