@@ -22,6 +22,8 @@
         <field name="arch" type="xml">
             <field name="partner_id" position="before">
                 <field name="purchase_type" widget="radio" options="{'horizontal': true}"/>
+                <field name="packing_lot_name" readonly="1" force_save="1"/>
+                <field name="last_packing_lot_alphabet" invisile="1"/>
             </field>
             <field name="date_order" position="before">
                 <field name="sale_id" readonly="1" force_save="1" invisible="sale_id"/>
@@ -32,7 +34,7 @@
                     <field name="package_line_ids" readonly="state in ('done', 'cancel')">
                         <tree>
                             <field name="purchase_id" column_invisible="1"/>
-                            <field name="lot_name"/>
+<!--                            <field name="lot_name"/>-->
                             <field name="quantity"/>
                             <field name="uom_id"/>
                             <field name="size"/>
@@ -45,7 +47,7 @@
                                 <group>
                                     <group>
                                         <field name="purchase_id" invisible="1" force_save="1"/>
-                                        <field name="lot_name"/>
+<!--                                        <field name="lot_name"/>-->
                                         <field name="quantity"/>
                                         <field name="uom_id"/>
                                         <field name="note"/>
