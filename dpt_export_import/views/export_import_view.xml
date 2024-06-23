@@ -5,4 +5,8 @@
               sequence="40"
               web_icon="dpt_export_import,static/description/icon.png"/>
 
+    <menuitem id="menu_product_variant_config_dpt_export_import" name="Products"
+              action="stock.product_template_action_product"
+              parent="dpt_export_import.dpt_export_import_menu" sequence="100"/>
+
 </odoo>

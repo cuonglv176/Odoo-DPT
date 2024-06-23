@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_product_dpt_export_import_inherit" model="ir.ui.view">
+        <field name="name">product.template.dpt.export.import.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='purchase']" position="after">
+                <page string="Export / Import" name="dpt_export_import">
+                    <group>
+                        <group>
+                            <field name="dpt_english_name"/>
+                            <field name="dpt_description"/>
+                            <field name="dpt_n_w_kg"/>
+                            <field name="dpt_g_w_kg"/>
+                        </group>
+                        <group>
+                            <field name="dpt_uom_id"/>
+                            <field name="dpt_uom2_ecus_id"/>
+                            <field name="dpt_uom2_id"/>
+                            <field name="dpt_price_kd"/>
+                            <field name="dpt_price_usd"/>
+                            <field name="dpt_tax_import"/>
+                            <field name="dpt_tax_ecus5"/>
+                            <field name="dpt_tax"/>
+                            <field name="dpt_exchange_rate"/>
+                        </group>
+                    </group>
+
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>

@@ -10,5 +10,6 @@
     'depends': ['sale', 'sale_management', 'dpt_service_management', 'hr', 'purchase', 'stock'],
     'data': [
         'views/export_import_view.xml',
+        'views/product_template_view.xml',
     ],
 }
