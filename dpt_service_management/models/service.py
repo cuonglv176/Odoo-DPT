@@ -138,7 +138,9 @@ class RequiredField(models.Model):
     uom_id = fields.Many2one('uom.uom', 'Unit', tracking=True)
     default_compute_from = fields.Selection([
         ('weight_in_so', 'Weight in SO'),
-        ('volume_in_so', 'Volume in SO')
+        ('volume_in_so', 'Volume in SO'),
+        ('packing_num_in_po', 'Packing Num in PO'),
+        ('declared_price_in_so', 'Declared Price in SO'),
     ], string='Default From', tracking=True)
 
     def get_default_value(self, so):
@@ -149,6 +151,14 @@ class RequiredField(models.Model):
         if self.default_compute_from == 'volume_in_so' and self.fields_type == 'integer':
             return {
                 'value_integer': so.volume
+            }
+        if self.default_compute_from == 'packing_num_in_po' and self.fields_type == 'integer':
+            return {
+                'value_integer': sum(so.purchase_ids.mapped('package_line_ids').mapped('quantity'))
+            }
+        if self.default_compute_from == 'declared_price_in_so' and self.fields_type == 'integer':
+            return {
+                'value_integer': sum(so.order_line.mapped('price_declaration'))
             }
         return {}
 

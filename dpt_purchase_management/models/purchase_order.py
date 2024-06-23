@@ -100,3 +100,16 @@ class PurchaseOrder(models.Model):
             'service_lines_ids': service_lines_ids,
             'stage_id': helpdesk_stage_id.id,
         }
+
+    @api.constrains('package_line_ids')
+    def _constrains_package_line(self):
+        for item in self:
+            if not item.sale_id:
+                continue
+            purchase_ids = item.sale_id.purchase_ids
+            packing_num = sum(purchase_ids.package_line_ids.mapped('quantity'))
+            all_num_packing_field_ids = item.sale_id.fields_ids.filtered(
+                lambda f: f.fields_id.default_compute_from == 'packing_num_in_po')
+            all_num_packing_field_ids.write({
+                'value_integer': packing_num
+            })
