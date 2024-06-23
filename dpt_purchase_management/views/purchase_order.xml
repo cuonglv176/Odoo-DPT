@@ -34,7 +34,7 @@
                     <field name="package_line_ids" readonly="state in ('done', 'cancel')">
                         <tree>
                             <field name="purchase_id" column_invisible="1"/>
-<!--                            <field name="lot_name"/>-->
+                            <!--                            <field name="lot_name"/>-->
                             <field name="quantity"/>
                             <field name="uom_id"/>
                             <field name="size"/>
@@ -47,7 +47,7 @@
                                 <group>
                                     <group>
                                         <field name="purchase_id" invisible="1" force_save="1"/>
-<!--                                        <field name="lot_name"/>-->
+                                        <!--                                        <field name="lot_name"/>-->
                                         <field name="quantity"/>
                                         <field name="uom_id"/>
                                         <field name="note"/>
@@ -78,6 +78,24 @@
             </page>
             <xpath expr="//field[@name='order_line']/tree/field[@name='product_qty']" position="after">
                 <field name="buying_url"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='qty_received']" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='qty_received']" position="after">
+                <field name="cost"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='qty_invoiced']" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='taxes_id']" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+            <xpath expr="//group[hasclass('oe_subtotal_footer')]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal']" position="attributes">
+                <attribute name="sum">Sum Price Subtotal</attribute>
             </xpath>
         </field>
     </record>

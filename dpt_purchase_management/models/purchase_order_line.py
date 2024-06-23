@@ -7,6 +7,7 @@ class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
     buying_url = fields.Char('Buying URL')
+    cost = fields.Monetary('Cost')
 
     @api.depends('product_qty', 'product_uom', 'company_id')
     def _compute_price_unit_and_date_planned_and_name(self):
@@ -76,3 +77,17 @@ class PurchaseOrderLine(models.Model):
             if not line.name or line.name in default_names:
                 product_ctx = {'seller_id': seller.id, 'lang': get_lang(line.env, line.partner_id.lang).code}
                 line.name = line._get_product_purchase_description(line.product_id.with_context(product_ctx))
+
+    @api.depends('product_qty', 'price_unit', 'taxes_id', 'discount', 'cost')
+    def _compute_amount(self):
+        for line in self:
+            tax_results = self.env['account.tax']._compute_taxes([line._convert_to_tax_base_line_dict()])
+            totals = next(iter(tax_results['totals'].values()))
+            amount_untaxed = totals['amount_untaxed']
+            amount_tax = totals['amount_tax']
+
+            line.update({
+                'price_subtotal': amount_untaxed + line.cost,
+                'price_tax': amount_tax + line.cost,
+                'price_total': amount_untaxed + amount_tax + line.cost,
+            })
