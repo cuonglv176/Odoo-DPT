@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="systray_Activity_Menu_Previews" owl="1">
+       <t t-if="!activities.length">
+            <div class="dropdown-item-text text-center o_no_activity">
+                <span>No activities planned.</span>
+            </div>
+        </t>
+           <div class="o_mail_systray_dropdown_top">
+            <button type="button" t-on-click="onMarkAsRead" class="btn btn-link o_mark_as_read">Mark as read</button>
+        </div>
+           <t t-foreach="activities" t-as="activity" t-key="activities[0]">
+            <t t-if="activity.status == 'seen'">
+                <div class="o_mail_preview o_systray_activity" t-att-data-message_id="activity.id"
+                     t-att-data-res_id="activity.res_id"
+                     t-att-data-res_model="activity.model" t-att-data-model_name="activity.name"
+                     t-att-data-url_portal="activity.url_portal"
+                     t-att-data-status="activity.status"
+                     data-filter='my'
+                     data-action_id="465">
+                    <div t-if="activity.icon">
+                        <t t-if="activity.status == 'seen'">
+                            <i t-attf-class="fa #{activity.icon}"/>
+                        </t>
+                    </div>
+                    <t t-if="activity.status == 'seen'">
+                        <div class="o_preview_info">
+                            <div class="o_preview_title">
+                                <span class="o_preview_name" style=" white-space: normal">
+                                    <t t-esc="activity.res_name"/>
+                                    <br/>
+                                    <t t-esc="activity.create_date"/>
+                                </span>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </t>
+               <t t-if="activity.status != 'seen'">
+                <div class="o_mail_preview o_systray_activity" t-att-data-message_id="activity.id"
+                     t-att-data-res_id="activity.res_id"
+                     style="background-color: whitesmoke;"
+                     t-att-data-res_model="activity.model" t-att-data-model_name="activity.name"
+                     t-att-data-url_portal="activity.url_portal"
+                     data-action_id="465"
+                     t-att-data-status="activity.status"
+                     data-filter='my'>
+                    <div t-if="activity.icon">
+                        <t t-if="activity.status != 'seen'">
+                            <i style="font-weight: bold; font-size: 15px;background-color: whitesmoke;"
+                               t-attf-class="fa #{activity.icon}"/>
+                        </t>
+                    </div>
+                    <t t-if="activity.status != 'seen'">
+                        <div class="o_preview_info o_preview_unread" style="background-color: whitesmoke;">
+                            <div class="o_preview_title o_preview_unread">
+                                <span class="o_preview_name" style="font-weight: bold; white-space: normal;">
+                                    <t t-esc="activity.res_name"/>
+                                    <br/>
+                                    <t t-esc="activity.create_date"/>
+                                </span>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </t>
+   </t>
+
+    <t t-name="systray_Activity_Menu" owl="1">
+
+        <Dropdown autoOpen="false" beforeOpen.bind="beforeOpen" position="'bottom-end'">
+            <t t-set-slot="toggler">
+                <i class="fa fa-bell" role="img" aria-label="Notifications"/>
+                <span class="o_notification_counter badge badge-pill"/>
+            </t>
+            <t t-set-slot="default">
+                <t t-call="systray_Activity_Menu_Previews">
+                    <t t-set="activities" t-value="_activities"/>
+                </t>
+            </t>
+        </Dropdown>
+   </t>
+</templates>
