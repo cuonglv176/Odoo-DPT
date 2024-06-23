@@ -15,6 +15,10 @@ class MailMessage(models.Model):
             obj_data = self.env[res.model].browse(res.res_id)
             res.res_id = obj_data.service_id.id
             res.model = 'dpt.service.management'
+        if res.model and res.model in ('uom.uom'):
+            obj_data = self.env[res.model].browse(res.res_id)
+            res.res_id = obj_data.service_ids[:1].id
+            res.model = 'dpt.service.management'
         return res
 
 
@@ -41,7 +45,7 @@ class DPTService(models.Model):
     cost_account_id = fields.Many2one('account.account', string='Cost Account', tracking=True)
     revenue_account_id = fields.Many2one('account.account', string='Revenue Account', tracking=True)
     steps_count = fields.Integer(string='Steps', compute="_compute_count_steps")
-    description = fields.Html(string='Description')
+    description = fields.Text(string='Description')
     currency_id = fields.Many2one('res.currency', string='Currency', tracking=True)
     price = fields.Monetary(currency_field='currency_id', string='Price', tracking=True)
     uom_id = fields.Many2one('uom.uom', string='Default Unit', tracking=True)
@@ -83,7 +87,7 @@ class DPTServiceSteps(models.Model):
     sequence = fields.Integer(string='Sequence', tracking=True)
     department_id = fields.Many2one('hr.department', string='Department', tracking=True)
     employee_id = fields.Many2one('hr.employee', string='Employee Default', tracking=True)
-    description = fields.Html(string='Description')
+    description = fields.Text(string='Description')
     is_create_ticket = fields.Boolean('Create Ticket', tracking=True)
     service_id = fields.Many2one('dpt.service.management', string='Service', ondelete='cascade', tracking=True)
 
@@ -116,14 +120,15 @@ class RequiredField(models.Model):
         ('other', 'Other'),
     ], string='Field Mapping', default='other', tracking=True)
     name = fields.Char(string='Name', tracking=True)
-    description = fields.Html(string='Description')
+    description = fields.Text(string='Description', tracking=True)
     fields_type = fields.Selection([
         ('char', 'Char'),
         ('integer', 'Integer'),
         ('date', 'Date'),
         ('selection', 'Selection')
     ], string='Fields type', default='char', tracking=True)
-    selection_value_ids = fields.One2many('dpt.sale.order.fields.selection','fields_id', string='Selection Value', tracking=True)
+    selection_value_ids = fields.One2many('dpt.sale.order.fields.selection', 'fields_id', string='Selection Value',
+                                          tracking=True)
     type = fields.Selection(selection=[
         ("required", "Required"),
         ("options", "Options")
@@ -134,7 +139,7 @@ class RequiredField(models.Model):
     default_compute_from = fields.Selection([
         ('weight_in_so', 'Weight in SO'),
         ('volume_in_so', 'Volume in SO')
-    ], string='Default From')
+    ], string='Default From', tracking=True)
 
     def get_default_value(self, so):
         if self.default_compute_from == 'weight_in_so' and self.fields_type == 'integer':

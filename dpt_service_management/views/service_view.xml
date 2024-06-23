@@ -34,7 +34,7 @@
                     </group>
                     <notebook>
                         <page string="Description" name="description">
-                            <field name="description" widget="html"/>
+                            <field name="description"/>
                         </page>
                         <page string="Steps" name="steps">
                             <field name="steps_ids" nolabel="1">
@@ -43,7 +43,7 @@
                                     <field name="department_id"/>
                                     <field name="employee_id" widget="many2one_avatar_user"
                                            domain="[('department_id','=',department_id)]"/>
-                                    <field name="description" widget="html"/>
+                                    <field name="description"/>
                                     <field name="is_create_ticket" widget="boolean_toggle"/>
                                 </tree>
                             </field>
@@ -56,7 +56,7 @@
                                     <field name="name" required="1"/>
                                     <field name="field" required="1"/>
                                     <field name="fields_type" required="1"/>
-                                    <field name="description" widget="html"/>
+                                    <field name="description"/>
                                     <field name="selection_value_ids" widget="many2many_tags"/>
                                     <field name="type" widget="radio"/>
                                     <field name="uom_id" invisible="not using_calculation_price"
@@ -69,9 +69,9 @@
                         <page string="Units" name="units">
                             <field name="uom_ids" nolabel="1">
                                 <tree editable="bottom">
-                                    <field name="name"/>
-                                    <field name="category_id"/>
-                                    <field name="description" widget="html"/>
+                                    <field name="name" readonly="1"/>
+                                    <field name="category_id" readonly="1"/>
+                                    <field name="description"/>
                                 </tree>
                             </field>
                         </page>

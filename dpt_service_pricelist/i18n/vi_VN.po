@@ -86,7 +86,7 @@ msgstr "Ngày tạo"
 #: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist_item__currency_id
 #: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist_item_detail__currency_id
 msgid "Currency"
-msgstr "Tiền t"
+msgstr "Tiền tệ"
 
 #. module: dpt_service_pricelist
 #: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist__partner_id
