@@ -37,9 +37,9 @@
                     <field string="Approvals" name="approval_count" widget="statinfo"/>
                 </button>
             </div>
-            <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
-                <field name="department_id"/>
-            </xpath>
+<!--            <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">-->
+<!--                <field name="department_id"/>-->
+<!--            </xpath>-->
         </field>
     </record>
 

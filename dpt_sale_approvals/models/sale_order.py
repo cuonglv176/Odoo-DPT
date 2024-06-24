@@ -128,8 +128,12 @@ class SaleOrder(models.Model):
                         required = True
                     else:
                         required = False
-                elif r.type_condition == 'price_list' and not rec.service_id.pricelist_item_ids:
+                elif r.type_condition == 'price_list':
                     required = True
+                    for uom in rec.service_id.pricelist_item_ids:
+                        if rec.uom_id == uom.uom_id:
+                            required = False
+                            break
                 elif r.type_condition == 'other':
                     required = True
                 else:
