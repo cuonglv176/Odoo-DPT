@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <record id="view_dpt_export_import_line_form" model="ir.ui.view">
+        <field name="name">dpt.export.import.line.form</field>
+        <field name="model">dpt.export.import.line</field>
+        <field name="arch" type="xml">
+            <form string="Export import line Form">
+                <header>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,eligible,declared,released,consulted,post_control,cancelled"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="sale_id"/>
+                            <field name="product_id"/>
+                            <field name="dpt_english_name"/>
+                            <field name="dpt_description"/>
+                            <field name="dpt_n_w_kg"/>
+                            <field name="dpt_g_w_kg"/>
+                        </group>
+                        <group>
+                            <field name="dpt_uom_id"/>
+                            <field name="dpt_uom2_ecus_id"/>
+                            <field name="dpt_uom2_id"/>
+                            <field name="dpt_price_kd"/>
+                            <field name="dpt_price_usd"/>
+                            <field name="dpt_tax_import"/>
+                            <field name="dpt_tax_ecus5"/>
+                            <field name="dpt_tax"/>
+                            <field name="dpt_exchange_rate"/>
+                        </group>
+
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dpt_export_import_line_tree" model="ir.ui.view">
+        <field name="name">dpt.export.import.tree</field>
+        <field name="model">dpt.export.import.line</field>
+        <field name="arch" type="xml">
+            <tree string="Export import Line List">
+                <field name="sale_id"/>
+                <field name="product_id"/>
+                <field name="dpt_english_name"/>
+                <field name="dpt_description"/>
+                <field name="dpt_n_w_kg"/>
+                <field name="dpt_g_w_kg"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_dpt_export_import_line_management" model="ir.actions.act_window">
+        <field name="name">Export import</field>
+        <field name="res_model">dpt.export.import.line</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <menuitem id="submenu_dpt_export_import_line_management" name="Customs Declaration Line"
+              parent="dpt_export_import.dpt_export_import_menu"
+              action="action_dpt_export_import_line_management"
+              groups="sales_team.group_sale_salesman_all_leads"
+              sequence="20"/>
+</odoo>

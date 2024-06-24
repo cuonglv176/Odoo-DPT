@@ -1,14 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import collections
-from datetime import timedelta
-from itertools import groupby
-import operator as py_operator
 from odoo import fields, models, _
-from odoo.tools import groupby
-from odoo.tools.float_utils import float_round, float_is_zero
-
 
 class DptExportImport(models.Model):
     _name = "dpt.export.import"
@@ -17,9 +10,18 @@ class DptExportImport(models.Model):
 
     name = fields.Char(string='Title')
     code = fields.Char(string='Code')
-    user_id = fields.Many2one('res.user', string='User Export/Import', default=lambda self: self.env.user)
+    user_id = fields.Many2one('res.users', string='User Export/Import', default=lambda self: self.env.user)
     date = fields.Date(required=True, default=lambda self: fields.Date.context_today(self))
     line_ids = fields.One2many('dpt.export.import.line', 'export_import_id', string='Export/Import Line')
+    description = fields.Text(string='Description')
+    state = fields.Selection([
+        ('draft', 'Nháp'),
+        ('declared', 'Tờ khai thông quan'),
+        ('released', 'Giải phóng'),
+        ('consulted', 'Tham vấn'),
+        ('post_control', 'Kiểm tra sau thông quan'),
+        ('cancelled', 'Huỷ')
+    ], string='State', default='draft')
 
 
 class DptExportImportLine(models.Model):
@@ -27,7 +29,10 @@ class DptExportImportLine(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Dpt Export Import line'
 
+    sequence = fields.Integer(default=1)
     export_import_id = fields.Many2one('dpt.export.import', string='Export import')
+    sale_line_id = fields.Many2one('sale.order.line', string='Sale order line')
+    sale_id = fields.Many2one('sale.order', string='Sale order')
     product_tmpl_id = fields.Many2one('product.template', string='Product Template',
                                       related='product_id.product_tmpl_id')
     product_id = fields.Many2one('product.product', string='Product')
@@ -44,3 +49,13 @@ class DptExportImportLine(models.Model):
     dpt_tax_ecus5 = fields.Float(string='VAT ECUS5', tracking=True)
     dpt_tax = fields.Float(string='VAT(%)', tracking=True)
     dpt_exchange_rate = fields.Monetary(string='Exchange rate', tracking=True)
+    currency_id = fields.Many2one('res.currency', string='Currency')
+    state = fields.Selection([
+        ('draft', 'Nháp'),
+        ('eligible', 'Đủ điều kiện khai báo'),
+        ('declared', 'Tờ khai thông quan'),
+        ('released', 'Giải phóng'),
+        ('consulted', 'Tham vấn'),
+        ('post_control', 'Kiểm tra sau thông quan'),
+        ('cancelled', 'Huỷ')
+    ], string='State', default='draft')
