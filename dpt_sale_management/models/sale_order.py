@@ -78,7 +78,7 @@ class SaleOrder(models.Model):
                     for field_data in self.env['sale.order'].browse(self.id.origin).fields_ids:
                         if field_data.fields_id.id == required_fields_id.id:
                             val.append({
-                                'sequence': field_data.sequence,
+                                'sequence': 1 if field_data.type == 'required' else 0,
                                 'fields_id': required_fields_id.id,
                                 'sale_id': self.id,
                                 'value_char': field_data.value_char,
@@ -91,7 +91,7 @@ class SaleOrder(models.Model):
                     for field_data in self.fields_ids:
                         if field_data.fields_id.id == required_fields_id.id:
                             val.append({
-                                'sequence': field_data.sequence,
+                                'sequence': 1 if field_data.type == 'required' else 0,
                                 'fields_id': required_fields_id.id,
                                 'sale_id': self.id,
                                 'value_char': field_data.value_char,
@@ -104,7 +104,7 @@ class SaleOrder(models.Model):
                     result = [item for item in val if item['fields_id'] == required_fields_id.id]
                     if not result:
                         x = {
-                            'sequence': sequence,
+                            'sequence': 1 if required_fields_id.type == 'required' else 0,
                             'fields_id': required_fields_id.id,
                         }
                         default_value = required_fields_id.get_default_value(self)
@@ -113,7 +113,7 @@ class SaleOrder(models.Model):
                         val.append(x)
                 else:
                     x = {
-                        'sequence': sequence,
+                        'sequence': 1 if required_fields_id.type == 'required' else 0,
                         'fields_id': required_fields_id.id,
                     }
                     default_value = required_fields_id.get_default_value(self)
@@ -122,6 +122,7 @@ class SaleOrder(models.Model):
                     val.append(x)
             list_sale_service_id.append(sale_service_id.service_id.id)
         if val:
+            val = sorted(val, key=lambda x: x["sequence"], reverse=True)
             self.fields_ids = None
             self.fields_ids = [(0, 0, item) for item in val]
         if not self.sale_service_ids:
@@ -301,7 +302,12 @@ class SaleOrder(models.Model):
 class SaleOrderField(models.Model):
     _name = 'dpt.sale.order.fields'
 
-    sequence = fields.Integer()
+    def _default_sequence(self):
+        if self.type == 'required':
+            return 1
+        return 0
+
+    sequence = fields.Integer(default=_default_sequence, compute='_compute_sequence', store=True)
     sale_id = fields.Many2one('sale.order', string='Sale Order')
     service_id = fields.Many2one(related='fields_id.service_id')
     fields_id = fields.Many2one('dpt.service.management.required.fields', string='Fields')
@@ -321,3 +327,11 @@ class SaleOrderField(models.Model):
     ], string='Fields type', default='char', related='fields_id.fields_type')
     using_calculation_price = fields.Boolean(related='fields_id.using_calculation_price')
     uom_id = fields.Many2one(related="fields_id.uom_id")
+
+    @api.depends('fields_id', 'fields_id.type')
+    def _compute_sequence(self):
+        for r in self:
+            if r.type == 'required':
+                r.sequence = 1
+            else:
+                r.sequence = 0

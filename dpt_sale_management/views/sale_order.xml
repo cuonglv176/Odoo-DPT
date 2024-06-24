@@ -59,7 +59,7 @@
             <page name="order_lines" position="after">
                 <page name="sale_field" string="Other Fields">
                     <field name="fields_ids" readonly="state == 'cancel' or locked">
-                        <tree editable="bottom" decoration-danger="type=='required'">
+                        <tree editable="bottom" default_order="sequence desc" decoration-danger="type=='required'">
                             <field name="using_calculation_price" column_invisible="1"/>
                             <field name="sequence" widget="handle"/>
                             <field name="service_id"/>
