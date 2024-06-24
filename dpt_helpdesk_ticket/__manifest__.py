@@ -15,6 +15,7 @@
         'views/helpdesk_stage.xml',
         'views/helpdesk_ticket_view.xml',
         'views/sale_order_view.xml',
+        'views/helpdesk_team.xml',
     ],
     'installable': True,
     'application': True,

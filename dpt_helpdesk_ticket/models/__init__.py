@@ -4,3 +4,4 @@
 from . import helpdesk_stage
 from . import helpdesk_ticket
 from . import sale_order
+from . import helpdesk_team

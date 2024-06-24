@@ -2,7 +2,6 @@ from odoo import models, fields, api, _
 
 
 class SaleOrder(models.Model):
-
     _inherit = 'sale.order'
 
     count_ticket = fields.Integer(compute='_compute_count_ticket')
@@ -33,8 +32,8 @@ class SaleOrder(models.Model):
             if r.department_id:
                 list_department.append(r.department_id.id)
         for department in list_department:
-            service_ids = []
             for service in self.sale_service_ids:
+                service_ids = []
                 if department == service.department_id.id:
                     service_ids.append((0, 0, {
                         'service_id': service.service_id.id,
@@ -46,12 +45,23 @@ class SaleOrder(models.Model):
                         'amount_total': service.amount_total,
                         # 'status': r.price_status,
                     }))
-            self.env['helpdesk.ticket'].create({
-                'sale_id': self.id,
-                'partner_id': self.partner_id.id,
-                'service_lines_ids': service_ids,
-                'department_id': department,
-            })
+                team_id = self.env['helpdesk.team'].search([('service_type_ids', 'in', [service.service_type_id.id])],
+                                                           limit=1)
+                if team_id:
+                    self.env['helpdesk.ticket'].create({
+                        'sale_id': self.id,
+                        'partner_id': self.partner_id.id,
+                        'service_lines_ids': service_ids,
+                        'department_id': department,
+                        'team_id': team_id,
+                    })
+                else:
+                    self.env['helpdesk.ticket'].create({
+                        'sale_id': self.id,
+                        'partner_id': self.partner_id.id,
+                        'service_lines_ids': service_ids,
+                        'department_id': department,
+                    })
         # return {
         #     'name': "Service Ticket",
         #     'type': 'ir.actions.act_window',
