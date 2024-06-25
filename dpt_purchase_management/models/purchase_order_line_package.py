@@ -3,14 +3,31 @@ from odoo import fields, models, api, _
 
 class PurchaseOrderLinePackage(models.Model):
     _name = 'purchase.order.line.package'
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin']
     _description = 'Purchase Package'
+    _order = 'create_date DESC'
 
-    purchase_id = fields.Many2one('purchase.order', 'Purchase')
-    detail_ids = fields.One2many('purchase.order.line.package.detail', 'package_id', 'Package detail')
-    uom_id = fields.Many2one('uom.uom', 'Package Unit', domain="[('is_package_unit', '=', True)]")
-    # lot_name = fields.Char('Lot Name')
-    quantity = fields.Integer('Quantity')
-    size = fields.Char('Size')
-    weight = fields.Float('Weight (kg)')
-    volume = fields.Float('Volume (m3)')
-    note = fields.Char('Note')
+    purchase_id = fields.Many2one('purchase.order', 'Purchase', tracking=True)
+    sale_id = fields.Many2one('sale.order', 'Sale Order', tracking=True)
+    name = fields.Char('Package Name', tracking=True)
+    code = fields.Char('Package Code', default='NEW', copy=False, index=True, tracking=True)
+    date = fields.Date(string='Date', required=True, default=lambda self: fields.Date.context_today(self), tracking=True)
+    uom_id = fields.Many2one('uom.uom', 'Package Unit', domain="[('is_package_unit', '=', True)]", tracking=True)
+    quantity = fields.Integer('Quantity', tracking=True)
+    size = fields.Char('Size', tracking=True)
+    weight = fields.Float('Weight (kg)', tracking=True)
+    volume = fields.Float('Volume (m3)', tracking=True)
+    note = fields.Text('Note', tracking=True)
+    image = fields.Binary(string='Image', tracking=True)
+    detail_ids = fields.One2many('purchase.order.line.package.detail', 'package_id', 'Package detail', tracking=True)
+
+
+    @api.model
+    def create(self, vals):
+        if vals.get('code', 'NEW') == 'NEW':
+            vals['code'] = self._generate_service_code()
+        return super(PurchaseOrderLinePackage, self).create(vals)
+
+    def _generate_service_code(self):
+        sequence = self.env['ir.sequence'].next_by_code('purchase.order.line.package') or '00'
+        return f'{sequence}'

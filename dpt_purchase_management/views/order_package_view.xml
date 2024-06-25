@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <record id="view_dpt_purchase_order_line_package_form" model="ir.ui.view">
+        <field name="name">purchase.order.line.package.form</field>
+        <field name="model">purchase.order.line.package</field>
+        <field name="arch" type="xml">
+            <form string="Export import Form">
+                <header>
+                </header>
+                <sheet>
+                    <label for="name"/>
+                    <h1>
+                        <field name="name" placeholder="e.g Kiện hàng đơn ABC"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="sale_id"/>
+                            <field name="purchase_id"/>
+                            <field name="date"/>
+                            <field name="image" widget="image" class="oe_avatar"
+                                   options='{"preview_image": "image", "size": [80, 80]}'/>
+                        </group>
+                        <group>
+                            <field name="quantity"/>
+                            <field name="uom_id"/>
+                            <field name="size"/>
+                            <field name="weight"/>
+                            <field name="volume"/>
+                            <field name="note"/>
+                        </group>
+
+                    </group>
+                    <notebook>
+                        <page string="Product Detail" name="detail_line">
+                            <field name="detail_ids" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="sale_line_id"/>
+                                    <field name="product_id"/>
+                                    <field name="uom_id"/>
+                                    <field name="quantity"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dpt_purchase_order_line_package_tree" model="ir.ui.view">
+        <field name="name">purchase.order.line.package.tree</field>
+        <field name="model">purchase.order.line.package</field>
+        <field name="arch" type="xml">
+            <tree string="Package List">
+                <field name="code"/>
+                <field name="sale_id"/>
+                <field name="purchase_id"/>
+                <field name="date"/>
+                <field name="quantity"/>
+                <field name="uom_id"/>
+                <field name="size"/>
+                <field name="weight"/>
+                <field name="volume"/>
+                <field name="image" widget="image" class="oe_avatar"
+                       options='{"preview_image": "image", "size": [80, 80]}'/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_purchase_order_line_package_management" model="ir.actions.act_window">
+        <field name="name">Package</field>
+        <field name="res_model">purchase.order.line.package</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <menuitem id="submenu_purchase_order_line_package_management" name="Package"
+              parent="stock.menu_stock_root"
+              action="action_purchase_order_line_package_management"
+              sequence="11"/>
+</odoo>

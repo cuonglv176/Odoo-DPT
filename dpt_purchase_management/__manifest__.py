@@ -12,7 +12,9 @@
     'data': [
         'security/ir.model.access.csv',
         'data/res_partner.xml',
+        'data/package_sequence.xml',
         'views/dpt_service_management.xml',
+        'views/order_package_view.xml',
         'views/purchase_order.xml',
         'views/sale_order.xml',
         'views/uom_uom.xml',

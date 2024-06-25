@@ -9,4 +9,10 @@
               action="stock.product_template_action_product"
               parent="dpt_export_import.dpt_export_import_menu" sequence="100"/>
 
+
+    <menuitem id="submenu_export_import_package_management" name="Package"
+              parent="dpt_export_import.dpt_export_import_menu"
+              action="dpt_purchase_management.action_purchase_order_line_package_management"
+              sequence="10"/>
+
 </odoo>
