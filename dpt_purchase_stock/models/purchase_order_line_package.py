@@ -32,14 +32,14 @@ class PurchaseOrderLinePackage(models.Model):
             'picking_type_id': self.purchase_id.picking_type_id.id,
             'group_id': self.purchase_id.group_id.id,
             'origin': self.purchase_id.name,
-            'description_picking': self.lot_name,
+            # 'description_picking': self.purchase_id.packing_lot_name,
             'warehouse_id': self.purchase_id.picking_type_id.warehouse_id.id,
             'product_uom_qty': self.quantity,
             'product_uom': self.uom_id.product_id.uom_id.id,
             'move_line_ids': [(0, 0, {
                 'company_id': self.env.company.id,
                 'product_id': self.uom_id.product_id.id,
-                'lot_name': f'{self.purchase_id.name}_{self.lot_name}',
+                # 'lot_name': f'{self.purchase_id.name}_{self.lot_name}',
                 'quantity': self.quantity,
             })]
         }]
