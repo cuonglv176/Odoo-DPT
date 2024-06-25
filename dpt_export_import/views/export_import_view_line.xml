@@ -9,12 +9,16 @@
                 <header>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,eligible,declared,released,consulted,post_control,cancelled"/>
+                    <button string="Eligible" type="object" name="action_update_eligible" class="btn-primary"
+                            invisible="state != 'draft'"/>
                 </header>
                 <sheet>
                     <group>
                         <group>
                             <field name="sale_id"/>
+                            <field name="sale_line_id"/>
                             <field name="product_id"/>
+                            <field name="package_ids" widget="many2many_tags"/>
                             <field name="dpt_english_name"/>
                             <field name="dpt_description"/>
                             <field name="dpt_n_w_kg"/>
@@ -47,13 +51,28 @@
         <field name="name">dpt.export.import.tree</field>
         <field name="model">dpt.export.import.line</field>
         <field name="arch" type="xml">
-            <tree string="Export import Line List">
+            <tree string="Export Import Line List">
                 <field name="sale_id"/>
                 <field name="product_id"/>
                 <field name="dpt_english_name"/>
                 <field name="dpt_description"/>
                 <field name="dpt_n_w_kg"/>
                 <field name="dpt_g_w_kg"/>
+                <field name="dpt_uom_id"/>
+                <field name="dpt_uom2_ecus_id"/>
+                <field name="dpt_uom2_id"/>
+                <field name="dpt_price_kd"/>
+                <field name="dpt_price_usd"/>
+                <field name="dpt_tax_import"/>
+                <field name="dpt_tax_ecus5"/>
+                <field name="dpt_tax"/>
+                <field name="dpt_exchange_rate"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state in ('eligible','declared','released','consulted','post_control')"/>
+                <button string="Eligible" type="object" name="action_update_eligible" class="btn-primary"
+                        invisible="state != 'draft'"/>
             </tree>
         </field>
     </record>

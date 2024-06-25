@@ -7,12 +7,14 @@
     'author': 'CuongLV',
     'maintainer': 'Your Name',
     'website': 'http://dpt.com',
-    'depends': ['sale', 'sale_management', 'dpt_service_management', 'hr', 'purchase', 'stock'],
+    'depends': ['sale', 'sale_management', 'dpt_service_management', 'dpt_purchase_management', 'hr', 'purchase',
+                'stock'],
     'data': [
         'security/ir.model.access.csv',
         'views/menu.xml',
         'views/export_import_view.xml',
         'views/product_template_view.xml',
         'views/export_import_view_line.xml',
+        'views/sale_order_view.xml',
     ],
 }

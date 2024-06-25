@@ -27,6 +27,32 @@
                             <field name="dpt_exchange_rate"/>
                         </group>
                     </group>
+                    <notebook>
+                        <page string="History">
+                            <field name="dpt_export_import_line_ids" readonly="1">
+                                <tree>
+                                    <field name="dpt_english_name"/>
+                                    <field name="dpt_description"/>
+                                    <field name="dpt_n_w_kg"/>
+                                    <field name="dpt_g_w_kg"/>
+                                    <field name="dpt_uom_id"/>
+                                    <field name="dpt_uom2_ecus_id"/>
+                                    <field name="dpt_uom2_id"/>
+                                    <field name="dpt_price_kd"/>
+                                    <field name="dpt_price_usd"/>
+                                    <field name="dpt_tax_import"/>
+                                    <field name="dpt_tax_ecus5"/>
+                                    <field name="dpt_tax"/>
+                                    <field name="dpt_exchange_rate"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="state" widget="badge"
+                                           decoration-info="state == 'draft'"
+                                           decoration-success="state in ('eligible','declared','released','consulted','post_control')"/>
+                                    <button string="Restore" type="object" name="restore_information_to_product"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
 
                 </page>
             </xpath>

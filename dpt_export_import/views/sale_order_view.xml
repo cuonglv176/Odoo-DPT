@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="dpt_export_import_view_sale_order_inherit_form" model="ir.ui.view">
+        <field name="name">sale.order.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree/field[@name='price_total']" position="after">
+                <button string="Update Declaration Line" type="object" name="action_open_dpt_export_import_line"
+                        class="btn-primary"/>
+            </xpath>
+
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" type="object" name="action_open_declaration" icon="fa-list-ul">
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_value">
+                            <field string="Declaration" name="declaration_count"/>
+                        </span>
+                        <span class="o_stat_text">Declaration</span>
+                    </div>
+                </button>
+                <button class="oe_stat_button" type="object" name="action_open_declaration_line" icon="fa-list-ul">
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_value">
+                            <field string="Declaration Line" name="declaration_line_count"/>
+                        </span>
+                        <span class="o_stat_text">Declaration Line</span>
+                    </div>
+                </button>
+            </div>
+        </field>
+    </record>
+
+
+</odoo>

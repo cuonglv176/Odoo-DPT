@@ -26,3 +26,5 @@ class ProductTemplate(models.Model):
     dpt_tax_ecus5 = fields.Float(string='VAT ECUS5', tracking=True)
     dpt_tax = fields.Float(string='VAT(%)', tracking=True)
     dpt_exchange_rate = fields.Monetary(string='Exchange rate', tracking=True)
+    dpt_export_import_line_ids = fields.One2many('dpt.export.import.line', 'product_tmpl_id', string='Declaration line')
+
