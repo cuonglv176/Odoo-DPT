@@ -5,6 +5,7 @@ class PurchaseOrderLinePackage(models.Model):
     _inherit = 'purchase.order.line.package'
 
     move_ids = fields.One2many('stock.move', 'package_line_id', 'Move')
+    picking_id = fields.Many2one('stock.picking', 'Picking')
 
     def _create_stock_moves(self, picking):
         values = []
