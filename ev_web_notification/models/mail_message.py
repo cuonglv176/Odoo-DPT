@@ -32,9 +32,11 @@ class Message(models.Model):
         # firebase_notification = self.env['firebase.notification'].sudo().search([('message_id','=',self.id)])
         # if len(firebase_notification) > 0:
         #     firebase_notification.mark_seen()
-        self.env['bus.bus'].sudo().sendone(
-            (self._cr.dbname, 'res.partner', self.author_id.id),
-            {'type': 'notification_updated', 'notification_seen': True})
+        self.env['bus.bus'].sudo()._sendone(
+            f'mail_message_{self.env.user.id}',
+            'notification_updated',
+            {'notification_seen': True}
+        )
 
     def message_read_all(self):
         message_ids = self.env['mail.message'].sudo().search(
@@ -47,7 +49,7 @@ class Message(models.Model):
             {'notification_seen': True}
         )
 
-    def _push_system_notification(self, author_id, url_portal, recipients, subject_notification, model, res_id,
+    def _push_system_notification(self, author_id, recipients, subject_notification, model, res_id,
                                   icon='fa-user',
                                   body='', record_name='',
                                   timestamp=None, comment_id=False):
@@ -71,10 +73,8 @@ class Message(models.Model):
         message_ids = []
         for rc in recipients:
             values = {
-                'url_portal': url_portal,
                 'comment_id': comment_id,
                 # 'action_id': action.id,
-                'canned_response_ids': [],
                 'author_id': author_id,
                 'email_from': f'"{partner_id.name}" <{partner_id.email}>',
                 'model': model,
@@ -88,21 +88,20 @@ class Message(models.Model):
                 'parent_id': False,
                 'subtype_id': subtype_id,
                 'status': 'unseen',
-                'add_sign': True,
                 'record_name': record_name,
                 'icon': icon,
                 'attachment_ids': []}
 
             message_id = self.env['mail.message'].sudo().create(values)
             message_ids.append(message_id)
-        if author_id:
-            for at in recipients:
-                user = self.env['res.users'].sudo().search([('partner_id', '=', at)], limit=1)
-                if user:
-                    self.env['bus.bus'].sudo().sendmany([[
-                        'tcm_notification_%s' % user.id,
-                        {'type': 'notification_updated', 'notification_unseen': True}]])
-                    user.sudo().notify_info(message=subject_notification)
+        # if author_id:
+        #     for at in recipients:
+        #         user = self.env['res.users'].sudo().search([('partner_id', '=', at)], limit=1)
+        #         if user:
+        #             self.env['bus.bus'].sudo()._sendmany([[
+        #                 'tcm_notification_%s' % user.id,
+        #                 {'type': 'notification_updated', 'notification_unseen': True}]])
+        #             user.sudo().notify_info(message=subject_notification)
         # for message in message_ids:
         #     for partner in message.partner_ids:
         #         user = self.env['res.users'].sudo().search([('partner_id','=',partner.id)], limit=1)

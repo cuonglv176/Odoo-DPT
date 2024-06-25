@@ -20,6 +20,7 @@ class SystrayMenu extends Component {
         this.busService.addChannel(this.channel)
         this.busService.addEventListener("notification", this._onMessageNotificationUpdate.bind(this))
         onMounted(this._getActivityData);
+        this.element = window.$
     }
 
     _onMessageNotificationUpdate(payload) {
@@ -75,15 +76,7 @@ class SystrayMenu extends Component {
             kwargs: {context: session.user_context},
         })
         self.activityCounter = result.reduce((total_count, p_data) => total_count + p_data.total_count || 0, 0);
-        let $content = window.$('.o_mail_systray_dropdown_items').append(
-                $(renderToString('systray_Activity_Menu_Previews', {
-                    activities: self._activities,
-                    isEmpty: self.isEmpty
-                }))
-            )
-        ;
-        // this.$target.find('.o_mail_systray_dropdown_items')
-        console.log(result)
+        self._activities = result
     }
 }
 

@@ -30,6 +30,14 @@
                                 <field name="message_notification" />
                             </group>
                         </group>
+                        <group>
+                                <field name="partner_ids">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="email"/>
+                                    </tree>
+                                </field>
+                        </group>
                         <group invisible="not model_id">
                             <group>
                                 <label for="trigger"/>
@@ -124,84 +132,164 @@
                                 </div>
                             </group>
                         </group>
+
+                        <notebook invisible="not model_id" groups="base.group_no_one">
+                            <page string="Actions To Do" name="actions">
+                                <field
+                                    name="action_server_ids"
+                                    widget="one2many"
+                                    class="o_base_automation_actions_field"
+                                    context="{'default_model_id': model_id, 'form_view_ref': 'base_automation.ir_actions_server_view_form_automation'}"
+                                >
+                                    <kanban>
+                                        <control>
+                                            <create string="Add an action" />
+                                        </control>
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                <div class="oe_kanban_global_click row g-0 align-items-center">
+                                                    <div class="d-flex align-items-center gap-1">
+                                                        <field name="sequence" widget="handle" class="px-1" />
+                                                        <field name="state" invisible="1" />
+                                                        <field name="evaluation_type" invisible="1" />
+                                                        <field name="value" invisible="1" />
+                                                        <field name="selection_value" invisible="1" />
+                                                        <field name="value_field_to_show" invisible="1"/>
+                                                        <field name="update_field_type" invisible="1"/>
+                                                        <field name="update_m2m_operation" invisible="1"/>
+
+                                                        <!-- Icon section -->
+                                                        <i
+                                                            data-name="server_action_icon"
+                                                            t-att-title="record.state.value"
+                                                            class="fa fa-fw"
+                                                            t-att-class="{
+                                                                'code': 'fa-file-code-o',
+                                                                'object_create': 'fa-edit',
+                                                                'object_write': 'fa-refresh',
+                                                                'multi': 'fa-list-ul',
+                                                                'mail_post': 'fa-envelope',
+                                                                'followers': 'fa-user-o',
+                                                                'remove_followers': 'fa-user-times',
+                                                                'next_activity': 'fa-clock-o',
+                                                                'sms': 'fa-comments-o',
+                                                                'webhook': 'fa-paper-plane',
+                                                            }[record.state.raw_value]"
+                                                        />
+                                                        <field name="name" class="text-truncate" />
+                                                        <t invisible="state != 'object_write'">
+                                                            <t invisible="not (update_field_type == 'many2many' and update_m2m_operation == 'clear') or evaluation_type != 'value'">
+                                                                <span>by clearing it</span>
+                                                            </t>
+                                                            <t invisible="not (update_field_type == 'many2many' and update_m2m_operation == 'add') or evaluation_type != 'value'">
+                                                                <span>by adding</span><field name="resource_ref"/>
+                                                            </t>
+                                                            <t invisible="not (update_field_type == 'many2many' and update_m2m_operation == 'remove') or evaluation_type != 'value'">
+                                                               <span>by removing</span><field name="resource_ref"/>
+                                                            </t>
+                                                            <t invisible="not (update_field_type == 'many2many' and update_m2m_operation == 'set') or evaluation_type != 'value'">
+                                                                <span>by setting it to</span><field name="resource_ref"/>
+                                                             </t>
+                                                            <t invisible="update_field_type == 'many2many' and evaluation_type == 'value'">
+                                                                <span invisible="evaluation_type != 'value'">to</span>
+                                                                <span invisible="evaluation_type != 'equation'">as</span>
+                                                                <field name="resource_ref" invisible="not (value_field_to_show == 'resource_ref' and evaluation_type == 'value')" />
+                                                                <field name="selection_value" invisible="not (value_field_to_show == 'selection_value' and evaluation_type == 'value')" class="d-inline"/>
+                                                                <field name="update_boolean_value" invisible="not (value_field_to_show == 'update_boolean_value' and evaluation_type == 'value')" class="d-inline"/>
+                                                                <em invisible="not (value_field_to_show == 'value' and evaluation_type == 'value')" t-out="record.value.raw_value" class="d-inline"/>
+                                                                <code invisible="not (evaluation_type == 'equation')" t-out="record.value.raw_value"/>
+                                                            </t>
+                                                        </t>
+                                                        <button type="delete" name="delete" class="btn fa fa-trash fa-xl px-3 ms-auto" title="Delete Action" />
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </templates>
+                                    </kanban>
+                                </field>
+                            </page>
+                            <page string="Notes" name="notes">
+                                <field name="description" placeholder="Keep track of what this automation does and why it exists..."/>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
         </record>
 
-<!--        &lt;!&ndash; automation Tree View &ndash;&gt;-->
-<!--        <record id="view_base_automation_tree" model="ir.ui.view">-->
-<!--            <field name="name">base.automation.tree</field>-->
-<!--            <field name="model">base.automation</field>-->
-<!--            <field name="arch" type="xml">-->
-<!--                <tree string="Automation Rules">-->
-<!--                    <field name="name"/>-->
-<!--                    <field name="trigger"/>-->
-<!--                    <field name="model_id"/>-->
-<!--                </tree>-->
-<!--            </field>-->
-<!--        </record>-->
+        <!-- automation Tree View -->
+        <record id="view_base_automation_tree" model="ir.ui.view">
+            <field name="name">base.automation.tree</field>
+            <field name="model">base.automation</field>
+            <field name="arch" type="xml">
+                <tree string="Automation Rules">
+                    <field name="name"/>
+                    <field name="trigger"/>
+                    <field name="model_id"/>
+                </tree>
+            </field>
+        </record>
 
-<!--        &lt;!&ndash; automation Kanban View &ndash;&gt;-->
-<!--        <record id="view_base_automation_kanban" model="ir.ui.view">-->
-<!--            <field name="name">base.automation.kanban</field>-->
-<!--            <field name="model">base.automation</field>-->
-<!--            <field name="arch" type="xml">-->
-<!--                <kanban-->
-<!--                    string="Automation Rules"-->
-<!--                    class="o_base_automation_kanban_view"-->
-<!--                    records_draggable="false"-->
-<!--                    groups_draggable="false"-->
-<!--                    quick_create="false"-->
-<!--                    group_create="false"-->
-<!--                    group_edit="false"-->
-<!--                    group_delete="false"-->
-<!--                >-->
-<!--                    <templates>-->
-<!--                        <t t-name="kanban-box">-->
-<!--                            <div class="oe_kanban_global_click">-->
-<!--                                <field name="active" invisible="1" />-->
-<!--                                <field name="model_name" invisible="1" />-->
-<!--                                <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active" />-->
-<!--                                <div class="d-flex flex-column flex-md-row gap-3 flex-grow-1">-->
-<!--                                    <div class="d-flex align-items-center o_automation_base_info">-->
-<!--                                        <div class="d-flex flex-column">-->
-<!--                                            <field name="name" class="fs-2 fw-bold"/>-->
-<!--                                            <field name="model_id" invisible="context.get('default_model_id')"/>-->
-<!--                                            <div class="d-flex align-items-center gap-1" invisible="trigger in ['on_time', 'on_time_created', 'on_time_updated']">-->
-<!--                                                <field name="trigger" />-->
-<!--                                                <field name="on_change_field_ids" invisible="trigger != 'on_change'" class="my-1" />-->
-<!--                                                <field name="trg_selection_field_id" invisible="trigger not in ['on_state_set', 'on_priority_set']" class="o_tag o_tag_color_0 rounded-pill p-1 px-2" />-->
-<!--                                                <field name="trg_field_ref_display_name" invisible="trigger not in ['on_stage_set', 'on_tag_set']" class="o_tag o_tag_color_0 rounded-pill p-1 px-2" />-->
-<!--                                                <field name="trigger_field_ids" invisible="trigger not in ['on_create_or_write']" class="my-1" />-->
-<!--                                            </div>-->
-<!--                                            <div class="d-flex align-items-center gap-1" invisible="trigger != 'on_time'">-->
-<!--                                                <field name="trg_date_range"/>-->
-<!--                                                <field name="trg_date_range_type" class="text-lowercase" />-->
-<!--                                                <span class="flex-shrink-0">-->
-<!--                                                    based on <field name="trg_date_id" invisible="trigger != 'on_time'"  class="o_tag o_tag_color_0 rounded-pill p-1 px-2" />-->
-<!--                                                </span>-->
-<!--                                            </div>-->
-<!--                                            <div class="d-flex align-items-center gap-1" invisible="trigger not in ['on_time_created', 'on_time_updated']">-->
-<!--                                                <field name="trg_date_range"/>-->
-<!--                                                <field name="trg_date_range_type" class="text-lowercase" />-->
-<!--                                                <field name="trigger" class="text-lowercase" />-->
-<!--                                                <field name="trg_date_id" invisible="trigger != 'on_time'"  class="o_tag o_tag_color_0 rounded-pill p-1 px-2" />-->
-<!--                                            </div>-->
-<!--                                            <field name="trg_date_calendar_id" invisible="not trg_date_id or trg_date_range_type != 'day'" />-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                    <div class="d-none flex-grow-1 align-items-center gap-3 o_automation_actions" data-name="more-info">-->
-<!--                                        <i class="fa fa-2x fa-arrow-right text-primary" title="Actions" />-->
-<!--                                        <field name="action_server_ids" widget="base_automation_actions_one2many" class="align-self-center w-100 me-md-3" />-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </t>-->
-<!--                    </templates>-->
-<!--                </kanban>-->
-<!--            </field>-->
-<!--        </record>-->
+        <!-- automation Kanban View -->
+        <record id="view_base_automation_kanban" model="ir.ui.view">
+            <field name="name">base.automation.kanban</field>
+            <field name="model">base.automation</field>
+            <field name="arch" type="xml">
+                <kanban
+                    string="Automation Rules"
+                    class="o_base_automation_kanban_view"
+                    records_draggable="false"
+                    groups_draggable="false"
+                    quick_create="false"
+                    group_create="false"
+                    group_edit="false"
+                    group_delete="false"
+                >
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <field name="active" invisible="1" />
+                                <field name="model_name" invisible="1" />
+                                <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active" />
+                                <div class="d-flex flex-column flex-md-row gap-3 flex-grow-1">
+                                    <div class="d-flex align-items-center o_automation_base_info">
+                                        <div class="d-flex flex-column">
+                                            <field name="name" class="fs-2 fw-bold"/>
+                                            <field name="model_id" invisible="context.get('default_model_id')"/>
+                                            <div class="d-flex align-items-center gap-1" invisible="trigger in ['on_time', 'on_time_created', 'on_time_updated']">
+                                                <field name="trigger" />
+                                                <field name="on_change_field_ids" invisible="trigger != 'on_change'" class="my-1" />
+                                                <field name="trg_selection_field_id" invisible="trigger not in ['on_state_set', 'on_priority_set']" class="o_tag o_tag_color_0 rounded-pill p-1 px-2" />
+                                                <field name="trg_field_ref_display_name" invisible="trigger not in ['on_stage_set', 'on_tag_set']" class="o_tag o_tag_color_0 rounded-pill p-1 px-2" />
+                                                <field name="trigger_field_ids" invisible="trigger not in ['on_create_or_write']" class="my-1" />
+                                            </div>
+                                            <div class="d-flex align-items-center gap-1" invisible="trigger != 'on_time'">
+                                                <field name="trg_date_range"/>
+                                                <field name="trg_date_range_type" class="text-lowercase" />
+                                                <span class="flex-shrink-0">
+                                                    based on <field name="trg_date_id" invisible="trigger != 'on_time'"  class="o_tag o_tag_color_0 rounded-pill p-1 px-2" />
+                                                </span>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-1" invisible="trigger not in ['on_time_created', 'on_time_updated']">
+                                                <field name="trg_date_range"/>
+                                                <field name="trg_date_range_type" class="text-lowercase" />
+                                                <field name="trigger" class="text-lowercase" />
+                                                <field name="trg_date_id" invisible="trigger != 'on_time'"  class="o_tag o_tag_color_0 rounded-pill p-1 px-2" />
+                                            </div>
+                                            <field name="trg_date_calendar_id" invisible="not trg_date_id or trg_date_range_type != 'day'" />
+                                        </div>
+                                    </div>
+                                    <div class="d-none flex-grow-1 align-items-center gap-3 o_automation_actions" data-name="more-info">
+                                        <i class="fa fa-2x fa-arrow-right text-primary" title="Actions" />
+                                        <field name="action_server_ids" widget="base_automation_actions_one2many" class="align-self-center w-100 me-md-3" />
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
 
         <record id="view_base_automation_search" model="ir.ui.view">
             <field name="name">base.automation.search</field>
@@ -217,19 +305,21 @@
         </record>
 
         <!-- automation Action -->
-        <record id="base_automation_act" model="ir.actions.act_window">
+        <record id="base_automation_act_custom" model="ir.actions.act_window">
             <field name="name">Automation Rules</field>
             <field name="res_model">base.automation</field>
-            <field name="view_mode">kanban,tree,form</field>
-            <field name="view_id" ref="base_automation.view_base_automation_kanban"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="ev_web_notify.view_base_automation_kanban"/>
             <field name="domain">[('type', '=', 'notification')]</field>
             <field name="context">{
                 'active_test': False,
                 'default_type': 'notification',
-                'tree_view_ref': 'ev_web_notify.view_base_automation_form',
             }</field>
-            <field name="view_ids" eval="[(5, 0, 0),
-                (0, 0, {'view_mode': 'form', 'view_id': ref('ev_web_notify.view_base_automation_form')})]"/>
+<!--            <field name="view_ids" eval="[(5, 0, 0),-->
+<!--                (0, 0, {'view_mode': 'form', 'view_id': ref('ev_web_notify.view_base_automation_form')}),-->
+<!--                (0, 0, {'view_mode': 'kanban', 'view_id': ref('ev_web_notify.view_base_automation_kanban')}),-->
+<!--                (0, 0, {'view_mode': 'tree', 'view_id': ref('ev_web_notify.view_base_automation_tree')}),-->
+<!--                ]"/>-->
             <field name="help" type="html">
                 <img class="w-100 w-md-75"
                 src="/base_automation/static/img/automation.svg" />
@@ -245,7 +335,7 @@
             </field>
         </record>
 
-        <menuitem id="menu_base_automation_form" name="Flex Notification"
-            parent="base.menu_automation" action="base_automation_act" sequence="1"/>
+        <menuitem id="menu_flex_automation_form" name="Flex Notification"
+            parent="base.menu_automation" action="base_automation_act_custom" sequence="1"/>
 
         </odoo>
