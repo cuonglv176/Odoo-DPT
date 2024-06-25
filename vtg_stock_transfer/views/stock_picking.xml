@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_picking_tree_transfer_inherit" model="ir.ui.view">
+        <field name="name">view.picking.tree.transfer.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+
+            <field name="name" position="after">
+                <field name="x_transfer_type" optional="hide"/>
+                <field name="x_location_id"/>
+                <field name="x_location_dest_id"/>
+            </field>
+
+            <field name="location_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="location_dest_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+
+        </field>
+    </record>
+
+    <record id="view_picking_form_transfer_inherit" model="ir.ui.view">
+        <field name="name">view.picking.form.transfer.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+
+            <field name="location_id" position="after">
+                <field name="x_transfer_type" invisible="1" force_save="1"/>
+                <field name="x_location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"
+                       invisible="picking_type_code != 'internal'" required="picking_type_code == 'internal'"
+                       force_save="1"/>
+            </field>
+
+            <field name="location_id" position="attributes">
+                <attribute name="invisible">picking_type_code != 'outgoing'</attribute>
+                <attribute name="force_save">1</attribute>
+            </field>
+
+            <field name="location_dest_id" position="after">
+                <field name="x_location_dest_id" options="{'no_create': True}" force_save="1"
+                       groups="stock.group_stock_multi_locations"
+                       invisible="picking_type_code != 'internal'" required="picking_type_code == 'internal'"/>
+            </field>
+
+            <field name="location_dest_id" position="attributes">
+                <attribute name="invisible">picking_type_code != 'incoming'</attribute>
+                <attribute name="force_save">1</attribute>
+            </field>
+
+            <field name="origin" position="after">
+                <field name="x_in_transfer_picking_id" invisible="picking_type_code != 'internal'" readonly="1"/>
+            </field>
+
+        </field>
+    </record>
+
+</odoo>
