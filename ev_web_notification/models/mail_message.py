@@ -32,8 +32,8 @@ class Message(models.Model):
         # firebase_notification = self.env['firebase.notification'].sudo().search([('message_id','=',self.id)])
         # if len(firebase_notification) > 0:
         #     firebase_notification.mark_seen()
-        self.env['bus.bus'].sudo()._sendone(
-            f'mail_message_{self.env.user.id}',
+        self.env['bus.bus']._sendone(
+            self.env.user.partner_id.id,
             'notification_updated',
             {'notification_seen': True}
         )
@@ -44,7 +44,7 @@ class Message(models.Model):
         for message in message_ids:
             message.update_status_message()
         self.env['bus.bus'].sudo()._sendone(
-            f'mail_message_{self.env.user.id}',
+            self.env.user.partner_id.id,
             'notification_updated',
             {'notification_seen': True}
         )
@@ -94,14 +94,15 @@ class Message(models.Model):
 
             message_id = self.env['mail.message'].sudo().create(values)
             message_ids.append(message_id)
-        # if author_id:
-        #     for at in recipients:
-        #         user = self.env['res.users'].sudo().search([('partner_id', '=', at)], limit=1)
-        #         if user:
-        #             self.env['bus.bus'].sudo()._sendmany([[
-        #                 'tcm_notification_%s' % user.id,
-        #                 {'type': 'notification_updated', 'notification_unseen': True}]])
-        #             user.sudo().notify_info(message=subject_notification)
+        if author_id:
+            for at in recipients:
+                user = self.env['res.users'].sudo().search([('partner_id', '=', at)], limit=1)
+                if user:
+                    self.env['bus.bus'].sudo()._sendmany(
+                        [[user.partner_id.id, "notification_updated", {'notification_seen': True}]]
+                    )
+                    # [[user.partner_id.id, "notification_updated", {'notification_seen': True}]]
+                    # user.sudo().notify_info(message=subject_notification)
         # for message in message_ids:
         #     for partner in message.partner_ids:
         #         user = self.env['res.users'].sudo().search([('partner_id','=',partner.id)], limit=1)

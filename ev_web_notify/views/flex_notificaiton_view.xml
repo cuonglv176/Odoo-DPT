@@ -308,18 +308,18 @@
         <record id="base_automation_act_custom" model="ir.actions.act_window">
             <field name="name">Automation Rules</field>
             <field name="res_model">base.automation</field>
-            <field name="view_mode">kanban</field>
+            <field name="view_mode">kanban,tree,form</field>
             <field name="view_id" ref="ev_web_notify.view_base_automation_kanban"/>
             <field name="domain">[('type', '=', 'notification')]</field>
             <field name="context">{
                 'active_test': False,
                 'default_type': 'notification',
             }</field>
-<!--            <field name="view_ids" eval="[(5, 0, 0),-->
-<!--                (0, 0, {'view_mode': 'form', 'view_id': ref('ev_web_notify.view_base_automation_form')}),-->
-<!--                (0, 0, {'view_mode': 'kanban', 'view_id': ref('ev_web_notify.view_base_automation_kanban')}),-->
-<!--                (0, 0, {'view_mode': 'tree', 'view_id': ref('ev_web_notify.view_base_automation_tree')}),-->
-<!--                ]"/>-->
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('ev_web_notify.view_base_automation_kanban')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('ev_web_notify.view_base_automation_form')}),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('ev_web_notify.view_base_automation_tree')}),
+                ]"/>
             <field name="help" type="html">
                 <img class="w-100 w-md-75"
                 src="/base_automation/static/img/automation.svg" />

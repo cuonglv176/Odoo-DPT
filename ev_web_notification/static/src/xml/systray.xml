@@ -15,7 +15,7 @@
                         <span>No activities planned.</span>
                     </div>
                 </t>
-                    <t t-foreach="_activities" t-as="activity" t-key="_activities[0]">
+                    <t t-foreach="_activities" t-as="activity" t-key="activity.id">
                         <t t-if="activity.status == 'seen'">
                             <div class="o_mail_preview o_systray_activity" t-att-data-message_id="activity.id"
                                  t-att-data-res_id="activity.res_id"

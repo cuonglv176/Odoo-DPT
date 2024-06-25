@@ -16,14 +16,20 @@ class SystrayMenu extends Component {
         this._activities = [];
         this.activityCounter = 0;
         this.busService = this.env.services.bus_service;
-        this.channel = "mail_message_" + session.user_id
-        this.busService.addChannel(this.channel)
-        this.busService.addEventListener("notification", this._onMessageNotificationUpdate.bind(this))
+        this.busService.addEventListener("notification", ({detail: notifications}) => {
+            for (const {payload, type} of notifications) {
+                if (type === "notification_updated") {
+                    debugger;
+                }
+            }
+        });
+        this.busService.start()
         onMounted(this._getActivityData);
         this.element = window.$
     }
 
     _onMessageNotificationUpdate(payload) {
+        console.log(payload)
         if (payload) {
             if (payload.notification_unseen) {
                 this.activityCounter++;
