@@ -2,6 +2,8 @@ from odoo import models, fields, api, _
 from datetime import datetime
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
+import re
+
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
@@ -47,3 +49,22 @@ class ResPartner(models.Model):
 
             domain = expression.AND([name_domain, domain])
         return self._search(domain, limit=limit, order=order)
+
+    @api.onchange('email')
+    def validate_email(self):
+        regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+        if self.email and not re.fullmatch(regex, self.email):
+            raise ValidationError(_('Email address is invalid.'))
+
+    @api.onchange('phone', 'mobile')
+    def validate_phone(self):
+        regex = r'^(?:\+84|0)(?:3[2-9]|5[2689]|7[06-9]|8[1-689]|9[0-46-9])[0-9]{7}$'
+        msg = ''
+        if self.phone and not re.fullmatch(regex, self.phone):
+            msg += f'{_("Phone1 is invalid.")}\n'
+
+        if self.mobile and not re.fullmatch(regex, self.mobile):
+            msg += f'{_("Phone2 is invalid.")}\n'
+        if msg:
+            raise ValidationError(msg)
+

@@ -55,6 +55,7 @@ class DPTService(models.Model):
     required_fields_ids = fields.One2many('dpt.service.management.required.fields', 'service_id',
                                           string='Required Fields', copy=True, auto_join=True)
     active = fields.Boolean('Active', default='True')
+    image = fields.Image("Image", required=True, tracking=True)
 
     _sql_constraints = [
         ('code_name_index', 'CREATE INDEX code_name_index ON dpt_service_management (code, name)',
