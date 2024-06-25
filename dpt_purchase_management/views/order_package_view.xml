@@ -19,8 +19,7 @@
                             <field name="sale_id"/>
                             <field name="purchase_id"/>
                             <field name="date"/>
-                            <field name="image" widget="image" class="oe_avatar"
-                                   options='{"preview_image": "image", "size": [80, 80]}'/>
+                            <field name="note"/>
                         </group>
                         <group>
                             <field name="quantity"/>
@@ -28,7 +27,8 @@
                             <field name="size"/>
                             <field name="weight"/>
                             <field name="volume"/>
-                            <field name="note"/>
+                            <field name="image" widget="image"
+                                   options='{"preview_image": "image", "size": [300, 300]}'/>
                         </group>
 
                     </group>
@@ -70,7 +70,7 @@
                 <field name="weight"/>
                 <field name="volume"/>
                 <field name="image" widget="image" class="oe_avatar"
-                       options='{"preview_image": "image", "size": [80, 80]}'/>
+                       options='{"preview_image": "image", "size": [100, 100]}'/>
             </tree>
         </field>
     </record>
