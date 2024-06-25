@@ -31,8 +31,8 @@ class SaleOrder(models.Model):
     weight = fields.Float('Weight')
     volume = fields.Float('Volume')
 
-    @api.constrains('weight', 'volume', 'order_line')
-    def constrains_weight_volume(self):
+    @api.onchange('weight', 'volume', 'order_line')
+    def onchange_weight_volume(self):
         for fields_id in self.fields_ids:
             if fields_id.fields_id.default_compute_from == 'weight_in_so' and fields_id.fields_id.fields_type == 'integer':
                 fields_id.value_integer = self.weight
