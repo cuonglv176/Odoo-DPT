@@ -29,7 +29,7 @@
                                    domain="[('department_id','=',department_id)]"/>
                             <field name="steps_count"/>
                             <field name="active" widget="boolean_toggle"/>
-                            <field name="image"/>
+<!--                            <field name="image"/>-->
                         </group>
 
                     </group>
