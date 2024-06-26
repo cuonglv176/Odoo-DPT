@@ -6,7 +6,7 @@ class StockPicking(models.Model):
 
     package_ids = fields.One2many('purchase.order.line.package', 'picking_id', 'Packages')
     move_ids_product = fields.One2many('stock.move', 'picking_id', string="Stock move",
-                                       domain=[('is_package', '=', False)])
+                                       domain=[('is_package', '=', False)], copy=False)
     sale_purchase_id = fields.Many2one(related="purchase_id.sale_id")
 
     def create(self, vals):

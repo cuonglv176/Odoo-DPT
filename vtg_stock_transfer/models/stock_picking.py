@@ -9,10 +9,10 @@ class StockPicking(models.Model):
 
     # using for select location in internal picking
     x_location_id = fields.Many2one('stock.location', 'Source Location', check_company=True,
-                                    states={'draft': [('readonly', False)]},
+                                    states={'draft': [('readonly', False)]}, copy=True,
                                     default=lambda self: self.env['stock.picking.type'].browse(
                                         self._context.get('default_picking_type_id')).default_location_src_id)
-    x_location_dest_id = fields.Many2one('stock.location', 'Destination Location', check_company=True,
+    x_location_dest_id = fields.Many2one('stock.location', 'Destination Location', check_company=True, copy=True,
                                          states={'draft': [('readonly', False)]},
                                          default=lambda self: self.env['stock.picking.type'].browse(
                                              self._context.get('default_picking_type_id')).default_location_dest_id)
@@ -71,6 +71,23 @@ class StockPicking(models.Model):
                 'x_transfer_type': 'incoming_transfer',
                 'origin': picking.name,
                 'picking_type_id': new_picking_type_id.id,
+                'package_ids': [(0, 0, {
+                    'code': package_id.code,
+                    'date': package_id.date,
+                    'uom_id': package_id.uom_id.id,
+                    'quantity': package_id.quantity,
+                    'size': package_id.size,
+                    'weight': package_id.weight,
+                    'volume': package_id.volume,
+                    'note': package_id.note,
+                    'image': package_id.image,
+                    'detail_ids': [(0, 0, {
+                        'product_id': detail_id.product_id.id,
+                        'uom_id': detail_id.uom_id.id,
+                        'quantity':  detail_id.quantity
+                    }) for detail_id in package_id.detail_ids] if package_id.detail_ids else None,
+                    'lot_ids': package_id.lot_ids.ids if package_id.lot_ids else None
+                }) for package_id in picking.package_ids]
             })
             in_transfer_picking_id._onchange_get_location()
             # in_transfer_picking_id.action_confirm()
