@@ -49,7 +49,7 @@
                                         <field name="purchase_id" invisible="1" force_save="1"/>
                                         <!--                                        <field name="lot_name"/>-->
                                         <field name="quantity"/>
-                                        <field name="uom_id"/>
+                                        <field name="uom_id" required="1"/>
                                         <field name="note"/>
                                     </group>
                                     <group>
