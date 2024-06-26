@@ -76,6 +76,10 @@ class SaleOrderLine(models.Model):
                     'default_dpt_tax_ecus5': self.product_id.dpt_tax_ecus5,
                     'default_dpt_tax': self.product_id.dpt_tax,
                     'default_dpt_exchange_rate': self.product_id.dpt_exchange_rate,
+                    'default_dpt_code_hs': self.product_id.dpt_code_hs,
+                    'default_dpt_uom1_id': self.product_id.dpt_uom1_id,
+                    'default_dpt_sl1': self.product_id.dpt_sl1,
+                    'default_dpt_sl2': self.product_id.dpt_sl2,
                 },
             }
         else:

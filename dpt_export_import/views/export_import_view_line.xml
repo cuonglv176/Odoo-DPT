@@ -23,17 +23,21 @@
                             <field name="dpt_description"/>
                             <field name="dpt_n_w_kg"/>
                             <field name="dpt_g_w_kg"/>
+                            <field name="dpt_code_hs"/>
+                            <field name="dpt_tax"/>
+                            <field name="dpt_exchange_rate"/>
                         </group>
                         <group>
                             <field name="dpt_uom_id"/>
+                            <field name="dpt_uom1_id"/>
+                            <field name="dpt_sl1"/>
                             <field name="dpt_uom2_ecus_id"/>
                             <field name="dpt_uom2_id"/>
+                            <field name="dpt_sl2"/>
                             <field name="dpt_price_kd"/>
                             <field name="dpt_price_usd"/>
                             <field name="dpt_tax_import"/>
                             <field name="dpt_tax_ecus5"/>
-                            <field name="dpt_tax"/>
-                            <field name="dpt_exchange_rate"/>
                         </group>
 
                     </group>
@@ -59,8 +63,11 @@
                 <field name="dpt_n_w_kg"/>
                 <field name="dpt_g_w_kg"/>
                 <field name="dpt_uom_id"/>
+                <field name="dpt_uom1_id"/>
+                <field name="dpt_sl1"/>
                 <field name="dpt_uom2_ecus_id"/>
                 <field name="dpt_uom2_id"/>
+                <field name="dpt_sl2"/>
                 <field name="dpt_price_kd"/>
                 <field name="dpt_price_usd"/>
                 <field name="dpt_tax_import"/>
