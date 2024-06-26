@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dpt_car_management,dpt_car_management.dpt_car_management,model_dpt_car_management,base.group_user,1,1,1,1
+access_dpt_car_tracking,dpt_car_management.dpt_car_tracking,model_dpt_car_tracking,base.group_user,1,1,1,1
