@@ -14,6 +14,8 @@ class DptExportImport(models.Model):
     user_id = fields.Many2one('res.users', string='User Export/Import', default=lambda self: self.env.user)
     date = fields.Date(required=True, default=lambda self: fields.Date.context_today(self))
     line_ids = fields.One2many('dpt.export.import.line', 'export_import_id', string='Export/Import Line')
+    select_line_ids = fields.Many2many('dpt.export.import.line', string='Export/Import Line',
+                                       domain=[('export_import_id', '=', False)])
     description = fields.Text(string='Description')
     state = fields.Selection([
         ('draft', 'Nháp'),
@@ -24,6 +26,23 @@ class DptExportImport(models.Model):
         ('cancelled', 'Huỷ')
     ], string='State', default='draft')
     sale_id = fields.Many2one('sale.order', string='Sale Order')
+
+    def action_select_import_line(self):
+        view_form_id = self.env.ref('dpt_export_import.dpt_export_import_select_line_form').id
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Select Line'),
+            'view_mode': 'form',
+            'res_model': 'dpt.export.import',
+            'target': 'new',
+            'res_id': self.id,
+            'views': [[view_form_id, 'form']],
+        }
+
+    def action_update_import_line(self):
+        if self.select_line_ids:
+            for select_line_id in self.select_line_ids:
+                select_line_id.export_import_id = self.id
 
 
 class DptExportImportLine(models.Model):
