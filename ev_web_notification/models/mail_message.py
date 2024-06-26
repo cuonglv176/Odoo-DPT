@@ -49,6 +49,21 @@ class Message(models.Model):
             {'notification_seen': True}
         )
 
+    def _notify_channel(
+        self, message, partner_id
+    ):
+        # pylint: disable=protected-access
+        # if not self.env.user._is_admin() and any(user.id != self.env.uid for user in self):
+        #     raise exceptions.UserError(
+        #         _("Sending a notification to another user is forbidden.")
+        #     )
+        channel_name_field = "notification_updated"
+        bus_message = {
+            "message": message,
+        }
+        notifications = [[partner_id, channel_name_field, [bus_message]]]
+        self.env["bus.bus"]._sendmany(notifications)
+
     def _push_system_notification(self, author_id, recipients, subject_notification, model, res_id,
                                   icon='fa-user',
                                   body='', record_name='',
@@ -98,11 +113,7 @@ class Message(models.Model):
             for at in recipients:
                 user = self.env['res.users'].sudo().search([('partner_id', '=', at)], limit=1)
                 if user:
-                    self.env['bus.bus'].sudo()._sendmany(
-                        [[user.partner_id.id, "notification_updated", {'notification_seen': True}]]
-                    )
-                    # [[user.partner_id.id, "notification_updated", {'notification_seen': True}]]
-                    # user.sudo().notify_info(message=subject_notification)
+                    self._notify_channel(message={'notification_seen': True}, partner_id=user.partner_id)
         # for message in message_ids:
         #     for partner in message.partner_ids:
         #         user = self.env['res.users'].sudo().search([('partner_id','=',partner.id)], limit=1)

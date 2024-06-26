@@ -12,6 +12,7 @@ class SystrayMenu extends Component {
 
     setup() {
         super.setup(...arguments);
+        let self = this;
         this.action = useService("action");
         this._activities = [];
         this.activityCounter = 0;
@@ -19,7 +20,8 @@ class SystrayMenu extends Component {
         this.busService.addEventListener("notification", ({detail: notifications}) => {
             for (const {payload, type} of notifications) {
                 if (type === "notification_updated") {
-                    debugger;
+                    self._getActivityData();
+                    self._onMessageNotificationUpdate();
                 }
             }
         });
@@ -71,7 +73,6 @@ class SystrayMenu extends Component {
         if (!session.user_id) {
             self._activities = [];
             self.activityCounter = 0;
-            window.$('.o_notification_counter').text(self.activityCounter);
             window.$el.toggleClass('o_no_notification', !self.activityCounter);
             return Promise.resolve([]);
         }
@@ -82,7 +83,8 @@ class SystrayMenu extends Component {
             kwargs: {context: session.user_context},
         })
         self.activityCounter = result.reduce((total_count, p_data) => total_count + p_data.total_count || 0, 0);
-        self._activities = result
+        self._activities = result;
+        window.$('.o_notification_counter').text(self.activityCounter);
     }
 }
 
