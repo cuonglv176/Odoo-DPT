@@ -178,7 +178,7 @@ class SaleOrder(models.Model):
             tax_amount += r.amount_total * 8 / 100
         self.service_total_untax_amount = untax_amount
         self.service_tax_amount = tax_amount
-        self.service_total_amount = untax_amount + tax_amount
+        self.service_total_amount = untax_amount
 
     def compute_show_action_calculation(self):
         # only show action calculation when current user is in the same department
