@@ -26,6 +26,7 @@
                                         <field name="purchase_id" invisible="1" force_save="1"/>
                                         <!--                                        <field name="lot_name"/>-->
                                         <field name="quantity"/>
+                                        <field name="lot_ids" widget="many2many_tags" options="{'no_create': True }"/>
                                         <field name="uom_id" required="1"/>
                                         <field name="note"/>
                                     </group>
