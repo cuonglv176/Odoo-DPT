@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_stock_picking_car_tracking_form_inherit" model="ir.ui.view">
+        <field name="name">view_stock_picking_car_tracking_form_inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <field name="origin" position="after">
+                <field name="car_id" options="{'no_create': True}"/>
+            </field>
+            <page name="note" position="before">
+                <page name="car_tracking" string="Cars Tracking">
+                    <field name="car_tracking_ids" context="{'default_car_id': car_id}">
+                        <tree editable="bottom">
+                            <field name="picking_id" column_invisible="1" force_save="1"/>
+                            <field name="car_id" column_invisible="1" force_save="1"/>
+                            <field name="description"/>
+                            <field name="duration" widget="float_time"/>
+                        </tree>
+                    </field>
+                </page>
+            </page>
+        </field>
+    </record>
+
+</odoo>
