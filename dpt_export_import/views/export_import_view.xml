@@ -9,6 +9,16 @@
                 <header>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,declared,released,consulted,post_control,cancelled"/>
+                    <button string="Declared" type="object" name="action_declared" class="btn-primary"
+                            invisible="state == 'declared'"/>
+                    <button string="Released" type="object" name="action_released" class="btn-primary"
+                            invisible="state == 'released'"/>
+                    <button string="Consulted" type="object" name="action_consulted" class="btn-primary"
+                            invisible="state == 'consulted'"/>
+                    <button string="Post control" type="object" name="action_post_control" class="btn-primary"
+                            invisible="state == 'post_control'"/>
+                    <button string="Cancelled" type="object" name="action_cancelled" class="btn-primary"
+                            invisible="state == 'cancelled'"/>
                 </header>
                 <sheet>
                     <label for="name"/>

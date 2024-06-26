@@ -27,6 +27,32 @@ class DptExportImport(models.Model):
     ], string='State', default='draft')
     sale_id = fields.Many2one('sale.order', string='Sale Order')
 
+
+    def action_declared(self):
+        self.state = 'declared'
+        for line_id in self.line_ids:
+            line_id.state = 'declared'
+
+    def action_released(self):
+        self.state = 'released'
+        for line_id in self.line_ids:
+            line_id.state = 'released'
+
+    def action_consulted(self):
+        self.state = 'consulted'
+        for line_id in self.line_ids:
+            line_id.state = 'consulted'
+
+    def action_post_control(self):
+        self.state = 'post_control'
+        for line_id in self.line_ids:
+            line_id.state = 'post_control'
+
+    def action_cancelled(self):
+        self.state = 'cancelled'
+        for line_id in self.line_ids:
+            line_id.state = 'cancelled'
+
     def action_select_import_line(self):
         view_form_id = self.env.ref('dpt_export_import.dpt_export_import_select_line_form').id
         return {
