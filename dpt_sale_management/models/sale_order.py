@@ -247,7 +247,7 @@ class SaleOrder(models.Model):
                                     date=fields.Date.today(),
                                 ), service_price_id.min_amount)
                                 if (not service_price_id.is_price and price > max_price) or (
-                                        service_price_id.is_price and price / compute_field_id.value_integer > max_price):
+                                        service_price_id.is_price and (price / compute_field_id.value_integer if compute_field_id.value_integer != 0 else price) > max_price):
                                     max_price = service_price_id.currency_id._convert(
                                         from_amount=detail_price_id.amount,
                                         to_currency=self.env.company.currency_id,
