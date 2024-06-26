@@ -36,10 +36,10 @@
                        force_save="1"/>
             </field>
 
-            <field name="location_id" position="attributes">
+            <xpath expr="//field[@name='location_id'][2]" position="attributes">
                 <attribute name="invisible">picking_type_code != 'outgoing'</attribute>
                 <attribute name="force_save">1</attribute>
-            </field>
+            </xpath>
 
             <field name="location_dest_id" position="after">
                 <field name="x_location_dest_id" options="{'no_create': True}" force_save="1"
@@ -47,10 +47,10 @@
                        invisible="picking_type_code != 'internal'" required="picking_type_code == 'internal'"/>
             </field>
 
-            <field name="location_dest_id" position="attributes">
+            <xpath expr="//field[@name='location_dest_id'][2]" position="attributes">
                 <attribute name="invisible">picking_type_code != 'incoming'</attribute>
                 <attribute name="force_save">1</attribute>
-            </field>
+            </xpath>
 
             <field name="origin" position="after">
                 <field name="x_in_transfer_picking_id" invisible="picking_type_code != 'internal'" readonly="1"/>

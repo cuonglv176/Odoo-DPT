@@ -12,17 +12,26 @@ class SystrayMenu extends Component {
 
     setup() {
         super.setup(...arguments);
+        let self = this;
         this.action = useService("action");
         this._activities = [];
         this.activityCounter = 0;
         this.busService = this.env.services.bus_service;
-        this.channel = "mail_message_" + session.user_id
-        this.busService.addChannel(this.channel)
-        this.busService.addEventListener("notification", this._onMessageNotificationUpdate.bind(this))
+        this.busService.addEventListener("notification", ({detail: notifications}) => {
+            for (const {payload, type} of notifications) {
+                if (type === "notification_updated") {
+                    self._getActivityData();
+                    self._onMessageNotificationUpdate();
+                }
+            }
+        });
+        this.busService.start()
         onMounted(this._getActivityData);
+        this.element = window.$
     }
 
     _onMessageNotificationUpdate(payload) {
+        console.log(payload)
         if (payload) {
             if (payload.notification_unseen) {
                 this.activityCounter++;
@@ -64,7 +73,6 @@ class SystrayMenu extends Component {
         if (!session.user_id) {
             self._activities = [];
             self.activityCounter = 0;
-            window.$('.o_notification_counter').text(self.activityCounter);
             window.$el.toggleClass('o_no_notification', !self.activityCounter);
             return Promise.resolve([]);
         }
@@ -75,15 +83,8 @@ class SystrayMenu extends Component {
             kwargs: {context: session.user_context},
         })
         self.activityCounter = result.reduce((total_count, p_data) => total_count + p_data.total_count || 0, 0);
-        let $content = window.$('.o_mail_systray_dropdown_items').append(
-                $(renderToString('systray_Activity_Menu_Previews', {
-                    activities: self._activities,
-                    isEmpty: self.isEmpty
-                }))
-            )
-        ;
-        // this.$target.find('.o_mail_systray_dropdown_items')
-        console.log(result)
+        self._activities = result;
+        window.$('.o_notification_counter').text(self.activityCounter);
     }
 }
 

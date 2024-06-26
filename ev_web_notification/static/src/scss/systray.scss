@@ -1,0 +1,59 @@
+.o_mail_systray_dropdown {
+  border-radius: 0;
+  flex: 0 1 auto;
+  max-height: 400px;
+  min-height: 50px;
+  min-width: 340px;
+  overflow-y: auto;
+  padding: 0;
+
+  .o_mail_systray_dropdown_items {
+    .o_mail_systray_dropdown_top {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-box-flex: 0;
+      -webkit-flex: 0 0 auto;
+      flex: 0 0 auto;
+      justify-content: space-between;
+      border-bottom: 1px solid #ced4da;
+      box-shadow: 0 0 2px #ced4da;
+    }
+
+    .o_mail_preview {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      background-color: #f8f9fa;
+      color: #666666;
+      cursor: pointer;
+      overflow: hidden;
+      position: relative;
+
+      &.o_systray_activity {
+        background-color: transparent;
+      }
+
+      &:not(:last-child) {
+        border-bottom: 1px solid #ced4da;
+      }
+
+      @include media-breakpoint-up(sm) {
+        min-height: 50px;
+        padding: 5px;
+      }
+
+      .o_preview_info {
+        flex: 1 1 100%;
+        overflow: hidden;
+        @include media-breakpoint-up(sm) {
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+}
+
+.background-gray {
+  background: lightgray !important;
+}
