@@ -9,8 +9,15 @@ class StockPicking(models.Model):
                                        domain=[('is_package', '=', False)])
     sale_purchase_id = fields.Many2one(related="purchase_id.sale_id")
 
+    def create(self, vals):
+        res = super().create(vals)
+        res.onchange_package()
+        return res
+
     @api.onchange('package_ids')
     def onchange_package(self):
+        if not self._origin.id:
+            return
         # remove package move
         package_move_ids = self.move_ids_without_package - self.move_ids_product
         package_move_ids.unlink()
