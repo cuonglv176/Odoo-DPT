@@ -22,15 +22,15 @@ class DPTSaleServiceManagement(models.Model):
     compute_uom_id = fields.Many2one('uom.uom', 'Compute Unit')
     compute_value = fields.Float('Compute Value')
 
-    def write(self, vals):
-        old_price = self.price
-        res = super(DPTSaleServiceManagement, self).write(vals)
-        new_price = self.price
-        if self.env.context.get('final_approved', False):
-            return res
-        if old_price > new_price:
-            raise UserError(_("Cannot lower price, only increase price."))
-        return res
+    # def write(self, vals):
+    #     old_price = self.price
+    #     res = super(DPTSaleServiceManagement, self).write(vals)
+    #     new_price = self.price
+    #     if self.env.context.get('final_approved', False):
+    #         return res
+    #     if old_price > new_price:
+    #         raise UserError(_("Cannot lower price, only increase price."))
+    #     return res
 
     def _compute_amount_total(self):
         for item in self:

@@ -21,7 +21,6 @@ class PurchaseOrderLinePackage(models.Model):
     image = fields.Binary(string='Image', tracking=True)
     detail_ids = fields.One2many('purchase.order.line.package.detail', 'package_id', 'Package detail', tracking=True)
 
-
     @api.model
     def create(self, vals):
         if vals.get('code', 'NEW') == 'NEW':
