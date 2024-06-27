@@ -12,7 +12,7 @@ class Message(models.Model):
     _inherit = 'mail.message'
 
     def _default_action_id(self):
-        action = self.env['ir.actions.act_window'].search([('res_model', '=', self.model)], limit=1)
+        action = self.env['ir.actions.act_window'].sudo().search([('res_model', '=', self.model)], limit=1)
         return action.id
 
     message_type = fields.Selection(selection_add=[('system_notification', 'System Notification')],
