@@ -16,6 +16,7 @@
         'views/dpt_creat_new_contract_views.xml',
         'views/purchase_order_views.xml',
         'views/sale_order_views.xml',
+        'views/res_partner_views.xml',
         'data/service_sequence.xml',
     ],
     # only loaded in demonstration mode
