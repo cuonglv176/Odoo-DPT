@@ -22,24 +22,24 @@ class DPTSaleServiceManagement(models.Model):
     compute_uom_id = fields.Many2one('uom.uom', 'Compute Unit')
     compute_value = fields.Float('Compute Value')
 
-    def write(self, vals):
-        old_price = self.price
-        res = super(DPTSaleServiceManagement, self).write(vals)
-        new_price = self.price
-        if self.env.context.get('final_approved', False):
-            return res
-        if old_price > new_price:
-            raise UserError(_("Cannot lower price, only increase price."))
-        return res
+    # def write(self, vals):
+    #     old_price = self.price
+    #     res = super(DPTSaleServiceManagement, self).write(vals)
+    #     new_price = self.price
+    #     if self.env.context.get('final_approved', False):
+    #         return res
+    #     if old_price > new_price:
+    #         raise UserError(_("Cannot lower price, only increase price."))
+    #     return res
 
     def _compute_amount_total(self):
         for item in self:
-            item.amount_total = item.qty * item.price * item.compute_value if item.pricelist_item_id.is_price else item.qty * item.price
+            item.amount_total = item.qty * item.price * item.compute_value if item.pricelist_item_id.is_price and item.pricelist_item_id.compute_price == 'table' else item.qty * item.price
 
     @api.onchange('price', 'qty')
     def onchange_amount_total(self):
         if self.price and self.qty:
-            self.amount_total = self.price * self.qty * self.compute_value if self.pricelist_item_id.is_price else self.qty * self.price
+            self.amount_total = self.price * self.qty * self.compute_value if self.pricelist_item_id.is_price and self.pricelist_item_id.compute_price == 'table' else self.qty * self.price
 
     @api.onchange('service_id')
     def onchange_service(self):
