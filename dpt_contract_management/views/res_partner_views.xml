@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_res_partner_inherit_form" model="ir.ui.view">
+        <field name="name">res.partner.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="create_new_contract" string="Create Contract" icon="fa-book"
+                        type="object" class="oe_stat_button">
+                    <field string="Contract" name="count_contract" widget="statinfo"/>
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>
