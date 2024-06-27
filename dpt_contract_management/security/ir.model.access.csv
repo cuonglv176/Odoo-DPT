@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+dpt.contract.management,dpt.contract.management,model_dpt_contract_management,,1,1,1,1
+dpt.creat.new.contract,dpt.creat.new.contract,model_dpt_creat_new_contract,,1,1,1,1

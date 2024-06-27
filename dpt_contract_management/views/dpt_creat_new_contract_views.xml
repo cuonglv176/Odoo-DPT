@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_dpt_creat_new_contract_form" model="ir.ui.view">
+        <field name="name">dpt.creat.new.contract</field>
+        <field name="model">dpt.creat.new.contract</field>
+        <field name="arch" type="xml">
+            <form string="Contract Form">
+                <p>
+                    Create new contract or update exist contract?
+                </p>
+                <footer>
+                    <button name="create_new_contract" string="Create Contract" type="object" class="oe_highlight"/>
+                    <button name="action_update_to_contract" string="Update Contract" type="object"
+                            class="oe_highlight"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
