@@ -195,7 +195,7 @@ msgstr "Mô tả"
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_product__dpt_description
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_template__dpt_description
 msgid "Description Product"
-msgstr "Mô tả sản phẩm"
+msgstr "Mô tả SP"
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__display_name
@@ -247,7 +247,7 @@ msgstr "Đủ điều kiện khai báo"
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_product__dpt_english_name
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_template__dpt_english_name
 msgid "English name"
-msgstr "Tên tiếng anh"
+msgstr "Tên TA"
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_exchange_rate
@@ -769,7 +769,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_product__dpt_tax_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_template__dpt_tax_import
 msgid "Tax import (%)"
-msgstr "Thuế nhập khẩu (%)"
+msgstr "Thuế NK (%)"
 
 #. module: dpt_export_import
 #: model:ir.model.fields.selection,name:dpt_export_import.selection__dpt_export_import__state__consulted

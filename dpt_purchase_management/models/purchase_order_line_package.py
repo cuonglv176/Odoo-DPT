@@ -18,7 +18,7 @@ class PurchaseOrderLinePackage(models.Model):
     weight = fields.Float('Weight (kg)', tracking=True)
     volume = fields.Float('Volume (m3)', tracking=True)
     note = fields.Text('Note', tracking=True)
-    image = fields.Binary(string='Image', tracking=True)
+    image = fields.Binary(string='Image')
     detail_ids = fields.One2many('purchase.order.line.package.detail', 'package_id', 'Package detail', tracking=True)
 
     @api.model
