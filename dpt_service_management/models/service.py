@@ -101,8 +101,7 @@ class DPTServiceSteps(models.Model):
             else:
                 mapping_delete[item.service_id] = item
         for service_id, step_ids in mapping_delete.items():
-            service_id.message_post(
-                body=_("Delete Step: %s") % ','.join(step_ids.mapped('uom_id').mapped('description')))
+            service_id.message_post(body=_(f"Delete Step: {','.join(step_ids.mapped('description'))}"))
         return super(DPTServiceSteps, self).unlink()
 
 
