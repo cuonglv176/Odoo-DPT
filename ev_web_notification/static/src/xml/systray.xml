@@ -10,7 +10,7 @@
             </t>
             <t t-set-slot="default">
                 <div class="o_mail_systray_dropdown">
-                    <t t-if="!_activities.length">
+                    <t t-if="!props._activities.length">
                     <div class="dropdown-item-text text-center o_no_activity">
                         <span>No activities planned.</span>
                     </div>
@@ -72,15 +72,15 @@
 <!--                        </t>-->
 <!--                    </t>-->
                     <div class="d-flex flex-column list-group-flush">
-                        <t t-foreach="_activities" t-as="activity" t-key="activity.id">
-                            <div style="align-items: center;border-bottom: 1px solid white;" t-attf-class="#{activity.status != 'seen' ? 'background-gray' : ''} o-mail-ActivityGroup list-group-item list-group-item-action d-flex p-2 cursor-pointer">
+                        <t t-foreach="props._activities" t-as="activity" t-key="activity.id">
+                            <div t-on-click="() => this.openRecord(activity)" style="align-items: center;border-bottom: 1px solid white;" t-attf-class="#{activity.status != 'seen' ? 'background-gray' : ''} o-mail-ActivityGroup list-group-item list-group-item-action d-flex p-2 cursor-pointer">
                                 <i style="font-weight: bold; font-size: 15px;"  t-attf-class="fa #{activity.icon}"/>
                                 <div class="flex-grow-1 overflow-hidden">
                                     <div class="d-flex px-2" name="activityTitle" t-out="activity.res_name"/>
 
                                     <div class="d-flex">
                                         <span class=" py-0 px-2 text-truncate">
-                                            <t t-out="activity.create_date"/>
+                                            <t t-out="activity.create_date"/><t t-out="activity.res_id"/>
                                         </span>
                                     </div>
                                 </div>
