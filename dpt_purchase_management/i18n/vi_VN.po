@@ -256,3 +256,11 @@ msgstr "Số khối (m3)"
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__weight
 msgid "Weight (kg)"
 msgstr "Cân nặng (kg)"
+
+
+#. module: purchase
+#. odoo-python
+#: model:ir.actions.act_window,name:purchase.purchase_form_action
+#: model:ir.ui.menu,name:purchase.menu_purchase_form_action
+msgid "Purchase Orders"
+msgstr "Đơn mua hàng nội bộ"
