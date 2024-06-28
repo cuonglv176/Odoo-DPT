@@ -82,8 +82,6 @@
                     </field>
                 </page>
             </page>
-            <xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal']" position="replace">
-            </xpath>
             <xpath expr="//label[@for='pricelist_id']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
