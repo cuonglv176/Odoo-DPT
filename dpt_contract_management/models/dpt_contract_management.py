@@ -1,78 +1,6 @@
 from odoo import api, fields, models, _
 
 
-class ResPartner(models.Model):
-    _inherit = 'res.partner'
-
-    contract_id = fields.Many2one('dpt.contract.management', string='Last Contract Update')
-    count_contract = fields.Integer(compute='_compute_count_contract')
-
-    def _compute_count_contract(self):
-        for record in self:
-            record.count_contract = self.env['dpt.contract.management'].search_count([('partner_id', '=', self.id)])
-
-
-    def create_new_contract(self):
-        return {
-            'name': "Contract",
-            'type': 'ir.actions.act_window',
-            'res_model': 'dpt.creat.new.contract',
-            'target': 'new',
-            'view_mode': 'form',
-            'view_id': self.env.ref('dpt_contract_management.view_dpt_creat_new_contract_form').id,
-            # 'domain': [('sale_id', '=', self.id)],
-            'context': dict(self._context, **{
-                'default_partner_id': self.id,
-                'default_res_model': self._name,
-                'default_res_id': self.id,
-            })
-        }
-
-
-class SaleOrder(models.Model):
-    _inherit = 'sale.order'
-
-    contract_id = fields.Many2one('dpt.contract.management', string='Contract')
-
-    def create_new_contract(self):
-        return {
-            'name': "Contract",
-            'type': 'ir.actions.act_window',
-            'res_model': 'dpt.creat.new.contract',
-            'target': 'new',
-            'view_mode': 'form',
-            'view_id': self.env.ref('dpt_contract_management.view_dpt_creat_new_contract_form').id,
-            # 'domain': [('sale_id', '=', self.id)],
-            'context': dict(self._context, **{
-                'default_partner_id': self.partner_id.id,
-                'default_res_model': self._name,
-                'default_res_id': self.id,
-            })
-        }
-
-
-class PurchaseOrder(models.Model):
-    _inherit = 'purchase.order'
-
-    contract_id = fields.Many2one('dpt.contract.management', string='Contract')
-
-    def create_new_contract(self):
-        return {
-            'name': "Contract",
-            'type': 'ir.actions.act_window',
-            'res_model': 'dpt.creat.new.contract',
-            'target': 'new',
-            'view_mode': 'form',
-            'view_id': self.env.ref('dpt_contract_management.view_dpt_creat_new_contract_form').id,
-            # 'domain': [('sale_id', '=', self.id)],
-            'context': dict(self._context, **{
-                'default_partner_id': self.partner_id.id,
-                'default_res_model': self._name,
-                'default_res_id': self.id,
-            })
-        }
-
-
 class DPTContractManagement(models.Model):
     _name = 'dpt.contract.management'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin']
@@ -174,14 +102,14 @@ class DPTCreatNewContract(models.TransientModel):
     res_model = fields.Char(string='Model')
     res_id = fields.Integer(string='Id')
 
-    @api.onchange('is_update_exist_contract')
-    def _onchange_contract(self):
-        if self.is_update_exist_contract:
-            return {
-                'contract_id': {
-                    'domain': [('contract_id', '=', self.contract_id.id)],
-                }
-            }
+    # @api.onchange('is_update_exist_contract')
+    # def _onchange_contract(self):
+    #     if self.is_update_exist_contract:
+    #         return {
+    #             'contract_id': {
+    #                 'domain': [('partner_id', '=', self.partner_id.id)],
+    #             }
+    #         }
 
     def action_update_to_contract(self):
         self.env['log.error.contract'].update_res_record(self.res_model, self.res_id, self.contract_id)
