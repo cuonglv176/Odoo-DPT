@@ -215,54 +215,54 @@ class DptExportImportLine(models.Model):
             self.dpt_sl1 = self.sale_line_id.product_uom_qty
             self.dpt_sl2 = self.sale_line_id.dpt_sl2
 
-        @api.depends('dpt_amount_tax_import', 'dpt_amount_tax', 'dpt_amount_tax_other')
-        def _compute_total_vat(self):
-            for rec in self:
-                rec.dpt_total_vat = rec.dpt_amount_tax_import + rec.dpt_amount_tax + rec.dpt_amount_tax_other
+    @api.depends('dpt_amount_tax_import', 'dpt_amount_tax', 'dpt_amount_tax_other')
+    def _compute_total_vat(self):
+        for rec in self:
+            rec.dpt_total_vat = rec.dpt_amount_tax_import + rec.dpt_amount_tax + rec.dpt_amount_tax_other
 
-        def restore_information_to_product(self):
-            self.product_id.dpt_english_name = self.dpt_english_name
-            self.product_id.dpt_description = self.dpt_description
-            self.product_id.dpt_n_w_kg = self.dpt_n_w_kg
-            self.product_id.dpt_g_w_kg = self.dpt_g_w_kg
-            self.product_id.dpt_uom_id = self.dpt_uom_id
-            self.product_id.dpt_uom2_ecus_id = self.dpt_uom2_ecus_id
-            self.product_id.dpt_uom2_id = self.dpt_uom2_id
-            self.product_id.dpt_price_kd = self.dpt_price_kd
-            self.product_id.dpt_price_usd = self.dpt_price_usd
-            self.product_id.dpt_tax_import = self.dpt_tax_import
-            self.product_id.dpt_tax_ecus5 = self.dpt_tax_ecus5
-            self.product_id.dpt_tax = self.dpt_tax
-            self.product_id.dpt_exchange_rate = self.dpt_exchange_rate
-            self.product_id.dpt_code_hs = self.dpt_code_hs
-            self.product_id.dpt_uom1_id = self.dpt_uom1_id
-            self.product_id.dpt_sl1 = self.dpt_sl1
-            self.product_id.dpt_sl2 = self.dpt_sl2
+    def restore_information_to_product(self):
+        self.product_id.dpt_english_name = self.dpt_english_name
+        self.product_id.dpt_description = self.dpt_description
+        self.product_id.dpt_n_w_kg = self.dpt_n_w_kg
+        self.product_id.dpt_g_w_kg = self.dpt_g_w_kg
+        self.product_id.dpt_uom_id = self.dpt_uom_id
+        self.product_id.dpt_uom2_ecus_id = self.dpt_uom2_ecus_id
+        self.product_id.dpt_uom2_id = self.dpt_uom2_id
+        self.product_id.dpt_price_kd = self.dpt_price_kd
+        self.product_id.dpt_price_usd = self.dpt_price_usd
+        self.product_id.dpt_tax_import = self.dpt_tax_import
+        self.product_id.dpt_tax_ecus5 = self.dpt_tax_ecus5
+        self.product_id.dpt_tax = self.dpt_tax
+        self.product_id.dpt_exchange_rate = self.dpt_exchange_rate
+        self.product_id.dpt_code_hs = self.dpt_code_hs
+        self.product_id.dpt_uom1_id = self.dpt_uom1_id
+        self.product_id.dpt_sl1 = self.dpt_sl1
+        self.product_id.dpt_sl2 = self.dpt_sl2
 
-        def action_update_eligible(self):
-            self.state = 'eligible'
+    def action_update_eligible(self):
+        self.state = 'eligible'
 
-        @api.onchange('sale_line_id')
-        def onchange_sale_line_id(self):
-            self.product_id = self.sale_line_id.product_id
+    @api.onchange('sale_line_id')
+    def onchange_sale_line_id(self):
+        self.product_id = self.sale_line_id.product_id
 
-        @api.onchange('product_id')
-        def onchange_information_product(self):
-            if self.product_id:
-                self.dpt_english_name = self.product_id.dpt_english_name
-                self.dpt_description = self.product_id.dpt_description
-                self.dpt_n_w_kg = self.product_id.dpt_n_w_kg
-                self.dpt_g_w_kg = self.product_id.dpt_g_w_kg
-                self.dpt_uom_id = self.product_id.dpt_uom_id
-                self.dpt_uom2_ecus_id = self.product_id.dpt_uom2_ecus_id
-                self.dpt_uom2_id = self.product_id.dpt_uom2_id
-                self.dpt_price_kd = self.product_id.dpt_price_kd
-                self.dpt_price_usd = self.product_id.dpt_price_usd
-                self.dpt_tax_import = self.product_id.dpt_tax_import
-                self.dpt_tax_ecus5 = self.product_id.dpt_tax_ecus5
-                self.dpt_tax = self.product_id.dpt_tax
-                self.dpt_exchange_rate = self.product_id.dpt_exchange_rate
-                self.dpt_code_hs = self.product_id.dpt_code_hs
-                self.dpt_uom1_id = self.product_id.dpt_uom1_id
-                self.dpt_sl1 = self.product_id.dpt_sl1
-                self.dpt_sl2 = self.product_id.dpt_sl2
+    @api.onchange('product_id')
+    def onchange_information_product(self):
+        if self.product_id:
+            self.dpt_english_name = self.product_id.dpt_english_name
+            self.dpt_description = self.product_id.dpt_description
+            self.dpt_n_w_kg = self.product_id.dpt_n_w_kg
+            self.dpt_g_w_kg = self.product_id.dpt_g_w_kg
+            self.dpt_uom_id = self.product_id.dpt_uom_id
+            self.dpt_uom2_ecus_id = self.product_id.dpt_uom2_ecus_id
+            self.dpt_uom2_id = self.product_id.dpt_uom2_id
+            self.dpt_price_kd = self.product_id.dpt_price_kd
+            self.dpt_price_usd = self.product_id.dpt_price_usd
+            self.dpt_tax_import = self.product_id.dpt_tax_import
+            self.dpt_tax_ecus5 = self.product_id.dpt_tax_ecus5
+            self.dpt_tax = self.product_id.dpt_tax
+            self.dpt_exchange_rate = self.product_id.dpt_exchange_rate
+            self.dpt_code_hs = self.product_id.dpt_code_hs
+            self.dpt_uom1_id = self.product_id.dpt_uom1_id
+            self.dpt_sl1 = self.product_id.dpt_sl1
+            self.dpt_sl2 = self.product_id.dpt_sl2
