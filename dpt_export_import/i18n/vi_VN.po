@@ -96,7 +96,7 @@ msgstr "Dòng tờ khai"
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__date
 msgid "Date"
-msgstr "Ngày"
+msgstr "Ngày mở tờ khai"
 
 #. module: dpt_export_import
 #. odoo-python

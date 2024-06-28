@@ -3,6 +3,12 @@
 
 from odoo import fields, models, _, api
 
+class DptExportImportGate(models.Model):
+    _name = "dpt.export.import.gate"
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _description = 'Dpt Export Import Gate'
+
+    name = fields.Char(string='Name')
 
 class DptExportImport(models.Model):
     _name = "dpt.export.import"
@@ -11,8 +17,13 @@ class DptExportImport(models.Model):
 
     name = fields.Char(string='Title')
     code = fields.Char(string='Code')
+    invoice_code = fields.Char(string='Invoice Code')
+    sale_id = fields.Many2one('sale.order', string='Sale Order')
+    importer_id = fields.Many2one('res.partner', string='Importer')
+    gate_id = fields.Many2one('dpt.export.import.gate', string='Gate Importer')
     user_id = fields.Many2one('res.users', string='User Export/Import', default=lambda self: self.env.user)
     date = fields.Date(required=True, default=lambda self: fields.Date.context_today(self))
+    consultation_date = fields.Date(string='Consultation date')
     line_ids = fields.One2many('dpt.export.import.line', 'export_import_id', string='Export/Import Line')
     select_line_ids = fields.Many2many('dpt.export.import.line', string='Export/Import Line',
                                        domain=[('export_import_id', '=', False)])
@@ -25,8 +36,33 @@ class DptExportImport(models.Model):
         ('post_control', 'Kiểm tra sau thông quan'),
         ('cancelled', 'Huỷ')
     ], string='State', default='draft')
-    sale_id = fields.Many2one('sale.order', string='Sale Order')
+    dpt_n_w_kg = fields.Integer(string='Total N.W (KG)', compute="_compute_total_sum_line")
+    dpt_g_w_kg = fields.Integer(string='Total G.W (KG)', compute="_compute_total_sum_line")
+    total_package = fields.Char(string='Total package', compute="_compute_total_package_line")
+    dpt_tax_import = fields.Float(string='Total Tax import (%)',  compute="_compute_total_package_line")
+    def _compute_total_sum_line(self):
+        for rec in self:
+            rec.dpt_n_w_kg = sum(line.dpt_n_w_kg for line in rec.line_ids)
+            rec.dpt_g_w_kg = sum(line.dpt_g_w_kg for line in rec.line_ids)
 
+    def _compute_total_package_line(self):
+        for rec in self:
+            package_ids = []
+            for line_id in rec.line_ids:
+                for package_id in line_id.package_ids:
+                    package_ids.append(package_id.id)
+            query = """
+                SELECT string_agg(quantity || ' ' || name, ' + ') AS total_package 
+                FROM (
+                    SELECT SUM(quantity) as  quantity, b.name ->>'en_US' as name
+                    FROM purchase_order_line_package a 
+                    JOIN uom_uom b on a.uom_id = b.id
+                    WHERE a.id in %s 
+                GROUP BY b.name) as a
+            """
+            self.env.cr.execute(query, [tuple(package_ids)])
+            result = {r['total_package']: r for r in self.env.cr.dictfetchall()}
+            rec.total_package = result or ''
 
     def action_declared(self):
         self.state = 'declared'
@@ -78,7 +114,10 @@ class DptExportImportLine(models.Model):
 
     sequence = fields.Integer(default=1)
     export_import_id = fields.Many2one('dpt.export.import', string='Export import')
+    lot_code = fields.Char(string='Lot code')
     sale_id = fields.Many2one('sale.order', string='Sale order')
+    sale_user_id = fields.Many2one('res.users', string='User Sale', related='sale_id.user_id')
+    partner_id = fields.Many2one('res.partner', string='Sale Partner', related='sale_id.partner_id')
     sale_line_id = fields.Many2one('sale.order.line', string='Sale order line', domain=[('order_id', '=', 'sale_id')])
     product_tmpl_id = fields.Many2one('product.template', string='Product Template',
                                       related='product_id.product_tmpl_id')
@@ -86,8 +125,8 @@ class DptExportImportLine(models.Model):
     package_ids = fields.Many2many('purchase.order.line.package', string='Package')
     dpt_english_name = fields.Char(string='English name', tracking=True)
     dpt_description = fields.Text(string='Description Product', size=240, tracking=True)
-    dpt_n_w_kg = fields.Char(string='N.W (KG)', tracking=True)
-    dpt_g_w_kg = fields.Char(string='G.W (KG)', tracking=True)
+    dpt_n_w_kg = fields.Integer(string='N.W (KG)', tracking=True)
+    dpt_g_w_kg = fields.Integer(string='G.W (KG)', tracking=True)
     dpt_uom_id = fields.Many2one('uom.uom', string='Uom Export/Import', tracking=True)
     dpt_uom2_ecus_id = fields.Many2one('uom.uom', string='ĐVT SL2 (Ecus)', tracking=True)
     dpt_uom2_id = fields.Many2one('uom.uom', string='ĐVT 2', tracking=True)
@@ -102,6 +141,9 @@ class DptExportImportLine(models.Model):
     dpt_uom1_id = fields.Many2one('uom.uom', string='ĐVT 1', tracking=True)
     dpt_sl2 = fields.Integer(string='SL2', tracking=True)
     currency_id = fields.Many2one('res.currency', string='Currency')
+    dpt_total_usd_vnd = fields.Monetary(string='Total USD (VND)', tracking=True)
+    dpt_total_cny_vnd = fields.Monetary(string='Total CNT (VND)', tracking=True)
+    dpt_total = fields.Monetary(string='Total', tracking=True)
     state = fields.Selection([
         ('draft', 'Nháp'),
         ('eligible', 'Đủ điều kiện khai báo'),
