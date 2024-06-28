@@ -25,7 +25,7 @@ class Message(models.Model):
     action_id = fields.Char(string="Action_id", default=_default_action_id)
     comment_id = fields.Integer()
 
-    def update_status_message(self, *args, **kwargs):
+    def update_status_message(self):
         self.write({
             'status': 'seen'
         })

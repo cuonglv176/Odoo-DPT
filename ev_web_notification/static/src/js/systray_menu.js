@@ -14,7 +14,8 @@ class SystrayMenu extends Component {
         super.setup(...arguments);
         let self = this;
         this.action = useService("action");
-        this._activities = [];
+        this.orm = useService("orm");
+        this.props._activities = this._getActivityData();
         this.activityCounter = 0;
         this.busService = this.env.services.bus_service;
         this.busService.addEventListener("notification", ({detail: notifications}) => {
@@ -26,8 +27,23 @@ class SystrayMenu extends Component {
             }
         });
         this.busService.start()
-        onMounted(this._getActivityData);
-        this.element = window.$
+    }
+
+    async openRecord(activity) {
+        document.body.click();
+        let self = this;
+        await this.orm.call('mail.message', 'update_status_message', [activity.id]);
+        self._updateActivityPreview();
+           this.action.doAction(
+               {
+               type: 'ir.actions.act_window',
+               res_model: activity.model,
+               res_id: activity.res_id,
+               views: [[false, 'form']],
+               target: 'current',
+                }
+            );
+        this._getActivityData();
     }
 
     _onMessageNotificationUpdate(payload) {
@@ -83,8 +99,9 @@ class SystrayMenu extends Component {
             kwargs: {context: session.user_context},
         })
         self.activityCounter = result.reduce((total_count, p_data) => total_count + p_data.total_count || 0, 0);
-        self._activities = result;
+        this.props._activities = result;
         window.$('.o_notification_counter').text(self.activityCounter);
+        return result;
     }
 }
 
