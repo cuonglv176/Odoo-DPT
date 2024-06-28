@@ -25,7 +25,7 @@ class DptExportImport(models.Model):
     gate_id = fields.Many2one('dpt.export.import.gate', string='Gate Importer')
     user_id = fields.Many2one('res.users', string='User Export/Import', default=lambda self: self.env.user)
     date = fields.Date(required=True, default=lambda self: fields.Date.context_today(self))
-    currency_id = fields.Many2one('res.currency', string='Currency',default=lambda self: self.env.company.currency_id)
+    currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
     consultation_date = fields.Date(string='Consultation date')
     line_ids = fields.One2many('dpt.export.import.line', 'export_import_id', string='Export/Import Line')
     select_line_ids = fields.Many2many('dpt.export.import.line', string='Export/Import Line',
@@ -159,26 +159,27 @@ class DptExportImportLine(models.Model):
     dpt_uom_id = fields.Many2one('uom.uom', string='Uom Export/Import', tracking=True)
     dpt_uom2_ecus_id = fields.Many2one('uom.uom', string='ĐVT SL2 (Ecus)', tracking=True)
     dpt_uom2_id = fields.Many2one('uom.uom', string='ĐVT 2', tracking=True)
-    dpt_price_kd = fields.Monetary(string='Giá KD/giá cũ', tracking=True,currency_field='currency_id')
-    dpt_price_usd = fields.Monetary(string='Giá khai (USD)', tracking=True,currency_field='currency_id')
+    dpt_price_kd = fields.Monetary(string='Giá KD/giá cũ', tracking=True, currency_field='currency_id')
+    dpt_price_usd = fields.Monetary(string='Giá khai (USD)', tracking=True, currency_field='currency_id')
     dpt_tax_import = fields.Float(string='Tax import (%)', tracking=True)
-    dpt_amount_tax_import = fields.Float(string='Amount Tax Import', tracking=True)
+    dpt_amount_tax_import = fields.Monetary(string='Amount Tax Import', tracking=True, currency_field='currency_id')
     dpt_tax_ecus5 = fields.Char(string='VAT ECUS5', tracking=True)
     dpt_tax = fields.Float(string='VAT(%)', tracking=True)
-    dpt_amount_tax = fields.Float(string='Amount Tax', tracking=True)
-    dpt_exchange_rate = fields.Monetary(string='Exchange rate', tracking=True,currency_field='currency_id')
-    dpt_code_hs = fields.Char(string='HS Code', tracking=True)
+    dpt_amount_tax = fields.Monetary(string='Amount Tax', tracking=True, currency_field='currency_id')
+    dpt_exchange_rate = fields.Monetary(string='Exchange rate', tracking=True, currency_field='currency_id')
+    dpt_code_hs = fields.Char(string='HS Code', tracking=True, related='sale_line_id.product_code')
     dpt_sl1 = fields.Integer(string='SL1', tracking=True)
     dpt_uom1_id = fields.Many2one('uom.uom', string='ĐVT 1', tracking=True)
     dpt_sl2 = fields.Integer(string='SL2', tracking=True)
-    currency_id = fields.Many2one('res.currency', string='Currency',default=lambda self: self.env.company.currency_id)
-    dpt_total_usd_vnd = fields.Monetary(string='Total USD (VND)', tracking=True,currency_field='currency_id')
-    dpt_total_cny_vnd = fields.Monetary(string='Total CNY (VND)', tracking=True,currency_field='currency_id')
-    dpt_price_cny_vnd = fields.Monetary(string='Price CNY (VND)', tracking=True,currency_field='currency_id')
+    currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
+    dpt_total_usd_vnd = fields.Monetary(string='Total USD (VND)', tracking=True, currency_field='currency_id')
+    dpt_total_cny_vnd = fields.Monetary(string='Total CNY (VND)', tracking=True, currency_field='currency_id')
+    dpt_price_cny_vnd = fields.Monetary(string='Price CNY (VND)', tracking=True, currency_field='currency_id')
     dpt_tax_other = fields.Float(string='Tax Other (%)', tracking=True)
     dpt_amount_tax_other = fields.Float(string='Amount Tax Other', tracking=True)
-    dpt_total_vat = fields.Monetary(string='Total VAT', tracking=True, compute="_compute_total_vat",currency_field='currency_id')
-    dpt_total = fields.Monetary(string='Total', tracking=True,currency_field='currency_id')
+    dpt_total_vat = fields.Monetary(string='Total VAT', tracking=True, compute="_compute_total_vat",
+                                    currency_field='currency_id')
+    dpt_total = fields.Monetary(string='Total', tracking=True, currency_field='currency_id')
     dpt_is_new = fields.Boolean(string='Is new', tracking=True, default=False)
     state = fields.Selection([
         ('draft', 'Nháp'),
@@ -190,7 +191,31 @@ class DptExportImportLine(models.Model):
         ('cancelled', 'Huỷ')
     ], string='State', default='draft')
 
-    @api.depends('dpt_amount_tax_import','dpt_amount_tax','dpt_amount_tax_other')
+    @api.onchange('sale_line_id')
+    def onchange_sale_order_line(self):
+        if self.sale_line_id:
+            self.sale_id = self.sale_line_id.order_id
+            self.product_id = self.sale_line_id.product_id
+            self.dpt_english_name = self.sale_line_id.product_id.dpt_english_name
+            self.dpt_description = self.sale_line_id.product_id.dpt_description
+            self.dpt_n_w_kg = self.sale_line_id.product_id.dpt_n_w_kg
+            self.dpt_g_w_kg = self.sale_line_id.product_id.dpt_g_w_kg
+            self.dpt_uom_id = self.sale_line_id.product_id.dpt_uom_id
+            self.dpt_price_kd = self.sale_line_id.product_id.dpt_price_kd
+            self.dpt_tax_import = self.sale_line_id.import_tax_rate
+            self.dpt_amount_tax_import = self.sale_line_id.import_tax_amount
+            self.dpt_tax_other = self.sale_line_id.other_tax_rate
+            self.dpt_amount_tax_other = self.sale_line_id.other_tax_amount
+            self.dpt_tax_import = self.sale_line_id.import_tax_rate
+            self.dpt_tax_ecus5 = self.sale_line_id.product_id.dpt_tax_ecus5
+            self.dpt_tax = self.sale_line_id.vat_tax_rate
+            self.dpt_amount_tax = self.sale_line_id.dpt_amount_tax
+            self.dpt_exchange_rate = self.sale_line_id.payment_exchange_rate
+            self.dpt_uom1_id = self.sale_line_id.product_uom
+            self.dpt_sl1 = self.sale_line_id.product_uom_qty
+            self.dpt_sl2 = self.sale_line_id.dpt_sl2
+
+    @api.depends('dpt_amount_tax_import', 'dpt_amount_tax', 'dpt_amount_tax_other')
     def _compute_total_vat(self):
         for rec in self:
             rec.dpt_total_vat = rec.dpt_amount_tax_import + rec.dpt_amount_tax + rec.dpt_amount_tax_other

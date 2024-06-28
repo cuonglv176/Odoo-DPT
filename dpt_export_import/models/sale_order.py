@@ -49,7 +49,7 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     dpt_export_import_line_ids = fields.One2many('dpt.export.import.line', 'sale_line_id', string='Declaration line')
-    product_code = fields.Char(string='HS Code', related='product_id.code')
+    product_code = fields.Char(string='HS Code', related='product_id.default_code')
     declared_unit_price = fields.Monetary(string='Declared unit price', currency_field='currency_id')
     declared_unit_total = fields.Monetary(string='Declared unit Total', currency_field='currency_id')
     payment_exchange_rate = fields.Monetary(string='Payment exchange rate', currency_field='currency_id')
@@ -59,7 +59,8 @@ class SaleOrderLine(models.Model):
     import_tax_amount = fields.Monetary(string='Import tax Amount', currency_field='currency_id')
     vat_tax_amount = fields.Monetary(string='VAT tax Amount', currency_field='currency_id')
     other_tax_amount = fields.Monetary(string='Other tax Amount', currency_field='currency_id')
-    total_tax_amount = fields.Monetary(string='Total tax Amount', currency_field='currency_id')
+    total_tax_amount = fields.Monetary(string='Total tax Amount', currency_field='currency_id',
+                                       compute="compute_total_tax_amount")
     state_export_import_line = fields.Selection([
         ('draft', 'Nháp'),
         ('eligible', 'Đủ điều kiện khai báo'),
@@ -69,6 +70,11 @@ class SaleOrderLine(models.Model):
         ('post_control', 'Kiểm tra sau thông quan'),
         ('cancelled', 'Huỷ')
     ], string='State', default='draft', compute='compute_state_export_import_line')
+
+    @api.depends('import_tax_amount', 'other_tax_amount', 'vat_tax_amount')
+    def compute_total_tax_amount(self):
+        for rec in self:
+            rec.total_tax_amount = rec.import_tax_amount + rec.other_tax_amount + rec.vat_tax_amount
 
     @api.depends('dpt_export_import_line_ids', 'dpt_export_import_line_ids.state')
     def compute_state_export_import_line(self):
@@ -122,13 +128,17 @@ class SaleOrderLine(models.Model):
                     'default_dpt_uom2_ecus_id': self.product_id.dpt_uom2_ecus_id,
                     'default_dpt_uom2_id': self.product_id.dpt_uom2_id,
                     'default_dpt_price_kd': self.product_id.dpt_price_kd,
-                    'default_dpt_tax_import': self.product_id.dpt_tax_import,
+                    'default_dpt_tax_import': self.import_tax_rate,
+                    'default_dpt_amount_tax_import': self.import_tax_amount,
+                    'default_dpt_tax_other': self.other_tax_rate,
+                    'default_dpt_amount_tax_other': self.other_tax_amount,
                     'default_dpt_tax_ecus5': self.product_id.dpt_tax_ecus5,
-                    'default_dpt_tax': self.product_id.dpt_tax,
-                    'default_dpt_exchange_rate': self.product_id.dpt_exchange_rate,
+                    'default_dpt_tax': self.vat_tax_rate,
+                    'default_dpt_amount_tax': self.vat_tax_amount,
+                    'default_dpt_exchange_rate': self.payment_exchange_rate,
                     'default_dpt_code_hs': self.product_id.dpt_code_hs,
-                    'default_dpt_uom1_id': self.product_id.dpt_uom1_id,
-                    'default_dpt_sl1': self.product_id.dpt_sl1,
+                    'default_dpt_uom1_id': self.product_uom,
+                    'default_dpt_sl1': self.product_uom_qty,
                     'default_dpt_sl2': self.product_id.dpt_sl2,
                 },
             }
