@@ -86,13 +86,13 @@
                 <field name="dpt_g_w_kg"/>
                 <field name="package_ids" widget="many2many_tags"/>
                 <field name="dpt_code_hs"/>
-                <field name="dpt_tax_import" widget="boolean_toggle"/>
+                <field name="dpt_tax_import" widget="percentage"/>
                 <field name="dpt_amount_tax_import"/>
                 <field name="dpt_uom2_ecus_id"/>
                 <field name="dpt_uom2_id"/>
                 <field name="dpt_sl2"/>
                 <field name="dpt_tax_ecus5"/>
-                <field name="dpt_tax" widget="boolean_toggle"/>
+                <field name="dpt_tax" widget="percentage"/>
                 <field name="dpt_amount_tax"/>
                 <field name="dpt_tax_other" widget="percentage"/>
                 <field name="dpt_amount_tax_other"/>

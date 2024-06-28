@@ -21,7 +21,8 @@ class DptExportImport(models.Model):
     code = fields.Char(string='Code')
     invoice_code = fields.Char(string='Invoice Code')
     sale_id = fields.Many2one('sale.order', string='Sale Order')
-    importer_id = fields.Many2one('res.partner', string='Importer')
+    partner_importer_id = fields.Many2one('res.partner', string='Partner Importer')
+    partner_exporter_id = fields.Many2one('res.partner', string='Partner Exporter')
     gate_id = fields.Many2one('dpt.export.import.gate', string='Gate Importer')
     user_id = fields.Many2one('res.users', string='User Export/Import', default=lambda self: self.env.user)
     date = fields.Date(required=True, default=lambda self: fields.Date.context_today(self))
@@ -48,15 +49,28 @@ class DptExportImport(models.Model):
     ], string='Declaration Flow', default='red')
     dpt_n_w_kg = fields.Integer(string='Total N.W (KG)', compute="_compute_total_sum_line")
     dpt_g_w_kg = fields.Integer(string='Total G.W (KG)', compute="_compute_total_sum_line")
+    total_cubic_meters = fields.Integer(string='Total cubic meters')
     total_package = fields.Char(string='Total package', compute="_compute_total_package_line")
-    dpt_tax_import = fields.Float(string='Total Tax import (%)', compute="_compute_total_sum_line")
+    dpt_amount_tax_import = fields.Monetary(string='Total Amount import', compute="_compute_total_sum_line",
+                                            currency_field='currency_id')
+    dpt_amount_tax = fields.Monetary(string='Total Amount VAT', compute="_compute_total_sum_line",
+                                     currency_field='currency_id')
     dpt_total_line = fields.Integer(string='Total line', compute="_compute_total_count_line")
     dpt_total_line_new = fields.Integer(string='Total line New', compute="_compute_total_count_line")
+    estimated_total_amount = fields.Monetary(string='Estimated total amount', compute="_compute_estimated_total_amount",
+                                             currency_field='currency_id')
+    actual_total_amount = fields.Monetary(string='Actual total amount', currency_field='currency_id')
+    payment_exchange_rate = fields.Monetary(string='Payment exchange rate', currency_field='currency_id')
     shipping_slip = fields.Char(string='Shipping Slip')
     type_of_vehicle = fields.Char(string='Type of vehicle')
     driver_name = fields.Char(string='Driver Name')
     driver_phone_number = fields.Char(string='Driver Phone Number')
     vehicle_license_plate = fields.Char(string='Vehicle License Plate')
+
+    @api.depends('dpt_amount_tax_import', 'dpt_amount_tax')
+    def _compute_estimated_total_amount(self):
+        for rec in self:
+            rec.estimated_total_amount = rec.dpt_amount_tax + rec.dpt_amount_tax_import
 
     @api.depends('line_ids', 'line_ids.dpt_is_new')
     def _compute_total_count_line(self):
@@ -64,12 +78,14 @@ class DptExportImport(models.Model):
             rec.dpt_total_line = len(rec.line_ids)
             rec.dpt_total_line_new = len(rec.line_ids.filtered(lambda rec: rec.dpt_is_new == True))
 
-    @api.depends('line_ids', 'line_ids.dpt_n_w_kg', 'line_ids.dpt_g_w_kg', 'line_ids.dpt_tax_import')
+    @api.depends('line_ids', 'line_ids.dpt_n_w_kg', 'line_ids.dpt_g_w_kg', 'line_ids.dpt_amount_tax_import',
+                 'line_ids.dpt_amount_tax')
     def _compute_total_sum_line(self):
         for rec in self:
             rec.dpt_n_w_kg = sum(line.dpt_n_w_kg for line in rec.line_ids)
             rec.dpt_g_w_kg = sum(line.dpt_g_w_kg for line in rec.line_ids)
-            rec.dpt_tax_import = sum(line.dpt_tax_import for line in rec.line_ids)
+            rec.dpt_amount_tax_import = sum(line.dpt_amount_tax_import for line in rec.line_ids)
+            rec.dpt_amount_tax = sum(line.dpt_amount_tax for line in rec.line_ids)
 
     def _compute_total_package_line(self):
         for rec in self:
