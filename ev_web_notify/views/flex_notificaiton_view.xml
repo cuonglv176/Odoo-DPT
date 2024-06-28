@@ -335,7 +335,7 @@
             </field>
         </record>
 
-        <menuitem id="menu_flex_automation_form" name="Flex Notification"
+        <menuitem id="menu_flex_automation_form" name="Cài đặt thông báo"
             parent="base.menu_automation" action="base_automation_act_custom" sequence="1"/>
 
         </odoo>

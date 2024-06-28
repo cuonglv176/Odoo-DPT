@@ -8,14 +8,14 @@ class BaseAutomation(models.Model):
         ('normal', 'Normal'),
         ('notification', 'Notification'),
     ], default='normal')
-    message_notification = fields.Text(string='Notification Message')
+    message_notification = fields.Text(string='Nội dung thông báo')
     notification_type = fields.Selection([
         ('success', 'Success'),
         ('danger', 'Danger'),
         ('warning', 'Warning'),
         ('info', 'Info'),
     ])
-    partner_ids = fields.Many2many('res.partner', string='Partner')
+    partner_ids = fields.Many2many('res.partner', string='Người nhận')
 
     @api.model_create_multi
     def create(self, vals_list):
