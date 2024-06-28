@@ -9,7 +9,9 @@
                     <group>
                         <group>
                             <field name="is_update_exist_contract"/>
-                            <field name="contract_id" required="1" invisible="not is_update_exist_contract"/>
+                            <field name="contract_id" required="1"
+                                   domain="[('partner_id', '=', partner_id)]"
+                                   invisible="not is_update_exist_contract"/>
                             <field name="partner_id" required="1" readonly="1" force_save="1"
                                    invisible="not is_update_exist_contract"/>
                         </group>

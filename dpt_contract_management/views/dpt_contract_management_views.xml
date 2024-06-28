@@ -89,6 +89,7 @@
     </record>
 
     <menuitem id="submenu_dpt_contract_management_root" name="Contract"
+              web_icon="dpt_contract_management,static/description/icon.png"
               sequence="15"/>
     <menuitem id="submenu_dpt_contract_management" name="Contract" parent="dpt_contract_management.submenu_dpt_contract_management_root"
               action="action_dpt_contract_management"
