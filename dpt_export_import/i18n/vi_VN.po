@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-28 07:20+0000\n"
-"PO-Revision-Date: 2024-06-28 07:20+0000\n"
+"POT-Creation-Date: 2024-06-28 08:50+0000\n"
+"PO-Revision-Date: 2024-06-28 08:50+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -69,6 +69,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__activity_type_icon
 msgid "Activity Type Icon"
 msgstr ""
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_amount_tax
+msgid "Amount Tax"
+msgstr "Tiền thuế VAT"
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_amount_tax_import
+msgid "Amount Tax Import"
+msgstr "Tiền thuế NK"
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_amount_tax_other
+msgid "Amount Tax Other"
+msgstr "Tiền thuế khác"
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__message_attachment_count
@@ -164,7 +179,7 @@ msgstr "Dòng tờ khai"
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_sale_order__declaration_count
 msgid "Declaration count"
-msgstr "Số lượng tờ khai"
+msgstr "Số lượng tờ khia"
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_sale_order__declaration_line_count
@@ -195,7 +210,7 @@ msgstr "Mô tả"
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_product__dpt_description
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_template__dpt_description
 msgid "Description Product"
-msgstr "Mô tả SP"
+msgstr "Mô tả sản phẩm"
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__display_name
@@ -247,7 +262,7 @@ msgstr "Đủ điều kiện khai báo"
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_product__dpt_english_name
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_template__dpt_english_name
 msgid "English name"
-msgstr "Tên TA"
+msgstr "Tên tiếng anh"
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_exchange_rate
@@ -765,11 +780,16 @@ msgid ""
 msgstr ""
 
 #. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_tax_other
+msgid "Tax Other (%)"
+msgstr "Thuế Suất Khác (%)"
+
+#. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_tax_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_product__dpt_tax_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_template__dpt_tax_import
 msgid "Tax import (%)"
-msgstr "Thuế NK (%)"
+msgstr "Thuế nhập khẩu (%)"
 
 #. module: dpt_export_import
 #: model:ir.model.fields.selection,name:dpt_export_import.selection__dpt_export_import__state__consulted
@@ -785,12 +805,13 @@ msgstr "Tiêu đề"
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_total
 msgid "Total"
-msgstr ""
+msgstr "Tổng"
 
 #. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_price_cny_vnd
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_total_cny_vnd
-msgid "Total CNT (VND)"
-msgstr "Tổng CNT (VND)"
+msgid "Total CNY (VND)"
+msgstr "Tổng CNY (VND)"
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__dpt_g_w_kg
@@ -811,6 +832,11 @@ msgstr "Tổng Tax import (%)"
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_total_usd_vnd
 msgid "Total USD (VND)"
 msgstr "Tổng USD (VND)"
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_total_vat
+msgid "Total VAT"
+msgstr "Tổng thuế"
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__dpt_total_line

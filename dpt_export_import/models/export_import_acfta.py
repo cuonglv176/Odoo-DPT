@@ -13,4 +13,4 @@ class DptExportImportACFTA(models.Model):
     dpt_nk_tt = fields.Integer(string='NK TT')
     dpt_nk_ud = fields.Integer(string='NK ưu đãi')
     dpt_vat = fields.Integer(string='VAT')
-    dpt_acfta = fields.Integer(string='VAT')
+    dpt_acfta = fields.Integer(string='ACFTA')

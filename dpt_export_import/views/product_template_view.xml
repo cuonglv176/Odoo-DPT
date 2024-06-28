@@ -42,7 +42,6 @@
                                     <field name="state" widget="badge"
                                            decoration-info="state == 'draft'"
                                            decoration-success="state in ('eligible','declared','released','consulted','post_control')"/>
-
                                     <field name="sale_user_id"/>
                                     <field name="sale_id"/>
                                     <field name="lot_code"/>
@@ -58,17 +57,23 @@
                                     <field name="dpt_g_w_kg"/>
                                     <field name="package_ids" widget="many2many_tags"/>
                                     <field name="dpt_code_hs"/>
-                                    <field name="dpt_tax_import"/>
+                                    <field name="dpt_tax_import" widget="boolean_toggle"/>
+                                    <field name="dpt_amount_tax_import"/>
                                     <field name="dpt_uom2_ecus_id"/>
                                     <field name="dpt_uom2_id"/>
                                     <field name="dpt_sl2"/>
                                     <field name="dpt_tax_ecus5"/>
-                                    <field name="dpt_tax"/>
+                                    <field name="dpt_tax" widget="boolean_toggle"/>
+                                    <field name="dpt_amount_tax"/>
+                                    <field name="dpt_tax_other" widget="percentage"/>
+                                    <field name="dpt_amount_tax_other"/>
                                     <field name="dpt_exchange_rate"/>
+                                    <field name="dpt_total_vat"/>
                                     <field name="dpt_total_usd_vnd"/>
+                                    <field name="dpt_price_cny_vnd"/>
                                     <field name="dpt_total_cny_vnd"/>
+                                    <field name="dpt_is_new" widget="boolean_toggle"/>
                                     <field name="currency_id" invisible="1"/>
-
                                 </tree>
                             </field>
                         </page>

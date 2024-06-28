@@ -161,8 +161,10 @@ class DptExportImportLine(models.Model):
     dpt_price_kd = fields.Monetary(string='Giá KD/giá cũ', tracking=True)
     dpt_price_usd = fields.Monetary(string='Giá khai (USD)', tracking=True)
     dpt_tax_import = fields.Float(string='Tax import (%)', tracking=True)
-    dpt_tax_ecus5 = fields.Float(string='VAT ECUS5', tracking=True)
+    dpt_amount_tax_import = fields.Float(string='Amount Tax Import', tracking=True)
+    dpt_tax_ecus5 = fields.Char(string='VAT ECUS5', tracking=True)
     dpt_tax = fields.Float(string='VAT(%)', tracking=True)
+    dpt_amount_tax = fields.Float(string='Amount Tax', tracking=True)
     dpt_exchange_rate = fields.Monetary(string='Exchange rate', tracking=True)
     dpt_code_hs = fields.Char(string='HS Code', tracking=True)
     dpt_sl1 = fields.Integer(string='SL1', tracking=True)
@@ -170,7 +172,11 @@ class DptExportImportLine(models.Model):
     dpt_sl2 = fields.Integer(string='SL2', tracking=True)
     currency_id = fields.Many2one('res.currency', string='Currency')
     dpt_total_usd_vnd = fields.Monetary(string='Total USD (VND)', tracking=True)
-    dpt_total_cny_vnd = fields.Monetary(string='Total CNT (VND)', tracking=True)
+    dpt_total_cny_vnd = fields.Monetary(string='Total CNY (VND)', tracking=True)
+    dpt_price_cny_vnd = fields.Monetary(string='Price CNY (VND)', tracking=True)
+    dpt_tax_other = fields.Float(string='Tax Other (%)', tracking=True)
+    dpt_amount_tax_other = fields.Float(string='Amount Tax Other', tracking=True)
+    dpt_total_vat = fields.Monetary(string='Total VAT', tracking=True, compute="_compute_total_vat")
     dpt_total = fields.Monetary(string='Total', tracking=True)
     dpt_is_new = fields.Boolean(string='Is new', tracking=True, default=False)
     state = fields.Selection([
@@ -182,6 +188,11 @@ class DptExportImportLine(models.Model):
         ('post_control', 'Kiểm tra sau thông quan'),
         ('cancelled', 'Huỷ')
     ], string='State', default='draft')
+
+    @api.depends('dpt_amount_tax_import','dpt_amount_tax','dpt_amount_tax_other')
+    def _compute_total_vat(self):
+        for rec in self:
+            rec.dpt_total_vat = rec.dpt_amount_tax_import + rec.dpt_amount_tax + rec.dpt_amount_tax_other
 
     def restore_information_to_product(self):
         self.product_id.dpt_english_name = self.dpt_english_name
