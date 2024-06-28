@@ -36,6 +36,13 @@
                         <page string="History">
                             <field name="dpt_export_import_line_ids" readonly="1">
                                 <tree>
+                                    <button string="Eligible" type="object" name="action_update_eligible"
+                                            class="btn-primary"
+                                            invisible="state != 'draft'"/>
+                                    <field name="state" widget="badge"
+                                           decoration-info="state == 'draft'"
+                                           decoration-success="state in ('eligible','declared','released','consulted','post_control')"/>
+
                                     <field name="sale_user_id"/>
                                     <field name="sale_id"/>
                                     <field name="lot_code"/>
@@ -61,12 +68,7 @@
                                     <field name="dpt_total_usd_vnd"/>
                                     <field name="dpt_total_cny_vnd"/>
                                     <field name="currency_id" invisible="1"/>
-                                    <field name="state" widget="badge"
-                                           decoration-info="state == 'draft'"
-                                           decoration-success="state in ('eligible','declared','released','consulted','post_control')"/>
-                                    <button string="Eligible" type="object" name="action_update_eligible"
-                                            class="btn-primary"
-                                            invisible="state != 'draft'"/>
+
                                 </tree>
                             </field>
                         </page>

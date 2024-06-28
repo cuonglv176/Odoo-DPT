@@ -3,12 +3,14 @@
 
 from odoo import fields, models, _, api
 
+
 class DptExportImportGate(models.Model):
     _name = "dpt.export.import.gate"
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Dpt Export Import Gate'
 
     name = fields.Char(string='Name')
+
 
 class DptExportImport(models.Model):
     _name = "dpt.export.import"
@@ -28,22 +30,45 @@ class DptExportImport(models.Model):
     select_line_ids = fields.Many2many('dpt.export.import.line', string='Export/Import Line',
                                        domain=[('export_import_id', '=', False)])
     description = fields.Text(string='Description')
+
     state = fields.Selection([
         ('draft', 'Nháp'),
+        ('confirm', 'Xác nhận tờ khai'),
         ('declared', 'Tờ khai thông quan'),
         ('released', 'Giải phóng'),
         ('consulted', 'Tham vấn'),
         ('post_control', 'Kiểm tra sau thông quan'),
         ('cancelled', 'Huỷ')
     ], string='State', default='draft')
+    declaration_flow = fields.Selection([
+        ('red', 'Red'),
+        ('yellow', 'Yellow'),
+        ('green', 'Green')
+    ], string='Declaration Flow', default='red')
     dpt_n_w_kg = fields.Integer(string='Total N.W (KG)', compute="_compute_total_sum_line")
     dpt_g_w_kg = fields.Integer(string='Total G.W (KG)', compute="_compute_total_sum_line")
     total_package = fields.Char(string='Total package', compute="_compute_total_package_line")
-    dpt_tax_import = fields.Float(string='Total Tax import (%)',  compute="_compute_total_package_line")
+    dpt_tax_import = fields.Float(string='Total Tax import (%)', compute="_compute_total_sum_line")
+    dpt_total_line = fields.Integer(string='Total line', compute="_compute_total_count_line")
+    dpt_total_line_new = fields.Integer(string='Total line New', compute="_compute_total_count_line")
+    shipping_slip = fields.Char(string='Shipping Slip')
+    type_of_vehicle = fields.Char(string='Type of vehicle')
+    driver_name = fields.Char(string='Driver Name')
+    driver_phone_number = fields.Char(string='Driver Phone Number')
+    vehicle_license_plate = fields.Char(string='Vehicle License Plate')
+
+    @api.depends('line_ids', 'line_ids.dpt_is_new')
+    def _compute_total_count_line(self):
+        for rec in self:
+            rec.dpt_total_line = len(rec.line_ids)
+            rec.dpt_total_line_new = len(rec.line_ids.filtered(lambda rec: rec.dpt_is_new == True))
+
+    @api.depends('line_ids', 'line_ids.dpt_n_w_kg', 'line_ids.dpt_g_w_kg', 'line_ids.dpt_tax_import')
     def _compute_total_sum_line(self):
         for rec in self:
             rec.dpt_n_w_kg = sum(line.dpt_n_w_kg for line in rec.line_ids)
             rec.dpt_g_w_kg = sum(line.dpt_g_w_kg for line in rec.line_ids)
+            rec.dpt_tax_import = sum(line.dpt_tax_import for line in rec.line_ids)
 
     def _compute_total_package_line(self):
         for rec in self:
@@ -51,18 +76,21 @@ class DptExportImport(models.Model):
             for line_id in rec.line_ids:
                 for package_id in line_id.package_ids:
                     package_ids.append(package_id.id)
-            query = """
-                SELECT string_agg(quantity || ' ' || name, ' + ') AS total_package 
-                FROM (
-                    SELECT SUM(quantity) as  quantity, b.name ->>'en_US' as name
-                    FROM purchase_order_line_package a 
-                    JOIN uom_uom b on a.uom_id = b.id
-                    WHERE a.id in %s 
-                GROUP BY b.name) as a
-            """
-            self.env.cr.execute(query, [tuple(package_ids)])
-            result = {r['total_package']: r for r in self.env.cr.dictfetchall()}
-            rec.total_package = result or ''
+            if package_ids:
+                query = """
+                    SELECT string_agg(quantity || ' ' || name, ' + ') AS total_package 
+                    FROM (
+                        SELECT SUM(quantity) as  quantity, b.name ->>'en_US' as name
+                        FROM purchase_order_line_package a 
+                        JOIN uom_uom b on a.uom_id = b.id
+                        WHERE a.id in %s 
+                    GROUP BY b.name) as a
+                """
+                self.env.cr.execute(query, [tuple(package_ids)])
+                result = self.env.cr.dictfetchone()
+                rec.total_package = result.get('total_package') or ''
+            else:
+                rec.total_package = ''
 
     def action_declared(self):
         self.state = 'declared'
@@ -144,6 +172,7 @@ class DptExportImportLine(models.Model):
     dpt_total_usd_vnd = fields.Monetary(string='Total USD (VND)', tracking=True)
     dpt_total_cny_vnd = fields.Monetary(string='Total CNT (VND)', tracking=True)
     dpt_total = fields.Monetary(string='Total', tracking=True)
+    dpt_is_new = fields.Boolean(string='Is new', tracking=True, default=False)
     state = fields.Selection([
         ('draft', 'Nháp'),
         ('eligible', 'Đủ điều kiện khai báo'),

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-25 16:49+0000\n"
-"PO-Revision-Date: 2024-06-25 16:49+0000\n"
+"POT-Creation-Date: 2024-06-28 07:20+0000\n"
+"PO-Revision-Date: 2024-06-28 07:20+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,48 +18,75 @@ msgstr ""
 #. module: dpt_export_import
 #: model_terms:ir.ui.view,arch_db:dpt_export_import.dpt_export_import_view_sale_order_inherit_form
 msgid "<span class=\"o_stat_text\">Declaration Line</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Dòng tờ khai</span>"
 
 #. module: dpt_export_import
 #: model_terms:ir.ui.view,arch_db:dpt_export_import.dpt_export_import_view_sale_order_inherit_form
 msgid "<span class=\"o_stat_text\">Declaration</span>"
+msgstr "<span class=\"o_stat_text\">Tờ khai</span>"
+
+#. module: dpt_export_import
+#: model:ir.ui.menu,name:dpt_export_import.submenu_dpt_export_import_acfta_management
+msgid "ACFTA"
 msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__message_needaction
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__message_needaction
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__message_needaction
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__message_needaction
 msgid "Action Needed"
 msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__activity_ids
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__activity_ids
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__activity_ids
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__activity_ids
 msgid "Activities"
 msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__activity_exception_decoration
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__activity_exception_decoration
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__activity_exception_decoration
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__activity_exception_decoration
 msgid "Activity Exception Decoration"
 msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__activity_state
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__activity_state
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__activity_state
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__activity_state
 msgid "Activity State"
 msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__activity_type_icon
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__activity_type_icon
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__activity_type_icon
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__activity_type_icon
 msgid "Activity Type Icon"
 msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__message_attachment_count
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__message_attachment_count
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__message_attachment_count
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__message_attachment_count
 msgid "Attachment Count"
 msgstr ""
+
+#. module: dpt_export_import
+#: model_terms:ir.ui.view,arch_db:dpt_export_import.dpt_export_import_select_line_form
+msgid "Cancel"
+msgstr "Hủy"
+
+#. module: dpt_export_import
+#: model_terms:ir.ui.view,arch_db:dpt_export_import.view_dpt_export_import_form
+msgid "Cancelled"
+msgstr "Hủy"
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__code
@@ -67,13 +94,27 @@ msgid "Code"
 msgstr "Mã"
 
 #. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__consultation_date
+msgid "Consultation date"
+msgstr "Ngày tham vấn"
+
+#. module: dpt_export_import
+#: model_terms:ir.ui.view,arch_db:dpt_export_import.view_dpt_export_import_form
+msgid "Consulted"
+msgstr "Đã tham vấn"
+
+#. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__create_uid
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__create_uid
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__create_uid
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__create_date
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__create_date
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__create_date
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__create_date
 msgid "Created on"
 msgstr ""
@@ -96,7 +137,7 @@ msgstr "Dòng tờ khai"
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__date
 msgid "Date"
-msgstr "Ngày mở tờ khai"
+msgstr "Ngày"
 
 #. module: dpt_export_import
 #. odoo-python
@@ -106,6 +147,11 @@ msgstr "Ngày mở tờ khai"
 #, python-format
 msgid "Declaration"
 msgstr "Tờ khai"
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__declaration_flow
+msgid "Declaration Flow"
+msgstr "Luồng tờ khai"
 
 #. module: dpt_export_import
 #. odoo-python
@@ -118,7 +164,7 @@ msgstr "Dòng tờ khai"
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_sale_order__declaration_count
 msgid "Declaration count"
-msgstr "Số lượng tờ khia"
+msgstr "Số lượng tờ khai"
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_sale_order__declaration_line_count
@@ -132,6 +178,11 @@ msgstr "Số lượng dòng tờ khai"
 #: model:ir.model.fields,field_description:dpt_export_import.field_sale_order_line__dpt_export_import_line_ids
 msgid "Declaration line"
 msgstr "Dòng tờ khai"
+
+#. module: dpt_export_import
+#: model_terms:ir.ui.view,arch_db:dpt_export_import.view_dpt_export_import_form
+msgid "Declared"
+msgstr "Tờ khai"
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__description
@@ -148,6 +199,8 @@ msgstr "Mô tả sản phẩm"
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__display_name
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__display_name
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__display_name
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__display_name
 msgid "Display Name"
 msgstr ""
@@ -158,13 +211,34 @@ msgid "Dpt Export Import"
 msgstr "Xuất nhập khẩu"
 
 #. module: dpt_export_import
+#: model:ir.model,name:dpt_export_import.model_dpt_export_import_acfta
+msgid "Dpt Export Import ACFTA"
+msgstr ""
+
+#. module: dpt_export_import
+#: model:ir.model,name:dpt_export_import.model_dpt_export_import_gate
+msgid "Dpt Export Import Gate"
+msgstr "Cửa khẩu"
+
+#. module: dpt_export_import
 #: model:ir.model,name:dpt_export_import.model_dpt_export_import_line
 msgid "Dpt Export Import line"
 msgstr "Dòng tờ khai"
 
 #. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__driver_name
+msgid "Driver Name"
+msgstr "Tên tài xế"
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__driver_phone_number
+msgid "Driver Phone Number"
+msgstr "Số điện thoại tài xế"
+
+#. module: dpt_export_import
 #: model_terms:ir.ui.view,arch_db:dpt_export_import.view_dpt_export_import_line_form
 #: model_terms:ir.ui.view,arch_db:dpt_export_import.view_dpt_export_import_line_tree
+#: model_terms:ir.ui.view,arch_db:dpt_export_import.view_product_dpt_export_import_inherit
 msgid "Eligible"
 msgstr "Đủ điều kiện khai báo"
 
@@ -188,6 +262,11 @@ msgid "Export / Import"
 msgstr "Xuất nhập khẩu"
 
 #. module: dpt_export_import
+#: model_terms:ir.ui.view,arch_db:dpt_export_import.view_dpt_export_import_acfta_tree
+msgid "Export Import ACFTA"
+msgstr "ACFTA"
+
+#. module: dpt_export_import
 #: model_terms:ir.ui.view,arch_db:dpt_export_import.view_dpt_export_import_form
 msgid "Export Import Line"
 msgstr "Dòng tờ khai"
@@ -198,6 +277,7 @@ msgid "Export Import Line List"
 msgstr "Tờ khai"
 
 #. module: dpt_export_import
+#: model:ir.actions.act_window,name:dpt_export_import.action_dpt_export_import_acfta_management
 #: model:ir.actions.act_window,name:dpt_export_import.action_dpt_export_import_line_management
 #: model:ir.actions.act_window,name:dpt_export_import.action_dpt_export_import_management
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__export_import_id
@@ -226,23 +306,30 @@ msgstr "Xuất Nhập Khẩu"
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__line_ids
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__select_line_ids
 msgid "Export/Import Line"
 msgstr "Dòng tờ khai"
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__message_follower_ids
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__message_follower_ids
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__message_follower_ids
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__message_follower_ids
 msgid "Followers"
 msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__message_partner_ids
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__message_partner_ids
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__message_partner_ids
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__message_partner_ids
 msgid "Followers (Partners)"
 msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import__activity_type_icon
+#: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_acfta__activity_type_icon
+#: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_gate__activity_type_icon
 #: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_line__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
 msgstr ""
@@ -253,6 +340,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_template__dpt_g_w_kg
 msgid "G.W (KG)"
 msgstr ""
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__gate_id
+msgid "Gate Importer"
+msgstr "Cửa khẩu nhập"
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_price_kd
@@ -275,7 +367,22 @@ msgid "Giải phóng"
 msgstr ""
 
 #. module: dpt_export_import
+#: model:ir.model.fields.selection,name:dpt_export_import.selection__dpt_export_import__declaration_flow__green
+msgid "Green"
+msgstr "Xanh"
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__dpt_hs_code
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_code_hs
+#: model:ir.model.fields,field_description:dpt_export_import.field_product_product__dpt_code_hs
+#: model:ir.model.fields,field_description:dpt_export_import.field_product_template__dpt_code_hs
+msgid "HS Code"
+msgstr "Mã Hs"
+
+#. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__has_message
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__has_message
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__has_message
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__has_message
 msgid "Has Message"
 msgstr ""
@@ -293,24 +400,32 @@ msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__id
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__id
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__id
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__id
 msgid "ID"
 msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__activity_exception_icon
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__activity_exception_icon
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__activity_exception_icon
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__activity_exception_icon
 msgid "Icon"
 msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import__activity_exception_icon
+#: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_acfta__activity_exception_icon
+#: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_gate__activity_exception_icon
 #: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_line__activity_exception_icon
 msgid "Icon to indicate an exception activity."
 msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import__message_needaction
+#: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_acfta__message_needaction
+#: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_gate__message_needaction
 #: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_line__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr ""
@@ -318,16 +433,42 @@ msgstr ""
 #. module: dpt_export_import
 #: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import__message_has_error
 #: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import__message_has_sms_error
+#: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_acfta__message_has_error
+#: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_acfta__message_has_sms_error
+#: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_gate__message_has_error
+#: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_gate__message_has_sms_error
 #: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_line__message_has_error
 #: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_line__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
 
 #. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__importer_id
+msgid "Importer"
+msgstr "Nhân viên XNK"
+
+#. module: dpt_export_import
+#: model_terms:ir.ui.view,arch_db:dpt_export_import.view_dpt_export_import_form
+msgid "Information"
+msgstr "Thông tin"
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__invoice_code
+msgid "Invoice Code"
+msgstr "Mã hóa đơn"
+
+#. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__message_is_follower
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__message_is_follower
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__message_is_follower
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__message_is_follower
 msgid "Is Follower"
 msgstr ""
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_is_new
+msgid "Is new"
+msgstr "Dòng tờ khai mới"
 
 #. module: dpt_export_import
 #: model:ir.model.fields.selection,name:dpt_export_import.selection__dpt_export_import__state__post_control
@@ -337,30 +478,45 @@ msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__write_uid
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__write_uid
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__write_uid
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__write_date
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__write_date
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__write_date
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__write_date
 msgid "Last Updated on"
 msgstr ""
 
 #. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__lot_code
+msgid "Lot code"
+msgstr "Mã Lô"
+
+#. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__message_has_error
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__message_has_error
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__message_has_error
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__message_has_error
 msgid "Message Delivery error"
 msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__message_ids
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__message_ids
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__message_ids
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__message_ids
 msgid "Messages"
 msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__my_activity_date_deadline
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__my_activity_date_deadline
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__my_activity_date_deadline
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__my_activity_date_deadline
 msgid "My Activity Deadline"
 msgstr ""
@@ -373,25 +529,48 @@ msgid "N.W (KG)"
 msgstr ""
 
 #. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__dpt_nk_tt
+msgid "NK TT"
+msgstr ""
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__dpt_nk_ud
+msgid "NK ưu đãi"
+msgstr ""
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__name
+msgid "Name"
+msgstr "Tên"
+
+#. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__activity_calendar_event_id
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__activity_calendar_event_id
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__activity_calendar_event_id
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
 msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__activity_date_deadline
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__activity_date_deadline
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__activity_date_deadline
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__activity_summary
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__activity_summary
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__activity_summary
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__activity_summary
 msgid "Next Activity Summary"
 msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__activity_type_id
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__activity_type_id
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__activity_type_id
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__activity_type_id
 msgid "Next Activity Type"
 msgstr ""
@@ -404,32 +583,46 @@ msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__message_needaction_counter
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__message_needaction_counter
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__message_needaction_counter
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__message_needaction_counter
 msgid "Number of Actions"
 msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__message_has_error_counter
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__message_has_error_counter
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__message_has_error_counter
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__message_has_error_counter
 msgid "Number of errors"
 msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import__message_needaction_counter
+#: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_acfta__message_needaction_counter
+#: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_gate__message_needaction_counter
 #: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_line__message_needaction_counter
 msgid "Number of messages requiring action"
 msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import__message_has_error_counter
+#: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_acfta__message_has_error_counter
+#: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_gate__message_has_error_counter
 #: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_line__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__package_ids
+#: model:ir.ui.menu,name:dpt_export_import.submenu_export_import_package_management
 msgid "Package"
 msgstr "Kiện hàng"
+
+#. module: dpt_export_import
+#: model_terms:ir.ui.view,arch_db:dpt_export_import.view_dpt_export_import_form
+msgid "Post control"
+msgstr "Kiểm soát"
 
 #. module: dpt_export_import
 #: model:ir.model,name:dpt_export_import.model_product_template
@@ -449,23 +642,48 @@ msgstr "Sản phẩm"
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__rating_ids
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__rating_ids
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__rating_ids
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__rating_ids
 msgid "Ratings"
 msgstr "Đánh giá"
 
 #. module: dpt_export_import
+#: model:ir.model.fields.selection,name:dpt_export_import.selection__dpt_export_import__declaration_flow__red
+msgid "Red"
+msgstr "Đỏ"
+
+#. module: dpt_export_import
+#: model_terms:ir.ui.view,arch_db:dpt_export_import.view_dpt_export_import_form
+msgid "Released"
+msgstr "Giải phóng"
+
+#. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__activity_user_id
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__activity_user_id
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__activity_user_id
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__activity_user_id
 msgid "Responsible User"
 msgstr ""
 
 #. module: dpt_export_import
-#: model_terms:ir.ui.view,arch_db:dpt_export_import.view_product_dpt_export_import_inherit
-msgid "Restore"
-msgstr "Lấy làm mặc định"
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_sl1
+#: model:ir.model.fields,field_description:dpt_export_import.field_product_product__dpt_sl1
+#: model:ir.model.fields,field_description:dpt_export_import.field_product_template__dpt_sl1
+msgid "SL1"
+msgstr ""
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_sl2
+#: model:ir.model.fields,field_description:dpt_export_import.field_product_product__dpt_sl2
+#: model:ir.model.fields,field_description:dpt_export_import.field_product_template__dpt_sl2
+msgid "SL2"
+msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__message_has_sms_error
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__message_has_sms_error
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__message_has_sms_error
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr ""
@@ -474,6 +692,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__sale_id
 msgid "Sale Order"
 msgstr "Đơn hàng"
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__partner_id
+msgid "Sale Partner"
+msgstr "Khách hàng"
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__sale_id
@@ -496,9 +719,32 @@ msgid "Sales Order Line"
 msgstr "Dòng đơn bán hàng"
 
 #. module: dpt_export_import
+#: model_terms:ir.ui.view,arch_db:dpt_export_import.dpt_export_import_select_line_form
+#: model_terms:ir.ui.view,arch_db:dpt_export_import.view_dpt_export_import_form
+msgid "Select"
+msgstr "Chọn dòng tờ khai"
+
+#. module: dpt_export_import
+#. odoo-python
+#: code:addons/dpt_export_import/models/export_import.py:0
+#, python-format
+msgid "Select Line"
+msgstr "Chọn dòng tờ khai"
+
+#. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__sequence
 msgid "Sequence"
 msgstr "Trình tự"
+
+#. module: dpt_export_import
+#: model_terms:ir.ui.view,arch_db:dpt_export_import.view_dpt_export_import_form
+msgid "Shipping"
+msgstr "Vận chuyển"
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__shipping_slip
+msgid "Shipping Slip"
+msgstr "Phiếu vận chuyển"
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__state
@@ -508,6 +754,8 @@ msgstr "Trạng thái"
 
 #. module: dpt_export_import
 #: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import__activity_state
+#: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_acfta__activity_state
+#: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_gate__activity_state
 #: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_line__activity_state
 msgid ""
 "Status based on activities\n"
@@ -535,10 +783,62 @@ msgid "Title"
 msgstr "Tiêu đề"
 
 #. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_total
+msgid "Total"
+msgstr ""
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_total_cny_vnd
+msgid "Total CNT (VND)"
+msgstr "Tổng CNT (VND)"
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__dpt_g_w_kg
+msgid "Total G.W (KG)"
+msgstr "Tổng G.W (KG)"
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__dpt_n_w_kg
+msgid "Total N.W (KG)"
+msgstr "Tổng N.W (KG)"
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__dpt_tax_import
+msgid "Total Tax import (%)"
+msgstr "Tổng Tax import (%)"
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_total_usd_vnd
+msgid "Total USD (VND)"
+msgstr "Tổng USD (VND)"
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__dpt_total_line
+msgid "Total line"
+msgstr "Tổng dòng tờ khai"
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__dpt_total_line_new
+msgid "Total line New"
+msgstr "Tổng dòng tờ khai mới"
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__total_package
+msgid "Total package"
+msgstr "Tổng kiện"
+
+#. module: dpt_export_import
 #: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import__activity_exception_decoration
+#: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_acfta__activity_exception_decoration
+#: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_gate__activity_exception_decoration
 #: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_line__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr ""
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__type_of_vehicle
+msgid "Type of vehicle"
+msgstr "Loại xe"
 
 #. module: dpt_export_import
 #: model:ir.model.fields.selection,name:dpt_export_import.selection__dpt_export_import__state__declared
@@ -568,6 +868,17 @@ msgid "User Export/Import"
 msgstr "Nhân viên"
 
 #. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__sale_user_id
+msgid "User Sale"
+msgstr "Nhân viên CS"
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__dpt_acfta
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__dpt_vat
+msgid "VAT"
+msgstr ""
+
+#. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_tax_ecus5
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_product__dpt_tax_ecus5
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_template__dpt_tax_ecus5
@@ -582,20 +893,46 @@ msgid "VAT(%)"
 msgstr ""
 
 #. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__vehicle_license_plate
+msgid "Vehicle License Plate"
+msgstr ""
+
+#. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__website_message_ids
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__website_message_ids
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__website_message_ids
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__website_message_ids
 msgid "Website Messages"
 msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import__website_message_ids
+#: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_acfta__website_message_ids
+#: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_gate__website_message_ids
 #: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_line__website_message_ids
 msgid "Website communication history"
 msgstr ""
 
 #. module: dpt_export_import
+#: model:ir.model.fields.selection,name:dpt_export_import.selection__dpt_export_import__state__confirm
+msgid "Xác nhận tờ khai"
+msgstr ""
+
+#. module: dpt_export_import
+#: model:ir.model.fields.selection,name:dpt_export_import.selection__dpt_export_import__declaration_flow__yellow
+msgid "Yellow"
+msgstr "Vàng"
+
+#. module: dpt_export_import
 #: model_terms:ir.ui.view,arch_db:dpt_export_import.view_dpt_export_import_form
 msgid "e.g"
+msgstr ""
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_uom1_id
+#: model:ir.model.fields,field_description:dpt_export_import.field_product_product__dpt_uom1_id
+#: model:ir.model.fields,field_description:dpt_export_import.field_product_template__dpt_uom1_id
+msgid "ĐVT 1"
 msgstr ""
 
 #. module: dpt_export_import

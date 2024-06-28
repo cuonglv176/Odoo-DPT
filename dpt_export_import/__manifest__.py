@@ -16,5 +16,6 @@
         'views/product_template_view.xml',
         'views/export_import_view_line.xml',
         'views/sale_order_view.xml',
+        'views/export_import_acfta.xml',
     ],
 }

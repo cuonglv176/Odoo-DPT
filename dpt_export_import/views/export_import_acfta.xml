@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <record id="view_dpt_export_import_acfta_tree" model="ir.ui.view">
+        <field name="name">dpt.export.import.acfta.tree</field>
+        <field name="model">dpt.export.import.acfta</field>
+        <field name="arch" type="xml">
+            <tree string="Export Import ACFTA" editable="bottom">
+                <field name="dpt_v"/>
+                <field name="dpt_hs_code"/>
+                <field name="dpt_nk_tt"/>
+                <field name="dpt_nk_ud"/>
+                <field name="dpt_vat"/>
+                <field name="dpt_acfta"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_dpt_export_import_acfta_management" model="ir.actions.act_window">
+        <field name="name">Export import</field>
+        <field name="res_model">dpt.export.import.acfta</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <menuitem id="submenu_dpt_export_import_acfta_management" name="ACFTA"
+              parent="dpt_export_import.dpt_export_import_menu"
+              action="action_dpt_export_import_acfta_management"
+              groups="sales_team.group_sale_salesman_all_leads"
+              sequence="22"/>
+</odoo>
