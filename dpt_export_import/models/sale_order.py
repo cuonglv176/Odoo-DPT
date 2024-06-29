@@ -11,7 +11,7 @@ class SaleOrder(models.Model):
     dpt_export_import_line_ids = fields.One2many('dpt.export.import.line', 'sale_id', string='Declaration line')
     declaration_count = fields.Integer(string='Declaration count', compute="_compute_declaration_count")
     declaration_line_count = fields.Integer(string='Declaration count line', compute="_compute_declaration_count")
-    is_declaration = fields.Boolean(default=False, compute="_compute_is_declaration")
+    is_declaration = fields.Boolean(default=False, compute="_compute_is_declaration", store=True)
 
     @api.depends('dpt_export_import_line_ids', 'dpt_export_import_line_ids.state')
     def _compute_is_declaration(self):
