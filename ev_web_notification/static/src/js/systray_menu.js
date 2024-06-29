@@ -22,7 +22,7 @@ class SystrayMenu extends Component {
             for (const {payload, type} of notifications) {
                 if (type === "notification_updated") {
                     self._getActivityData();
-                    self._onMessageNotificationUpdate();
+                    self._onMessageNotificationUpdate(payload);
                 }
             }
         });
@@ -34,20 +34,19 @@ class SystrayMenu extends Component {
         let self = this;
         await this.orm.call('mail.message', 'update_status_message', [activity.id]);
         self._updateActivityPreview();
-           this.action.doAction(
-               {
-               type: 'ir.actions.act_window',
-               res_model: activity.model,
-               res_id: activity.res_id,
-               views: [[false, 'form']],
-               target: 'current',
-                }
-            );
+        this.action.doAction(
+            {
+                type: 'ir.actions.act_window',
+                res_model: activity.model,
+                res_id: activity.res_id,
+                views: [[false, 'form']],
+                target: 'current',
+            }
+        );
         this._getActivityData();
     }
 
-    _onMessageNotificationUpdate(payload) {
-        console.log(payload)
+    async _onMessageNotificationUpdate(payload) {
         if (payload) {
             if (payload.notification_unseen) {
                 this.activityCounter++;
@@ -56,6 +55,30 @@ class SystrayMenu extends Component {
                 this.activityCounter--;
             }
             window.$('.o_notification_counter').text(this.activityCounter);
+            let permission = await Notification.requestPermission();
+            let self = this;
+            if (permission && payload) {
+                payload.forEach((i) => {
+                    if (i.message.subject_notification) {
+                        let subject_notification = i.message.subject_notification
+                        const noti = new Notification(subject_notification, {
+                            body: subject_notification,
+                            icon: '/logo.png'
+                        });
+                        noti.addEventListener('click', function () {
+                            self.action.doAction(
+                                {
+                                    type: 'ir.actions.act_window',
+                                    res_model: i.model,
+                                    res_id: i.res_id,
+                                    views: [[false, 'form']],
+                                    target: 'current',
+                                }
+                            );
+                        });
+                    }
+                });
+            }
         }
     }
 
