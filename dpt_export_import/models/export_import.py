@@ -21,7 +21,7 @@ class DptExportImport(models.Model):
     code = fields.Char(string='Code')
     invoice_code = fields.Char(string='Invoice Code')
     sale_id = fields.Many2one('sale.order', string='Sale Order')
-    sale_ids = fields.Many2one('sale.order', string='Select Sale Order')
+    sale_ids = fields.Many2many('sale.order', string='Select Sale Order')
     partner_importer_id = fields.Many2one('res.partner', string='Partner Importer')
     partner_exporter_id = fields.Many2one('res.partner', string='Partner Exporter')
     gate_id = fields.Many2one('dpt.export.import.gate', string='Gate Importer')
@@ -242,7 +242,6 @@ class DptExportImportLine(models.Model):
         ('usd', 'USD'),
         ('cny', 'CNY')
     ], string='Declaration type', default='usd')
-
 
     def action_unlink(self):
         self.export_import_id = None

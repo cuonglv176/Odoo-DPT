@@ -116,7 +116,8 @@
                                     <field name="dpt_total_cny_vnd"/>
                                     <field name="dpt_is_new" widget="boolean_toggle"/>
                                     <field name="currency_id" invisible="1"/>
-
+                                    <button string="Unlink" type="object" name="action_unlink" class="btn-primary"
+                                            groups="sales_team.group_sale_salesman_all_leads"/>
                                 </tree>
                             </field>
                             <group name="note_group" col="6" class="mt-2 mt-md-0">
