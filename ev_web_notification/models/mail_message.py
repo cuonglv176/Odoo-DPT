@@ -113,7 +113,12 @@ class Message(models.Model):
             for at in recipients:
                 user = self.env['res.users'].sudo().search([('partner_id', '=', at)], limit=1)
                 if user:
-                    self._notify_channel(message={'notification_seen': True}, partner_id=user.partner_id)
+                    self._notify_channel(message={
+                        'notification_seen': True,
+                        'subject_notification': subject_notification,
+                        'res_id': res_id,
+                        'model': model,
+                    }, partner_id=user.partner_id)
         # for message in message_ids:
         #     for partner in message.partner_ids:
         #         user = self.env['res.users'].sudo().search([('partner_id','=',partner.id)], limit=1)
