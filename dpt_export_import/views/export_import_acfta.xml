@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <tree string="Export Import ACFTA" editable="bottom">
                 <field name="dpt_v"/>
-                <field name="dpt_hs_code"/>
+                <field name="name"/>
                 <field name="dpt_nk_tt"/>
                 <field name="dpt_nk_ud"/>
                 <field name="dpt_vat"/>

@@ -410,7 +410,7 @@ msgid "Green"
 msgstr "Xanh"
 
 #. module: dpt_export_import
-#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__dpt_hs_code
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__name
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_code_hs
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_product__dpt_code_hs
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_template__dpt_code_hs
