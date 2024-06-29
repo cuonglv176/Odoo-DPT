@@ -14,11 +14,14 @@
                         class="btn-primary"/>
             </xpath>
 
-            <xpath expr="//field[@name='order_line']/tree/field[@name='price_total']" position="attributes">
+            <xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal']" position="attributes">
                  <attribute name="string">Thành tiền xuất hóa đơn</attribute>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="attributes">
                  <attribute name="string">Đơn giá xuất hóa đơn </attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='tax_id']" position="attributes">
+                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom']" position="before">
                 <field name="hs_code_id"/>
