@@ -201,9 +201,10 @@ class DptExportImportLine(models.Model):
     dpt_sl2 = fields.Integer(string='SL2', tracking=True)
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
     currency_usd_id = fields.Many2one('res.currency', string='Currency USD', default=1)
+    currency_cny_id = fields.Many2one('res.currency', string='Currency CNY', default=6)
     dpt_total_usd_vnd = fields.Monetary(string='Total USD (VND)', tracking=True, currency_field='currency_id')
     dpt_total_cny_vnd = fields.Monetary(string='Total CNY (VND)', tracking=True, currency_field='currency_id')
-    dpt_price_cny_vnd = fields.Monetary(string='Price CNY (VND)', tracking=True, currency_field='currency_id')
+    dpt_price_cny_vnd = fields.Monetary(string='Price CNY (VND)', tracking=True, currency_field='currency_cny_id')
     dpt_tax_other = fields.Float(string='Tax Other (%)', tracking=True)
     dpt_amount_tax_other = fields.Float(string='Amount Tax Other', tracking=True)
     dpt_total_vat = fields.Monetary(string='Total VAT', tracking=True, compute="_compute_total_vat",
@@ -219,6 +220,10 @@ class DptExportImportLine(models.Model):
         ('post_control', 'Kiểm tra sau thông quan'),
         ('cancelled', 'Huỷ')
     ], string='State', default='draft')
+    declaration_type = fields.Selection([
+        ('usd', 'USD'),
+        ('cny', 'CNY')
+    ], string='Declaration type', default='usd')
 
     @api.onchange('dpt_price_usd', 'dpt_exchange_rate', 'dpt_sl1')
     def onchange_compute_dpt_total_usd_vnd(self):
@@ -234,7 +239,7 @@ class DptExportImportLine(models.Model):
 
     @api.onchange('dpt_price_cny_vnd', 'dpt_sl1')
     def onchange_compute_dpt_total_cny_vnd(self):
-        self.dpt_total_cny_vnd = self.dpt_price_cny_vnd * self.dpt_sl1
+        self.dpt_total_cny_vnd = self.dpt_price_cny_vnd * self.dpt_exchange_rate * self.dpt_sl1
 
     def write(self, vals):
         val_update_sale_line = {}
