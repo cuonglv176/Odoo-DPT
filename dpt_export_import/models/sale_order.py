@@ -136,7 +136,6 @@ class SaleOrderLine(models.Model):
                     'default_dpt_tax': self.vat_tax_rate,
                     'default_dpt_amount_tax': self.vat_tax_amount,
                     'default_dpt_exchange_rate': self.payment_exchange_rate,
-                    'default_dpt_code_hs': self.product_id.dpt_code_hs,
                     'default_dpt_uom1_id': self.product_uom,
                     'default_dpt_sl1': self.product_uom_qty,
                     'default_dpt_sl2': self.product_id.dpt_sl2,

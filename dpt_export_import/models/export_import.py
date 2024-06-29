@@ -195,7 +195,6 @@ class DptExportImportLine(models.Model):
     dpt_tax = fields.Float(string='VAT(%)', tracking=True)
     dpt_amount_tax = fields.Monetary(string='Amount Tax', tracking=True, currency_field='currency_id')
     dpt_exchange_rate = fields.Monetary(string='Exchange rate', tracking=True, currency_field='currency_id')
-    dpt_code_hs = fields.Char(string='HS Code', tracking=True, related='sale_line_id.product_code')
     hs_code_id = fields.Many2one('dpt.export.import.acfta', string='HS Code')
     dpt_sl1 = fields.Integer(string='SL1', tracking=True)
     dpt_uom1_id = fields.Many2one('uom.uom', string='ĐVT 1', tracking=True)
@@ -314,7 +313,7 @@ class DptExportImportLine(models.Model):
         self.product_id.dpt_tax_ecus5 = self.dpt_tax_ecus5
         self.product_id.dpt_tax = self.dpt_tax
         self.product_id.dpt_exchange_rate = self.dpt_exchange_rate
-        self.product_id.dpt_code_hs = self.dpt_code_hs
+        self.product_id.dpt_code_hs = self.hs_code_id.name
         self.product_id.dpt_uom1_id = self.dpt_uom1_id
         self.product_id.dpt_sl1 = self.dpt_sl1
         self.product_id.dpt_sl2 = self.dpt_sl2
@@ -342,7 +341,6 @@ class DptExportImportLine(models.Model):
             self.dpt_tax_ecus5 = self.product_id.dpt_tax_ecus5
             self.dpt_tax = self.product_id.dpt_tax
             self.dpt_exchange_rate = self.product_id.dpt_exchange_rate
-            self.dpt_code_hs = self.product_id.dpt_code_hs
             self.dpt_uom1_id = self.product_id.dpt_uom1_id
             self.dpt_sl1 = self.product_id.dpt_sl1
             self.dpt_sl2 = self.product_id.dpt_sl2
