@@ -27,10 +27,12 @@ class PurchaseOrder(models.Model):
     import_package_stock = fields.Boolean('Import Package to Stock')
     purchase_type = fields.Selection([
         ('internal', 'Internal'),
-        ('external', 'External')
+        ('external', 'External'),
+        ('buy_cny', 'Mua tệ'),
     ], string='Purchase type', default='external', tracking=True)
     packing_lot_name = fields.Char('Packing Lot name', compute="compute_packing_lot_name", store=True)
     last_packing_lot_alphabet = fields.Char('Last Packing Lot alphabet', compute="compute_packing_lot_name", store=True)
+    department_id = fields.Many2one('hr.department', string='Phòng ban')
 
     @api.depends('package_line_ids.quantity', 'package_line_ids.uom_id.packing_code')
     def compute_packing_lot_name(self):
