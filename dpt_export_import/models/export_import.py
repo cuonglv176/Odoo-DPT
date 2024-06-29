@@ -273,7 +273,7 @@ class DptExportImportLine(models.Model):
                 'hs_code_id': vals.get('hs_code_id')
             })
         res = super(DptExportImportLine, self).write(vals)
-        res.sale_line_id.write(val_update_sale_line)
+        self.sale_line_id.write(val_update_sale_line)
         return res
 
     @api.onchange('sale_line_id')

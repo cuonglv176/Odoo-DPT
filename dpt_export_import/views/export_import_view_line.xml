@@ -25,14 +25,12 @@
                             <field name="dpt_sl1"/>
                             <field name="dpt_uom1_id"/>
                             <field name="declaration_type" widget="radio" options="{'horizontal': true}"/>
+                            <field name="dpt_exchange_rate"/>
                             <field name="dpt_price_usd" invisible="declaration_type != 'usd'"/>
                             <field name="dpt_total_usd_vnd" invisible="declaration_type != 'usd'"/>
                             <field name="dpt_price_cny_vnd" invisible="declaration_type != 'cny'"/>
                             <field name="dpt_total_cny_vnd" invisible="declaration_type != 'cny'"/>
                             <field name="dpt_price_kd"/>
-                            <field name="dpt_n_w_kg"/>
-                            <field name="dpt_g_w_kg"/>
-                            <field name="package_ids" widget="many2many_tags"/>
                         </group>
                         <group>
                             <field name="hs_code_id"/>
@@ -47,9 +45,14 @@
                             <field name="dpt_tax_other" widget="percentage"/>
                             <field name="dpt_amount_tax_other"/>
                             <field name="dpt_total_vat"/>
-                            <field name="dpt_exchange_rate"/>
                             <field name="dpt_is_new" widget="boolean_toggle"/>
                             <field name="currency_id" invisible="1"/>
+                            <field name="currency_usd_id" invisible="1"/>
+                            <field name="currency_cny_id" invisible="1"/>
+                            <field name="package_ids" widget="many2many_tags"/>
+                            <field name="dpt_n_w_kg"/>
+                            <field name="dpt_g_w_kg"/>
+
                         </group>
                     </group>
                 </sheet>
