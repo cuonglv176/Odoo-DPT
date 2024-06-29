@@ -10,7 +10,7 @@
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,eligible,declared,released,consulted,post_control,cancelled"/>
                     <button string="Eligible" type="object" name="action_update_eligible" class="btn-primary"
-                            invisible="state != 'draft'"/>
+                            invisible="state != 'draft'" groups="sales_team.group_sale_salesman_all_leads"/>
                 </header>
                 <sheet>
                     <group>
@@ -32,7 +32,7 @@
                             <field name="package_ids" widget="many2many_tags"/>
                         </group>
                         <group>
-                            <field name="dpt_code_hs"/>
+                            <field name="hs_code_id"/>
                             <field name="dpt_tax_import" widget="percentage"/>
                             <field name="dpt_amount_tax_import"/>
                             <field name="dpt_uom2_ecus_id"/>
@@ -67,7 +67,7 @@
         <field name="arch" type="xml">
             <tree string="Export Import Line List">
                 <button string="Eligible" type="object" name="action_update_eligible" class="btn-primary"
-                        invisible="state != 'draft'"/>
+                        invisible="state != 'draft'" groups="sales_team.group_sale_salesman_all_leads"/>
                 <field name="state" widget="badge"
                        decoration-info="state == 'draft'"
                        decoration-success="state in ('eligible','declared','released','consulted','post_control')"/>
@@ -82,10 +82,11 @@
                 <field name="dpt_uom1_id"/>
                 <field name="dpt_price_kd"/>
                 <field name="dpt_price_usd"/>
+                <field name="dpt_price_cny_vnd"/>
                 <field name="dpt_n_w_kg"/>
                 <field name="dpt_g_w_kg"/>
                 <field name="package_ids" widget="many2many_tags"/>
-                <field name="dpt_code_hs"/>
+                <field name="hs_code_id"/>
                 <field name="dpt_tax_import" widget="percentage"/>
                 <field name="dpt_amount_tax_import"/>
                 <field name="dpt_uom2_ecus_id"/>
@@ -99,7 +100,6 @@
                 <field name="dpt_exchange_rate"/>
                 <field name="dpt_total_vat"/>
                 <field name="dpt_total_usd_vnd"/>
-                <field name="dpt_price_cny_vnd"/>
                 <field name="dpt_total_cny_vnd"/>
                 <field name="dpt_is_new" widget="boolean_toggle"/>
                 <field name="currency_id" invisible="1"/>

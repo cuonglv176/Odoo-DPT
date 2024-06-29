@@ -158,7 +158,7 @@ class RequiredField(models.Model):
             }
         if self.default_compute_from == 'declared_price_in_so' and self.fields_type == 'integer':
             return {
-                'value_integer': sum(so.order_line.mapped('price_declaration'))
+                'value_integer': sum(so.order_line.mapped('declared_unit_price'))
             }
         return {}
 

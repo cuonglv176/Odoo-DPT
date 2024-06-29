@@ -49,7 +49,7 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     dpt_export_import_line_ids = fields.One2many('dpt.export.import.line', 'sale_line_id', string='Declaration line')
-    product_code = fields.Char(string='HS Code', related='product_id.default_code')
+    hs_code_id = fields.Many2one('dpt.export.import.acfta', string='HS Code')
     declared_unit_price = fields.Monetary(string='Declared unit price', currency_field='currency_id')
     declared_unit_total = fields.Monetary(string='Declared unit Total', currency_field='currency_id')
     payment_exchange_rate = fields.Monetary(string='Payment exchange rate', currency_field='currency_id')
@@ -140,6 +140,7 @@ class SaleOrderLine(models.Model):
                     'default_dpt_uom1_id': self.product_uom,
                     'default_dpt_sl1': self.product_uom_qty,
                     'default_dpt_sl2': self.product_id.dpt_sl2,
+                    'default_hs_code_id': self.hs_code_id.id,
                 },
             }
         else:

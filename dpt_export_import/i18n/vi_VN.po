@@ -690,7 +690,7 @@ msgstr "Tên nhà nhập khẩu"
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__payment_exchange_rate
 #: model:ir.model.fields,field_description:dpt_export_import.field_sale_order_line__payment_exchange_rate
 msgid "Payment exchange rate"
-msgstr "Tỷ giá thanh toán"
+msgstr "Tỷ giá tính thuế"
 
 #. module: dpt_export_import
 #: model_terms:ir.ui.view,arch_db:dpt_export_import.view_dpt_export_import_form
@@ -700,7 +700,7 @@ msgstr "Kiểm soát"
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_price_cny_vnd
 msgid "Price CNY (VND)"
-msgstr "Tổng CNY (VND)"
+msgstr "Giá khai CNY"
 
 #. module: dpt_export_import
 #: model:ir.model,name:dpt_export_import.model_product_template

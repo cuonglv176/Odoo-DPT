@@ -21,6 +21,17 @@
                             invisible="state == 'cancelled'"/>
                 </header>
                 <sheet>
+                    <div name="button_box" class="oe_button_box">
+                        <button class="oe_stat_button" type="object" name="action_open_declaration_line"
+                                icon="fa-list-ul">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_value">
+                                    <field string="Declaration Line" name="dpt_total_line"/>
+                                </span>
+                                <span class="o_stat_text">Declaration Line</span>
+                            </div>
+                        </button>
+                    </div>
                     <label for="name"/>
                     <h1>
                         <field name="name" placeholder="e.g "/>

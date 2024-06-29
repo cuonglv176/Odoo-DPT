@@ -14,7 +14,7 @@
                         class="btn-primary"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom']" position="before">
-                <field name="product_code"/>
+                <field name="hs_code_id"/>
                 <field name="declared_unit_price"/>
                 <field name="declared_unit_total"/>
                 <field name="payment_exchange_rate"/>

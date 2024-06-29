@@ -39,7 +39,7 @@ class SaleOrder(models.Model):
             if fields_id.fields_id.default_compute_from == 'volume_in_so' and fields_id.fields_id.fields_type == 'integer':
                 fields_id.value_integer = self.volume
             if fields_id.fields_id.default_compute_from == 'declared_price_in_so' and fields_id.fields_id.fields_type == 'integer':
-                fields_id.value_integer = sum(self.order_line.mapped('price_declaration'))
+                fields_id.value_integer = sum(self.order_line.mapped('declared_unit_price'))
 
     @api.model
     def create(self, vals_list):
@@ -221,7 +221,7 @@ class SaleOrder(models.Model):
                     if service_price_id.percent_based_on == 'product_total_amount':
                         price_base = sum(self.order_line.mapped('price_total'))
                     elif service_price_id.percent_based_on == 'declaration_total_amount':
-                        price_base = sum(self.order_line.mapped('price_declaration'))
+                        price_base = sum(self.order_line.mapped('declared_unit_price'))
                     if price_base:
                         price = max(service_price_id.currency_id._convert(
                             from_amount=price_base * service_price_id.percent_price / 100,
