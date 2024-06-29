@@ -33,48 +33,8 @@
             <page name="products" position="after">
                 <page string="Package" name="package">
                     <field name="import_package_stock" invisible="1"/>
-                    <field name="package_line_ids" readonly="state in ('done', 'cancel')">
-                        <tree>
-                            <field name="purchase_id" column_invisible="1"/>
-                            <!--                            <field name="lot_name"/>-->
-                            <field name="quantity"/>
-                            <field name="uom_id"/>
-                            <field name="size"/>
-                            <field name="weight"/>
-                            <field name="volume"/>
-                            <field name="note"/>
-                        </tree>
-                        <form>
-                            <sheet>
-                                <group>
-                                    <group>
-                                        <field name="purchase_id" invisible="1" force_save="1"/>
-                                        <!--                                        <field name="lot_name"/>-->
-                                        <field name="quantity"/>
-                                        <field name="uom_id" required="1"/>
-                                        <field name="note"/>
-                                    </group>
-                                    <group>
-                                        <field name="size"/>
-                                        <field name="weight"/>
-                                        <field name="volume"/>
-                                    </group>
-                                </group>
-                                <notebook>
-                                    <page name="detail" string="Detail">
-                                        <field name="detail_ids">
-                                            <tree editable="bottom">
-                                                <field name="package_id" column_invisible="1"/>
-                                                <field name="product_id"/>
-                                                <field name="uom_id" readonly="1" force_save="1"/>
-                                                <field name="quantity"/>
-                                            </tree>
-                                        </field>
-                                    </page>
-                                </notebook>
-                            </sheet>
-                        </form>
-                    </field>
+                    <field name="package_line_ids" readonly="state in ('done', 'cancel')"
+                           context="{'default_sale_id': sale_id}"/>
                 </page>
 
             </page>
