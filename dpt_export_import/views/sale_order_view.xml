@@ -15,13 +15,13 @@
             </xpath>
 
             <xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal']" position="attributes">
-                 <attribute name="string">Thành tiền xuất hóa đơn</attribute>
+                <attribute name="string">Thành tiền xuất hóa đơn</attribute>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="attributes">
-                 <attribute name="string">Đơn giá xuất hóa đơn</attribute>
+                <attribute name="string">Đơn giá xuất hóa đơn</attribute>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree/field[@name='tax_id']" position="attributes">
-                 <attribute name="column_invisible">1</attribute>
+                <attribute name="column_invisible">1</attribute>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom']" position="after">
                 <field name="hs_code_id"/>
@@ -37,6 +37,7 @@
                 <field name="total_tax_amount"/>
             </xpath>
             <div name="button_box" position="inside">
+                <field name="is_declaration" invisible="1"/>
                 <button class="oe_stat_button" type="object" name="action_open_declaration" icon="fa-list-ul">
                     <div class="o_form_field o_stat_info">
                         <span class="o_stat_value">
