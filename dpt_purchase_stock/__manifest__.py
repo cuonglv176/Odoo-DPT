@@ -7,9 +7,8 @@
     'author': 'TuUH',
     'maintainer': 'TuUH',
     'website': 'http://dpt.com',
-    'depends': ['stock', 'dpt_purchase_management', 'purchase', 'product'],
+    'depends': ['stock', 'dpt_purchase_management', 'dpt_stock_management', 'purchase', 'product'],
     'data': [
-        'views/uom_uom.xml',
         'views/stock_picking.xml',
         'views/purchase_order.xml',
     ],

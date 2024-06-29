@@ -31,36 +31,14 @@ class PurchaseOrder(models.Model):
         ('buy_cny', 'Mua tệ'),
     ], string='Purchase type', default='external', tracking=True)
     packing_lot_name = fields.Char('Packing Lot name', compute="compute_packing_lot_name", store=True)
-    last_packing_lot_alphabet = fields.Char('Last Packing Lot alphabet', compute="compute_packing_lot_name", store=True)
     department_id = fields.Many2one('hr.department', string='Phòng ban')
 
     @api.depends('package_line_ids.quantity', 'package_line_ids.uom_id.packing_code')
     def compute_packing_lot_name(self):
         for item in self:
-            now = datetime.now()
-            prefix = f'D{year_to_alphabet(now.year)}{now.strftime("%m%d")}'
-            main_name = '+'.join(
-                [f'{line.quantity}{line.uom_id.packing_code if line.uom_id.packing_code else ""}' for line in
-                 item.package_line_ids])
-            if main_name:
-                full_name = f'{prefix}-{main_name}'
-                # other purchase have same full name
-                domain = [('packing_lot_name', 'ilike', full_name),
-                          ('id', '!=', item._origin.id)] if item._origin.id else [
-                    ('packing_lot_name', 'ilike', full_name)]
-                exist_po_id = self.env['purchase.order'].search(domain, order="id desc", limit=1)
-                if not exist_po_id:
-                    item.packing_lot_name = full_name
-                    item.last_packing_lot_alphabet = ''
-                else:
-                    if not exist_po_id.last_packing_lot_alphabet:
-                        exist_po_id.last_packing_lot_alphabet = 'A'
-                        exist_po_id.packing_lot_name = exist_po_id.packing_lot_name + '-A'
-                    item.packing_lot_name = f'{full_name}-{next_alphabet(exist_po_id.last_packing_lot_alphabet)}'
-                    item.last_packing_lot_alphabet = next_alphabet(exist_po_id.last_packing_lot_alphabet)
-            else:
-                item.packing_lot_name = None
-                item.last_packing_lot_alphabet = ''
+            item.packing_lot_name = '.'.join(
+                [f"{package_line_id.quantity}{package_line_id.uom_id.packing_code}" for package_line_id in
+                 item.package_line_ids if package_line_id.uom_id.packing_code])
 
     @api.model
     def create(self, vals):

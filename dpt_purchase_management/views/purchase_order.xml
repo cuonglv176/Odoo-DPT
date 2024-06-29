@@ -26,7 +26,6 @@
                        invisible="context.get('from_purchase_order_confirm')"/>
                 <field name="department_id"/>
                 <field name="packing_lot_name" readonly="1" force_save="1"/>
-                <field name="last_packing_lot_alphabet" invisible="1"/>
             </field>
             <field name="date_order" position="before">
                 <field name="sale_id" readonly="1" force_save="1" invisible="sale_id"/>

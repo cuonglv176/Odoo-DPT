@@ -7,6 +7,17 @@ class PurchaseOrderLinePackage(models.Model):
     move_ids = fields.One2many('stock.move', 'package_line_id', 'Move')
     picking_id = fields.Many2one('stock.picking', 'Picking')
     lot_ids = fields.Many2many('stock.lot', string='Lot')
+    product_ids = fields.Many2many('product.product', compute="_compute_product")
+
+    @api.depends('purchase_id', 'picking_id')
+    def _compute_product(self):
+        for item in self:
+            product_ids = self.env['product.product']
+            if item.purchase_id:
+                product_ids |= item.purchase_id.order_line.mapped('product_id')
+            if item.picking_id:
+                product_ids |= item.picking_id.move_ids_product.mapped('product_id')
+            item.product_ids = product_ids if product_ids else self.env['product.product'].search([])
 
     def _create_stock_moves(self, picking):
         values = []
