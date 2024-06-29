@@ -54,6 +54,8 @@
                             <field name="dpt_g_w_kg"/>
                             <field name="total_cubic_meters"/>
                             <field name="dpt_amount_tax_import"/>
+                            <field name="dpt_amount_tax"/>
+                            <field name="dpt_amount_tax_other"/>
                             <field name="estimated_total_amount"/>
                             <field name="payment_exchange_rate"/>
                         </group>

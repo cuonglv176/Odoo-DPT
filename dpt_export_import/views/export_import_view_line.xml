@@ -27,6 +27,7 @@
                             <field name="declaration_type" widget="radio" options="{'horizontal': true}"/>
                             <field name="dpt_exchange_rate"/>
                             <field name="dpt_price_usd" invisible="declaration_type != 'usd'"/>
+                            <field name="dpt_total_usd" invisible="declaration_type != 'usd'"/>
                             <field name="dpt_total_usd_vnd" invisible="declaration_type != 'usd'"/>
                             <field name="dpt_price_cny_vnd" invisible="declaration_type != 'cny'"/>
                             <field name="dpt_total_cny_vnd" invisible="declaration_type != 'cny'"/>
@@ -86,6 +87,7 @@
                 <field name="dpt_uom1_id"/>
                 <field name="dpt_price_kd"/>
                 <field name="dpt_price_usd"/>
+                <field name="dpt_total_usd"/>
                 <field name="dpt_price_cny_vnd"/>
                 <field name="dpt_n_w_kg"/>
                 <field name="dpt_g_w_kg"/>

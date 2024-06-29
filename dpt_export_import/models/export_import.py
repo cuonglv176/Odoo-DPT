@@ -21,6 +21,7 @@ class DptExportImport(models.Model):
     code = fields.Char(string='Code')
     invoice_code = fields.Char(string='Invoice Code')
     sale_id = fields.Many2one('sale.order', string='Sale Order')
+    sale_ids = fields.Many2one('sale.order', string='Select Sale Order')
     partner_importer_id = fields.Many2one('res.partner', string='Partner Importer')
     partner_exporter_id = fields.Many2one('res.partner', string='Partner Exporter')
     gate_id = fields.Many2one('dpt.export.import.gate', string='Gate Importer')
@@ -55,6 +56,8 @@ class DptExportImport(models.Model):
                                             currency_field='currency_id')
     dpt_amount_tax = fields.Monetary(string='Total Amount VAT', compute="_compute_total_sum_line",
                                      currency_field='currency_id')
+    dpt_amount_tax_other = fields.Monetary(string='Total Amount Tax Other', currency_field='currency_id',
+                                           compute="_compute_total_sum_line")
     dpt_total_line = fields.Integer(string='Total line', compute="_compute_total_count_line")
     dpt_total_line_new = fields.Integer(string='Total line New', compute="_compute_total_count_line")
     estimated_total_amount = fields.Monetary(string='Estimated total amount', compute="_compute_estimated_total_amount",
@@ -97,6 +100,7 @@ class DptExportImport(models.Model):
             rec.dpt_n_w_kg = sum(line.dpt_n_w_kg for line in rec.line_ids)
             rec.dpt_g_w_kg = sum(line.dpt_g_w_kg for line in rec.line_ids)
             rec.dpt_amount_tax_import = sum(line.dpt_amount_tax_import for line in rec.line_ids)
+            rec.dpt_amount_tax_other = sum(line.dpt_amount_tax_other for line in rec.line_ids)
             rec.dpt_amount_tax = sum(line.dpt_amount_tax for line in rec.line_ids)
 
     def _compute_total_package_line(self):
@@ -187,13 +191,14 @@ class DptExportImportLine(models.Model):
     dpt_uom_id = fields.Many2one('uom.uom', string='Uom Export/Import', tracking=True)
     dpt_uom2_ecus_id = fields.Many2one('uom.uom', string='ĐVT SL2 (Ecus)', tracking=True)
     dpt_uom2_id = fields.Many2one('uom.uom', string='ĐVT 2', tracking=True)
-    dpt_price_kd = fields.Monetary(string='Giá KD/giá cũ', tracking=True, currency_field='currency_id')
-    dpt_price_usd = fields.Monetary(string='Giá khai (USD)', tracking=True, currency_field='currency_usd_id')
+    dpt_price_kd = fields.Char(string='Giá KD/giá cũ', tracking=True)
     dpt_tax_import = fields.Float(string='Tax import (%)', tracking=True)
-    dpt_amount_tax_import = fields.Monetary(string='Amount Tax Import', tracking=True, currency_field='currency_id')
+    dpt_amount_tax_import = fields.Monetary(string='Amount Tax Import', currency_field='currency_id',
+                                            compute="_compute_dpt_amount_tax_import")
     dpt_tax_ecus5 = fields.Char(string='VAT ECUS5', tracking=True)
     dpt_tax = fields.Float(string='VAT(%)', tracking=True)
-    dpt_amount_tax = fields.Monetary(string='Amount Tax', tracking=True, currency_field='currency_id')
+    dpt_amount_tax = fields.Monetary(string='Amount Tax', currency_field='currency_id',
+                                     compute="_compute_dpt_amount_tax")
     dpt_exchange_rate = fields.Monetary(string='Exchange rate', tracking=True, currency_field='currency_id')
     hs_code_id = fields.Many2one('dpt.export.import.acfta', string='HS Code')
     dpt_code_hs = fields.Char(string='H')
@@ -203,11 +208,17 @@ class DptExportImportLine(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
     currency_usd_id = fields.Many2one('res.currency', string='Currency USD', default=1)
     currency_cny_id = fields.Many2one('res.currency', string='Currency CNY', default=6)
-    dpt_total_usd_vnd = fields.Monetary(string='Total USD (VND)', tracking=True, currency_field='currency_id')
-    dpt_total_cny_vnd = fields.Monetary(string='Total CNY (VND)', tracking=True, currency_field='currency_id')
+    dpt_price_usd = fields.Monetary(string='Giá khai (USD)', tracking=True, currency_field='currency_usd_id')
+    dpt_total_usd = fields.Monetary(string='Total (USD)', currency_field='currency_usd_id',
+                                    compute="_compute_dpt_total_usd")
+    dpt_total_usd_vnd = fields.Monetary(string='Total USD (VND)', currency_field='currency_id',
+                                        compute="_compute_dpt_total_usd_vnd")
+    dpt_total_cny_vnd = fields.Monetary(string='Total CNY (VND)', currency_field='currency_id',
+                                        compute="_compute_dpt_total_cny_vnd")
     dpt_price_cny_vnd = fields.Monetary(string='Price CNY (VND)', tracking=True, currency_field='currency_cny_id')
     dpt_tax_other = fields.Float(string='Tax Other (%)', tracking=True)
-    dpt_amount_tax_other = fields.Float(string='Amount Tax Other', tracking=True)
+    dpt_amount_tax_other = fields.Monetary(string='Amount Tax Other', currency_field='currency_id',
+                                           compute="_compute_dpt_amount_tax_other")
     dpt_total_vat = fields.Monetary(string='Total VAT', tracking=True, compute="_compute_total_vat",
                                     currency_field='currency_id')
     dpt_total = fields.Monetary(string='Total', tracking=True, currency_field='currency_id')
@@ -226,21 +237,49 @@ class DptExportImportLine(models.Model):
         ('cny', 'CNY')
     ], string='Declaration type', default='usd')
 
-    @api.onchange('dpt_price_usd', 'dpt_exchange_rate', 'dpt_sl1')
-    def onchange_compute_dpt_total_usd_vnd(self):
-        self.dpt_total_usd_vnd = self.dpt_price_usd * self.dpt_exchange_rate * self.dpt_sl1
+    @api.onchange('hs_code_id')
+    def get_data_vat_hs_code(self):
+        self.dpt_tax = self.hs_code_id.dpt_vat / 100
+        self.dpt_tax_import = self.hs_code_id.dpt_acfa / 100
 
-    @api.onchange('dpt_tax_import', 'dpt_total_usd_vnd')
-    def onchange_dpt_amount_tax_import(self):
-        self.dpt_amount_tax_import = self.dpt_tax_import * self.dpt_total_usd_vnd
+    @api.depends('dpt_price_usd', 'dpt_exchange_rate', 'dpt_sl1')
+    def _compute_dpt_total_usd_vnd(self):
+        for rec in self:
+            rec.dpt_total_usd_vnd = rec.dpt_price_usd * rec.dpt_exchange_rate * rec.dpt_sl1
 
-    @api.onchange('dpt_tax', 'dpt_total_usd_vnd')
-    def onchange_compute_dpt_amount_tax(self):
-        self.dpt_amount_tax = self.dpt_tax * self.dpt_total_usd_vnd
+    @api.depends('dpt_price_cny_vnd', 'dpt_sl1')
+    def _compute_dpt_total_usd(self):
+        for rec in self:
+            rec.dpt_total_usd = rec.dpt_price_usd * rec.dpt_sl1
 
-    @api.onchange('dpt_price_cny_vnd', 'dpt_sl1')
-    def onchange_compute_dpt_total_cny_vnd(self):
-        self.dpt_total_cny_vnd = self.dpt_price_cny_vnd * self.dpt_exchange_rate * self.dpt_sl1
+    @api.depends('dpt_price_cny_vnd', 'dpt_exchange_rate', 'dpt_sl1')
+    def _compute_dpt_total_cny_vnd(self):
+        for rec in self:
+            rec.dpt_total_cny_vnd = rec.dpt_price_cny_vnd * rec.dpt_exchange_rate * rec.dpt_sl1
+
+    @api.depends('dpt_tax_import', 'dpt_price_cny_vnd', 'declaration_type', 'dpt_total_usd_vnd')
+    def _compute_dpt_amount_tax_import(self):
+        for rec in self:
+            if rec.declaration_type == 'usd':
+                rec.dpt_amount_tax_import = rec.dpt_tax_import * rec.dpt_total_usd_vnd
+            else:
+                rec.dpt_amount_tax_import = rec.dpt_tax_import * rec.dpt_price_cny_vnd
+
+    @api.depends('dpt_tax', 'dpt_price_cny_vnd', 'declaration_type', 'dpt_total_usd_vnd')
+    def _compute_dpt_amount_tax(self):
+        for rec in self:
+            if rec.declaration_type == 'usd':
+                rec.dpt_amount_tax = rec.dpt_tax * rec.dpt_total_usd_vnd
+            else:
+                rec.dpt_amount_tax = rec.dpt_tax * rec.dpt_price_cny_vnd
+
+    @api.depends('dpt_tax_other', 'dpt_price_cny_vnd', 'declaration_type', 'dpt_total_usd_vnd')
+    def _compute_dpt_amount_tax_other(self):
+        for rec in self:
+            if rec.declaration_type == 'usd':
+                rec.dpt_amount_tax_other = rec.dpt_tax_other * rec.dpt_total_usd_vnd
+            else:
+                rec.dpt_amount_tax_other = rec.dpt_tax_other * rec.dpt_price_cny_vnd
 
     def write(self, vals):
         val_update_sale_line = {}
