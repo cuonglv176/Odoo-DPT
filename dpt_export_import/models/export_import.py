@@ -17,11 +17,19 @@ class DptExportImport(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Dpt Export Import'
 
+    def _get_domain_sale_order(self):
+        sale_ids = []
+        line_ids = self.env['dpt.export.import.line'].search(
+            [('state', '!=', 'draft'), ('export_import_id', '=', False)])
+        for line_id in line_ids:
+            sale_ids.append(line_id.sale_id.id)
+        return [('id', 'in', sale_ids)]
+
     name = fields.Char(string='Title')
     code = fields.Char(string='Code')
     invoice_code = fields.Char(string='Invoice Code')
     sale_id = fields.Many2one('sale.order', string='Sale Order')
-    sale_ids = fields.Many2many('sale.order', string='Select Sale Order')
+    sale_ids = fields.Many2many('sale.order', string='Select Sale Order', domain=_get_domain_sale_order)
     partner_importer_id = fields.Many2one('res.partner', string='Partner Importer')
     partner_exporter_id = fields.Many2one('res.partner', string='Partner Exporter')
     gate_id = fields.Many2one('dpt.export.import.gate', string='Gate Importer')
