@@ -318,7 +318,7 @@ class DptExportImportLine(models.Model):
         self.product_id.dpt_tax_ecus5 = self.dpt_tax_ecus5
         self.product_id.dpt_tax = self.dpt_tax
         self.product_id.dpt_exchange_rate = self.dpt_exchange_rate
-        self.product_id.dpt_code_hs = self.hs_code_id.name
+        self.product_id.hs_code_id = self.hs_code_id
         self.product_id.dpt_uom1_id = self.dpt_uom1_id
         self.product_id.dpt_sl1 = self.dpt_sl1
         self.product_id.dpt_sl2 = self.dpt_sl2

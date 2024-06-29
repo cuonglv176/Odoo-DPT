@@ -411,9 +411,9 @@ msgstr "Xanh"
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__name
-#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_code_hs
-#: model:ir.model.fields,field_description:dpt_export_import.field_product_product__dpt_code_hs
-#: model:ir.model.fields,field_description:dpt_export_import.field_product_template__dpt_code_hs
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__hs_code_id
+#: model:ir.model.fields,field_description:dpt_export_import.field_product_product__hs_code_id
+#: model:ir.model.fields,field_description:dpt_export_import.field_product_template__hs_code_id
 #: model:ir.model.fields,field_description:dpt_export_import.field_sale_order_line__product_code
 msgid "HS Code"
 msgstr "Mã Hs"

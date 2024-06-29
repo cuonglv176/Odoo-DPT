@@ -14,7 +14,7 @@
                             <field name="dpt_description"/>
                             <field name="dpt_n_w_kg"/>
                             <field name="dpt_g_w_kg"/>
-                            <field name="dpt_code_hs"/>
+                            <field name="hs_code_id"/>
                             <field name="dpt_tax"/>
                             <field name="dpt_exchange_rate"/>
                         </group>
