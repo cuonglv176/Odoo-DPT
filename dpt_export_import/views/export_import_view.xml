@@ -76,6 +76,9 @@
                             <field name="description"/>
                         </page>
                         <page string="Export Import Line" name="export_import_line">
+                            <group>
+                                <field name="sale_ids" widget="many2many_tags"/>
+                            </group>
                             <button string="Select"
                                     name="action_select_import_line"
                                     type="object"

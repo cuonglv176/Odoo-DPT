@@ -33,7 +33,6 @@ class DptExportImport(models.Model):
     select_line_ids = fields.Many2many('dpt.export.import.line', string='Export/Import Line',
                                        domain=[('export_import_id', '=', False), ('state', '!=', 'draft')])
     description = fields.Text(string='Description')
-
     state = fields.Selection([
         ('draft', 'Nháp'),
         ('confirm', 'Xác nhận tờ khai'),
@@ -69,6 +68,13 @@ class DptExportImport(models.Model):
     driver_name = fields.Char(string='Driver Name')
     driver_phone_number = fields.Char(string='Driver Phone Number')
     vehicle_license_plate = fields.Char(string='Vehicle License Plate')
+
+    @api.onchange('sale_ids')
+    def onchange_add_declaration_line(self):
+        for order_line_id in self.sale_ids:
+            if order_line_id.dpt_export_import_line_ids:
+                for dpt_export_import_line_id in order_line_id.dpt_export_import_line_ids:
+                    dpt_export_import_line_id.export_import_id = self.id
 
     def action_open_declaration_line(self):
         view_id = self.env.ref('dpt_export_import.view_dpt_export_import_line_tree').id
@@ -236,6 +242,10 @@ class DptExportImportLine(models.Model):
         ('usd', 'USD'),
         ('cny', 'CNY')
     ], string='Declaration type', default='usd')
+
+
+    def action_unlink(self):
+        self.export_import_id = None
 
     @api.onchange('hs_code_id')
     def get_data_vat_hs_code(self):
