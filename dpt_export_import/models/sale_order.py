@@ -50,6 +50,7 @@ class SaleOrderLine(models.Model):
 
     dpt_export_import_line_ids = fields.One2many('dpt.export.import.line', 'sale_line_id', string='Declaration line')
     hs_code_id = fields.Many2one('dpt.export.import.acfta', string='HS Code')
+    dpt_code_hs = fields.Char(string='H')
     declared_unit_price = fields.Monetary(string='Declared unit price', currency_field='currency_id')
     declared_unit_total = fields.Monetary(string='Declared unit Total', currency_field='currency_id')
     payment_exchange_rate = fields.Monetary(string='Payment exchange rate', currency_field='currency_id')

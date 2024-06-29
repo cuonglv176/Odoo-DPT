@@ -27,6 +27,7 @@ class ProductTemplate(models.Model):
     dpt_tax = fields.Float(string='VAT(%)', tracking=True)
     dpt_exchange_rate = fields.Monetary(string='Exchange rate', tracking=True)
     hs_code_id = fields.Many2one('dpt.export.import.acfta', string='HS Code')
+    dpt_code_hs = fields.Char(string='H')
     dpt_sl1 = fields.Integer(string='SL1', tracking=True)
     dpt_uom1_id = fields.Many2one('uom.uom', string='ĐVT 1', tracking=True)
     dpt_sl2 = fields.Integer(string='SL2', tracking=True)
