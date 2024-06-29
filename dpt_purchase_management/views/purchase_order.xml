@@ -24,6 +24,7 @@
             <field name="partner_id" position="before">
                 <field name="purchase_type" widget="radio" options="{'horizontal': true}"
                        invisible="context.get('from_purchase_order_confirm')"/>
+                <field name="department_id"/>
                 <field name="packing_lot_name" readonly="1" force_save="1"/>
                 <field name="last_packing_lot_alphabet" invisible="1"/>
             </field>
@@ -106,7 +107,7 @@
     <record id="purchase.purchase_form_action" model="ir.actions.act_window">
         <field name="domain">[('state','in',('purchase', 'done')), ('purchase_type','=', 'internal')]</field>
         <field name="name">Đơn mua hàng nội bộ</field>
-        <field name="context">{'from_purchase_order_confirm': True}</field>
+        <field name="context">{'from_purchase_order_confirm': True, 'default_purchase_type': 'internal'}</field>
     </record>
 
     <menuitem name="Đơn mua hàng nội bộ" id="purchase.menu_purchase_form_action" action="purchase.purchase_form_action"
@@ -122,7 +123,7 @@
             ]"/>
         <field name="domain">[('state','in',('purchase', 'done')), ('purchase_type','=', 'external')]</field>
         <field name="search_view_id" ref="purchase.purchase_order_view_search"/>
-        <field name="context">{'from_purchase_order_confirm': True}</field>
+        <field name="context">{'from_purchase_order_confirm': True, 'default_purchase_type': 'external'}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No purchase order found. Let's create one!
@@ -134,6 +135,32 @@
         </field>
     </record>
     <menuitem name="Đơn mua hàng mua hộ" action="purchase_form_external_action" id="menu_purchase_form_external_action"
+              parent="purchase.menu_procurement_management"
+              sequence="6"/>
+
+
+    <record id="purchase_form_buy_cny_action" model="ir.actions.act_window">
+        <field name="name">Đơn mua hàng mua tệ</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">tree,kanban,form,pivot,graph,calendar,activity</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('purchase.purchase_order_view_tree')}),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('purchase.purchase_order_view_kanban_without_dashboard')}),
+            ]"/>
+        <field name="domain">[('state','in',('purchase', 'done')), ('purchase_type','=', 'buy_cny')]</field>
+        <field name="search_view_id" ref="purchase.purchase_order_view_search"/>
+        <field name="context">{'from_purchase_order_confirm': True, 'default_purchase_type': 'buy_cny'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No purchase order found. Let's create one!
+            </p>
+            <p>
+                Once you ordered your products to your supplier, confirm your request for quotation and it will turn
+                into a purchase order.
+            </p>
+        </field>
+    </record>
+    <menuitem name="Đơn mua hàng mua tệ" action="purchase_form_buy_cny_action" id="menu_purchase_form_buy_cny_action"
               parent="purchase.menu_procurement_management"
               sequence="6"/>
 
