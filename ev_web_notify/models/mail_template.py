@@ -50,7 +50,7 @@ class MailTemplate(models.Model):
             )
         )[res_id]
         values['recipient_ids'] = [Command.link(pid) for pid in values.get('partner_ids', list())]
-        if email_values.get('recipient_ids'):
+        if email_values and email_values.get('recipient_ids'):
             values['recipient_ids'] = [Command.link(pid) for pid in email_values.get('recipient_ids', list())]
         values['attachment_ids'] = [Command.link(aid) for aid in values.get('attachment_ids', list())]
         values.update(email_values or {})
