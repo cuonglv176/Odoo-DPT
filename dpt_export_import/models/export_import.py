@@ -257,7 +257,7 @@ class DptExportImportLine(models.Model):
     @api.onchange('hs_code_id')
     def get_data_vat_hs_code(self):
         self.dpt_tax = self.hs_code_id.dpt_vat / 100
-        self.dpt_tax_import = self.hs_code_id.dpt_acfa / 100
+        self.dpt_tax_import = self.hs_code_id.dpt_acfta / 100
 
     @api.depends('dpt_price_usd', 'dpt_exchange_rate', 'dpt_sl1')
     def _compute_dpt_total_usd_vnd(self):
