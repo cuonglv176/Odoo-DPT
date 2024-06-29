@@ -13,6 +13,13 @@
                 <button string="Update Declaration Line" type="object" name="action_open_dpt_export_import_line"
                         class="btn-primary"/>
             </xpath>
+
+            <xpath expr="//field[@name='order_line']/tree/field[@name='price_total']" position="attributes">
+                 <attribute name="string">Thành tiền xuất hóa đơn</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="attributes">
+                 <attribute name="string">Đơn giá xuất hóa đơn </attribute>
+            </xpath>
             <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom']" position="before">
                 <field name="hs_code_id"/>
                 <field name="declared_unit_price"/>

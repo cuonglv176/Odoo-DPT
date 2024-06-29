@@ -56,7 +56,7 @@
                                     <field name="dpt_n_w_kg"/>
                                     <field name="dpt_g_w_kg"/>
                                     <field name="package_ids" widget="many2many_tags"/>
-                                    <field name="dpt_code_hs"/>
+                                    <field name="hs_code_id"/>
                                     <field name="dpt_tax_import" widget="boolean_toggle"/>
                                     <field name="dpt_amount_tax_import"/>
                                     <field name="dpt_uom2_ecus_id"/>
