@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-28 18:15+0000\n"
-"PO-Revision-Date: 2024-06-28 18:15+0000\n"
+"POT-Creation-Date: 2024-06-29 16:12+0000\n"
+"PO-Revision-Date: 2024-06-29 16:12+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -17,6 +17,7 @@ msgstr ""
 
 #. module: dpt_export_import
 #: model_terms:ir.ui.view,arch_db:dpt_export_import.dpt_export_import_view_sale_order_inherit_form
+#: model_terms:ir.ui.view,arch_db:dpt_export_import.view_dpt_export_import_form
 msgid "<span class=\"o_stat_text\">Declaration Line</span>"
 msgstr "<span class=\"o_stat_text\">Dòng tờ khai</span>"
 
@@ -100,6 +101,11 @@ msgid "Attachment Count"
 msgstr ""
 
 #. module: dpt_export_import
+#: model:ir.model.fields.selection,name:dpt_export_import.selection__dpt_export_import_line__declaration_type__cny
+msgid "CNY"
+msgstr ""
+
+#. module: dpt_export_import
 #: model_terms:ir.ui.view,arch_db:dpt_export_import.dpt_export_import_select_line_form
 msgid "Cancel"
 msgstr "Hủy"
@@ -147,6 +153,16 @@ msgid "Currency"
 msgstr "Tiền tệ"
 
 #. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__currency_cny_id
+msgid "Currency CNY"
+msgstr ""
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__currency_usd_id
+msgid "Currency USD"
+msgstr ""
+
+#. module: dpt_export_import
 #: model:ir.ui.menu,name:dpt_export_import.submenu_dpt_export_import_management
 msgid "Customs Declaration"
 msgstr "Tờ khai"
@@ -177,8 +193,10 @@ msgstr "Luồng tờ khai"
 
 #. module: dpt_export_import
 #. odoo-python
+#: code:addons/dpt_export_import/models/export_import.py:0
 #: code:addons/dpt_export_import/models/sale_order.py:0
 #: model_terms:ir.ui.view,arch_db:dpt_export_import.dpt_export_import_view_sale_order_inherit_form
+#: model_terms:ir.ui.view,arch_db:dpt_export_import.view_dpt_export_import_form
 #, python-format
 msgid "Declaration Line"
 msgstr "Dòng tờ khai"
@@ -200,6 +218,11 @@ msgstr "Số lượng dòng tờ khai"
 #: model:ir.model.fields,field_description:dpt_export_import.field_sale_order_line__dpt_export_import_line_ids
 msgid "Declaration line"
 msgstr "Dòng tờ khai"
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__declaration_type
+msgid "Declaration type"
+msgstr "Loại tiền khai"
 
 #. module: dpt_export_import
 #: model_terms:ir.ui.view,arch_db:dpt_export_import.view_dpt_export_import_form
@@ -414,7 +437,7 @@ msgstr "Xanh"
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__hs_code_id
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_product__hs_code_id
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_template__hs_code_id
-#: model:ir.model.fields,field_description:dpt_export_import.field_sale_order_line__product_code
+#: model:ir.model.fields,field_description:dpt_export_import.field_sale_order_line__hs_code_id
 msgid "HS Code"
 msgstr "Mã Hs"
 
@@ -690,7 +713,7 @@ msgstr "Tên nhà nhập khẩu"
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__payment_exchange_rate
 #: model:ir.model.fields,field_description:dpt_export_import.field_sale_order_line__payment_exchange_rate
 msgid "Payment exchange rate"
-msgstr "Tỷ giá tính thuế"
+msgstr "Tỷ giá thanh toán"
 
 #. module: dpt_export_import
 #: model_terms:ir.ui.view,arch_db:dpt_export_import.view_dpt_export_import_form
@@ -810,6 +833,11 @@ msgid "Select Line"
 msgstr "Chọn dòng tờ khai"
 
 #. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__sale_ids
+msgid "Select Sale Order"
+msgstr ""
+
+#. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__sequence
 msgid "Sequence"
 msgstr "Trình tự"
@@ -863,6 +891,11 @@ msgid "Tham vấn"
 msgstr ""
 
 #. module: dpt_export_import
+#: model_terms:ir.ui.view,arch_db:dpt_export_import.dpt_export_import_view_sale_order_inherit_form
+msgid "Thành tiền xuất hóa đơn"
+msgstr ""
+
+#. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__name
 msgid "Title"
 msgstr "Tiêu đề"
@@ -871,6 +904,16 @@ msgstr "Tiêu đề"
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_total
 msgid "Total"
 msgstr "Tổng"
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_total_usd
+msgid "Total (USD)"
+msgstr ""
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__dpt_amount_tax_other
+msgid "Total Amount Tax Other"
+msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__dpt_amount_tax
@@ -951,6 +994,17 @@ msgstr "Loại xe"
 #: model:ir.model.fields.selection,name:dpt_export_import.selection__sale_order_line__state_export_import_line__declared
 msgid "Tờ khai thông quan"
 msgstr ""
+
+#. module: dpt_export_import
+#: model:ir.model.fields.selection,name:dpt_export_import.selection__dpt_export_import_line__declaration_type__usd
+msgid "USD"
+msgstr ""
+
+#. module: dpt_export_import
+#: model_terms:ir.ui.view,arch_db:dpt_export_import.view_dpt_export_import_form
+#: model_terms:ir.ui.view,arch_db:dpt_export_import.view_dpt_export_import_line_tree
+msgid "Unlink"
+msgstr "Gỡ khỏi tờ khai"
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_uom_id
@@ -1062,6 +1116,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_product__dpt_uom2_ecus_id
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_template__dpt_uom2_ecus_id
 msgid "ĐVT SL2 (Ecus)"
+msgstr ""
+
+#. module: dpt_export_import
+#: model_terms:ir.ui.view,arch_db:dpt_export_import.dpt_export_import_view_sale_order_inherit_form
+msgid "Đơn giá xuất hóa đơn"
 msgstr ""
 
 #. module: dpt_export_import
