@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="dpt_sale_order_cutlist_tree_view" model="ir.ui.view">
+        <field name="name">dpt_sale_order_cutlist_tree_view</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_create_shipping_slip" string="Create Shipping slip" type="object"
+                        class="oe_highlight"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_valid_cutlist_sale_order" model="ir.actions.act_window">
+        <field name="name">Valid Cutlist</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+        <field name="context">{'search_default_my_quotation': 1, 'is_cutlist_view': 1}</field>
+        <field name="domain">[('valid_cutlist', '=', True)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new quotation, the first step of a new sale!
+            </p>
+            <p>
+                Once the quotation is confirmed by the customer, it becomes a sales order.
+                <br/>
+                You will be able to create an invoice and collect the payment.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="valid_cutlist_sale_order_menu" name="Valid Cutlist" parent="sale.sale_menu_root"
+              action="action_valid_cutlist_sale_order" sequence="12"/>
+
+</odoo>

@@ -11,7 +11,8 @@ class PurchaseOrderLinePackage(models.Model):
     sale_id = fields.Many2one('sale.order', 'Sale Order', tracking=True)
     name = fields.Char('Package Name', tracking=True)
     code = fields.Char('Package Code', default='NEW', copy=False, index=True, tracking=True)
-    date = fields.Date(string='Date', required=True, default=lambda self: fields.Date.context_today(self), tracking=True)
+    date = fields.Date(string='Date', required=True, default=lambda self: fields.Date.context_today(self),
+                       tracking=True)
     uom_id = fields.Many2one('uom.uom', 'Package Unit', domain="[('is_package_unit', '=', True)]", tracking=True)
     quantity = fields.Integer('Quantity', tracking=True)
     size = fields.Char('Size', tracking=True)

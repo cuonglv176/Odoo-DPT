@@ -98,11 +98,6 @@ msgid "Is Purchase Service"
 msgstr "Là dịch vụ mua hàng"
 
 #. module: dpt_purchase_management
-#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order__last_packing_lot_alphabet
-msgid "Last Packing Lot alphabet"
-msgstr "Chữ số sau cùng của mã kiện"
-
-#. module: dpt_purchase_management
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__write_uid
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package_detail__write_uid
 msgid "Last Updated by"

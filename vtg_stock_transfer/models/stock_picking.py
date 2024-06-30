@@ -42,6 +42,9 @@ class StockPicking(models.Model):
         for line in self.move_line_ids_without_package:
             line.location_id = self.location_id
             line.location_dest_id = self.location_dest_id
+        for line in self.move_ids_without_package:
+            line.location_id = self.location_id
+            line.location_dest_id = self.location_dest_id
 
     @api.model
     def create(self, vals):
