@@ -8,6 +8,15 @@ class PurchaseOrderLinePackage(models.Model):
     picking_id = fields.Many2one('stock.picking', 'Picking')
     lot_ids = fields.Many2many('stock.lot', string='Lot')
     product_ids = fields.Many2many('product.product', compute="_compute_product")
+    created_picking_qty = fields.Integer('Quantity Created Picking', compute='compute_created_picking_qty')
+
+    def compute_created_picking_qty(self):
+        for item in self:
+            out_picking_ids = self.env['stock.picking'].sudo().search([('picking_in_id', '=', item.picking_id.id)])
+            out_picking_ids = out_picking_ids.filtered(
+                lambda op: op.picking_type_id.code != 'incoming' or op.x_transfer_type != 'incoming')
+            item.created_picking_qty = sum([package_id.quantity for package_id in out_picking_ids.package_ids.filtered(
+                    lambda p: p.uom_id.id == item.uom_id.id)])
 
     @api.depends('purchase_id', 'picking_id')
     def _compute_product(self):
@@ -43,7 +52,6 @@ class PurchaseOrderLinePackage(models.Model):
             'picking_id': picking.id,
             'partner_id': picking.partner_id.id,
             'state': 'draft',
-            'purchase_line_id': self.id,
             'company_id': picking.company_id.id,
             'picking_type_id': picking.picking_type_id.id,
             'group_id': picking.group_id.id,

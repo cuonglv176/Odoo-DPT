@@ -2,7 +2,7 @@
 {
     'name': 'DPT Stock Management',
     'version': '1.0',
-    'summary': 'Manage Sale Information',
+    'summary': 'Manage Stock Information',
     'category': 'Stock',
     'author': 'TuUH',
     'maintainer': 'Your Name',

@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dpt_shipping_slip,access_dpt_shipping_slip,model_dpt_shipping_slip,base.group_user,1,1,1,1
+access_dpt_vehicle_stage,access_dpt_vehicle_stage,model_dpt_vehicle_stage,base.group_user,1,1,1,1
+access_dpt_vehicle_stage_log,access_dpt_vehicle_stage_log,model_dpt_vehicle_stage_log,base.group_user,1,1,1,1

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="dpt_vehicle_stage_tree_views" model="ir.ui.view">
+        <field name="name">dpt_vehicle_stage_tree_views</field>
+        <field name="model">dpt.vehicle.stage</field>
+        <field name="arch" type="xml">
+            <tree string="Vehicle Stage" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="is_default" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="dpt_vehicle_stage_action" model="ir.actions.act_window">
+        <field name="name">Vehicle Stage</field>
+        <field name="res_model">dpt.vehicle.stage</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="dpt_vehicle_stage_menu" name="Vehicle Stage" sequence="40" action="dpt_vehicle_stage_action"
+              parent="fleet.fleet_configuration"/>
+
+</odoo>

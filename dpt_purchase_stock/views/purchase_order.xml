@@ -9,6 +9,13 @@
             <xpath expr="//button[@id='bid_confirm']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
+            <xpath expr="//button[@id='draft_confirm']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@id='draft_confirm']" position="after">
+                <button name="button_confirm_with_package" type="object" invisible="state != 'draft'"
+                        string="Confirm Order" data-hotkey="q"/>
+            </xpath>
         </field>
     </record>
 

@@ -7,6 +7,7 @@
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='origin']" position="after">
+                <field name="packing_lot_name" readonly="1" force_save="1"/>
                 <field name="transfer_code"/>
                 <field name="transfer_code_chinese"/>
             </xpath>
@@ -16,6 +17,7 @@
                         <tree>
                             <field name="purchase_id" column_invisible="1"/>
                             <!--                            <field name="lot_name"/>-->
+                            <field name="created_picking_qty" column_invisible="1"/>
                             <field name="quantity"/>
                             <field name="uom_id"/>
                             <field name="size"/>
@@ -29,6 +31,7 @@
                                     <group>
                                         <field name="purchase_id" invisible="1" force_save="1"/>
                                         <!--                                        <field name="lot_name"/>-->
+                                        <field name="created_picking_qty" invisible="1"/>
                                         <field name="quantity"/>
                                         <field name="lot_ids" widget="many2many_tags" options="{'no_create': True }"/>
                                         <field name="uom_id" required="1"/>
@@ -132,6 +135,18 @@
                 <attribute name="invisible">1</attribute>
                 <attribute name="force_save">1</attribute>
             </field>
+            <xpath expr="//header" position="inside">
+                <field name="finish_create_picking" invisible="1"/>
+                <button name="action_create_transfer_picking" string="Create transfer picking" type="object"
+                        invisible="picking_type_code != 'incoming' or finish_create_picking" data-hotkey="o"/>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <field name="num_picking_out" invisible="True"/>
+                <button name="action_view_picking_out" type="object" class="oe_stat_button" icon="fa-rotate-left"
+                        invisible="num_picking_out == 0">
+                    <field string="Picking Out" name="num_picking_out" widget="statinfo"/>
+                </button>
+            </xpath>
         </field>
     </record>
 
