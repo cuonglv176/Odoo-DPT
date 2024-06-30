@@ -22,7 +22,7 @@ class StockPicking(models.Model):
         for item in self:
             item.packing_lot_name = '.'.join(
                 [f"{package_line_id.quantity}{package_line_id.uom_id.packing_code}" for package_line_id in
-                 item.package_line_ids if package_line_id.uom_id.packing_code])
+                 item.package_ids if package_line_id.uom_id.packing_code])
 
     def _compute_num_picking_out(self):
         for item in self:
