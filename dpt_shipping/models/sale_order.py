@@ -44,7 +44,7 @@ class SaleOrder(models.Model):
     def action_create_shipping_slip(self):
         default_vehicle_stage_id = self.env['dpt.vehicle.stage'].sudo().search([('is_default', '=', True)], limit=1)
         picking_ids = self.env['stock.picking'].sudo().search(
-            [('sale_id', 'in', self.ids), ('x_transfer_type', '=', 'outgoing_transfer')])
+            [('sale_id', 'in', self.ids), ('picking_type_code', '=', 'incoming')])
         shipping_slip_id = self.env['dpt.shipping.slip'].create({
             'sale_ids': self.ids,
             'picking_ids': picking_ids.ids,

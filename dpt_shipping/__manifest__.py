@@ -18,5 +18,6 @@
         'views/dpt_shipping_slip.xml',
         'views/dpt_vehicle_stage.xml',
         'views/sale_order.xml',
+        'views/stock_picking.xml',
     ],
 }
