@@ -10,4 +10,8 @@ class DPTVehicleStage(models.Model):
     name = fields.Char('Name')
     sequence = fields.Integer('Sequence')
     is_default = fields.Boolean('Is Default')
+    country = fields.Selection([
+        ('chinese', 'Chinese'),
+        ('vietnamese', 'Vietnamese'),
+    ], default='chinese', string='Country')
 

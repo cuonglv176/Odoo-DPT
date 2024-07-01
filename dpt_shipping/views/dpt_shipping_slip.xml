@@ -8,7 +8,11 @@
             <form string="Shipping slip">
                 <sheet>
                     <header>
-                        <field name="vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"/>
+                        <field name="vehicle_country" invisible="1"/>
+                        <field name="vn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
+                               invisible="vehicle_country != 'vietnamese'"/>
+                        <field name="cn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
+                               invisible="vehicle_country != 'chinese'"/>
                     </header>
                     <group>
                         <group>
