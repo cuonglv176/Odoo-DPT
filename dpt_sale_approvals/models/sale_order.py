@@ -120,6 +120,8 @@ class SaleOrder(models.Model):
                         diff_value = rec.new_price - rec.price
                     elif r.type_value == 'rate':
                         diff_value = (rec.new_price - rec.price)/rec.price * 100
+                    else:
+                        diff_value = 0
                     if r.type_compare == 'equal' and diff_value == 0:
                         required = True
                     elif r.type_compare == 'higher' and diff_value > 0 and diff_value >= r.value_compare:
