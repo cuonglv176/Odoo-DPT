@@ -1,6 +1,43 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 
+
+    <record id="product_template_dpt_export_import_inherit_tree_view" model="ir.ui.view">
+        <field name="name">product.template.product.tree.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="list_price" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="standard_price" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="product_tag_ids" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="uom_id" position="after">
+                <field name="dpt_so_tk"/>
+                <field name="dpt_location"/>
+                <field name="dpt_dk_gia"/>
+                <field name="dpt_exchange_rate"/>
+                <field name="dpt_currency_id"/>
+                <field name="dpt_short_name"/>
+                <field name="dpt_date_dk"/>
+                <field name="dpt_xuat_xu"/>
+                <field name="dpt_company_name"/>
+                <field name="dpt_ma_xe"/>
+                <field name="dpt_price_usd"/>
+                <field name="dpt_sl1"/>
+                <field name="dpt_uom1_id"/>
+                <field name="dpt_sl2"/>
+                <field name="dpt_uom2_id"/>
+                <field name="dpt_tax_import"/>
+                <field name="dpt_tax"/>
+            </field>
+        </field>
+    </record>
+
     <record id="view_product_dpt_export_import_inherit" model="ir.ui.view">
         <field name="name">product.template.dpt.export.import.form.inherit</field>
         <field name="model">product.template</field>
@@ -29,7 +66,17 @@
                             <field name="dpt_price_usd"/>
                             <field name="dpt_tax_import"/>
                             <field name="dpt_tax_ecus5"/>
-
+                        </group>
+                        <group>
+                            <field name="dpt_so_tk"/>
+                            <field name="dpt_location"/>
+                            <field name="dpt_dk_gia"/>
+                            <field name="dpt_currency_id"/>
+                            <field name="dpt_short_name"/>
+                            <field name="dpt_date_dk"/>
+                            <field name="dpt_xuat_xu"/>
+                            <field name="dpt_company_name"/>
+                            <field name="dpt_ma_xe"/>
                         </group>
                     </group>
                     <notebook>
@@ -57,13 +104,13 @@
                                     <field name="dpt_g_w_kg"/>
                                     <field name="package_ids" widget="many2many_tags"/>
                                     <field name="hs_code_id"/>
-                                    <field name="dpt_tax_import" widget="boolean_toggle"/>
+                                    <field name="dpt_tax_import" widget="percentage"/>
                                     <field name="dpt_amount_tax_import"/>
                                     <field name="dpt_uom2_ecus_id"/>
                                     <field name="dpt_uom2_id"/>
                                     <field name="dpt_sl2"/>
                                     <field name="dpt_tax_ecus5"/>
-                                    <field name="dpt_tax" widget="boolean_toggle"/>
+                                    <field name="dpt_tax" widget="percentage"/>
                                     <field name="dpt_amount_tax"/>
                                     <field name="dpt_tax_other" widget="percentage"/>
                                     <field name="dpt_amount_tax_other"/>
