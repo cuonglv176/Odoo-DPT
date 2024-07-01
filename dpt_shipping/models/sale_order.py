@@ -8,11 +8,34 @@ class SaleOrder(models.Model):
 
     valid_cutlist = fields.Boolean('Valid Cutlist', compute="_compute_valid_cutlist", store=True)
 
+    @api.depends('picking_ids', 'picking_ids.state', 'ticket_ids', 'ticket_ids.department_id', 'ticket_ids.stage_id',
+                 'dpt_export_import_ids')
     def _compute_valid_cutlist(self):
         # đã nhập đủ kiện, sản phẩm
         # đủ khai báo XNK
+        # các ticket ở kho TQ đều hoàn thành
         for item in self:
-            item.valid_cutlist = True
+            valid_cutlist = False
+            if all([picking_id.state not in ('done', 'cancel') for picking_id in item.picking_ids if
+                    picking_id.picking_type_code == 'incoming']) and all(
+                [ticket_id.stage_id.is_done_stage for ticket_id in item.ticket_ids if
+                 ticket_id.department_id.is_chinese_stock_department]) and item.dpt_export_import_ids:
+                valid_cutlist = True
+            item.valid_cutlist = valid_cutlist
+
+    @api.model
+    def create(self, vals):
+        res = super().create(vals)
+        res._compute_valid_cutlist()
+        return res
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'valid_cutlist' in vals:
+            return res
+        for item in self:
+            item._compute_valid_cutlist()
+        return res
 
     def action_create_shipping_slip(self):
         default_vehicle_stage_id = self.env['dpt.vehicle.stage'].sudo().search([('is_default', '=', True)], limit=1)
