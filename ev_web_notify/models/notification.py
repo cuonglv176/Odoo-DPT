@@ -31,7 +31,7 @@ class BaseAutomation(models.Model):
 automation_id = env['base.automation'].browse({result.id})
 env['mail.message']._push_system_notification(  
     {result.create_uid.id},
-    automation_id.partner_ids.ids, automation_id.message_notification,
+    automation_id.partner_ids.ids, automation_id.message_notification.format(record=record),
     '{result.model_id.model}', record.id
 )
 """
