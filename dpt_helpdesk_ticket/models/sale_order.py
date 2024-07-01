@@ -5,6 +5,7 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     count_ticket = fields.Integer(compute='_compute_count_ticket')
+    ticket_ids = fields.One2many('helpdesk.ticket', 'sale_id', 'Tickets')
 
     def get_tickets(self):
         return {
