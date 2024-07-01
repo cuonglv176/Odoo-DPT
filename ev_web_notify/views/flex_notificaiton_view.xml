@@ -27,7 +27,7 @@
                         <group groups="base.group_no_one">
                             <group>
                                 <field name="model_id" options="{'no_create': True}" />
-                                <field name="message_notification" />
+                                <field name="message_notification" placeholder="Có thể kèm nội dung của record (Tương đương với bản ghi đang được kích hoạt hiện tại) ví dụ : Thông báo đơn hàng {record.name} đã xác nhận" />
                             </group>
                         </group>
                         <group>
