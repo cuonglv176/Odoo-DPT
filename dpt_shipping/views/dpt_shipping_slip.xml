@@ -27,7 +27,9 @@
                             <field name="sale_ids" readonly="1"/>
                         </page>
                         <page name="transfer_picking" string="Picking">
-                            <field name="picking_ids" readonly="1"/>
+                            <field name="picking_ids" readonly="1" context="{
+                                     'form_view_ref': 'stock.view_picking_form',
+                                     'tree_view_ref': 'dpt_shipping.view_picking_tree_create_transfer_in_shipping_inherit'}"/>
                         </page>
                         <page name="vehicle_stage_tracking" string="Vehicle Stage Tracking">
                             <field name="vehicle_stage_log_ids">

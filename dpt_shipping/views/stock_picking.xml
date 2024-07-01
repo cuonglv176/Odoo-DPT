@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_picking_tree_create_transfer_in_shipping_inherit" model="ir.ui.view">
+        <field name="name">view_picking_tree_create_transfer_in_shipping_inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <field name="picking_type_code" column_invisible="1"/>
+                <field name="finish_create_picking" column_invisible="1"/>
+                <button name="action_create_transfer_picking" string="Create transfer picking" type="object"
+                        invisible="picking_type_code != 'incoming' or finish_create_picking"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
