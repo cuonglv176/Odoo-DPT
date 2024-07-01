@@ -10,7 +10,10 @@ class DPTShippingSlip(models.Model):
     name = fields.Char('Name')
     transfer_code = fields.Char('Transfer Code')
     transfer_code_chinese = fields.Char('Transfer Code in Chinese')
-    picking_ids = fields.Many2many('stock.picking', string='Picking')
+    picking_ids = fields.Many2many('stock.picking', 'stock_picking_in_shipping_rel', 'shipping_slip_id', 'picking_id',
+                                   string='Picking')
+    transfer_picking_ids = fields.Many2many('stock.picking', 'stock_picking_transfer_shipping_rel', 'shipping_slip_id',
+                                            'picking_id', string='Transfer Picking')
     sale_ids = fields.Many2many('sale.order', string='Sale Order')
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle')
     vehicle_country = fields.Selection(related='vehicle_id.country')
