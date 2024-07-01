@@ -67,6 +67,7 @@ class StockPicking(models.Model):
             if not new_picking_type_id:
                 raise ValidationError(f'Vui lòng tạo loại điều chuyển cho kho {picking.x_location_dest_id.warehouse_id.name}')
             in_transfer_picking_id = picking.copy({
+                'name': picking.name,
                 'x_location_id': picking.x_location_id.id,
                 'x_location_dest_id': picking.x_location_dest_id.id,
                 'location_id': transit_location_id.id,
