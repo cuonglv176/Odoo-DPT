@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="dpt_shipping_slip_form_view" model="ir.ui.view">
+        <field name="name">dpt_shipping_slip_form_view</field>
+        <field name="model">dpt.shipping.slip</field>
+        <field name="arch" type="xml">
+            <form string="Shipping slip">
+                <sheet>
+                    <header>
+                        <field name="vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"/>
+                    </header>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="vehicle_id" options="{'no_create': True}"/>
+                            <field name="transfer_code"/>
+                            <field name="transfer_code_chinese"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="sale_order" string="Order">
+                            <field name="sale_ids" readonly="1"/>
+                        </page>
+                        <page name="transfer_picking" string="Transfer">
+                            <field name="transfer_picking_ids" readonly="1"/>
+                        </page>
+                        <page name="vehicle_stage_tracking" string="Vehicle Stage Tracking">
+                            <field name="vehicle_stage_log_ids">
+                                <tree editable="bottom" delete="0">
+                                    <field name="vehicle_id" column_invisible="1" force_save="1"/>
+                                    <field name="shipping_slip_id" column_invisible="1" force_save="1"/>
+                                    <field name="current_stage_id" options="{'no_create': True}"/>
+                                    <field name="next_stage_id" options="{'no_create': True}"/>
+                                    <field name="log_datetime"/>
+                                    <field name="log_time" widget="float_time"/>
+                                    <field name="description"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="dpt_shipping_slip_tree_views" model="ir.ui.view">
+        <field name="name">dpt_shipping_slip_tree_views</field>
+        <field name="model">dpt.shipping.slip</field>
+        <field name="arch" type="xml">
+            <tree string="Shipping slip">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="dpt_shipping_slip_action" model="ir.actions.act_window">
+        <field name="name">Shipping slip</field>
+        <field name="res_model">dpt.shipping.slip</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="dpt_shipping_slip_menu" name="Shipping slip" sequence="40" action="dpt_shipping_slip_action"
+              parent="stock.menu_stock_warehouse_mgmt"/>
+
+</odoo>

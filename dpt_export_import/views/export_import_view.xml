@@ -54,6 +54,8 @@
                             <field name="dpt_g_w_kg"/>
                             <field name="total_cubic_meters"/>
                             <field name="dpt_amount_tax_import"/>
+                            <field name="dpt_amount_tax"/>
+                            <field name="dpt_amount_tax_other"/>
                             <field name="estimated_total_amount"/>
                             <field name="payment_exchange_rate"/>
                         </group>
@@ -74,6 +76,9 @@
                             <field name="description"/>
                         </page>
                         <page string="Export Import Line" name="export_import_line">
+                            <group>
+                                <field name="sale_ids" widget="many2many_tags" domain="[('is_declaration','=',True)]"/>
+                            </group>
                             <button string="Select"
                                     name="action_select_import_line"
                                     type="object"
@@ -111,7 +116,8 @@
                                     <field name="dpt_total_cny_vnd"/>
                                     <field name="dpt_is_new" widget="boolean_toggle"/>
                                     <field name="currency_id" invisible="1"/>
-
+                                    <button string="Unlink" type="object" name="action_unlink" class="btn-primary"
+                                            groups="sales_team.group_sale_salesman_all_leads"/>
                                 </tree>
                             </field>
                             <group name="note_group" col="6" class="mt-2 mt-md-0">
