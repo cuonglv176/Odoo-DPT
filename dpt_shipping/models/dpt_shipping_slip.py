@@ -10,7 +10,7 @@ class DPTShippingSlip(models.Model):
     name = fields.Char('Name')
     transfer_code = fields.Char('Transfer Code')
     transfer_code_chinese = fields.Char('Transfer Code in Chinese')
-    transfer_picking_ids = fields.Many2many('stock.picking', string='Transfer Picking')
+    picking_ids = fields.Many2many('stock.picking', string='Picking')
     sale_ids = fields.Many2many('sale.order', string='Sale Order')
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle')
     vehicle_stage_id = fields.Many2one('dpt.vehicle.stage', 'Vehicle Stage')
@@ -42,10 +42,10 @@ class DPTShippingSlip(models.Model):
         })
         return res
 
-    @api.constrains('transfer_picking_ids', 'transfer_code', 'transfer_code_chinese')
+    @api.constrains('picking_ids', 'transfer_code', 'transfer_code_chinese')
     def constrains_transfer_code(self):
         for item in self:
-            item.transfer_picking_ids.write({
+            item.picking_ids.write({
                 'transfer_code': item.transfer_code,
                 'transfer_code_chinese': item.transfer_code_chinese,
             })

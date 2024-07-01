@@ -6,14 +6,173 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-26 10:27+0000\n"
-"PO-Revision-Date: 2024-06-26 10:27+0000\n"
+"POT-Creation-Date: 2024-07-01 10:59+0000\n"
+"PO-Revision-Date: 2024-07-01 10:59+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
+msgid "Add a Product"
+msgstr "Thêm sản phẩm"
+
+#. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
+msgid "Assign Serial Numbers"
+msgstr ""
+
+#. module: dpt_stock_management
+#. odoo-python
+#: code:addons/dpt_stock_management/models/stock_warehouse.py:0
+#, python-format
+msgid "Cannot configurate 2 or more warehouse is main incoming warehouse"
+msgstr "Không thể cấu hình 2 hoặc nhiều kho hàng là kho nhập hàng chính"
+
+#. module: dpt_stock_management
+#. odoo-python
+#: code:addons/dpt_stock_management/models/stock_picking.py:0
+#, python-format
+msgid "Create Transfer"
+msgstr "Tạo Điều chuyển"
+
+#. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
+msgid "Create transfer picking"
+msgstr "Tạo Điều chuyển"
+
+#. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
+msgid "Demand"
+msgstr "Số lượng"
+
+#. module: dpt_stock_management
+#. odoo-python
+#: code:addons/dpt_stock_management/models/stock_picking.py:0
+#, python-format
+msgid "Deposit"
+msgstr ""
+
+#. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
+msgid "Description"
+msgstr "Miêu tả"
+
+#. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
+msgid "Detail"
+msgstr "Chi tiết"
+
+#. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__finish_create_picking
+msgid "Finish Create Picking"
+msgstr ""
+
+#. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
+msgid "Forecast"
+msgstr ""
+
+#. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
+msgid "Forecast Report"
+msgstr ""
+
+#. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_stock_move__is_package
+msgid "Is Package"
+msgstr "Là kiện hàng"
+
+#. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_stock_warehouse__is_main_incoming_warehouse
+msgid "Is main incoming Warehouse"
+msgstr "Là kho nhập hàng chính"
+
+#. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_purchase_order_line_package__move_ids
+msgid "Move"
+msgstr ""
+
+#. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__num_picking_out
+msgid "Num Picking Out"
+msgstr "Số lượng phiếu xuất"
+
+#. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_stock_move__package_line_id
+msgid "Package Line"
+msgstr "Kiện hàng"
+
+#. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__package_ids
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
+msgid "Packages"
+msgstr "Kiện hàng"
+
+#. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__packing_lot_name
+msgid "Packing Lot name"
+msgstr "Mã kiện"
+
+#. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_purchase_order_line_package__picking_id
+msgid "Picking"
+msgstr ""
+
+#. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__picking_in_id
+msgid "Picking In"
+msgstr "Phiếu nhập"
+
+#. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__picking_out_ids
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
+msgid "Picking Out"
+msgstr "Phiếu xuất"
+
+#. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_purchase_order_line_package__product_ids
+#: model:ir.model.fields,field_description:dpt_stock_management.field_uom_uom__product_id
+msgid "Product"
+msgstr "Sản phẩm"
+
+#. module: dpt_stock_management
+#: model:ir.model,name:dpt_stock_management.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "Đơn vị tính sản phẩm"
+
+#. module: dpt_stock_management
+#: model:ir.model,name:dpt_stock_management.model_purchase_order_line_package
+msgid "Purchase Package"
+msgstr ""
+
+#. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
+msgid "Quantity"
+msgstr "Số lượng"
+
+#. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_purchase_order_line_package__created_picking_qty
+msgid "Quantity Created Picking"
+msgstr ""
+
+#. module: dpt_stock_management
+#: model:ir.model,name:dpt_stock_management.model_stock_move
+msgid "Stock Move"
+msgstr "Dịch chuyển tồn kho"
+
+#. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
+msgid "Stock Moves"
+msgstr ""
+
+#. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__move_ids_product
+msgid "Stock move"
+msgstr ""
 
 #. module: dpt_stock_management
 #: model:ir.model,name:dpt_stock_management.model_stock_picking
@@ -29,3 +188,13 @@ msgstr "Mã vận chuyển"
 #: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__transfer_code_chinese
 msgid "Transfer Code in Chinese"
 msgstr "Mã vận chuyển Trung Quốc"
+
+#. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
+msgid "Unit"
+msgstr "Đơn vị"
+
+#. module: dpt_stock_management
+#: model:ir.model,name:dpt_stock_management.model_stock_warehouse
+msgid "Warehouse"
+msgstr "Kho hàng"

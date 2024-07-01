@@ -22,8 +22,8 @@
                         <page name="sale_order" string="Order">
                             <field name="sale_ids" readonly="1"/>
                         </page>
-                        <page name="transfer_picking" string="Transfer">
-                            <field name="transfer_picking_ids" readonly="1"/>
+                        <page name="transfer_picking" string="Picking">
+                            <field name="picking_ids" readonly="1"/>
                         </page>
                         <page name="vehicle_stage_tracking" string="Vehicle Stage Tracking">
                             <field name="vehicle_stage_log_ids">
