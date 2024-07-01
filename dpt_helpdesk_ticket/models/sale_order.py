@@ -50,7 +50,7 @@ class SaleOrder(models.Model):
                 'partner_id': self.partner_id.id,
                 'service_lines_ids': service_ids,
                 'department_id': service.department_id.id,
-                'team_id': service.helpdesk_team_id.id,
+                'team_id': service.service_id.helpdesk_team_id.id,
             })
 
             # team_id = self.env['helpdesk.team'].search([('service_type_ids', 'in', [service.service_type_id.id])],
