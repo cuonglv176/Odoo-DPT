@@ -10,7 +10,7 @@ class SaleOrder(models.Model):
 
     def cron_update_valid_cutlist_so(self):
         sale_ids = self.env['sale.order'].sudo().search([])
-        sale_ids._compute_valid_cutlist()
+        sale_ids.with_context(onchange_sale_service_ids=True)._compute_valid_cutlist()
 
     @api.depends('picking_ids', 'picking_ids.state', 'ticket_ids', 'ticket_ids.department_id', 'ticket_ids.stage_id',
                  'dpt_export_import_ids')
