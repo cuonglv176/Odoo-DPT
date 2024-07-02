@@ -331,6 +331,10 @@ class SaleOrderField(models.Model):
     using_calculation_price = fields.Boolean(related='fields_id.using_calculation_price')
     uom_id = fields.Many2one(related="fields_id.uom_id")
 
+    @api.onchange('value_char','value_integer','value_date')
+    def action_calculation_update_price(self):
+        self.sale_id.action_calculation()
+
     @api.depends('fields_id', 'fields_id.type')
     def _compute_sequence(self):
         for r in self:
