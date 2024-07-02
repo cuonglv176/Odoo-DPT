@@ -100,7 +100,7 @@ class SaleOrderLine(models.Model):
                     declared_unit_price += line.dpt_price_usd * line.dpt_exchange_rate
                 if line.declaration_type == 'cny':
                     declared_unit_price += line.dpt_price_cny_vnd * line.dpt_exchange_rate
-            rec.declared_unit_total = declared_unit_price
+            rec.declared_unit_price = declared_unit_price
 
     @api.depends('dpt_export_import_line_ids', 'dpt_export_import_line_ids.dpt_total_usd_vnd',
                  'dpt_export_import_line_ids.dpt_total_cny_vnd', 'dpt_export_import_line_ids.dpt_total_vat',
