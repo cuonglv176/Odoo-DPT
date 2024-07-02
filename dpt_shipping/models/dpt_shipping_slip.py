@@ -10,10 +10,15 @@ class DPTShippingSlip(models.Model):
     name = fields.Char('Name')
     transfer_code = fields.Char('Transfer Code')
     transfer_code_chinese = fields.Char('Transfer Code in Chinese')
-    picking_ids = fields.Many2many('stock.picking', string='Picking')
+    picking_ids = fields.Many2many('stock.picking', 'stock_picking_in_shipping_rel', 'shipping_slip_id', 'picking_id',
+                                   string='Picking')
+    transfer_picking_ids = fields.Many2many('stock.picking', 'stock_picking_transfer_shipping_rel', 'shipping_slip_id',
+                                            'picking_id', string='Transfer Picking')
     sale_ids = fields.Many2many('sale.order', string='Sale Order')
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle')
-    vehicle_stage_id = fields.Many2one('dpt.vehicle.stage', 'Vehicle Stage')
+    vehicle_country = fields.Selection(related='vehicle_id.country')
+    vn_vehicle_stage_id = fields.Many2one('dpt.vehicle.stage', 'Vehicle Stage', domain=[('country', '=', 'vietnamese')])
+    cn_vehicle_stage_id = fields.Many2one('dpt.vehicle.stage', 'Vehicle Stage', domain=[('country', '=', 'chinese')])
     vehicle_stage_log_ids = fields.One2many('dpt.vehicle.stage.log', 'shipping_slip_id', 'Vehicle Stage Log')
 
     @api.model
@@ -27,19 +32,32 @@ class DPTShippingSlip(models.Model):
         return f'{sequence}'
 
     def write(self, vals):
-        if 'vehicle_stage_id' not in vals:
+        if 'vn_vehicle_stage_id' not in vals and 'cn_vehicle_stage_id' not in vals:
             return super().write(vals)
-        current_stage_id = self.vehicle_stage_id
-        res = super().write(vals)
-        next_stage_id = self.vehicle_stage_id
-        if current_stage_id == next_stage_id:
-            return res
-        self.env['dpt.vehicle.stage.log'].create({
-            'vehicle_id': self.vehicle_id.id,
-            'shipping_slip_id': self.id,
-            'current_stage_id': current_stage_id.id,
-            'next_stage_id': next_stage_id.id,
-        })
+        if self.vehicle_country == 'vietnamese':
+            current_stage_id = self.vn_vehicle_stage_id
+            res = super().write(vals)
+            next_stage_id = self.vn_vehicle_stage_id
+            if current_stage_id == next_stage_id:
+                return res
+            self.env['dpt.vehicle.stage.log'].create({
+                'vehicle_id': self.vehicle_id.id,
+                'shipping_slip_id': self.id,
+                'current_stage_id': current_stage_id.id,
+                'next_stage_id': next_stage_id.id,
+            })
+        elif self.vehicle_country == 'chinese':
+            current_stage_id = self.cn_vehicle_stage_id
+            res = super().write(vals)
+            next_stage_id = self.cn_vehicle_stage_id
+            if current_stage_id == next_stage_id:
+                return res
+            self.env['dpt.vehicle.stage.log'].create({
+                'vehicle_id': self.vehicle_id.id,
+                'shipping_slip_id': self.id,
+                'current_stage_id': current_stage_id.id,
+                'next_stage_id': next_stage_id.id,
+            })
         return res
 
     @api.constrains('picking_ids', 'transfer_code', 'transfer_code_chinese')

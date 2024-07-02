@@ -10,7 +10,7 @@ class SaleOrder(models.Model):
 
     def cron_update_valid_cutlist_so(self):
         sale_ids = self.env['sale.order'].sudo().search([])
-        sale_ids._compute_valid_cutlist()
+        sale_ids.with_context(onchange_sale_service_ids=True)._compute_valid_cutlist()
 
     @api.depends('picking_ids', 'picking_ids.state', 'ticket_ids', 'ticket_ids.department_id', 'ticket_ids.stage_id',
                  'dpt_export_import_ids')
@@ -44,7 +44,7 @@ class SaleOrder(models.Model):
     def action_create_shipping_slip(self):
         default_vehicle_stage_id = self.env['dpt.vehicle.stage'].sudo().search([('is_default', '=', True)], limit=1)
         picking_ids = self.env['stock.picking'].sudo().search(
-            [('sale_id', 'in', self.ids), ('x_transfer_type', '=', 'outgoing_transfer')])
+            [('sale_id', 'in', self.ids), ('picking_type_code', '=', 'incoming')])
         shipping_slip_id = self.env['dpt.shipping.slip'].create({
             'sale_ids': self.ids,
             'picking_ids': picking_ids.ids,

@@ -13,9 +13,11 @@
         'security/ir.model.access.csv',
         'data/ir_sequence.xml',
         'data/ir_cron.xml',
+        'views/fleet_vehicle.xml',
         'views/hr_department.xml',
         'views/dpt_shipping_slip.xml',
         'views/dpt_vehicle_stage.xml',
         'views/sale_order.xml',
+        'views/stock_picking.xml',
     ],
 }

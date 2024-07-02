@@ -32,3 +32,13 @@ class ProductTemplate(models.Model):
     dpt_uom1_id = fields.Many2one('uom.uom', string='ĐVT 1', tracking=True)
     dpt_sl2 = fields.Integer(string='SL2', tracking=True)
     dpt_export_import_line_ids = fields.One2many('dpt.export.import.line', 'product_tmpl_id', string='Declaration line')
+
+    dpt_so_tk = fields.Char(string='Số TK')
+    dpt_location = fields.Char(string='Địa điểm dỡ hàng')
+    dpt_dk_gia = fields.Char(string='Điều kiện giá hóa đơn')
+    dpt_short_name = fields.Char(string='Tên Hàng')
+    dpt_date_dk = fields.Char(string='Ngày ĐK')
+    dpt_xuat_xu = fields.Char(string='Xuất xứ')
+    dpt_company_name = fields.Char(string='Tên doanh nghiệp')
+    dpt_ma_xe = fields.Char(string='Mã xe')
+    dpt_currency_id = fields.Many2one('res.currency', string='Đơn vị tiền tệ', tracking=True)

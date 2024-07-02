@@ -321,6 +321,12 @@ class DptExportImportLine(models.Model):
                 'hs_code_id': vals.get('hs_code_id')
             })
         res = super(DptExportImportLine, self).write(vals)
+        val_update_sale_line.update({
+            'import_tax_amount': self.dpt_amount_tax_import
+        })
+        val_update_sale_line.update({
+            'vat_tax_amount': self.dpt_amount_tax
+        })
         self.sale_line_id.write(val_update_sale_line)
         return res
 

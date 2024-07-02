@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-01 11:03+0000\n"
-"PO-Revision-Date: 2024-07-01 11:03+0000\n"
+"POT-Creation-Date: 2024-07-01 17:09+0000\n"
+"PO-Revision-Date: 2024-07-01 17:09+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -46,6 +46,24 @@ msgid "Attachment Count"
 msgstr ""
 
 #. module: dpt_shipping
+#: model:ir.actions.server,name:dpt_shipping.cron_update_valid_cutlist_so_ir_actions_server
+msgid "Base: Auto-update Valid Cutlist SO"
+msgstr ""
+
+#. module: dpt_shipping
+#: model:ir.model.fields.selection,name:dpt_shipping.selection__dpt_vehicle_stage__country__chinese
+#: model:ir.model.fields.selection,name:dpt_shipping.selection__fleet_vehicle__country__chinese
+msgid "Chinese"
+msgstr "Trung Quốc"
+
+#. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__vehicle_country
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage__country
+#: model:ir.model.fields,field_description:dpt_shipping.field_fleet_vehicle__country
+msgid "Country"
+msgstr ""
+
+#. module: dpt_shipping
 #: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_sale_order_cutlist_tree_view
 msgid "Create Shipping slip"
 msgstr ""
@@ -54,6 +72,11 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:dpt_shipping.action_valid_cutlist_sale_order
 msgid "Create a new quotation, the first step of a new sale!"
 msgstr ""
+
+#. module: dpt_shipping
+#: model_terms:ir.ui.view,arch_db:dpt_shipping.view_picking_tree_create_transfer_in_shipping_inherit
+msgid "Create transfer picking"
+msgstr "Tạo Điều chuyển"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__create_uid
@@ -73,6 +96,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage_log__current_stage_id
 msgid "Current Stage"
 msgstr ""
+
+#. module: dpt_shipping
+#: model:ir.model,name:dpt_shipping.model_hr_department
+msgid "Department"
+msgstr "Bộ phận"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage_log__description
@@ -133,6 +161,11 @@ msgstr ""
 #: model:ir.model.fields,help:dpt_shipping.field_dpt_shipping_slip__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
+
+#. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_hr_department__is_chinese_stock_department
+msgid "Is Chinese Stock Department"
+msgstr "Là phòng kho TQ"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage__is_default
@@ -248,6 +281,12 @@ msgid "Order"
 msgstr "Đơn hàng"
 
 #. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__picking_ids
+#: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_slip_form_view
+msgid "Picking"
+msgstr "Phiếu nhập"
+
+#. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__rating_ids
 msgid "Ratings"
 msgstr ""
@@ -300,11 +339,6 @@ msgid ""
 msgstr ""
 
 #. module: dpt_shipping
-#: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_slip_form_view
-msgid "Picking"
-msgstr "Phiếu nhập"
-
-#. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__transfer_code
 msgid "Transfer Code"
 msgstr "Mã phiếu vận chuyển"
@@ -313,11 +347,6 @@ msgstr "Mã phiếu vận chuyển"
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__transfer_code_chinese
 msgid "Transfer Code in Chinese"
 msgstr "Mã phiếu vận chuyển TQ"
-
-#. module: dpt_shipping
-#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__picking_ids
-msgid "Picking"
-msgstr "Phiếu nhập"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,help:dpt_shipping.field_dpt_shipping_slip__activity_exception_decoration
@@ -332,14 +361,16 @@ msgid "Valid Cutlist"
 msgstr "Đơn có thể Cutlist"
 
 #. module: dpt_shipping
+#: model:ir.model,name:dpt_shipping.model_fleet_vehicle
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__vehicle_id
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage_log__vehicle_id
 msgid "Vehicle"
-msgstr "Xe"
+msgstr "Phương tiện"
 
 #. module: dpt_shipping
 #: model:ir.actions.act_window,name:dpt_shipping.dpt_vehicle_stage_action
-#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__vehicle_stage_id
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__cn_vehicle_stage_id
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__vn_vehicle_stage_id
 #: model:ir.ui.menu,name:dpt_shipping.dpt_vehicle_stage_menu
 #: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_vehicle_stage_tree_views
 msgid "Vehicle Stage"
@@ -354,6 +385,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_slip_form_view
 msgid "Vehicle Stage Tracking"
 msgstr ""
+
+#. module: dpt_shipping
+#: model:ir.model.fields.selection,name:dpt_shipping.selection__dpt_vehicle_stage__country__vietnamese
+#: model:ir.model.fields.selection,name:dpt_shipping.selection__fleet_vehicle__country__vietnamese
+msgid "Vietnamese"
+msgstr "Việt Nam"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__website_message_ids
