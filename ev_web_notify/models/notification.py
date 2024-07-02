@@ -8,7 +8,7 @@ class BaseAutomation(models.Model):
         ('normal', 'Normal'),
         ('notification', 'Notification'),
     ], default='normal')
-    message_notification = fields.Text(string='Nội dung thông báo')
+    message_notification = fields.Text(string='Nội dung thông báo', help='Có thể kèm nội dung của record (Tương đương với bản ghi đang được kích hoạt hiện tại) ví dụ : Thông báo đơn hàng {record.name} đã xác nhận')
     notification_type = fields.Selection([
         ('success', 'Success'),
         ('danger', 'Danger'),
