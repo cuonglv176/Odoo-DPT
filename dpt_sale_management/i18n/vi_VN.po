@@ -74,12 +74,12 @@ msgstr ""
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__compute_uom_id
 msgid "Compute Unit"
-msgstr "Đơn vị tính giá"
+msgstr "Đơn vị tính"
 
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__compute_value
 msgid "Compute Value"
-msgstr "Giá trị tính giá"
+msgstr "Số lượng"
 
 #. module: dpt_sale_management
 #: model_terms:ir.ui.view,arch_db:dpt_sale_management.view_sale_calculation_form
