@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-23 17:36+0000\n"
-"PO-Revision-Date: 2024-06-23 17:36+0000\n"
+"POT-Creation-Date: 2024-07-02 21:52+0000\n"
+"PO-Revision-Date: 2024-07-02 21:52+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -65,13 +65,6 @@ msgid "Cancelled"
 msgstr "Hủy"
 
 #. module: dpt_sale_management
-#. odoo-python
-#: code:addons/dpt_sale_management/models/dpt_sale_service_management.py:0
-#, python-format
-msgid "Cannot lower price, only increase price."
-msgstr ""
-
-#. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__compute_uom_id
 msgid "Compute Unit"
 msgstr "Đơn vị tính"
@@ -113,11 +106,6 @@ msgstr "Tiền tệ"
 #: model:ir.model,name:dpt_sale_management.model_dpt_sale_service_management
 msgid "DPT Sale Service Management"
 msgstr ""
-
-#. module: dpt_sale_management
-#: model:ir.model.fields,field_description:dpt_sale_management.field_sale_order_line__price_declaration
-msgid "Declaration"
-msgstr "Giá khai báo"
 
 #. module: dpt_sale_management
 #: model:ir.model,name:dpt_sale_management.model_hr_department
@@ -333,11 +321,6 @@ msgid "Sales Order"
 msgstr "Đơn bán hàng"
 
 #. module: dpt_sale_management
-#: model:ir.model,name:dpt_sale_management.model_sale_order_line
-msgid "Sales Order Line"
-msgstr "Dòng đơn bán hàng"
-
-#. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_order_fields__selection_value_id
 msgid "Selection Value"
 msgstr "Giá trị"
@@ -380,6 +363,11 @@ msgid "Service Total Untax Amount"
 msgstr "Số tiền trước thuế"
 
 #. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__uom_id
+msgid "Service detail"
+msgstr "Chi tiết dịch vụ"
+
+#. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_sale_order__show_action_calculation
 msgid "Show Action Calculation"
 msgstr ""
@@ -397,7 +385,6 @@ msgstr "Loại trường"
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation_line__uom_id
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_order_fields__uom_id
-#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__uom_id
 msgid "Unit"
 msgstr "Đơn vị tính"
 
