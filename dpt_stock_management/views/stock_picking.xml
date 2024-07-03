@@ -11,6 +11,9 @@
                 <field name="transfer_code"/>
                 <field name="transfer_code_chinese"/>
             </xpath>
+            <button name="action_open_label_type" position="after">
+                <button name="export_wrong_import_data" string="Print Sub Label" type="object"/>
+            </button>
             <page name="operations" position="before">
                 <page string="Packages" name="packages">
                     <field name="package_ids" readonly="state == 'done' and is_locked">
