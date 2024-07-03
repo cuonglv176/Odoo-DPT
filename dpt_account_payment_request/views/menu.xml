@@ -4,7 +4,7 @@
     <menuitem id="dpt_menu_action_account_payments_payable"
               action="account.action_account_payments_payable"
               parent="purchase.menu_purchase_root"
-              string="Account Payment"
+              name="Account Payment"
               sequence="10"/>
 
 
