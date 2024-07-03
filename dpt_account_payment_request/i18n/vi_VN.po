@@ -197,7 +197,7 @@ msgstr ""
 #: model:ir.ui.menu,name:dpt_account_payment_request.dpt_account_payment_request_menu
 #: model:ir.ui.menu,name:dpt_account_payment_request.menu_dpt_action_account_payments_request
 msgid "Payment Request"
-msgstr "Tiền tệ thanh toán"
+msgstr "Đề nghị thanh toán"
 
 #. module: dpt_account_payment_request
 #: model:ir.ui.menu,name:dpt_account_payment_request.menu_dpt_action_account_payments_type
