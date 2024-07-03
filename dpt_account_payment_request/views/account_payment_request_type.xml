@@ -24,11 +24,13 @@
                     <notebook>
                         <page string="Rules">
                             <field name="rule_ids" editable="bottom">
-                                <field name="sequence" widget="handle"/>
-                                <field name="department_id"/>
-                                <field name="user_id"/>
-                                <field name="type_compare"/>
-                                <field name="value_compare"/>
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="department_id"/>
+                                    <field name="user_id"/>
+                                    <field name="type_compare"/>
+                                    <field name="value_compare"/>
+                                </tree>
                             </field>
                         </page>
                     </notebook>
