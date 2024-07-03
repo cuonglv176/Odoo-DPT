@@ -12,6 +12,7 @@
         'security/ir.model.access.csv',
         'security/helpdesk_ticket.xml',
         'data/helpdesk_ticket_sequence.xml',
+        'views/helpdesk_ticket_view.xml',
         'views/helpdesk_stage.xml',
         'views/helpdesk_ticket_view.xml',
         'views/sale_order_view.xml',

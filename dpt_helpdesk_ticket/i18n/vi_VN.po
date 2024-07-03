@@ -170,7 +170,7 @@ msgstr ""
 #. module: dpt_helpdesk_ticket
 #: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_helpdesk_ticket__type_service
 msgid "Type Service"
-msgstr ""
+msgstr "Loại Ticket"
 
 #. module: dpt_helpdesk_ticket
 #: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_dpt_helpdesk_servie_line__uom_id
@@ -181,3 +181,36 @@ msgstr "Đơn vị tính"
 #: model:ir.model,name:dpt_helpdesk_ticket.model_dpt_helpdesk_servie_line
 msgid "dpt.helpdesk.servie.line"
 msgstr ""
+
+
+#. module: helpdesk
+#. odoo-python
+#: model:ir.model.fields,field_description:helpdesk.field_helpdesk_ticket__user_id
+#, python-format
+msgid "Assigned to"
+msgstr "Người thực hiện"
+
+
+#. module: helpdesk
+#. odoo-python
+#: model:ir.model.fields,field_description:helpdesk.field_helpdesk_ticket__partner_id
+#, python-format
+msgid "Partner"
+msgstr "User Khách hàng"
+
+
+#. module: helpdesk
+#. odoo-python
+#: model:ir.model.fields,field_description:helpdesk.field_helpdesk_ticket__partner_phone
+#, python-format
+msgid "Customer Phone"
+msgstr "Số điện thoại khách hàng"
+
+
+#. module: dpt_helpdesk_ticket
+#. odoo-python
+#: model:ir.model.fields,field_description:dpt_helpdesk_ticket.field_helpdesk_ticket__sale_id
+#, python-format
+msgid "Sale"
+msgstr "Đơn bán hàng"
+

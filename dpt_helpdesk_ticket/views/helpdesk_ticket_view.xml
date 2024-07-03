@@ -5,6 +5,12 @@
         <field name="model">helpdesk.ticket</field>
         <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='email_cc']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='email_cc']" position="after">
+                <field name="user_id"/>
+            </xpath>
             <xpath expr="//header" position="inside">
                 <button string="Create Purchase Order" name="action_create_po" type="object" class="btn-primary"
                         invisible="purchase_id"/>
@@ -15,7 +21,8 @@
             <field name="ticket_type_id" position="after">
                 <field name="department_id"/>
                 <field name="purchase_id"/>
-                <field name="purchase_status"/>
+                <field name="purchase_status" readonly="1" force_save="1"/>
+                <field name="lot_name"/>
             </field>
             <field name="priority" position="replace"/>
             <field name="user_id" position="replace"/>
@@ -41,6 +48,22 @@
                     </field>
                 </page>
             </page>
+        </field>
+    </record>
+
+
+    <record id="helpdesk_tickets_view_tree" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.inherit</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='team_id']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='team_id']" position="after">
+                <field name="lot_name"/>
+                <field name="service_ids" widget="many2many_tags"/>
+            </xpath>
         </field>
     </record>
 </odoo>
