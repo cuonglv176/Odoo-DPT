@@ -8,7 +8,11 @@
             <form string="Shipping slip">
                 <sheet>
                     <header>
-                        <field name="vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"/>
+                        <field name="vehicle_country" invisible="1"/>
+                        <field name="vn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
+                               invisible="vehicle_country != 'vietnamese'"/>
+                        <field name="cn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
+                               invisible="vehicle_country != 'chinese'"/>
                     </header>
                     <group>
                         <group>
@@ -22,8 +26,10 @@
                         <page name="sale_order" string="Order">
                             <field name="sale_ids" readonly="1"/>
                         </page>
-                        <page name="transfer_picking" string="Transfer">
-                            <field name="transfer_picking_ids" readonly="1"/>
+                        <page name="transfer_picking" string="Picking">
+                            <field name="picking_ids" readonly="1" context="{
+                                     'form_view_ref': 'stock.view_picking_form',
+                                     'tree_view_ref': 'dpt_shipping.view_picking_tree_create_transfer_in_shipping_inherit'}"/>
                         </page>
                         <page name="vehicle_stage_tracking" string="Vehicle Stage Tracking">
                             <field name="vehicle_stage_log_ids">

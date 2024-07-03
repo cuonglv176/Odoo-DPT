@@ -36,7 +36,6 @@
                                         <!--                                        <field name="lot_name"/>-->
                                         <field name="created_picking_qty" invisible="1"/>
                                         <field name="quantity"/>
-                                        <field name="lot_ids" widget="many2many_tags" options="{'no_create': True }"/>
                                         <field name="uom_id" required="1"/>
                                         <field name="note"/>
                                     </group>

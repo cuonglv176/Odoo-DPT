@@ -65,8 +65,10 @@ class SaleOrderLine(models.Model):
     dpt_export_import_line_ids = fields.One2many('dpt.export.import.line', 'sale_line_id', string='Declaration line')
     hs_code_id = fields.Many2one('dpt.export.import.acfta', string='HS Code')
     dpt_code_hs = fields.Char(string='H')
-    declared_unit_price = fields.Monetary(string='Declared unit price', currency_field='currency_id')
-    declared_unit_total = fields.Monetary(string='Declared unit Total', currency_field='currency_id')
+    declared_unit_price = fields.Monetary(string='Declared unit price', currency_field='currency_id',
+                                          compute="compute_declared_unit_price")
+    declared_unit_total = fields.Monetary(string='Declared unit Total', currency_field='currency_id',
+                                          compute="compute_declared_unit_total")
     payment_exchange_rate = fields.Monetary(string='Payment exchange rate', currency_field='currency_id')
     import_tax_rate = fields.Float(string='Import tax rate(%)')
     vat_tax_rate = fields.Float(string='VAT rate(%)')
@@ -85,6 +87,33 @@ class SaleOrderLine(models.Model):
         ('post_control', 'Kiểm tra sau thông quan'),
         ('cancelled', 'Huỷ')
     ], string='State', default='draft', compute='compute_state_export_import_line')
+
+    @api.depends('dpt_export_import_line_ids', 'dpt_export_import_line_ids.dpt_price_usd',
+                 'dpt_export_import_line_ids.dpt_price_cny_vnd',
+                 'dpt_export_import_line_ids.dpt_exchange_rate',
+                 'dpt_export_import_line_ids.declaration_type')
+    def compute_declared_unit_price(self):
+        for rec in self:
+            declared_unit_price = 0
+            for line in rec.dpt_export_import_line_ids:
+                if line.declaration_type == 'usd':
+                    declared_unit_price += line.dpt_price_usd * line.dpt_exchange_rate
+                if line.declaration_type == 'cny':
+                    declared_unit_price += line.dpt_price_cny_vnd * line.dpt_exchange_rate
+            rec.declared_unit_price = declared_unit_price
+
+    @api.depends('dpt_export_import_line_ids', 'dpt_export_import_line_ids.dpt_total_usd_vnd',
+                 'dpt_export_import_line_ids.dpt_total_cny_vnd', 'dpt_export_import_line_ids.dpt_total_vat',
+                 'dpt_export_import_line_ids.declaration_type')
+    def compute_declared_unit_total(self):
+        for rec in self:
+            declared_unit_total = 0
+            for line in rec.dpt_export_import_line_ids:
+                if line.declaration_type == 'usd':
+                    declared_unit_total += line.dpt_total_usd_vnd + line.dpt_total_vat
+                if line.declaration_type == 'cny':
+                    declared_unit_total += line.dpt_total_cny_vnd + line.dpt_total_vat
+            rec.declared_unit_total = declared_unit_total
 
     @api.depends('import_tax_amount', 'other_tax_amount', 'vat_tax_amount')
     def compute_total_tax_amount(self):

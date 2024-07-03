@@ -8,7 +8,7 @@ class BaseAutomation(models.Model):
         ('normal', 'Normal'),
         ('notification', 'Notification'),
     ], default='normal')
-    message_notification = fields.Text(string='Nội dung thông báo')
+    message_notification = fields.Text(string='Nội dung thông báo', help='Có thể kèm nội dung của record (Tương đương với bản ghi đang được kích hoạt hiện tại) ví dụ : Thông báo đơn hàng {record.name} đã xác nhận')
     notification_type = fields.Selection([
         ('success', 'Success'),
         ('danger', 'Danger'),
@@ -31,7 +31,7 @@ class BaseAutomation(models.Model):
 automation_id = env['base.automation'].browse({result.id})
 env['mail.message']._push_system_notification(  
     {result.create_uid.id},
-    automation_id.partner_ids.ids, automation_id.message_notification,
+    automation_id.partner_ids.ids, automation_id.message_notification.format(record=record),
     '{result.model_id.model}', record.id
 )
 """

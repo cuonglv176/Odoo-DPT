@@ -27,7 +27,7 @@
                         <group groups="base.group_no_one">
                             <group>
                                 <field name="model_id" options="{'no_create': True}" />
-                                <field name="message_notification" />
+                                <field name="message_notification"/>
                             </group>
                         </group>
                         <group>

@@ -357,7 +357,7 @@ msgstr "Bảng định mức"
 #. module: dpt_service_pricelist
 #: model:ir.model.fields.selection,name:dpt_service_pricelist.selection__product_pricelist_item__percent_based_on__product_total_amount
 msgid "Product Total Amount"
-msgstr "Tổng giá trị Saản phẩm"
+msgstr "Tổng giá trị Sản phẩm"
 
 #. module: dpt_service_pricelist
 #: model:ir.model.fields,field_description:dpt_service_pricelist.field_product_pricelist_item_detail__uom_id

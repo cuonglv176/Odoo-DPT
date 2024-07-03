@@ -6,7 +6,6 @@ class PurchaseOrderLinePackage(models.Model):
 
     move_ids = fields.One2many('stock.move', 'package_line_id', 'Move')
     picking_id = fields.Many2one('stock.picking', 'Picking')
-    lot_ids = fields.Many2many('stock.lot', string='Lot')
     product_ids = fields.Many2many('product.product', compute="_compute_product")
     created_picking_qty = fields.Integer('Quantity Created Picking', compute='compute_created_picking_qty')
 
@@ -16,7 +15,7 @@ class PurchaseOrderLinePackage(models.Model):
             out_picking_ids = out_picking_ids.filtered(
                 lambda op: op.picking_type_id.code != 'incoming' or op.x_transfer_type != 'incoming')
             item.created_picking_qty = sum([package_id.quantity for package_id in out_picking_ids.package_ids.filtered(
-                    lambda p: p.uom_id.id == item.uom_id.id)])
+                lambda p: p.uom_id.id == item.uom_id.id)])
 
     @api.depends('purchase_id', 'picking_id')
     def _compute_product(self):
@@ -37,10 +36,6 @@ class PurchaseOrderLinePackage(models.Model):
 
     def _prepare_stock_moves(self, picking):
         date_planned = picking.date_deadline or fields.Datetime.now()
-        if self.purchase_id:
-            lot_name = self.purchase_id.packing_lot_name + f'_{self.quantity}{self.uom_id.packing_code}'
-        else:
-            lot_name = self.picking_id.name + f'_{self.quantity}{self.uom_id.packing_code}'
         vals = {
             'name': (self.uom_id.product_id.display_name or '')[:2000],
             'product_id': self.uom_id.product_id.id,
@@ -59,24 +54,11 @@ class PurchaseOrderLinePackage(models.Model):
             'warehouse_id': picking.picking_type_id.warehouse_id.id,
             'product_uom_qty': self.quantity,
             'product_uom': self.uom_id.product_id.uom_id.id,
+            'move_line_ids': [(0, 0, {
+                'company_id': self.env.company.id,
+                'product_id': self.uom_id.product_id.id,
+                'lot_name': self.picking_id.name,
+                'quantity': self.quantity,
+            })]
         }
-        move_line_vals = []
-        for lot_id in self.lot_ids:
-            move_line_vals.append((0, 0, {
-                'company_id': self.env.company.id,
-                'product_id': self.uom_id.product_id.id,
-                'lot_id': lot_id.id,
-                'lot_name': lot_id.name,
-                'quantity': self.quantity,
-            }))
-        if not move_line_vals:
-            move_line_vals.append((0, 0, {
-                'company_id': self.env.company.id,
-                'product_id': self.uom_id.product_id.id,
-                'lot_name': lot_name,
-                'quantity': self.quantity,
-            }))
-        vals.update({
-            'move_line_ids': move_line_vals
-        })
         return vals

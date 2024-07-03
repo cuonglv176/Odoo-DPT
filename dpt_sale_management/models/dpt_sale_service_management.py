@@ -11,7 +11,7 @@ class DPTSaleServiceManagement(models.Model):
     description = fields.Html(string='Description')
     qty = fields.Float(string='QTY', default=1)
     uom_ids = fields.Many2many(related='service_id.uom_ids')
-    uom_id = fields.Many2one('uom.uom', string='Unit', domain="[('id', 'in', uom_ids)]")
+    uom_id = fields.Many2one('uom.uom', string='Service detail', domain="[('id', 'in', uom_ids)]")
     price = fields.Monetary(currency_field='currency_id', string='Price')
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
     department_id = fields.Many2one(related='service_id.department_id')
