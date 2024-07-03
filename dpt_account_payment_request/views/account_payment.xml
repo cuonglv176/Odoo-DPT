@@ -246,11 +246,26 @@
     <record id="dpt_action_account_payments_request" model="ir.actions.act_window">
         <field name="name">Payments Request</field>
         <field name="res_model">account.payment</field>
-        <field name="view_mode">tree,kanban,form,graph</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{
+            'default_payment_type': 'outbound',
+            'default_partner_type': 'supplier',
+            'search_default_outbound_filter': 1,
+            'default_move_journal_types': ('bank', 'cash'),
+            }
+        </field>
         <field name="view_ids" eval="[(5, 0, 0),
         (0, 0, {'view_mode': 'tree', 'view_id': ref('dpt_view_account_payment_request_tree')}),
-        (0, 0, {'view_mode': 'from', 'view_id': ref('dpt_view_account_payment_request_form')}),
-    ]"/>
+        (0, 0, {'view_mode': 'from', 'view_id': ref('dpt_view_account_payment_request_form')})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Register a payment request
+            </p>
+            <p>
+                Payments are used to register liquidity movements. You can process those payments by your own means or
+                by using installed facilities.
+            </p>
+        </field>
     </record>
 
 
