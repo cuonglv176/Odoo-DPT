@@ -47,7 +47,7 @@
         <field name="view_mode">tree,form</field>
         <field name="view_ids" eval="[(5, 0, 0),
         (0, 0, {'view_mode': 'tree', 'view_id': ref('dpt_view_account_payment_type_tree')}),
-        (0, 0, {'view_mode': 'from', 'view_id': ref('dpt_view_account_payment_type_form')}),]"/>
+        (0, 0, {'view_mode': 'form', 'view_id': ref('dpt_view_account_payment_type_form')}),]"/>
     </record>
 
 
