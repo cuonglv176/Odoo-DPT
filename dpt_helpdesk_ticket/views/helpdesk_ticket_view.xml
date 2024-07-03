@@ -48,7 +48,6 @@
         <field name="name">helpdesk.ticket.tree</field>
         <field name="model">helpdesk.ticket</field>
         <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_tree"/>
-        <field name="mode">primary</field>
         <field name="arch" type="xml">
             <field name="name" position="after">
                 <field name="sale_id"/>
