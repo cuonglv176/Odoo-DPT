@@ -1,0 +1,350 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* dpt_account_payment_request
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-07-03 06:49+0000\n"
+"PO-Revision-Date: 2024-07-03 06:49+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_form
+msgid "<span class=\"o_stat_text\">Journal Entry</span>"
+msgstr "<span class=\"o_stat_text\">Nhật ký</span>"
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_form
+msgid "<span class=\"o_stat_text\">Transaction</span>"
+msgstr "<span class=\"o_stat_text\">Bút toán</span>"
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_form
+msgid ""
+"<span invisible=\"paired_internal_transfer_payment_id or not is_internal_transfer or state != 'draft'\" class=\"fst-italic\">\n"
+"                                    A second payment will be created in the destination journal.\n"
+"                                </span>"
+msgstr ""
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_form
+msgid ""
+"<span invisible=\"reconciled_invoices_type != 'invoice'\">Invoice</span>\n"
+"                                    <span invisible=\"reconciled_invoices_type == 'invoice'\">Credit Note</span>"
+msgstr ""
+"<span invisible=\"reconciled_invoices_type != 'invoice'\">Hóa đơn</span>\n"
+"                                    <span invisible=\"reconciled_invoices_type == 'invoice'\">Credit Note</span>"
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_form
+msgid "<span>Bill</span>"
+msgstr "Hóa đơn"
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_form
+msgid "<span>Draft</span>"
+msgstr "Nháp"
+
+#. module: dpt_account_payment_request
+#: model:ir.ui.menu,name:dpt_account_payment_request.dpt_menu_action_account_payments_payable
+msgid "Account Payment"
+msgstr "Thanh toán"
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_type_form
+msgid "Account Payment Payment"
+msgstr "Thanh toán"
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_tree
+msgid "Amount"
+msgstr "Tài khoản"
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_tree
+msgid "Amount in Currency"
+msgstr "Tiền tệ"
+
+#. module: dpt_account_payment_request
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_account_payment__approval_id
+msgid "Approval Payment Request"
+msgstr "Đề nghị thanh toán"
+
+#. module: dpt_account_payment_request
+#. odoo-python
+#: code:addons/dpt_account_payment_request/models/account_payment_inherit.py:0
+#, python-format
+msgid "Approval request"
+msgstr "Phê duyệt"
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_form
+msgid "Cancel"
+msgstr "Hủy"
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_form
+msgid "Company Bank Account"
+msgstr "Tài khoản ngân hàng"
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_form
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_tree
+msgid "Confirm"
+msgstr "Xác nhận"
+
+#. module: dpt_account_payment_request
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_dpt_account_payment_type__create_uid
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_dpt_account_payment_type_rule__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: dpt_account_payment_request
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_dpt_account_payment_type__create_date
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_dpt_account_payment_type_rule__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_form
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_tree
+msgid "Customer"
+msgstr "Khách hàng"
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_form
+msgid "Customer Bank Account"
+msgstr "Tài khoản khách hàng"
+
+#. module: dpt_account_payment_request
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_account_payment__department_id
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_dpt_account_payment_type_rule__department_id
+msgid "Department Request"
+msgstr "Phòng ban gửi"
+
+#. module: dpt_account_payment_request
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_dpt_account_payment_type__display_name
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_dpt_account_payment_type_rule__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: dpt_account_payment_request
+#: model:ir.model.fields.selection,name:dpt_account_payment_request.selection__dpt_account_payment_type_rule__type_compare__equal
+msgid "Equal"
+msgstr "Bằng"
+
+#. module: dpt_account_payment_request
+#: model:ir.model.fields.selection,name:dpt_account_payment_request.selection__dpt_account_payment_type_rule__type_compare__higher
+msgid "Higher"
+msgstr "Lớn hơn"
+
+#. module: dpt_account_payment_request
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_dpt_account_payment_type__id
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_dpt_account_payment_type_rule__id
+msgid "ID"
+msgstr ""
+
+#. module: dpt_account_payment_request
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_dpt_account_payment_type__write_uid
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_dpt_account_payment_type_rule__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: dpt_account_payment_request
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_dpt_account_payment_type__write_date
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_dpt_account_payment_type_rule__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: dpt_account_payment_request
+#: model:ir.model.fields.selection,name:dpt_account_payment_request.selection__dpt_account_payment_type_rule__type_compare__lower
+msgid "Lower"
+msgstr "Nhỏ hơn"
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_form
+msgid "Mark as Sent"
+msgstr ""
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_form
+msgid "Memo"
+msgstr "Bản ghi nhớ"
+
+#. module: dpt_account_payment_request
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_dpt_account_payment_type__name
+msgid "Name"
+msgstr "Tên"
+
+#. module: dpt_account_payment_request
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_account_payment__code
+msgid "Payment Code"
+msgstr "Mã ĐNTT"
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_tree
+msgid "Payment Currency"
+msgstr ""
+
+#. module: dpt_account_payment_request
+#: model:ir.ui.menu,name:dpt_account_payment_request.dpt_account_payment_request_menu
+#: model:ir.ui.menu,name:dpt_account_payment_request.menu_dpt_action_account_payments_request
+msgid "Payment Request"
+msgstr "Đề nghị thanh toán"
+
+#. module: dpt_account_payment_request
+#: model:ir.ui.menu,name:dpt_account_payment_request.menu_dpt_action_account_payments_type
+msgid "Payment Request Type"
+msgstr "Loại ĐNTT"
+
+#. module: dpt_account_payment_request
+#: model:ir.model,name:dpt_account_payment_request.model_account_payment
+msgid "Payments"
+msgstr "Thanh toán"
+
+#. module: dpt_account_payment_request
+#: model:ir.actions.act_window,name:dpt_account_payment_request.dpt_action_account_payments_request
+msgid "Payments Request"
+msgstr "Đề nghị thanh toán"
+
+#. module: dpt_account_payment_request
+#: model:ir.actions.act_window,name:dpt_account_payment_request.dpt_action_account_payments_type_request
+msgid "Payments Type"
+msgstr "Loại ĐNTT"
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.actions.act_window,help:dpt_account_payment_request.dpt_action_account_payments_request
+msgid ""
+"Payments are used to register liquidity movements. You can process those payments by your own means or\n"
+"                by using installed facilities."
+msgstr ""
+
+#. module: dpt_account_payment_request
+#. odoo-python
+#: code:addons/dpt_account_payment_request/models/account_payment_inherit.py:0
+#, python-format
+msgid "Please config category approval change price (DNTT)"
+msgstr ""
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_form
+msgid "Register Payment"
+msgstr "ĐNTT"
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.actions.act_window,help:dpt_account_payment_request.dpt_action_account_payments_request
+msgid "Register a payment request"
+msgstr ""
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_form
+msgid "Request Cancel"
+msgstr "Hủy"
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_form
+msgid "Reset To Draft"
+msgstr "Chuyển về nháp"
+
+#. module: dpt_account_payment_request
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_dpt_account_payment_type__rule_ids
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_type_form
+msgid "Rules"
+msgstr ""
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_form
+msgid "Send Request Approval"
+msgstr "Gửi yêu cầu phê duyệt"
+
+#. module: dpt_account_payment_request
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_dpt_account_payment_type_rule__sequence
+msgid "Sequence"
+msgstr ""
+
+#. module: dpt_account_payment_request
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_account_payment__request_status
+msgid "Status approval"
+msgstr "Trạng thái duyệt"
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_form
+msgid "The selected payment method requires a bank account but none is set on"
+msgstr ""
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_tree
+msgid "Total"
+msgstr "Tổng"
+
+#. module: dpt_account_payment_request
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_dpt_account_payment_type_rule__type_id
+msgid "Type"
+msgstr "Loại ĐNTT"
+
+#. module: dpt_account_payment_request
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_dpt_account_payment_type_rule__type_compare
+msgid "Type Compare"
+msgstr "Loại So sánh"
+
+#. module: dpt_account_payment_request
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_account_payment__type_id
+msgid "Type Request"
+msgstr "Loại yêu cầu"
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_form
+msgid "Unmark as Sent"
+msgstr ""
+
+#. module: dpt_account_payment_request
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_dpt_account_payment_type_rule__user_id
+msgid "User Approve"
+msgstr "Người duyệt"
+
+#. module: dpt_account_payment_request
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_account_payment__user_id
+msgid "User Request"
+msgstr "Người yêu cầu"
+
+#. module: dpt_account_payment_request
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_dpt_account_payment_type_rule__value_compare
+msgid "Value Compare"
+msgstr "So sánh giá trị"
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_form
+msgid "Vendor"
+msgstr "Nhà cung cấp"
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_form
+msgid "Vendor Bank Account"
+msgstr "Tài khoản ngân hàng của nhà cung cấp"
+
+#. module: dpt_account_payment_request
+#: model:ir.model,name:dpt_account_payment_request.model_dpt_account_payment_type
+msgid "dpt.account.payment.type"
+msgstr ""
+
+#. module: dpt_account_payment_request
+#: model:ir.model,name:dpt_account_payment_request.model_dpt_account_payment_type_rule
+msgid "dpt.account.payment.type.rule"
+msgstr ""
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_form
+msgid "e.g. Cash"
+msgstr ""
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_form
+msgid "the destination journal"
+msgstr ""

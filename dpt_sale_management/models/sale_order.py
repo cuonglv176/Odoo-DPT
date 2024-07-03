@@ -221,7 +221,7 @@ class SaleOrder(models.Model):
                     if service_price_id.percent_based_on == 'product_total_amount':
                         price_base = sum(self.order_line.mapped('price_total'))
                     elif service_price_id.percent_based_on == 'declaration_total_amount':
-                        price_base = sum(self.order_line.mapped('declared_unit_price'))
+                        price_base = sum(self.order_line.mapped('declared_unit_total'))
                     if price_base:
                         price = max(service_price_id.currency_id._convert(
                             from_amount=price_base * service_price_id.percent_price / 100,
@@ -330,6 +330,12 @@ class SaleOrderField(models.Model):
     ], string='Fields type', default='char', related='fields_id.fields_type')
     using_calculation_price = fields.Boolean(related='fields_id.using_calculation_price')
     uom_id = fields.Many2one(related="fields_id.uom_id")
+
+    def write(self, vals):
+        res = super(SaleOrderField, self).write(vals)
+        if 'value_char' in vals or 'value_integer' in vals or 'value_date' in vals:
+            self.sale_id.action_calculation()
+        return res
 
     @api.depends('fields_id', 'fields_id.type')
     def _compute_sequence(self):

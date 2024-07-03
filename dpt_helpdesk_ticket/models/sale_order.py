@@ -13,7 +13,7 @@ class SaleOrder(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'helpdesk.ticket',
             'target': 'self',
-            'views': [[False, 'tree']],
+            'views': [[False, 'tree'], [False, 'form']],
             'domain': [('sale_id', '=', self.id)],
             'context': "{'create': False}"
         }
