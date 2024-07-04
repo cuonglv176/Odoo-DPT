@@ -43,4 +43,15 @@
             </page>
         </field>
     </record>
+
+    <record id="ticket_list_view_dpt_helpdesk_ticket" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.tree</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="sale_id"/>
+            </field>
+        </field>
+    </record>
 </odoo>

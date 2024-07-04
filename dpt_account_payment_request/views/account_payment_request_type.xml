@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="dpt_view_account_payment_type_tree" model="ir.ui.view">
+        <field name="name">dpt.account.payment.type.tree</field>
+        <field name="model">dpt.account.payment.type</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="dpt_view_account_payment_type_form" model="ir.ui.view">
+        <field name="name">dpt.account.payment.type.form</field>
+        <field name="model">dpt.account.payment.type</field>
+        <field name="arch" type="xml">
+            <form string="Account Payment Payment">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <notebook>
+                        <page string="Rules">
+                            <field name="rule_ids" editable="bottom">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="department_id"/>
+                                    <field name="user_id"/>
+                                    <field name="type_compare"/>
+                                    <field name="value_compare"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="dpt_action_account_payments_type_request" model="ir.actions.act_window">
+        <field name="name">Payments Type</field>
+        <field name="res_model">dpt.account.payment.type</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('dpt_view_account_payment_type_tree')}),
+        (0, 0, {'view_mode': 'form', 'view_id': ref('dpt_view_account_payment_type_form')}),]"/>
+    </record>
+
+
+</odoo>

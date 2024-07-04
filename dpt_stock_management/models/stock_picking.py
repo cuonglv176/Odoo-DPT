@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 from odoo import models, fields, api, _
+import xlrd, xlwt
+import base64
+from odoo.exceptions import ValidationError, UserError
+import io as stringIOModule
 
 
 class StockPicking(models.Model):
@@ -159,4 +163,86 @@ class StockPicking(models.Model):
             'view_mode': 'tree,form',
             'domain': [('id', 'in', self.picking_out_ids.ids)],
             'views': [[view_id, 'tree'], [view_form_id, 'form']],
+        }
+
+    def export_wrong_import_data(self):
+        data = [1, 2, 3, 4, 5]
+        workbook = xlwt.Workbook(encoding="UTF-8")
+        worksheet = workbook.add_sheet("Ngân sách")
+        xlwt.add_palette_colour('gray_lighter', 0x21)
+        workbook.set_colour_RGB(0x21, 224, 224, 224)
+        style_blue = xlwt.easyxf(
+            'font: bold on, name Times New Roman, height 249; pattern: pattern solid, fore_colour pale_blue;'
+            'borders: left thin, right thin, top thin, bottom thin;'
+        )
+        style_blue_3 = xlwt.easyxf(
+            'font: bold on, name Times New Roman, height 249; pattern: pattern solid, fore_colour pale_blue;'
+            'borders: left thin, right thin, top thin, bottom thin; align: horiz centre, vert centre'
+        )
+        style_blue_2 = xlwt.easyxf(
+            'font: name Times New Roman, height 219; pattern: pattern solid, fore_colour white;'
+            'align: wrap on, horiz left; borders: left thin, right thin, top thin, bottom thin;'
+        )
+        style_red = xlwt.easyxf(
+            'font: bold on, name Times New Roman, height 269, colour_index red; align: horiz centre, vert centre;'
+        )
+        style_normal = xlwt.easyxf(
+            'font: name Times New Roman, height 229;'
+        )
+        style_normal.num_format_str = '#,##0'
+        style_total = xlwt.easyxf(
+            'font: bold on, name Times New Roman, height 249'
+        )
+        style_total.num_format_str = '#,##0'
+        row = 2
+        for r in self.package_ids:
+            val = \
+                f"Tên hàng: {r.uom_id.name}\n" \
+                f"Kiểu mẫu: {r.uom_id.name} - Nhãn hiệu: ... - Ký hiệu: ....\n" \
+                f"Kích thước/Dung tích/Chất liệu: {r.size}/{r.volume}/" \
+                f"Ngày/Tháng/năm sản xuất: \n" \
+                f"Trọng lượng: {r.weight} \n" \
+                f"Nhà sản xuất: {self.partner_id.name}\n" \
+                f"Địa chỉ nhà sản xuất: {self.partner_id.street or ''}\n" \
+                f"Nhà nhập khẩu: CÔNG TY TNHH DPT VINA HOLDINGS\n" \
+                f"Địa chỉ nhà nhập khẩu: Liền kề NTT38, Số 82 Nguyễn Tuân, Phường Thanh Xuân Trung, Quận Thanh Xuân, Thành phố Hà Nội\n" \
+                f"XUẤT XỨ: TRUNG QUỐC\n" \
+                f"{self.packing_lot_name or ''}\n" \
+                f"<Mã lô (QR)>"
+
+            val2 = f"Description of goods: {r.uom_id.name}\n" \
+                   f"Model: {r.uom_id.name} - Brand: ... - Symbol: .... \n" \
+                   f"Dimensions/Capacity/Material: {r.size}/{r.volume}/ \n" \
+                   f"Manufacturing date: \n" \
+                   f"N.W/ G.W: {r.weight}\n" \
+                   f"Manufacturer: {self.partner_id.name} \n" \
+                   f"Address: {self.partner_id.street or ''} \n" \
+                   f"Importer: DPT VINA HOLDINGS CO., LTD\n" \
+                   f"Address: Apartment NTT38, No. 82, Nguyen Tuan Street, Thanh Xuan Trung Ward, Thanh Xuan District, Hanoi City, Vietnam\n" \
+                   f"MADE IN CHINA\n" \
+                   f"{self.packing_lot_name or ''}\n" \
+                   f"<Mã lô (QR)>"
+
+            worksheet.row(row).height = 256 * 2
+            worksheet.col(0).width = 128 * 200
+            worksheet.col(1).width = 128 * 200
+            worksheet.write(row, 0, val, style_blue_2)
+            worksheet.write(row, 1, val2, style_blue_2)
+            row += 1
+        stream = stringIOModule.BytesIO()
+        workbook.save(stream)
+        xls = stream.getvalue()
+        vals = {
+            'name': f'Tem_phu_{self.name}' + '.xls',
+            'datas': base64.b64encode(xls),
+            # 'datas_fname': 'Template_ngan_sach.xls',
+            'type': 'binary',
+            'res_model': self._name,
+            'res_id': self.id,
+        }
+        file_xls = self.env['ir.attachment'].create(vals)
+        return {
+            'type': 'ir.actions.act_url',
+            'url': '/web/content/' + str(file_xls.id) + '?download=true',
+            'target': 'new',
         }

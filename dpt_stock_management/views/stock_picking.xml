@@ -11,6 +11,9 @@
                 <field name="transfer_code"/>
                 <field name="transfer_code_chinese"/>
             </xpath>
+            <button name="action_open_label_type" position="after">
+                <button name="export_wrong_import_data" string="Print Sub Label" type="object"/>
+            </button>
             <xpath expr="//field[@name='state'][1]" position="replace">
                 <field name="state" widget="statusbar" statusbar_visible="assigned,done,cancel"/>
             </xpath>
