@@ -21,6 +21,29 @@ class StockPicking(models.Model):
     finish_create_picking = fields.Boolean('Finish Create Picking', compute="_compute_finish_create_picking")
     packing_lot_name = fields.Char('Packing Lot name', compute="compute_packing_lot_name", store=True)
 
+    # re-define for translation
+    name = fields.Char(
+        'Picking Name', default='/',
+        copy=False, index='trigram', readonly=True)
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('waiting', 'Waiting Another Operation'),
+        ('confirmed', 'Waiting'),
+        ('assigned', 'Ready'),
+        ('done', 'Done'),
+        ('cancel', 'Cancelled'),
+    ], string='Status', compute='_compute_state',
+        copy=False, index=True, readonly=True, store=True, tracking=True,
+        help=" * Draft: The transfer is not confirmed yet. Reservation doesn't apply.\n"
+             " * Waiting another operation: This transfer is waiting for another operation before being ready.\n"
+             " * Waiting: The transfer is waiting for the availability of some products.\n(a) The shipping policy is \"As soon as possible\": no product could be reserved.\n(b) The shipping policy is \"When all products are ready\": not all the products could be reserved.\n"
+             " * Ready: The transfer is ready to be processed.\n(a) The shipping policy is \"As soon as possible\": at least one product has been reserved.\n(b) The shipping policy is \"When all products are ready\": all product have been reserved.\n"
+             " * Done: The transfer has been processed.\n"
+             " * Cancelled: The transfer has been cancelled.")
+    partner_id = fields.Many2one(
+        'res.partner', 'Supplier',
+        check_company=True, index='btree_not_null')
+
     @api.depends('package_ids.quantity', 'package_ids.uom_id.packing_code')
     def compute_packing_lot_name(self):
         for item in self:
@@ -40,6 +63,8 @@ class StockPicking(models.Model):
     def create(self, vals):
         res = super().create(vals)
         res.action_update_picking_name()
+        # auto assign picking
+        res.button_confirm()
         return res
 
     def action_update_picking_name(self):

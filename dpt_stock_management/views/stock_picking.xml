@@ -14,6 +14,14 @@
             <button name="action_open_label_type" position="after">
                 <button name="export_wrong_import_data" string="Print Sub Label" type="object"/>
             </button>
+            <xpath expr="//field[@name='state'][1]" position="replace">
+                <field name="state" widget="statusbar" statusbar_visible="assigned,done,cancel"/>
+            </xpath>
+            <xpath expr="//field[@name='state'][2]" position="replace">
+            </xpath>
+            <field name="origin" position="attributes">
+                <attribute name="invisible">picking_type_code == 'incoming'</attribute>
+            </field>
             <page name="operations" position="before">
                 <page string="Packages" name="packages">
                     <field name="package_ids" readonly="state == 'done' and is_locked">
@@ -149,6 +157,31 @@
                     <field string="Picking Out" name="num_picking_out" widget="statinfo"/>
                 </button>
             </xpath>
+            <xpath expr="//div[hasclass('o_td_label')]" position="replace">
+                <div class="o_td_label">
+                    <label for="partner_id" string="Delivery Address" style="font-weight:bold;"
+                           invisible="picking_type_code != 'outgoing'"/>
+                    <label for="partner_id" string="Receive From" style="font-weight:bold;"
+                           invisible="picking_type_code != 'incoming'"/>
+                    <label for="partner_id" string="Contact" style="font-weight:bold;"
+                           invisible="picking_type_code in ['incoming', 'outgoing']"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="vpicktree_new_list_view_inherit" model="ir.ui.view">
+        <field name="name">vpicktree_new_list_view_inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="packing_lot_name"/>
+                <field name="purchase_id"/>
+            </field>
+            <field name="origin" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </field>
         </field>
     </record>
 
