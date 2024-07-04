@@ -51,7 +51,7 @@ msgstr "Đơn mua hàng"
 #. module: dpt_purchase_stock
 #: model:ir.model.fields,field_description:dpt_purchase_stock.field_stock_picking__sale_purchase_id
 msgid "Sale"
-msgstr ""
+msgstr "Đơn hàng"
 
 #. module: dpt_purchase_stock
 #: model:ir.model,name:dpt_purchase_stock.model_stock_picking

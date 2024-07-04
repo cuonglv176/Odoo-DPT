@@ -36,6 +36,9 @@ class StockPicking(models.Model):
              " * Ready: The transfer is ready to be processed.\n(a) The shipping policy is \"As soon as possible\": at least one product has been reserved.\n(b) The shipping policy is \"When all products are ready\": all product have been reserved.\n"
              " * Done: The transfer has been processed.\n"
              " * Cancelled: The transfer has been cancelled.")
+    partner_id = fields.Many2one(
+        'res.partner', 'Supplier',
+        check_company=True, index='btree_not_null')
 
     @api.depends('package_ids.quantity', 'package_ids.uom_id.packing_code')
     def compute_packing_lot_name(self):
