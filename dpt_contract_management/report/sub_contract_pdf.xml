@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="sub_contract_pdf">
+            <t t-set="title">sub_contact</t>
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <!--                    <!DOCTYPE html>-->
+                    <!--                    <html lang="vi">-->
+                    <head>
+                        <!--                            <meta charset="UTF-8">-->
+                        <title>PHỤ LỤC HỢP ĐỒNG SỐ 01</title>
+                    </head>
+                    <body style="width: 100%">
+                        <div>
+                            <table style="text-align: center; width: 100%; border: none;">
+                                <tr style="border: none;">
+                                    <td style="border: none;"> </td>
+                                    <td style="border: none;">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</td>
+                                </tr>
+                                <tr style="border: none;">
+                                    <td style="border: none;">CÔNG TY TNHH DPT VINA HOLDINGS</td>
+                                    <td style="border: none;">Độc lập – Tự do – Hạnh phúc</td>
+                                </tr>
+                                <tr style="border: none;">
+                                    <td style="border: none;">Số: /2024/HĐNT</td>
+                                    <td style="border: none;">***</td>
+                                </tr>
+                            </table>
+                            <div style="width: 100%; text-align: center">
+                                <h3>PHỤ LỤC HỢP ĐỒNG SỐ 01</h3>
+                                <!--                            <p>CÔNG TY TNHH DPT VINA HOLDINGS</p>-->
+                                <p>(Đính kèm HĐNT Số:       /2024/HĐNT)</p>
+                            </div>
+                            <!--                            <p>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</p>-->
+                            <!--                            <p>Độc lập – Tự do – Hạnh phúc</p>-->
+                            <!--                            <p>***</p>-->
+                            <div style="width: 100%; padding-left: 20%">
+                                <p>- Căn cứ vào Luật Thương Mại Số 36/2005/QH11 ngày 14 tháng 06 năm 2005;</p>
+                                <p>- Căn cứ vào Luật Doanh Nghiệp Số 59/2020/QH 14 ngày 17 tháng 06 năm 2020;</p>
+                                <p>- Căn cứ vào nhu cầu, khả năng và thỏa thuận của các bên;</p>
+                            </div>
+                            <div style="padding: 20px 5px 10px 15%">
+                                <p>Hôm nay, ngày tháng năm 2024 chúng tôi gồm:</p>
+                                <p>
+                                    <strong>Bên A (Bên cung cấp dịch vụ): CÔNG TY TNHH DPT VINA HOLDINGS</strong>
+                                </p>
+                                <p>Đại Diện: Ông Bùi Đình Nhật Chức vụ: Giám Đốc</p>
+                                <p>Địa Chỉ: Liền kề NTT38, Số 82 Nguyễn Tuân, Phường Thanh Xuân Trung, Quận Thanh Xuân,
+                                    Thành phố Hà Nội.
+                                </p>
+                                <p>Mã Số Thuế: 0109366059</p>
+                                <p>
+                                    <strong>Bên B (Bên sử dụng dịch vụ):</strong>
+                                </p>
+                                <p>Đại Diện: .........................................................Chức vụ: Giám
+                                    Đốc
+                                </p>
+                                <p>Địa Chỉ: .........................................................</p>
+                                <p>Mã số thuế: .........................................................</p>
+                                <p>Sau khi thỏa thuận, hai bên nhất trí thực hiện hợp đồng dịch vụ ủy thác nhập khẩu với
+                                    nội dung như sau:
+                                </p>
+                                <h2>ĐIỀU 1: NỘI DUNG HÀNG HÓA</h2>
+                                <p>1. Nội dung hàng hóa:</p>
+                                <ul>
+                                    <li>Tên Sản phẩm và danh mục sản phẩm:
+                                    </li>
+                                    <li>Thể tích hàng hóa tạm tính:
+                                    </li>
+                                    <li>Cân nặng/ Thể tích hàng hóa thực tế sẽ được đo khi hàng về đến kho của Bên A tại Trung Quốc.
+                                    </li>
+                                    <li>Giá trị hàng hóa:
+                                        <table style="border: 1px black solid; width: 100%">
+                                            <tr>
+                                                <th style="border: 1px black solid">STT</th>
+                                                <th style="border: 1px black solid">Tên hàng hóa</th>
+                                                <th style="border: 1px black solid">Số lượng (bộ)</th>
+                                                <th style="border: 1px black solid">Đơn giá (CNY)</th>
+                                                <th style="border: 1px black solid">Thành tiền (CNY)</th>
+                                                <th style="border: 1px black solid">Thành tiền (VND)</th>
+                                            </tr>
+                                            <tr>
+                                                <td style="border: 1px black solid"> </td>
+                                                <td style="border: 1px black solid"> </td>
+                                                <td style="border: 1px black solid"> </td>
+                                                <td style="border: 1px black solid"> </td>
+                                                <td style="border: 1px black solid"> </td>
+                                                <td style="border: 1px black solid"> </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border: 1px black solid"> </td>
+                                                <td style="border: 1px black solid">Tổng</td>
+                                                <td style="border: 1px black solid" colspan="4">0.00</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border: 1px black solid"> </td>
+                                                <td style="border: 1px black solid">Bằng chữ</td>
+                                                <td style="border: 1px black solid"  colspan="4"> </td>
+                                            </tr>
+                                        </table>
+                                    </li>
+                                    <li>(*) Tỷ giá được quy định chi tiết tại khoản 3 Điều 2 Phụ lục này.
+                                    </li>
+                                    <li>Sản phẩm không nhái logo, nhãn hiệu hay made in của các nước khác ngoài Trung Quốc.
+                                    </li>
+                                </ul>
+                                <h2>GIÁ CƯỚC VÀ THANH TOÁN.</h2>
+                                <p>1. Giá cước dịch vụ theo Giá trị hàng hóa
+                                </p>
+                                <ul>
+                                    <li>Giá trị hàng hóa: Theo điều 1 của Phụ lục 01</li>
+                                    <li>Chi phí vận chuyển nội địa Trung Quốc từ Nhà cung cấp đến Kho Bên A: 0 CNY</li>
+                                </ul>
+                                <p>2. Giá cước dịch vụ theo Khối lượng/Thể tích hàng hóa
+                                </p>
+                                <ul>
+                                    <li>Giá cước vận chuyển quốc tế từ kho Bên A tại Trung Quốc đến Hà Nội: 2,000,000/m3 (Hai triệu năm trăm nghìn đồng chẵn cho một khối hàng) theo Mã báo giá, cụ thể bao gồm:
+                                        <ul>
+                                            <li>Chi phí kho bãi, vận chuyển, thực hiện thủ tục hải quan xuất nhập khẩu</li>
+                                            <li>Thuế nhập khẩu (nếu có), thuế VAT phải nộp tương ứng với 10% giá trị hàng hóa khai quan</li>
+                                        </ul>
+                                    </li>
+                                    <li>Giá cước vận chuyển chặng cuối tại Việt Nam từ kho Bên A tới kho Bên B cung cấp dưới đây, là 0 VND (Miễn phí), cụ thể
+                                        <ul>
+                                            <li>Địa chỉ kho Bên B: Ngã tư UBND xã Trưng Trắc, Huyện Văn Lâm, Hưng Yên.</li>
+                                            <li>Trong trường hợp Bên B thay đổi địa chỉ kho, hoặc số lần giao hàng, Giá cước vận chuyển chặng cuối có thể thay đổi.</li>
+                                            <li>Lưu ý: Bên B tự đảm bảo phương án bốc xếp hàng hóa từ xe giao hàng của Bên A xuống kho của Bên B. Trong trường hợp Bên B không có phương án bốc xếp, chi phí phát sinh cho việc bốc xếp hàng hóa Bên B chịu trách nhiệm thanh toán cho Bên A.</li>
+                                        </ul>
+                                    </li>
+                                    <li>Tổng tiền Cước vận chuyển quốc tế tạm tính: 66,000,000 VND (Sáu mươi sáu triệu đồng chẵn). Khối lượng/Thể tích thực tế sẽ được Bên A cân đo khi hàng về đến kho của Bên A từ đó làm cơ sở tính Tổng tiền cước vận chuyển quốc tế thực tế.</li>
+                                </ul>
+                                <p>3. Thanh Toán
+                                </p>
+                                <p>Bên B thanh toán 100%  tiền cước vận chuyển quốc tế thực tế cho Bên A trước khi nhận hàng tại kho Bên B.</p>
+                                <ul>
+                                    <li>Hình thức thanh toán:
+                                        Bên B chuyển khoản qua ngân hàng vào các tài khoản thu hộ của bên A dưới đây  (hoặc bằng tiền mặt):
+                                        <ul>
+                                            <li>Ngân hàng TMCP Ngoại thương Việt Nam (Vietcombank)</li>
+                                            <li>STK: 9901525577</li>
+                                            <li>Tên chủ TK: DUONG THI HOA</li>
+                                            <li>Nội dung chuyển khoản ghi rõ: DGP lamhung</li>
+                                        </ul>
+                                    </li>
+                                    <li>Trong trường hợp đột xuất không thể thanh toán theo thời hạn đã thỏa thuận, Bên B phải có văn bản giải thích gửi cho Bên A, tối thiểu 02 ngày trước hạn thanh toán.</li>
+                                    <li>Chính sách công nợ chi tiết trong HĐNT Số:</li>
+                                </ul>
+                            </div>
+                            <table style="text-align: center; width: 100%; border: none">
+                                <tr style="border: none;">
+                                    <td style="border: none;">
+                                        <p>
+                                            <strong>ĐẠI DIỆN BÊN A</strong>
+                                        </p>
+                                    </td>
+                                    <td style="border: none;">
+                                        <p>
+                                            <strong>ĐẠI DIỆN BÊN B</strong>
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </body>
+                    <!--                    </html>-->
+                </t>
+            </t>
+        </template>
+        <record id="action_report_dpt_sub_contact" model="ir.actions.report">
+            <field name="name">Sub Contract</field>
+            <field name="model">dpt.contract.management</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">dpt_contract_management.sub_contract_pdf</field>
+            <field name="report_file">dpt_contract_management.sub_contract_pdf</field>
+            <field name="print_report_name">'Sub Contact - %s - %s' % (object.partner_id.name or '', object.name)</field>
+            <field name="binding_model_id" ref="model_dpt_contract_management"/>
+            <field name="binding_type">report</field>
+        </record>
+
+    </data>
+</odoo>
