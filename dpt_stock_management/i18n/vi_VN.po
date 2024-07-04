@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-03 04:32+0000\n"
-"PO-Revision-Date: 2024-07-03 04:32+0000\n"
+"POT-Creation-Date: 2024-07-04 03:09+0000\n"
+"PO-Revision-Date: 2024-07-04 03:09+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -63,6 +63,11 @@ msgid "Cannot configurate 2 or more warehouse is main incoming warehouse"
 msgstr "Không thể cấu hình 2 hoặc nhiều kho hàng là kho nhập hàng chính"
 
 #. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
+msgid "Contact"
+msgstr "Liên hệ"
+
+#. module: dpt_stock_management
 #. odoo-python
 #: code:addons/dpt_stock_management/models/stock_picking.py:0
 #, python-format
@@ -73,6 +78,11 @@ msgstr "Tạo Điều chuyển"
 #: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
 msgid "Create transfer picking"
 msgstr "Tạo Điều chuyển"
+
+#. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
+msgid "Delivery Address"
+msgstr "Khách hàng"
 
 #. module: dpt_stock_management
 #: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
@@ -179,6 +189,11 @@ msgid "Picking Out"
 msgstr "Phiếu xuất"
 
 #. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
+msgid "Print Sub Label"
+msgstr "In tem phụ"
+
+#. module: dpt_stock_management
 #: model:ir.model.fields,field_description:dpt_stock_management.field_purchase_order_line_package__product_ids
 #: model:ir.model.fields,field_description:dpt_stock_management.field_uom_uom__product_id
 msgid "Product"
@@ -208,6 +223,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:dpt_stock_management.selection__stock_picking__state__assigned
 msgid "Ready"
 msgstr "Sẵn sàng"
+
+#. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
+msgid "Receive From"
+msgstr "Nhà cung cấp"
 
 #. module: dpt_stock_management
 #: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__state
