@@ -20,6 +20,8 @@ class StockPicking(models.Model):
     num_picking_out = fields.Integer('Num Picking Out', compute="_compute_num_picking_out")
     finish_create_picking = fields.Boolean('Finish Create Picking', compute="_compute_finish_create_picking")
     packing_lot_name = fields.Char('Packing Lot name', compute="compute_packing_lot_name", store=True)
+    is_main_incoming = fields.Boolean('Is Main Incoming', compute="_compute_main_incoming")
+    lot_name = fields.Char('Lot')
 
     # re-define for translation
     name = fields.Char(
@@ -44,12 +46,30 @@ class StockPicking(models.Model):
         'res.partner', 'Supplier',
         check_company=True, index='btree_not_null')
 
+    def _compute_main_incoming(self):
+        for item in self:
+            item.is_main_incoming = item.picking_type_code == 'incoming' and item.location_dest_id.warehouse_id.is_main_incoming_warehouse
+
     @api.depends('package_ids.quantity', 'package_ids.uom_id.packing_code')
     def compute_packing_lot_name(self):
         for item in self:
             item.packing_lot_name = '.'.join(
                 [f"{package_id.quantity}{package_id.uom_id.packing_code}" for package_id in
                  item.package_ids if package_id.uom_id.packing_code])
+
+    @api.onchange('lot_name')
+    @api.constrains('lot_name')
+    def constrains_lot_name(self):
+        for item in self:
+            for move_id in item.move_ids_without_package:
+                if move_id.product_id.tracking != 'lot':
+                    continue
+                lot_id = self.env['stock.lot'].search(
+                    [('product_id', '=', move_id.product_id.id), ('name', '=', item.lot_name)], limit=1)
+                if not lot_id:
+                    raise ValidationError(
+                        _('There is not Lot %s of Product %s !') % (move_id.product_id.display_name, item.lot_name))
+                move_id.move_line_ids.update({'lot_id': lot_id.id})
 
     def _compute_num_picking_out(self):
         for item in self:
@@ -60,16 +80,56 @@ class StockPicking(models.Model):
             item.finish_create_picking = all(
                 [package_id.quantity == package_id.created_picking_qty for package_id in item.package_ids])
 
+    @api.model
     def create(self, vals):
         res = super().create(vals)
         res.action_update_picking_name()
+        res.onchange_package()
         # auto assign picking
-        res.button_confirm()
+        res.action_confirm()
         return res
+
+    @api.onchange('package_ids')
+    def onchange_package(self):
+        if not self._origin.id:
+            return
+        # remove package move
+        package_move_ids = self.move_ids_without_package - self.move_ids_product
+        package_move_ids.unlink()
+        if self.purchase_id:
+            self.package_ids.update({
+                'purchase_id': self.purchase_id.id
+            })
+        # create package move
+        self.package_ids._create_stock_moves(self)
+
+    def action_confirm(self):
+        if self.is_main_incoming or self.lot_name:
+            # auto create move line with lot name is picking name
+            move_line_vals = []
+            for move_id in self.move_ids_without_package:
+                if move_id.product_id.tracking != 'lot':
+                    continue
+                move_line_vals.append({
+                    'move_id': move_id.id,
+                    'picking_id': self.id,
+                    'location_id': move_id.location_id.id,
+                    'location_dest_id': move_id.location_dest_id.id,
+                    'product_id': move_id.product_id.id,
+                    'quantity': move_id.product_uom_qty,
+                    'product_uom_id': move_id.product_uom.id,
+                    'lot_name': self.name if self.is_main_incoming else None,
+                    'lot_id': self.env['stock.lot'].search(
+                        [('product_id', '=', move_id.product_id.id), ('name', '=', self.lot_name)])[
+                              :1].id if not self.is_main_incoming and self.lot_name else None
+                })
+            if move_line_vals:
+                self.env['stock.move.line'].create(move_line_vals)
+        return super().action_confirm()
 
     def action_update_picking_name(self):
         # getname if it is incoming picking in Chinese stock
-        if self.picking_type_code == 'incoming' and self.location_dest_id.warehouse_id.is_main_incoming_warehouse:
+        if self.is_main_incoming:
             prefix = f'KT{datetime.now().strftime("%y%m%d")}'
             nearest_picking_id = self.env['stock.picking'].sudo().search(
                 [('name', 'ilike', prefix + "%"), ('id', '!=', self.id),

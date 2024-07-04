@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-04 03:09+0000\n"
-"PO-Revision-Date: 2024-07-04 03:09+0000\n"
+"POT-Creation-Date: 2024-07-04 17:23+0000\n"
+"PO-Revision-Date: 2024-07-04 17:23+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -132,6 +132,11 @@ msgid "Forecast Report"
 msgstr ""
 
 #. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__is_main_incoming
+msgid "Is Main Incoming"
+msgstr ""
+
+#. module: dpt_stock_management
 #: model:ir.model.fields,field_description:dpt_stock_management.field_stock_move__is_package
 msgid "Is Package"
 msgstr "Là kiện hàng"
@@ -140,6 +145,11 @@ msgstr "Là kiện hàng"
 #: model:ir.model.fields,field_description:dpt_stock_management.field_stock_warehouse__is_main_incoming_warehouse
 msgid "Is main incoming Warehouse"
 msgstr "Là kho nhập hàng chính"
+
+#. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__lot_name
+msgid "Lot"
+msgstr "Mã Lô"
 
 #. module: dpt_stock_management
 #: model:ir.model.fields,field_description:dpt_stock_management.field_purchase_order_line_package__move_ids
@@ -200,6 +210,11 @@ msgid "Product"
 msgstr "Sản phẩm"
 
 #. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
+msgid "Product PO"
+msgstr "Sản phẩm Mua hàng"
+
+#. module: dpt_stock_management
 #: model:ir.model,name:dpt_stock_management.model_uom_uom
 msgid "Product Unit of Measure"
 msgstr "Đơn vị tính sản phẩm"
@@ -253,6 +268,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__partner_id
 msgid "Supplier"
 msgstr "Nhà cung cấp"
+
+#. module: dpt_stock_management
+#. odoo-python
+#: code:addons/dpt_stock_management/models/stock_picking.py:0
+#, python-format
+msgid "There is not Lot %s of Product %s !"
+msgstr "Không có mã Lot %s của Sản phẩm %s !"
 
 #. module: dpt_stock_management
 #: model:ir.model,name:dpt_stock_management.model_stock_picking
