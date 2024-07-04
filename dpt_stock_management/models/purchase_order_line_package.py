@@ -53,12 +53,6 @@ class PurchaseOrderLinePackage(models.Model):
             'origin': picking.name,
             'warehouse_id': picking.picking_type_id.warehouse_id.id,
             'product_uom_qty': self.quantity,
-            'product_uom': self.uom_id.product_id.uom_id.id,
-            'move_line_ids': [(0, 0, {
-                'company_id': self.env.company.id,
-                'product_id': self.uom_id.product_id.id,
-                'lot_name': self.picking_id.name,
-                'quantity': self.quantity,
-            })]
+            'product_uom': self.uom_id.product_id.uom_id.id
         }
         return vals
