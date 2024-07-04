@@ -157,6 +157,16 @@
                     <field string="Picking Out" name="num_picking_out" widget="statinfo"/>
                 </button>
             </xpath>
+            <xpath expr="//div[hasclass('o_td_label')]" position="replace">
+                <div class="o_td_label">
+                    <label for="partner_id" string="Delivery Address" style="font-weight:bold;"
+                           invisible="picking_type_code != 'outgoing'"/>
+                    <label for="partner_id" string="Receive From" style="font-weight:bold;"
+                           invisible="picking_type_code != 'incoming'"/>
+                    <label for="partner_id" string="Contact" style="font-weight:bold;"
+                           invisible="picking_type_code in ['incoming', 'outgoing']"/>
+                </div>
+            </xpath>
         </field>
     </record>
 
@@ -172,16 +182,6 @@
             <field name="origin" position="attributes">
                 <attribute name="column_invisible">1</attribute>
             </field>
-            <xpath expr="//div[hasclass('o_td_label')]" position="replace">
-                <div class="o_td_label">
-                    <label for="partner_id" string="Delivery Address" style="font-weight:bold;"
-                           invisible="picking_type_code != 'outgoing'"/>
-                    <label for="partner_id" string="Receive From" style="font-weight:bold;"
-                           invisible="picking_type_code != 'incoming'"/>
-                    <label for="partner_id" string="Contact" style="font-weight:bold;"
-                           invisible="picking_type_code in ['incoming', 'outgoing']"/>
-                </div>
-            </xpath>
         </field>
     </record>
 
