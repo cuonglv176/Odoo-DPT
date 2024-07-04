@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="contract_pdf">
+            <t t-set="title">Contract</t>
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <!--                    <!DOCTYPE html>-->
+                    <!--                    <html lang="vi">-->
+                    <head>
+                        <!--                            <meta charset="UTF-8">-->
+                        <title>HỢP ĐỒNG NGUYÊN TẮC DỊCH VỤ ỦY THÁC NHẬP KHẨU</title>
+                    </head>
+                    <body style="width: 100%">
+                        <div>
+                            <table style="text-align: center; width: 100%; border: none; border-left: none">
+                                <tr style="border: none;">
+                                    <td style="border: none;">HỢP ĐỒNG NGUYÊN TẮC DỊCH VỤ ỦY THÁC NHẬP KHẨU</td>
+                                    <td style="border: none;">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</td>
+                                </tr>
+                                <tr style="border: none;">
+                                    <td style="border: none;">CÔNG TY TNHH DPT VINA HOLDINGS</td>
+                                    <td style="border: none;">Độc lập – Tự do – Hạnh phúc</td>
+                                </tr>
+                                <tr style="border: none;">
+                                    <td style="border: none;">Số: /2024/HĐNT</td>
+                                    <td style="border: none;">***</td>
+                                </tr>
+                            </table>
+                            <div style="width: 100%; text-align: center">
+                                <h3>HỢP ĐỒNG NGUYÊN TẮC DỊCH VỤ ỦY THÁC NHẬP KHẨU</h3>
+                                <!--                            <p>CÔNG TY TNHH DPT VINA HOLDINGS</p>-->
+                                <p>Số: /2024/HĐNT</p>
+                            </div>
+                            <!--                            <p>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</p>-->
+                            <!--                            <p>Độc lập – Tự do – Hạnh phúc</p>-->
+                            <!--                            <p>***</p>-->
+                            <div style="width: 100%; padding-left: 20%">
+                                <p>- Căn cứ vào Luật Thương Mại Số 36/2005/QH11 ngày 14 tháng 06 năm 2005;</p>
+                                <p>- Căn cứ vào Luật Doanh Nghiệp Số 59/2020/QH 14 ngày 17 tháng 06 năm 2020;</p>
+                                <p>- Căn cứ vào nhu cầu, khả năng và thỏa thuận của các bên;</p>
+                            </div>
+                            <div style="padding: 20px 5px 10px 15%">
+                                <p>Hôm nay, ngày tháng năm 2024 chúng tôi gồm:</p>
+                                <p>
+                                    <strong>Bên A (Bên cung cấp dịch vụ): CÔNG TY TNHH DPT VINA HOLDINGS</strong>
+                                </p>
+                                <p>Đại Diện: Ông Bùi Đình Nhật Chức vụ: Giám Đốc</p>
+                                <p>Địa Chỉ: Liền kề NTT38, Số 82 Nguyễn Tuân, Phường Thanh Xuân Trung, Quận Thanh Xuân,
+                                    Thành phố Hà Nội.
+                                </p>
+                                <p>Mã Số Thuế: 0109366059</p>
+                                <p>
+                                    <strong>Bên B (Bên sử dụng dịch vụ):</strong>
+                                </p>
+                                <p>Đại Diện: .........................................................Chức vụ: Giám
+                                    Đốc
+                                </p>
+                                <p>Địa Chỉ: .........................................................</p>
+                                <p>Mã số thuế: .........................................................</p>
+                                <p>Sau khi thỏa thuận, hai bên nhất trí thực hiện hợp đồng dịch vụ ủy thác nhập khẩu với
+                                    nội dung như sau:
+                                </p>
+                                <h2>ĐIỀU 1: NỘI DUNG</h2>
+                                <p>Bên A cung cấp các dịch vụ ủy thác nhập khẩu hàng hóa từ Trung Quốc về Việt Nam cho
+                                    bên B bao gồm:
+                                </p>
+                                <p>1. Nội dung dịch vụ:</p>
+                                <ul>
+                                    <li>Dịch vụ đàm phán mua hàng và thanh toán cho nhà cung cấp do Bên B chỉ định tại
+                                        Trung Quốc.
+                                    </li>
+                                    <li>Dịch vụ vận chuyển hàng hóa từ Trung Quốc về Việt Nam:
+                                        <ul>
+                                            <li>Dịch vụ vận chuyển nội địa Trung Quốc từ nhà cung cấp của Bên B tới kho
+                                                của Bên A (nếu có).
+                                            </li>
+                                            <li>Dịch vụ vận chuyển quốc tế (VCQT) từ kho của Bên A tại Trung Quốc về kho
+                                                của Bên A tại Việt Nam.
+                                            </li>
+                                            <li>Dịch vụ vận chuyển nội địa Việt Nam từ kho của Bên A về kho của Bên B.
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>Dịch vụ thông quan hàng hóa để đưa hàng của Bên B từ Trung Quốc qua cửa khẩu về
+                                        Việt Nam:
+                                        <ul>
+                                            <li>Xuất khẩu hàng hóa: Mở tờ khai, làm C/O, thủ tục hải quan xuất khẩu,
+                                                ...
+                                            </li>
+                                            <li>Nhập khẩu hàng hóa: Mở tờ khai, thủ tục hải quan nhập khẩu, ...</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <p>2. Nội dung hàng hóa:</p>
+                                <ul>
+                                    <li>Tên sản phẩm và danh mục sản phẩm: Theo Phụ lục hợp đồng đính kèm hợp đồng
+                                        này.
+                                    </li>
+                                </ul>
+                                <h2>ĐIỀU 2: TRÁCH NHIỆM CỦA BÊN A</h2>
+                                <p>1. Đảm bảo tiến độ, cung cấp đầy đủ và chính xác về thông tin hàng hóa, các điều
+                                    khoản thương mại, giá tiền, thời gian sản xuất và giao vận đàm phán với nhà cung
+                                    cấp, để Bên B ra quyết định về việc mua hàng.
+                                </p>
+                                <p>2. Bên A không chịu trách nhiệm về các phát sinh liên quan đến hợp đồng thương mại về
+                                    hàng hóa giữa Bên B với nhà cung cấp tại Trung Quốc bao gồm số lượng, chất lượng và
+                                    thông số kỹ thuật sản phẩm sau khi Bên B đã chốt với nhà cung cấp.
+                                </p>
+                                <p>3. Thanh toán đầy đủ, chính xác và đúng tiến độ cho nhà cung cấp của Bên B theo thông
+                                    tin thanh toán trên hợp đồng hoặc hóa đơn do Bên B cung cấp; và cung cấp đầy đủ, kịp
+                                    thời chứng từ giao dịch cho Bên B sau khi giao dịch.
+                                </p>
+                                <p>4. Bên A không chịu trách nhiệm nếu có phát sinh thiệt hại liên quan đến việc Bên B
+                                    cung cấp sai thông tin thanh toán cho Nhà cung cấp, hoặc Nhà cung cấp bỏ trốn/lừa
+                                    đảo.
+                                </p>
+                                <p>5. Bên A có trách nhiệm thực hiện đúng, đủ các thủ tục nhập khẩu theo quy định của
+                                    nhà nước.
+                                </p>
+                                <p>6. Chịu trách nhiệm vận chuyển đúng theo tiến độ thời gian theo thường đạt của Bên A
+                                    thông báo trước cho Bên B, hoặc theo thỏa thuận của hai bên; đảm bảo bảo quản và
+                                    giao đầy đủ hàng hóa cho Bên B.
+                                </p>
+                                <p>7. Về cước vận chuyển được hai bên thỏa thuận tại Phụ lục hợp đồng này. Bên A có
+                                    trách nhiệm thông báo cho Bên B trước khi tiến hành vận chuyển từng chặng (bao gồm
+                                    tất cả các chặng nội địa Trung Quốc, quốc tế, chặng cuối) trong trường hợp cước vận
+                                    chuyển có thể thay đổi do:
+                                    <ul>
+                                        <li>Hàng hóa phát sinh các vấn đề đặc biệt không được Bên B thông báo trước cho
+                                            Bên A về nguồn gốc xuất xứ, chất liệu, kỹ thuật, bao bì đóng gói, … ảnh
+                                            hưởng đến chi phí hải quan, thuế và chi phí phát sinh này sẽ do Bên B hoàn
+                                            toàn chịu trách nhiệm.
+                                        </li>
+                                        <li>Khối lượng/thể tích thực tế i) &lt;250kg hoặc 1m3 hoặc ii) chênh lệch lớn
+                                            (chỉ bằng hoặc nhỏ hơn 70%) so với khối lượng/thể tích tạm tính.
+                                        </li>
+                                        <li>Điều kiện bất khả kháng như: dịch bệnh, thiên tai, tắc biên do khối lượng
+                                            hàng hóa tới cửa khẩu quá tải, kiểm hóa hải quan hoặc thay đổi đột ngột
+                                            chính sách hải quan ảnh hưởng đến chính sách thủ tục hải quan, chính sách
+                                            thuế liên quan đến hàng hóa của Bên B, …
+                                        </li>
+                                    </ul>
+                                </p>
+                                <p>8. Trong trường hợp Bên A thay đổi giá và báo trước cho Bên B, Bên B có quyền đàm
+                                    phán và chọn tiếp tục hoặc hủy hợp đồng hoặc huỷ phụ lục của hợp đồng này.
+                                </p>
+                                <p>9. Bên A chịu trách nhiệm bồi thường (chỉ áp dụng với Đường bộ) trong các trường hợp:
+                                    <ul>
+                                        <li>Đối với hàng chậm:
+                                            <ul>
+                                                <li>VCQT về HN: Quá 35 ngày VCQT giảm 50% phí VCQT, quá 40 ngày VCQT
+                                                    giảm 80% phí VCQT, quá 60 ngày VCQT giảm 100% phí VCQT hoặc xử lý
+                                                    theo chính sách mất hàng (ngoại trừ trường hợp bất khả kháng như:
+                                                    thiên tai, dịch bệnh, HQ thay đổi chính sách, tắc biên do hàng hóa
+                                                    ùn nhiều, biên đóng, ...).
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>Đối với hàng mất/ thất lạc kiện:
+                                            <ul>
+                                                <li>Kiện hàng còn nguyên đai, nguyên kiện ("Mất âm"): Khách hàng đã ký
+                                                    nhận trạng thái kiện hàng, số lượng kiện hàng khi nhận hàng:
+                                                    <ul>
+                                                        <li>Mất hàng trong kiện: Quay video kiểm hàng và đối với đơn
+                                                            hàng full dịch vụ, Bên A sẽ hỗ trợ liên hệ người bán khiếu
+                                                            nại.
+                                                        </li>
+                                                        <li>Thiếu kiện so với số lượng hàng đã gửi (đã có ký xác nhận
+                                                            tại kho Trung Quốc): Bên A kiểm tra lại và nếu mất sẽ đền bù
+                                                            100% giá trị hàng hóa không quá 10 lần phí VCQT.
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                                <li>Kiện hàng có dấu hiệu rách, thủng: Khách hàng đã ký nhận trạng thái
+                                                    kiện hàng, số lượng kiện hàng khi nhận hàng:
+                                                    <ul>
+                                                        <li>Mất hàng trong kiện: Quay video kiểm hàng, Bên A và khách
+                                                            hàng phối hợp lập biên bản và khiếu nại hải quan tại biên
+                                                            giới. Bên A hỗ trợ tối đa, nếu mất Bên A đền 50% giá trị
+                                                            hàng hóa không quá 10 lần phí VCQT.
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </p>
+                                <h2>ĐIỀU 3: TRÁCH NHIỆM CỦA BÊN B</h2>
+                                <p>1. Cung cấp thông tin yêu cầu dịch vụ cho Bên A theo mẫu hoặc tài khoản hệ thống của
+                                    Bên A.
+                                </p>
+                                <p>2. Cung cấp đầy đủ và chính xác thông tin cho Bên A để phục vụ cho việc thanh toán
+                                    cho nhà cung cấp và vận chuyển hàng hóa.
+                                </p>
+                                <p>3. Cung cấp cho Bên A đầy đủ chứng từ để thực hiện thủ tục thông quan hàng hóa nhập
+                                    khẩu cho Bên B.
+                                </p>
+                                <p>4. Thanh toán đầy đủ các chi phí dịch vụ cho Bên A theo thỏa thuận tại Phụ lục hợp
+                                    đồng.
+                                </p>
+                                <h2>ĐIỀU 4: ĐIỀU KHOẢN CHUNG</h2>
+                                <p>1. Hai bên cam kết thực hiện đúng và đầy đủ các điều khoản trong hợp đồng.</p>
+                                <p>2. Trong quá trình thực hiện hợp đồng nếu phát sinh những vướng mắc, hai bên cùng bàn
+                                    bạc giải quyết trên tinh thần hợp tác và tôn trọng lẫn nhau.
+                                </p>
+                                <p>3. Hợp đồng có hiệu lực kể từ ngày ký và được lập thành 02 bản có giá trị pháp lý như
+                                    nhau, mỗi bên giữ 01 bản.
+                                </p>
+
+                                <!--        <p>Giám đốc</p>-->
+                                <!--        <p>Bùi Đình Nhật</p>-->
+                                <!--        <p>ĐẠI DIỆN BÊN B</p>-->
+                                <!--        <p>Giám đốc</p>-->
+                                <!--        <p>...............................................</p>-->
+                            </div>
+                            <table style="text-align: center; width: 100%; border: none; border-left: none">
+                                <tr style="border: none;">
+                                    <td style="border: none;">
+                                        <p>
+                                            <strong>ĐẠI DIỆN BÊN A</strong>
+                                        </p>
+                                    </td>
+                                    <td style="border: none;">
+                                        <p>
+                                            <strong>ĐẠI DIỆN BÊN B</strong>
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </body>
+                    <!--                    </html>-->
+                </t>
+            </t>
+            <!--            <t t-call="stock.report_generic_barcode"/>-->
+        </template>
+        <record id="action_report_dpt_contract" model="ir.actions.report">
+            <field name="name">Contract</field>
+            <field name="model">dpt.contract.management</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">dpt_contract_management.contract_pdf</field>
+            <field name="report_file">dpt_contract_management.contract_pdf</field>
+            <field name="print_report_name">'Contract - %s - %s' % (object.partner_id.name or '', object.name)</field>
+            <field name="binding_model_id" ref="model_dpt_contract_management"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>
