@@ -47,7 +47,7 @@ class SaleOrder(models.Model):
             [('sale_id', 'in', self.ids), ('picking_type_code', '=', 'incoming')])
         shipping_slip_id = self.env['dpt.shipping.slip'].create({
             'sale_ids': self.ids,
-            'picking_ids': picking_ids.ids,
+            'picking_ids': picking_ids.filtered(lambda sp: sp.is_main_incoming).ids,
             'vehicle_stage_id': default_vehicle_stage_id.id if default_vehicle_stage_id else None,
         })
         action = self.env.ref('dpt_shipping.dpt_shipping_slip_action').sudo().read()[0]
@@ -56,4 +56,9 @@ class SaleOrder(models.Model):
         py_ctx['create'] = 0
         py_ctx['delete'] = 0
         action['context'] = py_ctx
+        return action
+
+    def action_update_picking(self):
+        action = self.env.ref('dpt_shipping.dpt_get_picking_so_wizard_action').sudo().read()[0]
+        action['context'] = {'default_sale_id': self.id}
         return action

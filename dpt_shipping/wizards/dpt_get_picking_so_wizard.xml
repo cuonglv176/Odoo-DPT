@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="dpt_get_picking_so_wizard_form_view" model="ir.ui.view">
+        <field name="name">dpt_get_picking_so_wizard_form_view</field>
+        <field name="model">dpt.get.picking.so.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Get Picking">
+                <group>
+                    <group>
+                        <field name="sale_id" invisible="1"/>
+                        <field name="picking_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_update_picking_to_so" type="object" string="Update SO" class="oe_highlight"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="dpt_get_picking_so_wizard_action" model="ir.actions.act_window">
+        <field name="name">Get Picking</field>
+        <field name="res_model">dpt.get.picking.so.wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_id" ref="dpt_shipping.dpt_get_picking_so_wizard_form_view"/>
+        <field name="context">{}</field>
+        <field name="target">new</field>
+        <field name="view_mode">form</field>
+    </record>
+
+</odoo>
