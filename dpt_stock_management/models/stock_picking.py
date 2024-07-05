@@ -20,7 +20,8 @@ class StockPicking(models.Model):
     num_picking_out = fields.Integer('Num Picking Out', compute="_compute_num_picking_out")
     finish_create_picking = fields.Boolean('Finish Create Picking', compute="_compute_finish_create_picking")
     packing_lot_name = fields.Char('Packing Lot name', compute="compute_packing_lot_name", store=True)
-    is_main_incoming = fields.Boolean('Is Main Incoming', compute="_compute_main_incoming")
+    is_main_incoming = fields.Boolean('Is Main Incoming', compute="_compute_main_incoming",
+                                      search="search_main_incoming")
     lot_name = fields.Char('Lot')
 
     # re-define for translation
@@ -49,6 +50,19 @@ class StockPicking(models.Model):
     def _compute_main_incoming(self):
         for item in self:
             item.is_main_incoming = item.picking_type_code == 'incoming' and item.location_dest_id.warehouse_id.is_main_incoming_warehouse
+
+    def search_main_incoming(self, operator, value):
+        main_warehouse_ids = self.env['stock.warehouse'].sudo().search([('is_main_incoming_warehouse', '=', True)])
+        if (operator == '=' and value) or (operator == '!=' and not value):
+            domain = [('picking_type_code', '=', 'incoming'),
+                      ('location_dest_id.warehouse_id', 'in', main_warehouse_ids.ids)]
+        if (operator == '!=' and value) or (operator == '=' and not value):
+            domain = ['|', ('picking_type_code', '!=', 'incoming'),
+                      ('location_dest_id.warehouse_id', 'not in', main_warehouse_ids.ids)]
+        return domain
+
+        def _search_employee_id(self, operator, value):
+            return [('id', operator, value)]
 
     @api.depends('package_ids.quantity', 'package_ids.uom_id.packing_code')
     def compute_packing_lot_name(self):

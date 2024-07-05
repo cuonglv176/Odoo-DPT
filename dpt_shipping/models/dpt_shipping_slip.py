@@ -67,3 +67,9 @@ class DPTShippingSlip(models.Model):
                 'transfer_code': item.transfer_code,
                 'transfer_code_chinese': item.transfer_code_chinese,
             })
+
+    @api.onchange('sale_ids')
+    def onchange_sale_get_picking(self):
+        picking_ids = self.env['stock.picking'].sudo().search(
+            [('sale_id', 'in', self.sale_ids), ('picking_type_code', '=', 'incoming')])
+        self.picking_ids = picking_ids.filtered(lambda sp: sp.is_main_incoming).ids
