@@ -6,12 +6,11 @@
         <field name="model">dpt.get.picking.so.wizard</field>
         <field name="arch" type="xml">
             <form string="Get Picking">
-                <group>
-                    <group>
-                        <field name="sale_id" invisible="1"/>
-                        <field name="picking_ids" widget="many2many_tags" options="{'no_create': True}"/>
-                    </group>
-                </group>
+                <sheet>
+                    <field name="sale_id" invisible="1"/>
+                    <label for="picking_ids"/>
+                    <field name="picking_ids" options="{'no_create': True}"/>
+                </sheet>
                 <footer>
                     <button name="action_update_picking_to_so" type="object" string="Update SO" class="oe_highlight"/>
                     <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
