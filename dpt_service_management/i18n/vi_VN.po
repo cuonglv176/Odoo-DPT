@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-23 17:36+0000\n"
-"PO-Revision-Date: 2024-06-23 17:36+0000\n"
+"POT-Creation-Date: 2024-07-06 17:49+0000\n"
+"PO-Revision-Date: 2024-07-06 17:49+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -72,6 +72,11 @@ msgstr "Địa chỉ"
 #: model:ir.model.fields,field_description:dpt_service_management.field_uom_uom__message_attachment_count
 msgid "Attachment Count"
 msgstr ""
+
+#. module: dpt_service_management
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__auo_complete
+msgid "Auto Complete"
+msgstr "Tự hoàn thành"
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__campaign_id
@@ -169,20 +174,6 @@ msgstr "Lấy mặc định từ"
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__uom_id
 msgid "Default Unit"
 msgstr "Đơn vị mặc định"
-
-#. module: dpt_service_management
-#. odoo-python
-#: code:addons/dpt_service_management/models/service.py:0
-#, python-format
-msgid "Delete Required field: %s"
-msgstr "Xóa Trường bắt buộc: %s"
-
-#. module: dpt_service_management
-#. odoo-python
-#: code:addons/dpt_service_management/models/service.py:0
-#, python-format
-msgid "Delete Step: %s"
-msgstr "Xóa Bước: %s"
 
 #. module: dpt_service_management
 #: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management_steps__department_id
@@ -702,6 +693,11 @@ msgstr "Cân nặng"
 #: model:ir.model.fields.selection,name:dpt_service_management.selection__dpt_service_management_required_fields__default_compute_from__weight_in_so
 msgid "Weight in SO"
 msgstr "Cân nặng trên Báo gi"
+
+#. module: dpt_service_management
+#: model:ir.model.fields,field_description:dpt_service_management.field_dpt_service_management__zezo_price
+msgid "Zezo Price"
+msgstr "Giá 0 đồng"
 
 #. module: dpt_service_management
 #: model:ir.model,name:dpt_service_management.model_dpt_sale_order_fields_selection
