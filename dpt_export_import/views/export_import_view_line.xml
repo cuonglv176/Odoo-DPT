@@ -20,6 +20,7 @@
                             <field name="lot_code"/>
                             <field name="partner_id"/>
                             <field name="product_id"/>
+                            <field name="product_history_id" domain="[('product_id','=', product_id)]"/>
                             <field name="dpt_english_name"/>
                             <field name="dpt_description"/>
                             <field name="dpt_sl1"/>

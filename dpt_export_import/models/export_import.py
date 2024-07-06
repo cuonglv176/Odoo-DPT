@@ -179,6 +179,7 @@ class DptExportImportLine(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Dpt Export Import line'
 
+    name = fields.Text(string='Name', compute="_get_name")
     sequence = fields.Integer(default=1)
     export_import_id = fields.Many2one('dpt.export.import', string='Export import')
     lot_code = fields.Char(string='Lot code')
@@ -242,6 +243,39 @@ class DptExportImportLine(models.Model):
         ('usd', 'USD'),
         ('cny', 'CNY')
     ], string='Declaration type', default='usd')
+    product_history_id = fields.Many2one('dpt.export.import.line', string='Description Selection')
+
+    @api.onchange('product_history_id')
+    def onchange_get_data_product_history(self):
+        if self.product_history_id:
+            self.dpt_english_name = self.product_history_id.dpt_english_name
+            self.dpt_description = self.product_history_id.dpt_description
+            self.dpt_n_w_kg = self.product_history_id.dpt_n_w_kg
+            self.dpt_g_w_kg = self.product_history_id.dpt_g_w_kg
+            self.dpt_uom_id = self.product_history_id.dpt_uom_id
+            self.dpt_uom2_ecus_id = self.product_history_id.dpt_uom2_ecus_id
+            self.dpt_price_kd = self.product_history_id.dpt_price_kd
+            self.dpt_tax_import = self.product_history_id.dpt_tax_import
+            self.dpt_amount_tax_import = self.product_history_id.dpt_amount_tax_import
+            self.dpt_tax_ecus5 = self.product_history_id.dpt_tax_ecus5
+            self.dpt_tax = self.product_history_id.dpt_tax
+            self.dpt_amount_tax = self.product_history_id.dpt_amount_tax
+            self.dpt_exchange_rate = self.product_history_id.dpt_exchange_rate
+            self.hs_code_id = self.product_history_id.hs_code_id
+            self.dpt_sl1 = self.product_history_id.dpt_sl1
+            self.dpt_uom1_id = self.product_history_id.dpt_uom1_id
+            self.dpt_sl2 = self.product_history_id.dpt_sl2
+            self.dpt_price_usd = self.product_history_id.dpt_price_usd
+            self.dpt_price_cny_vnd = self.product_history_id.dpt_price_cny_vnd
+            self.dpt_tax_other = self.product_history_id.dpt_tax_other
+            self.dpt_total = self.product_history_id.dpt_total
+            self.declaration_type = self.product_history_id.declaration_type
+
+
+    @api.depends('dpt_description')
+    def _get_name(self):
+        for rec in self:
+            rec.name = rec.dpt_description
 
     def action_unlink(self):
         self.export_import_id = None
