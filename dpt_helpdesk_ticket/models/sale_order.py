@@ -46,13 +46,25 @@ class SaleOrder(models.Model):
                 'amount_total': service.amount_total,
                 # 'status': r.price_status,
             }))
-            self.env['helpdesk.ticket'].create({
-                'sale_id': self.id,
-                'partner_id': self.partner_id.id,
-                'service_lines_ids': service_ids,
-                'department_id': service.department_id.id,
-                'team_id': service.service_id.helpdesk_team_id.id,
-            })
+            stage_done_id = self.env['helpdesk.stage'].search(
+                [('is_done_stage', '=', True), ('team_ids', 'in', [service.service_id.helpdesk_team_id.id])])
+            if service.service_id.auo_complete:
+                self.env['helpdesk.ticket'].create({
+                    'sale_id': self.id,
+                    'partner_id': self.partner_id.id,
+                    'service_lines_ids': service_ids,
+                    'department_id': service.department_id.id,
+                    'team_id': service.service_id.helpdesk_team_id.id,
+                    'stage_id': stage_done_id.id,
+                })
+            else:
+                self.env['helpdesk.ticket'].create({
+                    'sale_id': self.id,
+                    'partner_id': self.partner_id.id,
+                    'service_lines_ids': service_ids,
+                    'department_id': service.department_id.id,
+                    'team_id': service.service_id.helpdesk_team_id.id,
+                })
 
             # team_id = self.env['helpdesk.team'].search([('service_type_ids', 'in', [service.service_type_id.id])],
             #                                            limit=1)

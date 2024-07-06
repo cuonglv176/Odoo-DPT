@@ -55,6 +55,8 @@ class DPTService(models.Model):
     required_fields_ids = fields.One2many('dpt.service.management.required.fields', 'service_id',
                                           string='Required Fields', copy=True, auto_join=True)
     active = fields.Boolean('Active', default='True')
+    zezo_price = fields.Boolean('Zezo Price', default=False)
+    auo_complete = fields.Boolean('Auto Complete', default=False)
     # image = fields.Image("Image", required=True, tracking=True)
 
     _sql_constraints = [
