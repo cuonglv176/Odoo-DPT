@@ -32,6 +32,7 @@
                             <!--                            <field name="sale_id" invisible="1"/>-->
                             <field name="sequence" widget="handle"/>
                             <field name="currency_id" column_invisible="1" force_save="1"/>
+                            <field name="currency_cny_id" column_invisible="1" force_save="1"/>
                             <field name="service_id"/>
                             <field name="uom_id"/>
                             <!--                            <field name="description"/>-->
@@ -40,6 +41,7 @@
                             <field name="qty" column_invisible="1" force_save="1"/>
                             <field name="uom_ids" column_invisible="1"/>
                             <field name="price" readonly="0" force_save="1"/>
+                            <field name="price_cny" readonly="0" force_save="1"/>
                             <!--                            <field name="currency_id" invisible="1"/>-->
                             <field name="amount_total" readonly="1" force_save="1"/>
                             <field name="department_id" context="{'dpt_sale_management': 1}"/>
