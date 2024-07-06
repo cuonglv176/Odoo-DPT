@@ -19,14 +19,15 @@
                             <field name="currency_id" column_invisible="1" force_save="1"/>
                             <field name="service_id" readonly="1"/>
                             <field name="description"/>
-                            <field name="uom_id" readonly="1"/>
+                            <field name="uom_ids" column_invisible="1"/>
+                            <field name="uom_id"/>
                             <field name="price" readonly="1" force_save="1"/>
                             <field name="new_price" readonly="is_edit_new_price != True"/>
                             <field name="is_edit_new_price" column_invisible="1"/>
                             <field name="amount_total" readonly="1" force_save="1"/>
                             <field name="new_amount_total" readonly="1" force_save="1"/>
                             <field name="price_status" readonly="1" force_save="1"/>
-                            <field name="department_id" readonly="1"/>
+                            <field name="department_id" readonly="1" context="{'only_department_name': True}"/>
                         </tree>
                     </field>
                 </page>
@@ -47,6 +48,29 @@
                             <field name="tax_id" readonly="1"/>
                             <field name="price_subtotal" readonly="1"/>
                             <field name="new_price_subtotal"/>
+                        </tree>
+                    </field>
+                </page>
+                <page name="sale_field" string="Other Fields" invisible="sequence_code != 'BAOGIA'">
+                    <field name="sale_fields_ids">
+                        <tree editable="bottom" default_order="sequence desc" decoration-danger="type=='required'">
+                            <field name="using_calculation_price" column_invisible="1"/>
+                            <field name="sequence" widget="handle"/>
+                            <field name="service_id"/>
+                            <field name="fields_id"/>
+                            <field name="type" column_invisible="1"/>
+                            <field name="fields_type" column_invisible="1"/>
+                            <field name="value_char" invisible="fields_type != 'char'"
+                                   required="type == 'required' and fields_type == 'char'"/>
+                            <field name="value_integer" invisible="fields_type != 'integer'"
+                                   required="type == 'required' and fields_type == 'integer'"/>
+                            <field name="value_date" invisible="fields_type != 'date'"
+                                   required="type == 'required' and fields_type == 'date'"/>
+                            <field name="selection_value_id" invisible="fields_type != 'selection'"
+                                   required="type == 'required' and fields_type == 'selection'"
+                                   domain="[('fields_id','=',fields_id)]"/>
+                            <field name="uom_id" invisible="not using_calculation_price"
+                                   required="using_calculation_price" options="{'no_create': True, 'no_open': True}"/>
                         </tree>
                     </field>
                 </page>
