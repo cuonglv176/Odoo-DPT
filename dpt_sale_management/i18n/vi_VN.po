@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-02 21:52+0000\n"
-"PO-Revision-Date: 2024-07-02 21:52+0000\n"
+"POT-Creation-Date: 2024-07-06 18:02+0000\n"
+"PO-Revision-Date: 2024-07-06 18:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -101,6 +101,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__currency_id
 msgid "Currency"
 msgstr "Tiền tệ"
+
+#. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__currency_cny_id
+msgid "Currency CNY"
+msgstr ""
 
 #. module: dpt_sale_management
 #: model:ir.model,name:dpt_sale_management.model_dpt_sale_service_management
@@ -271,6 +276,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__price
 msgid "Price"
 msgstr "Đơn giá"
+
+#. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__price_cny
+msgid "Price CNY"
+msgstr "Đơn giá (CNY)"
 
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__price_in_pricelist
