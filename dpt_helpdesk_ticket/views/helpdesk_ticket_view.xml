@@ -22,7 +22,7 @@
                 <field name="department_id"/>
                 <field name="purchase_id"/>
                 <field name="purchase_status" readonly="1" force_save="1"/>
-                <field name="lot_name"/>
+                <field name="lot_name" force_save="1"/>
             </field>
             <field name="priority" position="replace"/>
             <field name="user_id" position="replace"/>
@@ -63,6 +63,23 @@
             <xpath expr="//field[@name='team_id']" position="after">
                 <field name="lot_name"/>
                 <field name="service_ids" widget="many2many_tags"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="helpdesk_ticket_view_kanban" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.inherit</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='ticket_type_id']" position="after">
+                <br/>
+                <field name="sale_id"/>
+                <br/>
+                <field name="lot_name"/>
+                <br/>
+                <field name="lot_name"/>
             </xpath>
         </field>
     </record>
