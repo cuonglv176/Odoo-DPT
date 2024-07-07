@@ -6,16 +6,16 @@
         <field name="model">dpt.shipping.slip</field>
         <field name="arch" type="xml">
             <form string="Shipping slip">
+                <header>
+                    <button name="action_create_shipping_slip_receive" string="Create Shipping Receive"
+                            type="object" class="btn-primary"/>
+                    <field name="vehicle_country" invisible="1"/>
+                    <field name="vn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
+                           invisible="vehicle_country != 'vietnamese'"/>
+                    <field name="cn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
+                           invisible="vehicle_country != 'chinese'"/>
+                </header>
                 <sheet>
-                    <header>
-                        <button name="action_create_shipping_slip_receive" string="Create Shipping Receive"
-                                type="object" class="btn-primary"/>
-                        <field name="vehicle_country" invisible="1"/>
-                        <field name="vn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
-                               invisible="vehicle_country != 'vietnamese'"/>
-                        <field name="cn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
-                               invisible="vehicle_country != 'chinese'"/>
-                    </header>
                     <group>
                         <group>
                             <field name="name"/>
