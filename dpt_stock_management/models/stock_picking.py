@@ -47,6 +47,8 @@ class StockPicking(models.Model):
         'res.partner', 'Supplier',
         check_company=True, index='btree_not_null')
 
+    sale_service_ids = fields.One2many('dpt.sale.service.management', 'picking_id', 'Sale Service')
+
     def _compute_main_incoming(self):
         for item in self:
             item.is_main_incoming = item.picking_type_code == 'incoming' and item.location_dest_id.warehouse_id.is_main_incoming_warehouse
@@ -317,3 +319,10 @@ class StockPicking(models.Model):
             'url': '/web/content/' + str(file_xls.id) + '?download=true',
             'target': 'new',
         }
+
+    @api.constrains('sale_purchase_id', 'sale_service_ids')
+    def constrains_update_sale_service(self):
+        for item in self:
+            item.sale_service_ids.write({
+                'sale_id': item.sale_purchase_id.id
+            })
