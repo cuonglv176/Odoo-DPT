@@ -20,5 +20,6 @@
         'views/sale_order.xml',
         'views/stock_picking.xml',
         'wizards/dpt_get_picking_so_wizard.xml',
+        'wizards/dpt_shipping_split_wizard.xml',
     ],
 }

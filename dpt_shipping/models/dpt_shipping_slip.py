@@ -20,6 +20,8 @@ class DPTShippingSlip(models.Model):
     vn_vehicle_stage_id = fields.Many2one('dpt.vehicle.stage', 'Vehicle Stage', domain=[('country', '=', 'vietnamese')])
     cn_vehicle_stage_id = fields.Many2one('dpt.vehicle.stage', 'Vehicle Stage', domain=[('country', '=', 'chinese')])
     vehicle_stage_log_ids = fields.One2many('dpt.vehicle.stage.log', 'shipping_slip_id', 'Vehicle Stage Log')
+    send_shipping_id = fields.Many2one('dpt.shipping.slip', 'Shipping Sent')
+    receive_shipping_ids = fields.One2many('dpt.shipping.slip', 'send_shipping_id', 'Shipping Receive')
 
     @api.model
     def create(self, vals):
@@ -73,3 +75,11 @@ class DPTShippingSlip(models.Model):
         picking_ids = self.env['stock.picking'].sudo().search(
             [('sale_id', 'in', self.sale_ids), ('picking_type_code', '=', 'incoming')])
         self.picking_ids = picking_ids.filtered(lambda sp: sp.is_main_incoming).ids
+
+    def action_create_shipping_slip_receive(self):
+        action = self.env.ref('dpt_shipping.dpt_shipping_split_wizard_action').sudo().read()[0]
+        action['context'] = {
+            'default_shipping_id': self.id,
+            'default_sale_ids': self.sale_ids.ids,
+        }
+        return action

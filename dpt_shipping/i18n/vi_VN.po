@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-05 02:08+0000\n"
-"PO-Revision-Date: 2024-07-05 02:08+0000\n"
+"POT-Creation-Date: 2024-07-07 14:30+0000\n"
+"PO-Revision-Date: 2024-07-07 14:30+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -52,6 +52,7 @@ msgstr ""
 
 #. module: dpt_shipping
 #: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_get_picking_so_wizard_form_view
+#: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_split_wizard_form_view
 msgid "Cancel"
 msgstr "Hủy"
 
@@ -67,6 +68,17 @@ msgstr "Trung Quốc"
 #: model:ir.model.fields,field_description:dpt_shipping.field_fleet_vehicle__country
 msgid "Country"
 msgstr ""
+
+#. module: dpt_shipping
+#: model:ir.actions.act_window,name:dpt_shipping.dpt_shipping_split_wizard_action
+#: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_split_wizard_form_view
+msgid "Create Shipping"
+msgstr "Tạo phiếu vận chuyển"
+
+#. module: dpt_shipping
+#: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_slip_form_view
+msgid "Create Shipping Receive"
+msgstr "Tạo phiếu vận chuyển (nhận)"
 
 #. module: dpt_shipping
 #: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_sale_order_cutlist_tree_view
@@ -87,6 +99,7 @@ msgstr "Tạo Điều chuyển"
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_get_picking_so_wizard__create_uid
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__create_uid
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_split_wizard__create_uid
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage__create_uid
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage_log__create_uid
 msgid "Created by"
@@ -95,6 +108,7 @@ msgstr ""
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_get_picking_so_wizard__create_date
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__create_date
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_split_wizard__create_date
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage__create_date
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage_log__create_date
 msgid "Created on"
@@ -118,6 +132,7 @@ msgstr ""
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_get_picking_so_wizard__display_name
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__display_name
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_split_wizard__display_name
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage__display_name
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage_log__display_name
 msgid "Display Name"
@@ -152,6 +167,7 @@ msgstr ""
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_get_picking_so_wizard__id
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__id
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_split_wizard__id
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage__id
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage_log__id
 msgid "ID"
@@ -196,6 +212,7 @@ msgstr ""
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_get_picking_so_wizard__write_uid
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__write_uid
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_split_wizard__write_uid
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage__write_uid
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage_log__write_uid
 msgid "Last Updated by"
@@ -204,6 +221,7 @@ msgstr ""
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_get_picking_so_wizard__write_date
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__write_date
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_split_wizard__write_date
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage__write_date
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage_log__write_date
 msgid "Last Updated on"
@@ -311,6 +329,11 @@ msgid "Ratings"
 msgstr ""
 
 #. module: dpt_shipping
+#: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_slip_form_view
+msgid "Receive Shipping"
+msgstr "Danh sách phiếu nhận"
+
+#. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__activity_user_id
 msgid "Responsible User"
 msgstr ""
@@ -323,7 +346,13 @@ msgstr ""
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_get_picking_so_wizard__sale_id
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__sale_ids
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_split_wizard__sale_ids
 msgid "Sale Order"
+msgstr "Đơn hàng"
+
+#. module: dpt_shipping
+#: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_split_wizard_form_view
+msgid "Sales"
 msgstr "Đơn hàng"
 
 #. module: dpt_shipping
@@ -335,6 +364,21 @@ msgstr "Đơn bán hàng"
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage__sequence
 msgid "Sequence"
 msgstr ""
+
+#. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_split_wizard__shipping_id
+msgid "Shipping"
+msgstr "Phiếu vận chuyển"
+
+#. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__receive_shipping_ids
+msgid "Shipping Receive"
+msgstr "Phiếu nhận"
+
+#. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__send_shipping_id
+msgid "Shipping Sent"
+msgstr "Phiếu gửi"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage_log__shipping_slip_id
@@ -445,6 +489,11 @@ msgstr ""
 #. module: dpt_shipping
 #: model:ir.model,name:dpt_shipping.model_dpt_shipping_slip
 msgid "dpt.shipping.slip"
+msgstr ""
+
+#. module: dpt_shipping
+#: model:ir.model,name:dpt_shipping.model_dpt_shipping_split_wizard
+msgid "dpt.shipping.split.wizard"
 msgstr ""
 
 #. module: dpt_shipping
