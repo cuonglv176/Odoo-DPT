@@ -6,14 +6,39 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-01 10:59+0000\n"
-"PO-Revision-Date: 2024-07-01 10:59+0000\n"
+"POT-Creation-Date: 2024-07-04 17:23+0000\n"
+"PO-Revision-Date: 2024-07-04 17:23+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: dpt_stock_management
+#: model:ir.model.fields,help:dpt_stock_management.field_stock_picking__state
+msgid ""
+" * Draft: The transfer is not confirmed yet. Reservation doesn't apply.\n"
+" * Waiting another operation: This transfer is waiting for another operation before being ready.\n"
+" * Waiting: The transfer is waiting for the availability of some products.\n"
+"(a) The shipping policy is \"As soon as possible\": no product could be reserved.\n"
+"(b) The shipping policy is \"When all products are ready\": not all the products could be reserved.\n"
+" * Ready: The transfer is ready to be processed.\n"
+"(a) The shipping policy is \"As soon as possible\": at least one product has been reserved.\n"
+"(b) The shipping policy is \"When all products are ready\": all product have been reserved.\n"
+" * Done: The transfer has been processed.\n"
+" * Cancelled: The transfer has been cancelled."
+msgstr ""
+" * Nháp: Điều chuyển chưa được xác nhận. Không áp dụng dự trữ.\n"
+" * Đợi hoạt động khác: Điều chuyển này đang đợi hoạt động khác hoàn thành mới có thể thực hiện được.\n"
+" * Đang đợi: Điều chuyển này đang chờ đủ tình trạng còn hàng của một số sản phẩm.\n"
+"(a) Chính sách vận chuyển là \"Càng nhanh càng tốt\": không sản phẩm nào có thể dự trữ.\n"
+"(b) Chính sách vận chuyển là \"Khi tất cả sản phẩm đều sẵn sàng\": không phải tất cả sản phẩm đều có thể dự trữ.\n"
+" * Sẵn sàng: Điều chuyển đã sẵn sàng để xử lý.\n"
+"(a) Chính sách vận chuyển là \"Càng nhanh càng tốt\": ít nhất một sản phẩm đã được dự trữ.\n"
+"(b) Chính sách vận chuyển là \"Khi tất cả sản phẩm đều sẵn sàng\": tất cả sản phẩm đã được dự trữ.\n"
+" * Hoàn tất: Điều chuyển đã được xử lý xong.\n"
+" * Đã hủy: Điều chuyển đã bị hủy."
 
 #. module: dpt_stock_management
 #: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
@@ -26,11 +51,21 @@ msgid "Assign Serial Numbers"
 msgstr ""
 
 #. module: dpt_stock_management
+#: model:ir.model.fields.selection,name:dpt_stock_management.selection__stock_picking__state__cancel
+msgid "Cancelled"
+msgstr "Đã hủy"
+
+#. module: dpt_stock_management
 #. odoo-python
 #: code:addons/dpt_stock_management/models/stock_warehouse.py:0
 #, python-format
 msgid "Cannot configurate 2 or more warehouse is main incoming warehouse"
 msgstr "Không thể cấu hình 2 hoặc nhiều kho hàng là kho nhập hàng chính"
+
+#. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
+msgid "Contact"
+msgstr "Liên hệ"
 
 #. module: dpt_stock_management
 #. odoo-python
@@ -43,6 +78,11 @@ msgstr "Tạo Điều chuyển"
 #: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
 msgid "Create transfer picking"
 msgstr "Tạo Điều chuyển"
+
+#. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
+msgid "Delivery Address"
+msgstr "Khách hàng"
 
 #. module: dpt_stock_management
 #: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
@@ -67,6 +107,16 @@ msgid "Detail"
 msgstr "Chi tiết"
 
 #. module: dpt_stock_management
+#: model:ir.model.fields.selection,name:dpt_stock_management.selection__stock_picking__state__done
+msgid "Done"
+msgstr "Hoàn tất"
+
+#. module: dpt_stock_management
+#: model:ir.model.fields.selection,name:dpt_stock_management.selection__stock_picking__state__draft
+msgid "Draft"
+msgstr "Nháp"
+
+#. module: dpt_stock_management
 #: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__finish_create_picking
 msgid "Finish Create Picking"
 msgstr ""
@@ -82,6 +132,11 @@ msgid "Forecast Report"
 msgstr ""
 
 #. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__is_main_incoming
+msgid "Is Main Incoming"
+msgstr ""
+
+#. module: dpt_stock_management
 #: model:ir.model.fields,field_description:dpt_stock_management.field_stock_move__is_package
 msgid "Is Package"
 msgstr "Là kiện hàng"
@@ -90,6 +145,11 @@ msgstr "Là kiện hàng"
 #: model:ir.model.fields,field_description:dpt_stock_management.field_stock_warehouse__is_main_incoming_warehouse
 msgid "Is main incoming Warehouse"
 msgstr "Là kho nhập hàng chính"
+
+#. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__lot_name
+msgid "Lot"
+msgstr "Mã Lô"
 
 #. module: dpt_stock_management
 #: model:ir.model.fields,field_description:dpt_stock_management.field_purchase_order_line_package__move_ids
@@ -128,16 +188,31 @@ msgid "Picking In"
 msgstr "Phiếu nhập"
 
 #. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__name
+msgid "Picking Name"
+msgstr "Mã lô"
+
+#. module: dpt_stock_management
 #: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__picking_out_ids
 #: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
 msgid "Picking Out"
 msgstr "Phiếu xuất"
 
 #. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
+msgid "Print Sub Label"
+msgstr "In tem phụ"
+
+#. module: dpt_stock_management
 #: model:ir.model.fields,field_description:dpt_stock_management.field_purchase_order_line_package__product_ids
 #: model:ir.model.fields,field_description:dpt_stock_management.field_uom_uom__product_id
 msgid "Product"
 msgstr "Sản phẩm"
+
+#. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
+msgid "Product PO"
+msgstr "Sản phẩm Mua hàng"
 
 #. module: dpt_stock_management
 #: model:ir.model,name:dpt_stock_management.model_uom_uom
@@ -160,6 +235,21 @@ msgid "Quantity Created Picking"
 msgstr ""
 
 #. module: dpt_stock_management
+#: model:ir.model.fields.selection,name:dpt_stock_management.selection__stock_picking__state__assigned
+msgid "Ready"
+msgstr "Sẵn sàng"
+
+#. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
+msgid "Receive From"
+msgstr "Nhà cung cấp"
+
+#. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__state
+msgid "Status"
+msgstr "Trạng thái"
+
+#. module: dpt_stock_management
 #: model:ir.model,name:dpt_stock_management.model_stock_move
 msgid "Stock Move"
 msgstr "Dịch chuyển tồn kho"
@@ -173,6 +263,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__move_ids_product
 msgid "Stock move"
 msgstr ""
+
+#. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__partner_id
+msgid "Supplier"
+msgstr "Nhà cung cấp"
+
+#. module: dpt_stock_management
+#. odoo-python
+#: code:addons/dpt_stock_management/models/stock_picking.py:0
+#, python-format
+msgid "There is not Lot %s of Product %s !"
+msgstr "Không có mã Lot %s của Sản phẩm %s !"
 
 #. module: dpt_stock_management
 #: model:ir.model,name:dpt_stock_management.model_stock_picking
@@ -193,6 +295,16 @@ msgstr "Mã vận chuyển Trung Quốc"
 #: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
 msgid "Unit"
 msgstr "Đơn vị"
+
+#. module: dpt_stock_management
+#: model:ir.model.fields.selection,name:dpt_stock_management.selection__stock_picking__state__confirmed
+msgid "Waiting"
+msgstr "Đang chờ"
+
+#. module: dpt_stock_management
+#: model:ir.model.fields.selection,name:dpt_stock_management.selection__stock_picking__state__waiting
+msgid "Waiting Another Operation"
+msgstr "Đang chờ hoạt động khác"
 
 #. module: dpt_stock_management
 #: model:ir.model,name:dpt_stock_management.model_stock_warehouse

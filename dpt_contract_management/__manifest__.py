@@ -18,6 +18,8 @@
         'views/sale_order_views.xml',
         'views/res_partner_views.xml',
         'data/service_sequence.xml',
+        'report/contract_pdf.xml',
+        'report/sub_contract_pdf.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

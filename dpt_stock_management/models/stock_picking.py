@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 from odoo import models, fields, api, _
+import xlrd, xlwt
+import base64
+from odoo.exceptions import ValidationError, UserError
+import io as stringIOModule
 
 
 class StockPicking(models.Model):
@@ -16,6 +20,49 @@ class StockPicking(models.Model):
     num_picking_out = fields.Integer('Num Picking Out', compute="_compute_num_picking_out")
     finish_create_picking = fields.Boolean('Finish Create Picking', compute="_compute_finish_create_picking")
     packing_lot_name = fields.Char('Packing Lot name', compute="compute_packing_lot_name", store=True)
+    is_main_incoming = fields.Boolean('Is Main Incoming', compute="_compute_main_incoming",
+                                      search="search_main_incoming")
+    lot_name = fields.Char('Lot')
+
+    # re-define for translation
+    name = fields.Char(
+        'Picking Name', default='/',
+        copy=False, index='trigram', readonly=True)
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('waiting', 'Waiting Another Operation'),
+        ('confirmed', 'Waiting'),
+        ('assigned', 'Ready'),
+        ('done', 'Done'),
+        ('cancel', 'Cancelled'),
+    ], string='Status', compute='_compute_state',
+        copy=False, index=True, readonly=True, store=True, tracking=True,
+        help=" * Draft: The transfer is not confirmed yet. Reservation doesn't apply.\n"
+             " * Waiting another operation: This transfer is waiting for another operation before being ready.\n"
+             " * Waiting: The transfer is waiting for the availability of some products.\n(a) The shipping policy is \"As soon as possible\": no product could be reserved.\n(b) The shipping policy is \"When all products are ready\": not all the products could be reserved.\n"
+             " * Ready: The transfer is ready to be processed.\n(a) The shipping policy is \"As soon as possible\": at least one product has been reserved.\n(b) The shipping policy is \"When all products are ready\": all product have been reserved.\n"
+             " * Done: The transfer has been processed.\n"
+             " * Cancelled: The transfer has been cancelled.")
+    partner_id = fields.Many2one(
+        'res.partner', 'Supplier',
+        check_company=True, index='btree_not_null')
+
+    def _compute_main_incoming(self):
+        for item in self:
+            item.is_main_incoming = item.picking_type_code == 'incoming' and item.location_dest_id.warehouse_id.is_main_incoming_warehouse
+
+    def search_main_incoming(self, operator, value):
+        main_warehouse_ids = self.env['stock.warehouse'].sudo().search([('is_main_incoming_warehouse', '=', True)])
+        if (operator == '=' and value) or (operator == '!=' and not value):
+            domain = [('picking_type_code', '=', 'incoming'),
+                      ('location_dest_id.warehouse_id', 'in', main_warehouse_ids.ids)]
+        if (operator == '!=' and value) or (operator == '=' and not value):
+            domain = ['|', ('picking_type_code', '!=', 'incoming'),
+                      ('location_dest_id.warehouse_id', 'not in', main_warehouse_ids.ids)]
+        return domain
+
+        def _search_employee_id(self, operator, value):
+            return [('id', operator, value)]
 
     @api.depends('package_ids.quantity', 'package_ids.uom_id.packing_code')
     def compute_packing_lot_name(self):
@@ -23,6 +70,20 @@ class StockPicking(models.Model):
             item.packing_lot_name = '.'.join(
                 [f"{package_id.quantity}{package_id.uom_id.packing_code}" for package_id in
                  item.package_ids if package_id.uom_id.packing_code])
+
+    @api.onchange('lot_name')
+    @api.constrains('lot_name')
+    def constrains_lot_name(self):
+        for item in self:
+            for move_id in item.move_ids_without_package:
+                if move_id.product_id.tracking != 'lot':
+                    continue
+                lot_id = self.env['stock.lot'].search(
+                    [('product_id', '=', move_id.product_id.id), ('name', '=', item.lot_name)], limit=1)
+                if not lot_id:
+                    raise ValidationError(
+                        _('There is not Lot %s of Product %s !') % (move_id.product_id.display_name, item.lot_name))
+                move_id.move_line_ids.update({'lot_id': lot_id.id})
 
     def _compute_num_picking_out(self):
         for item in self:
@@ -33,14 +94,56 @@ class StockPicking(models.Model):
             item.finish_create_picking = all(
                 [package_id.quantity == package_id.created_picking_qty for package_id in item.package_ids])
 
+    @api.model
     def create(self, vals):
         res = super().create(vals)
         res.action_update_picking_name()
+        res.onchange_package()
+        # auto assign picking
+        res.action_confirm()
         return res
+
+    @api.onchange('package_ids')
+    def onchange_package(self):
+        if not self._origin.id:
+            return
+        # remove package move
+        package_move_ids = self.move_ids_without_package - self.move_ids_product
+        package_move_ids.unlink()
+        if self.purchase_id:
+            self.package_ids.update({
+                'purchase_id': self.purchase_id.id
+            })
+        # create package move
+        self.package_ids._create_stock_moves(self)
+
+    def action_confirm(self):
+        if self.is_main_incoming or self.lot_name:
+            # auto create move line with lot name is picking name
+            move_line_vals = []
+            for move_id in self.move_ids_without_package:
+                if move_id.product_id.tracking != 'lot':
+                    continue
+                move_line_vals.append({
+                    'move_id': move_id.id,
+                    'picking_id': self.id,
+                    'location_id': move_id.location_id.id,
+                    'location_dest_id': move_id.location_dest_id.id,
+                    'product_id': move_id.product_id.id,
+                    'quantity': move_id.product_uom_qty,
+                    'product_uom_id': move_id.product_uom.id,
+                    'lot_name': self.name if self.is_main_incoming else None,
+                    'lot_id': self.env['stock.lot'].search(
+                        [('product_id', '=', move_id.product_id.id), ('name', '=', self.lot_name)])[
+                              :1].id if not self.is_main_incoming and self.lot_name else None
+                })
+            if move_line_vals:
+                self.env['stock.move.line'].create(move_line_vals)
+        return super().action_confirm()
 
     def action_update_picking_name(self):
         # getname if it is incoming picking in Chinese stock
-        if self.picking_type_code == 'incoming' and self.location_dest_id.warehouse_id.is_main_incoming_warehouse:
+        if self.is_main_incoming:
             prefix = f'KT{datetime.now().strftime("%y%m%d")}'
             nearest_picking_id = self.env['stock.picking'].sudo().search(
                 [('name', 'ilike', prefix + "%"), ('id', '!=', self.id),
@@ -134,4 +237,86 @@ class StockPicking(models.Model):
             'view_mode': 'tree,form',
             'domain': [('id', 'in', self.picking_out_ids.ids)],
             'views': [[view_id, 'tree'], [view_form_id, 'form']],
+        }
+
+    def export_wrong_import_data(self):
+        data = [1, 2, 3, 4, 5]
+        workbook = xlwt.Workbook(encoding="UTF-8")
+        worksheet = workbook.add_sheet("Ngân sách")
+        xlwt.add_palette_colour('gray_lighter', 0x21)
+        workbook.set_colour_RGB(0x21, 224, 224, 224)
+        style_blue = xlwt.easyxf(
+            'font: bold on, name Times New Roman, height 249; pattern: pattern solid, fore_colour pale_blue;'
+            'borders: left thin, right thin, top thin, bottom thin;'
+        )
+        style_blue_3 = xlwt.easyxf(
+            'font: bold on, name Times New Roman, height 249; pattern: pattern solid, fore_colour pale_blue;'
+            'borders: left thin, right thin, top thin, bottom thin; align: horiz centre, vert centre'
+        )
+        style_blue_2 = xlwt.easyxf(
+            'font: name Times New Roman, height 219; pattern: pattern solid, fore_colour white;'
+            'align: wrap on, horiz left; borders: left thin, right thin, top thin, bottom thin;'
+        )
+        style_red = xlwt.easyxf(
+            'font: bold on, name Times New Roman, height 269, colour_index red; align: horiz centre, vert centre;'
+        )
+        style_normal = xlwt.easyxf(
+            'font: name Times New Roman, height 229;'
+        )
+        style_normal.num_format_str = '#,##0'
+        style_total = xlwt.easyxf(
+            'font: bold on, name Times New Roman, height 249'
+        )
+        style_total.num_format_str = '#,##0'
+        row = 2
+        for r in self.package_ids:
+            val = \
+                f"Tên hàng: {r.uom_id.name}\n" \
+                f"Kiểu mẫu: {r.uom_id.name} - Nhãn hiệu: ... - Ký hiệu: ....\n" \
+                f"Kích thước/Dung tích/Chất liệu: {r.size}/{r.volume}/" \
+                f"Ngày/Tháng/năm sản xuất: \n" \
+                f"Trọng lượng: {r.weight} \n" \
+                f"Nhà sản xuất: {self.partner_id.name}\n" \
+                f"Địa chỉ nhà sản xuất: {self.partner_id.street or ''}\n" \
+                f"Nhà nhập khẩu: CÔNG TY TNHH DPT VINA HOLDINGS\n" \
+                f"Địa chỉ nhà nhập khẩu: Liền kề NTT38, Số 82 Nguyễn Tuân, Phường Thanh Xuân Trung, Quận Thanh Xuân, Thành phố Hà Nội\n" \
+                f"XUẤT XỨ: TRUNG QUỐC\n" \
+                f"{self.packing_lot_name or ''}\n" \
+                f"<Mã lô (QR)>"
+
+            val2 = f"Description of goods: {r.uom_id.name}\n" \
+                   f"Model: {r.uom_id.name} - Brand: ... - Symbol: .... \n" \
+                   f"Dimensions/Capacity/Material: {r.size}/{r.volume}/ \n" \
+                   f"Manufacturing date: \n" \
+                   f"N.W/ G.W: {r.weight}\n" \
+                   f"Manufacturer: {self.partner_id.name} \n" \
+                   f"Address: {self.partner_id.street or ''} \n" \
+                   f"Importer: DPT VINA HOLDINGS CO., LTD\n" \
+                   f"Address: Apartment NTT38, No. 82, Nguyen Tuan Street, Thanh Xuan Trung Ward, Thanh Xuan District, Hanoi City, Vietnam\n" \
+                   f"MADE IN CHINA\n" \
+                   f"{self.packing_lot_name or ''}\n" \
+                   f"<Mã lô (QR)>"
+
+            worksheet.row(row).height = 256 * 2
+            worksheet.col(0).width = 128 * 200
+            worksheet.col(1).width = 128 * 200
+            worksheet.write(row, 0, val, style_blue_2)
+            worksheet.write(row, 1, val2, style_blue_2)
+            row += 1
+        stream = stringIOModule.BytesIO()
+        workbook.save(stream)
+        xls = stream.getvalue()
+        vals = {
+            'name': f'Tem_phu_{self.name}' + '.xls',
+            'datas': base64.b64encode(xls),
+            # 'datas_fname': 'Template_ngan_sach.xls',
+            'type': 'binary',
+            'res_model': self._name,
+            'res_id': self.id,
+        }
+        file_xls = self.env['ir.attachment'].create(vals)
+        return {
+            'type': 'ir.actions.act_url',
+            'url': '/web/content/' + str(file_xls.id) + '?download=true',
+            'target': 'new',
         }

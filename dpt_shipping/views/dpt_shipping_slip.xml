@@ -24,10 +24,10 @@
                     </group>
                     <notebook>
                         <page name="sale_order" string="Order">
-                            <field name="sale_ids" readonly="1"/>
+                            <field name="sale_ids"/>
                         </page>
                         <page name="transfer_picking" string="Picking">
-                            <field name="picking_ids" readonly="1" context="{
+                            <field name="picking_ids" context="{
                                      'form_view_ref': 'stock.view_picking_form',
                                      'tree_view_ref': 'dpt_shipping.view_picking_tree_create_transfer_in_shipping_inherit'}"/>
                         </page>

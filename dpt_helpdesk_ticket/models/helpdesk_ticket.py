@@ -6,7 +6,6 @@ class HelpdeskTicket(models.Model):
     _inherit = 'helpdesk.ticket'
 
     name = fields.Char(default='PDV')
-    sale_id = fields.Many2one('sale.order', string='Đơn bán hàng')
     type_service = fields.Selection([('sale_order', 'Sale Order'),
                                      ('stock', 'Stock'),
                                      ('import_export', 'Import Export')], string='Loại ticket')
@@ -16,6 +15,25 @@ class HelpdeskTicket(models.Model):
     department_id = fields.Many2one('hr.department', string='Department')
     lot_name = fields.Char(string='Mã Lô', readonly=True)
     service_ids = fields.Many2many('dpt.service.management', compute='_compute_service_ids', store=True)
+    pack_name = fields.Char(string='Mã pack', compute='_compute_pack_name', store=True)
+    sale_id = fields.Many2one('sale.order', string='Đơn bán hàng')
+
+    @api.depends(
+        'purchase_id',
+        'sale_id',
+    )
+    def _compute_pack_name(self):
+        for rec in self:
+            picking_id = self.env['stock.picking'].search([
+                '|',
+                ('sale_purchase_id', '=', rec.sale_id.id),
+                ('purchase_id', '=', rec.purchase_id.id),
+            ])
+            if not picking_id or not picking_id.packing_lot_name:
+                rec.pack_name = False
+                continue
+            rec.pack_name = picking_id.packing_lot_name
+
 
     @api.depends(
         'service_lines_ids',

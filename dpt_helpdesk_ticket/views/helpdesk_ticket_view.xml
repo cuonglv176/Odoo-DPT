@@ -51,7 +51,6 @@
         </field>
     </record>
 
-
     <record id="helpdesk_tickets_view_tree" model="ir.ui.view">
         <field name="name">helpdesk.ticket.inherit</field>
         <field name="model">helpdesk.ticket</field>
@@ -64,6 +63,9 @@
                 <field name="lot_name"/>
                 <field name="service_ids" widget="many2many_tags"/>
             </xpath>
+            <field name="name" position="after">
+                <field name="sale_id"/>
+            </field>
         </field>
     </record>
 
@@ -79,7 +81,7 @@
                 <br/>
                 <field name="lot_name"/>
                 <br/>
-                <field name="lot_name"/>
+<!--                <field name="pack_name"/>-->
             </xpath>
         </field>
     </record>
