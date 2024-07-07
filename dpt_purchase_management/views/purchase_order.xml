@@ -59,6 +59,14 @@
             <xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal']" position="attributes">
                 <attribute name="sum">Sum Price Subtotal</attribute>
             </xpath>
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" type="object" name="get_origin_po" icon="fa-solid fa-cart-shopping">
+                    <field string="Buy CNY PO" name="count_buy_cny_po" widget="statinfo"/>
+                </button>
+            </div>
+            <field name="purchase_type" position="after">
+                <field name="origin_po" invisible="purchase_type != 'buy_cny'"/>
+            </field>
         </field>
     </record>
 
