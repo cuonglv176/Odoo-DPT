@@ -61,9 +61,6 @@ class StockPicking(models.Model):
                       ('location_dest_id.warehouse_id', 'not in', main_warehouse_ids.ids)]
         return domain
 
-        def _search_employee_id(self, operator, value):
-            return [('id', operator, value)]
-
     @api.depends('package_ids.quantity', 'package_ids.uom_id.packing_code')
     def compute_packing_lot_name(self):
         for item in self:

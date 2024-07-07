@@ -81,5 +81,6 @@ class DPTShippingSlip(models.Model):
         action['context'] = {
             'default_shipping_id': self.id,
             'default_sale_ids': self.sale_ids.ids,
+            'default_available_sale_ids': self.sale_ids.ids,
         }
         return action

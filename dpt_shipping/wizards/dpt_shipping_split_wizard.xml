@@ -14,7 +14,8 @@
                     </group>
                     <notebook>
                         <page name="sale_order" string="Sales">
-                            <field name="sale_ids"/>
+                            <field name="available_sale_ids" invisible="1"/>
+                            <field name="sale_ids" domain="[('id', 'in', available_sale_ids)]"/>
                         </page>
                     </notebook>
                 </sheet>
