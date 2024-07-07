@@ -81,7 +81,7 @@ class SaleOrder(models.Model):
             for r in self.sale_service_ids:
                 list_service = []
                 for sale_service_id in self.sale_service_ids:
-                    if sale_service_id.department_id == department:
+                    if sale_service_id.department_id == department and not sale_service_id.service_id.zezo_price:
                         if sale_service_id.new_price != 0 and sale_service_id.new_price != sale_service_id.price:
                             sale_service_id.approval_id = approval_id
                         list_service.append(sale_service_id)

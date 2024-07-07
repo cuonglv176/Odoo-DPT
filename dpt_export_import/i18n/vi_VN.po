@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-29 16:12+0000\n"
-"PO-Revision-Date: 2024-06-29 16:12+0000\n"
+"POT-Creation-Date: 2024-07-06 17:36+0000\n"
+"PO-Revision-Date: 2024-07-06 17:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -251,6 +251,11 @@ msgstr "Mô tả"
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_template__dpt_description
 msgid "Description Product"
 msgstr "Mô tả sản phẩm"
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__product_history_id
+msgid "Description Selection"
+msgstr "Chọn mô tả sản phẩm"
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__display_name
@@ -526,6 +531,11 @@ msgid "Invoice Code"
 msgstr "Mã hóa đơn"
 
 #. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_sale_order__is_declaration
+msgid "Is Declaration"
+msgstr ""
+
+#. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__message_is_follower
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__message_is_follower
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__message_is_follower
@@ -591,6 +601,12 @@ msgid "My Activity Deadline"
 msgstr ""
 
 #. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_product_product__dpt_ma_xe
+#: model:ir.model.fields,field_description:dpt_export_import.field_product_template__dpt_ma_xe
+msgid "Mã xe"
+msgstr ""
+
+#. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_n_w_kg
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_product__dpt_n_w_kg
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_template__dpt_n_w_kg
@@ -609,6 +625,7 @@ msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__name
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__name
 msgid "Name"
 msgstr "Tên"
 
@@ -642,6 +659,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__activity_type_id
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__activity_type_id
 msgid "Next Activity Type"
+msgstr ""
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_product_product__dpt_date_dk
+#: model:ir.model.fields,field_description:dpt_export_import.field_product_template__dpt_date_dk
+msgid "Ngày ĐK"
 msgstr ""
 
 #. module: dpt_export_import
@@ -835,7 +858,7 @@ msgstr "Chọn dòng tờ khai"
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__sale_ids
 msgid "Select Sale Order"
-msgstr ""
+msgstr "Chọn đơn hàng (Đủ điều kiện khai)"
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__sequence
@@ -869,6 +892,12 @@ msgid ""
 "Overdue: Due date is already passed\n"
 "Today: Activity date is today\n"
 "Planned: Future activities."
+msgstr ""
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_product_product__dpt_so_tk
+#: model:ir.model.fields,field_description:dpt_export_import.field_product_template__dpt_so_tk
+msgid "Số TK"
 msgstr ""
 
 #. module: dpt_export_import
@@ -913,7 +942,7 @@ msgstr ""
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__dpt_amount_tax_other
 msgid "Total Amount Tax Other"
-msgstr ""
+msgstr "Tổng thuế khác"
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__dpt_amount_tax
@@ -987,6 +1016,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__type_of_vehicle
 msgid "Type of vehicle"
 msgstr "Loại xe"
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_product_product__dpt_short_name
+#: model:ir.model.fields,field_description:dpt_export_import.field_product_template__dpt_short_name
+msgid "Tên Hàng"
+msgstr ""
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_product_product__dpt_company_name
+#: model:ir.model.fields,field_description:dpt_export_import.field_product_template__dpt_company_name
+msgid "Tên doanh nghiệp"
+msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields.selection,name:dpt_export_import.selection__dpt_export_import__state__declared
@@ -1083,6 +1124,12 @@ msgid "Website communication history"
 msgstr ""
 
 #. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_product_product__dpt_xuat_xu
+#: model:ir.model.fields,field_description:dpt_export_import.field_product_template__dpt_xuat_xu
+msgid "Xuất xứ"
+msgstr ""
+
+#. module: dpt_export_import
 #: model:ir.model.fields.selection,name:dpt_export_import.selection__dpt_export_import__state__confirm
 msgid "Xác nhận tờ khai"
 msgstr ""
@@ -1119,8 +1166,26 @@ msgid "ĐVT SL2 (Ecus)"
 msgstr ""
 
 #. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_product_product__dpt_dk_gia
+#: model:ir.model.fields,field_description:dpt_export_import.field_product_template__dpt_dk_gia
+msgid "Điều kiện giá hóa đơn"
+msgstr ""
+
+#. module: dpt_export_import
 #: model_terms:ir.ui.view,arch_db:dpt_export_import.dpt_export_import_view_sale_order_inherit_form
 msgid "Đơn giá xuất hóa đơn"
+msgstr ""
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_product_product__dpt_currency_id
+#: model:ir.model.fields,field_description:dpt_export_import.field_product_template__dpt_currency_id
+msgid "Đơn vị tiền tệ"
+msgstr ""
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_product_product__dpt_location
+#: model:ir.model.fields,field_description:dpt_export_import.field_product_template__dpt_location
+msgid "Địa điểm dỡ hàng"
 msgstr ""
 
 #. module: dpt_export_import

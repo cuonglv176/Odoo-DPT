@@ -28,6 +28,8 @@
                             <field name="employee_id" widget="many2one_avatar_user"
                                    domain="[('department_id','=',department_id)]"/>
                             <field name="steps_count"/>
+                            <field name="zezo_price" widget="boolean_toggle"/>
+                            <field name="auo_complete" widget="boolean_toggle"/>
                             <field name="active" widget="boolean_toggle"/>
 <!--                            <field name="image"/>-->
                         </group>

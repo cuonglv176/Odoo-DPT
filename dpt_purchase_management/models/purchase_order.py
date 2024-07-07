@@ -32,6 +32,23 @@ class PurchaseOrder(models.Model):
     ], string='Purchase type', default='external', tracking=True)
     packing_lot_name = fields.Char('Packing Lot name', compute="compute_packing_lot_name", store=True)
     department_id = fields.Many2one('hr.department', string='Phòng ban')
+    origin_po = fields.Many2one('sale.order')
+    count_buy_cny_po = fields.Integer(compute='_compute_count_buy_cny_po')
+
+    def _compute_count_buy_cny_po(self):
+        for r in self:
+            r.count_buy_cny_po = self.search_count([('purchase_type', '=', 'buy_cny'), ('origin_po', '=', r.id)])
+
+    def get_origin_po(self):
+        return {
+            'name': "Purchase Order",
+            'type': 'ir.actions.act_window',
+            'res_model': 'purchase.order',
+            'target': 'self',
+            'views': [(False, 'list'), (False, 'form')],
+            'domain': [('origin_po', '=', self.id)],
+            'context': "{'create': False}"
+        }
 
     @api.depends('package_line_ids.quantity', 'package_line_ids.uom_id.packing_code')
     def compute_packing_lot_name(self):
@@ -43,10 +60,24 @@ class PurchaseOrder(models.Model):
     @api.model
     def create(self, vals):
         res = super().create(vals)
+        res.create_buy_cny_purchase_order()
         if not self.env.context.get('create_from_so', False):
             return res
         # create ticket and auto mark done ticket
         res.create_helpdesk_ticket()
+        return res
+
+    def create_buy_cny_purchase_order(self):
+        self.ensure_one()
+        if self.purchase_type == 'buy_cny':
+            return True
+        vals = {
+            'purchase_type': 'buy_cny',
+            'department_id': self.department_id.id,
+            'partner_id': self.partner_id.id,
+            'origin_po': self.id,
+        }
+        res = self.create(vals)
         return res
 
     def create_helpdesk_ticket(self):
