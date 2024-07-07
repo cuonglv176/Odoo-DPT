@@ -5,7 +5,8 @@ from odoo.osv.expression import AND, OR
 class DPTSaleOrderFields(models.Model):
     _inherit = 'dpt.sale.order.fields'
 
-    approval_id = fields.Many2one('approval.request', string='Approval Change Price', compute="compute_get_approval_id")
+    approval_id = fields.Many2one('approval.request', string='Approval Change Price', compute="compute_get_approval_id",
+                                  store=True)
 
     @api.depends('service_id', 'sale_id')
     def compute_get_approval_id(self):
