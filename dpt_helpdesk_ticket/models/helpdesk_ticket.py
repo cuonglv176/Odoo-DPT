@@ -24,15 +24,16 @@ class HelpdeskTicket(models.Model):
     )
     def _compute_pack_name(self):
         for rec in self:
-            picking_id = self.env['stock.picking'].search([
-                '|',
-                ('sale_purchase_id', '=', rec.sale_id.id),
-                ('purchase_id', '=', rec.purchase_id.id),
-            ])
-            if not picking_id or not picking_id.packing_lot_name:
+            if not rec.sale_id:
                 rec.pack_name = False
                 continue
-            rec.pack_name = picking_id.packing_lot_name
+            picking_id = self.env['stock.picking'].search([
+                ('origin', '=', rec.sale_id.name),
+            ])
+            if not picking_id or not picking_id.mapped('packing_lot_name'):
+                rec.pack_name = False
+                continue
+            rec.pack_name = ','.join(picking_id.mapped('packing_lot_name'))
 
 
     @api.depends(

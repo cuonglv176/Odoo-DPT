@@ -81,7 +81,8 @@
                 <br/>
                 <field name="lot_name"/>
                 <br/>
-<!--                <field name="pack_name"/>-->
+                <field name="pack_name"/>
+                <field name="service_ids" widget="many2many_tags"/>
             </xpath>
         </field>
     </record>
