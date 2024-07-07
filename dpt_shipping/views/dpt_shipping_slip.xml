@@ -8,6 +8,8 @@
             <form string="Shipping slip">
                 <sheet>
                     <header>
+                        <button name="action_create_shipping_slip_receive" string="Create Shipping Receive"
+                                type="object" class="btn-primary"/>
                         <field name="vehicle_country" invisible="1"/>
                         <field name="vn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
                                invisible="vehicle_country != 'vietnamese'"/>
@@ -17,6 +19,7 @@
                     <group>
                         <group>
                             <field name="name"/>
+                            <field name="send_shipping_id" options="{'no_create': True}" readonly="1" force_save="1"/>
                             <field name="vehicle_id" options="{'no_create': True}"/>
                             <field name="transfer_code"/>
                             <field name="transfer_code_chinese"/>
@@ -43,6 +46,9 @@
                                     <field name="description"/>
                                 </tree>
                             </field>
+                        </page>
+                        <page name="receive_shipping" string="Receive Shipping">
+                            <field name="receive_shipping_ids"/>
                         </page>
                     </notebook>
                 </sheet>
