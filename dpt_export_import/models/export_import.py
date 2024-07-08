@@ -325,41 +325,19 @@ class DptExportImportLine(models.Model):
                 rec.dpt_amount_tax_other = rec.dpt_tax_other * rec.dpt_price_cny_vnd
 
     def write(self, vals):
-        val_update_sale_line = {}
-        if 'dpt_exchange_rate' in vals:
-            val_update_sale_line.update({
-                'payment_exchange_rate': vals.get('dpt_exchange_rate')
-            })
-        if 'dpt_tax_import' in vals:
-            val_update_sale_line.update({
-                'import_tax_rate': vals.get('dpt_tax_import')
-            })
-        if 'dpt_tax' in vals:
-            val_update_sale_line.update({
-                'vat_tax_rate': vals.get('dpt_tax')
-            })
-        if 'dpt_amount_tax_import' in vals:
-            val_update_sale_line.update({
-                'import_tax_amount': vals.get('dpt_amount_tax_import')
-            })
-        if 'dpt_amount_tax' in vals:
-            val_update_sale_line.update({
-                'vat_tax_amount': vals.get('dpt_amount_tax')
-            })
-        if 'dpt_total_vat' in vals:
-            val_update_sale_line.update({
-                'total_tax_amount': vals.get('dpt_total_vat')
-            })
-        if 'hs_code_id' in vals:
-            val_update_sale_line.update({
-                'hs_code_id': vals.get('hs_code_id')
-            })
         res = super(DptExportImportLine, self).write(vals)
+        val_update_sale_line = {}
         val_update_sale_line.update({
-            'import_tax_amount': self.dpt_amount_tax_import
-        })
-        val_update_sale_line.update({
-            'vat_tax_amount': self.dpt_amount_tax
+            'payment_exchange_rate': self.dpt_exchange_rate,
+            'import_tax_rate': self.dpt_tax_import,
+            'vat_tax_rate': self.dpt_tax,
+            'other_tax_rate': self.dpt_tax_other,
+            'total_tax_amount': self.dpt_total_vat,
+            'hs_code_id': self.hs_code_id,
+            'import_tax_amount': self.dpt_amount_tax_import,
+            'vat_tax_amount': self.dpt_amount_tax,
+            'other_tax_amount': self.dpt_amount_tax_other,
+
         })
         self.sale_line_id.write(val_update_sale_line)
         return res
