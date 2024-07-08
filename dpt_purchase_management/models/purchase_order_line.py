@@ -8,6 +8,14 @@ class PurchaseOrderLine(models.Model):
 
     buying_url = fields.Char('Buying URL')
     cost = fields.Monetary('Cost')
+    price_unit3 = fields.Float('Price Unit 3')
+    price_cost3 = fields.Float('Price Cost 3')
+    price_subtotal3 = fields.Float('Price Subtotal 3', compute='_compute_price_subtotal3', store=True)
+
+    @api.depends('price_unit3', 'product_qty', 'price_cost3')
+    def _compute_price_subtotal3(self):
+        for r in self:
+            r.price_subtotal3 = r.price_unit3 * r.product_qty + r.price_cost3
 
     @api.depends('product_qty', 'product_uom', 'company_id')
     def _compute_price_unit_and_date_planned_and_name(self):

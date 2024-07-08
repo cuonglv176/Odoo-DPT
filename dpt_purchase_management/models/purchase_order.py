@@ -34,6 +34,7 @@ class PurchaseOrder(models.Model):
     department_id = fields.Many2one('hr.department', string='Phòng ban')
     origin_po = fields.Many2one('sale.order')
     count_buy_cny_po = fields.Integer(compute='_compute_count_buy_cny_po')
+    last_rate_currency = fields.Float('Rate Currency')
 
     def _compute_count_buy_cny_po(self):
         for r in self:
@@ -124,3 +125,13 @@ class PurchaseOrder(models.Model):
             all_num_packing_field_ids.write({
                 'value_integer': packing_num
             })
+
+    def write(self, vals):
+        res = super(PurchaseOrder, self).write(vals)
+        if vals.get('state'):
+            self.update_last_rate_currency()
+
+    def update_last_rate_currency(self):
+        self.ensure_one()
+        if self.state == 'purchase' and self.currency_id:
+            self.last_rate_currency = self.currency_id.rate
