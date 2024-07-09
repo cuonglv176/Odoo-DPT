@@ -8,6 +8,7 @@
         <field name="arch" type="xml">
             <field name="picking_type_id" position="before">
                 <field name="sale_purchase_id"/>
+                <field name="customer_id"/>
             </field>
             <field name="origin" position="before">
                 <field name="purchase_id" invisible="picking_type_code != 'incoming'"/>
