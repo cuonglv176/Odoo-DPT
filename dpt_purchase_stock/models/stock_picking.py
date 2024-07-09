@@ -6,6 +6,7 @@ class StockPicking(models.Model):
 
     sale_purchase_id = fields.Many2one('sale.order', 'Sale', compute="_compute_sale", inverse="_inverse_sale",
                                        store=True)
+    customer_id = fields.Many2one(related="sale_purchase_id.partner_id", string="Customer")
 
     @api.depends('purchase_id', 'purchase_id.sale_id')
     def _compute_sale(self):

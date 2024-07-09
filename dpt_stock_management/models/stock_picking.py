@@ -23,6 +23,8 @@ class StockPicking(models.Model):
     is_main_incoming = fields.Boolean('Is Main Incoming', compute="_compute_main_incoming",
                                       search="search_main_incoming")
     lot_name = fields.Char('Lot')
+    total_volume = fields.Float('Total Volume', compute="_compute_total_volume_height")
+    total_height = fields.Float('Total Height', compute="_compute_total_volume_height")
 
     # re-define for translation
     name = fields.Char(
@@ -48,6 +50,11 @@ class StockPicking(models.Model):
         check_company=True, index='btree_not_null')
 
     sale_service_ids = fields.One2many('dpt.sale.service.management', 'picking_id', 'Sale Service')
+
+    def _compute_total_volume_height(self):
+        for item in self:
+            item.total_volume = 0
+            item.total_height = 0
 
     def _compute_main_incoming(self):
         for item in self:
