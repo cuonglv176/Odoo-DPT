@@ -111,6 +111,10 @@
                     </span>
                 </div>
             </field>
+            <notebook position="after">
+                <label for="note" string="Note"/>
+                <field name="note"/>
+            </notebook>
         </field>
     </record>
 
