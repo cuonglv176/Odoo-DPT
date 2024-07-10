@@ -35,6 +35,8 @@
                 <field name="other_tax_amount"/>
                 <field name="vat_tax_amount"/>
                 <field name="total_tax_amount"/>
+                <field name="currency_cny_id" column_invisible="1" force_save="1"/>
+                <field name="price_unit_cny"/>
             </xpath>
             <div name="button_box" position="inside">
                 <field name="is_declaration" invisible="1"/>

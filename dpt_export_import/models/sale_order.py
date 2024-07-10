@@ -78,6 +78,8 @@ class SaleOrderLine(models.Model):
     other_tax_amount = fields.Monetary(string='Other tax Amount', currency_field='currency_id')
     total_tax_amount = fields.Monetary(string='Total tax Amount', currency_field='currency_id',
                                        compute="compute_total_tax_amount")
+    currency_cny_id = fields.Many2one('res.currency', string='Currency CNY', default=6)
+    price_unit_cny = fields.Monetary(string='Price Unit CNY', currency_field='currency_cny_id')
     state_export_import_line = fields.Selection([
         ('draft', 'Nháp'),
         ('eligible', 'Đủ điều kiện khai báo'),
@@ -87,6 +89,10 @@ class SaleOrderLine(models.Model):
         ('post_control', 'Kiểm tra sau thông quan'),
         ('cancelled', 'Huỷ')
     ], string='State', default='draft', compute='compute_state_export_import_line')
+
+    @api.onchange('price_unit_cny')
+    def onchange_price_unit_cny(self):
+        self.price_unit = self.price_unit_cny * self.payment_exchange_rate
 
     @api.depends('dpt_export_import_line_ids', 'dpt_export_import_line_ids.dpt_price_usd',
                  'dpt_export_import_line_ids.dpt_price_cny_vnd',
