@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-10 06:48+0000\n"
-"PO-Revision-Date: 2024-07-10 06:48+0000\n"
+"POT-Creation-Date: 2024-07-10 08:35+0000\n"
+"PO-Revision-Date: 2024-07-10 08:35+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -122,11 +122,6 @@ msgid "Draft"
 msgstr "Nháp"
 
 #. module: dpt_stock_management
-#: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
-msgid "Dịch vụ"
-msgstr ""
-
-#. module: dpt_stock_management
 #: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__finish_create_picking
 msgid "Finish Create Picking"
 msgstr ""
@@ -140,16 +135,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
 msgid "Forecast Report"
 msgstr ""
-
-#. module: dpt_stock_management
-#: model_terms:ir.ui.view,arch_db:dpt_stock_management.stock_picking_kanban_inherit_view
-msgid "Weight:"
-msgstr "Cân nặng:"
-
-#. module: dpt_stock_management
-#: model_terms:ir.ui.view,arch_db:dpt_stock_management.stock_picking_kanban_inherit_view
-msgid "Weight: 0 kg"
-msgstr "Cân nặng: 0 kg"
 
 #. module: dpt_stock_management
 #: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__is_main_incoming
@@ -190,7 +175,7 @@ msgstr "Kiện hàng"
 #: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__package_ids
 #: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
 msgid "Packages"
-msgstr "Kiện hàng"
+msgstr "Nhóm Kiện hàng"
 
 #. module: dpt_stock_management
 #: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__packing_lot_name
@@ -268,7 +253,12 @@ msgstr "Nhà cung cấp"
 #. module: dpt_stock_management
 #: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__sale_service_ids
 msgid "Sale Service"
-msgstr ""
+msgstr "Dịch vụ"
+
+#. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
+msgid "Sale Services"
+msgstr "Dịch vụ"
 
 #. module: dpt_stock_management
 #: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__scheduled_date
@@ -318,14 +308,14 @@ msgid "There is not Lot %s of Product %s !"
 msgstr "Không có mã Lot %s của Sản phẩm %s !"
 
 #. module: dpt_stock_management
-#: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__total_weight
-msgid "Total Weight"
-msgstr "Tổng cân nặng"
-
-#. module: dpt_stock_management
 #: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__total_volume
 msgid "Total Volume"
 msgstr "Tổng số khối"
+
+#. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__total_weight
+msgid "Total Weight"
+msgstr "Tổng cân nặng"
 
 #. module: dpt_stock_management
 #: model:ir.model,name:dpt_stock_management.model_stock_picking
@@ -354,7 +344,9 @@ msgstr "Số khối"
 
 #. module: dpt_stock_management
 #: model_terms:ir.ui.view,arch_db:dpt_stock_management.stock_picking_kanban_inherit_view
-msgid "Volume: 0 m<sup>3</sup>"
+msgid ""
+"Volume: 0 m\n"
+"                        <sup>3</sup>"
 msgstr "Số khối: 0 m<sup>3</sup>"
 
 #. module: dpt_stock_management
@@ -374,10 +366,22 @@ msgstr "Kho hàng"
 
 #. module: dpt_stock_management
 #: model_terms:ir.ui.view,arch_db:dpt_stock_management.stock_picking_kanban_inherit_view
+msgid "Weight:"
+msgstr "Cân nặng:"
+
+#. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.stock_picking_kanban_inherit_view
+msgid "Weight: 0 kg"
+msgstr "Cân nặng: 0 kg"
+
+#. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.stock_picking_kanban_inherit_view
 msgid "kg"
 msgstr ""
 
 #. module: dpt_stock_management
 #: model_terms:ir.ui.view,arch_db:dpt_stock_management.stock_picking_kanban_inherit_view
-msgid "m<sup>3</sup>"
+msgid ""
+"m\n"
+"                        <sup>3</sup>"
 msgstr ""
