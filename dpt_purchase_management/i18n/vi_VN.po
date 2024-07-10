@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-01 11:03+0000\n"
-"PO-Revision-Date: 2024-07-01 11:03+0000\n"
+"POT-Creation-Date: 2024-07-10 16:27+0000\n"
+"PO-Revision-Date: 2024-07-10 16:27+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -41,8 +41,18 @@ msgid "Activity Type Icon"
 msgstr ""
 
 #. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_dpt_purchase_service_management__amount_total
+msgid "Amount Total"
+msgstr "Tổng tiền"
+
+#. module: dpt_purchase_management
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__message_attachment_count
 msgid "Attachment Count"
+msgstr ""
+
+#. module: dpt_purchase_management
+#: model_terms:ir.ui.view,arch_db:dpt_purchase_management.purchase_order_form_package_line_inherit_form
+msgid "Buy CNY PO"
 msgstr ""
 
 #. module: dpt_purchase_management
@@ -56,9 +66,24 @@ msgid "Campaign"
 msgstr ""
 
 #. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_dpt_purchase_service_management__compute_uom_id
+msgid "Compute Unit"
+msgstr ""
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_dpt_purchase_service_management__compute_value
+msgid "Compute Value"
+msgstr ""
+
+#. module: dpt_purchase_management
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line__cost
 msgid "Cost"
 msgstr "Phí"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order__count_buy_cny_po
+msgid "Count Buy Cny Po"
+msgstr ""
 
 #. module: dpt_purchase_management
 #. odoo-python
@@ -69,15 +94,27 @@ msgid "Create PO"
 msgstr "Tạo đơn Mua hàng"
 
 #. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_dpt_purchase_service_management__create_uid
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__create_uid
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package_detail__create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_dpt_purchase_service_management__create_date
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__create_date
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package_detail__create_date
 msgid "Created on"
+msgstr ""
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_dpt_purchase_service_management__currency_id
+msgid "Currency"
+msgstr ""
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_dpt_purchase_service_management__currency_cny_id
+msgid "Currency CNY"
 msgstr ""
 
 #. module: dpt_purchase_management
@@ -91,9 +128,20 @@ msgid "Date"
 msgstr ""
 
 #. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_dpt_purchase_service_management__description
+msgid "Description"
+msgstr ""
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_dpt_purchase_service_management__display_name
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__display_name
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package_detail__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_dpt_purchase_service_management__department_id
+msgid "Executing Department"
 msgstr ""
 
 #. module: dpt_purchase_management
@@ -127,6 +175,12 @@ msgid "Has Message"
 msgstr ""
 
 #. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__height
+msgid "Height (cm)"
+msgstr "Chiều cao (cm)"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_dpt_purchase_service_management__id
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__id
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package_detail__id
 msgid "ID"
@@ -164,6 +218,11 @@ msgid "Import Package to Stock"
 msgstr ""
 
 #. module: dpt_purchase_management
+#: model_terms:ir.ui.view,arch_db:dpt_purchase_management.view_dpt_purchase_order_line_package_form
+msgid "Information"
+msgstr "Thông tin đại diện"
+
+#. module: dpt_purchase_management
 #: model:ir.model.fields.selection,name:dpt_purchase_management.selection__purchase_order__purchase_type__internal
 msgid "Internal"
 msgstr "Nội bộ"
@@ -189,16 +248,23 @@ msgid "Is Purchase Service"
 msgstr "Là dịch vụ mua hàng"
 
 #. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_dpt_purchase_service_management__write_uid
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__write_uid
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package_detail__write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_dpt_purchase_service_management__write_date
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__write_date
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package_detail__write_date
 msgid "Last Updated on"
 msgstr ""
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__length
+msgid "Length (cm)"
+msgstr "Chiều dài (cm)"
 
 #. module: dpt_purchase_management
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__medium_id
@@ -285,6 +351,11 @@ msgid ""
 msgstr ""
 
 #. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order__origin_po
+msgid "Origin Po"
+msgstr ""
+
+#. module: dpt_purchase_management
 #: model:ir.actions.act_window,name:dpt_purchase_management.action_purchase_order_line_package_management
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package_detail__package_id
 #: model:ir.ui.menu,name:dpt_purchase_management.submenu_purchase_order_line_package_management
@@ -352,6 +423,41 @@ msgid "Please config 1 helpdesk stage is finish stage!!"
 msgstr "Vui lòng cấu hình 1 giai đoạn là hoàn thành"
 
 #. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_dpt_purchase_service_management__price
+msgid "Price"
+msgstr ""
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_dpt_purchase_service_management__price_cny
+msgid "Price CNY"
+msgstr ""
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line__price_cost3
+msgid "Price Cost 3"
+msgstr ""
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line__price_subtotal3
+msgid "Price Subtotal 3"
+msgstr ""
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line__price_unit3
+msgid "Price Unit 3"
+msgstr ""
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_dpt_purchase_service_management__price_in_pricelist
+msgid "Price in Pricelist"
+msgstr ""
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_dpt_purchase_service_management__pricelist_item_id
+msgid "Pricelist Item"
+msgstr ""
+
+#. module: dpt_purchase_management
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package_detail__product_id
 msgid "Product"
 msgstr "Sản phẩm"
@@ -372,6 +478,7 @@ msgid "Product Unit of Measure"
 msgstr "Đơn vị tính sản phẩm"
 
 #. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_dpt_purchase_service_management__purchase_id
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__purchase_id
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_sale_order__purchase_ids
 #: model_terms:ir.ui.view,arch_db:dpt_purchase_management.view_sale_order_create_po_inherit_form
@@ -404,10 +511,20 @@ msgid "Purchase type"
 msgstr "Loại mua hàng"
 
 #. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_dpt_purchase_service_management__qty
+msgid "QTY"
+msgstr ""
+
+#. module: dpt_purchase_management
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__quantity
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package_detail__quantity
 msgid "Quantity"
 msgstr "Số lượng"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order__last_rate_currency
+msgid "Rate Currency"
+msgstr ""
 
 #. module: dpt_purchase_management
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__rating_ids
@@ -445,14 +562,40 @@ msgid "Sales Order"
 msgstr "Đơn bán hàng"
 
 #. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_dpt_purchase_service_management__sequence
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package_detail__sequence
 msgid "Sequence"
+msgstr ""
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_dpt_purchase_service_management__service_id
+msgid "Service"
+msgstr ""
+
+#. module: dpt_purchase_management
+#: model_terms:ir.ui.view,arch_db:dpt_purchase_management.purchase_order_form_package_line_inherit_form
+msgid "Service Cost"
+msgstr ""
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order__purchase_service_ids
+msgid "Service Line"
+msgstr ""
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_dpt_purchase_service_management__uom_id
+msgid "Service detail"
 msgstr ""
 
 #. module: dpt_purchase_management
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_sale_order__show_create_po
 msgid "Show create PO"
 msgstr ""
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__size
+msgid "Size"
+msgstr "Kích thước"
 
 #. module: dpt_purchase_management
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__source_id
@@ -493,6 +636,36 @@ msgid ""
 msgstr ""
 
 #. module: dpt_purchase_management
+#: model_terms:ir.ui.view,arch_db:dpt_purchase_management.view_dpt_purchase_order_line_package_form
+msgid "Total"
+msgstr "Tổng"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__total_height
+msgid "Total Height (cm)"
+msgstr "Tổng chiều cao (cm)"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__total_length
+msgid "Total Length (cm)"
+msgstr "Tổng chiều dài (cm)"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__total_volume
+msgid "Total Volume (m3)"
+msgstr "Tổng Số khối (m3)"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__total_weight
+msgid "Total Weight (kg)"
+msgstr "Tổng Cân nặng (kg)"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__total_width
+msgid "Total Width (cm)"
+msgstr "Tổng chiều rộng (cm)"
+
+#. module: dpt_purchase_management
 #: model:ir.model.fields,help:dpt_purchase_management.field_purchase_order_line_package__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr ""
@@ -501,6 +674,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package_detail__uom_id
 msgid "Unit"
 msgstr "Đơn vị"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_dpt_purchase_service_management__uom_ids
+msgid "Units"
+msgstr ""
 
 #. module: dpt_purchase_management
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__volume
@@ -521,6 +699,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__weight
 msgid "Weight (kg)"
 msgstr "Cân nặng (kg)"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__width
+msgid "Width (cm)"
+msgstr "Chiều rộng (cm)"
+
+#. module: dpt_purchase_management
+#: model:ir.model,name:dpt_purchase_management.model_dpt_purchase_service_management
+msgid "dpt.purchase.service.management"
+msgstr ""
 
 #. module: dpt_purchase_management
 #: model_terms:ir.ui.view,arch_db:dpt_purchase_management.view_dpt_purchase_order_line_package_form

@@ -10,7 +10,7 @@ class DPTShippingSplitWizard(models.TransientModel):
                                           'available_sale_id', string='Available Sale Order')
     sale_ids = fields.Many2many('sale.order', 'dpt_shipping_split_sale_rel', 'shipping_slip_id', 'sale_id',
                                 string='Sale Order')
-    shipping_id = fields.Many2one('dpt.shipping.slip', tring='Shipping Slip')
+    shipping_id = fields.Many2one('dpt.shipping.slip', string='Shipping Slip')
 
     def create_shipping_receive(self):
         picking_ids = self.env['stock.picking'].sudo().search(

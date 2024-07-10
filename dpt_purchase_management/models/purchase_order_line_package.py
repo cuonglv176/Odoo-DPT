@@ -13,6 +13,7 @@ class PurchaseOrderLinePackage(models.Model):
     code = fields.Char('Package Code', default='NEW', copy=False, index=True, tracking=True)
     date = fields.Date(string='Date', required=True, default=lambda self: fields.Date.context_today(self),
                        tracking=True)
+    size = fields.Char('Size', tracking=True)
     uom_id = fields.Many2one('uom.uom', 'Package Unit', domain="[('is_package_unit', '=', True)]", tracking=True)
     quantity = fields.Integer('Quantity', tracking=True)
     length = fields.Float('Length (cm)', tracking=True)
@@ -42,17 +43,17 @@ class PurchaseOrderLinePackage(models.Model):
 
     @api.onchange('length')
     def onchange_length(self):
-        self.total_length = self.length + self.quantity
+        self.total_length = self.length * self.quantity
         self.volume = self.length * self.width * self.height / 1000000
 
     @api.onchange('width')
     def onchange_width(self):
-        self.total_width = self.width + self.quantity
+        self.total_width = self.width * self.quantity
         self.volume = self.length * self.width * self.height / 1000000
 
     @api.onchange('height')
     def onchange_height(self):
-        self.total_volume = self.height + self.quantity
+        self.total_height = self.height * self.quantity
         self.volume = self.length * self.width * self.height / 1000000
 
     @api.onchange('total_length', 'total_width', 'total_height')
@@ -61,4 +62,4 @@ class PurchaseOrderLinePackage(models.Model):
 
     @api.onchange('quantity', 'weight')
     def onchange_height(self):
-        self.total_weight = self.weight + self.quantity
+        self.total_weight = self.weight * self.quantity

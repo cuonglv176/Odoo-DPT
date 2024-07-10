@@ -57,8 +57,8 @@ class StockPicking(models.Model):
 
     def _compute_total_volume_weight(self):
         for item in self:
-            item.total_volume = sum(item.package_ids.mapped('volume'))
-            item.total_weight = sum(item.package_ids.mapped('weight'))
+            item.total_volume = sum(item.package_ids.mapped('total_volume'))
+            item.total_weight = sum(item.package_ids.mapped('total_weight'))
 
     def _compute_main_incoming(self):
         for item in self:
