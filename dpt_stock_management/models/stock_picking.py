@@ -85,6 +85,8 @@ class StockPicking(models.Model):
     @api.constrains('lot_name')
     def constrains_lot_name(self):
         for item in self:
+            if item.is_main_incoming:
+                continue
             for move_id in item.move_ids_without_package:
                 if move_id.product_id.tracking != 'lot':
                     continue
