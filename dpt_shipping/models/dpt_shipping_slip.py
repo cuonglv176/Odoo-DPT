@@ -36,6 +36,9 @@ class DPTShippingSlip(models.Model):
     def write(self, vals):
         if 'vn_vehicle_stage_id' not in vals and 'cn_vehicle_stage_id' not in vals:
             return super().write(vals)
+        last_time_record_id = self.vehicle_stage_log_ids.sorted(key=lambda x: x['log_datetime'], reverse=True)[:1]
+        last_time = last_time_record_id.log_datetime if last_time_record_id else self.create_date
+        log_time = fields.Datetime.now() - last_time
         if self.vehicle_country == 'vietnamese':
             current_stage_id = self.vn_vehicle_stage_id
             res = super().write(vals)
@@ -47,6 +50,7 @@ class DPTShippingSlip(models.Model):
                 'shipping_slip_id': self.id,
                 'current_stage_id': current_stage_id.id,
                 'next_stage_id': next_stage_id.id,
+                'log_time': log_time.total_seconds() / 3600,
             })
         elif self.vehicle_country == 'chinese':
             current_stage_id = self.cn_vehicle_stage_id
@@ -59,7 +63,10 @@ class DPTShippingSlip(models.Model):
                 'shipping_slip_id': self.id,
                 'current_stage_id': current_stage_id.id,
                 'next_stage_id': next_stage_id.id,
+                'log_time': log_time.total_seconds() / 3600,
             })
+        else:
+            return super().write(vals)
         return res
 
     @api.constrains('picking_ids', 'transfer_code', 'transfer_code_chinese')

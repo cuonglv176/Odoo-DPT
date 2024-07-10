@@ -127,7 +127,7 @@ msgstr ""
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage_log__current_stage_id
 msgid "Current Stage"
-msgstr ""
+msgstr "Trạng thái ban đầu"
 
 #. module: dpt_shipping
 #: model:ir.model,name:dpt_shipping.model_hr_department
@@ -137,7 +137,7 @@ msgstr "Bộ phận"
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage_log__description
 msgid "Description"
-msgstr ""
+msgstr "Mô tả"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_get_picking_so_wizard__display_name
@@ -469,7 +469,7 @@ msgstr ""
 #. module: dpt_shipping
 #: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_slip_form_view
 msgid "Vehicle Stage Tracking"
-msgstr ""
+msgstr "Lịch sử thay đổi trạng thái"
 
 #. module: dpt_shipping
 #: model:ir.model.fields.selection,name:dpt_shipping.selection__dpt_vehicle_stage__country__vietnamese
