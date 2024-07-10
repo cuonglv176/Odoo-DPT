@@ -151,7 +151,7 @@ msgstr ""
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__vehicle_driver_id
 msgid "Driver"
-msgstr "Tài xê"
+msgstr "Tài xế"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,help:dpt_shipping.field_dpt_shipping_slip__vehicle_driver_id
