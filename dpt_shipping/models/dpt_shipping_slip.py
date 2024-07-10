@@ -22,6 +22,13 @@ class DPTShippingSlip(models.Model):
     vehicle_stage_log_ids = fields.One2many('dpt.vehicle.stage.log', 'shipping_slip_id', 'Vehicle Stage Log')
     send_shipping_id = fields.Many2one('dpt.shipping.slip', 'Shipping Sent')
     receive_shipping_ids = fields.One2many('dpt.shipping.slip', 'send_shipping_id', 'Shipping Receive')
+    vehicle_driver_id = fields.Many2one(related="vehicle_id.driver_id")
+    vehicle_license_plate = fields.Char(related="vehicle_id.license_plate")
+    vehicle_driver_phone = fields.Char(compute="_compute_vehicle_driver_phone")
+
+    def _compute_vehicle_driver_phone(self):
+        for item in self:
+            item.vehicle_driver_phone = item.vehicle_driver_id.phone or item.vehicle_driver_id.mobile if item.vehicle_driver_id else None
 
     @api.model
     def create(self, vals):

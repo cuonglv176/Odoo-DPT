@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-10 16:38+0000\n"
-"PO-Revision-Date: 2024-07-10 16:38+0000\n"
+"POT-Creation-Date: 2024-07-10 17:02+0000\n"
+"PO-Revision-Date: 2024-07-10 17:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -149,6 +149,16 @@ msgid "Display Name"
 msgstr ""
 
 #. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__vehicle_driver_id
+msgid "Driver"
+msgstr "Tài xê"
+
+#. module: dpt_shipping
+#: model:ir.model.fields,help:dpt_shipping.field_dpt_shipping_slip__vehicle_driver_id
+msgid "Driver address of the vehicle"
+msgstr ""
+
+#. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__message_follower_ids
 msgid "Followers"
 msgstr ""
@@ -235,6 +245,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage__write_date
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage_log__write_date
 msgid "Last Updated on"
+msgstr ""
+
+#. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__vehicle_license_plate
+msgid "License Plate"
+msgstr "Biển số xe"
+
+#. module: dpt_shipping
+#: model:ir.model.fields,help:dpt_shipping.field_dpt_shipping_slip__vehicle_license_plate
+msgid "License plate number of the vehicle (i = plate number for a car)"
 msgstr ""
 
 #. module: dpt_shipping
@@ -451,6 +471,11 @@ msgstr "Đơn có thể Cutlist"
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage_log__vehicle_id
 msgid "Vehicle"
 msgstr "Phương tiện"
+
+#. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__vehicle_driver_phone
+msgid "Vehicle Driver Phone"
+msgstr "SĐT Tài xế"
 
 #. module: dpt_shipping
 #: model:ir.actions.act_window,name:dpt_shipping.dpt_vehicle_stage_action
