@@ -23,8 +23,8 @@ class StockPicking(models.Model):
     is_main_incoming = fields.Boolean('Is Main Incoming', compute="_compute_main_incoming",
                                       search="search_main_incoming")
     lot_name = fields.Char('Lot')
-    total_volume = fields.Float('Total Volume', compute="_compute_total_volume_height")
-    total_height = fields.Float('Total Height', compute="_compute_total_volume_height")
+    total_volume = fields.Float('Total Volume', compute="_compute_total_volume_weight")
+    total_weight = fields.Float('Total Weight', compute="_compute_total_volume_weight")
 
     # re-define for translation
     name = fields.Char(
@@ -48,13 +48,17 @@ class StockPicking(models.Model):
     partner_id = fields.Many2one(
         'res.partner', 'Supplier',
         check_company=True, index='btree_not_null')
+    scheduled_date = fields.Datetime(
+        'Scheduled Date', compute='_compute_scheduled_date', inverse='_set_scheduled_date', store=True,
+        index=True, default=fields.Datetime.now, tracking=True,
+        help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.")
 
     sale_service_ids = fields.One2many('dpt.sale.service.management', 'picking_id', 'Sale Service')
 
-    def _compute_total_volume_height(self):
+    def _compute_total_volume_weight(self):
         for item in self:
-            item.total_volume = 0
-            item.total_height = 0
+            item.total_volume = sum(item.package_ids.mapped('volume'))
+            item.total_weight = sum(item.package_ids.mapped('weight'))
 
     def _compute_main_incoming(self):
         for item in self:

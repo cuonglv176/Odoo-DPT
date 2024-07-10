@@ -209,4 +209,27 @@
         </field>
     </record>
 
+    <record id="stock_picking_kanban_inherit_view" model="ir.ui.view">
+        <field name="name">stock_picking_kanban_inherit_view</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.stock_picking_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_kanban_record_headings')]" position="replace">
+                <div class="o_kanban_record_headings ms-1">
+                    <strong class="o_kanban_record_title"><span><t t-esc="record.name.value"/> - <t t-esc="record.packing_lot_name"/></span></strong>
+                </div>
+            </xpath>
+            <field name="picking_properties" position="after">
+                <div>
+                    <span t-if="record.total_weight">Weight: <t t-esc="record.total_weight"/> kg</span>
+                    <span t-else="">Weight: 0 kg</span>
+                </div>
+                <div>
+                    <span t-if="record.total_volume">Volume: <t t-esc="record.total_volume"/> m<sup>3</sup></span>
+                    <span t-else="">Volume: 0 m<sup>3</sup></span>
+                </div>
+            </field>
+        </field>
+    </record>
+
 </odoo>
