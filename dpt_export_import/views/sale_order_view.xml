@@ -23,18 +23,34 @@
             <xpath expr="//field[@name='order_line']/tree/field[@name='tax_id']" position="attributes">
                 <attribute name="column_invisible">1</attribute>
             </xpath>
+            <page name="order_lines" position="after">
+                <page name="dpt_export_import" string="Import / Export">
+                    <field name="order_line">
+                        <tree editable="bottom">
+                            <field name="product_id"/>
+                            <field name="hs_code_id"/>
+                            <field name="declared_unit_price"/>
+                            <field name="declared_unit_total"/>
+                            <field name="payment_exchange_rate"/>
+                            <field name="import_tax_rate" widget="percentage"/>
+                            <field name="other_tax_rate" widget="percentage"/>
+                            <field name="vat_tax_rate" widget="percentage"/>
+                            <field name="import_tax_amount"/>
+                            <field name="other_tax_amount"/>
+                            <field name="vat_tax_amount"/>
+                            <field name="total_tax_amount"/>
+                            <field name="state_export_import_line" widget="badge"
+                                   decoration-info="state_export_import_line == 'draft'"
+                                   decoration-success="state_export_import_line in ('eligible','declared','released','consulted','post_control')"/>
+                            <button string="Update Declaration Line" type="object"
+                                    name="action_open_dpt_export_import_line"
+                                    class="btn-primary"/>
+                        </tree>
+                    </field>
+                </page>
+            </page>
+
             <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom']" position="after">
-                <field name="hs_code_id"/>
-                <field name="declared_unit_price"/>
-                <field name="declared_unit_total"/>
-                <field name="payment_exchange_rate"/>
-                <field name="import_tax_rate" widget="percentage"/>
-                <field name="other_tax_rate" widget="percentage"/>
-                <field name="vat_tax_rate" widget="percentage"/>
-                <field name="import_tax_amount"/>
-                <field name="other_tax_amount"/>
-                <field name="vat_tax_amount"/>
-                <field name="total_tax_amount"/>
                 <field name="currency_cny_id" column_invisible="1" force_save="1"/>
                 <field name="price_unit_cny"/>
             </xpath>
