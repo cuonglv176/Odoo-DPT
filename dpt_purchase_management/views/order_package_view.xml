@@ -24,13 +24,25 @@
                         <group>
                             <field name="quantity"/>
                             <field name="uom_id"/>
-                            <field name="size"/>
-                            <field name="weight"/>
-                            <field name="volume"/>
                             <field name="image" widget="image"
                                    options='{"preview_image": "image", "size": [300, 300]}'/>
                         </group>
-
+                    </group>
+                    <group>
+                        <group string="Information">
+                            <field name="length"/>
+                            <field name="width"/>
+                            <field name="height"/>
+                            <field name="volume"/>
+                            <field name="weight"/>
+                        </group>
+                        <group string="Total">
+                            <field name="total_length"/>
+                            <field name="total_width"/>
+                            <field name="total_height"/>
+                            <field name="total_volume"/>
+                            <field name="total_weight"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Product Detail" name="detail_line">
@@ -66,9 +78,11 @@
                 <field name="date"/>
                 <field name="quantity"/>
                 <field name="uom_id"/>
-                <field name="size"/>
-                <field name="weight"/>
-                <field name="volume"/>
+                <field name="total_length"/>
+                <field name="total_width"/>
+                <field name="total_height"/>
+                <field name="total_weight"/>
+                <field name="total_volume"/>
                 <field name="image" widget="image" class="oe_avatar"
                        options='{"preview_image": "image", "size": [100, 100]}'/>
             </tree>

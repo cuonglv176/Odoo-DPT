@@ -455,11 +455,6 @@ msgid "Show create PO"
 msgstr ""
 
 #. module: dpt_purchase_management
-#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__size
-msgid "Size"
-msgstr "Kích thước"
-
-#. module: dpt_purchase_management
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__source_id
 msgid "Source"
 msgstr ""

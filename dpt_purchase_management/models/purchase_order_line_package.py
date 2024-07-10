@@ -15,9 +15,17 @@ class PurchaseOrderLinePackage(models.Model):
                        tracking=True)
     uom_id = fields.Many2one('uom.uom', 'Package Unit', domain="[('is_package_unit', '=', True)]", tracking=True)
     quantity = fields.Integer('Quantity', tracking=True)
-    size = fields.Char('Size', tracking=True)
+    length = fields.Float('Length (cm)', tracking=True)
+    width = fields.Float('Width (cm)', tracking=True)
+    height = fields.Float('Height (cm)', tracking=True)
     weight = fields.Float('Weight (kg)', tracking=True)
     volume = fields.Float('Volume (m3)', tracking=True)
+
+    total_length = fields.Float('Total Length (cm)', tracking=True)
+    total_width = fields.Float('Total Width (cm)', tracking=True)
+    total_height = fields.Float('Total Height (cm)', tracking=True)
+    total_weight = fields.Float('Total Weight (kg)', tracking=True)
+    total_volume = fields.Float('Total Volume (m3)', tracking=True)
     note = fields.Text('Note', tracking=True)
     image = fields.Binary(string='Image')
     detail_ids = fields.One2many('purchase.order.line.package.detail', 'package_id', 'Package detail', tracking=True)
@@ -31,3 +39,26 @@ class PurchaseOrderLinePackage(models.Model):
     def _generate_service_code(self):
         sequence = self.env['ir.sequence'].next_by_code('purchase.order.line.package') or '00'
         return f'{sequence}'
+
+    @api.onchange('length')
+    def onchange_length(self):
+        self.total_length = self.length + self.quantity
+        self.volume = self.length * self.width * self.height / 1000000
+
+    @api.onchange('width')
+    def onchange_width(self):
+        self.total_width = self.width + self.quantity
+        self.volume = self.length * self.width * self.height / 1000000
+
+    @api.onchange('height')
+    def onchange_height(self):
+        self.total_volume = self.height + self.quantity
+        self.volume = self.length * self.width * self.height / 1000000
+
+    @api.onchange('total_length', 'total_width', 'total_height')
+    def onchange_total_length(self):
+        self.total_volume = self.total_length * self.total_width * self.total_height / 1000000
+
+    @api.onchange('quantity', 'weight')
+    def onchange_height(self):
+        self.total_weight = self.weight + self.quantity
