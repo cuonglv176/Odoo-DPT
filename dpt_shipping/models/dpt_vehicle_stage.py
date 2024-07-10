@@ -14,4 +14,5 @@ class DPTVehicleStage(models.Model):
         ('chinese', 'Chinese'),
         ('vietnamese', 'Vietnamese'),
     ], default='chinese', string='Country')
+    active = fields.Boolean('Active', default=True)
 

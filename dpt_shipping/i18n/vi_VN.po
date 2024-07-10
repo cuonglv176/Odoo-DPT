@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-07 14:30+0000\n"
-"PO-Revision-Date: 2024-07-07 14:30+0000\n"
+"POT-Creation-Date: 2024-07-10 16:38+0000\n"
+"PO-Revision-Date: 2024-07-10 16:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -19,6 +19,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__message_needaction
 msgid "Action Needed"
 msgstr ""
+
+#. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage__active
+msgid "Active"
+msgstr "Hiệu lực"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__activity_ids
@@ -43,6 +48,11 @@ msgstr ""
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__message_attachment_count
 msgid "Attachment Count"
+msgstr ""
+
+#. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_split_wizard__available_sale_ids
+msgid "Available Sale Order"
 msgstr ""
 
 #. module: dpt_shipping
@@ -366,11 +376,6 @@ msgid "Sequence"
 msgstr ""
 
 #. module: dpt_shipping
-#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_split_wizard__shipping_id
-msgid "Shipping"
-msgstr "Phiếu vận chuyển"
-
-#. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__receive_shipping_ids
 msgid "Shipping Receive"
 msgstr "Phiếu nhận"
@@ -381,6 +386,7 @@ msgid "Shipping Sent"
 msgstr "Phiếu gửi"
 
 #. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_split_wizard__shipping_id
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage_log__shipping_slip_id
 msgid "Shipping Slip"
 msgstr "Phiếu vận chuyển"
