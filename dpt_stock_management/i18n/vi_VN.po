@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-04 17:23+0000\n"
-"PO-Revision-Date: 2024-07-04 17:23+0000\n"
+"POT-Creation-Date: 2024-07-10 06:48+0000\n"
+"PO-Revision-Date: 2024-07-10 06:48+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -80,6 +80,11 @@ msgid "Create transfer picking"
 msgstr "Tạo Điều chuyển"
 
 #. module: dpt_stock_management
+#: model:ir.model,name:dpt_stock_management.model_dpt_sale_service_management
+msgid "DPT Sale Service Management"
+msgstr ""
+
+#. module: dpt_stock_management
 #: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
 msgid "Delivery Address"
 msgstr "Khách hàng"
@@ -117,6 +122,11 @@ msgid "Draft"
 msgstr "Nháp"
 
 #. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
+msgid "Dịch vụ"
+msgstr ""
+
+#. module: dpt_stock_management
 #: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__finish_create_picking
 msgid "Finish Create Picking"
 msgstr ""
@@ -130,6 +140,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
 msgid "Forecast Report"
 msgstr ""
+
+#. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.stock_picking_kanban_inherit_view
+msgid "Weight:"
+msgstr "Cân nặng:"
+
+#. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.stock_picking_kanban_inherit_view
+msgid "Weight: 0 kg"
+msgstr "Cân nặng: 0 kg"
 
 #. module: dpt_stock_management
 #: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__is_main_incoming
@@ -178,6 +198,7 @@ msgid "Packing Lot name"
 msgstr "Mã kiện"
 
 #. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_dpt_sale_service_management__picking_id
 #: model:ir.model.fields,field_description:dpt_stock_management.field_purchase_order_line_package__picking_id
 msgid "Picking"
 msgstr ""
@@ -245,6 +266,26 @@ msgid "Receive From"
 msgstr "Nhà cung cấp"
 
 #. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__sale_service_ids
+msgid "Sale Service"
+msgstr ""
+
+#. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__scheduled_date
+msgid "Scheduled Date"
+msgstr "Lịch giao theo kế hoạch"
+
+#. module: dpt_stock_management
+#: model:ir.model.fields,help:dpt_stock_management.field_stock_picking__scheduled_date
+msgid ""
+"Scheduled time for the first part of the shipment to be processed. Setting "
+"manually a value here would set it as expected date for all the stock moves."
+msgstr ""
+"Thời gian theo kế hoạch để xử lý phần đầu tiên của lô hàng. Việc thiết lập "
+"thủ công một giá trị tại đây sẽ đặt ngày này làm ngày dự kiến cho tất cả "
+"dịch chuyển tồn kho."
+
+#. module: dpt_stock_management
 #: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__state
 msgid "Status"
 msgstr "Trạng thái"
@@ -277,6 +318,16 @@ msgid "There is not Lot %s of Product %s !"
 msgstr "Không có mã Lot %s của Sản phẩm %s !"
 
 #. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__total_weight
+msgid "Total Weight"
+msgstr "Tổng cân nặng"
+
+#. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__total_volume
+msgid "Total Volume"
+msgstr "Tổng số khối"
+
+#. module: dpt_stock_management
 #: model:ir.model,name:dpt_stock_management.model_stock_picking
 msgid "Transfer"
 msgstr "Điều chuyển"
@@ -297,6 +348,16 @@ msgid "Unit"
 msgstr "Đơn vị"
 
 #. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.stock_picking_kanban_inherit_view
+msgid "Volume:"
+msgstr "Số khối"
+
+#. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.stock_picking_kanban_inherit_view
+msgid "Volume: 0 m<sup>3</sup>"
+msgstr "Số khối: 0 m<sup>3</sup>"
+
+#. module: dpt_stock_management
 #: model:ir.model.fields.selection,name:dpt_stock_management.selection__stock_picking__state__confirmed
 msgid "Waiting"
 msgstr "Đang chờ"
@@ -310,3 +371,13 @@ msgstr "Đang chờ hoạt động khác"
 #: model:ir.model,name:dpt_stock_management.model_stock_warehouse
 msgid "Warehouse"
 msgstr "Kho hàng"
+
+#. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.stock_picking_kanban_inherit_view
+msgid "kg"
+msgstr ""
+
+#. module: dpt_stock_management
+#: model_terms:ir.ui.view,arch_db:dpt_stock_management.stock_picking_kanban_inherit_view
+msgid "m<sup>3</sup>"
+msgstr ""
