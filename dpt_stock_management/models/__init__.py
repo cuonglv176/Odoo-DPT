@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from . import dpt_sale_order_fields
 from . import dpt_sale_service_management
 from . import stock_picking
 from . import uom_uom
