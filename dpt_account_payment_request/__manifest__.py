@@ -7,7 +7,7 @@
     'author': 'CuongLV',
     'maintainer': 'Your Name',
     'website': 'http://dpt.com',
-    'depends': ['base', 'account', 'purchase'],
+    'depends': ['base', 'account', 'purchase','dpt_sale_deposit'],
     'data': [
         'security/ir.model.access.csv',
         'data/account_sequence.xml',
