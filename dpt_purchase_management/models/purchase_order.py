@@ -40,7 +40,7 @@ class PurchaseOrder(models.Model):
     @api.onchange('department_id')
     def onchange_department_id(self):
         if not self.department_id:
-            self.department_id = self.user.employee_id.department_id
+            self.department_id = self.user_id.employee_id.department_id
 
     def _compute_count_buy_cny_po(self):
         for r in self:
