@@ -32,5 +32,5 @@ class DPTSaleOrderFields(models.Model):
         if not current_employee_id:
             return domain
         department_and_child_ids = current_employee_id.department_id | current_employee_id.department_id.child_ids
-        domain = AND([domain, [('service_id.department_id', 'in', department_and_child_ids.ids)]])
+        # domain = AND([domain, [('service_id.department_id', 'in', department_and_child_ids.ids)]])
         return domain

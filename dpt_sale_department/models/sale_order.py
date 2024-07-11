@@ -35,5 +35,5 @@ class SaleOrder(models.Model):
             service_type_id = self.env['dpt.service.management.type'].search([('code', '=', 'inventory')])
             domain = AND([domain, [('sale_service_ids.service_id.service_type_id', 'in', service_type_id.ids)]])
         department_and_child_ids = current_employee_id.department_id | current_employee_id.department_id.child_ids
-        domain = AND([domain, [('sale_service_ids.service_id.department_id', 'in', department_and_child_ids.ids)]])
+        # domain = AND([domain, [('sale_service_ids.service_id.department_id', 'in', department_and_child_ids.ids)]])
         return domain
