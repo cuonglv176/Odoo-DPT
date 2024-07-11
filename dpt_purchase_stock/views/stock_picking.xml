@@ -23,6 +23,7 @@
         <field name="arch" type="xml">
             <field name="state" position="before">
                 <field name="sale_purchase_id"/>
+                <field name="customer_id"/>
             </field>
         </field>
     </record>

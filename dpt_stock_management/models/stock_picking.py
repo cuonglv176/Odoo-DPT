@@ -23,8 +23,8 @@ class StockPicking(models.Model):
     is_main_incoming = fields.Boolean('Is Main Incoming', compute="_compute_main_incoming",
                                       search="search_main_incoming")
     lot_name = fields.Char('Lot')
-    total_volume = fields.Float('Total Volume', compute="_compute_total_volume_weight")
-    total_weight = fields.Float('Total Weight', compute="_compute_total_volume_weight")
+    total_volume = fields.Float('Total Volume (m3)', compute="_compute_total_volume_weight")
+    total_weight = fields.Float('Total Weight (kg)', compute="_compute_total_volume_weight")
 
     # re-define for translation
     name = fields.Char(

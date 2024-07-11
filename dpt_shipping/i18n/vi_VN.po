@@ -435,12 +435,12 @@ msgstr ""
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__transfer_code
 msgid "Transfer Code"
-msgstr "Mã vận chuyển (đối tác)"
+msgstr "Mã phiếu vận chuyển (đối tác)"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__transfer_code_chinese
 msgid "Transfer Code in Chinese"
-msgstr "Mã vận chuyển TQ (đối tác)"
+msgstr "Mã phiếu vận chuyển TQ (đối tác)"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__transfer_picking_ids

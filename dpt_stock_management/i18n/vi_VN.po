@@ -309,13 +309,13 @@ msgstr "Không có mã Lot %s của Sản phẩm %s !"
 
 #. module: dpt_stock_management
 #: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__total_volume
-msgid "Total Volume"
-msgstr "Tổng số khối"
+msgid "Total Volume (m3)"
+msgstr "Tổng số khối (m3)"
 
 #. module: dpt_stock_management
 #: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__total_weight
-msgid "Total Weight"
-msgstr "Tổng cân nặng"
+msgid "Total Weight (kg)"
+msgstr "Tổng cân nặng (kg)"
 
 #. module: dpt_stock_management
 #: model:ir.model,name:dpt_stock_management.model_stock_picking
@@ -325,12 +325,12 @@ msgstr "Điều chuyển"
 #. module: dpt_stock_management
 #: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__transfer_code
 msgid "Transfer Code"
-msgstr "Mã vận chuyển (đối tác)"
+msgstr "Mã phiếu vận chuyển (đối tác)"
 
 #. module: dpt_stock_management
 #: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__transfer_code_chinese
 msgid "Transfer Code in Chinese"
-msgstr "Mã vận chuyển Trung Quốc (đối tác)"
+msgstr "Mã phiếu vận chuyển TQ (đối tác)"
 
 #. module: dpt_stock_management
 #: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
