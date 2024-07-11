@@ -20,10 +20,10 @@ class PurchaseOrderLinePackage(models.Model):
     width = fields.Float('Width (cm)', tracking=True)
     height = fields.Float('Height (cm)', tracking=True)
     weight = fields.Float('Weight (kg)', tracking=True)
-    volume = fields.Float('Volume (m3)', tracking=True)
+    volume = fields.Float('Volume (m3)', tracking=True, digits=(12, 5))
 
-    total_weight = fields.Float('Total Weight (kg)', tracking=True)
-    total_volume = fields.Float('Total Volume (m3)', tracking=True)
+    total_weight = fields.Float('Total Weight (kg)', tracking=True, digits=(12, 5))
+    total_volume = fields.Float('Total Volume (m3)', tracking=True, digits=(12, 5))
     note = fields.Text('Note', tracking=True)
     image = fields.Binary(string='Image')
     detail_ids = fields.One2many('purchase.order.line.package.detail', 'package_id', 'Package detail', tracking=True)
@@ -38,10 +38,13 @@ class PurchaseOrderLinePackage(models.Model):
         sequence = self.env['ir.sequence'].next_by_code('purchase.order.line.package') or '00'
         return f'{sequence}'
 
-    @api.onchange('quantity', 'length', 'width', 'height')
-    def onchange_volume(self):
+    @api.onchange('length', 'width', 'height')
+    def onchange_size(self):
         self.volume = self.length * self.width * self.height / 1000000
-        self.total_volume = self.quantity * self.length * self.width * self.height / 1000000
+
+    @api.onchange('quantity', 'volume')
+    def onchange_volume(self):
+        self.total_volume = self.quantity * self.volume
 
     @api.onchange('quantity', 'weight')
     def onchange_height(self):
