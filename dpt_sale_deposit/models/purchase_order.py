@@ -29,7 +29,7 @@ class PurchaseOrder(models.Model):
     @api.depends('origin_po')
     def _compute_deposit_count(self):
         for rec in self:
-            deposit_ids = self.env['account.payment'].search[('sale_id', '=', rec.origin_po.id)]
+            deposit_ids = self.env['account.payment'].search([('sale_id', '=', rec.origin_po.id)])
             rec.deposit_count = len(deposit_ids)
             deposit_amount_total = 0
             for deposit_id in deposit_ids:
