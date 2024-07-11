@@ -64,6 +64,11 @@ class StockPicking(models.Model):
         for item in self:
             item.is_main_incoming = item.picking_type_code == 'incoming' and item.location_dest_id.warehouse_id.is_main_incoming_warehouse
 
+    @api.onchange('picking_type_code', 'location_dest_id')
+    def _onchange_main_incoming(self):
+        for item in self:
+            item.is_main_incoming = item.picking_type_code == 'incoming' and item.location_dest_id.warehouse_id.is_main_incoming_warehouse
+
     def search_main_incoming(self, operator, value):
         main_warehouse_ids = self.env['stock.warehouse'].sudo().search([('is_main_incoming_warehouse', '=', True)])
         if (operator == '=' and value) or (operator == '!=' and not value):
