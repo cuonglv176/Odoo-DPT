@@ -146,6 +146,8 @@ class RequiredField(models.Model):
     ], string='Default From', tracking=True)
 
     def get_default_value(self, so):
+        if not so:
+            return {}
         if self.default_compute_from == 'weight_in_so' and self.fields_type == 'integer':
             return {
                 'value_integer': so.weight

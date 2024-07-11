@@ -54,6 +54,7 @@ class StockPicking(models.Model):
         help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.")
 
     sale_service_ids = fields.One2many('dpt.sale.service.management', 'picking_id', 'Sale Service')
+    fields_ids = fields.One2many('dpt.sale.order.fields', 'picking_id', 'Fields')
 
     def _compute_total_volume_weight(self):
         for item in self:
@@ -338,9 +339,105 @@ class StockPicking(models.Model):
             'target': 'new',
         }
 
-    @api.constrains('sale_purchase_id', 'sale_service_ids')
+    @api.constrains('sale_purchase_id', 'sale_service_ids', 'fields_ids')
     def constrains_update_sale_service(self):
         for item in self:
             item.sale_service_ids.write({
                 'sale_id': item.sale_purchase_id.id
             })
+            item.fields_ids.write({
+                'sale_id': item.sale_purchase_id.id
+            })
+
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        picking = super(StockPicking, self).copy(default)
+        picking.sale_service_ids = self.sale_service_ids
+        picking.fields_ids = self.fields_ids
+        return picking
+
+    @api.model
+    def create(self, vals_list):
+        res = super(StockPicking, self).create(vals_list)
+        self.check_required_fields()
+        return res
+
+    def write(self, vals):
+        res = super(StockPicking, self).write(vals)
+        self.check_required_fields()
+        return res
+
+    def check_required_fields(self):
+        for r in self.fields_ids:
+            if r.env.context.get('onchange_sale_service_ids', False):
+                continue
+            if r.fields_id.type == 'options' or (
+                    r.fields_id.type == 'required' and (
+                    r.value_char or r.value_integer or r.value_date or r.selection_value_id)):
+                continue
+            else:
+                raise ValidationError(_("Please fill required fields!!!"))
+
+    @api.onchange('sale_service_ids')
+    def onchange_sale_service_ids(self):
+        val = []
+        list_exist = self.env['stock.picking'].browse(self.id.origin).fields_ids.fields_id.ids
+        list_onchange = [item.fields_id.id for item in self.fields_ids]
+        list_sale_service_id = []
+        for sale_service_id in self.sale_service_ids:
+            if sale_service_id.service_id.id in list_sale_service_id:
+                continue
+            for required_fields_id in sale_service_id.service_id.required_fields_ids:
+                if required_fields_id.id in list_exist:
+                    for field_data in self.env['stock.picking'].browse(self.id.origin).fields_ids:
+                        if field_data.fields_id.id == required_fields_id.id:
+                            val.append({
+                                'sequence': 1 if field_data.type == 'required' else 0,
+                                'fields_id': required_fields_id.id,
+                                'sale_id': self.id,
+                                'value_char': field_data.value_char,
+                                'value_integer': field_data.value_integer,
+                                'value_date': field_data.value_date,
+                                'selection_value_id': field_data.selection_value_id.id,
+
+                            })
+                elif required_fields_id.id in list_onchange:
+                    for field_data in self.fields_ids:
+                        if field_data.fields_id.id == required_fields_id.id:
+                            val.append({
+                                'sequence': 1 if field_data.type == 'required' else 0,
+                                'fields_id': required_fields_id.id,
+                                'sale_id': self.id,
+                                'value_char': field_data.value_char,
+                                'value_integer': field_data.value_integer,
+                                'value_date': field_data.value_date,
+                                'selection_value_id': field_data.selection_value_id.id,
+
+                            })
+                if val:
+                    result = [item for item in val if item['fields_id'] == required_fields_id.id]
+                    if not result:
+                        x = {
+                            'sequence': 1 if required_fields_id.type == 'required' else 0,
+                            'fields_id': required_fields_id.id,
+                        }
+                        default_value = required_fields_id.get_default_value(so=self.sale_purchase_id)
+                        if default_value:
+                            x.update(default_value)
+                        val.append(x)
+                else:
+                    x = {
+                        'sequence': 1 if required_fields_id.type == 'required' else 0,
+                        'fields_id': required_fields_id.id,
+                    }
+                    default_value = required_fields_id.get_default_value(so=self.sale_purchase_id)
+                    if default_value:
+                        x.update(default_value)
+                    val.append(x)
+            list_sale_service_id.append(sale_service_id.service_id.id)
+        if val:
+            val = sorted(val, key=lambda x: x["sequence"], reverse=True)
+            self.fields_ids = None
+            self.fields_ids = [(0, 0, item) for item in val]
+        if not self.sale_service_ids:
+            self.fields_ids = [(5, 0, 0)]

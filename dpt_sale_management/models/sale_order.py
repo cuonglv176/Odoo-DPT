@@ -107,7 +107,7 @@ class SaleOrder(models.Model):
                             'sequence': 1 if required_fields_id.type == 'required' else 0,
                             'fields_id': required_fields_id.id,
                         }
-                        default_value = required_fields_id.get_default_value(self)
+                        default_value = required_fields_id.get_default_value(so=self)
                         if default_value:
                             x.update(default_value)
                         val.append(x)
@@ -116,7 +116,7 @@ class SaleOrder(models.Model):
                         'sequence': 1 if required_fields_id.type == 'required' else 0,
                         'fields_id': required_fields_id.id,
                     }
-                    default_value = required_fields_id.get_default_value(self)
+                    default_value = required_fields_id.get_default_value(so=self)
                     if default_value:
                         x.update(default_value)
                     val.append(x)
