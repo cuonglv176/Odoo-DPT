@@ -284,6 +284,10 @@ msgstr ""
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__name
+msgid "Name"
+msgstr "Mã phiếu vận chuyển (nội bộ)"
+
+#. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage__name
 msgid "Name"
 msgstr "Tên"
@@ -431,12 +435,12 @@ msgstr ""
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__transfer_code
 msgid "Transfer Code"
-msgstr "Mã phiếu vận chuyển"
+msgstr "Mã vận chuyển (đối tác)"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__transfer_code_chinese
 msgid "Transfer Code in Chinese"
-msgstr "Mã phiếu vận chuyển TQ"
+msgstr "Mã vận chuyển TQ (đối tác)"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__transfer_picking_ids
