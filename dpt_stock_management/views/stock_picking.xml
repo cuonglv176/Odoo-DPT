@@ -8,8 +8,8 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='origin']" position="after">
                 <field name="packing_lot_name" readonly="1" force_save="1"/>
-                <field name="transfer_code"/>
-                <field name="transfer_code_chinese"/>
+                <field name="transfer_code" />
+                <field name="transfer_code_chinese" invisible="1"/>
                 <field name="is_main_incoming" invisible="1"/>
                 <field name="lot_name" invisible="is_main_incoming" required="not is_main_incoming"/>
             </xpath>
