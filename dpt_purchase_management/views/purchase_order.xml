@@ -110,7 +110,7 @@
 
 
     <record id="purchase.purchase_form_action" model="ir.actions.act_window">
-        <field name="domain">[('state','in',('purchase', 'done')), ('purchase_type','=', 'internal')]</field>
+        <field name="domain">[('purchase_type','=', 'internal')]</field>
         <field name="name">Đơn mua hàng nội bộ</field>
         <field name="context">{'from_purchase_order_confirm': True, 'default_purchase_type': 'internal'}</field>
     </record>
@@ -126,7 +126,7 @@
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('purchase.purchase_order_view_tree')}),
                 (0, 0, {'view_mode': 'kanban', 'view_id': ref('purchase.purchase_order_view_kanban_without_dashboard')}),
             ]"/>
-        <field name="domain">[('state','in',('purchase', 'done')), ('purchase_type','=', 'external')]</field>
+        <field name="domain">[('purchase_type','=', 'external')]</field>
         <field name="search_view_id" ref="purchase.purchase_order_view_search"/>
         <field name="context">{'from_purchase_order_confirm': True, 'default_purchase_type': 'external'}</field>
         <field name="help" type="html">
@@ -152,7 +152,7 @@
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('purchase.purchase_order_view_tree')}),
                 (0, 0, {'view_mode': 'kanban', 'view_id': ref('purchase.purchase_order_view_kanban_without_dashboard')}),
             ]"/>
-        <field name="domain">[('state','in',('purchase', 'done')), ('purchase_type','=', 'buy_cny')]</field>
+        <field name="domain">[('purchase_type','=', 'buy_cny')]</field>
         <field name="search_view_id" ref="purchase.purchase_order_view_search"/>
         <field name="context">{'from_purchase_order_confirm': True, 'default_purchase_type': 'buy_cny'}</field>
         <field name="help" type="html">
