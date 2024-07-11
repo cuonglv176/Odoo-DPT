@@ -32,6 +32,7 @@ class DptExportImport(models.Model):
     line_ids = fields.One2many('dpt.export.import.line', 'export_import_id', string='Export/Import Line')
     select_line_ids = fields.Many2many('dpt.export.import.line', string='Export/Import Line',
                                        domain=[('export_import_id', '=', False), ('state', '!=', 'draft')])
+    dpt_tax_ecus5 = fields.Char(string='VAT ECUS5', tracking=True)
     description = fields.Text(string='Description')
     state = fields.Selection([
         ('draft', 'Nháp'),
@@ -68,6 +69,11 @@ class DptExportImport(models.Model):
     driver_name = fields.Char(string='Driver Name')
     driver_phone_number = fields.Char(string='Driver Phone Number')
     vehicle_license_plate = fields.Char(string='Vehicle License Plate')
+
+    @api.onchange('dpt_tax_ecus5')
+    def update_dpt_tax_ecus5(self):
+        for line_id in self.line_ids:
+            line_id.dpt_tax_ecus5 = self.dpt_tax_ecus5
 
     @api.onchange('sale_ids')
     def onchange_add_declaration_line(self):

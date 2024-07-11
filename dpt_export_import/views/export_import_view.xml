@@ -49,6 +49,7 @@
                         </group>
                         <group>
                             <field name="date"/>
+                            <field name="dpt_tax_ecus5"/>
                             <field name="consultation_date"/>
                             <field name="dpt_n_w_kg"/>
                             <field name="dpt_g_w_kg"/>
