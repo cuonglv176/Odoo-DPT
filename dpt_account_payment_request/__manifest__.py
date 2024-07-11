@@ -13,6 +13,7 @@
         'data/account_sequence.xml',
         'views/account_payment.xml',
         'views/account_payment_request_type.xml',
+        'views/purchase_order.xml',
         'views/menu.xml',
     ],
 }

@@ -32,6 +32,7 @@ class AccountPayment(models.Model):
     user_id = fields.Many2one('res.users', string='User Request', default=lambda self: self.env.user, tracking=True)
     department_id = fields.Many2one('hr.department', string='Department Request', tracking=True)
     type_id = fields.Many2one('dpt.account.payment.type', string='Type Request')
+    purchase_id = fields.Many2one('purchase.order', string='Purchase')
     approval_id = fields.Many2one('approval.request', string='Approval Payment Request')
     request_status = fields.Selection([
         ('new', 'To Submit'),

@@ -167,6 +167,8 @@
                                    decoration-muted="request_status == 'cancel'"/>
                             <field name="payment_type" widget="radio" options="{'horizontal': True}"
                                    readonly="state != 'draft'"/>
+                            <field name="sale_id" string="Sale Order"/>
+                            <field name="purchase_id"/>
                             <field name="partner_id" context="{'default_is_company': True}" string="Customer"
                                    options="{'no_quick_create': True}"
                                    invisible="partner_type != 'customer' or is_internal_transfer"
