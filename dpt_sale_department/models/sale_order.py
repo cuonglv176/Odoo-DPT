@@ -17,11 +17,20 @@ class SaleOrder(models.Model):
         Process domain to filter out detail
         """
         # Skip process domain if system user or skip_process_domain context is set
-        if not self.env.context.get('separate_for_department', False):
+        if not self.env.context.get('separate_for_department', False) and not self.env.context.get(
+                'separate_purchase_for_department', False) and not self.env.context.get(
+                'separate_inventory_for_department', False) and not self.env.context.get(
+                'separate_import_export_for_department', False):
             return domain
         current_employee_id = self.env.user.employee_ids[:1]
         if not current_employee_id:
             return domain
+        if self.env.context.get('separate_purchase_for_department', False):
+            domain = AND([domain, [('sale_service_ids.service_id.service_type_id.code', '=', 'purchase')]])
+        if self.env.context.get('separate_inventory_for_department', False):
+            domain = AND([domain, [('sale_service_ids.service_id.service_type_id.code', '=', 'inventory')]])
+        if self.env.context.get('separate_import_export_for_department', False):
+            domain = AND([domain, [('sale_service_ids.service_id.service_type_id.code', '=', 'import_export')]])
         department_and_child_ids = current_employee_id.department_id | current_employee_id.department_id.child_ids
         domain = AND([domain, [('sale_service_ids.service_id.department_id', 'in', department_and_child_ids.ids)]])
         return domain

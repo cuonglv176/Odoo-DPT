@@ -9,7 +9,9 @@
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
         <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
         <field name="domain">[('sale_service_ids', '!=', False),('state','!=', 'draft')]</field>
-        <field name="context">{'search_default_my_quotation': 1, 'separate_for_department': True}</field>
+        <field name="context">{'search_default_my_quotation': 1, 'separate_for_department': True,
+            'separate_purchase_for_department': True}
+        </field>
     </record>
 
     <menuitem id="quotation_for_purchase_menu" name="Service Quotation" parent="purchase.menu_procurement_management"
@@ -23,7 +25,9 @@
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
         <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
         <field name="domain">[('sale_service_ids', '!=', False),('state','!=', 'draft')]</field>
-        <field name="context">{'search_default_my_quotation': 1, 'separate_for_department': True}</field>
+        <field name="context">{'search_default_my_quotation': 1, 'separate_for_department': True,
+            'separate_inventory_for_department': True}
+        </field>
     </record>
 
     <menuitem id="quotation_for_stock_menu" name="Service Quotation" parent="stock.menu_stock_root"
@@ -37,7 +41,9 @@
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
         <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
         <field name="domain">[('sale_service_ids', '!=', False),('state','!=', 'draft')]</field>
-        <field name="context">{'search_default_my_quotation': 1, 'separate_for_department': True}</field>
+        <field name="context">{'search_default_my_quotation': 1, 'separate_for_department': True,
+            'separate_import_export_for_department': True}
+        </field>
     </record>
 
     <menuitem id="service_quotation_for_export_import_menu" name="Service Quotation" sequence="10"

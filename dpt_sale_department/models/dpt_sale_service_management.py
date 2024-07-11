@@ -17,8 +17,17 @@ class DPTSaleServiceManagement(models.Model):
         Process domain to filter out detail
         """
         # Skip process domain if system user or skip_process_domain context is set
-        if not self.env.context.get('separate_for_department', False):
+        if not self.env.context.get('separate_for_department', False) and not self.env.context.get(
+                'separate_purchase_for_department', False) and not self.env.context.get(
+            'separate_inventory_for_department', False) and not self.env.context.get(
+            'separate_import_export_for_department', False):
             return domain
+        if self.env.context.get('separate_purchase_for_department', False):
+            domain = AND([domain, [('service_id.service_type_id.code', '=', 'purchase')]])
+        if self.env.context.get('separate_inventory_for_department', False):
+            domain = AND([domain, [('service_id.service_type_id.code', '=', 'inventory')]])
+        if self.env.context.get('separate_import_export_for_department', False):
+            domain = AND([domain, [('service_id.service_type_id.code', '=', 'import_export')]])
         current_employee_id = self.env.user.employee_ids[:1]
         if not current_employee_id:
             return domain
