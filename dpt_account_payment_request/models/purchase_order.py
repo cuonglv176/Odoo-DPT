@@ -11,8 +11,8 @@ class PurchaseOrder(models.Model):
     payment_amount_total = fields.Float(string='Payment Amount', compute="_compute_payment_count")
 
     def action_open_payment(self):
-        view_id = self.env.ref('account.view_account_payment_tree').id
-        view_form_id = self.env.ref('account.view_account_payment_form').id
+        view_id = self.env.ref('dpt_account_payment_request.dpt_view_account_payment_request_tree').id
+        view_form_id = self.env.ref('dpt_account_payment_request.dpt_view_account_payment_request_form').id
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'account.payment',
