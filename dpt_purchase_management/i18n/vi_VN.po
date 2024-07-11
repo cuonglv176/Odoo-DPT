@@ -641,16 +641,6 @@ msgid "Total"
 msgstr "Tổng"
 
 #. module: dpt_purchase_management
-#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__total_height
-msgid "Total Height (cm)"
-msgstr "Tổng chiều cao (cm)"
-
-#. module: dpt_purchase_management
-#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__total_length
-msgid "Total Length (cm)"
-msgstr "Tổng chiều dài (cm)"
-
-#. module: dpt_purchase_management
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__total_volume
 msgid "Total Volume (m3)"
 msgstr "Tổng Số khối (m3)"
@@ -659,11 +649,6 @@ msgstr "Tổng Số khối (m3)"
 #: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__total_weight
 msgid "Total Weight (kg)"
 msgstr "Tổng Cân nặng (kg)"
-
-#. module: dpt_purchase_management
-#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line_package__total_width
-msgid "Total Width (cm)"
-msgstr "Tổng chiều rộng (cm)"
 
 #. module: dpt_purchase_management
 #: model:ir.model.fields,help:dpt_purchase_management.field_purchase_order_line_package__activity_exception_decoration

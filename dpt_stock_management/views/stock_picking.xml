@@ -33,9 +33,6 @@
                             <field name="created_picking_qty" column_invisible="1"/>
                             <field name="quantity"/>
                             <field name="uom_id"/>
-                            <field name="total_length"/>
-                            <field name="total_width"/>
-                            <field name="total_height"/>
                             <field name="total_weight"/>
                             <field name="total_volume"/>
                             <field name="note"/>
@@ -61,9 +58,6 @@
                                         <field name="weight"/>
                                     </group>
                                     <group string="Total">
-                                        <field name="total_length"/>
-                                        <field name="total_width"/>
-                                        <field name="total_height"/>
                                         <field name="total_volume"/>
                                         <field name="total_weight"/>
                                     </group>
