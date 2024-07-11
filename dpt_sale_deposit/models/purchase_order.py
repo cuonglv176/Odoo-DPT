@@ -17,7 +17,7 @@ class PurchaseOrder(models.Model):
             'res_model': 'account.payment',
             'name': _('Deposit'),
             'view_mode': 'tree,form',
-            'domain': [('origin_po', '=', self.id)],
+            'domain': [('sale_id', '=', self.origin_po.id)],
             'views': [[view_id, 'tree'], [view_form_id, 'form']],
             'context': {
                 'default_sale_id': self.origin_po.id,
