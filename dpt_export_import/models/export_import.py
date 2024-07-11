@@ -232,6 +232,7 @@ class DptExportImportLine(models.Model):
     dpt_is_new = fields.Boolean(string='Is new', tracking=True, default=False)
     state = fields.Selection([
         ('draft', 'Nháp'),
+        ('wait_confirm', 'Chờ xác nhận'),
         ('eligible', 'Đủ điều kiện khai báo'),
         ('declared', 'Tờ khai thông quan'),
         ('released', 'Giải phóng'),
@@ -244,6 +245,9 @@ class DptExportImportLine(models.Model):
         ('cny', 'CNY')
     ], string='Declaration type', default='usd')
     product_history_id = fields.Many2one('dpt.export.import.line', string='Description Selection')
+
+    def action_wait_confirm(self):
+        self.state = 'wait_confirm'
 
     @api.onchange('product_history_id')
     def onchange_get_data_product_history(self):
@@ -270,7 +274,6 @@ class DptExportImportLine(models.Model):
             self.dpt_tax_other = self.product_history_id.dpt_tax_other
             self.dpt_total = self.product_history_id.dpt_total
             self.declaration_type = self.product_history_id.declaration_type
-
 
     @api.depends('dpt_description')
     def _get_name(self):
