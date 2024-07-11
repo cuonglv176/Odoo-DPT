@@ -37,7 +37,7 @@ class PurchaseOrder(models.Model):
     last_rate_currency = fields.Float('Rate Currency')
     purchase_service_ids = fields.One2many('dpt.purchase.service.management', 'purchase_id', 'Service Line')
 
-    @api.onchange('department_id')
+    @api.onchange('user_id')
     def onchange_department_id(self):
         if not self.department_id:
             self.department_id = self.user_id.employee_id.department_id
