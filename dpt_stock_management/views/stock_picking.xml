@@ -8,6 +8,8 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='origin']" position="after">
                 <field name="packing_lot_name" readonly="1" force_save="1"/>
+                <field name="total_volume"/>
+                <field name="total_weight"/>
                 <field name="transfer_code" />
                 <field name="transfer_code_chinese" invisible="1"/>
                 <field name="is_main_incoming" invisible="1"/>
@@ -209,6 +211,10 @@
             <field name="name" position="after">
                 <field name="packing_lot_name"/>
                 <field name="purchase_id"/>
+            </field>
+            <field name="scheduled_date" position="after">
+                <field name="total_volume"/>
+                <field name="total_weight"/>
             </field>
             <field name="origin" position="attributes">
                 <attribute name="column_invisible">1</attribute>
