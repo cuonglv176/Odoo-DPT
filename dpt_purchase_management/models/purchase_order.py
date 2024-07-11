@@ -37,6 +37,11 @@ class PurchaseOrder(models.Model):
     last_rate_currency = fields.Float('Rate Currency')
     purchase_service_ids = fields.One2many('dpt.purchase.service.management', 'purchase_id', 'Service Line')
 
+    @api.onchange('department_id')
+    def onchange_department_id(self):
+        if not self.department_id:
+            self.department_id = self.user.employee_id.department_id
+
     def _compute_count_buy_cny_po(self):
         for r in self:
             r.count_buy_cny_po = self.search_count([('purchase_type', '=', 'buy_cny'), ('origin_po', '=', r.id)])
