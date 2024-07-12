@@ -28,7 +28,7 @@ class DPTSaleTemplateService(models.Model):
     def _prepare_order_service_values(self):
         """ Give the values to create the corresponding order line.
 
-        :return: `sale.order.line` create values
+        :return: `sale.order.line` create valuesA
         :rtype: dict
         """
         self.ensure_one()
