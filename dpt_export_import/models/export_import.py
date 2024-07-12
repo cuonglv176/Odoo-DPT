@@ -336,6 +336,25 @@ class DptExportImportLine(models.Model):
             else:
                 rec.dpt_amount_tax_other = rec.dpt_tax_other * rec.dpt_price_cny_vnd
 
+    @api.model
+    def create(self, vals_list):
+        res = super(DptExportImportLine, self).create(vals_list)
+        val_update_sale_line = {}
+        val_update_sale_line.update({
+            'payment_exchange_rate': self.dpt_exchange_rate,
+            'import_tax_rate': self.dpt_tax_import,
+            'vat_tax_rate': self.dpt_tax,
+            'other_tax_rate': self.dpt_tax_other,
+            'total_tax_amount': self.dpt_total_vat,
+            'hs_code_id': self.hs_code_id,
+            'import_tax_amount': self.dpt_amount_tax_import,
+            'vat_tax_amount': self.dpt_amount_tax,
+            'other_tax_amount': self.dpt_amount_tax_other,
+
+        })
+        self.sale_line_id.write(val_update_sale_line)
+        return res
+
     def write(self, vals):
         res = super(DptExportImportLine, self).write(vals)
         val_update_sale_line = {}
