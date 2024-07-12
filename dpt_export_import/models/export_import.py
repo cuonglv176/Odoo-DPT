@@ -412,19 +412,23 @@ class DptExportImportLine(models.Model):
     @api.onchange('product_id')
     def onchange_information_product(self):
         if self.product_id:
-            self.dpt_english_name = self.product_id.dpt_english_name
-            self.dpt_description = self.product_id.dpt_description
-            self.dpt_n_w_kg = self.product_id.dpt_n_w_kg
-            self.dpt_g_w_kg = self.product_id.dpt_g_w_kg
-            self.dpt_uom_id = self.product_id.dpt_uom_id
-            self.dpt_uom2_ecus_id = self.product_id.dpt_uom2_ecus_id
-            self.dpt_uom2_id = self.product_id.dpt_uom2_id
-            self.dpt_price_kd = self.product_id.dpt_price_kd
-            self.dpt_price_usd = self.product_id.dpt_price_usd
-            self.dpt_tax_import = self.product_id.dpt_tax_import
-            self.dpt_tax_ecus5 = self.product_id.dpt_tax_ecus5
-            self.dpt_tax = self.product_id.dpt_tax
-            self.dpt_exchange_rate = self.product_id.dpt_exchange_rate
-            self.dpt_uom1_id = self.product_id.dpt_uom1_id
-            self.dpt_sl1 = self.product_id.dpt_sl1
-            self.dpt_sl2 = self.product_id.dpt_sl2
+            if self.product_id.dpt_export_import_line_ids:
+                self.product_history_id = self.product_id.dpt_export_import_line_ids[0]
+            else:
+                self.product_history_id = None
+                self.dpt_english_name = self.product_id.dpt_english_name
+                self.dpt_description = self.product_id.dpt_description
+                self.dpt_n_w_kg = self.product_id.dpt_n_w_kg
+                self.dpt_g_w_kg = self.product_id.dpt_g_w_kg
+                self.dpt_uom_id = self.product_id.dpt_uom_id
+                self.dpt_uom2_ecus_id = self.product_id.dpt_uom2_ecus_id
+                self.dpt_uom2_id = self.product_id.dpt_uom2_id
+                self.dpt_price_kd = self.product_id.dpt_price_kd
+                self.dpt_price_usd = self.product_id.dpt_price_usd
+                self.dpt_tax_import = self.product_id.dpt_tax_import
+                self.dpt_tax_ecus5 = self.product_id.dpt_tax_ecus5
+                self.dpt_tax = self.product_id.dpt_tax
+                self.dpt_exchange_rate = self.product_id.dpt_exchange_rate
+                self.dpt_uom1_id = self.product_id.dpt_uom1_id
+                self.dpt_sl1 = self.product_id.dpt_sl1
+                self.dpt_sl2 = self.product_id.dpt_sl2
