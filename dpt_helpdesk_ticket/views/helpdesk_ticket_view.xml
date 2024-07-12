@@ -11,6 +11,23 @@
             <xpath expr="//field[@name='email_cc']" position="after">
                 <field name="user_id"/>
             </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" type="object" name="action_view_sale_order" icon="fa-credit-card">
+                    Đơn hàng
+                </button>
+                <button class="oe_stat_button" type="object" name="action_view_purchase_order" icon="fa-credit-card">
+                    Đơn mua hàng
+                </button>
+                <button class="oe_stat_button" type="object" name="action_view_stock_picking_order" icon="fa-car">
+                    Phiếu kho
+                </button>
+                <button class="oe_stat_button" type="object" name="action_view_approval_request" icon="fa-check">
+                    Phê duyệt
+                </button>
+                <button class="oe_stat_button" type="object" name="action_view_contract" icon="fa-file-text">
+                    Hợp đồng
+                </button>
+            </xpath>
             <xpath expr="//header" position="inside">
                 <button string="Create Purchase Order" name="action_create_po" type="object" class="btn-primary"
                         invisible="purchase_id"/>
@@ -34,16 +51,15 @@
                 <page name="service_lines_ids" string="Service">
                     <field name="service_lines_ids">
                         <tree editable="bottom">
-                            <!--                            <field name="sale_id" invisible="1"/>-->
                             <field name="sequence" widget="handle"/>
+                            <field name="currency_id" column_invisible="1" force_save="1"/>
                             <field name="service_id"/>
                             <field name="description"/>
-                            <field name="qty" readonly="1" force_save="1"/>
+                            <field name="qty" column_invisible="1" force_save="1"/>
                             <field name="uom_id"/>
                             <field name="price" readonly="1" force_save="1"/>
-                            <!--                            <field name="currency_id" invisible="1"/>-->
                             <field name="amount_total" readonly="1" force_save="1"/>
-                            <field name="status"/>
+                            <field name="department_id"/>
                         </tree>
                     </field>
                 </page>
@@ -77,12 +93,15 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='ticket_type_id']" position="after">
                 <br/>
-                <field name="sale_id"/>
+                CS: <field name="user_sale_id"/>
                 <br/>
-                <field name="lot_name"/>
+                Mã đơn hàng: <field name="sale_id"/>
                 <br/>
-                <field name="pack_name"/>
-                <field name="service_ids" widget="many2many_tags"/>
+                Mã lô: <field name="lot_name"/>
+                <br/>
+                Mã pack: <field name="pack_name"/>
+                <br/>
+                Dịch vụ: <field name="service_ids" widget="many2many_tags"/>
             </xpath>
         </field>
     </record>
