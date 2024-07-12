@@ -309,15 +309,15 @@ class DptExportImportLine(models.Model):
         for rec in self:
             rec.dpt_total_cny_vnd = rec.dpt_price_cny_vnd * rec.dpt_exchange_rate * rec.dpt_sl1
 
-    @api.depends('dpt_tax_import', 'dpt_price_cny_vnd', 'declaration_type', 'dpt_total_usd_vnd')
+    @api.depends('dpt_tax_import', 'dpt_total_cny_vnd', 'declaration_type', 'dpt_total_usd_vnd')
     def _compute_dpt_amount_tax_import(self):
         for rec in self:
             if rec.declaration_type == 'usd':
                 rec.dpt_amount_tax_import = rec.dpt_tax_import * rec.dpt_total_usd_vnd
             else:
-                rec.dpt_amount_tax_import = rec.dpt_tax_import * rec.dpt_price_cny_vnd
+                rec.dpt_amount_tax_import = rec.dpt_tax_import * rec.dpt_total_cny_vnd
 
-    @api.depends('dpt_tax', 'dpt_price_cny_vnd', 'declaration_type', 'dpt_total_usd_vnd', 'dpt_amount_tax_import',
+    @api.depends('dpt_tax', 'dpt_total_cny_vnd', 'declaration_type', 'dpt_total_usd_vnd', 'dpt_amount_tax_import',
                  'dpt_amount_tax_other')
     def _compute_dpt_amount_tax(self):
         for rec in self:
@@ -326,15 +326,15 @@ class DptExportImportLine(models.Model):
                         rec.dpt_total_usd_vnd + rec.dpt_amount_tax_import + rec.dpt_tax_other)
             else:
                 rec.dpt_amount_tax = rec.dpt_tax * (
-                        rec.dpt_price_cny_vnd + rec.dpt_amount_tax_import + rec.dpt_tax_other)
+                        rec.dpt_total_cny_vnd + rec.dpt_amount_tax_import + rec.dpt_tax_other)
 
-    @api.depends('dpt_tax_other', 'dpt_price_cny_vnd', 'declaration_type', 'dpt_total_usd_vnd')
+    @api.depends('dpt_tax_other', 'dpt_total_cny_vnd', 'declaration_type', 'dpt_total_usd_vnd')
     def _compute_dpt_amount_tax_other(self):
         for rec in self:
             if rec.declaration_type == 'usd':
                 rec.dpt_amount_tax_other = rec.dpt_tax_other * rec.dpt_total_usd_vnd
             else:
-                rec.dpt_amount_tax_other = rec.dpt_tax_other * rec.dpt_price_cny_vnd
+                rec.dpt_amount_tax_other = rec.dpt_tax_other * rec.dpt_total_cny_vnd
 
     @api.model
     def create(self, vals_list):
