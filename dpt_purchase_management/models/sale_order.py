@@ -8,6 +8,8 @@ class SaleOrder(models.Model):
     product_order_count = fields.Integer('Product Order Count', compute="_compute_product_order_count")
     show_create_po = fields.Boolean('Show create PO', compute="_compute_show_create_po")
     purchase_ids = fields.One2many('purchase.order', 'sale_id', 'Purchase')
+    purchase_service_ids = fields.One2many('dpt.purchase.service.management', 'origin_po', 'Purchase Service')
+
 
     def _compute_show_create_po(self):
         for item in self:
