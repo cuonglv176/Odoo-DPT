@@ -18,6 +18,7 @@ class HelpdeskTicket(models.Model):
     pack_name = fields.Char(string='Mã pack', compute='_compute_pack_name', store=True)
     sale_id = fields.Many2one('sale.order', string='Đơn bán hàng')
     user_sale_id = fields.Many2one('res.users', string='Nhân viên kinh doanh', related='sale_id.user_id', store=True)
+    fields_ids = fields.One2many('dpt.sale.order.fields', 'ticket_id', string='Fields', related='sale_id.fields_ids')
 
     def action_view_sale_order(self):
         if not self.sale_id:
