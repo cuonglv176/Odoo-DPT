@@ -45,7 +45,7 @@
         </field>
     </record>
 
-    <menuitem id="valid_cutlist_sale_order_menu" name="Valid Cutlist" parent="dpt_export_import.dpt_export_import_menu"
-              action="action_valid_cutlist_sale_order" sequence="12"/>
+<!--    <menuitem id="valid_cutlist_sale_order_menu" name="Valid Cutlist" parent="dpt_export_import.dpt_export_import_menu"-->
+<!--              action="action_valid_cutlist_sale_order" sequence="12"/>-->
 
 </odoo>
