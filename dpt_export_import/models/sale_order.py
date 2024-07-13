@@ -90,7 +90,7 @@ class SaleOrderLine(models.Model):
         ('cancelled', 'Huỷ')
     ], string='State', default='draft', compute='compute_state_export_import_line')
 
-    @api.onchange('price_unit_cny')
+    @api.onchange('price_unit_cny', 'product_uom_qty')
     def onchange_price_unit_cny(self):
         if self.price_unit_cny != 0:
             self.price_unit = self.price_unit_cny * self.currency_cny_id.rate
