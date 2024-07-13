@@ -52,7 +52,6 @@
 
             <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom']" position="after">
                 <field name="currency_cny_id" column_invisible="1" force_save="1"/>
-                <field name="payment_exchange_rate"/>
                 <field name="price_unit_cny"/>
             </xpath>
             <div name="button_box" position="inside">
