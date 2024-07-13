@@ -34,8 +34,22 @@ class PurchaseOrder(models.Model):
     department_id = fields.Many2one('hr.department', string='Phòng ban')
     origin_po = fields.Many2one('sale.order')
     count_buy_cny_po = fields.Integer(compute='_compute_count_buy_cny_po')
+    count_so = fields.Integer(default=1)
     last_rate_currency = fields.Float('Rate Currency')
     purchase_service_ids = fields.One2many('dpt.purchase.service.management', 'purchase_id', 'Service Line')
+
+    def action_open_sale_order(self):
+        return {
+            'name': "Sale Order",
+            'type': 'ir.actions.act_window',
+            'res_model': 'sale.order',
+            'target': 'self',
+            'view_mode': 'form',
+            'res_id': self.origin_po.id,
+            'views': [(False, 'form')],
+            'domain': [('id', '=', self.origin_po.id)],
+            'context': "{'create': False}"
+        }
 
     @api.onchange('user_id')
     def onchange_department_id(self):

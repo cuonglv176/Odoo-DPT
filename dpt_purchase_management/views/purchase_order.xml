@@ -90,6 +90,9 @@
                 <button class="oe_stat_button" type="object" name="get_origin_po" icon="fa-solid fa-cart-shopping">
                     <field string="Buy CNY PO" name="count_buy_cny_po" widget="statinfo"/>
                 </button>
+                <button class="oe_stat_button" type="object" name="action_open_sale_order" icon="fa-usd">
+                    <field string="Sale Order" name="count_so" widget="statinfo"/>
+                </button>
             </div>
             <field name="purchase_type" position="after">
                 <field name="origin_po" invisible="purchase_type != 'buy_cny'"/>
