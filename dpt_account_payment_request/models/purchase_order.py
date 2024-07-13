@@ -27,7 +27,7 @@ class PurchaseOrder(models.Model):
                 'default_purchase_id': self.id,
                 'default_sale_id': self.origin_po.id,
                 'default_partner_id': self.partner_id.id,
-                'default_amount': self.amount_total,
+                'default_amount': self.amount_untaxed,
                 'default_ref': _(f'Thanh toán cho {self.name}'),
             },
         }
