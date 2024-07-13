@@ -7,20 +7,39 @@
         <field name="arch" type="xml">
             <form string="Shipping slip">
                 <header>
+                    <button name="action_ready_get_car" string="Ready Get Car"
+                            type="object" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_start_get_car" string="Start Get Car"
+                            type="object" class="btn-primary" invisible="state != 'ready_get_car'"/>
+                    <button name="action_finish_get_car" string="Finish Get Car"
+                            type="object" class="btn-primary" invisible="state != 'start_get_car'"/>
+                    <button name="action_start_drop_good" string="Start Drop Good"
+                            type="object" class="btn-primary" invisible="state != 'finish_get_car'"/>
+                    <button name="action_finish_drop_good" string="Finish Drop Good"
+                            type="object" class="btn-primary" invisible="state != 'start_drop_good'"/>
+                    <button name="action_declared" string="Declared"
+                            type="object" class="btn-primary" invisible="state != 'finish_drop_good'"/>
+                    <button name="action_move_other_car" string="Move Other Car"
+                            type="object" class="btn-primary" invisible="state != 'declared'"/>
+                    <button name="action_finish" string="Finish"
+                            type="object" class="btn-primary" invisible="state != 'move_other_car'"/>
                     <button name="action_create_shipping_slip_receive" string="Create Shipping Receive"
-                            type="object" class="btn-primary"/>
+                            type="object" class="btn-primary" invisible="state != 'move_other_car'"/>
+
                     <field name="vehicle_country" invisible="1"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,ready_get_car,start_get_car,finish_get_car,start_drop_good,finish_drop_good,declared,move_other_car,finish"/>
+                </header>
+                <sheet>
                     <field name="vn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
                            invisible="vehicle_country != 'vietnamese'"/>
                     <field name="cn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
                            invisible="vehicle_country != 'chinese'"/>
-                </header>
-                <sheet>
                     <group>
                         <group>
                             <field name="name"/>
                             <field name="send_shipping_id" options="{'no_create': True}" readonly="1" force_save="1"/>
-                            <field name="transfer_code" />
+                            <field name="transfer_code"/>
                             <field name="transfer_code_chinese" invisible="1"/>
                         </group>
                         <group>
@@ -28,16 +47,32 @@
                             <field name="vehicle_driver_id"/>
                             <field name="vehicle_license_plate"/>
                             <field name="vehicle_driver_phone"/>
+                            <field name="total_volume"/>
+                            <field name="total_weight"/>
+                            <field name="total_num_packing"/>
                         </group>
                     </group>
+                    <label for="note"/>
+                    <field name="note" nolable="1"/>
                     <notebook>
-                        <page name="sale_order" string="Order">
-                            <field name="sale_ids"/>
-                        </page>
-                        <page name="transfer_picking" string="Picking">
-                            <field name="picking_ids" context="{
+                        <page name="out_picking" string="Out Picking">
+                            <field name="out_picking_ids" context="{
                                      'form_view_ref': 'stock.view_picking_form',
-                                     'tree_view_ref': 'dpt_shipping.view_picking_tree_create_transfer_in_shipping_inherit'}"/>
+                                     'tree_view_ref': 'stock.vpicktree'}"/>
+                        </page>
+                        <page name="in_picking" string="In Picking">
+                            <field name="in_picking_ids" context="{
+                                     'form_view_ref': 'stock.view_picking_form',
+                                     'tree_view_ref': 'stock.vpicktree'}"/>
+                        </page>
+
+                        <page name="sale_order" string="Order">
+                            <field name="sale_ids" readonly="1"/>
+                        </page>
+                        <page name="import_export" string="Import Export">
+                            <field name="export_import_ids" context="{
+                                     'form_view_ref': 'dpt_export_import.view_dpt_export_import_form',
+                                     'tree_view_ref': 'dpt_export_import.view_dpt_export_import_tree'}"/>
                         </page>
                         <page name="vehicle_stage_tracking" string="Vehicle Stage Tracking">
                             <field name="vehicle_stage_log_ids">
@@ -51,9 +86,6 @@
                                     <field name="description"/>
                                 </tree>
                             </field>
-                        </page>
-                        <page name="receive_shipping" string="Receive Shipping">
-                            <field name="receive_shipping_ids"/>
                         </page>
                     </notebook>
                 </sheet>
