@@ -22,3 +22,8 @@ class DPTPurchaseServiceManagement(models.Model):
     price_in_pricelist = fields.Monetary(currency_field='currency_id', string='Price in Pricelist')
     compute_uom_id = fields.Many2one('uom.uom', 'Compute Unit')
     compute_value = fields.Float('Compute Value')
+
+    @api.depends('price', 'qty')
+    def _compute_amount_total(self):
+        for rec in self:
+            rec.amount_total = rec.qty * rec.price

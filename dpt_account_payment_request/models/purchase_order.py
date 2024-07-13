@@ -10,6 +10,28 @@ class PurchaseOrder(models.Model):
     payment_count = fields.Integer(string='Payment count', compute="_compute_payment_count")
     payment_amount_total = fields.Float(string='Payment Amount', compute="_compute_payment_count")
 
+    def action_open_payment_popup(self):
+        view_form_id = self.env.ref('dpt_account_payment_request.dpt_view_account_payment_request_form').id
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.payment',
+            'name': _('Payment'),
+            'view_mode': 'form',
+            'target': 'new',
+            'domain': [('purchase_id', '=', self.id)],
+            'views': [[view_form_id, 'form']],
+            'context': {
+                'default_payment_type': 'outbound',
+                'default_partner_type': 'supplier',
+                'default_move_journal_types': ('bank', 'cash'),
+                'default_purchase_id': self.id,
+                'default_sale_id': self.origin_po.id,
+                'default_partner_id': self.partner_id.id,
+                'default_amount': self.amount_toal,
+                'default_ref': _(f'Thanh toán cho {self.name}'),
+            },
+        }
+
     def action_open_payment(self):
         view_id = self.env.ref('dpt_account_payment_request.dpt_view_account_payment_request_tree').id
         view_form_id = self.env.ref('dpt_account_payment_request.dpt_view_account_payment_request_form').id
