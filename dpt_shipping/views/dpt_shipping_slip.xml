@@ -55,9 +55,6 @@
                     <label for="note"/>
                     <field name="note" nolable="1"/>
                     <notebook>
-                        <page name="sale_order" string="Order">
-                            <field name="sale_ids" readonly="1"/>
-                        </page>
                         <page name="out_picking" string="Out Picking">
                             <field name="out_picking_ids" context="{
                                      'form_view_ref': 'stock.view_picking_form',
@@ -67,6 +64,10 @@
                             <field name="in_picking_ids" context="{
                                      'form_view_ref': 'stock.view_picking_form',
                                      'tree_view_ref': 'stock.vpicktree'}"/>
+                        </page>
+
+                        <page name="sale_order" string="Order">
+                            <field name="sale_ids" readonly="1"/>
                         </page>
                         <page name="import_export" string="Import Export">
                             <field name="export_import_ids" context="{
