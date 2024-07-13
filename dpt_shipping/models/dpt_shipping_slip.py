@@ -36,12 +36,29 @@ class DPTShippingSlip(models.Model):
         ('move_other_car', 'Move Other Car'),
         ('finish', 'Finish'),
     ], default='draft', string='State')
+    note = fields.Text('Note')
+
+    total_volume = fields.Float('Total Volume (m3)', compute="_compute_information")
+    total_weight = fields.Float('Total Weight (kg)', compute="_compute_information")
+    total_num_packing = fields.Float('Total Num Packing', compute="_compute_information")
 
     def _compute_information(self):
         for item in self:
             item.sale_ids = (item.in_picking_ids | item.out_picking_ids).mapped('sale_purchase_id')
             item.export_import_ids = (item.in_picking_ids | item.out_picking_ids).mapped('sale_purchase_id').mapped(
                 'dpt_export_import_ids')
+            if item.vehicle_country == 'chinese':
+                item.total_volume = sum(item.out_picking_ids.mapped('total_volume'))
+                item.total_weight = sum(item.out_picking_ids.mapped('total_weight'))
+                item.total_num_packing = sum(item.out_picking_ids.mapped('package_ids').mapped('quantity'))
+            elif item.vehicle_country == 'vietnamese':
+                item.total_volume = sum(item.in_picking_ids.mapped('total_volume'))
+                item.total_weight = sum(item.in_picking_ids.mapped('total_weight'))
+                item.total_num_packing = sum(item.in_picking_ids.mapped('package_ids').mapped('quantity'))
+            else:
+                item.total_volume = 0
+                item.total_weight = 0
+                item.total_num_packing = 0
 
     def _compute_vehicle_driver_phone(self):
         for item in self:

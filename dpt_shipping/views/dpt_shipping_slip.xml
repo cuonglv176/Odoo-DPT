@@ -27,14 +27,14 @@
                             type="object" class="btn-primary" invisible="state != 'move_other_car'"/>
 
                     <field name="vehicle_country" invisible="1"/>
-                    <field name="vn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
-                           invisible="vehicle_country != 'vietnamese'"/>
-                    <field name="cn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
-                           invisible="vehicle_country != 'chinese'"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,ready_get_car,start_get_car,finish_get_car,start_drop_good,finish_drop_good,declared,move_other_car,finish"/>
                 </header>
                 <sheet>
+                    <field name="vn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
+                           invisible="vehicle_country != 'vietnamese'"/>
+                    <field name="cn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
+                           invisible="vehicle_country != 'chinese'"/>
                     <group>
                         <group>
                             <field name="name"/>
@@ -47,8 +47,13 @@
                             <field name="vehicle_driver_id"/>
                             <field name="vehicle_license_plate"/>
                             <field name="vehicle_driver_phone"/>
+                            <field name="total_volume"/>
+                            <field name="total_weight"/>
+                            <field name="total_num_packing"/>
                         </group>
                     </group>
+                    <label for="note"/>
+                    <field name="note" nolable="1"/>
                     <notebook>
                         <page name="sale_order" string="Order">
                             <field name="sale_ids" readonly="1"/>
