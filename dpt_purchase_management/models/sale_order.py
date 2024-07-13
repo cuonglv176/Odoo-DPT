@@ -10,7 +10,6 @@ class SaleOrder(models.Model):
     purchase_ids = fields.One2many('purchase.order', 'sale_id', 'Purchase')
     purchase_service_ids = fields.One2many('dpt.purchase.service.management', 'sale_id', 'Purchase Service')
 
-
     def _compute_show_create_po(self):
         for item in self:
             item.show_create_po = (any(item.sale_service_ids.mapped('service_id').mapped(
@@ -72,11 +71,12 @@ class SaleOrder(models.Model):
             'views': [(self.env.ref('purchase.purchase_order_form').sudo().id, "form")],
             'context': {
                 'default_sale_id': self.id,
-                'default_partner_id':  self.env.ref('dpt_purchase_management.partner_default_supplier').id,
+                'default_partner_id': self.env.ref('dpt_purchase_management.partner_default_supplier').id,
                 'default_order_line': default_order_line,
                 'default_package_line_ids': default_package_line_ids,
                 'default_date_planned': fields.Datetime.now(),
                 'default_import_package_stock': True,
+                'default_currency_id': 6,
                 'no_compute_price': True,
                 'create_from_so': True
             }
