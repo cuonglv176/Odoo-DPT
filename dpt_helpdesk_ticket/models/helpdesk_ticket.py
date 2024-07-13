@@ -71,13 +71,9 @@ class HelpdeskTicket(models.Model):
         stock_picking_ids = self.env['stock.picking'].search([
             '|',
             '|',
-            '|',
-            '|',
             ('sale_id', '=', self.sale_id.id),
             ('sale_purchase_id', '=', self.sale_id.id),
-            ('purchase_id', '=', self.purchase_id.id),
             ('origin', '=', self.sale_id.name),
-            ('origin', '=', self.purchase_id.name),
         ])
         if not stock_picking_ids:
             return {
