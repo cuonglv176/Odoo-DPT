@@ -5,7 +5,7 @@ class DPTPurchaseServiceManagement(models.Model):
     _name = 'dpt.purchase.service.management'
 
     purchase_id = fields.Many2one('purchase.order', ondelete='cascade')
-    sale_id = fields.Many2one('sale.order', ondelete='cascade', related="purchase_id.origin_po")
+    sale_id = fields.Many2one('sale.order', ondelete='cascade', related="purchase_id.sale_id")
     service_id = fields.Many2one('dpt.service.management', string='Service')
     description = fields.Html(string='Description')
     qty = fields.Float(string='QTY', default=1)

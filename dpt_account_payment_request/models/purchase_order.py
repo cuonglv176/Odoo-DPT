@@ -25,7 +25,7 @@ class PurchaseOrder(models.Model):
                 'default_partner_type': 'supplier',
                 'default_move_journal_types': ('bank', 'cash'),
                 'default_purchase_id': self.id,
-                'default_sale_id': self.origin_po.id,
+                'default_sale_id': self.sale_id.id,
                 'default_partner_id': self.partner_id.id,
                 'default_amount': self.amount_untaxed,
                 'default_ref': _(f'Thanh toán cho {self.name}'),

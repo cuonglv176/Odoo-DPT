@@ -32,11 +32,15 @@ class PurchaseOrder(models.Model):
     ], string='Purchase type', default='external', tracking=True)
     packing_lot_name = fields.Char('Packing Lot name', compute="compute_packing_lot_name", store=True)
     department_id = fields.Many2one('hr.department', string='Phòng ban')
-    origin_po = fields.Many2one('sale.order')
+    origin_po = fields.Many2one('purchase.order')
     count_buy_cny_po = fields.Integer(compute='_compute_count_buy_cny_po')
-    count_so = fields.Integer(default=1)
+    count_so = fields.Integer(compute='_compute_count_so')
     last_rate_currency = fields.Float('Rate Currency')
     purchase_service_ids = fields.One2many('dpt.purchase.service.management', 'purchase_id', 'Service Line')
+
+    def _compute_count_so(self):
+        for rec in self:
+            rec.count_so = len(rec.sale_id)
 
     def action_open_sale_order(self):
         return {
@@ -45,9 +49,9 @@ class PurchaseOrder(models.Model):
             'res_model': 'sale.order',
             'target': 'self',
             'view_mode': 'form',
-            'res_id': self.origin_po.id,
+            'res_id': self.sale_id.id,
             'views': [(False, 'form')],
-            'domain': [('id', '=', self.origin_po.id)],
+            'domain': [('id', '=', self.sale_id.id)],
             'context': "{'create': False}"
         }
 
