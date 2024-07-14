@@ -24,6 +24,9 @@
             <field name="amount_total" position="replace">
                 <field name="amount_untaxed"/>
             </field>
+            <field name="name" position="after">
+                <field name="purchase_type"/>
+            </field>
         </field>
     </record>
 
