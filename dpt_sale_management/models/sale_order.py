@@ -30,6 +30,11 @@ class SaleOrder(models.Model):
     show_action_calculation = fields.Boolean('Show Action Calculation', compute='compute_show_action_calculation')
     weight = fields.Float('Weight')
     volume = fields.Float('Volume')
+    type_so_route = fields.Selection([('office_route', 'Office Route'),
+                                      ('unoffice_route', 'Unoffice Route')], string='Type SO Route')
+    line_transfer = fields.Selection([('road', 'Road'),
+                                      ('sea', 'Sea'),
+                                      ('flying', 'Flying')], string='Line Transfer')
 
     @api.onchange('weight', 'volume', 'order_line')
     def onchange_weight_volume(self):
