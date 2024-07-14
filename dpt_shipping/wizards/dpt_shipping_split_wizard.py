@@ -6,9 +6,9 @@ from odoo import fields, models, api, _
 class DPTShippingSplitWizard(models.TransientModel):
     _name = 'dpt.shipping.split.wizard'
 
-    available_sale_ids = fields.Many2many('sale.order', 'dpt_shipping_split_available_sale_rel', 'shipping_split_id',
+    available_sale_ids = fields.Many2many('sale.order', 'dpt_shipping_split_available_sale_rel', 'shipping_slip_id',
                                           'available_sale_id', string='Available Sale Order')
-    sale_ids = fields.Many2many('sale.order', 'dpt_shipping_split_sale_rel', 'shipping_split_id', 'sale_id',
+    sale_ids = fields.Many2many('sale.order', 'dpt_shipping_split_sale_rel', 'shipping_slip_id', 'sale_id',
                                 string='Sale Order')
 
     available_picking_ids = fields.Many2many('sale.order', 'dpt_shipping_split_available_picking_rel',
