@@ -5,6 +5,7 @@ class DPTService(models.Model):
     _inherit = 'dpt.service.management'
 
     helpdesk_team_id = fields.Many2one('helpdesk.team', string='Helpdesk Team')
+    is_tth_service = fields.Boolean(string='TTH Service')
 
     @api.model
     def create(self, vals):

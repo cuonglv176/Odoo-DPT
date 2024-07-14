@@ -64,6 +64,15 @@ class SaleOrder(models.Model):
         # for department in list_department:
         for service in self.sale_service_ids:
             service_ids = []
+            if service.service_id.is_tth_service:
+                vals = {
+                    'purchase_type': 'buy_cny',
+                    'department_id': service.department_id.id,
+                    'partner_id': self.partner_id.id,
+                    'sale_id': self.id,
+                }
+                res = self.env['purchase.order'].create(vals)
+                continue
             # if department == service.department_id.id:
             service_ids.append((0, 0, {
                 'service_id': service.service_id.id,
