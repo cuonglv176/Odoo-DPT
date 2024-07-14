@@ -122,8 +122,10 @@ class DPTShippingSlip(models.Model):
         action = self.env.ref('dpt_shipping.dpt_shipping_split_wizard_action').sudo().read()[0]
         action['context'] = {
             'default_shipping_id': self.id,
+            'default_picking_ids': self.out_picking_ids.mapped('x_in_transfer_picking_id').ids,
             'default_sale_ids': self.sale_ids.ids,
             'default_available_sale_ids': self.sale_ids.ids,
+            'default_available_picking_ids': self.out_picking_ids.mapped('x_in_transfer_picking_id').ids,
         }
         return action
 
