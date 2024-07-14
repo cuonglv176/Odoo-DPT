@@ -24,6 +24,10 @@
             <page name="optional_products" position="attributes">
                 <attribute name="invisible">1</attribute>
             </page>
+            <field name="sale_order_template_id" position="after">
+                <field name="type_so_route"/>
+                <field name="line_transfer"/>
+            </field>
             <!--            <button name="action_cancel" position="replace"/>-->
             <page name="order_lines" position="before">
                 <page name="sale_service" string="Service">
@@ -45,6 +49,7 @@
                             <!--                            <field name="currency_id" invisible="1"/>-->
                             <field name="amount_total" readonly="1" force_save="1"/>
                             <field name="department_id" context="{'dpt_sale_management': 1}"/>
+                            <field name="note"/>
                         </tree>
                     </field>
                     <group col="6" class="mt-2 mt-md-0">
@@ -111,10 +116,10 @@
                     </span>
                 </div>
             </field>
-            <notebook position="after">
-                <label for="note" string="Note"/>
-                <field name="note"/>
-            </notebook>
+<!--            <notebook position="after">-->
+<!--                <label for="note" string="Note"/>-->
+<!--                <field name="note"/>-->
+<!--            </notebook>-->
         </field>
     </record>
 
