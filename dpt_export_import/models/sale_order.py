@@ -82,6 +82,7 @@ class SaleOrderLine(models.Model):
     price_unit_cny = fields.Monetary(string='Price Unit CNY', currency_field='currency_cny_id')
     state_export_import_line = fields.Selection([
         ('draft', 'Nháp'),
+        ('wait_confirm', 'Chờ xác nhận'),
         ('eligible', 'Đủ điều kiện khai báo'),
         ('declared', 'Tờ khai thông quan'),
         ('released', 'Giải phóng'),
