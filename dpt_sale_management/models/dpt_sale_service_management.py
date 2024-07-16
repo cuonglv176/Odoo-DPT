@@ -25,6 +25,10 @@ class DPTSaleServiceManagement(models.Model):
     compute_value = fields.Float('Compute Value')
     note = fields.Text(string='Note')
 
+    @api.onchange('price_cny')
+    def onchange_price_cny(self):
+        self.price = self.price_cny * self.currency_cny_id.rate
+
     # def write(self, vals):
     #     old_price = self.price
     #     res = super(DPTSaleServiceManagement, self).write(vals)
@@ -42,6 +46,7 @@ class DPTSaleServiceManagement(models.Model):
     @api.onchange('price', 'qty')
     def onchange_amount_total(self):
         if self.price and self.qty:
+            self.price_cny = self.price / self.currency_cny_id.rate
             self.amount_total = self.price * self.qty * self.compute_value if self.pricelist_item_id.is_price and self.pricelist_item_id.compute_price == 'table' else self.qty * self.price
 
     @api.onchange('service_id')
