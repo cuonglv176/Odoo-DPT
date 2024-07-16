@@ -46,7 +46,6 @@ class DPTSaleServiceManagement(models.Model):
     @api.onchange('price', 'qty')
     def onchange_amount_total(self):
         if self.price and self.qty:
-            self.price_cny = self.price / self.currency_cny_id.rate
             self.amount_total = self.price * self.qty * self.compute_value if self.pricelist_item_id.is_price and self.pricelist_item_id.compute_price == 'table' else self.qty * self.price
 
     @api.onchange('service_id')
