@@ -36,7 +36,7 @@
                             <!--                            <field name="sale_id" invisible="1"/>-->
                             <field name="sequence" widget="handle"/>
                             <field name="currency_id" column_invisible="1" force_save="1"/>
-                            <field name="currency_cny_id" column_invisible="1" force_save="1"/>
+                            <field name="currency_cny_id" optional="hide"/>
                             <field name="service_id"/>
                             <field name="uom_id"/>
                             <!--                            <field name="description"/>-->
