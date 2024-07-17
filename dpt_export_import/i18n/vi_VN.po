@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-10 23:09+0000\n"
-"PO-Revision-Date: 2024-07-10 23:09+0000\n"
+"POT-Creation-Date: 2024-07-17 22:34+0000\n"
+"PO-Revision-Date: 2024-07-17 22:34+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -116,6 +116,12 @@ msgid "Cancelled"
 msgstr "Hủy"
 
 #. module: dpt_export_import
+#: model:ir.model.fields.selection,name:dpt_export_import.selection__dpt_export_import_line__state__wait_confirm
+#: model:ir.model.fields.selection,name:dpt_export_import.selection__sale_order_line__state_export_import_line__wait_confirm
+msgid "Chờ xác nhận"
+msgstr ""
+
+#. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__code
 msgid "Code"
 msgstr "Mã"
@@ -154,6 +160,7 @@ msgstr "Tiền tệ"
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__currency_cny_id
+#: model:ir.model.fields,field_description:dpt_export_import.field_sale_order_line__currency_cny_id
 msgid "Currency CNY"
 msgstr ""
 
@@ -438,6 +445,11 @@ msgid "Green"
 msgstr "Xanh"
 
 #. module: dpt_export_import
+#: model_terms:ir.ui.view,arch_db:dpt_export_import.view_dpt_export_import_line_form
+msgid "Gửi yêu cầu"
+msgstr ""
+
+#. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__name
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__hs_code_id
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_product__hs_code_id
@@ -509,6 +521,11 @@ msgstr ""
 #: model:ir.model.fields,help:dpt_export_import.field_dpt_export_import_line__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
+
+#. module: dpt_export_import
+#: model_terms:ir.ui.view,arch_db:dpt_export_import.dpt_export_import_view_sale_order_inherit_form
+msgid "Import / Export"
+msgstr "Xuất nhập khẩu"
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_sale_order_line__import_tax_amount
@@ -747,6 +764,11 @@ msgstr "Kiểm soát"
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_price_cny_vnd
 msgid "Price CNY (VND)"
 msgstr "Giá khai CNY"
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_sale_order_line__price_unit_cny
+msgid "Price Unit CNY"
+msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model,name:dpt_export_import.model_product_template
@@ -1079,6 +1101,7 @@ msgid "VAT"
 msgstr ""
 
 #. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__dpt_tax_ecus5
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__dpt_tax_ecus5
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_product__dpt_tax_ecus5
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_template__dpt_tax_ecus5
