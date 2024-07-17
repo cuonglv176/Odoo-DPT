@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-06 18:02+0000\n"
-"PO-Revision-Date: 2024-07-06 18:02+0000\n"
+"POT-Creation-Date: 2024-07-17 22:44+0000\n"
+"PO-Revision-Date: 2024-07-17 22:44+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -105,7 +105,7 @@ msgstr "Tiền tệ"
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__currency_cny_id
 msgid "Currency CNY"
-msgstr ""
+msgstr "Tiền tệ (CNY)"
 
 #. module: dpt_sale_management
 #: model:ir.model,name:dpt_sale_management.model_dpt_sale_service_management
@@ -157,6 +157,11 @@ msgid "Fields type"
 msgstr "Loại trường"
 
 #. module: dpt_sale_management
+#: model:ir.model.fields.selection,name:dpt_sale_management.selection__sale_order__line_transfer__flying
+msgid "Flying"
+msgstr "Đường bay"
+
+#. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__id
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation_line__id
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_order_fields__id
@@ -182,32 +187,32 @@ msgstr "Bắt buộc "
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__is_required_volume
 msgid "Is required volume"
-msgstr ""
+msgstr "Khối lượng"
 
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__is_required_weight
 msgid "Is required weight"
-msgstr ""
+msgstr "Trọng lượng"
 
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__is_show_address
 msgid "Is show address"
-msgstr ""
+msgstr "Hiển thị địa chỉ"
 
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__is_show_distance
 msgid "Is show distance"
-msgstr ""
+msgstr "Hiển thị khoảng giá"
 
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__is_show_volume
 msgid "Is show volume"
-msgstr ""
+msgstr "Hiển thị khối lượng"
 
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__is_show_weight
 msgid "Is show weight"
-msgstr ""
+msgstr "Hiển thị trọng lượng"
 
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__write_uid
@@ -226,6 +231,11 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_sale_order__line_transfer
+msgid "Line Transfer"
+msgstr ""
+
+#. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__min_amount_total
 msgid "Min Amount"
 msgstr "Giá tối thiểu"
@@ -239,6 +249,16 @@ msgstr "Giá tối thiểu"
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation_line__min_price
 msgid "Min Price"
 msgstr "Đơn giá tối thiểu"
+
+#. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__note
+msgid "Note"
+msgstr "Ghi chú"
+
+#. module: dpt_sale_management
+#: model:ir.model.fields.selection,name:dpt_sale_management.selection__sale_order__type_so_route__office_route
+msgid "Office Route"
+msgstr "Chính nhạch"
 
 #. module: dpt_sale_management
 #: model_terms:ir.ui.view,arch_db:dpt_sale_management.view_sale_order_inherit_form
@@ -310,6 +330,11 @@ msgid "Quotation Sent"
 msgstr "Báo giá đã gửi"
 
 #. module: dpt_sale_management
+#: model:ir.model.fields.selection,name:dpt_sale_management.selection__sale_order__line_transfer__road
+msgid "Road"
+msgstr "Đường bộ"
+
+#. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__sale_id
 msgid "Sale"
 msgstr "Đơn hàng"
@@ -317,7 +342,7 @@ msgstr "Đơn hàng"
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_order_fields__sale_id
 msgid "Sale Order"
-msgstr ""
+msgstr "Đơn hàng"
 
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__sale_service_id
@@ -329,6 +354,11 @@ msgstr "Dịch vụ"
 #: model:ir.model.fields.selection,name:dpt_sale_management.selection__sale_order__state__sale
 msgid "Sales Order"
 msgstr "Đơn bán hàng"
+
+#. module: dpt_sale_management
+#: model:ir.model.fields.selection,name:dpt_sale_management.selection__sale_order__line_transfer__sea
+msgid "Sea"
+msgstr "Đường biển"
 
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_order_fields__selection_value_id
@@ -393,6 +423,11 @@ msgid "Type Fields"
 msgstr "Loại trường"
 
 #. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_sale_order__type_so_route
+msgid "Type SO Route"
+msgstr "Loại vận chuyển"
+
+#. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation_line__uom_id
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_order_fields__uom_id
 msgid "Unit"
@@ -403,6 +438,11 @@ msgstr "Đơn vị tính"
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__uom_ids
 msgid "Units"
 msgstr "Đơn vị tính"
+
+#. module: dpt_sale_management
+#: model:ir.model.fields.selection,name:dpt_sale_management.selection__sale_order__type_so_route__unoffice_route
+msgid "Unoffice Route"
+msgstr "Tiểu ngạch"
 
 #. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_sale_order__update_pricelist
