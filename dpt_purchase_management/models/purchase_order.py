@@ -37,7 +37,19 @@ class PurchaseOrder(models.Model):
     count_so = fields.Integer(compute='_compute_count_so')
     last_rate_currency = fields.Float('Rate Currency')
     purchase_service_ids = fields.One2many('dpt.purchase.service.management', 'purchase_id', 'Service Line')
-    service_ids = fields.One2many('dpt.sale.service.management', 'purchase_id', 'Dịch Vụ')
+    sale_service_ids = fields.One2many('dpt.sale.service.management', 'purchase_id', 'Dịch Vụ')
+    service_total_amount = fields.Float(compute='_compute_service_amount')
+
+    @api.depends('sale_service_ids.amount_total')
+    def _compute_service_amount(self):
+        untax_amount = 0
+        tax_amount = 0
+        for r in self.sale_service_ids:
+            untax_amount += r.amount_total
+            tax_amount += r.amount_total * 8 / 100
+        self.service_total_untax_amount = untax_amount
+        self.service_tax_amount = tax_amount
+        self.service_total_amount = untax_amount
 
     def _compute_count_so(self):
         for rec in self:

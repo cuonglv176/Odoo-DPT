@@ -67,8 +67,8 @@
                 <!--                        </tree>-->
                 <!--                    </field>-->
                 <!--                </page>-->
-                <page name="sale_service" string="Service">
-                    <field name="service_ids" readonly="state == 'cancel' or locked">
+                <page name="sale_service" string="Dịch vụ">
+                    <field name="sale_service_ids" readonly="state == 'cancel' or locked">
                         <tree editable="bottom">
                             <field name="sequence" widget="handle"/>
                             <field name="currency_id" column_invisible="1" force_save="1"/>
