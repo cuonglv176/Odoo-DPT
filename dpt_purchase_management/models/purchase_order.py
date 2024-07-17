@@ -37,6 +37,7 @@ class PurchaseOrder(models.Model):
     count_so = fields.Integer(compute='_compute_count_so')
     last_rate_currency = fields.Float('Rate Currency')
     purchase_service_ids = fields.One2many('dpt.purchase.service.management', 'purchase_id', 'Service Line')
+    service_ids = fields.One2many('dpt.sale.service.management', 'purchase_id', 'Dịch Vụ')
 
     def _compute_count_so(self):
         for rec in self:

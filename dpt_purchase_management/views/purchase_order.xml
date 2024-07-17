@@ -16,7 +16,7 @@
         </field>
     </record>
 
-     <record id="purchase_order_view_tree2_inherit" model="ir.ui.view">
+    <record id="purchase_order_view_tree2_inherit" model="ir.ui.view">
         <field name="name">purchase.order.tree.inherit</field>
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
@@ -50,23 +50,52 @@
                     <field name="package_line_ids" readonly="state in ('done', 'cancel')"
                            context="{'default_sale_id': sale_id}"/>
                 </page>
-                <page string="Service Cost" name="purchase_service">
-                    <field name="purchase_service_ids">
+                <!--                <page string="Service Cost" name="purchase_service">-->
+                <!--                    <field name="purchase_service_ids">-->
+                <!--                        <tree editable="bottom">-->
+                <!--                            <field name="sequence" widget="handle"/>-->
+                <!--                            <field name="currency_id" column_invisible="1" force_save="1"/>-->
+                <!--                            <field name="currency_cny_id" column_invisible="1" force_save="1"/>-->
+                <!--                            <field name="service_id"/>-->
+                <!--                            <field name="uom_id"/>-->
+                <!--                            <field name="qty" column_invisible="1" force_save="1"/>-->
+                <!--                            <field name="uom_ids" column_invisible="1"/>-->
+                <!--                            <field name="price" readonly="0" force_save="1"/>-->
+                <!--                            <field name="price_cny" readonly="0" force_save="1"/>-->
+                <!--                            <field name="amount_total" readonly="1" force_save="1"/>-->
+                <!--                            <field name="department_id"/>-->
+                <!--                        </tree>-->
+                <!--                    </field>-->
+                <!--                </page>-->
+                <page name="sale_service" string="Service">
+                    <field name="service_ids" readonly="state == 'cancel' or locked">
                         <tree editable="bottom">
                             <field name="sequence" widget="handle"/>
                             <field name="currency_id" column_invisible="1" force_save="1"/>
-                            <field name="currency_cny_id" column_invisible="1" force_save="1"/>
+                            <field name="currency_cny_id" optional="hide"/>
                             <field name="service_id"/>
                             <field name="uom_id"/>
+                            <field name="compute_value" readonly="1" force_save="1"/>
+                            <field name="compute_uom_id" readonly="1" force_save="1"/>
                             <field name="qty" column_invisible="1" force_save="1"/>
                             <field name="uom_ids" column_invisible="1"/>
                             <field name="price" readonly="0" force_save="1"/>
                             <field name="price_cny" readonly="0" force_save="1"/>
                             <field name="amount_total" readonly="1" force_save="1"/>
-                            <field name="department_id"/>
+                            <field name="department_id" context="{'dpt_sale_management': 1}"/>
+                            <field name="note"/>
                         </tree>
                     </field>
+                    <group col="6" class="mt-2 mt-md-0">
+                        <group class="oe_subtotal_footer" colspan="2">
+                            <!--                            <field name="service_total_untax_amount" colspan="2" readonly="1"/>-->
+                            <!--                            <field name="service_tax_amount" colspan="2" readonly="1"/>-->
+                            <field name="service_total_amount" colspan="2" readonly="1"/>
+                        </group>
+                        <div class="clearfix"/>
+                    </group>
                 </page>
+
             </page>
             <xpath expr="//field[@name='order_line']/tree/field[@name='product_qty']" position="after">
                 <field name="buying_url"/>
@@ -107,8 +136,10 @@
                 <field name="last_rate_currency"/>
             </field>
             <xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal']" position="after">
-                <field name="price_unit3" readonly="0" groups="purchase.group_purchase_user,account.group_account_user"/>
-                <field name="price_cost3" readonly="0" groups="purchase.group_purchase_user,account.group_account_user"/>
+                <field name="price_unit3" readonly="0"
+                       groups="purchase.group_purchase_user,account.group_account_user"/>
+                <field name="price_cost3" readonly="0"
+                       groups="purchase.group_purchase_user,account.group_account_user"/>
                 <field name="price_subtotal3" groups="purchase.group_purchase_user,account.group_account_user"/>
             </xpath>
         </field>

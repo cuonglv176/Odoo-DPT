@@ -1,6 +1,30 @@
 from odoo import api, fields, models, _
 
 
+class DPTSaleServiceManagement(models.Model):
+    _inherit = 'dpt.sale.service.management'
+
+    purchase_id = fields.Many2one('purchase.order', ondelete='cascade')
+
+    @api.model
+    def create(self, vals):
+        if vals.get('purchase_id') and not vals.get('sale_id'):
+            purchase_id = self.env['purchase.order'].browse(vals.get('purchase_id'))
+            vals.update({
+                'sale_id': purchase_id.sale_id.id
+            })
+        return super(DPTSaleServiceManagement, self).create(vals)
+
+    def write(self, vals):
+        if vals.get('purchase_id') and not self.sale_id:
+            purchase_id = self.env['purchase.order'].browse(vals.get('purchase_id'))
+            vals.update({
+                'sale_id': purchase_id.sale_id.id
+            })
+        res = super(DPTSaleServiceManagement, self).write(vals)
+        return res
+
+
 class DPTPurchaseServiceManagement(models.Model):
     _name = 'dpt.purchase.service.management'
 
