@@ -47,7 +47,8 @@ class BaseAutomation(models.Model):
             if field_data._name == 'res.user':
                 res_partner_ids += field_data.partner_id
                 continue
-            res_partner_ids += field_data
+            if res_partner_ids and field_data:
+                res_partner_ids += field_data
         return res_partner_ids
 
     # res_partner_ids = automation_id.get_partner_by_records(record)
