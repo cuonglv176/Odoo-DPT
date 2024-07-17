@@ -15,14 +15,7 @@ class DPTSaleServiceManagement(models.Model):
             })
         return super(DPTSaleServiceManagement, self).create(vals)
 
-    def write(self, vals):
-        if vals.get('purchase_id') and not self.sale_id:
-            purchase_id = self.env['purchase.order'].browse(vals.get('purchase_id'))
-            vals.update({
-                'sale_id': purchase_id.sale_id.id
-            })
-        res = super(DPTSaleServiceManagement, self).write(vals)
-        return res
+  
 
 
 class DPTPurchaseServiceManagement(models.Model):
