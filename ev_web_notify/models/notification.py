@@ -8,7 +8,8 @@ class BaseAutomation(models.Model):
         ('normal', 'Normal'),
         ('notification', 'Notification'),
     ], default='normal')
-    message_notification = fields.Text(string='Nội dung thông báo', help='Có thể kèm nội dung của record (Tương đương với bản ghi đang được kích hoạt hiện tại) ví dụ : Thông báo đơn hàng {record.name} đã xác nhận')
+    message_notification = fields.Text(string='Nội dung thông báo',
+                                       help='Có thể kèm nội dung của record (Tương đương với bản ghi đang được kích hoạt hiện tại) ví dụ : Thông báo đơn hàng {record.name} đã xác nhận')
     notification_type = fields.Selection([
         ('success', 'Success'),
         ('danger', 'Danger'),
@@ -32,11 +33,12 @@ class BaseAutomation(models.Model):
 
     def _execute_notification_web(self, record_id):
         res_partner_ids = self.get_partner_by_records(record_id)
-        self.env['mail.message']._push_system_notification(
-            {self.create_uid.id},
-            res_partner_ids.ids, self.message_notification.format(record=record_id),
-            '{result.model_id.model}', record_id.id
-        )
+        if record_id:
+            self.env['mail.message']._push_system_notification(
+                {self.create_uid.id},
+                res_partner_ids.ids, self.message_notification.format(record=record_id),
+                '{result.model_id.model}', record_id.id
+            )
 
     def get_partner_by_records(self, record_id):
         res_partner_ids = self.partner_ids or self.env['res.partner']
@@ -74,5 +76,3 @@ automation_id._execute_notification_web(record)
 """
         })
         return result
-
-
