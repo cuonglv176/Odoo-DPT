@@ -36,6 +36,9 @@
                 <field name="employee_sale"/>
                 <field name="employee_cs"/>
             </field>
+            <xpath expr="//page[@name='order_lines']/field[@name='order_line']/tree/field[@name='product_template_id']" position="before">
+                <field name="legal_xhd"/>
+            </xpath>
             <!--            <button name="action_cancel" position="replace"/>-->
             <page name="order_lines" position="before">
                 <page name="sale_service" string="Service">
