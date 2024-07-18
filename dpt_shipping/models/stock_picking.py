@@ -8,12 +8,12 @@ class StockPicking(models.Model):
 
     in_draft_shipping = fields.Boolean('In Draft Shipping', compute="_compute_in_draft_shipping",
                                        search="_search_in_draft_shipping")
-    finish_stock_services = fields.Boolean('Finish Stock Services', compute="_compute_finish_stock_services",
-                                           inverse='_inverse_valid_cutlist', store=True)
-    have_stock_label = fields.Boolean('Have Stock Labels', compute="_compute_have_stock_label",
-                                      inverse='_inverse_valid_cutlist', store=True)
-    have_export_import = fields.Boolean('Have Export Import', compute="_compute_have_export_import",
-                                        inverse='_inverse_valid_cutlist', store=True)
+    finish_stock_services = fields.Boolean('Finish Stock Services', compute="_compute_valid_cutlist",
+                                           inverse='_inverse_finish_stock_services', store=True)
+    have_stock_label = fields.Boolean('Have Stock Labels', compute="_compute_valid_cutlist",
+                                      inverse='_inverse_have_stock_label', store=True)
+    have_export_import = fields.Boolean('Have Export Import', compute="_compute_valid_cutlist",
+                                        inverse='_inverse_have_export_import', store=True)
     edited_finish_stock_services = fields.Boolean('Edited Finish Stock Services')
     edited_have_stock_label = fields.Boolean('Edited Have Stock Labels')
     edited_have_export_import = fields.Boolean('Edited Have Export Import')
@@ -40,15 +40,15 @@ class StockPicking(models.Model):
         picking_ids = self.env['stock.picking'].sudo().search([])
         picking_ids._compute_valid_cutlist()
 
-    def _compute_finish_stock_services(self):
+    def _inverse_finish_stock_services(self):
         for item in self:
             item.edited_finish_stock_services = True
 
-    def _compute_have_stock_label(self):
+    def _inverse_have_stock_label(self):
         for item in self:
             item.edited_have_stock_label = True
 
-    def _compute_have_export_import(self):
+    def _inverse_have_export_import(self):
         for item in self:
             item.edited_have_export_import = True
 
@@ -85,13 +85,38 @@ class StockPicking(models.Model):
                 vals.update({'edited_finish_stock_services': True})
             if 'have_stock_label' in vals:
                 vals.update({'edited_have_stock_label': True})
-            if 'edited_have_export_import' in vals:
+            if 'have_export_import' in vals:
                 vals.update({'edited_have_export_import': True})
             return super().write(vals)
         res = super().write(vals)
         for item in self:
             item._compute_valid_cutlist()
+            # update shipping split
+            item.update_shipping_split()
         return res
+
+    def update_shipping_split(self):
+        shipping_slip_id = self.env['dpt.shipping.slip'].sudo().search(
+            ['|', ('out_picking_ids', 'in', self.ids), ('in_picking_ids', 'in', self.ids)], limit=1)
+        if not shipping_slip_id:
+            return
+        if shipping_slip_id.vehicle_country == 'chinese':
+            invalid_picking_ids = shipping_slip_id.out_picking_ids.filtered(
+                lambda sp: not sp.finish_stock_services or not sp.have_stock_label or not sp.have_export_import)
+        elif shipping_slip_id.vehicle_country == 'vietnamese':
+            invalid_picking_ids = shipping_slip_id.in_picking_ids.filtered(
+                lambda sp: not sp.finish_stock_services or not sp.have_stock_label or not sp.have_export_import)
+        else:
+            return
+        if not invalid_picking_ids:
+            ready_stage_id = self.env['dpt.vehicle.stage'].sudo().search(
+                [('country', '=', shipping_slip_id.vehicle_country), ('is_ready_stage', '=', True)], limit=1,
+                order="id")
+            if ready_stage_id:
+                if shipping_slip_id.vehicle_country == 'chinese':
+                    shipping_slip_id.cn_vehicle_stage_id = ready_stage_id
+                elif shipping_slip_id.vehicle_country == 'vietnamese':
+                    shipping_slip_id.vn_vehicle_stage_id = ready_stage_id
 
     def action_create_shipping_slip(self):
         default_vehicle_stage_id = self.env['dpt.vehicle.stage'].sudo().search([('is_default', '=', True)], limit=1)

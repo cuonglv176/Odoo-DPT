@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-13 18:32+0000\n"
-"PO-Revision-Date: 2024-07-13 18:32+0000\n"
+"POT-Creation-Date: 2024-07-18 16:52+0000\n"
+"PO-Revision-Date: 2024-07-18 16:52+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -62,6 +62,16 @@ msgid "Available Sale Order"
 msgstr ""
 
 #. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_split_wizard__available_picking_ids
+msgid "Available Stock Picking"
+msgstr ""
+
+#. module: dpt_shipping
+#: model:ir.actions.server,name:dpt_shipping.cron_update_valid_cutlist_picking_ir_actions_server
+msgid "Base: Auto-update Valid Cutlist Picking"
+msgstr ""
+
+#. module: dpt_shipping
 #: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_get_picking_so_wizard_form_view
 #: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_split_wizard_form_view
 msgid "Cancel"
@@ -91,7 +101,6 @@ msgstr "Tạo phiếu vận chuyển"
 msgid "Create Shipping Receive"
 msgstr "Tạo phiếu vận chuyển (nhận)"
 
-
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_get_picking_so_wizard__create_uid
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__create_uid
@@ -116,12 +125,6 @@ msgid "Current Stage"
 msgstr "Trạng thái ban đầu"
 
 #. module: dpt_shipping
-#: model:ir.model.fields.selection,name:dpt_shipping.selection__dpt_shipping_slip__state__declared
-#: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_slip_form_view
-msgid "Declared"
-msgstr "Xe thông quan XK"
-
-#. module: dpt_shipping
 #: model:ir.model,name:dpt_shipping.model_hr_department
 msgid "Department"
 msgstr "Bộ phận"
@@ -141,11 +144,6 @@ msgid "Display Name"
 msgstr ""
 
 #. module: dpt_shipping
-#: model:ir.model.fields.selection,name:dpt_shipping.selection__dpt_shipping_slip__state__draft
-msgid "Draft"
-msgstr "Nháp"
-
-#. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__vehicle_driver_id
 msgid "Driver"
 msgstr "Tài xế"
@@ -156,27 +154,29 @@ msgid "Driver address of the vehicle"
 msgstr ""
 
 #. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_stock_picking__edited_finish_stock_services
+msgid "Edited Finish Stock Services"
+msgstr ""
+
+#. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_stock_picking__edited_have_export_import
+msgid "Edited Have Export Import"
+msgstr ""
+
+#. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_stock_picking__edited_have_stock_label
+msgid "Edited Have Stock Labels"
+msgstr ""
+
+#. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__export_import_ids
 msgid "Export Import"
 msgstr "Tờ khai"
 
 #. module: dpt_shipping
-#: model:ir.model.fields.selection,name:dpt_shipping.selection__dpt_shipping_slip__state__finish
-#: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_slip_form_view
-msgid "Finish"
-msgstr "Hoàn thành"
-
-#. module: dpt_shipping
-#: model:ir.model.fields.selection,name:dpt_shipping.selection__dpt_shipping_slip__state__finish_drop_good
-#: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_slip_form_view
-msgid "Finish Drop Good"
-msgstr "Hoàn thành xếp hàng trên bãi"
-
-#. module: dpt_shipping
-#: model:ir.model.fields.selection,name:dpt_shipping.selection__dpt_shipping_slip__state__finish_get_car
-#: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_slip_form_view
-msgid "Finish Get Car"
-msgstr "Hòan thành xếp xe"
+#: model:ir.model.fields,field_description:dpt_shipping.field_stock_picking__finish_stock_services
+msgid "Finish Stock Services"
+msgstr "Hoàn thành Dịch vụ Kho"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__message_follower_ids
@@ -207,6 +207,16 @@ msgstr "Gắn phiếu nhập"
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage_log__has_message
 msgid "Has Message"
 msgstr ""
+
+#. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_stock_picking__have_export_import
+msgid "Have Export Import"
+msgstr "Hoàn thành Khai báo"
+
+#. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_stock_picking__have_stock_label
+msgid "Have Stock Labels"
+msgstr "Đã in Tem phụ"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_get_picking_so_wizard__id
@@ -249,6 +259,11 @@ msgid "Import Export"
 msgstr "Tờ khai"
 
 #. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_stock_picking__in_draft_shipping
+msgid "In Draft Shipping"
+msgstr ""
+
+#. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__in_picking_ids
 #: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_slip_form_view
 msgid "In Picking"
@@ -265,10 +280,20 @@ msgid "Is Default"
 msgstr ""
 
 #. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage__is_draft_stage
+msgid "Is Draft Stage"
+msgstr "Là trạng thái Nháp"
+
+#. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__message_is_follower
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage_log__message_is_follower
 msgid "Is Follower"
 msgstr ""
+
+#. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage__is_ready_stage
+msgid "Is Ready Stage"
+msgstr "Là trạng thái Sẵn sàng"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_get_picking_so_wizard__write_uid
@@ -324,12 +349,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage_log__message_ids
 msgid "Messages"
 msgstr ""
-
-#. module: dpt_shipping
-#: model:ir.model.fields.selection,name:dpt_shipping.selection__dpt_shipping_slip__state__move_other_car
-#: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_slip_form_view
-msgid "Move Other Car"
-msgstr "Xe sang bãi VN"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__my_activity_date_deadline
@@ -414,7 +433,13 @@ msgstr "Phiếu xuất"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_get_picking_so_wizard__picking_ids
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_split_wizard__picking_ids
 msgid "Picking"
+msgstr "Phiếu nhập"
+
+#. module: dpt_shipping
+#: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_split_wizard_form_view
+msgid "Pickings"
 msgstr "Phiếu kho"
 
 #. module: dpt_shipping
@@ -422,12 +447,6 @@ msgstr "Phiếu kho"
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage_log__rating_ids
 msgid "Ratings"
 msgstr ""
-
-#. module: dpt_shipping
-#: model:ir.model.fields.selection,name:dpt_shipping.selection__dpt_shipping_slip__state__ready_get_car
-#: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_slip_form_view
-msgid "Ready Get Car"
-msgstr "Sẵn sàng xếp xe"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__activity_user_id
@@ -481,23 +500,6 @@ msgstr "Phiếu vận chuyển"
 #: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_slip_tree_views
 msgid "Shipping slip"
 msgstr "Phiếu vận chuyển"
-
-#. module: dpt_shipping
-#: model:ir.model.fields.selection,name:dpt_shipping.selection__dpt_shipping_slip__state__start_drop_good
-#: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_slip_form_view
-msgid "Start Drop Good"
-msgstr ""
-
-#. module: dpt_shipping
-#: model:ir.model.fields.selection,name:dpt_shipping.selection__dpt_shipping_slip__state__start_get_car
-#: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_slip_form_view
-msgid "Start Get Car"
-msgstr "Bắt đầu xếp hàng trên bãi"
-
-#. module: dpt_shipping
-#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__state
-msgid "State"
-msgstr "Trạng thái"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,help:dpt_shipping.field_dpt_shipping_slip__activity_state
@@ -556,10 +558,7 @@ msgid "Update SO"
 msgstr "Cập nhật"
 
 #. module: dpt_shipping
-#: model:ir.actions.act_window,name:dpt_shipping.action_valid_cutlist_sale_order
 #: model:ir.actions.act_window,name:dpt_shipping.action_valid_cutlist_stock_picking
-#: model:ir.model.fields,field_description:dpt_shipping.field_sale_order__valid_cutlist
-#: model:ir.model.fields,field_description:dpt_shipping.field_stock_picking__valid_cutlist
 #: model:ir.ui.menu,name:dpt_shipping.valid_cutlist_stock_picking_menu
 msgid "Valid Cutlist"
 msgstr "Cutlist"
@@ -583,7 +582,7 @@ msgstr "SĐT Tài xế"
 #: model:ir.ui.menu,name:dpt_shipping.dpt_vehicle_stage_menu
 #: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_vehicle_stage_tree_views
 msgid "Vehicle Stage"
-msgstr "Trạng thái phiếu vận chuyển"
+msgstr "Trạng thái xe"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__vehicle_stage_log_ids
