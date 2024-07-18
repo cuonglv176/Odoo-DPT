@@ -35,6 +35,8 @@ class SaleOrder(models.Model):
     line_transfer = fields.Selection([('road', 'Road'),
                                       ('sea', 'Sea'),
                                       ('flying', 'Flying')], string='Line Transfer')
+    employee_sale = fields.Many2one('hr.employee', string='Employee Sale')
+    employee_cs = fields.Many2one('hr.employee', string='Employee CS')
 
     @api.onchange('weight', 'volume', 'order_line')
     def onchange_weight_volume(self):
