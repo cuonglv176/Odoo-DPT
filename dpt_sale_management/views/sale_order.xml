@@ -21,12 +21,20 @@
             <button name="action_preview_sale_order" position="attributes">
                 <attribute name="invisible">1</attribute>
             </button>
+            <button name="action_unlock" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </button>
+            <button name="action_lock" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </button>
             <page name="optional_products" position="attributes">
                 <attribute name="invisible">1</attribute>
             </page>
             <field name="sale_order_template_id" position="after">
                 <field name="type_so_route"/>
                 <field name="line_transfer"/>
+                <field name="employee_sale"/>
+                <field name="employee_cs"/>
             </field>
             <!--            <button name="action_cancel" position="replace"/>-->
             <page name="order_lines" position="before">
@@ -83,7 +91,7 @@
                                    required="type == 'required' and fields_type == 'selection'"
                                    domain="[('fields_id','=',fields_id)]"/>
 
-                            <field name="uom_id" invisible="not using_calculation_price"
+                            <field name="uom_id" invisible="not using_calculation_price" column_invisible="1"
                                    required="using_calculation_price" options="{'no_create': True, 'no_open': True}"/>
                         </tree>
                     </field>
