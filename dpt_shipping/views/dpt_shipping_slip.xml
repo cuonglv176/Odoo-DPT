@@ -7,34 +7,16 @@
         <field name="arch" type="xml">
             <form string="Shipping slip">
                 <header>
-                    <button name="action_ready_get_car" string="Ready Get Car"
-                            type="object" class="btn-primary" invisible="state != 'draft'"/>
-                    <button name="action_start_get_car" string="Start Get Car"
-                            type="object" class="btn-primary" invisible="state != 'ready_get_car'"/>
-                    <button name="action_finish_get_car" string="Finish Get Car"
-                            type="object" class="btn-primary" invisible="state != 'start_get_car'"/>
-                    <button name="action_start_drop_good" string="Start Drop Good"
-                            type="object" class="btn-primary" invisible="state != 'finish_get_car'"/>
-                    <button name="action_finish_drop_good" string="Finish Drop Good"
-                            type="object" class="btn-primary" invisible="state != 'start_drop_good'"/>
-                    <button name="action_declared" string="Declared"
-                            type="object" class="btn-primary" invisible="state != 'finish_drop_good'"/>
-                    <button name="action_move_other_car" string="Move Other Car"
-                            type="object" class="btn-primary" invisible="state != 'declared'"/>
-                    <button name="action_finish" string="Finish"
-                            type="object" class="btn-primary" invisible="state != 'move_other_car'"/>
                     <button name="action_create_shipping_slip_receive" string="Create Shipping Receive"
-                            type="object" class="btn-primary" invisible="state != 'move_other_car'"/>
+                            type="object" class="btn-primary"/>
 
                     <field name="vehicle_country" invisible="1"/>
-                    <field name="state" widget="statusbar"
-                           statusbar_visible="draft,ready_get_car,start_get_car,finish_get_car,start_drop_good,finish_drop_good,declared,move_other_car,finish"/>
-                </header>
-                <sheet>
                     <field name="vn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
                            invisible="vehicle_country != 'vietnamese'"/>
                     <field name="cn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
                            invisible="vehicle_country != 'chinese'"/>
+                </header>
+                <sheet>
                     <group>
                         <group>
                             <field name="name"/>

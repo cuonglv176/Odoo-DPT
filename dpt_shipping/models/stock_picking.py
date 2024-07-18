@@ -6,11 +6,51 @@ from odoo import models, fields, api
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    valid_cutlist = fields.Boolean('Valid Cutlist', compute="_compute_valid_cutlist", store=True)
+    in_draft_shipping = fields.Boolean('In Draft Shipping', compute="_compute_in_draft_shipping",
+                                       search="_search_in_draft_shipping")
+    finish_stock_services = fields.Boolean('Finish Stock Services', compute="_compute_finish_stock_services",
+                                           inverse='_inverse_valid_cutlist', store=True)
+    have_stock_label = fields.Boolean('Have Stock Labels', compute="_compute_have_stock_label",
+                                      inverse='_inverse_valid_cutlist', store=True)
+    have_export_import = fields.Boolean('Have Export Import', compute="_compute_have_export_import",
+                                        inverse='_inverse_valid_cutlist', store=True)
+    edited_finish_stock_services = fields.Boolean('Edited Finish Stock Services')
+    edited_have_stock_label = fields.Boolean('Edited Have Stock Labels')
+    edited_have_export_import = fields.Boolean('Edited Have Export Import')
+
+    def _compute_in_draft_shipping(self):
+        for item in self:
+            draft_shipping_slip_ids = self.env['dpt.shipping.slip'].sudo().search(
+                ['|', ('out_picking_ids', 'in', [item.id]), ('in_picking_ids', 'in', [item.id]), '|', '&',
+                 ('vehicle_country', '=', 'chinese'), ('cn_vehicle_stage_id.is_draft_stage', '=', True), '&',
+                 ('vehicle_country', '=', 'vietnamese'), ('vn_vehicle_stage_id.is_draft_stage', '=', True)])
+            item.in_draft_shipping = True if draft_shipping_slip_ids else False
+
+    def _search_in_draft_shipping(self, operator, value):
+        draft_shipping_slip_ids = self.env['dpt.shipping.slip'].sudo().search(
+            ['|', '&', ('vehicle_country', '=', 'chinese'), ('cn_vehicle_stage_id.is_draft_stage', '=', True), '&',
+             ('vehicle_country', '=', 'vietnamese'), ('vn_vehicle_stage_id.is_draft_stage', '=', True)])
+        picking_ids = draft_shipping_slip_ids.out_picking_ids | draft_shipping_slip_ids.in_picking_ids
+        if (operator == '!=' and value) or (operator == '==' and not value):
+            return [('id', 'not in', picking_ids.ids)]
+        else:
+            return [('id', 'in', picking_ids.ids)]
 
     def cron_update_valid_cutlist_picking(self):
         picking_ids = self.env['stock.picking'].sudo().search([])
         picking_ids._compute_valid_cutlist()
+
+    def _compute_finish_stock_services(self):
+        for item in self:
+            item.edited_finish_stock_services = True
+
+    def _compute_have_stock_label(self):
+        for item in self:
+            item.edited_have_stock_label = True
+
+    def _compute_have_export_import(self):
+        for item in self:
+            item.edited_have_export_import = True
 
     @api.depends('sale_purchase_id', 'state', 'sale_purchase_id.ticket_ids', 'sale_purchase_id.dpt_export_import_ids')
     def _compute_valid_cutlist(self):
@@ -18,12 +58,14 @@ class StockPicking(models.Model):
         # đủ khai báo XNK
         # các ticket ở kho TQ đều hoàn thành
         for item in self:
-            valid_cutlist = False
-            if item.state not in ('done', 'cancel') and item.picking_type_code == 'incoming' and (item.x_transfer_type == 'outgoing_transfer' and item.location_id.warehouse_id.is_main_incoming_warehouse) and item.sale_purchase_id and all(
+            if not item.edited_finish_stock_services:
+                item.finish_stock_services = item.sale_purchase_id and all(
                     [ticket_id.stage_id.is_done_stage for ticket_id in item.sale_purchase_id.ticket_ids if
-                     ticket_id.department_id.is_chinese_stock_department]) and item.sale_purchase_id.dpt_export_import_ids:
-                valid_cutlist = True
-            item.valid_cutlist = valid_cutlist
+                     ticket_id.department_id.is_chinese_stock_department])
+            if not item.edited_have_stock_label:
+                item.have_stock_label = item.exported_label
+            if not item.edited_have_export_import:
+                item.have_export_import = True if item.sale_purchase_id and item.sale_purchase_id.dpt_export_import_ids else False
 
     @api.model
     def create(self, vals):
@@ -32,9 +74,21 @@ class StockPicking(models.Model):
         return res
 
     def write(self, vals):
+        if self.edited_finish_stock_services and 'finish_stock_services' in vals:
+            vals.pop('finish_stock_services', None)
+        if self.edited_have_stock_label and 'have_stock_label' in vals:
+            vals.pop('have_stock_label', None)
+        if self.edited_have_export_import and 'have_export_import' in vals:
+            vals.pop('have_export_import', None)
+        if self.env.context.get('edit_valid_cutlist', False):
+            if 'finish_stock_services' in vals:
+                vals.update({'edited_finish_stock_services': True})
+            if 'have_stock_label' in vals:
+                vals.update({'edited_have_stock_label': True})
+            if 'edited_have_export_import' in vals:
+                vals.update({'edited_have_export_import': True})
+            return super().write(vals)
         res = super().write(vals)
-        if 'valid_cutlist' in vals:
-            return res
         for item in self:
             item._compute_valid_cutlist()
         return res

@@ -11,10 +11,10 @@ class DPTShippingSlip(models.Model):
     transfer_code = fields.Char('Transfer Code')
     transfer_code_chinese = fields.Char('Transfer Code in Chinese')
     out_picking_ids = fields.Many2many('stock.picking', 'stock_picking_out_shipping_rel', 'shipping_slip_id',
-                                       'picking_id', string='Out Picking', domain="[('valid_cutlist','=', True)]")
+                                       'picking_id', string='Out Picking')
     export_import_ids = fields.Many2many('dpt.export.import', string='Export Import', compute="_compute_information")
     in_picking_ids = fields.Many2many('stock.picking', 'stock_picking_in_shipping_rel', 'shipping_slip_id',
-                                      'picking_id', string='In Picking', domain="[('valid_cutlist','=', True)]")
+                                      'picking_id', string='In Picking')
     sale_ids = fields.Many2many('sale.order', string='Sale Order', compute="_compute_information")
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle')
     vehicle_country = fields.Selection(related='vehicle_id.country')
@@ -25,17 +25,6 @@ class DPTShippingSlip(models.Model):
     vehicle_driver_id = fields.Many2one(related="vehicle_id.driver_id")
     vehicle_license_plate = fields.Char(related="vehicle_id.license_plate")
     vehicle_driver_phone = fields.Char(compute="_compute_vehicle_driver_phone")
-    state = fields.Selection([
-        ('draft', 'Draft'),
-        ('ready_get_car', 'Ready Get Car'),
-        ('start_get_car', 'Start Get Car'),
-        ('finish_get_car', 'Finish Get Car'),
-        ('start_drop_good', 'Start Drop Good'),
-        ('finish_drop_good', 'Finish Drop Good'),
-        ('declared', 'Declared'),
-        ('move_other_car', 'Move Other Car'),
-        ('finish', 'Finish'),
-    ], default='draft', string='State')
     note = fields.Text('Note')
 
     total_volume = fields.Float('Total Volume (m3)', compute="_compute_information")
@@ -129,26 +118,3 @@ class DPTShippingSlip(models.Model):
         }
         return action
 
-    def action_ready_get_car(self):
-        self.state = 'ready_get_car'
-
-    def action_start_get_car(self):
-        self.state = 'start_get_car'
-
-    def action_finish_get_car(self):
-        self.state = 'finish_get_car'
-
-    def action_start_drop_good(self):
-        self.state = 'start_drop_good'
-
-    def action_finish_drop_good(self):
-        self.state = 'finish_drop_good'
-
-    def action_declared(self):
-        self.state = 'declared'
-
-    def action_move_other_car(self):
-        self.state = 'move_other_car'
-
-    def action_finish(self):
-        self.state = 'finish'

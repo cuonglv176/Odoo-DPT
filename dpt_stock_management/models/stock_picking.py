@@ -55,6 +55,7 @@ class StockPicking(models.Model):
 
     sale_service_ids = fields.One2many('dpt.sale.service.management', 'picking_id', 'Sale Service')
     fields_ids = fields.One2many('dpt.sale.order.fields', 'picking_id', 'Fields')
+    exported_label = fields.Boolean('Exported Label')
 
     def _compute_total_volume_weight(self):
         for item in self:
@@ -333,6 +334,7 @@ class StockPicking(models.Model):
             'res_id': self.id,
         }
         file_xls = self.env['ir.attachment'].create(vals)
+        self.exported_label = True
         return {
             'type': 'ir.actions.act_url',
             'url': '/web/content/' + str(file_xls.id) + '?download=true',

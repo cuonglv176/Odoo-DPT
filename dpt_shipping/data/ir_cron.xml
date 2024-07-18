@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="cron_update_valid_cutlist_so" model="ir.cron">
-        <field name="name">Base: Auto-update Valid Cutlist SO</field>
-        <field name="model_id" ref="sale.model_sale_order"/>
+    <record id="cron_update_valid_cutlist_picking" model="ir.cron">
+        <field name="name">Base: Auto-update Valid Cutlist Picking</field>
+        <field name="model_id" ref="sale.model_stock_picking"/>
         <field name="state">code</field>
-        <field name="code">model.cron_update_valid_cutlist_so()</field>
+        <field name="code">model.cron_update_valid_cutlist_picking()</field>
         <field name='interval_number'>1</field>
-        <field name='interval_type'>days</field>
+        <field name='interval_type'>hours</field>
         <field name="numbercall">-1</field>
         <field name="priority">3</field>
     </record>
