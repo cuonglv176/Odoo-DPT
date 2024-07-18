@@ -205,7 +205,7 @@ class SaleOrder(models.Model):
             current_uom_id = sale_service_id.uom_id
             service_price_ids = sale_service_id.service_id.get_active_pricelist(partner_id=self.partner_id)
             if current_uom_id:
-                service_price_ids = service_price_ids.filtered(lambda sp: sp.uom_id.id == current_uom_id.id)
+                service_price_ids = service_price_ids.filtered(lambda sp: sp.uom_id.id == current_uom_id.id and (sp.partner_id and sp.partner_id.id == self.partner_id.id or not sp.partner_id))
             if not service_price_ids:
                 continue
             max_price = 0
@@ -240,7 +240,8 @@ class SaleOrder(models.Model):
                         max_price = price
                         price_list_item_id = service_price_id
                 elif service_price_id.compute_price == 'table':
-                    compute_field_ids = self.fields_ids.filtered(lambda f: f.using_calculation_price)
+                    compute_field_ids = self.fields_ids.filtered(
+                        lambda f: f.using_calculation_price and f.service_id.id == sale_service_id.service_id.id)
                     for compute_field_id in compute_field_ids:
                         if not service_price_id.is_accumulated:
                             detail_price_ids = service_price_id.pricelist_table_detail_ids.filtered(lambda
@@ -253,14 +254,8 @@ class SaleOrder(models.Model):
                                     company=self.env.company,
                                     date=fields.Date.today(),
                                 ), service_price_id.min_amount)
-                                if (price > max_price * compute_value) and ((not service_price_id.is_price and price > max_price) or (
-                                        service_price_id.is_price and (price / compute_field_id.value_integer if compute_field_id.value_integer != 0 else price) > max_price)):
-                                    max_price = service_price_id.currency_id._convert(
-                                        from_amount=detail_price_id.amount,
-                                        to_currency=self.env.company.currency_id,
-                                        company=self.env.company,
-                                        date=fields.Date.today(),
-                                    )
+                                if price > max_price:
+                                    max_price = price
                                     price_list_item_id = service_price_id
                                     compute_value = compute_field_id.value_integer
                                     compute_uom_id = compute_field_id.uom_id.id
@@ -292,7 +287,7 @@ class SaleOrder(models.Model):
             sale_service_id.with_context(from_pricelist=True).write({
                 'uom_id': price_list_item_id.uom_id.id if price_list_item_id else (
                     service_price_ids[:1].uom_id.id if service_price_ids and service_price_ids[:1].uom_id else None),
-                'price': max_price,
+                'price': max_price / compute_value if price_list_item_id and price_list_item_id.is_price else max_price,
                 'qty': 1,
                 'pricelist_item_id': price_list_item_id.id if price_list_item_id else (
                     service_price_ids[:1].id if service_price_ids else None),
