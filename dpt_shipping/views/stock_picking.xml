@@ -5,10 +5,12 @@
         <field name="name">dpt_stock_picking_cutlist_tree_view</field>
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="mode">primary</field>
         <field name="arch" type="xml">
-            <xpath expr="//header" position="inside">
-                <button name="action_create_shipping_slip" string="Create Shipping slip" type="object"
-                        class="oe_highlight" invisible="not context.get('is_cutlist_view')"/>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="finish_stock_services" widget="boolean_toggle"/>
+                <field name="have_stock_label" widget="boolean_toggle"/>
+                <field name="have_export_import" widget="boolean_toggle"/>
             </xpath>
         </field>
     </record>
@@ -18,11 +20,15 @@
         <field name="res_model">stock.picking</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="stock.view_picking_internal_search"/>
-        <field name="context">{'is_cutlist_view': 1}</field>
-        <field name="domain">[('valid_cutlist', '=', True)]</field>
+        <field name="context">{'edit_valid_cutlist': True}</field>
+        <field name="domain">[('in_draft_shipping', '=', True)]</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('dpt_shipping.dpt_stock_picking_cutlist_tree_view')})
+            ]"/>
     </record>
 
-    <menuitem id="valid_cutlist_stock_picking_menu" name="Valid Cutlist" parent="dpt_export_import.dpt_export_import_menu"
+    <menuitem id="valid_cutlist_stock_picking_menu" name="Valid Cutlist"
+              parent="dpt_export_import.dpt_export_import_menu"
               action="action_valid_cutlist_stock_picking" sequence="12"/>
 
 
