@@ -15,7 +15,8 @@ class SalesOrder(models.Model):
         for rec in self:
             invoice_amount_total = 0
             for invoice_id in rec.invoice_ids:
-                invoice_amount_total += invoice_id.amount_total
+                if invoice_id.state == 'posted':
+                    invoice_amount_total += invoice_id.amount_total
             rec.invoice_amount_total = invoice_amount_total
 
     @api.depends('amount_total', 'service_total_amount')
