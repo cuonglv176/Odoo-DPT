@@ -27,7 +27,7 @@ class SaleOrder(models.Model):
             },
         }
 
-    @api.depends('deposit_ids')
+    @api.depends('deposit_ids', 'deposit_ids.amount')
     def _compute_deposit_count(self):
         for rec in self:
             rec.deposit_count = len(rec.deposit_ids)
