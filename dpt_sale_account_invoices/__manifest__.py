@@ -9,7 +9,6 @@
     'website': 'http://dpt.com',
     'depends': ['base', 'account', 'sale', 'dpt_sale_deposit', 'dpt_sale_department','dpt_purchase_management'],
     'data': [
-        'security/ir.model.access.csv',
         'views/sale_order.xml',
     ],
 }
