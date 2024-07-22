@@ -170,3 +170,8 @@ class PurchaseOrder(models.Model):
         self.ensure_one()
         if self.state == 'purchase' and self.currency_id:
             self.last_rate_currency = self.currency_id.rate
+
+    @api.onchange('currency_id')
+    def _onchange_currency_id(self):
+        if self.currency_id:
+            self.last_rate_currency = self.currency_id.rate
