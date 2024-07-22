@@ -157,11 +157,6 @@ msgid "Fields type"
 msgstr "Loại trường"
 
 #. module: dpt_sale_management
-#: model:ir.model.fields.selection,name:dpt_sale_management.selection__sale_order__line_transfer__flying
-msgid "Flying"
-msgstr "Đường bay"
-
-#. module: dpt_sale_management
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation__id
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_calculation_line__id
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_order_fields__id
@@ -228,11 +223,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_order_fields__write_date
 #: model:ir.model.fields,field_description:dpt_sale_management.field_dpt_sale_service_management__write_date
 msgid "Last Updated on"
-msgstr ""
-
-#. module: dpt_sale_management
-#: model:ir.model.fields,field_description:dpt_sale_management.field_sale_order__line_transfer
-msgid "Line Transfer"
 msgstr ""
 
 #. module: dpt_sale_management
@@ -510,3 +500,23 @@ msgstr ""
 #: model:ir.model,name:dpt_sale_management.model_dpt_sale_order_fields
 msgid "dpt.sale.order.fields"
 msgstr ""
+
+#. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_sale_order__line_transfer
+msgid "Line Transfer"
+msgstr "Đường vận chuyển"
+
+#. module: dpt_sale_management
+#: model:ir.model.fields.selection,name:dpt_sale_management.selection__sale_order__line_transfer__flying
+msgid "Flying"
+msgstr "Đường hàng không"
+
+#. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_sale_order__employee_cs
+msgid "Employee CS"
+msgstr "Nhân viên CS"
+
+#. module: dpt_sale_management
+#: model:ir.model.fields,field_description:dpt_sale_management.field_sale_order__employee_sale
+msgid "Employee Sale"
+msgstr "Nhân viên Sale"
