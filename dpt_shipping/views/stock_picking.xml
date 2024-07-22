@@ -31,5 +31,7 @@
               parent="dpt_export_import.dpt_export_import_menu"
               action="action_valid_cutlist_stock_picking" sequence="12"/>
 
+    <menuitem id="valid_cutlist_stock_picking_in_stock_menu" name="Valid Cutlist" parent="stock.menu_stock_root"
+              action="action_valid_cutlist_stock_picking" sequence="12"/>
 
 </odoo>

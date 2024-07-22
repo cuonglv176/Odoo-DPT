@@ -560,6 +560,7 @@ msgstr "Cập nhật"
 #. module: dpt_shipping
 #: model:ir.actions.act_window,name:dpt_shipping.action_valid_cutlist_stock_picking
 #: model:ir.ui.menu,name:dpt_shipping.valid_cutlist_stock_picking_menu
+#: model:ir.ui.menu,name:dpt_shipping.valid_cutlist_stock_picking_in_stock_menu
 msgid "Valid Cutlist"
 msgstr "Cutlist"
 

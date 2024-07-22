@@ -21,7 +21,7 @@
                         <group>
                             <field name="name"/>
                             <field name="send_shipping_id" options="{'no_create': True}" readonly="1" force_save="1"/>
-                            <field name="transfer_code"/>
+                            <field name="transfer_code" invisible="1"/>
                             <field name="transfer_code_chinese" invisible="1"/>
                         </group>
                         <group>
