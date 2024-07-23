@@ -59,4 +59,4 @@ class DPTSaleServiceManagement(models.Model):
     @api.depends('new_price', 'qty')
     def _compute_new_amount_total(self):
         for item in self:
-            item.new_amount_total = item.qty * item.new_price
+            item.new_amount_total = item.compute_value * item.new_price
