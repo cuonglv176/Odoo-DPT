@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="sale.view_sale_advance_payment_inv"/>
         <field name="arch" type="xml">
             <field name="advance_payment_method" position="after">
-                <field name="picking_ids" widget="many2many_tags" domain="[('sale_id','in',sale_order_ids.ids)]"/>
+                <field name="picking_ids" widget="many2many_tags" domain="[('sale_id','in',sale_order_ids)]"/>
             </field>
         </field>
     </record>
