@@ -10,5 +10,6 @@
     'depends': ['base', 'account', 'sale', 'dpt_sale_deposit', 'dpt_sale_department','dpt_purchase_management'],
     'data': [
         'views/sale_order.xml',
+        'views/sale_make_invoice_advance_views.xml',
     ],
 }
