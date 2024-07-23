@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_service_form_pricelist_inherit" model="ir.ui.view">
+            <field name="name">view_service_form_pricelist_inherit</field>
+            <field name="model">dpt.service.management</field>
+            <field name="inherit_id" ref="dpt_service_management.view_service_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='units']" position="after">
+                    <page string="Pricelist" name="pricelist">
+                        <field name="pricelist_item_ids"
+                               context="{'default_base':'list_price', 'from_services': True,
+                                     'form_view_ref': 'dpt_service_pricelist.product_pricelist_item_view_form_service_pricelist',
+                                     'tree_view_ref': 'dpt_service_pricelist.product_pricelist_item_view_tree_service_pricelist'}"/>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

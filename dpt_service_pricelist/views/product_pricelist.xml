@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="product_pricelist_view_form_inherit" model="ir.ui.view">
+            <field name="name">product.pricelist.view.form.inherit</field>
+            <field name="model">product.pricelist</field>
+            <field name="inherit_id" ref="product.product_pricelist_view_tree"/>
+            <field name="arch" type="xml">
+                <field name="discount_policy" position="replace">
+                    <field name="partner_id"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="product_pricelist_view_tree_inherit" model="ir.ui.view">
+            <field name="name">product.pricelist.view.form.inherit</field>
+            <field name="model">product.pricelist</field>
+            <field name="inherit_id" ref="product.product_pricelist_view"/>
+            <field name="arch" type="xml">
+                <field name="currency_id" position="before">
+                    <field name="partner_id"/>
+                </field>
+                <xpath expr="//page[@name='pricelist_rules']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//page[@name='pricelist_rules']" position="after">
+                    <page name="pricelist_rules_service" string="Price Rules">
+                        <field name="item_ids" nolabel="1"
+                               context="{'default_base':'list_price', 'default_partner_id': partner_id,
+                                     'form_view_ref': 'dpt_service_pricelist.product_pricelist_item_view_form_service_pricelist',
+                                     'tree_view_ref': 'dpt_service_pricelist.product_pricelist_item_view_tree_service_pricelist'}"/>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

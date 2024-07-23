@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="product_pricelist_item_view_form_service_pricelist" model="ir.ui.view">
+            <field name="name">product.pricelist.item.view.form.inherit</field>
+            <field name="model">product.pricelist.item</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <form string="Pricelist Rule">
+                    <sheet>
+                        <field name="name" invisible="1"/>
+                        <field name="company_id" invisible="1"/>
+                        <group>
+                            <group>
+                                <field name="service_id" invisible="context.get('from_services', False)"
+                                       force_save="1"/>
+                                <field name="uom_id"/>
+                                <field name="compute_price" widget="radio" options="{'horizontal': true}"/>
+                                <field name="currency_id"/>
+                                <field name="price" invisible="1"/>
+                                <field name="fixed_price" widget="monetary" invisible="compute_price != 'fixed'"
+                                       options="{'field_digits': True}"/>
+                                <label for="percent_price" string="Percentage"
+                                       invisible="compute_price != 'percentage'"/>
+                                <div class="o_row" invisible="compute_price != 'percentage'">
+                                    <field name="percent_price" class="oe_inline"
+                                           invisible="compute_price != 'percentage'"/>%
+                                </div>
+                                <field name="percent_based_on" invisible="compute_price != 'percentage'"/>
+                                <field name="min_amount" widget="monetary" options="{'field_digits': True}"/>
+                            </group>
+                            <group>
+                                <field name="partner_id"/>
+                                <field name="date_start"/>
+                                <field name="date_end"/>
+                                <field name="version" readonly="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Table" name="table" invisible="compute_price != 'table'">
+                                <field name="pricelist_table_detail_ids">
+                                    <tree editable="bottom">
+                                        <field name="uom_id"/>
+                                        <field name="compute_price"/>
+                                        <field name="amount"/>
+                                        <field name="description"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_pricelist_item_view_tree_service_pricelist" model="ir.ui.view">
+            <field name="name">product.pricelist.item.view.form.inherit</field>
+            <field name="model">product.pricelist.item</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <tree string="Pricelist Rule">
+                    <field name="service_id" invisible="context.get('from_services', False)"/>
+                    <field name="uom_id"/>
+                    <field name="create_uid" widget="many2one_avatar_user"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <field name="compute_price"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>
