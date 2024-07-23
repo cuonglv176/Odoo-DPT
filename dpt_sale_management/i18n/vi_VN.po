@@ -248,7 +248,7 @@ msgstr "Ghi chú"
 #. module: dpt_sale_management
 #: model:ir.model.fields.selection,name:dpt_sale_management.selection__sale_order__type_so_route__office_route
 msgid "Office Route"
-msgstr "Chính nhạch"
+msgstr "Chính ngạch"
 
 #. module: dpt_sale_management
 #: model_terms:ir.ui.view,arch_db:dpt_sale_management.view_sale_order_inherit_form
