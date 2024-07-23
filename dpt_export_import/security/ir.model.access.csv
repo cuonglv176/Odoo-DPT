@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+dpt.export.import,dpt.export.import.user,model_dpt_export_import,,1,1,1,1
+dpt.export.import_gate,dpt.export.import.user_gate,model_dpt_export_import_gate,,1,1,1,1
+dpt.export.import.line,dpt.export.import.line.user,model_dpt_export_import_line,,1,1,1,1
+dpt.export.import.acfta,dpt.export.import.acfta,model_dpt_export_import_acfta,,1,1,1,1

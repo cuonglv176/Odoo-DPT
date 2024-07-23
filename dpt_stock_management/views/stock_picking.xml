@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_picking_form_stock_inherit" model="ir.ui.view">
+        <field name="name">view_picking_form_stock_inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="packing_lot_name" readonly="1" force_save="1"/>
+                <field name="total_volume"/>
+                <field name="total_weight"/>
+                <field name="transfer_code"/>
+                <field name="transfer_code_chinese" invisible="1"/>
+                <field name="is_main_incoming" invisible="1"/>
+                <field name="lot_name" invisible="is_main_incoming" required="not is_main_incoming"/>
+            </xpath>
+            <button name="action_open_label_type" position="after">
+                <button name="export_wrong_import_data" string="Print Sub Label" type="object"/>
+            </button>
+            <xpath expr="//field[@name='state'][1]" position="replace">
+                <field name="state" widget="statusbar" statusbar_visible="assigned,done,cancel"/>
+            </xpath>
+            <xpath expr="//field[@name='state'][2]" position="replace">
+            </xpath>
+            <field name="origin" position="attributes">
+                <attribute name="invisible">picking_type_code == 'incoming'</attribute>
+            </field>
+            <page name="operations" position="replace">
+                <page string="Packages" name="packages">
+                    <field name="package_ids" readonly="state == 'done' and is_locked">
+                        <tree>
+                            <field name="purchase_id" column_invisible="1"/>
+                            <!--                            <field name="lot_name"/>-->
+                            <field name="created_picking_qty" column_invisible="1"/>
+                            <field name="quantity"/>
+                            <field name="uom_id"/>
+                            <field name="total_weight"/>
+                            <field name="total_volume"/>
+                            <field name="note"/>
+                        </tree>
+                        <form>
+                            <sheet>
+                                <group>
+                                    <group>
+                                        <field name="purchase_id" invisible="1" force_save="1"/>
+                                        <!--                                        <field name="lot_name"/>-->
+                                        <field name="created_picking_qty" invisible="1"/>
+                                        <field name="quantity"/>
+                                        <field name="uom_id" required="1"/>
+                                        <field name="note"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group string="Information">
+                                        <field name="length"/>
+                                        <field name="width"/>
+                                        <field name="height"/>
+                                        <field name="volume"/>
+                                        <field name="weight"/>
+                                    </group>
+                                    <group string="Total">
+                                        <field name="total_volume"/>
+                                        <field name="total_weight"/>
+                                    </group>
+                                </group>
+                                <notebook>
+                                    <page name="detail" string="Detail">
+                                        <field name="detail_ids">
+                                            <tree editable="bottom">
+                                                <field name="package_id" column_invisible="1"/>
+                                                <field name="product_id"/>
+                                                <field name="uom_id" readonly="1" force_save="1"/>
+                                                <field name="quantity"/>
+                                            </tree>
+                                        </field>
+                                    </page>
+                                </notebook>
+                            </sheet>
+                        </form>
+                    </field>
+                </page>
+                <page string="Sale Services" name="sale_service">
+                    <field name="sale_service_ids">
+                        <tree editable="bottom">
+                            <!--                            <field name="sale_id" invisible="1"/>-->
+                            <field name="sequence" widget="handle"/>
+                            <field name="currency_id" column_invisible="1" force_save="1"/>
+                            <field name="currency_cny_id" column_invisible="1" force_save="1"/>
+                            <field name="service_id"/>
+                            <field name="uom_id"/>
+                            <!--                            <field name="description"/>-->
+                            <!--                            <field name="compute_value" readonly="1" force_save="1"/>-->
+                            <!--                            <field name="compute_uom_id" readonly="1" force_save="1"/>-->
+                            <field name="qty" column_invisible="1" force_save="1"/>
+                            <field name="uom_ids" column_invisible="1"/>
+                            <field name="price" readonly="0" force_save="1"/>
+                            <field name="price_cny" readonly="0" force_save="1"/>
+                            <!--                            <field name="currency_id" invisible="1"/>-->
+                            <field name="amount_total" readonly="1" force_save="1"/>
+                            <field name="department_id" context="{'dpt_sale_management': 1}"/>
+                        </tree>
+                    </field>
+                </page>
+                <page name="sale_field" string="Other Fields">
+                    <field name="fields_ids">
+                        <tree editable="bottom" default_order="sequence desc" decoration-danger="type=='required'">
+                            <field name="using_calculation_price" column_invisible="1"/>
+                            <field name="sequence" widget="handle"/>
+                            <field name="service_id"/>
+                            <field name="fields_id"/>
+                            <field name="type" column_invisible="1"/>
+                            <field name="fields_type" column_invisible="1"/>
+                            <field name="value_char" invisible="fields_type != 'char'"
+                                   required="type == 'required' and fields_type == 'char'"/>
+                            <field name="value_integer" invisible="fields_type != 'integer'"
+                                   required="type == 'required' and fields_type == 'integer'"/>
+                            <field name="value_date" invisible="fields_type != 'date'"
+                                   required="type == 'required' and fields_type == 'date'"/>
+                            <field name="selection_value_id" invisible="fields_type != 'selection'"
+                                   required="type == 'required' and fields_type == 'selection'"
+                                   domain="[('fields_id','=',fields_id)]"/>
+                            <field name="uom_id" invisible="not using_calculation_price"
+                                   required="using_calculation_price" options="{'no_create': True, 'no_open': True}"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Product PO" name="operations_v2">
+                    <field name="move_ids_product" mode="tree,kanban" widget="stock_move_one2many"
+                           readonly="state == 'done' and is_locked"
+                           context="{'default_company_id': company_id, 'default_date': scheduled_date, 'default_date_deadline': date_deadline, 'picking_type_code': picking_type_code, 'default_picking_id': id, 'form_view_ref': 'stock.view_stock_move_operations', 'address_in_id': partner_id, 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_partner_id': partner_id}"
+                           add-label="Add a Product">
+                        <tree decoration-muted="scrapped == True or state == 'cancel' or (state == 'done' and is_locked == True)"
+                              string="Stock Moves" editable="1">
+                            <field name="company_id" column_invisible="True"/>
+                            <field name="name" column_invisible="True"/>
+                            <field name="state" readonly="0" column_invisible="True"/>
+                            <field name="picking_type_id" column_invisible="True"/>
+                            <field name="move_line_ids" column_invisible="True"/>
+                            <field name="location_id" column_invisible="True"/>
+                            <field name="location_dest_id" column_invisible="True"/>
+                            <field name="partner_id" column_invisible="True" readonly="state == 'done'"/>
+                            <field name="scrapped" column_invisible="True"/>
+                            <field name="picking_code" column_invisible="True"/>
+                            <field name="product_type" column_invisible="True"/>
+                            <field name="show_details_visible" column_invisible="True"/>
+                            <field name="show_reserved" column_invisible="True"/>
+                            <field name="additional" column_invisible="True"/>
+                            <field name="move_lines_count" column_invisible="True"/>
+                            <field name="is_locked" column_invisible="True"/>
+                            <field name="product_uom_category_id" column_invisible="True"/>
+                            <field name="has_tracking" column_invisible="True"/>
+                            <field name="display_assign_serial" column_invisible="True"/>
+                            <field name="product_id" context="{'default_detailed_type': 'product'}" required="1"
+                                   readonly="(state != 'draft' and not additional) or move_lines_count &gt; 0"
+                                   force_save="1"/>
+                            <field name="description_picking" string="Description" optional="hide"/>
+                            <field name="date" optional="hide"/>
+                            <field name="date_deadline" optional="hide"/>
+                            <field name="is_quantity_done_editable" column_invisible="True"/>
+                            <field name="show_quant" column_invisible="True"/>
+                            <field name="show_lots_text" column_invisible="True"/>
+                            <field name="show_lots_m2o" column_invisible="True"/>
+                            <field name="display_assign_serial" column_invisible="True"/>
+                            <field name="is_initial_demand_editable" column_invisible="True"/>
+                            <field name="display_import_lot" column_invisible="True"/>
+                            <field name="picking_type_entire_packs" column_invisible="True"/>
+                            <field name="product_packaging_id" groups="product.group_stock_packaging"
+                                   context="{'default_product_id': product_id}" readonly="not product_id"/>
+                            <field name="product_uom_qty" string="Demand" readonly="not is_initial_demand_editable"/>
+                            <field name="forecast_expected_date" column_invisible="True"/>
+                            <field name="forecast_availability" string="Forecast" optional="hide"
+                                   column_invisible="parent.state in ('draft', 'done') or parent.picking_type_code != 'outgoing'"
+                                   widget="forecast_widget"/>
+                            <field name="product_qty" readonly="1" column_invisible="True"/>
+                            <field name="quantity" string="Quantity" readonly="not is_quantity_done_editable"
+                                   column_invisible="parent.state=='draft'"
+                                   decoration-danger="product_uom_qty and quantity &gt; product_uom_qty and parent.state not in ['done', 'cancel']"/>
+                            <field name="product_uom" readonly="state != 'draft' and not additional"
+                                   options="{'no_open': True, 'no_create': True}" string="Unit" groups="uom.group_uom"/>
+                            <field name="product_uom" groups="!uom.group_uom" column_invisible="True"/>
+                            <field name="picked" optional="hide" column_invisible="parent.state=='draft'"/>
+                            <field name="lot_ids" widget="many2many_tags" groups="stock.group_production_lot"
+                                   invisible="not show_details_visible or has_tracking != 'serial'" optional="hide"
+                                   options="{'create': [('parent.use_create_lots', '=', True)]}"
+                                   context="{'default_company_id': company_id, 'default_product_id': product_id, 'active_picking_id': parent.id}"
+                                   domain="[('product_id','=',product_id)]"/>
+                            <button name="action_assign_serial" type="object" icon="fa-plus-square" role="img"
+                                    title="Assign Serial Numbers" invisible="not display_assign_serial"/>
+                            <button type="object" name="action_product_forecast_report" title="Forecast Report"
+                                    icon="fa-area-chart"
+                                    invisible="quantity == 0 and forecast_availability &lt;= 0 or (parent.picking_type_code == 'outgoing' and state != 'draft')"/>
+                            <button type="object" name="action_product_forecast_report" title="Forecast Report"
+                                    icon="fa-area-chart text-danger"
+                                    invisible="quantity &gt; 0 or forecast_availability &gt; 0 or (parent.picking_type_code == 'outgoing' and state != 'draft')"/>
+                        </tree>
+                    </field>
+                </page>
+            </page>
+            <field name="picking_type_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+                <attribute name="force_save">1</attribute>
+            </field>
+            <xpath expr="//header" position="inside">
+                <field name="finish_create_picking" invisible="1"/>
+                <button name="action_create_transfer_picking" string="Create transfer picking" type="object"
+                        invisible="picking_type_code != 'incoming' or finish_create_picking" data-hotkey="o"/>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <field name="num_picking_out" invisible="True"/>
+                <button name="action_view_picking_out" type="object" class="oe_stat_button" icon="fa-rotate-left"
+                        invisible="num_picking_out == 0">
+                    <field string="Picking Out" name="num_picking_out" widget="statinfo"/>
+                </button>
+            </xpath>
+            <xpath expr="//div[hasclass('o_td_label')]" position="replace">
+                <div class="o_td_label">
+                    <label for="partner_id" string="Delivery Address" style="font-weight:bold;"
+                           invisible="picking_type_code != 'outgoing'"/>
+                    <label for="partner_id" string="Receive From" style="font-weight:bold;"
+                           invisible="picking_type_code != 'incoming'"/>
+                    <label for="partner_id" string="Contact" style="font-weight:bold;"
+                           invisible="picking_type_code in ['incoming', 'outgoing']"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="vpicktree_new_list_view_inherit" model="ir.ui.view">
+        <field name="name">vpicktree_new_list_view_inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="packing_lot_name"/>
+                <field name="purchase_id"/>
+            </field>
+            <field name="scheduled_date" position="after">
+                <field name="total_volume"/>
+                <field name="total_weight"/>
+            </field>
+            <field name="origin" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="stock_picking_kanban_inherit_view" model="ir.ui.view">
+        <field name="name">stock_picking_kanban_inherit_view</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.stock_picking_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_kanban_record_headings')]" position="replace">
+                <div class="o_kanban_record_headings ms-1">
+                    <strong class="o_kanban_record_title">
+                        <span>
+                            <t t-esc="record.name.value"/>
+                            -
+                            <t t-esc="record.packing_lot_name"/>
+                        </span>
+                    </strong>
+                </div>
+            </xpath>
+            <field name="picking_properties" position="after">
+                <div>
+                    <span t-if="record.total_weight">Weight:
+                        <t t-esc="record.total_weight"/>
+                        kg
+                    </span>
+                    <span t-else="">Weight: 0 kg</span>
+                </div>
+                <div>
+                    <span t-if="record.total_volume">Volume:
+                        <t t-esc="record.total_volume"/>
+                        m
+                        <sup>3</sup>
+                    </span>
+                    <span t-else="">Volume: 0 m
+                        <sup>3</sup>
+                    </span>
+                </div>
+            </field>
+        </field>
+    </record>
+
+</odoo>

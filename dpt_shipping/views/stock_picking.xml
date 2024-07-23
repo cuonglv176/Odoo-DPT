@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="dpt_stock_picking_cutlist_tree_view" model="ir.ui.view">
+        <field name="name">dpt_stock_picking_cutlist_tree_view</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="finish_stock_services" widget="boolean_toggle"/>
+                <field name="have_stock_label" widget="boolean_toggle"/>
+                <field name="have_export_import" widget="boolean_toggle"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_valid_cutlist_stock_picking" model="ir.actions.act_window">
+        <field name="name">Valid Cutlist</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+        <field name="context">{'edit_valid_cutlist': True}</field>
+        <field name="domain">[('in_draft_shipping', '=', True)]</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('dpt_shipping.dpt_stock_picking_cutlist_tree_view')})
+            ]"/>
+    </record>
+
+    <menuitem id="valid_cutlist_stock_picking_menu" name="Valid Cutlist"
+              parent="dpt_export_import.dpt_export_import_menu"
+              action="action_valid_cutlist_stock_picking" sequence="12"/>
+
+    <menuitem id="valid_cutlist_stock_picking_in_stock_menu" name="Valid Cutlist" parent="stock.menu_stock_root"
+              action="action_valid_cutlist_stock_picking" sequence="12"/>
+
+</odoo>

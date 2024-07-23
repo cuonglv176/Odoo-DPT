@@ -1,0 +1,185 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* dpt_sale_approvals
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-08 19:14+0000\n"
+"PO-Revision-Date: 2024-06-09 02:17+0700\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.4\n"
+
+#. module: dpt_sale_approvals
+#: model:ir.model.fields,field_description:dpt_sale_approvals.field_dpt_sale_service_management__approval_id
+#: model:ir.model.fields,field_description:dpt_sale_approvals.field_sale_order_line__approval_id
+msgid "Approval Change Price"
+msgstr "Phê duyệt Thay đổi giá"
+
+#. module: dpt_sale_approvals
+#: model:ir.model,name:dpt_sale_approvals.model_approval_request
+msgid "Approval Request"
+msgstr "Yêu cầu phê duyệt"
+
+#. module: dpt_sale_approvals
+#: model:ir.model.fields,field_description:dpt_sale_approvals.field_sale_order__approval_count
+msgid "Approval count"
+msgstr "Số lượng phê duyệt"
+
+#. module: dpt_sale_approvals
+#. odoo-python
+#: code:addons/dpt_sale_approvals/models/sale_order.py:0
+#, python-format
+msgid "Approval request"
+msgstr "Phê duyệt"
+
+#. module: dpt_sale_approvals
+#: model_terms:ir.ui.view,arch_db:dpt_sale_approvals.view_sale_order_inherit_form
+msgid "Approvals"
+msgstr "Phê duyệt"
+
+#. module: dpt_sale_approvals
+#: model:ir.model.fields.selection,name:dpt_sale_approvals.selection__dpt_sale_service_management__price_status__approved
+#: model:ir.model.fields.selection,name:dpt_sale_approvals.selection__sale_order__price_status__approved
+#: model:ir.model.fields.selection,name:dpt_sale_approvals.selection__sale_order_line__price_status__approved
+msgid "Approved"
+msgstr "Đã duyệt"
+
+#. module: dpt_sale_approvals
+#: model_terms:ir.ui.view,arch_db:dpt_sale_approvals.view_sale_order_inherit_form
+msgid "Approved Price"
+msgstr "Phê duyệt giá"
+
+#. module: dpt_sale_approvals
+#: model_terms:ir.ui.view,arch_db:dpt_sale_approvals.view_sale_change_price_form
+msgid "Cancel"
+msgstr "Hủy"
+
+#. module: dpt_sale_approvals
+#: model_terms:ir.ui.view,arch_db:dpt_sale_approvals.view_sale_change_price_form
+#: model_terms:ir.ui.view,arch_db:dpt_sale_approvals.view_sale_order_inherit_form
+msgid "Change Price"
+msgstr "Thay đổi giá"
+
+#. module: dpt_sale_approvals
+#: model:ir.model.fields,field_description:dpt_sale_approvals.field_sale_order__approval_ids
+msgid "Change Price Approval"
+msgstr "Phê duyệt thay đổi giá"
+
+#. module: dpt_sale_approvals
+#: model:ir.model.fields,field_description:dpt_sale_approvals.field_approval_request__sequence_code
+msgid "Code"
+msgstr "Mã dịch vụ"
+
+#. module: dpt_sale_approvals
+#: model:ir.model,name:dpt_sale_approvals.model_dpt_sale_service_management
+msgid "DPT Sale Service Management"
+msgstr ""
+
+#. module: dpt_sale_approvals
+#: model:ir.model.fields,field_description:dpt_sale_approvals.field_dpt_sale_service_management__new_amount_total
+msgid "New Amount Total"
+msgstr "Tổng thay đổi"
+
+#. module: dpt_sale_approvals
+#: model:ir.model.fields,field_description:dpt_sale_approvals.field_dpt_sale_service_management__new_price
+msgid "New Price"
+msgstr "Giá thay đổi"
+
+#. module: dpt_sale_approvals
+#: model:ir.model.fields,field_description:dpt_sale_approvals.field_sale_order_line__new_price_subtotal
+msgid "New Price Subtotal"
+msgstr "Tổng thay đổi"
+
+#. module: dpt_sale_approvals
+#: model:ir.model.fields,field_description:dpt_sale_approvals.field_sale_order_line__new_price_unit
+msgid "New Price Unit"
+msgstr "Giá thay đổi"
+
+#. module: dpt_sale_approvals
+#: model:ir.model.fields.selection,name:dpt_sale_approvals.selection__dpt_sale_service_management__price_status__no_price
+#: model:ir.model.fields.selection,name:dpt_sale_approvals.selection__sale_order__price_status__no_price
+#: model:ir.model.fields.selection,name:dpt_sale_approvals.selection__sale_order_line__price_status__no_price
+msgid "No Price"
+msgstr "Không duyệt giá"
+
+#. module: dpt_sale_approvals
+#: model_terms:ir.ui.view,arch_db:dpt_sale_approvals.approval_request_view_form_inherit_form
+#: model_terms:ir.ui.view,arch_db:dpt_sale_approvals.view_sale_change_price_form
+msgid "Order Lines"
+msgstr "Chi tiết đơn hàng"
+
+#. module: dpt_sale_approvals
+#. odoo-python
+#: code:addons/dpt_sale_approvals/models/sale_order.py:0
+#, python-format
+msgid "Please config category approval change price (BAOGIA)"
+msgstr "Chưa cấu hình phần duyệt giá trong Phê duyệt  loại là (BAOGIA)"
+
+#. module: dpt_sale_approvals
+#: model:ir.model.fields,field_description:dpt_sale_approvals.field_approval_request__sale_id
+msgid "Sale Order"
+msgstr "Đơn hàng"
+
+#. module: dpt_sale_approvals
+#: model:ir.model.fields,field_description:dpt_sale_approvals.field_approval_request__order_line_ids
+msgid "Sale Order Line"
+msgstr "Sản phẩm chi tiết"
+
+#. module: dpt_sale_approvals
+#: model:ir.model.fields,field_description:dpt_sale_approvals.field_approval_request__sale_service_ids
+msgid "Sale Service"
+msgstr "Dịch vụ"
+
+#. module: dpt_sale_approvals
+#: model:ir.model,name:dpt_sale_approvals.model_sale_order
+msgid "Sales Order"
+msgstr "Đơn bán hàng"
+
+#. module: dpt_sale_approvals
+#: model:ir.model,name:dpt_sale_approvals.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Sản phẩm chi tiết"
+
+#. module: dpt_sale_approvals
+#: model_terms:ir.ui.view,arch_db:dpt_sale_approvals.approval_request_view_form_inherit_form
+#: model_terms:ir.ui.view,arch_db:dpt_sale_approvals.view_sale_change_price_form
+msgid "Sales Order Lines"
+msgstr "Sản phẩm chi tiết"
+
+#. module: dpt_sale_approvals
+#: model_terms:ir.ui.view,arch_db:dpt_sale_approvals.view_sale_change_price_form
+msgid "Send"
+msgstr "Gửi duyệt giá"
+
+#. module: dpt_sale_approvals
+#: model_terms:ir.ui.view,arch_db:dpt_sale_approvals.approval_request_view_form_inherit_form
+#: model_terms:ir.ui.view,arch_db:dpt_sale_approvals.view_sale_change_price_form
+msgid "Service"
+msgstr "Dịch vụ"
+
+#. module: dpt_sale_approvals
+#: model:ir.model.fields,field_description:dpt_sale_approvals.field_dpt_sale_service_management__price_status
+#: model:ir.model.fields,field_description:dpt_sale_approvals.field_sale_order__price_status
+#: model:ir.model.fields,field_description:dpt_sale_approvals.field_sale_order_line__price_status
+msgid "Status"
+msgstr "Trạng thái"
+
+#. module: dpt_sale_approvals
+#: model:ir.model.fields.selection,name:dpt_sale_approvals.selection__dpt_sale_service_management__price_status__wait_approve
+#: model:ir.model.fields.selection,name:dpt_sale_approvals.selection__sale_order__price_status__wait_approve
+#: model:ir.model.fields.selection,name:dpt_sale_approvals.selection__sale_order_line__price_status__wait_approve
+msgid "Wait Approve"
+msgstr "Đang chờ duyệt giá"
+
+#. module: dpt_sale_approvals
+#: model_terms:ir.ui.view,arch_db:dpt_sale_approvals.view_sale_order_inherit_form
+msgid "Wait Approve Price"
+msgstr "Đang chờ duyệt giá"

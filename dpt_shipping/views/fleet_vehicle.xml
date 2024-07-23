@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="fleet_vehicle_country_view_form_inherit" model="ir.ui.view">
+        <field name="name">fleet_vehicle_country_view_form_inherit</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+        <field name="arch" type="xml">
+            <field name="tag_ids" position="after">
+                <field name="country" required="1"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="dpt_crm_lead_log_note_form_view" model="ir.ui.view">
+            <field name="name">crm.lead.log.note.form</field>
+            <field name="model">crm.lead.log.note</field>
+            <field name="arch" type="xml">
+                <form string="dpt crm lead log note">
+                    <sheet>
+                        <h3 class="text-center">CẬP NHẬT GHI CHÚ:
+                        </h3>
+                        <group>
+                            <group>
+                                <field name="content"/>
+                                <field name="contact_form"/>
+                            </group>
+                            <group>
+                                <field name="result"/>
+                                <field name="lead_id" readonly="1" force_save="1"/>
+                                <field name="stage_id" readonly="1" force_save="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Ghi chú">
+                                <field name="note" widget="html"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <footer>
+                        <button string="Lưu" class="btn-primary" special="save" data-hotkey="v"/>
+                        <button string="Hủy" special="cancel" data-hotkey="z"/>
+                    </footer>
+                </form>
+
+            </field>
+        </record>
+
+
+        <record id="dpt_crm_lead_log_note_action_new" model="ir.actions.act_window">
+            <field name="name">Log Note</field>
+            <field name="res_model">crm.lead.log.note</field>
+            <field name="view_mode">form,tree</field>
+            <field name="domain">[('lead_id', '=', active_id)]</field>
+            <field name="context">{'search_default_lead_id': active_id, 'default_lead_id': active_id}
+            </field>
+        </record>
+
+        <record id="crm_lead_view_form" model="ir.ui.view">
+            <field name="name">crm.lead.form</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/header/button[last()]" position="after">
+                    <button class="oe_stat_button" type="object" name="dpt_crm_lead_log_note_action_new"
+                            string="Update Log Note"/>
+                    <field name="is_exist" invisible="1"/>
+                </xpath>
+                <div name="button_box" position="before">
+                    <widget name="web_ribbon" title="Lead Exist" bg_color="bg-danger" invisible="is_exist != True"/>
+                </div>
+
+                <xpath expr="//page[last()]" position="after">
+                    <page string="Log Note" name="page_log_note">
+                        <field name="lead_log_note_ids" readonly="1">
+                            <tree string="crm.lead.log.note">
+                                <field name="create_date" optional="show"/>
+                                <field name="lead_id" optional="show"/>
+                                <field name="stage_id" optional="show"/>
+                                <field name="contact_form" optional="show"/>
+                                <field name="content" optional="show"/>
+                                <field name="result" optional="show"/>
+                                <field name="note" optional="show"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Lead exist" name="page_lead_exist_ids">
+                        <field name="lead_exist_ids" readonly="1">
+                            <tree string="Lead Exist">
+                                <field name="create_date" optional="show"/>
+                                <field name="user_id" optional="show"/>
+                                <field name="stage_id" optional="show"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="dpt_custom_lead_view_tree_custom" model="ir.ui.view">
+            <field name="name">crm.lead.tree.lead</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_tree_view_leads"/>
+            <field name="priority">99</field>
+            <field name="arch" type="xml">
+                <field name="priority" position="after">
+                    <field name="is_exist"/>
+                </field>
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="decoration-danger">
+                        is_exist == True
+                    </attribute>
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="dpt_shipping_slip_form_view" model="ir.ui.view">
+        <field name="name">dpt_shipping_slip_form_view</field>
+        <field name="model">dpt.shipping.slip</field>
+        <field name="arch" type="xml">
+            <form string="Shipping slip">
+                <header>
+                    <button name="action_create_shipping_slip_receive" string="Create Shipping Receive"
+                            type="object" class="btn-primary"/>
+
+                    <field name="vehicle_country" invisible="1"/>
+                    <field name="vn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
+                           invisible="vehicle_country != 'vietnamese'"/>
+                    <field name="cn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
+                           invisible="vehicle_country != 'chinese'"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="send_shipping_id" options="{'no_create': True}" readonly="1" force_save="1"/>
+                            <field name="transfer_code" invisible="1"/>
+                            <field name="transfer_code_chinese" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="vehicle_id" options="{'no_create': True}"/>
+                            <field name="vehicle_driver_id"/>
+                            <field name="vehicle_license_plate"/>
+                            <field name="vehicle_driver_phone"/>
+                            <field name="total_volume"/>
+                            <field name="total_weight"/>
+                            <field name="total_num_packing"/>
+                        </group>
+                    </group>
+                    <label for="note"/>
+                    <field name="note" nolable="1"/>
+                    <notebook>
+                        <page name="out_picking" string="Out Picking">
+                            <field name="out_picking_ids" context="{
+                                     'form_view_ref': 'stock.view_picking_form',
+                                     'tree_view_ref': 'stock.vpicktree'}"/>
+                        </page>
+                        <page name="in_picking" string="In Picking">
+                            <field name="in_picking_ids" context="{
+                                     'form_view_ref': 'stock.view_picking_form',
+                                     'tree_view_ref': 'stock.vpicktree'}"/>
+                        </page>
+
+                        <page name="sale_order" string="Order">
+                            <field name="sale_ids" readonly="1"/>
+                        </page>
+                        <page name="import_export" string="Import Export">
+                            <field name="export_import_ids" context="{
+                                     'form_view_ref': 'dpt_export_import.view_dpt_export_import_form',
+                                     'tree_view_ref': 'dpt_export_import.view_dpt_export_import_tree'}"/>
+                        </page>
+                        <page name="vehicle_stage_tracking" string="Vehicle Stage Tracking">
+                            <field name="vehicle_stage_log_ids">
+                                <tree editable="bottom" delete="0">
+                                    <field name="vehicle_id" column_invisible="1" force_save="1"/>
+                                    <field name="shipping_slip_id" column_invisible="1" force_save="1"/>
+                                    <field name="current_stage_id" options="{'no_create': True}"/>
+                                    <field name="next_stage_id" options="{'no_create': True}"/>
+                                    <field name="log_datetime"/>
+                                    <field name="log_time" widget="float_time"/>
+                                    <field name="description"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="dpt_shipping_slip_tree_views" model="ir.ui.view">
+        <field name="name">dpt_shipping_slip_tree_views</field>
+        <field name="model">dpt.shipping.slip</field>
+        <field name="arch" type="xml">
+            <tree string="Shipping slip">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="dpt_shipping_slip_action" model="ir.actions.act_window">
+        <field name="name">Shipping slip</field>
+        <field name="res_model">dpt.shipping.slip</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="dpt_shipping_slip_menu" name="Shipping slip" sequence="40" action="dpt_shipping_slip_action"
+              parent="stock.menu_stock_warehouse_mgmt"/>
+
+</odoo>

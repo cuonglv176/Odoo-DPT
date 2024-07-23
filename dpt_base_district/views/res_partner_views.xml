@@ -1,0 +1,29 @@
+<odoo>
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <field name="zip" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="street2" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="city" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="state_id" position="after">
+                <field name="district_id" placeholder="District" class="o_address_street"
+                       readonly="type == 'contact' and parent_id != False"/>
+                <field name="wards_id" placeholder="Wards" class="o_address_street"/>
+
+            </field>
+            <xpath expr="//field[@name='child_ids']/form/sheet/group/group/div/div[@name='div_address']/field[@name='street2']"
+                   position="after">
+                <field name="district_id" placeholder="District" class="o_address_street"/>
+                <field name="wards_id" placeholder="Wards" class="o_address_street"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_purchase_order_line_package,access_purchase_order_line_package,model_purchase_order_line_package,base.group_user,1,1,1,1
+access_purchase_order_line_package_detail,access_purchase_order_line_package_detail,model_purchase_order_line_package_detail,base.group_user,1,1,1,1
+access_dpt_purchase_service_management,access_dpt_purchase_service_management,model_dpt_purchase_service_management,base.group_user,1,1,1,1

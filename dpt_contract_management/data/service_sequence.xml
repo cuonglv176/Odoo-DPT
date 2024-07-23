@@ -1,0 +1,10 @@
+
+<odoo>
+    <record id="seq_dpt_contract_management" model="ir.sequence">
+        <field name="name">DPT Contract Code</field>
+        <field name="code">dpt.contract.management</field>
+        <field name="prefix">BO</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

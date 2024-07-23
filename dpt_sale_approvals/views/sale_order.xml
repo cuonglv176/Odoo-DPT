@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+
+    <record id="view_sale_order_inherit_form" model="ir.ui.view">
+        <field name="name">sale.order.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="dpt_sale_management.view_sale_order_inherit_form"/>
+        <field name="arch" type="xml">
+            <button name="send_quotation_department" position="after">
+                <button string="Change Price" name="action_change_price" type="object"/>
+            </button>
+            <div name="button_box" position="before">
+                <field name="price_status" invisible="1"/>
+                <widget name="web_ribbon" title="Wait Approve Price" bg_color="bg-danger"
+                        invisible="price_status != 'wait_approve'"/>
+                <widget name="web_ribbon" title="Approved Price" bg_color="bg-success"
+                        invisible="price_status != 'approved'"/>
+            </div>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal']" position="after">
+                <field name="price_status" force_save="1" readonly="1" column_invisible="1"
+                       decoration-success="price_status == 'approved'"
+                       decoration-warning="price_status == 'wait_approve'"
+                       widget="badge"/>
+            </xpath>
+
+            <xpath expr="//field[@name='sale_service_ids']/tree/field[@name='department_id']" position="after">
+                <field name="price_status"
+                        force_save="1" readonly="1"
+                       decoration-success="price_status == 'approved'"
+                       decoration-warning="price_status == 'wait_approve'"
+                       widget="badge"/>
+            </xpath>
+
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" type="object" name="action_open_change_price_approval" icon="fa-check">
+                    <field string="Approvals" name="approval_count" widget="statinfo"/>
+                </button>
+            </div>
+<!--            <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">-->
+<!--                <field name="department_id"/>-->
+<!--            </xpath>-->
+        </field>
+    </record>
+
+</odoo>

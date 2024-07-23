@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="purchase_order_view_tree_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.tree.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="invoice_status" position="before">
+                <field name="purchase_type" optional="show" widget="badge"
+                       decoration-success="purchase_type == 'internal'"
+                       decoration-info="purchase_type == 'external'"
+                       invisible="context.get('from_purchase_order_confirm')"
+                />
+            </field>
+        </field>
+    </record>
+
+    <record id="purchase_order_view_tree2_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.tree.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
+        <field name="arch" type="xml">
+            <field name="amount_total" position="replace">
+                <field name="amount_untaxed"/>
+            </field>
+            <field name="name" position="after">
+                <field name="purchase_type"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="purchase_order_form_package_line_inherit_form" model="ir.ui.view">
+        <field name="name">purchase_order_form_package_line_inherit_form</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="before">
+                <field name="purchase_type" widget="radio" options="{'horizontal': true}"
+                       invisible="context.get('from_purchase_order_confirm')"/>
+                <field name="department_id"/>
+                <field name="packing_lot_name" readonly="1" force_save="1"/>
+            </field>
+            <field name="date_order" position="before">
+                <field name="sale_id" readonly="1" force_save="1" invisible="sale_id"/>
+            </field>
+            <page name="products" position="after">
+                <page string="Package" name="package">
+                    <field name="import_package_stock" invisible="1"/>
+                    <field name="package_line_ids" readonly="state in ('done', 'cancel')"
+                           context="{'default_sale_id': sale_id}"/>
+                </page>
+                <!--                <page string="Service Cost" name="purchase_service">-->
+                <!--                    <field name="purchase_service_ids">-->
+                <!--                        <tree editable="bottom">-->
+                <!--                            <field name="sequence" widget="handle"/>-->
+                <!--                            <field name="currency_id" column_invisible="1" force_save="1"/>-->
+                <!--                            <field name="currency_cny_id" column_invisible="1" force_save="1"/>-->
+                <!--                            <field name="service_id"/>-->
+                <!--                            <field name="uom_id"/>-->
+                <!--                            <field name="qty" column_invisible="1" force_save="1"/>-->
+                <!--                            <field name="uom_ids" column_invisible="1"/>-->
+                <!--                            <field name="price" readonly="0" force_save="1"/>-->
+                <!--                            <field name="price_cny" readonly="0" force_save="1"/>-->
+                <!--                            <field name="amount_total" readonly="1" force_save="1"/>-->
+                <!--                            <field name="department_id"/>-->
+                <!--                        </tree>-->
+                <!--                    </field>-->
+                <!--                </page>-->
+                <page name="sale_service" string="Dịch vụ">
+                    <field name="sale_service_ids">
+                        <tree editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="currency_id" column_invisible="1" force_save="1"/>
+                            <field name="currency_cny_id" optional="hide"/>
+                            <field name="service_id"/>
+                            <field name="uom_id"/>
+                            <field name="compute_value" readonly="1" force_save="1"/>
+                            <field name="compute_uom_id" readonly="1" force_save="1"/>
+                            <field name="qty" column_invisible="1" force_save="1"/>
+                            <field name="uom_ids" column_invisible="1"/>
+                            <field name="price" readonly="0" force_save="1"/>
+                            <field name="price_cny" readonly="0" force_save="1"/>
+                            <field name="amount_total" readonly="1" force_save="1"/>
+                            <field name="department_id" context="{'dpt_sale_management': 1}"/>
+                            <field name="note"/>
+                        </tree>
+                    </field>
+                    <group col="6" class="mt-2 mt-md-0">
+                        <group class="oe_subtotal_footer" colspan="2">
+                            <!--                            <field name="service_total_untax_amount" colspan="2" readonly="1"/>-->
+                            <!--                            <field name="service_tax_amount" colspan="2" readonly="1"/>-->
+                            <field name="service_total_amount" colspan="2" readonly="1"/>
+                        </group>
+                        <div class="clearfix"/>
+                    </group>
+                </page>
+
+            </page>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_qty']" position="after">
+                <field name="buying_url"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='qty_received']" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='qty_received']" position="after">
+                <field name="cost"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='qty_invoiced']" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='taxes_id']" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+            <xpath expr="//group[hasclass('oe_subtotal_footer')]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal']" position="attributes">
+                <attribute name="sum">Sum Price Subtotal</attribute>
+            </xpath>
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" type="object" name="get_origin_po" icon="fa-solid fa-cart-shopping">
+                    <field string="Buy CNY PO" name="count_buy_cny_po" widget="statinfo"/>
+                </button>
+                <button class="oe_stat_button" type="object" name="action_open_sale_order" icon="fa-usd">
+                    <field string="Sale Order" name="count_so" widget="statinfo"/>
+                </button>
+            </div>
+            <field name="purchase_type" position="after">
+                <field name="origin_po" invisible="purchase_type != 'buy_cny'"/>
+            </field>
+            <button name="action_view_picking" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </button>
+            <field name="currency_id" position="after">
+                <field name="last_rate_currency"/>
+            </field>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal']" position="after">
+                <field name="price_unit3" readonly="0"
+                       groups="purchase.group_purchase_user,account.group_account_user"/>
+                <field name="price_cost3" readonly="0"
+                       groups="purchase.group_purchase_user,account.group_account_user"/>
+                <field name="price_subtotal3" groups="purchase.group_purchase_user,account.group_account_user"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="purchase.purchase_form_action" model="ir.actions.act_window">
+        <field name="domain">[('purchase_type','=', 'internal')]</field>
+        <field name="name">Đơn mua hàng nội bộ</field>
+        <field name="context">{'from_purchase_order_confirm': True, 'default_purchase_type': 'internal'}</field>
+    </record>
+
+    <menuitem name="Đơn mua hàng nội bộ" id="purchase.menu_purchase_form_action" action="purchase.purchase_form_action"
+              parent="purchase.menu_procurement_management" sequence="6"/>
+
+    <record id="purchase_form_external_action" model="ir.actions.act_window">
+        <field name="name">Đơn mua hàng mua hộ</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">tree,kanban,form,pivot,graph,calendar,activity</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('purchase.purchase_order_view_tree')}),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('purchase.purchase_order_view_kanban_without_dashboard')}),
+            ]"/>
+        <field name="domain">[('purchase_type','=', 'external')]</field>
+        <field name="search_view_id" ref="purchase.purchase_order_view_search"/>
+        <field name="context">{'from_purchase_order_confirm': True, 'default_purchase_type': 'external'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No purchase order found. Let's create one!
+            </p>
+            <p>
+                Once you ordered your products to your supplier, confirm your request for quotation and it will turn
+                into a purchase order.
+            </p>
+        </field>
+    </record>
+    <menuitem name="Đơn mua hàng mua hộ" action="purchase_form_external_action" id="menu_purchase_form_external_action"
+              parent="purchase.menu_procurement_management"
+              sequence="6"/>
+
+
+    <record id="purchase_form_buy_cny_action" model="ir.actions.act_window">
+        <field name="name">Đơn mua hàng mua tệ</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">tree,kanban,form,pivot,graph,calendar,activity</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('purchase.purchase_order_view_tree')}),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('purchase.purchase_order_view_kanban_without_dashboard')}),
+            ]"/>
+        <field name="domain">[('purchase_type','=', 'buy_cny')]</field>
+        <field name="search_view_id" ref="purchase.purchase_order_view_search"/>
+        <field name="context">{'from_purchase_order_confirm': True, 'default_purchase_type': 'buy_cny'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No purchase order found. Let's create one!
+            </p>
+            <p>
+                Once you ordered your products to your supplier, confirm your request for quotation and it will turn
+                into a purchase order.
+            </p>
+        </field>
+    </record>
+    <menuitem name="Đơn mua hàng mua tệ" action="purchase_form_buy_cny_action" id="menu_purchase_form_buy_cny_action"
+              parent="purchase.menu_procurement_management"
+              sequence="6"/>
+
+</odoo>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!--    quotation for purchase department-->
+    <record id="service_quotation_for_purchase_action" model="ir.actions.act_window">
+        <field name="name">Service Quotation</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+        <field name="domain">[('sale_service_ids', '!=', False),('state','!=', 'draft')]</field>
+        <field name="context">{'search_default_my_quotation': 1, 'separate_for_department': True,
+            'separate_purchase_for_department': True}
+        </field>
+    </record>
+
+    <menuitem id="quotation_for_purchase_menu" name="Service Quotation" parent="purchase.menu_procurement_management"
+              action="service_quotation_for_purchase_action" sequence="01"/>
+
+    <!--    quotation for stock department-->
+    <record id="service_quotation_for_stock_action" model="ir.actions.act_window">
+        <field name="name">Service Quotation</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+        <field name="domain">[('sale_service_ids', '!=', False),('state','!=', 'draft')]</field>
+        <field name="context">{'search_default_my_quotation': 1, 'separate_for_department': True,
+            'separate_inventory_for_department': True}
+        </field>
+    </record>
+
+    <menuitem id="quotation_for_stock_menu" name="Service Quotation" parent="stock.menu_stock_root"
+              action="service_quotation_for_stock_action" sequence="10"/>
+
+    <!--    quotation for import-export department-->
+    <record id="service_quotation_for_export_import_action" model="ir.actions.act_window">
+        <field name="name">Service Quotation</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+        <field name="domain">[('sale_service_ids', '!=', False),('state','!=', 'draft')]</field>
+        <field name="context">{'search_default_my_quotation': 1, 'separate_for_department': True,
+            'separate_import_export_for_department': True}
+        </field>
+    </record>
+
+    <menuitem id="service_quotation_for_export_import_menu" name="Service Quotation" sequence="10"
+              parent="dpt_export_import.dpt_export_import_menu" action="service_quotation_for_export_import_action"/>
+
+</odoo>

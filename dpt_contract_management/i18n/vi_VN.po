@@ -1,0 +1,505 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* dpt_contract_management
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-28 02:35+0000\n"
+"PO-Revision-Date: 2024-06-28 02:35+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__activity_ids
+msgid "Activities"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__activity_state
+msgid "Activity State"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__activity_type_icon
+msgid "Activity Type Icon"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management_line__attachment_id
+msgid "Attachment"
+msgstr "Tệp đính kèm"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__message_attachment_count
+msgid "Attachment Count"
+msgstr "Số lượng Tệp Đính Kèm"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__campaign_id
+msgid "Campaign"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model_terms:ir.ui.view,arch_db:dpt_contract_management.view_service_form
+msgid "Cancel"
+msgstr "Hủy"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields.selection,name:dpt_contract_management.selection__dpt_contract_management__state__cancel
+msgid "Cancelled"
+msgstr "Hủy"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields.selection,name:dpt_contract_management.selection__dpt_contract_management__state__close
+#: model_terms:ir.ui.view,arch_db:dpt_contract_management.view_service_form
+msgid "Close"
+msgstr "Đóng"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__code
+msgid "Code"
+msgstr "Mã hợp đồng"
+
+#. module: dpt_contract_management
+#: model_terms:ir.ui.view,arch_db:dpt_contract_management.view_service_form
+msgid "Confirm"
+msgstr "Xác nhận"
+
+#. module: dpt_contract_management
+#: model:ir.model,name:dpt_contract_management.model_res_partner
+msgid "Contact"
+msgstr "Liên hệ"
+
+#. module: dpt_contract_management
+#: model:ir.actions.act_window,name:dpt_contract_management.action_dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management_line__contract_id
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_creat_new_contract__contract_id
+#: model:ir.model.fields,field_description:dpt_contract_management.field_log_error_contract__contract_id
+#: model:ir.model.fields,field_description:dpt_contract_management.field_purchase_order__contract_id
+#: model:ir.model.fields,field_description:dpt_contract_management.field_sale_order__contract_id
+#: model:ir.ui.menu,name:dpt_contract_management.submenu_dpt_contract_management
+#: model:ir.ui.menu,name:dpt_contract_management.submenu_dpt_contract_management_root
+#: model_terms:ir.ui.view,arch_db:dpt_contract_management.view_res_partner_inherit_form
+msgid "Contract"
+msgstr "Hợp đồng"
+
+#. module: dpt_contract_management
+#: model_terms:ir.ui.view,arch_db:dpt_contract_management.view_dpt_creat_new_contract_form
+#: model_terms:ir.ui.view,arch_db:dpt_contract_management.view_service_form
+msgid "Contract Form"
+msgstr "Mẫu hợp đồng"
+
+#. module: dpt_contract_management
+#: model_terms:ir.ui.view,arch_db:dpt_contract_management.view_dpt_contract_management_tree
+msgid "Contract List"
+msgstr "Danh sách hợp đồng"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_res_partner__count_contract
+#: model:ir.model.fields,field_description:dpt_contract_management.field_res_users__count_contract
+msgid "Count Contract"
+msgstr "Số lượng hợp đồng"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__count_po
+msgid "Count Po"
+msgstr "Số PO"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__count_so
+msgid "Count So"
+msgstr "Số SO"
+
+#. module: dpt_contract_management
+#: model_terms:ir.ui.view,arch_db:dpt_contract_management.view_dpt_creat_new_contract_form
+#: model_terms:ir.ui.view,arch_db:dpt_contract_management.view_purchase_order_inherit_form
+#: model_terms:ir.ui.view,arch_db:dpt_contract_management.view_res_partner_inherit_form
+#: model_terms:ir.ui.view,arch_db:dpt_contract_management.view_sale_order_inherit_form
+msgid "Create Contract"
+msgstr "Tạo Hợp đồng"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__create_uid
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management_line__create_uid
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_creat_new_contract__create_uid
+#: model:ir.model.fields,field_description:dpt_contract_management.field_log_error_contract__create_uid
+msgid "Created by"
+msgstr "Tạo bởi"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__create_date
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management_line__create_date
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_creat_new_contract__create_date
+#: model:ir.model.fields,field_description:dpt_contract_management.field_log_error_contract__create_date
+msgid "Created on"
+msgstr "Ngày tạo"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__currency_id
+msgid "Currency"
+msgstr "Tiền tệ"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__description
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management_line__description
+#: model:ir.model.fields,field_description:dpt_contract_management.field_log_error_contract__description
+msgid "Description"
+msgstr "Diễn giải"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__line_ids
+#: model_terms:ir.ui.view,arch_db:dpt_contract_management.view_service_form
+msgid "Detail"
+msgstr "Chi tiết"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__display_name
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management_line__display_name
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_creat_new_contract__display_name
+#: model:ir.model.fields,field_description:dpt_contract_management.field_log_error_contract__display_name
+msgid "Display Name"
+msgstr "Tên hiển thị"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields.selection,name:dpt_contract_management.selection__dpt_contract_management__state__done
+msgid "Done"
+msgstr "Hoàn thành"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields.selection,name:dpt_contract_management.selection__dpt_contract_management__state__draft
+msgid "Draft"
+msgstr "Nháp"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__end_date
+msgid "End Date"
+msgstr "Ngày kết thúc"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__message_follower_ids
+msgid "Followers"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,help:dpt_contract_management.field_dpt_contract_management__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__has_message
+msgid "Has Message"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__id
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management_line__id
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_creat_new_contract__id
+#: model:ir.model.fields,field_description:dpt_contract_management.field_log_error_contract__id
+msgid "ID"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__activity_exception_icon
+msgid "Icon"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,help:dpt_contract_management.field_dpt_contract_management__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_creat_new_contract__res_id
+#: model:ir.model.fields,field_description:dpt_contract_management.field_log_error_contract__res_id
+msgid "Id"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,help:dpt_contract_management.field_dpt_contract_management__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,help:dpt_contract_management.field_dpt_contract_management__message_has_error
+#: model:ir.model.fields,help:dpt_contract_management.field_dpt_contract_management__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__message_is_follower
+msgid "Is Follower"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_res_partner__contract_id
+#: model:ir.model.fields,field_description:dpt_contract_management.field_res_users__contract_id
+msgid "Last Contract Update"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__write_uid
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management_line__write_uid
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_creat_new_contract__write_uid
+#: model:ir.model.fields,field_description:dpt_contract_management.field_log_error_contract__write_uid
+msgid "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__write_date
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management_line__write_date
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_creat_new_contract__write_date
+#: model:ir.model.fields,field_description:dpt_contract_management.field_log_error_contract__write_date
+msgid "Last Updated on"
+msgstr "Ngày cập nhật cuối"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields.selection,name:dpt_contract_management.selection__dpt_contract_management__type__long_term
+msgid "Long Term"
+msgstr "Hợp đồng dài hạn"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__medium_id
+msgid "Medium"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__message_ids
+msgid "Messages"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_creat_new_contract__res_model
+#: model:ir.model.fields,field_description:dpt_contract_management.field_log_error_contract__res_model
+msgid "Model"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__name
+msgid "Name"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__activity_summary
+msgid "Next Activity Summary"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__message_has_error_counter
+msgid "Number of errors"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,help:dpt_contract_management.field_dpt_contract_management__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,help:dpt_contract_management.field_dpt_contract_management__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model_terms:ir.ui.view,arch_db:dpt_contract_management.view_service_form
+msgid "PO"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__partner_id
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_creat_new_contract__partner_id
+msgid "Partner"
+msgstr "Khách hàng"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields.selection,name:dpt_contract_management.selection__dpt_contract_management__state__processing
+msgid "Processing"
+msgstr "Đang xử lý"
+
+#. module: dpt_contract_management
+#: model:ir.model,name:dpt_contract_management.model_purchase_order
+msgid "Purchase Order"
+msgstr "Đơn mua hàng"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__rating_ids
+msgid "Ratings"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__activity_user_id
+msgid "Responsible User"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model_terms:ir.ui.view,arch_db:dpt_contract_management.view_service_form
+msgid "SO"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model,name:dpt_contract_management.model_sale_order
+msgid "Sales Order"
+msgstr "Đơn bán hàng"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields.selection,name:dpt_contract_management.selection__dpt_contract_management__type__short_term
+msgid "Short Term"
+msgstr "Hợp đồng ngắn hạn"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__source_id
+msgid "Source"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__start_date
+msgid "Start Date"
+msgstr "Ngày bắt đầu"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__state
+msgid "State"
+msgstr "Trạng thái"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,help:dpt_contract_management.field_dpt_contract_management__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,help:dpt_contract_management.field_dpt_contract_management__campaign_id
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,help:dpt_contract_management.field_dpt_contract_management__medium_id
+msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,help:dpt_contract_management.field_dpt_contract_management__source_id
+msgid ""
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__type
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management_line__type_file
+msgid "Type"
+msgstr "Loại HĐ"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,help:dpt_contract_management.field_dpt_contract_management__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr ""
+
+#. module: dpt_contract_management
+#: model_terms:ir.ui.view,arch_db:dpt_contract_management.view_dpt_creat_new_contract_form
+msgid "Update Contract"
+msgstr "Cập nhật hợp đồng"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_creat_new_contract__is_update_exist_contract
+msgid "Update Exist Contract"
+msgstr "Cập nhật hợp đồng"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__user_id
+msgid "User"
+msgstr "Người xử lý"
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,field_description:dpt_contract_management.field_dpt_contract_management__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model.fields,help:dpt_contract_management.field_dpt_contract_management__website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model,name:dpt_contract_management.model_dpt_contract_management
+msgid "dpt.contract.management"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model,name:dpt_contract_management.model_dpt_contract_management_line
+msgid "dpt.contract.management.line"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model:ir.model,name:dpt_contract_management.model_dpt_creat_new_contract
+msgid "dpt.creat.new.contract"
+msgstr ""
+
+#. module: dpt_contract_management
+#: model_terms:ir.ui.view,arch_db:dpt_contract_management.view_service_form
+msgid "e.g .Name contract"
+msgstr "e.g .Tên hợp đồng"
+
+#. module: dpt_contract_management
+#: model:ir.model,name:dpt_contract_management.model_log_error_contract
+msgid "log.error.contract"
+msgstr ""

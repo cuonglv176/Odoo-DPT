@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="partner_default_supplier" model="res.partner">
+        <field name="name">Default Supplier</field>
+        <field name="supplier_rank" eval="1"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+
+    <record id="product_template_dpt_export_import_inherit_tree_view" model="ir.ui.view">
+        <field name="name">product.template.product.tree.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="list_price" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="standard_price" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="product_tag_ids" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="uom_id" position="after">
+                <field name="dpt_description"/>
+                <field name="dpt_so_tk"/>
+                <field name="dpt_location"/>
+                <field name="dpt_dk_gia"/>
+                <field name="dpt_exchange_rate"/>
+                <field name="dpt_currency_id"/>
+                <field name="dpt_short_name"/>
+                <field name="dpt_date_dk"/>
+                <field name="dpt_xuat_xu"/>
+                <field name="dpt_company_name"/>
+                <field name="dpt_ma_xe"/>
+                <field name="dpt_price_usd"/>
+                <field name="dpt_sl1"/>
+                <field name="dpt_uom1_id"/>
+                <field name="dpt_sl2"/>
+                <field name="dpt_uom2_id"/>
+                <field name="dpt_tax_import"/>
+                <field name="dpt_tax"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_product_dpt_export_import_inherit" model="ir.ui.view">
+        <field name="name">product.template.dpt.export.import.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='purchase']" position="after">
+                <page string="Export / Import" name="dpt_export_import">
+                    <group>
+                        <group>
+                            <field name="dpt_english_name"/>
+                            <field name="dpt_description"/>
+                            <field name="dpt_n_w_kg"/>
+                            <field name="dpt_g_w_kg"/>
+                            <field name="hs_code_id"/>
+                            <field name="dpt_tax"/>
+                            <field name="dpt_exchange_rate"/>
+                        </group>
+                        <group>
+                            <field name="dpt_uom_id"/>
+                            <field name="dpt_uom1_id"/>
+                            <field name="dpt_sl1"/>
+                            <field name="dpt_uom2_ecus_id"/>
+                            <field name="dpt_uom2_id"/>
+                            <field name="dpt_sl2"/>
+                            <field name="dpt_price_kd"/>
+                            <field name="dpt_price_usd"/>
+                            <field name="dpt_tax_import"/>
+                            <field name="dpt_tax_ecus5"/>
+                        </group>
+                        <group>
+                            <field name="dpt_so_tk"/>
+                            <field name="dpt_location"/>
+                            <field name="dpt_dk_gia"/>
+                            <field name="dpt_currency_id"/>
+                            <field name="dpt_short_name"/>
+                            <field name="dpt_date_dk"/>
+                            <field name="dpt_xuat_xu"/>
+                            <field name="dpt_company_name"/>
+                            <field name="dpt_ma_xe"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="History">
+                            <field name="dpt_export_import_line_ids" readonly="1">
+                                <tree>
+                                    <button string="Eligible" type="object" name="action_update_eligible"
+                                            class="btn-primary"
+                                            invisible="state != 'draft'"/>
+                                    <field name="state" widget="badge"
+                                           decoration-info="state == 'draft'"
+                                           decoration-success="state in ('eligible','declared','released','consulted','post_control')"/>
+                                    <field name="sale_user_id"/>
+                                    <field name="sale_id"/>
+                                    <field name="lot_code"/>
+                                    <field name="partner_id"/>
+                                    <field name="product_id"/>
+                                    <field name="dpt_english_name"/>
+                                    <field name="dpt_description"/>
+                                    <field name="dpt_sl1"/>
+                                    <field name="dpt_uom1_id"/>
+                                    <field name="dpt_price_kd"/>
+                                    <field name="dpt_price_usd"/>
+                                    <field name="dpt_n_w_kg"/>
+                                    <field name="dpt_g_w_kg"/>
+                                    <field name="package_ids" widget="many2many_tags"/>
+                                    <field name="hs_code_id"/>
+                                    <field name="dpt_tax_import" widget="percentage"/>
+                                    <field name="dpt_amount_tax_import"/>
+                                    <field name="dpt_uom2_ecus_id"/>
+                                    <field name="dpt_uom2_id"/>
+                                    <field name="dpt_sl2"/>
+                                    <field name="dpt_tax_ecus5"/>
+                                    <field name="dpt_tax" widget="percentage"/>
+                                    <field name="dpt_amount_tax"/>
+                                    <field name="dpt_tax_other" widget="percentage"/>
+                                    <field name="dpt_amount_tax_other"/>
+                                    <field name="dpt_exchange_rate"/>
+                                    <field name="dpt_total_vat"/>
+                                    <field name="dpt_total_usd_vnd"/>
+                                    <field name="dpt_price_cny_vnd"/>
+                                    <field name="dpt_total_cny_vnd"/>
+                                    <field name="dpt_is_new" widget="boolean_toggle"/>
+                                    <field name="currency_id" invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>

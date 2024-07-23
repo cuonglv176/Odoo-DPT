@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="systray_Activity_Menu" owl="1">
+
+        <Dropdown autoOpen="false" beforeOpen.bind="beforeOpen" position="'bottom-end'">
+            <t t-set-slot="toggler">
+                <i class="fa fa-bell" role="img" aria-label="Notifications"/>
+                <span class="o_notification_counter badge badge-pill"/>
+            </t>
+            <t t-set-slot="default">
+                <div class="o_mail_systray_dropdown">
+                    <t t-if="!props._activities.length">
+                    <div class="dropdown-item-text text-center o_no_activity">
+                        <span>No activities planned.</span>
+                    </div>
+                    </t>
+<!--                    <t t-foreach="_activities" t-as="activity" t-key="activity.id">-->
+<!--                        <t t-if="activity.status == 'seen'">-->
+<!--                            <div class="o_mail_preview o_systray_activity" t-att-data-message_id="activity.id"-->
+<!--                                 t-att-data-res_id="activity.res_id"-->
+<!--                                 t-att-data-res_model="activity.model" t-att-data-model_name="activity.name"-->
+<!--                                 t-att-data-url_portal="activity.url_portal"-->
+<!--                                 t-att-data-status="activity.status"-->
+<!--                                 data-filter='my'-->
+<!--                                 data-action_id="465">-->
+<!--                                <div t-if="activity.icon">-->
+<!--                                    <t t-if="activity.status == 'seen'">-->
+<!--                                        <i t-attf-class="fa #{activity.icon}"/>-->
+<!--                                    </t>-->
+<!--                                </div>-->
+<!--                                <t t-if="activity.status == 'seen'">-->
+<!--                                    <div class="o_preview_info">-->
+<!--                                        <div class="o_preview_title">-->
+<!--                                            <span class="o_preview_name" style=" white-space: normal">-->
+<!--                                                <t t-esc="activity.res_name"/>-->
+<!--                                                <br/>-->
+<!--                                                <t t-esc="activity.create_date"/>-->
+<!--                                            </span>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </t>-->
+<!--                            </div>-->
+<!--                        </t>-->
+<!--                        <t t-if="activity.status != 'seen'">-->
+<!--                            <div class="o_mail_preview o_systray_activity" t-att-data-message_id="activity.id"-->
+<!--                                 t-att-data-res_id="activity.res_id"-->
+<!--                                 style="background-color: whitesmoke;"-->
+<!--                                 t-att-data-res_model="activity.model" t-att-data-model_name="activity.name"-->
+<!--                                 t-att-data-url_portal="activity.url_portal"-->
+<!--                                 data-action_id="465"-->
+<!--                                 t-att-data-status="activity.status"-->
+<!--                                 data-filter='my'>-->
+<!--                                <div t-if="activity.icon">-->
+<!--                                    <t t-if="activity.status != 'seen'">-->
+<!--                                        <i style="font-weight: bold; font-size: 15px;background-color: whitesmoke;"-->
+<!--                                           t-attf-class="fa #{activity.icon}"/>-->
+<!--                                    </t>-->
+<!--                                </div>-->
+<!--                                <t t-if="activity.status != 'seen'">-->
+<!--                                    <div class="o_preview_info o_preview_unread" style="background-color: whitesmoke;">-->
+<!--                                        <div class="o_preview_title o_preview_unread">-->
+<!--                                            <span class="o_preview_name" style="font-weight: bold; white-space: normal;">-->
+<!--                                                <t t-esc="activity.res_name"/>-->
+<!--                                                <br/>-->
+<!--                                                <t t-esc="activity.create_date"/>-->
+<!--                                            </span>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </t>-->
+<!--                            </div>-->
+<!--                        </t>-->
+<!--                    </t>-->
+                    <div class="d-flex flex-column list-group-flush">
+                        <t t-foreach="props._activities" t-as="activity" t-key="activity.id">
+                            <div t-on-click="() => this.openRecord(activity)" style="align-items: center;border-bottom: 1px solid white;" t-attf-class="#{activity.status != 'seen' ? 'background-gray' : ''} o-mail-ActivityGroup list-group-item list-group-item-action d-flex p-2 cursor-pointer">
+                                <i style="font-weight: bold; font-size: 15px;"  t-attf-class="fa #{activity.icon}"/>
+                                <div class="flex-grow-1 overflow-hidden">
+                                    <div class="d-flex px-2" name="activityTitle" t-out="activity.res_name"/>
+
+                                    <div class="d-flex">
+                                        <span class=" py-0 px-2 text-truncate">
+                                            <t t-out="activity.create_date"/><t t-out="activity.res_id"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+                <div class="o_mail_systray_dropdown_top">
+                    <button type="button" t-on-click="onMarkAsRead"
+                            class="btn btn-link o_mark_as_read">Mark as read</button>
+                </div>
+            </t>
+        </Dropdown>
+   </t>
+</templates>

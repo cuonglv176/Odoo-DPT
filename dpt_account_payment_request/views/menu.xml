@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <menuitem id="dpt_menu_action_account_payments_payable"
+                  action="account.action_account_payments_payable"
+                  parent="purchase.menu_purchase_root"
+                  name="Account Payment"
+                  sequence="10"/>
+
+        <menuitem id="dpt_account_payment_request_menu"
+                  name="Payment Request"
+                  sequence="40"
+                  web_icon="dpt_account_payment_request,static/description/icon.png"/>
+
+        <menuitem id="menu_dpt_action_account_payments_request"
+                  name="Payment Request"
+                  action="dpt_action_account_payments_request"
+                  parent="dpt_account_payment_request_menu"
+                  sequence="1"/>
+
+        <menuitem id="menu_dpt_action_account_payments_type"
+                  name="Payment Request Type"
+                  parent="dpt_account_payment_request_menu"
+                  action="dpt_action_account_payments_type_request"
+                  sequence="20"/>
+
+    </data>
+</odoo>

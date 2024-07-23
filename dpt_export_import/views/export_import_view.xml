@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <record id="view_dpt_export_import_form" model="ir.ui.view">
+        <field name="name">dpt.export.import.form</field>
+        <field name="model">dpt.export.import</field>
+        <field name="arch" type="xml">
+            <form string="Export import Form">
+                <header>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,declared,released,consulted,post_control,cancelled"/>
+                    <button string="Declared" type="object" name="action_declared" class="btn-primary"
+                            invisible="state == 'declared'"/>
+                    <button string="Released" type="object" name="action_released" class="btn-primary"
+                            invisible="state == 'released'"/>
+                    <button string="Consulted" type="object" name="action_consulted" class="btn-primary"
+                            invisible="state == 'consulted'"/>
+                    <button string="Post control" type="object" name="action_post_control" class="btn-primary"
+                            invisible="state == 'post_control'"/>
+                    <button string="Cancelled" type="object" name="action_cancelled" class="btn-primary"
+                            invisible="state == 'cancelled'"/>
+                </header>
+                <sheet>
+                    <div name="button_box" class="oe_button_box">
+                        <button class="oe_stat_button" type="object" name="action_open_declaration_line"
+                                icon="fa-list-ul">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_value">
+                                    <field string="Declaration Line" name="dpt_total_line"/>
+                                </span>
+                                <span class="o_stat_text">Declaration Line</span>
+                            </div>
+                        </button>
+                    </div>
+                    <label for="name"/>
+                    <h1>
+                        <field name="name" placeholder="e.g "/>
+                    </h1>
+                    <group string="Information">
+                        <group>
+                            <field name="code"/>
+                            <field name="partner_importer_id"/>
+                            <field name="partner_exporter_id"/>
+                            <field name="gate_id"/>
+                            <field name="invoice_code"/>
+                            <field name="user_id"/>
+                            <field name="total_package"/>
+                            <field name="declaration_flow" widget="radio" options="{'horizontal': true}"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="dpt_tax_ecus5"/>
+                            <field name="consultation_date"/>
+                            <field name="dpt_n_w_kg"/>
+                            <field name="dpt_g_w_kg"/>
+                            <field name="total_cubic_meters"/>
+                            <field name="dpt_amount_tax_import"/>
+                            <field name="dpt_amount_tax"/>
+                            <field name="dpt_amount_tax_other"/>
+                            <field name="estimated_total_amount"/>
+                            <field name="payment_exchange_rate"/>
+                        </group>
+                    </group>
+                    <group string="Shipping">
+                        <group>
+                            <field name="shipping_slip"/>
+                            <field name="type_of_vehicle"/>
+                        </group>
+                        <group>
+                            <field name="driver_name"/>
+                            <field name="driver_phone_number"/>
+                            <field name="vehicle_license_plate"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description"/>
+                        </page>
+                        <page string="Export Import Line" name="export_import_line">
+                            <group>
+                                <field name="sale_ids" widget="many2many_tags" domain="[('is_declaration','=',True)]"/>
+                            </group>
+                            <button string="Select"
+                                    name="action_select_import_line"
+                                    type="object"
+                                    class="oe_highlight"
+                                    data-hotkey="q"/>
+                            <field name="line_ids" nolabel="1">
+                                <tree editable="bottom" create="0">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="state" widget="badge"
+                                           decoration-info="state == 'draft'"
+                                           decoration-success="state in ('eligible','declared','released','consulted','post_control')"/>
+                                    <field name="sale_user_id"/>
+                                    <field name="sale_id"/>
+                                    <field name="lot_code"/>
+                                    <field name="partner_id"/>
+                                    <field name="product_id"/>
+                                    <field name="dpt_english_name"/>
+                                    <field name="dpt_description"/>
+                                    <field name="dpt_sl1"/>
+                                    <field name="dpt_uom1_id"/>
+                                    <field name="dpt_price_kd"/>
+                                    <field name="dpt_price_usd"/>
+                                    <field name="dpt_n_w_kg"/>
+                                    <field name="dpt_g_w_kg"/>
+                                    <field name="package_ids" widget="many2many_tags"/>
+                                    <field name="hs_code_id"/>
+                                    <field name="dpt_tax_import"/>
+                                    <field name="dpt_uom2_ecus_id"/>
+                                    <field name="dpt_uom2_id"/>
+                                    <field name="dpt_sl2"/>
+                                    <field name="dpt_tax_ecus5"/>
+                                    <field name="dpt_tax"/>
+                                    <field name="dpt_exchange_rate"/>
+                                    <field name="dpt_total_usd_vnd"/>
+                                    <field name="dpt_total_cny_vnd"/>
+                                    <field name="dpt_is_new" widget="boolean_toggle"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <button string="Unlink" type="object" name="action_unlink" class="btn-primary"
+                                            groups="sales_team.group_sale_salesman_all_leads"/>
+                                </tree>
+                            </field>
+                            <group name="note_group" col="6" class="mt-2 mt-md-0">
+                                <group class="oe_subtotal_footer" colspan="2" name="sale_total">
+                                    <field name="dpt_total_line"
+                                           colspan="2"
+                                           readonly="1"/>
+                                    <field name="dpt_total_line_new"
+                                           colspan="2"
+                                           readonly="1"/>
+                                </group>
+                                <div class="clearfix"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dpt_export_import_tree" model="ir.ui.view">
+        <field name="name">dpt.export.import.tree</field>
+        <field name="model">dpt.export.import</field>
+        <field name="arch" type="xml">
+            <tree string="Export import List">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_dpt_export_import_management" model="ir.actions.act_window">
+        <field name="name">Export import</field>
+        <field name="res_model">dpt.export.import</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <menuitem id="submenu_dpt_export_import_management" name="Customs Declaration"
+              parent="dpt_export_import.dpt_export_import_menu"
+              action="action_dpt_export_import_management"
+              groups="sales_team.group_sale_salesman_all_leads"
+              sequence="15"/>
+
+
+    <record id="dpt_export_import_select_line_form" model="ir.ui.view">
+        <field name="name">dpt.export.import.form</field>
+        <field name="model">dpt.export.import</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="select_line_ids"/>
+                <footer>
+                    <button string="Select"
+                            name="action_update_import_line"
+                            type="object"
+                            class="oe_highlight"
+                            data-hotkey="q"/>
+                    <button string="Cancel"
+                            class="btn btn-secondary"
+                            special="cancel"
+                            data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

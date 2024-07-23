@@ -14,10 +14,14 @@
                         <group>
                             <group>
                                 <field name="service_id" invisible="context.get('from_services', False)"
-                                       force_save="1"/>
-                                <field name="uom_id"/>
+                                       force_save="1" options="{'no_create': True}"/>
+                                <field name="service_uom_ids" invisible="1"/>
+                                <field name="uom_id"
+                                       domain="[('id','in', service_uom_ids)]" options="{'no_create': True}"/>
                                 <field name="compute_price" widget="radio" options="{'horizontal': true}"/>
-                                <field name="currency_id"/>
+                                <field name="is_price" invisible="compute_price != 'table'"/>
+                                <field name="is_accumulated" invisible="compute_price != 'table'"/>
+                                <field name="currency_id" options="{'no_create': True}" readonly="0" required="1"/>
                                 <field name="price" invisible="1"/>
                                 <field name="fixed_price" widget="monetary" invisible="compute_price != 'fixed'"
                                        options="{'field_digits': True}"/>
@@ -31,7 +35,7 @@
                                 <field name="min_amount" widget="monetary" options="{'field_digits': True}"/>
                             </group>
                             <group>
-                                <field name="partner_id"/>
+                                <field name="partner_id" options="{'no_create': True}"/>
                                 <field name="date_start"/>
                                 <field name="date_end"/>
                                 <field name="version" readonly="1"/>
@@ -41,10 +45,13 @@
                             <page string="Table" name="table" invisible="compute_price != 'table'">
                                 <field name="pricelist_table_detail_ids">
                                     <tree editable="bottom">
-                                        <field name="uom_id"/>
-                                        <field name="compute_price"/>
-                                        <field name="amount"/>
+                                        <field name="currency_id" column_invisible="1" force_save="1"/>
+                                        <field name="uom_id" options="{'no_create': True}"
+                                               required="parent.compute_price == 'table'"/>
                                         <field name="description"/>
+                                        <field name="min_value"/>
+                                        <field name="max_value"/>
+                                        <field name="amount"/>
                                     </tree>
                                 </field>
                             </page>
@@ -60,10 +67,11 @@
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <tree string="Pricelist Rule">
-                    <field name="service_id" invisible="context.get('from_services', False)"/>
+                    <field name="service_id" column_invisible="context.get('from_services', False)"/>
                     <field name="uom_id"/>
                     <field name="create_uid" widget="many2one_avatar_user"/>
                     <field name="date_start"/>
+                    <field name="partner_id"/>
                     <field name="date_end"/>
                     <field name="compute_price"/>
                 </tree>

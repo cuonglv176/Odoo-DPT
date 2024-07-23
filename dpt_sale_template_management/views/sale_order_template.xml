@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_sale_order_template_inherit_form" model="ir.ui.view">
+        <field name="name">sale.order.inherit</field>
+        <field name="model">sale.order.template</field>
+        <field name="inherit_id" ref="sale_management.sale_order_template_view_form"/>
+        <field name="arch" type="xml">
+            <page name="order_lines" position="before">
+                <page name="sale_service" string="Service">
+                    <field name="sale_service_ids">
+                        <tree editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="currency_id" column_invisible="1" force_save="1"/>
+                            <field name="service_id"/>
+                            <field name="description"/>
+                            <field name="qty" column_invisible="1" force_save="1"/>
+                            <field name="uom_ids" column_invisible="1"/>
+                            <field name="uom_id"/>
+                            <field name="price" readonly="1" force_save="1"/>
+                            <field name="amount_total" readonly="1" force_save="1"/>
+                            <field name="department_id"/>
+                        </tree>
+                    </field>
+                </page>
+            </page>
+            <sheet position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </sheet>
+        </field>
+    </record>
+
+</odoo>

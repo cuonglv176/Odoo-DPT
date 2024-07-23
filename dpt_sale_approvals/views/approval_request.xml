@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+
+    <record id="approval_request_view_form_inherit_form" model="ir.ui.view">
+        <field name="name">approval.request.inherit</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_form"/>
+        <field name="arch" type="xml">
+            <field name="date_confirmed" position="after">
+                <field name="sequence_code" invisible="1"/>
+                <field name="sale_id" invisible="sequence_code != 'BAOGIA'" readonly="1"/>
+            </field>
+            <page name="approvers" position="before">
+                <page name="sale_service" string="Service" invisible="sequence_code != 'BAOGIA'">
+                    <field name="sale_service_ids">
+                        <tree editable="bottom" create="0">
+                            <field name="sequence" widget="handle"/>
+                            <field name="currency_id" column_invisible="1" force_save="1"/>
+                            <field name="service_id" readonly="1"/>
+                            <field name="description"/>
+                            <field name="uom_ids" column_invisible="1"/>
+                            <field name="uom_id"/>
+                            <field name="price" readonly="1" force_save="1"/>
+                            <field name="new_price" readonly="is_edit_new_price != True"/>
+                            <field name="is_edit_new_price" column_invisible="1"/>
+                            <field name="amount_total" readonly="1" force_save="1"/>
+                            <field name="new_amount_total" readonly="1" force_save="1"/>
+                            <field name="price_status" readonly="1" force_save="1"/>
+                            <field name="department_id" readonly="1" context="{'only_department_name': True}"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Order Lines" name="order_lines" invisible="sequence_code != 'BAOGIA'">
+                    <field name="order_line_ids" widget="section_and_note_one2many">
+                        <tree string="Sales Order Lines" editable="bottom" limit="200" create="0">
+                            <field name="sequence" widget="handle"/>
+                            <field name="display_type" column_invisible="True"/>
+                            <field name="product_uom_category_id" column_invisible="True"/>
+                            <field name="product_type" column_invisible="True"/>
+                            <field name="product_updatable" column_invisible="True"/>
+                            <field name="is_downpayment" column_invisible="True"/>
+                            <field name="product_id" readonly="1" widget="sol_product_many2one"/>
+                            <field name="name" widget="section_and_note_text" optional="show" readonly="1"/>
+                            <field name="product_uom_qty" readonly="1"/>
+                            <field name="price_unit" readonly="1"/>
+                            <field name="new_price_unit"/>
+                            <field name="tax_id" readonly="1"/>
+                            <field name="price_subtotal" readonly="1"/>
+                            <field name="new_price_subtotal"/>
+                        </tree>
+                    </field>
+                </page>
+                <page name="sale_field" string="Other Fields" invisible="sequence_code != 'BAOGIA'">
+                    <field name="sale_fields_ids">
+                        <tree editable="bottom" default_order="sequence desc" decoration-danger="type=='required'">
+                            <field name="using_calculation_price" column_invisible="1"/>
+                            <field name="sequence" widget="handle"/>
+                            <field name="service_id"/>
+                            <field name="fields_id"/>
+                            <field name="type" column_invisible="1"/>
+                            <field name="fields_type" column_invisible="1"/>
+                            <field name="value_char" invisible="fields_type != 'char'"
+                                   required="type == 'required' and fields_type == 'char'"/>
+                            <field name="value_integer" invisible="fields_type != 'integer'"
+                                   required="type == 'required' and fields_type == 'integer'"/>
+                            <field name="value_date" invisible="fields_type != 'date'"
+                                   required="type == 'required' and fields_type == 'date'"/>
+                            <field name="selection_value_id" invisible="fields_type != 'selection'"
+                                   required="type == 'required' and fields_type == 'selection'"
+                                   domain="[('fields_id','=',fields_id)]"/>
+                            <field name="uom_id" invisible="not using_calculation_price"
+                                   required="using_calculation_price" options="{'no_create': True, 'no_open': True}"/>
+                        </tree>
+                    </field>
+                </page>
+            </page>
+
+        </field>
+    </record>
+
+</odoo>

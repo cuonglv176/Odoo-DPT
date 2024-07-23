@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_sale_order_inherit_form" model="ir.ui.view">
+        <field name="name">sale.order.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <button name="action_quotation_send" position="before">
+                <button string="Calculation" name="action_calculation" type="object"
+                        style="background-color: purple, color: white"
+                        invisible="not show_action_calculation"/>
+                <button string="Send Quotation Department" name="send_quotation_department" type="object"
+                        invisible="state != 'draft'"/>
+                <field name="show_action_calculation" invisible="1"/>
+
+            </button>
+            <button name="action_quotation_send" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </button>
+            <button name="action_preview_sale_order" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </button>
+            <button name="action_unlock" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </button>
+            <button name="action_lock" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </button>
+            <page name="optional_products" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </page>
+            <field name="sale_order_template_id" position="after">
+                <field name="type_so_route"/>
+                <field name="line_transfer"/>
+                <field name="employee_sale"/>
+                <field name="employee_cs"/>
+            </field>
+            <xpath expr="//page[@name='order_lines']/field[@name='order_line']/tree/field[@name='product_template_id']" position="before">
+                <field name="legal_xhd"/>
+            </xpath>
+            <!--            <button name="action_cancel" position="replace"/>-->
+            <page name="order_lines" position="before">
+                <page name="sale_service" string="Service">
+                    <field name="sale_service_ids" readonly="state == 'cancel' or locked">
+                        <tree editable="bottom">
+                            <!--                            <field name="sale_id" invisible="1"/>-->
+                            <field name="sequence" widget="handle"/>
+                            <field name="currency_id" column_invisible="1" force_save="1"/>
+                            <field name="currency_cny_id" optional="hide"/>
+                            <field name="service_id"/>
+                            <field name="uom_id"/>
+                            <!--                            <field name="description"/>-->
+                            <field name="compute_value" readonly="1" force_save="1"/>
+                            <field name="compute_uom_id" readonly="1" force_save="1"/>
+                            <field name="qty" column_invisible="1" force_save="1"/>
+                            <field name="uom_ids" column_invisible="1"/>
+                            <field name="price" readonly="0" force_save="1"/>
+                            <field name="price_cny" readonly="0" force_save="1"/>
+                            <!--                            <field name="currency_id" invisible="1"/>-->
+                            <field name="amount_total" readonly="1" force_save="1"/>
+                            <field name="department_id" context="{'dpt_sale_management': 1}"/>
+                            <field name="note"/>
+                        </tree>
+                    </field>
+                    <group col="6" class="mt-2 mt-md-0">
+                        <group class="oe_subtotal_footer" colspan="2">
+                            <!--                            <field name="service_total_untax_amount" colspan="2" readonly="1"/>-->
+                            <!--                            <field name="service_tax_amount" colspan="2" readonly="1"/>-->
+                            <field name="service_total_amount" colspan="2" readonly="1"/>
+                        </group>
+                        <div class="clearfix"/>
+                    </group>
+                </page>
+            </page>
+
+            <page name="order_lines" position="after">
+                <page name="sale_field" string="Other Fields">
+                    <field name="fields_ids" readonly="state == 'cancel' or locked">
+                        <tree editable="bottom" default_order="sequence desc" decoration-danger="type=='required'">
+                            <field name="using_calculation_price" column_invisible="1"/>
+                            <field name="sequence" widget="handle"/>
+                            <field name="service_id"/>
+                            <field name="fields_id"/>
+                            <field name="type" column_invisible="1"/>
+                            <field name="fields_type" column_invisible="1"/>
+                            <field name="value_char" invisible="fields_type != 'char'"
+                                   required="type == 'required' and fields_type == 'char'"/>
+                            <field name="value_integer" invisible="fields_type != 'integer'"
+                                   required="type == 'required' and fields_type == 'integer'"/>
+                            <field name="value_date" invisible="fields_type != 'date'"
+                                   required="type == 'required' and fields_type == 'date'"/>
+                            <field name="selection_value_id" invisible="fields_type != 'selection'"
+                                   required="type == 'required' and fields_type == 'selection'"
+                                   domain="[('fields_id','=',fields_id)]"/>
+
+                            <field name="uom_id" invisible="not using_calculation_price" column_invisible="1"
+                                   required="using_calculation_price" options="{'no_create': True, 'no_open': True}"/>
+                        </tree>
+                    </field>
+                </page>
+            </page>
+            <xpath expr="//label[@for='pricelist_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <field name="pricelist_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <xpath expr="//label[@for='pricelist_id']" position="after">
+                <label for="update_pricelist"/>
+            </xpath>
+            <field name="pricelist_id" position="after">
+                <field name="update_pricelist" readonly="state in ('sale', 'cancel')" force_save="1"/>
+            </field>
+            <field name="payment_term_id" position="after">
+                <label for="weight"/>
+                <div>
+                    <field name="weight" class="oe_inline" readonly="state != 'draft'"/>
+                    <span>kg</span>
+                </div>
+
+                <label for="volume"/>
+                <div>
+                    <field name="volume" class="oe_inline" readonly="state != 'draft'"/>
+                    <span>m
+                        <sup>3</sup>
+                    </span>
+                </div>
+            </field>
+<!--            <notebook position="after">-->
+<!--                <label for="note" string="Note"/>-->
+<!--                <field name="note"/>-->
+<!--            </notebook>-->
+        </field>
+    </record>
+
+    <record id="view_quotation_tree_with_onboarding_inherit" model="ir.ui.view">
+        <field name="name">view_quotation_tree_with_onboarding_inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="arch" type="xml">
+            <field name="state" position="replace">
+                <field name="state"
+                       decoration-success="state == 'sale'"
+                       decoration-info="state in ('draft', 'wait_price')"
+                       decoration-primary="state == 'sent'"
+                       widget="badge" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,260 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* dpt_sale_template_management
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-07 18:01+0000\n"
+"PO-Revision-Date: 2024-06-07 18:01+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__address
+msgid "Address"
+msgstr "Địa chỉ"
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation_line__amount_total
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_template_service__amount_total
+msgid "Amount Total"
+msgstr "Thành tiền"
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__calculation_line_ids
+msgid "Calculation Line"
+msgstr "Tính"
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__create_uid
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation_line__create_uid
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_template_service__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__create_date
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation_line__create_date
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_template_service__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__currency_id
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation_line__currency_id
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_template_service__currency_id
+msgid "Currency"
+msgstr "Tiền tệ"
+
+#. module: dpt_sale_template_management
+#: model:ir.model,name:dpt_sale_template_management.model_dpt_sale_template_service
+msgid "DPT Sale Template Service"
+msgstr ""
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_template_service__description
+msgid "Description"
+msgstr "Mô tả"
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__display_name
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation_line__display_name
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_template_service__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__distance
+msgid "Distance"
+msgstr "Khoảng cách"
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__distance_uom_id
+msgid "Distance Unit"
+msgstr "Đơn vị khoảng cách"
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_template_service__department_id
+msgid "Executing Department"
+msgstr "Phòng ban"
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__id
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation_line__id
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_template_service__id
+msgid "ID"
+msgstr ""
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__is_required_address
+msgid "Is required address"
+msgstr ""
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__is_required_distance
+msgid "Là khoảng cách cần thiết"
+msgstr "Bắt buộc "
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__is_required_volume
+msgid "Is required volume"
+msgstr ""
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__is_required_weight
+msgid "Is required weight"
+msgstr ""
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__is_show_address
+msgid "Is show address"
+msgstr ""
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__is_show_distance
+msgid "Is show distance"
+msgstr ""
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__is_show_volume
+msgid "Is show volume"
+msgstr ""
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__is_show_weight
+msgid "Is show weight"
+msgstr ""
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__write_uid
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation_line__write_uid
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_template_service__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__write_date
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation_line__write_date
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_template_service__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__min_amount_total
+msgid "Min Amount"
+msgstr "Giá tối thiểu"
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation_line__min_amount_total
+msgid "Min Amount Total"
+msgstr "Giá tối thiểu"
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation_line__min_price
+msgid "Min Price"
+msgstr "Đơn giá tối thiểu"
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation_line__parent_id
+msgid "Parent"
+msgstr "Cha"
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation_line__price
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_template_service__price
+msgid "Price"
+msgstr "Đơn giá"
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation_line__pricelist_item_id
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_template_service__pricelist_item_id
+msgid "Pricelist Item"
+msgstr "Chi tiết bảng giá"
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation_line__qty
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_template_service__qty
+msgid "QTY"
+msgstr "Số lượng"
+
+#. module: dpt_sale_template_management
+#: model:ir.model,name:dpt_sale_template_management.model_sale_order_template
+msgid "Quotation Template"
+msgstr "Mẫu báo giá"
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_template_service__sale_id
+msgid "Sale"
+msgstr "Bán hàng"
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__sale_service_id
+msgid "Sale Service"
+msgstr "Dịch vụ"
+
+#. module: dpt_sale_template_management
+#: model:ir.model,name:dpt_sale_template_management.model_sale_order
+msgid "Sales Order"
+msgstr "Đơn bán hàng"
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_template_service__sequence
+msgid "Sequence"
+msgstr ""
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__service_id
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation_line__service_id
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_template_service__service_id
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_sale_order_template__sale_service_ids
+#: model_terms:ir.ui.view,arch_db:dpt_sale_template_management.view_sale_order_template_inherit_form
+msgid "Service"
+msgstr "Dịch vụ"
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation_line__uom_id
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_template_service__uom_id
+msgid "Unit"
+msgstr "Đơn vị tính"
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation_line__service_uom_ids
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_template_service__uom_ids
+msgid "Units"
+msgstr "Đơn vị tính"
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__volume
+msgid "Volume"
+msgstr "Số khối"
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__volume_uom_id
+msgid "Volume Unit"
+msgstr "Đơn vị Số khối"
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__weight
+msgid "Weight"
+msgstr "Cân nặng"
+
+#. module: dpt_sale_template_management
+#: model:ir.model.fields,field_description:dpt_sale_template_management.field_dpt_sale_calculation__weight_uom_id
+msgid "Weight Unit"
+msgstr "Đơn vị Cân nặng"
+
+#. module: dpt_sale_template_management
+#: model:ir.model,name:dpt_sale_template_management.model_dpt_sale_calculation
+msgid "dpt.sale.calculation"
+msgstr ""
+
+#. module: dpt_sale_template_management
+#: model:ir.model,name:dpt_sale_template_management.model_dpt_sale_calculation_line
+msgid "dpt.sale.calculation.line"
+msgstr ""

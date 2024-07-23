@@ -17,7 +17,7 @@
                             <field name="service_type_id"/>
                             <field name="cost_account_id"/>
                             <field name="revenue_account_id"/>
-                            <field name="currency_id" column_invisible="True"/>
+                            <field name="currency_id"/>
                             <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"
                                    sum="Price"/>
                             <field name="uom_id" domain="[('id','in',uom_ids)]"/>
@@ -28,12 +28,16 @@
                             <field name="employee_id" widget="many2one_avatar_user"
                                    domain="[('department_id','=',department_id)]"/>
                             <field name="steps_count"/>
+                            <field name="zezo_price" widget="boolean_toggle"/>
+                            <field name="auo_complete" widget="boolean_toggle"/>
+                            <field name="active" widget="boolean_toggle"/>
+<!--                            <field name="image"/>-->
                         </group>
 
                     </group>
                     <notebook>
                         <page string="Description" name="description">
-                            <field name="description" widget="html"/>
+                            <field name="description"/>
                         </page>
                         <page string="Steps" name="steps">
                             <field name="steps_ids" nolabel="1">
@@ -42,7 +46,7 @@
                                     <field name="department_id"/>
                                     <field name="employee_id" widget="many2one_avatar_user"
                                            domain="[('department_id','=',department_id)]"/>
-                                    <field name="description" widget="html"/>
+                                    <field name="description"/>
                                     <field name="is_create_ticket" widget="boolean_toggle"/>
                                 </tree>
                             </field>
@@ -50,18 +54,27 @@
                         <page string="Required Fields" name="required_fields">
                             <field name="required_fields_ids" nolabel="1">
                                 <tree editable="bottom">
-                                    <field name="fields_id" domain="[('relation','=','sale.order')]"/>
-                                    <field name="description" widget="html"/>
+                                    <field name="fields_id" domain="[('relation','=','sale.order')]"
+                                           column_invisible="1"/>
+                                    <field name="name" required="1"/>
+                                    <field name="field" required="1"/>
+                                    <field name="fields_type" required="1"/>
+                                    <field name="description"/>
+                                    <field name="selection_value_ids" widget="many2many_tags"/>
                                     <field name="type" widget="radio"/>
+                                    <field name="uom_id" invisible="not using_calculation_price"
+                                           options="{'no_create': True, 'no_create_edit': True}"/>
+                                    <field name="using_calculation_price" widget="boolean_toggle"/>
+                                    <field name="default_compute_from"/>
                                 </tree>
                             </field>
                         </page>
                         <page string="Units" name="units">
                             <field name="uom_ids" nolabel="1">
                                 <tree editable="bottom">
-                                    <field name="name"/>
-                                    <field name="category_id"/>
-                                    <field name="description" widget="html"/>
+                                    <field name="name" readonly="1"/>
+                                    <field name="category_id" readonly="1"/>
+                                    <field name="description"/>
                                 </tree>
                             </field>
                         </page>
@@ -99,7 +112,8 @@
     </record>
 
 
-    <menuitem id="submenu_service_management" name="Services" parent="sale.sale_order_menu"
+    <menuitem id="submenu_service_management" name="Services" parent="sale.menu_sales_config"
               action="action_service_management"
+              groups="sales_team.group_sale_salesman_all_leads"
               sequence="15"/>
 </odoo>

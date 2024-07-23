@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_helpdesk_ticket_inherit_form" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.inherit</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='email_cc']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='email_cc']" position="after">
+                <field name="user_id"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" type="object" name="action_view_sale_order" icon="fa-credit-card">
+                    Đơn hàng
+                </button>
+                <button class="oe_stat_button" type="object" name="action_view_purchase_order" icon="fa-credit-card">
+                    Đơn mua hàng
+                </button>
+                <button class="oe_stat_button" type="object" name="action_view_stock_picking_order" icon="fa-car">
+                    Phiếu kho
+                </button>
+                <button class="oe_stat_button" type="object" name="action_view_approval_request" icon="fa-check">
+                    Phê duyệt
+                </button>
+                <button class="oe_stat_button" type="object" name="action_view_contract" icon="fa-file-text">
+                    Hợp đồng
+                </button>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button string="Create Purchase Order" name="action_create_po" type="object" class="btn-primary"
+                        invisible="purchase_id"/>
+            </xpath>
+            <field name="team_id" position="before">
+                <field name="sale_id"/>
+            </field>
+            <field name="ticket_type_id" position="after">
+                <field name="department_id"/>
+                <field name="purchase_id"/>
+                <field name="purchase_status" readonly="1" force_save="1"/>
+                <field name="lot_name" force_save="1"/>
+            </field>
+            <field name="priority" position="replace"/>
+            <field name="user_id" position="replace"/>
+            <field name="tag_ids" position="replace"/>
+            <field name="team_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <page name="description" position="before">
+                <page name="service_lines_ids" string="Service">
+                    <field name="service_lines_ids">
+                        <tree editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="currency_id" column_invisible="1" force_save="1"/>
+                            <field name="service_id"/>
+                            <field name="description"/>
+                            <field name="qty" column_invisible="1" force_save="1"/>
+                            <field name="uom_id"/>
+                            <field name="price" readonly="1" force_save="1"/>
+                            <field name="amount_total" readonly="1" force_save="1"/>
+                            <field name="department_id"/>
+                        </tree>
+                    </field>
+                </page>
+                <page name="fields_ids_page" string="Các trường thông tin">
+                    <field name="fields_ids">
+                        <tree editable="bottom" default_order="sequence desc" decoration-danger="type=='required'">
+                            <field name="using_calculation_price" column_invisible="1"/>
+                            <field name="sequence" widget="handle"/>
+                            <field name="service_id"/>
+                            <field name="fields_id"/>
+                            <field name="type" column_invisible="1"/>
+                            <field name="fields_type" column_invisible="1"/>
+                            <field name="value_char" invisible="fields_type != 'char'"
+                                   required="type == 'required' and fields_type == 'char'"/>
+                            <field name="value_integer" invisible="fields_type != 'integer'"
+                                   required="type == 'required' and fields_type == 'integer'"/>
+                            <field name="value_date" invisible="fields_type != 'date'"
+                                   required="type == 'required' and fields_type == 'date'"/>
+                            <field name="selection_value_id" invisible="fields_type != 'selection'"
+                                   required="type == 'required' and fields_type == 'selection'"
+                                   domain="[('fields_id','=',fields_id)]"/>
+                            <field name="uom_id" invisible="not using_calculation_price"
+                                   required="using_calculation_price" options="{'no_create': True, 'no_open': True}"/>
+                        </tree>
+                    </field>
+                </page>
+            </page>
+        </field>
+    </record>
+
+    <record id="helpdesk_tickets_view_tree" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.inherit</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='team_id']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='team_id']" position="after">
+                <field name="lot_name"/>
+<!--                <field name="service_ids" widget="many2many_tags"/>-->
+            </xpath>
+            <field name="name" position="after">
+                <field name="sale_id"/>
+            </field>
+        </field>
+    </record>
+
+
+    <record id="helpdesk_ticket_view_kanban" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.inherit</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='ticket_type_id']" position="after">
+                <br/>
+                CS: <field name="user_sale_id"/>
+                <br/>
+                Mã đơn hàng: <field name="sale_id"/>
+                <br/>
+                Mã lô: <field name="lot_name"/>
+                <br/>
+                Mã pack: <field name="pack_name"/>
+                <br/>
+                Dịch vụ: <field name="service_ids" widget="many2many_tags"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

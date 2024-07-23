@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_sale_order_create_po_inherit_form" model="ir.ui.view">
+        <field name="name">view_sale_order_create_po_inherit_form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <button name="action_quotation_send" position="before">
+                <field name="show_create_po" invisible="1"/>
+                <button name="action_create_purchase_order" string="Create PO" type="object"
+                        invisible="not show_create_po"/>
+            </button>
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" type="object" name="action_open_po" icon="fa-book">
+                    <field string="Purchase" name="product_order_count" widget="statinfo"/>
+                </button>
+            </div>
+<!--            <page name="order_lines" position="after">-->
+<!--                <page string="Service Cost" name="purchase_service">-->
+<!--                    <field name="purchase_service_ids">-->
+<!--                        <tree editable="bottom">-->
+<!--                            <field name="sequence" widget="handle"/>-->
+<!--                            <field name="currency_id" column_invisible="1" force_save="1"/>-->
+<!--                            <field name="currency_cny_id" column_invisible="1" force_save="1"/>-->
+<!--                            <field name="service_id"/>-->
+<!--                            <field name="uom_id"/>-->
+<!--                            <field name="qty" column_invisible="1" force_save="1"/>-->
+<!--                            <field name="uom_ids" column_invisible="1"/>-->
+<!--                            <field name="price" readonly="0" force_save="1"/>-->
+<!--                            <field name="price_cny" readonly="0" force_save="1"/>-->
+<!--                            <field name="amount_total" readonly="1" force_save="1"/>-->
+<!--                            <field name="department_id"/>-->
+<!--                        </tree>-->
+<!--                    </field>-->
+<!--                </page>-->
+<!--            </page>-->
+        </field>
+    </record>
+
+</odoo>

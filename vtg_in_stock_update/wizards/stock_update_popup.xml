@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="stock_update_popup_form" model="ir.ui.view">
+            <field name="name">stock.update.popup.form</field>
+            <field name="model">stock.update.popup</field>
+            <field name="arch" type="xml">
+                <form string="Cập nhật tồn kho">
+                    <group>
+                        <group>
+                            <field name="location_id"
+                                   options="{'no_create': True, 'no_create_edit': True}"/>
+                            <field name="filedata"/>
+                            <field name="filename" invisible="1"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Cập nhật" type="object" name="action_update_in_stock" class="btn-primary"/>
+                        <button string="Cập nhật SP - NCC" type="object" name="action_update_product_supplier" class="btn-primary"/>
+                        <button string="Hủy bỏ" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="stock_update_popup_action" model="ir.actions.act_window">
+            <field name="name">Cập nhật tồn kho</field>
+            <field name="res_model">stock.update.popup</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="stock_update_popup_menu" name="Cập nhật tồn kho" parent="stock.menu_stock_warehouse_mgmt"
+                  action="stock_update_popup_action" sequence="31"/>
+    </data>
+</odoo>

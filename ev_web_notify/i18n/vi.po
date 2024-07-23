@@ -1,0 +1,4 @@
+#. module: base_automation
+#: model:ir.model.fields,help:ev_web_notify.field_base_automation__message_notification
+msgid "Có thể kèm nội dung của record (Tương đương với bản ghi đang được kích hoạt hiện tại) ví dụ : Thông báo đơn hàng {record.name} đã xác nhận"
+msgstr "Có thể kèm nội dung của record (Tương đương với bản ghi đang được kích hoạt hiện tại) ví dụ : Thông báo đơn hàng {record.name} đã xác nhận"

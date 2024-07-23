@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_service_form" model="ir.ui.view">
+        <field name="name">dpt.contract.management</field>
+        <field name="model">dpt.contract.management</field>
+        <field name="arch" type="xml">
+            <form string="Contract Form">
+                <header>
+                    <button name="action_confirm" string="Confirm" type="object" class="oe_highlight"/>
+                    <button name="action_close" string="Close" type="object" class="oe_highlight"/>
+                    <button name="action_cancel" string="Cancel" type="object"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,processing,cancel"/>
+                </header>
+                <sheet>
+                    <div name="button_box" class="oe_button_box" >
+                        <button class="oe_stat_button" type="object" name="get_so"
+                            icon="fa-credit-card">
+                            <field string="SO" name="count_so" widget="statinfo"/>
+                        </button>
+                        <button class="oe_stat_button" type="object" name="get_po"
+                        icon="fa-cart-shopping">
+                            <field string="PO" name="count_po" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <label for="name"/>
+                    <h1>
+                        <field name="name" placeholder="e.g .Name contract"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="user_id"/>
+                            <field name="type"/>
+                            <field name="partner_id"/>
+                            <field name="currency_id"/>
+                        </group>
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                        </group>
+
+                    </group>
+                    <notebook>
+                        <page string="Detail" name="detail">
+                            <field name="description" widget="html"/>
+                        </page>
+<!--                        <page string="Attachment" name="attachment">-->
+<!--                            <field name="line_ids">-->
+<!--                                <tree>-->
+<!--                                    <field name="contract_id" column_invisible="1"/>-->
+<!--                                    <field name="description"/>-->
+<!--                                    <field name="type_file"/>-->
+<!--                                </tree>-->
+<!--                            </field>-->
+<!--                        </page>-->
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dpt_contract_management_tree" model="ir.ui.view">
+        <field name="name">dpt.contract.management.tree</field>
+        <field name="model">dpt.contract.management</field>
+        <field name="arch" type="xml">
+            <tree string="Contract List">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="type"/>
+                <field name="partner_id"/>
+                <field name="currency_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_dpt_contract_management" model="ir.actions.act_window">
+        <field name="name">Contract</field>
+        <field name="res_model">dpt.contract.management</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="submenu_dpt_contract_management_root" name="Contract"
+              web_icon="dpt_contract_management,static/description/icon.png"
+              sequence="15"/>
+    <menuitem id="submenu_dpt_contract_management" name="Contract" parent="dpt_contract_management.submenu_dpt_contract_management_root"
+              action="action_dpt_contract_management"
+              sequence="15"/>
+</odoo>
