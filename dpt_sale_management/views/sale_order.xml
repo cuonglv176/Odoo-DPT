@@ -21,9 +21,24 @@
             <button name="action_preview_sale_order" position="attributes">
                 <attribute name="invisible">1</attribute>
             </button>
+            <button name="action_unlock" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </button>
+            <button name="action_lock" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </button>
             <page name="optional_products" position="attributes">
                 <attribute name="invisible">1</attribute>
             </page>
+            <field name="sale_order_template_id" position="after">
+                <field name="type_so_route"/>
+                <field name="line_transfer"/>
+                <field name="employee_sale"/>
+                <field name="employee_cs"/>
+            </field>
+            <xpath expr="//page[@name='order_lines']/field[@name='order_line']/tree/field[@name='product_template_id']" position="before">
+                <field name="legal_xhd"/>
+            </xpath>
             <!--            <button name="action_cancel" position="replace"/>-->
             <page name="order_lines" position="before">
                 <page name="sale_service" string="Service">
@@ -32,7 +47,7 @@
                             <!--                            <field name="sale_id" invisible="1"/>-->
                             <field name="sequence" widget="handle"/>
                             <field name="currency_id" column_invisible="1" force_save="1"/>
-                            <field name="currency_cny_id" column_invisible="1" force_save="1"/>
+                            <field name="currency_cny_id" optional="hide"/>
                             <field name="service_id"/>
                             <field name="uom_id"/>
                             <!--                            <field name="description"/>-->
@@ -45,6 +60,7 @@
                             <!--                            <field name="currency_id" invisible="1"/>-->
                             <field name="amount_total" readonly="1" force_save="1"/>
                             <field name="department_id" context="{'dpt_sale_management': 1}"/>
+                            <field name="note"/>
                         </tree>
                     </field>
                     <group col="6" class="mt-2 mt-md-0">
@@ -78,7 +94,7 @@
                                    required="type == 'required' and fields_type == 'selection'"
                                    domain="[('fields_id','=',fields_id)]"/>
 
-                            <field name="uom_id" invisible="not using_calculation_price"
+                            <field name="uom_id" invisible="not using_calculation_price" column_invisible="1"
                                    required="using_calculation_price" options="{'no_create': True, 'no_open': True}"/>
                         </tree>
                     </field>
@@ -111,10 +127,10 @@
                     </span>
                 </div>
             </field>
-            <notebook position="after">
-                <label for="note" string="Note"/>
-                <field name="note"/>
-            </notebook>
+<!--            <notebook position="after">-->
+<!--                <label for="note" string="Note"/>-->
+<!--                <field name="note"/>-->
+<!--            </notebook>-->
         </field>
     </record>
 

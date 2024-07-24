@@ -23,6 +23,11 @@ class DPTSaleServiceManagement(models.Model):
     price_in_pricelist = fields.Monetary(currency_field='currency_id', string='Price in Pricelist')
     compute_uom_id = fields.Many2one('uom.uom', 'Compute Unit')
     compute_value = fields.Float('Compute Value')
+    note = fields.Text(string='Note')
+
+    @api.onchange('price_cny')
+    def onchange_price_cny(self):
+        self.price = self.price_cny * self.currency_cny_id.rate
 
     # def write(self, vals):
     #     old_price = self.price
@@ -47,3 +52,15 @@ class DPTSaleServiceManagement(models.Model):
     def onchange_service(self):
         if self.service_id:
             self.uom_id = self.service_id.uom_id
+
+    @api.onchange('uom_id')
+    def onchange_uom_id(self):
+        self.with_context(from_pricelist=True).write({
+            'amount_total': 0,
+            'price': 0,
+            'qty': 0,
+            'pricelist_item_id': None,
+            'price_in_pricelist': 0,
+            'compute_value': 0,
+            'compute_uom_id': None,
+        })

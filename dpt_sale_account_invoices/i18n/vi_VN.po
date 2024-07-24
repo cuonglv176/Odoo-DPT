@@ -1,0 +1,51 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* dpt_sale_account_invoices
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-07-20 08:30+0000\n"
+"PO-Revision-Date: 2024-07-20 08:30+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: dpt_sale_account_invoices
+#: model:ir.model.fields,field_description:dpt_sale_account_invoices.field_sale_order__invoice_amount_total
+msgid "Invoice total"
+msgstr "Tổng đã thanh toán"
+
+#. module: dpt_sale_account_invoices
+#: model:ir.model.fields,field_description:dpt_sale_account_invoices.field_sale_order__payment_amount_total
+msgid "Payment total"
+msgstr "Tổng cần thanh toán"
+
+#. module: dpt_sale_account_invoices
+#: model:ir.model.fields,field_description:dpt_sale_account_invoices.field_sale_order__purchase_amount_total
+msgid "Purchase total"
+msgstr "Tổng mua hàng hộ"
+
+#. module: dpt_sale_account_invoices
+#: model:ir.model,name:dpt_sale_account_invoices.model_sale_order
+msgid "Sales Order"
+msgstr "Đơn bán hàng"
+
+#. module: dpt_sale_account_invoices
+#: model_terms:ir.ui.view,arch_db:dpt_sale_account_invoices.view_sale_order_invoice_inherit_form
+msgid "Total deposit"
+msgstr "Tổng đặt cọc"
+
+#. module: dpt_sale_account_invoices
+#: model_terms:ir.ui.view,arch_db:dpt_sale_account_invoices.view_sale_order_invoice_inherit_form
+msgid "Total product"
+msgstr "Tổng sản phẩm mua hộ"
+
+#. module: dpt_sale_account_invoices
+#: model_terms:ir.ui.view,arch_db:dpt_sale_account_invoices.view_sale_order_invoice_inherit_form
+msgid "Total service"
+msgstr "Tổng dịch vụ"

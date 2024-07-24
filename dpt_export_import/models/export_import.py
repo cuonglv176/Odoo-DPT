@@ -323,10 +323,10 @@ class DptExportImportLine(models.Model):
         for rec in self:
             if rec.declaration_type == 'usd':
                 rec.dpt_amount_tax = rec.dpt_tax * (
-                        rec.dpt_total_usd_vnd + rec.dpt_amount_tax_import + rec.dpt_tax_other)
+                        rec.dpt_total_usd_vnd + rec.dpt_amount_tax_import + rec.dpt_amount_tax_other)
             else:
                 rec.dpt_amount_tax = rec.dpt_tax * (
-                        rec.dpt_total_cny_vnd + rec.dpt_amount_tax_import + rec.dpt_tax_other)
+                        rec.dpt_total_cny_vnd + rec.dpt_amount_tax_import + rec.dpt_amount_tax_other)
 
     @api.depends('dpt_tax_other', 'dpt_total_cny_vnd', 'declaration_type', 'dpt_total_usd_vnd')
     def _compute_dpt_amount_tax_other(self):

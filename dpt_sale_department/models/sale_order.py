@@ -26,14 +26,18 @@ class SaleOrder(models.Model):
         if not current_employee_id:
             return domain
         if self.env.context.get('separate_purchase_for_department', False):
-            service_type_id = self.env['dpt.service.management.type'].search([('code', '=', 'purchase')])
-            domain = AND([domain, [('sale_service_ids.service_id.service_type_id', 'in', service_type_id.ids)]])
+            service_purchase_type_id = self.env['dpt.service.management.type'].search([('code', '=', 'purchase')])
+            domain = AND(
+                [domain, [('sale_service_ids.service_id.service_type_id', 'in', service_purchase_type_id.ids)]])
         if self.env.context.get('separate_inventory_for_department', False):
-            service_type_id = self.env['dpt.service.management.type'].search([('code', '=', 'inventory')])
-            domain = AND([domain, [('sale_service_ids.service_id.service_type_id', 'in', service_type_id.ids)]])
+            service_inventory_type_id = self.env['dpt.service.management.type'].search([('code', '=', 'inventory')])
+            domain = AND(
+                [domain, [('sale_service_ids.service_id.service_type_id', 'in', service_inventory_type_id.ids)]])
         if self.env.context.get('separate_import_export_for_department', False):
-            service_type_id = self.env['dpt.service.management.type'].search([('code', '=', 'inventory')])
-            domain = AND([domain, [('sale_service_ids.service_id.service_type_id', 'in', service_type_id.ids)]])
-        department_and_child_ids = current_employee_id.department_id | current_employee_id.department_id.child_ids
+            service_import_export_type_id = self.env['dpt.service.management.type'].search(
+                [('code', '=', 'import_export')])
+            domain = AND(
+                [domain, [('sale_service_ids.service_id.service_type_id', 'in', service_import_export_type_id.ids)]])
+        # department_and_child_ids = current_employee_id.department_id | current_employee_id.department_id.child_ids
         # domain = AND([domain, [('sale_service_ids.service_id.department_id', 'in', department_and_child_ids.ids)]])
         return domain

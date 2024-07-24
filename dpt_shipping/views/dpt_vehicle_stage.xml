@@ -9,6 +9,8 @@
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="is_default" widget="boolean_toggle"/>
+                <field name="is_draft_stage" widget="boolean_toggle"/>
+                <field name="is_ready_stage" widget="boolean_toggle"/>
                 <field name="active" widget="boolean_toggle"/>
                 <field name="country"/>
             </tree>
@@ -24,6 +26,6 @@
     </record>
 
     <menuitem id="dpt_vehicle_stage_menu" name="Vehicle Stage" sequence="40" action="dpt_vehicle_stage_action"
-              parent="fleet.fleet_configuration"/>
+              parent="stock.menu_stock_config_settings"/>
 
 </odoo>

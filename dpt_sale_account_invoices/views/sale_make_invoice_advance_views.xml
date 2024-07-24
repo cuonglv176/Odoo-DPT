@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="sale_advance_payment_inv_dpt_view_form" model="ir.ui.view">
+        <field name="name">dpt.sale.advance.payment.inv.view.form</field>
+        <field name="model">sale.advance.payment.inv</field>
+        <field name="inherit_id" ref="sale.view_sale_advance_payment_inv"/>
+        <field name="arch" type="xml">
+            <field name="advance_payment_method" position="after">
+                <field name="picking_ids" widget="many2many_tags" domain="[('sale_id','in',sale_order_ids)]"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

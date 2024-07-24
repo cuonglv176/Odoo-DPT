@@ -11,6 +11,7 @@ class DPTGetPickingSOWizard(models.TransientModel):
                                    domain=[('sale_purchase_id', '=', False), ('is_main_incoming', '=', True)])
 
     def action_update_picking_to_so(self):
-        self.picking_ids.update({
-            'sale_purchase_id': self.sale_id.id
-        })
+        for picking_id in self.picking_ids:
+            picking_id.update({
+                'sale_purchase_id': self.sale_id.id
+            })

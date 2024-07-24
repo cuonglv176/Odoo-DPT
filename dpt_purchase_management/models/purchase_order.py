@@ -32,10 +32,39 @@ class PurchaseOrder(models.Model):
     ], string='Purchase type', default='external', tracking=True)
     packing_lot_name = fields.Char('Packing Lot name', compute="compute_packing_lot_name", store=True)
     department_id = fields.Many2one('hr.department', string='Phòng ban')
-    origin_po = fields.Many2one('sale.order')
+    origin_po = fields.Many2one('purchase.order')
     count_buy_cny_po = fields.Integer(compute='_compute_count_buy_cny_po')
+    count_so = fields.Integer(compute='_compute_count_so')
     last_rate_currency = fields.Float('Rate Currency')
     purchase_service_ids = fields.One2many('dpt.purchase.service.management', 'purchase_id', 'Service Line')
+    sale_service_ids = fields.One2many('dpt.sale.service.management', 'purchase_id', 'Dịch Vụ')
+    service_total_amount = fields.Float(compute='_compute_service_amount')
+
+    @api.depends('sale_service_ids.amount_total')
+    def _compute_service_amount(self):
+        untax_amount = 0
+        tax_amount = 0
+        for r in self.sale_service_ids:
+            untax_amount += r.amount_total
+            tax_amount += r.amount_total * 8 / 100
+        self.service_total_amount = untax_amount
+
+    def _compute_count_so(self):
+        for rec in self:
+            rec.count_so = len(rec.sale_id)
+
+    def action_open_sale_order(self):
+        return {
+            'name': "Sale Order",
+            'type': 'ir.actions.act_window',
+            'res_model': 'sale.order',
+            'target': 'self',
+            'view_mode': 'form',
+            'res_id': self.sale_id.id,
+            'views': [(False, 'form')],
+            'domain': [('id', '=', self.sale_id.id)],
+            'context': "{'create': False}"
+        }
 
     @api.onchange('user_id')
     def onchange_department_id(self):
@@ -140,4 +169,9 @@ class PurchaseOrder(models.Model):
     def update_last_rate_currency(self):
         self.ensure_one()
         if self.state == 'purchase' and self.currency_id:
+            self.last_rate_currency = self.currency_id.rate
+
+    @api.onchange('currency_id')
+    def _onchange_currency_id(self):
+        if self.currency_id:
             self.last_rate_currency = self.currency_id.rate

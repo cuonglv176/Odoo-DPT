@@ -17,19 +17,19 @@ class PurchaseOrder(models.Model):
             'res_model': 'account.payment',
             'name': _('Deposit'),
             'view_mode': 'tree,form',
-            'domain': [('sale_id', '=', self.origin_po.id)],
+            'domain': [('sale_id', '=', self.sale_id.id)],
             'views': [[view_id, 'tree'], [view_form_id, 'form']],
             'context': {
-                'default_sale_id': self.origin_po.id,
+                'default_sale_id': self.sale_id.id,
                 'default_partner_id': self.partner_id.id,
                 'default_ref': _(f'Đặt Cọc Đơn Hàng {self.name}'),
             },
         }
 
-    @api.depends('origin_po')
+    @api.depends('sale_id')
     def _compute_deposit_count(self):
         for rec in self:
-            deposit_ids = self.env['account.payment'].search([('sale_id', '=', rec.origin_po.id)])
+            deposit_ids = self.env['account.payment'].search([('sale_id', '=', rec.sale_id.id)])
             rec.deposit_count = len(deposit_ids)
             deposit_amount_total = 0
             for deposit_id in deposit_ids:

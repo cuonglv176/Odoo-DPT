@@ -1,10 +1,36 @@
 from odoo import api, fields, models, _
 
 
+class DPTSaleServiceManagement(models.Model):
+    _inherit = 'dpt.sale.service.management'
+
+    purchase_id = fields.Many2one('purchase.order', ondelete='cascade')
+
+    @api.model
+    def create(self, vals):
+        if vals.get('purchase_id') and not vals.get('sale_id'):
+            purchase_id = self.env['purchase.order'].browse(vals.get('purchase_id'))
+            vals.update({
+                'sale_id': purchase_id.sale_id.id
+            })
+        return super(DPTSaleServiceManagement, self).create(vals)
+
+    def write(self, vals):
+
+        if vals.get('purchase_id') and not self.sale_id:
+            purchase_id = self.env['purchase.order'].browse(vals.get('purchase_id'))
+            vals.update({
+                'sale_id': purchase_id.sale_id.id
+            })
+        res = super(DPTSaleServiceManagement, self).write(vals)
+        return res
+
+
 class DPTPurchaseServiceManagement(models.Model):
     _name = 'dpt.purchase.service.management'
 
     purchase_id = fields.Many2one('purchase.order', ondelete='cascade')
+    sale_id = fields.Many2one('sale.order', ondelete='cascade', related="purchase_id.sale_id")
     service_id = fields.Many2one('dpt.service.management', string='Service')
     description = fields.Html(string='Description')
     qty = fields.Float(string='QTY', default=1)
@@ -21,3 +47,8 @@ class DPTPurchaseServiceManagement(models.Model):
     price_in_pricelist = fields.Monetary(currency_field='currency_id', string='Price in Pricelist')
     compute_uom_id = fields.Many2one('uom.uom', 'Compute Unit')
     compute_value = fields.Float('Compute Value')
+
+    @api.depends('price', 'qty')
+    def _compute_amount_total(self):
+        for rec in self:
+            rec.amount_total = rec.qty * rec.price

@@ -17,6 +17,7 @@
                 <attribute name="invisible">1</attribute>
             </field>
             <field name="uom_id" position="after">
+                <field name="dpt_description"/>
                 <field name="dpt_so_tk"/>
                 <field name="dpt_location"/>
                 <field name="dpt_dk_gia"/>

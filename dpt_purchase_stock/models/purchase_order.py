@@ -27,12 +27,12 @@ class PurchaseOrder(models.Model):
         if not_uom_package_line_ids:
             raise ValidationError(
                 _("Please add Units to Package line with lot name: %s !") % ', '.join(
-                    not_uom_package_line_ids.mapped('lot_name')))
+                    not_uom_package_line_ids.mapped('name')))
         not_product_package_line_ids = self.package_line_ids.filtered(lambda pl: pl.uom_id and not pl.uom_id.product_id)
         if not_product_package_line_ids:
             raise ValidationError(
                 _("Please configurate Product to Units of Package line with lot name: %s !") % ', '.join(
-                    not_product_package_line_ids.mapped('lot_name')))
+                    not_product_package_line_ids.mapped('name')))
 
     def action_mark_done_po(self):
         self.write({'state': 'purchase', 'date_approve': fields.Datetime.now()})

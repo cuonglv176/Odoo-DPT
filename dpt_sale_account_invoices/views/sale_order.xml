@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_sale_order_invoice_inherit_form" model="ir.ui.view">
+        <field name="name">sale.order.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="dpt_sale_management.view_sale_order_inherit_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='sale_service']/group" position="replace">
+                <group col="6" class="mt-2 mt-md-0">
+                    <group class="oe_subtotal_footer" colspan="2">
+                        <field name="service_total_amount" colspan="2" readonly="1" string="Total service"/>
+                        <field name="amount_total" colspan="2" readonly="1" string="Total product"/>
+                        <field name="purchase_amount_total" colspan="2" invisible="1"/>
+                        <field name="payment_amount_total" colspan="2" readonly="1"/>
+                        <field name="deposit_amount_total" colspan="2" readonly="1" string="Total deposit"/>
+                        <field name="invoice_amount_total" colspan="2" readonly="1"/>
+                    </group>
+                    <div class="clearfix"/>
+                </group>
+            </xpath>
+            <button id="create_invoice" position="attributes">
+                <attribute name="string">Tất toán đơn hàng</attribute>
+            </button>
+        </field>
+    </record>
+
+</odoo>

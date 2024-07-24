@@ -82,6 +82,7 @@ class SaleOrderLine(models.Model):
     price_unit_cny = fields.Monetary(string='Price Unit CNY', currency_field='currency_cny_id')
     state_export_import_line = fields.Selection([
         ('draft', 'Nháp'),
+        ('wait_confirm', 'Chờ xác nhận'),
         ('eligible', 'Đủ điều kiện khai báo'),
         ('declared', 'Tờ khai thông quan'),
         ('released', 'Giải phóng'),
@@ -90,10 +91,10 @@ class SaleOrderLine(models.Model):
         ('cancelled', 'Huỷ')
     ], string='State', default='draft', compute='compute_state_export_import_line')
 
-    @api.onchange('price_unit_cny', 'payment_exchange_rate')
+    @api.onchange('price_unit_cny', 'product_uom_qty')
     def onchange_price_unit_cny(self):
-        if self.payment_exchange_rate != 0  and self.price_unit_cny != 0:
-            self.price_unit = self.price_unit_cny * self.payment_exchange_rate
+        if self.price_unit_cny != 0:
+            self.price_unit = self.price_unit_cny * self.currency_cny_id.rate
 
     @api.depends('dpt_export_import_line_ids', 'dpt_export_import_line_ids.dpt_price_usd',
                  'dpt_export_import_line_ids.dpt_price_cny_vnd',
