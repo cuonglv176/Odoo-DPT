@@ -10,9 +10,10 @@
             <field name="date_confirmed" position="after">
                 <field name="sequence_code" invisible="1"/>
                 <field name="sale_id" invisible="sequence_code != 'BAOGIA'" readonly="1"/>
+                <field name="payment_user_type"/>
             </field>
             <page name="approvers" position="before">
-                <page name="sale_service" string="Service" invisible="sequence_code != 'BAOGIA'">
+                <page name="sale_service" string="Service" invisible="sequence_code not in ['BAOGIA', 'DNTT']">
                     <field name="sale_service_ids">
                         <tree editable="bottom" create="0">
                             <field name="sequence" widget="handle"/>
@@ -51,7 +52,7 @@
                         </tree>
                     </field>
                 </page>
-                <page name="sale_field" string="Other Fields" invisible="sequence_code != 'BAOGIA'">
+                <page name="sale_field" string="Other Fields" invisible="sequence_code not in ['BAOGIA']">
                     <field name="sale_fields_ids">
                         <tree editable="bottom" default_order="sequence desc" decoration-danger="type=='required'">
                             <field name="using_calculation_price" column_invisible="1"/>

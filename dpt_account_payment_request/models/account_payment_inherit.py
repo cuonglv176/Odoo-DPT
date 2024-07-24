@@ -41,17 +41,24 @@ class AccountPayment(models.Model):
         ('refused', 'Refused'),
         ('cancel', 'Cancel'),
     ], string='Status approval', default="new", related="approval_id.request_status")
+    from_po = fields.Boolean()
+    from_so = fields.Boolean()
 
     def send_payment_request_request(self):
         category_id = self.env['approval.category'].search([('sequence_code', '=', 'DNTT')])
         if not category_id:
             raise ValidationError(_("Please config category approval change price (DNTT)"))
-        approval_id = self.env['approval.request'].create({
+        create_values = {
             'request_owner_id': self.env.user.id,
             'category_id': category_id.id,
             'sale_id': self.id,
             'date': datetime.now(),
-        })
+        }
+        if self.sale_id:
+            create_values.update({
+
+            })
+        approval_id = self.env['approval.request'].create(create_values)
         list_approver = self._compute_approver_list()
         if list_approver:
             approval_id.approver_ids = None

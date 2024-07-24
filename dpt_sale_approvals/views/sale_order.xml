@@ -31,6 +31,10 @@
                        decoration-warning="price_status == 'wait_approve'"
                        widget="badge"/>
             </xpath>
+            <xpath expr="//field[@name='sale_service_ids']/tree" position="inside">
+                <button name="action_create_or_open_approval_request" type="object" class="btn-primary" string="Đề nghị thanh toán"/>
+                <field name="approval_id" invisible="1"/>
+            </xpath>
 
             <div name="button_box" position="inside">
                 <button class="oe_stat_button" type="object" name="action_open_change_price_approval" icon="fa-check">
