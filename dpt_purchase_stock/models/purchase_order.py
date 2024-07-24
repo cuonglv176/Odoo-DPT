@@ -14,9 +14,11 @@ class PurchaseOrder(models.Model):
 
     def button_confirm_with_package(self):
         for order in self:
-            order.validate_order()
-            # create stock_move
-            order.sudo().action_create_stock()
+            # Chi ap dung voi don hang mua ho
+            if self.purchase_type == 'external':
+                order.validate_order()
+                # create stock_move
+                order.sudo().action_create_stock()
             # update state
             order.action_mark_done_po()
 
@@ -67,7 +69,9 @@ class PurchaseOrder(models.Model):
     def button_confirm(self):
         res = super().button_confirm()
         for order in self:
-            order.validate_order()
-            picking = order.get_picking()
-            order.package_line_ids._create_stock_moves(picking)
+            # Chi ap dung voi don hang mua ho
+            if self.purchase_type == 'external':
+                order.validate_order()
+                picking = order.get_picking()
+                order.package_line_ids._create_stock_moves(picking)
         return res
