@@ -22,6 +22,7 @@ class PurchaseOrder(models.Model):
             'views': [[view_form_id, 'form']],
             'context': {
                 'default_payment_type': 'outbound',
+                'default_from_po': True,
                 'default_partner_type': 'supplier',
                 'default_move_journal_types': ('bank', 'cash'),
                 'default_purchase_id': self.id,
@@ -45,6 +46,7 @@ class PurchaseOrder(models.Model):
             'context': {
                 'default_payment_type': 'outbound',
                 'default_partner_type': 'supplier',
+                'default_from_po': True,
                 'default_move_journal_types': ('bank', 'cash'),
                 'default_purchase_id': self.id,
                 'default_partner_id': self.partner_id.id,

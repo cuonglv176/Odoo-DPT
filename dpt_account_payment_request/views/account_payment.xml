@@ -15,6 +15,8 @@
                 <field name="date"/>
                 <field name="name"/>
                 <field name="journal_id"/>
+                <field name="payment_user_type" widget="radio"/>
+                <field name="payment_user" widget="radio"/>
                 <field name="payment_method_line_id"/>
                 <field name="partner_id" string="Customer"/>
                 <field name="amount_signed" string="Amount in Currency" groups="base.group_multi_currency"

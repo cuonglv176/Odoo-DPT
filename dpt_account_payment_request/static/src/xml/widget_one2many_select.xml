@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+   <t t-name="O2mMultiSelect" t-inherit-mode="primary"
+      t-inherit="web.X2ManyField" owl="1">
+       <xpath expr="//div[hasclass('o_x2m_control_panel')]" position="before">
+           <div class="dlt_btn" style="margin-bottom: 20px;">
+               <button t-if="Selected" t-on-click="ActionSelected"
+                       class="btn btn-primary">Đề nghị thanh toán
+               </button>
+           </div>
+       </xpath>
+   </t>
+</templates>
