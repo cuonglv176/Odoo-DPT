@@ -10,9 +10,7 @@ import { useService } from '@web/core/utils/hooks';
 
 export class O2MListRenderer extends ListRenderer {
    get hasSelectors() {
-       if (this.props.activeActions.delete) {
-           this.props.allowSelectors = true
-       }
+       this.props.allowSelectors = true
        let list = this.props.list
        list.selection = list.records.filter((rec) => rec.selected)
        list.selectDomain = (value) => {
