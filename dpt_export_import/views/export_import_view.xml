@@ -177,7 +177,7 @@
         <field name="model">dpt.export.import</field>
         <field name="arch" type="xml">
             <form>
-                <field name="select_line_ids" domain="[('state', 'in', ('eligible'))]"/>
+                <field name="select_line_ids" domain="[('state', '=', 'eligible')]"/>
                 <footer>
                     <button string="Select"
                             name="action_update_import_line"
