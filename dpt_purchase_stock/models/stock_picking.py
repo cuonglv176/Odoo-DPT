@@ -15,3 +15,6 @@ class StockPicking(models.Model):
 
     def _inverse_sale(self):
         pass
+
+    def _sanity_check(self, separate_pickings=True):
+        pass

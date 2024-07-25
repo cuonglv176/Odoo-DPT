@@ -11,6 +11,7 @@ class ApprovalRequest(models.Model):
     sale_fields_ids = fields.One2many('dpt.sale.order.fields', 'approval_id', string='Sale Order Fields')
     order_line_ids = fields.One2many('sale.order.line', 'approval_id', string='Sale Order Line')
     sequence_code = fields.Char(string="Code", related='category_id.sequence_code')
+    active = fields.Boolean('Active', default=True)
 
     def action_approve(self, approver=None):
         res = super(ApprovalRequest, self).action_approve(approver)

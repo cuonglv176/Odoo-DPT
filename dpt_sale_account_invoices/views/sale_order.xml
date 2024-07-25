@@ -18,6 +18,9 @@
                     <div class="clearfix"/>
                 </group>
             </xpath>
+            <button id="create_invoice" position="attributes">
+                <attribute name="string">Tất toán đơn hàng</attribute>
+            </button>
         </field>
     </record>
 

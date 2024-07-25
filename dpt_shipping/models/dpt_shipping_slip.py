@@ -102,7 +102,7 @@ class DPTShippingSlip(models.Model):
     @api.constrains('picking_ids', 'transfer_code', 'transfer_code_chinese')
     def constrains_transfer_code(self):
         for item in self:
-            item.picking_ids.write({
+            item.in_picking_ids.write({
                 'transfer_code': item.transfer_code,
                 'transfer_code_chinese': item.transfer_code_chinese,
             })

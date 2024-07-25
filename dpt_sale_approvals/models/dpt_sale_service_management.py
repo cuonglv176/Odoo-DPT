@@ -1,4 +1,5 @@
 from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
 
 class DPTSaleServiceManagement(models.Model):
@@ -20,9 +21,9 @@ class DPTSaleServiceManagement(models.Model):
         for rec in self:
             is_edit_new_price = False
             if rec.approval_id:
-               for approver_id in rec.approval_id.approver_ids:
-                   if self.env.user.id == approver_id.user_id.id:
-                       is_edit_new_price = True
+                for approver_id in rec.approval_id.approver_ids:
+                    if self.env.user.id == approver_id.user_id.id:
+                        is_edit_new_price = True
             rec.is_edit_new_price = is_edit_new_price
 
     # @api.depends('approval_id')
