@@ -142,8 +142,8 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_id')
     def onchange_compute_tax_rate(self):
-        self.import_tax_rate = self.product_id.dpt_tax_import
-        self.vat_tax_rate = self.product_id.dpt_tax
+        self.import_tax_rate = self.product_id.dpt_tax_import / 100
+        self.vat_tax_rate = self.product_id.dpt_tax / 100
 
     @api.onchange('import_tax_amount', 'declared_unit_total')
     def onchange_compute_import_tax_amount(self):
