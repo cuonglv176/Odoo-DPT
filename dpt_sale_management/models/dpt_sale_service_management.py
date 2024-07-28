@@ -25,6 +25,19 @@ class DPTSaleServiceManagement(models.Model):
     compute_value = fields.Float('Compute Value')
     note = fields.Text(string='Note')
 
+    def write(self, vals):
+        res = super(DPTSaleServiceManagement, self).write(vals)
+        self.action_confirm_quote()
+        return res
+
+    def action_confirm_quote(self):
+        a = 0
+        for line in self.sale_id.sale_service_ids:
+            if line.price < 1:
+                a = 1
+        if a == 0:
+            self.sale_id.state = 'sent'
+
     @api.onchange('price_cny')
     def onchange_price_cny(self):
         self.price = self.price_cny * self.currency_cny_id.rate
