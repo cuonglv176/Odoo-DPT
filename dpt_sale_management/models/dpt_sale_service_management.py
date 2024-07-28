@@ -33,7 +33,7 @@ class DPTSaleServiceManagement(models.Model):
     def action_confirm_quote(self):
         a = 0
         for line in self.sale_id.sale_service_ids:
-            if line.price < 1:
+            if line.price < 1 or line.price_status == 'wait_approve':
                 a = 1
         if a == 0:
             self.sale_id.state = 'sent'
