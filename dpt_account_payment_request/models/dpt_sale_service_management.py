@@ -34,10 +34,10 @@ class SaleServiceManagement(models.Model):
                 'default_partner_type': 'supplier',
                 'default_service_sale_ids': [(6, 0, self.ids)],
                 'default_move_journal_types': ('bank', 'cash'),
-                'default_sale_id': self.sale_id.id,
-                'default_partner_id': self.sale_id.partner_id.id,
-                'default_amount': self.amount_total,
-                'default_ref': _(f'Thanh toán cho {self.sale_id.name}'),
+                'default_sale_id': self[0].sale_id.id,
+                'default_partner_id': self[0].sale_id.partner_id.id,
+                'default_amount': sum(self.mapped('amount_total')),
+                'default_ref': _(f'Thanh toán cho {self[0].sale_id.name}'),
             },
         }
 
