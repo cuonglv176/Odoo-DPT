@@ -28,8 +28,8 @@ class ApprovalRequest(models.Model):
     def action_refuse(self, approver=None):
         res = super(ApprovalRequest, self).action_refuse(approver)
         # approver = self.approver_ids.filtered(lambda sp: sp.status == 'refused')
-        if res.status == 'refused':
-            res.sale_id.price_status = 'no_price'
+        if self.status == 'refused':
+            self.sale_id.price_status = 'no_price'
             for sale_service_id in self.sale_service_ids:
                 sale_service_id.new_price = sale_service_id.price
             for order_line_id in self.order_line_ids:
