@@ -18,6 +18,7 @@
         'views/dpt_shipping_slip.xml',
         'views/dpt_vehicle_stage.xml',
         'views/sale_order.xml',
+        'views/export_import.xml',
         'views/stock_picking.xml',
         'wizards/dpt_get_picking_so_wizard.xml',
         'wizards/dpt_shipping_split_wizard.xml',

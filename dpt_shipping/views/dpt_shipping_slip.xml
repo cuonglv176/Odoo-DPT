@@ -37,24 +37,23 @@
                     <label for="note"/>
                     <field name="note" nolable="1"/>
                     <notebook>
-                        <page name="out_picking" string="Out Picking">
-                            <field name="out_picking_ids" context="{
-                                     'form_view_ref': 'stock.view_picking_form',
-                                     'tree_view_ref': 'stock.vpicktree'}"/>
-                        </page>
-                        <page name="in_picking" string="In Picking">
-                            <field name="in_picking_ids" context="{
-                                     'form_view_ref': 'stock.view_picking_form',
-                                     'tree_view_ref': 'stock.vpicktree'}"/>
-                        </page>
-
-                        <page name="sale_order" string="Order">
-                            <field name="sale_ids" readonly="1"/>
-                        </page>
                         <page name="import_export" string="Import Export">
                             <field name="export_import_ids" context="{
                                      'form_view_ref': 'dpt_export_import.view_dpt_export_import_form',
                                      'tree_view_ref': 'dpt_export_import.view_dpt_export_import_tree'}"/>
+                        </page>
+                        <page name="sale_order" string="Order">
+                            <field name="sale_ids" readonly="1"/>
+                        </page>
+                        <page name="out_picking" string="Out Picking">
+                            <field name="out_picking_ids" context="{
+                                     'form_view_ref': 'stock.view_picking_form',
+                                     'tree_view_ref': 'stock.vpicktree'}" readonly="1"/>
+                        </page>
+                        <page name="in_picking" string="In Picking">
+                            <field name="in_picking_ids" context="{
+                                     'form_view_ref': 'stock.view_picking_form',
+                                     'tree_view_ref': 'stock.vpicktree'}" readonly="1"/>
                         </page>
                         <page name="vehicle_stage_tracking" string="Vehicle Stage Tracking">
                             <field name="vehicle_stage_log_ids">

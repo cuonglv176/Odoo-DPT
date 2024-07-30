@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_dpt_export_import_shipping_slip_form_inherit" model="ir.ui.view">
+        <field name="name">view_dpt_export_import_shipping_slip_form_inherit</field>
+        <field name="model">dpt.export.import</field>
+        <field name="inherit_id" ref="dpt_export_import.view_dpt_export_import_form"/>
+        <field name="arch" type="xml">
+            <field name="shipping_slip" position="replace">
+                <field name="shipping_slip_id" readonly="1" force_save="1"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

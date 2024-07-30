@@ -7,9 +7,10 @@
         <field name="arch" type="xml">
             <form string="Get Picking">
                 <sheet>
+                    <field name="picking_type_id" invisible="1"/>
                     <field name="sale_id" invisible="1"/>
                     <label for="picking_ids"/>
-                    <field name="picking_ids" options="{'no_create': True}"/>
+                    <field name="picking_ids" options="{'no_create': True}" context="{'default_sale_purchase_id': sale_id, 'default_picking_type_id': picking_type_id}"/>
                 </sheet>
                 <footer>
                     <button name="action_update_picking_to_so" type="object" string="Update SO" class="oe_highlight"/>

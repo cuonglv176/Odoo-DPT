@@ -12,7 +12,8 @@ class DPTShippingSlip(models.Model):
     transfer_code_chinese = fields.Char('Transfer Code in Chinese')
     out_picking_ids = fields.Many2many('stock.picking', 'stock_picking_out_shipping_rel', 'shipping_slip_id',
                                        'picking_id', string='Out Picking')
-    export_import_ids = fields.Many2many('dpt.export.import', string='Export Import', compute="_compute_information")
+    export_import_ids = fields.Many2many('dpt.export.import', 'export_import_shipping_rel', 'shipping_slip_id',
+                                         'export_import_id', string='Export Import', store=True)
     in_picking_ids = fields.Many2many('stock.picking', 'stock_picking_in_shipping_rel', 'shipping_slip_id',
                                       'picking_id', string='In Picking')
     sale_ids = fields.Many2many('sale.order', string='Sale Order', compute="_compute_information")
@@ -34,8 +35,6 @@ class DPTShippingSlip(models.Model):
     def _compute_information(self):
         for item in self:
             item.sale_ids = (item.in_picking_ids | item.out_picking_ids).mapped('sale_purchase_id')
-            item.export_import_ids = (item.in_picking_ids | item.out_picking_ids).mapped('sale_purchase_id').mapped(
-                'dpt_export_import_ids')
             if item.vehicle_country == 'chinese':
                 item.total_volume = sum(item.out_picking_ids.mapped('total_volume'))
                 item.total_weight = sum(item.out_picking_ids.mapped('total_weight'))
@@ -48,6 +47,19 @@ class DPTShippingSlip(models.Model):
                 item.total_volume = 0
                 item.total_weight = 0
                 item.total_num_packing = 0
+
+    @api.constrains('export_import_ids')
+    def constrains_export_import(self):
+        for item in self:
+            sale_order_ids = item.export_import_ids.mapped('sale_id')
+            in_picking_ids = self.env['stock.picking'].search(
+                [('sale_purchase_id', 'in', sale_order_ids.ids), ('x_transfer_type', '=', 'outgoing_transfer')])
+            out_picking_ids = self.env['stock.picking'].search(
+                [('sale_purchase_id', 'in', sale_order_ids.ids), ('x_transfer_type', '=', 'incoming_transfer')])
+            item.sale_ids = [(6, 0, sale_order_ids.ids)]
+            item.in_picking_ids = [(6, 0, in_picking_ids.ids)]
+            item.out_picking_ids = [(6, 0, out_picking_ids.ids)]
+            item.export_import_ids.shipping_slip_id = item.id
 
     def _compute_vehicle_driver_phone(self):
         for item in self:
@@ -117,4 +129,3 @@ class DPTShippingSlip(models.Model):
             'default_available_picking_ids': self.out_picking_ids.mapped('x_in_transfer_picking_id').ids,
         }
         return action
-
