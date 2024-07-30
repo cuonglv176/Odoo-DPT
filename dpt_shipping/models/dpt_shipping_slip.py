@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 
 class DPTShippingSlip(models.Model):
@@ -129,3 +130,19 @@ class DPTShippingSlip(models.Model):
             'default_available_picking_ids': self.out_picking_ids.mapped('x_in_transfer_picking_id').ids,
         }
         return action
+
+    def action_create_stock_transfer(self):
+        for item in self:
+            for sale_id in item.sale_ids:
+                if sale_id.id in (item.in_picking_ids | item.out_picking_ids).mapped('sale_purchase_id').ids:
+                    continue
+                main_incoming_picking_id = self.env['stock.picking'].search(
+                    [('sale_purchase_id', '=', sale_id.id), ('is_main_incoming', '=', True)])
+                if not main_incoming_picking_id:
+                    raise ValidationError("Vui lòng tạo phiếu nhập cho đơn hàng %s" % sale_id.name)
+                action = main_incoming_picking_id.action_create_transfer_picking()
+                transfer_picking_id = self.env['stock.picking'].with_context(action['context']).create({
+                    'sale_purchase_id': sale_id.id,
+                })
+                transfer_picking_id.create_in_transfer_picking()
+            item.constrains_export_import()
