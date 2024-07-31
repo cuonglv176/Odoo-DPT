@@ -78,11 +78,15 @@
                     <field name="available_payment_method_line_ids" invisible="1"/>
                     <field name="available_partner_bank_ids" invisible="1"/>
                     <field name="suitable_journal_ids" invisible="1"/>
+                    <field name="from_po" invisible="1"/>
+                    <field name="from_so" invisible="1"/>
                     <field name="country_code" invisible="1"/>
                     <field name="partner_type" invisible="1"/>
                     <field name="posted_before" invisible="1"/>
                     <field name="reconciled_invoices_type" invisible="1"/>
                     <field name="company_id" invisible="1"/>
+                    <field name="payment_user_type" widget="radio"/>
+                    <field name="payment_user" widget="radio"/>
                     <field name="paired_internal_transfer_payment_id" invisible="1"/>
                     <field name="available_journal_ids" invisible="1"/>
                     <field name="currency_id" invisible="1"/>
@@ -235,6 +239,14 @@
                             </div>
                         </group>
                     </group>
+                    <notebook>
+                        <page string="Sản phẩm" attrs="{'invisible': [('from_po', '=', False)]}">
+                            <field nam="purchase_product_ids"/>
+                        </page>
+                        <page string="Dịch vụ">
+                            <field nam="service_sale_ids"/>
+                        </page>
+                    </notebook>
                 </sheet>
                 <div class="o_attachment_preview"/>
                 <div class="oe_chatter">

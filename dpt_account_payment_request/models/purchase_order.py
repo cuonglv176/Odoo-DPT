@@ -12,6 +12,7 @@ class PurchaseOrder(models.Model):
 
     def action_open_payment_popup(self):
         view_form_id = self.env.ref('dpt_account_payment_request.dpt_view_account_payment_request_form').id
+        service_tth = self.env['dpt.service.management'].search([('code', '=', 'TTH')])
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'account.payment',
@@ -23,6 +24,10 @@ class PurchaseOrder(models.Model):
             'context': {
                 'default_payment_type': 'outbound',
                 'default_from_po': True,
+                'default_name': f"Thanh toán tiền mua hàng {self.name} {self.sale_id.name}",
+                'default_partner_id': self.partner_id.id,
+                'default_service_sale_ids': [(0, 0, {'service_id': service_tth.id})] if service_tth else False,
+                'default_purchase_product_ids': [(6, 0, self.order_line.ids)],
                 'default_partner_type': 'supplier',
                 'default_move_journal_types': ('bank', 'cash'),
                 'default_purchase_id': self.id,

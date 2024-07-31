@@ -41,7 +41,8 @@ class AccountPayment(models.Model):
         ('refused', 'Refused'),
         ('cancel', 'Cancel'),
     ], string='Status approval', default="new", related="approval_id.request_status")
-    service_sale_ids = fields.Many2many('dpt.sale.service.management', string='Sale line')
+    service_sale_ids = fields.Many2many('dpt.sale.service.management', string='Dịch vụ', readonly=1)
+    purchase_product_ids = fields.Many2many('purchase.order.line', string='Sản phẩm', readonly=1)
     from_po = fields.Boolean()
     from_so = fields.Boolean()
     payment_user_type = fields.Selection([

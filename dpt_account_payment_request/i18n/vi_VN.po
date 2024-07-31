@@ -348,3 +348,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_form
 msgid "the destination journal"
 msgstr ""
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.purchase_order_form_dpt_sale_deposit_inherit_form
+msgid "Create Payment"
+msgstr "Đề nghị thanh toán"
