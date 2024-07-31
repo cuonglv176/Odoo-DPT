@@ -158,6 +158,16 @@ class StockPicking(models.Model):
                 })
             if move_line_vals:
                 self.env['stock.move.line'].create(move_line_vals)
+
+        # update back to export import
+        if self.x_transfer_type == 'outgoing_transfer' and self.location_id.warehouse_id.is_main_incoming_warehouse:
+            for order_line in self.sale_purchase_id.order_line:
+                order_line.dpt_export_import_line_ids.write({'lot_code': self.name})
+                package_ids = self.package_ids.filtered(
+                    lambda p: order_line.product_id.id in p.detail_ids.mapped('product_id').ids)
+                if not package_ids:
+                    continue
+                order_line.dpt_export_import_line_ids.package_ids = order_line.dpt_export_import_line_ids.package_ids | package_ids
         return super().action_confirm()
 
     def action_update_picking_name(self):
