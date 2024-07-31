@@ -6,6 +6,7 @@ class PurchaseOrderLinePackage(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin']
     _description = 'Purchase Package'
     _order = 'create_date DESC'
+    _rec_name = 'code'
 
     purchase_id = fields.Many2one('purchase.order', 'Purchase', tracking=True)
     sale_id = fields.Many2one('sale.order', 'Sale Order', tracking=True)
