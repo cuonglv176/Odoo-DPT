@@ -22,7 +22,7 @@ class ApprovalRequest(models.Model):
             for sale_service_id in self.sale_service_ids:
                 sale_service_id.price = sale_service_id.new_price
             for order_line_id in self.order_line_ids:
-                order_line_id.price_unit = sale_service_id.new_price_unit
+                order_line_id.price_unit = order_line_id.new_price_unit
         return res
 
     def action_refuse(self, approver=None):
