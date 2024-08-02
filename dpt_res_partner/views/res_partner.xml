@@ -20,6 +20,7 @@
                     <field name="dpt_output_status"/>
                     <field name="dpt_order_status"/>
                     <field name="dpt_date_of_delivery"/>
+                    <field name="cs_user_id"/>
                 </group>
             </xpath>
 

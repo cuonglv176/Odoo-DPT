@@ -29,6 +29,7 @@ class ResPartner(models.Model):
     dpt_order_status = fields.Char('Order status')
     dpt_date_of_delivery = fields.Char('Date of delivery')
     company_type = fields.Selection(selection_add=[('household_business', 'Household Business')])
+    cs_user_id = fields.Many2one('res.users', string='Nhân viên CS')
 
     @api.depends('complete_name', 'email', 'vat', 'state_id', 'country_id', 'commercial_company_name', 'dpt_user_name')
     @api.depends_context('show_address', 'partner_show_db_id', 'address_inline', 'show_email', 'show_vat', 'lang')
