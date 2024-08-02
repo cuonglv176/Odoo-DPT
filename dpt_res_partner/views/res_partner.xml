@@ -21,6 +21,7 @@
                     <field name="dpt_order_status"/>
                     <field name="dpt_date_of_delivery"/>
                     <field name="cs_user_id"/>
+                    <field name="is_user"/>
                 </group>
             </xpath>
 
