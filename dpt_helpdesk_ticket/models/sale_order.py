@@ -22,7 +22,6 @@ class SaleOrder(models.Model):
                 'department_id': service_id.department_id.id,
                 'team_id': service_id.helpdesk_team_id.id,
             })
-            print(val_create)
             self.env['dpt.helpdesk.servie.line'].create({
                 'service_id': val_create.get('service_id'),
                 'description': val_create.get('description'),

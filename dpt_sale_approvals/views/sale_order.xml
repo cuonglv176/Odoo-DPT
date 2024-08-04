@@ -26,10 +26,14 @@
 
             <xpath expr="//field[@name='sale_service_ids']/tree/field[@name='department_id']" position="after">
                 <field name="price_status"
-                        force_save="1" readonly="1"
+                       force_save="1" readonly="1"
                        decoration-success="price_status == 'approved'"
                        decoration-warning="price_status == 'wait_approve'"
                        widget="badge"/>
+            </xpath>
+
+            <xpath expr="//field[@name='sale_service_ids']/tree/field[@name='price']" position="attributes">
+                <attribute name="context">{'check_price': True}</attribute>
             </xpath>
 
             <div name="button_box" position="inside">
@@ -37,9 +41,9 @@
                     <field string="Approvals" name="approval_count" widget="statinfo"/>
                 </button>
             </div>
-<!--            <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">-->
-<!--                <field name="department_id"/>-->
-<!--            </xpath>-->
+            <!--            <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">-->
+            <!--                <field name="department_id"/>-->
+            <!--            </xpath>-->
         </field>
     </record>
 
