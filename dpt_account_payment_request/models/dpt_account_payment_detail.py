@@ -7,6 +7,8 @@ class DPTAccountPaymentDetail(models.Model):
     _description = 'DPT Account Payment Detail'
 
     sequence = fields.Integer(string='Sequence')
+    product_id = fields.Many2one('product.product', string='Product')
+    service_id = fields.Many2one('dpt.service.management', string='Service')
     payment_id = fields.Many2one('Account Payment', string='Payment')
     description = fields.Html(string='Description')
     qty = fields.Float(string='QTY', default=1)
@@ -28,11 +30,7 @@ class DPTAccountPaymentDetail(models.Model):
     def onchange_price_cny(self):
         self.price = self.price_cny * self.currency_cny_id.rate
 
+    @api.depends('price', 'qty')
     def _compute_amount_total(self):
         for item in self:
-            item.amount_total = item.qty * item.price * item.compute_value if item.pricelist_item_id.is_price and item.pricelist_item_id.compute_price == 'table' else item.qty * item.price
-
-    @api.onchange('price', 'qty')
-    def onchange_amount_total(self):
-        if self.price and self.qty:
-            self.amount_total = self.price * self.qty * self.compute_value if self.pricelist_item_id.is_price and self.pricelist_item_id.compute_price == 'table' else self.qty * self.price
+            item.amount_total = item.qty * item.price
