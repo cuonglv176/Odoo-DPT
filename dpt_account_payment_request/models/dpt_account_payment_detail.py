@@ -24,6 +24,12 @@ class DPTAccountPaymentDetail(models.Model):
         self.onchange_update_amount_payment()
         return res
 
+    @api.model
+    def create(self, vals):
+        res = super(DPTAccountPaymentDetail, self).create(vals)
+        self.onchange_update_amount_payment()
+        return res
+
     def onchange_update_amount_payment(self):
         amount = 0
         if self.payment_id:
