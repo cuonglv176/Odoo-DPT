@@ -19,7 +19,11 @@ class DPTAccountPaymentDetail(models.Model):
     currency_cny_id = fields.Many2one('res.currency', string='Currency CNY', default=6)
     amount_total = fields.Monetary(currency_field='currency_id', string="Amount Total", compute="_compute_amount_total")
 
-    @api.onchange('price', 'qty', 'price_cny')
+    def write(self, vals):
+        res = super(DPTAccountPaymentDetail, self).write(vals)
+        self.onchange_update_amount_payment()
+        return res
+
     def onchange_update_amount_payment(self):
         amount = 0
         if self.payment_id:
