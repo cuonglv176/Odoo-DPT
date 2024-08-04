@@ -87,8 +87,8 @@ class SaleOrder(models.Model):
                         sale_service_id.approval_id = approval_id
                     list_service.append(sale_service_id)
             for line in self.order_line:
-                if line.new_price_unit != 0 and line.new_price_unit != line.price_unit:
-                    line.approval_id = approval_id
+                # if line.new_price_unit != 0 and line.new_price_unit != line.price_unit:
+                line.approval_id = approval_id
         if list_service:
             list_approver = self.compute_approver_approval_price_list(list_service)
             if list_approver:
