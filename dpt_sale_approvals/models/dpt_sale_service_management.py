@@ -19,7 +19,7 @@ class DPTSaleServiceManagement(models.Model):
     def write(self, vals):
         old_price = self.price
         rec = super(DPTSaleServiceManagement, self).write(vals)
-        if self.env.context.get('dpt_user_update'):
+        if self.env.context.get('search_default_my_quotation'):
             if 'price' in vals:
                 new_price = self.price
                 if old_price > new_price:
