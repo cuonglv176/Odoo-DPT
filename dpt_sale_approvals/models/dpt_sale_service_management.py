@@ -19,10 +19,11 @@ class DPTSaleServiceManagement(models.Model):
     def write(self, vals):
         old_price = self.price
         rec = super(DPTSaleServiceManagement, self).write(vals)
-        if 'price' in vals:
-            new_price = self.price
-            if old_price > new_price:
-                raise ValidationError(_(f"Giá mới {new_price} không được nhỏ hơn giá cũ {old_price}!!"))
+        if self.env.context.get('check_price', False):
+            if 'price' in vals:
+                new_price = self.price
+                if old_price > new_price:
+                    raise ValidationError(_(f"Giá mới {new_price} không được nhỏ hơn giá cũ {old_price}!!"))
         return rec
 
     @api.depends('approval_id')
