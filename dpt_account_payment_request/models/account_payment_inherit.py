@@ -52,7 +52,8 @@ class AccountPayment(models.Model):
         ('ltv', 'LTV'),
         ('dpt', 'DPT'),
     ], string='Pháp nhân thanh toán')
-    active = fields.Boolean(default=True )
+    active = fields.Boolean(default=True)
+    detail_ids = fields.One2many('dpt.account.payment.detail', 'payment_id', string='Chi tiết thanh toán')
 
     def send_payment_request_request(self):
         category_id = self.env['approval.category'].search([('sequence_code', '=', 'DNTT')])
