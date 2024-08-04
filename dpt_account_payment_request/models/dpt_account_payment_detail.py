@@ -22,9 +22,10 @@ class DPTAccountPaymentDetail(models.Model):
     @api.onchange('price', 'qty', 'price_cny')
     def onchange_update_amount_payment(self):
         amount = 0
-        for detail_id in self.payment_id.detail_ids:
-            amount += detail_id.amount_total
-        self.payment_id.amount = amount
+        if self.payment_id:
+            for detail_id in self.payment_id.detail_ids:
+                amount += detail_id.amount_total
+            self.payment_id.amount = amount
 
     @api.onchange('price_cny')
     def onchange_price_cny(self):
