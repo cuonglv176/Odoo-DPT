@@ -36,6 +36,7 @@ class DptExportImport(models.Model):
     description = fields.Text(string='Description')
     state = fields.Selection([
         ('draft', 'Nháp'),
+        ('draft_declaration', 'Tờ khai nháp'),
         ('confirm', 'Xác nhận tờ khai'),
         ('declared', 'Tờ khai thông quan'),
         ('released', 'Giải phóng'),
@@ -136,6 +137,11 @@ class DptExportImport(models.Model):
                 rec.total_package = result.get('total_package') or ''
             else:
                 rec.total_package = ''
+
+    def action_draft_declaration(self):
+        self.state = 'draft_declaration'
+        for line_id in self.line_ids:
+            line_id.state = 'draft_declaration'
 
     def action_declared(self):
         self.state = 'declared'
@@ -238,6 +244,7 @@ class DptExportImportLine(models.Model):
     dpt_is_new = fields.Boolean(string='Is new', tracking=True, default=False)
     state = fields.Selection([
         ('draft', 'Nháp'),
+        ('draft_declaration', 'Tờ khai nháp'),
         ('wait_confirm', 'Chờ xác nhận'),
         ('eligible', 'Đủ điều kiện khai báo'),
         ('declared', 'Tờ khai thông quan'),
