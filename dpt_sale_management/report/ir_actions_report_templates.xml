@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_service_saleorder">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <img t-att-src="'dpt_sale_management/static/src/img/header.png'" alt="Header" style="display:flex; width:100%;top:-20px"/>
+<!--                        <table>-->
+<!--                            <tr>-->
+<!--                                <th><img t-att-src="image_data_uri(doc.company_id.logo)" class="mw-100"/></th>-->
+<!--                                <th class="w-75">-->
+<!--                                    <h2 style="color:orange">CÔNG TY TNHH DPT VINA HOLDINGS - 棋速</h2>-->
+<!--                                    <br/>-->
+<!--                                    <p>Địa chỉ văn phòng: Số 6A, Ngõ 183, Hoàng Văn Thái, Khương Trung, Thanh Xuân, Hà Nội</p>-->
+<!--                                    <br/>-->
+<!--                                    <p>MST: 0109366059</p>-->
+<!--                                </th>-->
+<!--                            </tr>-->
+<!--                        </table>-->
+                        <h2>BÁO GIÁ DỊCH VỤ</h2>
+                        <p>Hiệu lực từ 24/05/2024 đến 31/05/2024 (Thời gian đến 7 ngày)</p>
+                        <p>(Tỷ giá áp dụng mức tỷ giá tại ngày thanh toán)</p>
+                        <p>Khách hàng:</p>
+                        <p>Mặt hàng:</p>
+                        <p>Địa chỉ:</p>
+                        <p>Tỷ giá tệ từ hệ thống:</p>
+                        <p>Tỷ giá usd từ hệ thống:</p>
+                        <p>Cám ơn quý khách đã quan tâm tới dịch vụ của Kỳ Tốc Logistics. Chúng tôi xin được gửi tới quý
+                            khách giá cước cho hàng nhập của quý khách như sau:
+                        </p>
+                        <table border="1">
+                            <tr>
+                                <th>Tên hàng hóa</th>
+                                <th>Số lượng</th>
+                                <th>Chi phí (VND)</th>
+                            </tr>
+                            <tr>
+                                <td>Sản phẩm 1</td>
+                                <td>10</td>
+                                <td>13,642,000</td>
+                            </tr>
+                            <tr>
+                                <td>Sản phẩm 2</td>
+                                <td>20</td>
+                                <td>27,284,000</td>
+                            </tr>
+                            <tr>
+                                <td>Sản phẩm 3</td>
+                                <td>15</td>
+                                <td>20,463,000</td>
+                            </tr>
+                            <tr>
+                                <td>Cước vận chuyển nội địa TQ</td>
+                                <td>544,261</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <p>Tổng tiền hàng + cước nội địa TQ: 61,933,261 VND</p>
+                        <p>Thế tích (m3): 10000</p>
+                        <p>Khối lượng (kg): 287</p>
+                        <p>Phí vận chuyến/ m3: 4,000</p>
+                        <p>Phí vận chuyển/ kg: 200,000</p>
+                        <p>Thuế VAT_Sản phẩm 3 (10%): 2,046,300 VND</p>
+                        <p>Thuế NK CO Form E_Sản phẩm 1 (5%): 682,100 VND</p>
+                        <p>Thuế NK CO Form E_Sản phẩm 2 (10%): 2,046,300 VND</p>
+                        <p>Thuế VAT_Sản phẩm 1 (10%): 1,364,200 VND</p>
+                        <p>Thuế VAT_Sản phẩm 2 (8%): 2,182,720 VND</p>
+                        <p>Giá trị kê khai dự kiến VND/lô: 33,020,000</p>
+                        <p>Thuế NK VND/lô: 4,911,120</p>
+                        <p>Thuế VAT VND/lô: 5,593,220</p>
+                        <p>Phí uỷ thác nhập khẩu VND/lô: 330,200</p>
+                        <p>Phí đầu mục VND/lô: 300,000</p>
+                        <p>Phí nâng hạ VND/lô: 700,000</p>
+                        <p>Cước VC BT-HN (kg) VND/lô: 57,400,000</p>
+                        <p>Cước VC BT-HN (m3) VND/lô: 40,000,000</p>
+                        <p>Giao hàng chặng cuối VND/lô: 1,100,000</p>
+                        <p>Tổng chi phí vận chuyển theo kg: 103,354,540 VND</p>
+                        <p>Tổng chi phí vận chuyển theo m3: 85,954,540 VND</p>
+                        <p>Chi phí theo kg: 360,120 VND</p>
+                        <p>Chi phí theo m3: 8,595 VND</p>
+                        <p>Chuyên viên: Nguyễn Phương</p>
+                        <p>Liên hệ: Ngọc Khánh</p>
+                        <p>SĐT: 0936 670 368</p>
+                        <p>Email: dpt.pl1207@gmail.com</p>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
