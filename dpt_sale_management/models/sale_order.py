@@ -210,7 +210,7 @@ class SaleOrder(models.Model):
                 continue
             max_price = 0
             price_list_item_id = None
-            compute_value = 0
+            compute_value = 1
             compute_uom_id = None
             for service_price_id in service_price_ids:
                 if service_price_id.compute_price == 'fixed_price':
