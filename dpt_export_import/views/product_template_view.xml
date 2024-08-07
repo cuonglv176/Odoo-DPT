@@ -92,7 +92,8 @@
                                            decoration-success="state in ('eligible','declared','released','consulted','post_control')"/>
                                     <field name="sale_user_id"/>
                                     <field name="sale_id"/>
-                                    <field name="lot_code"/>
+                                    <field name="lot_code" invisible="1"/>
+                                    <field name="stock_picking_ids" widget="many2many_tags"/>
                                     <field name="partner_id"/>
                                     <field name="product_id"/>
                                     <field name="dpt_english_name"/>

@@ -196,13 +196,14 @@ class DptExportImportLine(models.Model):
     export_import_id = fields.Many2one('dpt.export.import', string='Export import')
     lot_code = fields.Char(string='Lot code')
     sale_id = fields.Many2one('sale.order', string='Sale order')
+    stock_picking_ids = fields.Many2many('stock.picking', string='Lot code', compute="_compute_picking")
     sale_user_id = fields.Many2one('res.users', string='User Sale', related='sale_id.user_id')
     partner_id = fields.Many2one('res.partner', string='Sale Partner', related='sale_id.partner_id')
     sale_line_id = fields.Many2one('sale.order.line', string='Sale order line', domain=[('order_id', '=', 'sale_id')])
     product_tmpl_id = fields.Many2one('product.template', string='Product Template',
                                       related='product_id.product_tmpl_id')
     product_id = fields.Many2one('product.product', string='Product')
-    package_ids = fields.Many2many('purchase.order.line.package', string='Package')
+    package_ids = fields.Many2many('purchase.order.line.package', string='Package', compute="_compute_picking")
     dpt_english_name = fields.Char(string='English name', tracking=True)
     dpt_description = fields.Text(string='Description Product', size=240, tracking=True)
     dpt_n_w_kg = fields.Float(string='N.W (KG)', tracking=True)
@@ -258,6 +259,14 @@ class DptExportImportLine(models.Model):
         ('cny', 'CNY')
     ], string='Declaration type', default='usd')
     product_history_id = fields.Many2one('dpt.export.import.line', string='Description Selection')
+
+    @api.depends('sale_id')
+    def _compute_picking(self):
+        for item in self:
+            picking_ids = self.env['stock.picking'].search(
+                [('sale_purchase_id', '=', item.sale_id.id), ('is_main_incoming', '=', True)])
+            item.stock_picking_ids = picking_ids
+            item.package_ids = picking_ids.package_ids
 
     def action_wait_confirm(self):
         self.state = 'wait_confirm'
