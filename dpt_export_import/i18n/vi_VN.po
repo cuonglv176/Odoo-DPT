@@ -590,6 +590,7 @@ msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__lot_code
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__stock_picking_ids
 msgid "Lot code"
 msgstr "Mã Lô"
 
