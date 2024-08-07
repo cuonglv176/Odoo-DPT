@@ -8,9 +8,9 @@
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
-                <field name="finish_stock_services" widget="boolean_toggle"/>
-                <field name="have_stock_label" widget="boolean_toggle"/>
-                <field name="have_export_import" widget="boolean_toggle"/>
+                <field name="finish_stock_services" readonly="1"/>
+                <field name="have_stock_label" readonly="1"/>
+                <field name="have_export_import" readonly="1"/>
             </xpath>
         </field>
     </record>
@@ -21,7 +21,7 @@
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="stock.view_picking_internal_search"/>
         <field name="context">{'edit_valid_cutlist': True}</field>
-        <field name="domain">[('in_draft_shipping', '=', True)]</field>
+        <field name="domain">[('state', '=', 'done'), ('x_transfer_type','in',('outgoing', 'incoming'))]</field>
         <field name="view_ids" eval="[(5, 0, 0),
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('dpt_shipping.dpt_stock_picking_cutlist_tree_view')})
             ]"/>
