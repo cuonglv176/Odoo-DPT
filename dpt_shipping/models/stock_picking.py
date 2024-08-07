@@ -49,13 +49,15 @@ class StockPicking(models.Model):
     @api.model
     def create(self, vals):
         res = super().create(vals)
-        res._compute_valid_cutlist()
+        if not ('finish_stock_services' in vals or 'have_stock_label' in vals or 'have_export_import' in vals):
+            res._compute_valid_cutlist()
         return res
 
     def write(self, vals):
         res = super().write(vals)
         for item in self:
-            item._compute_valid_cutlist()
+            if not ('finish_stock_services' in vals or 'have_stock_label' in vals or 'have_export_import' in vals):
+                item._compute_valid_cutlist()
             # update shipping split
             item.update_shipping_split()
         return res

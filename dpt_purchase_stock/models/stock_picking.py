@@ -18,3 +18,10 @@ class StockPicking(models.Model):
 
     def _sanity_check(self, separate_pickings=True):
         pass
+
+    @api.constrains('sale_purchase_id', 'package_ids', 'total_volume', 'total_weight')
+    def constrains_picking(self):
+        for item in self:
+            if not item.sale_purchase_id:
+                continue
+            item.sale_purchase_id.recompute_weight_volume()
