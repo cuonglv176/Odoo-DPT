@@ -3,20 +3,340 @@
 <head>
     <meta charset="UTF-8">
     <title>Báo Giá Dịch Vụ</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
+<style>
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    table {
+        page-break-inside: auto
+    }
+
+    tr {
+        page-break-inside: avoid;
+        page-break-after: auto
+    }
+
+</style>
 <body>
-    <table>
-        <tr>
-            <th><img t-att-src="url('/dpt_sale_management/report/logo.png')"/></th>
-            <th>
-                <h2 style="color:orange">CÔNG TY TNHH DPT VINA HOLDINGS - 棋速</h2>
-                <br/>
-                <p>Địa chỉ văn phòng: Số 6A, Ngõ 183, Hoàng Văn Thái, Khương Trung, Thanh Xuân, Hà Nội</p>
-                <br/>
-                <p>MST: 0109366059</p>
-            </th>
-        </tr>
-    </table>
+<table cellpadding="1" style="width:100%; border: 1px black solid; border-collapse: collapse;">
+    <tr>
+        <th rowspan="10">Hàng hóa</th>
+        <th>Tên hàng hóa</th>
+        <th>Số lượng</th>
+        <th>Chi phí (VND)</th>
+        <th>Ghi chú</th>
+    </tr>
+    <tr>
+        <td>Sản phẩm 1</td>
+        <td>10</td>
+        <td>13,642,000</td>
+        <td>a</td>
+    </tr>
+    <tr>
+        <td>Sản phẩm 2</td>
+        <td>20</td>
+        <td>27,284,000</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Sản phẩm 3</td>
+        <td>15</td>
+        <td>20,463,000</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td colspan="2">Cước vận chuyển nội địa TQ</td>
+        <td>544,261</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td colspan="2">Tổng tiền hàng + cước nội địa TQ</td>
+        <td>61,933,261</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Thể tích (m3)</td>
+        <td></td>
+        <td>10000</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Khối lượng (kg)</td>
+        <td></td>
+        <td>287</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Phí vận chuyển/m3</td>
+        <td>VNĐ</td>
+        <td>4000</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Phí vận chuyển/kg</td>
+        <td>VNĐ</td>
+        <td>200000</td>
+        <td></td>
+    </tr>
+<!--    #Thuế-->
+    <tr>
+        <th rowspan="6">Thuế</th>
+        <td>NK CO Form E_Sản phẩm 1</td>
+        <td>5%</td>
+        <td>682100</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>NK CO Form E_Sản phẩm 2</td>
+        <td>8%</td>
+        <td>2,182,720</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>NK CO Form E_Sản phẩm 3</td>
+        <td>10%</td>
+        <td>2,046,300</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>VAT_Sản phẩm 1</td>
+        <td>8%</td>
+        <td>2,182,720</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>VAT_Sản phẩm 2</td>
+        <td>10%</td>
+        <td>2,046,300</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>VAT_Sản phẩm 3</td>
+        <td>10%</td>
+        <td>2,046,300</td>
+        <td></td>
+    </tr>
+    <!--    #Thuế-->
+    <tr>
+        <th rowspan="6">Thuế</th>
+        <td>NK CO Form E_Sản phẩm 1</td>
+        <td>5%</td>
+        <td>682100</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>NK CO Form E_Sản phẩm 2</td>
+        <td>8%</td>
+        <td>2,182,720</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>NK CO Form E_Sản phẩm 3</td>
+        <td>10%</td>
+        <td>2,046,300</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>VAT_Sản phẩm 1</td>
+        <td>8%</td>
+        <td>2,182,720</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>VAT_Sản phẩm 2</td>
+        <td>10%</td>
+        <td>2,046,300</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>VAT_Sản phẩm 3</td>
+        <td>10%</td>
+        <td>2,046,300</td>
+        <td></td>
+    </tr>
+    <!--    #Thuế-->
+    <tr>
+        <th rowspan="6">Thuế</th>
+        <td>NK CO Form E_Sản phẩm 1</td>
+        <td>5%</td>
+        <td>682100</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>NK CO Form E_Sản phẩm 2</td>
+        <td>8%</td>
+        <td>2,182,720</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>NK CO Form E_Sản phẩm 3</td>
+        <td>10%</td>
+        <td>2,046,300</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>VAT_Sản phẩm 1</td>
+        <td>8%</td>
+        <td>2,182,720</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>VAT_Sản phẩm 2</td>
+        <td>10%</td>
+        <td>2,046,300</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>VAT_Sản phẩm 3</td>
+        <td>10%</td>
+        <td>2,046,300</td>
+        <td></td>
+    </tr>
+    <!--    #Thuế-->
+    <tr>
+        <th rowspan="6">Thuế</th>
+        <td>NK CO Form E_Sản phẩm 1</td>
+        <td>5%</td>
+        <td>682100</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>NK CO Form E_Sản phẩm 2</td>
+        <td>8%</td>
+        <td>2,182,720</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>NK CO Form E_Sản phẩm 3</td>
+        <td>10%</td>
+        <td>2,046,300</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>VAT_Sản phẩm 1</td>
+        <td>8%</td>
+        <td>2,182,720</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>VAT_Sản phẩm 2</td>
+        <td>10%</td>
+        <td>2,046,300</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>VAT_Sản phẩm 3</td>
+        <td>10%</td>
+        <td>2,046,300</td>
+        <td></td>
+    </tr>
+<!--    Báo giá chi tiết-->
+    <tr>
+        <th rowspan="17">Báo giá chi tiết</th>
+        <td colspan="3">Bằng Tường - HN</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Giá trị kê khai dự kiến</td>
+        <td>VND/lô</td>
+        <td>33,020,000</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Thuế NK</td>
+        <td>VND/lô</td>
+        <td>4911120</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Thuế VAT</td>
+        <td>VND/lô</td>
+        <td>5593220</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Phí ủy thác nhập khẩu</td>
+        <td>VND/lô</td>
+        <td>330200</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Phí đầu mục</td>
+        <td>VND/lô</td>
+        <td>300000</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Phí nâng hạ</td>
+        <td>VND/lô</td>
+        <td>70000</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Cước VC BT-HN (kg)</td>
+        <td>VND/lô</td>
+        <td>57400000</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Cước VC BT-HN (m3)</td>
+        <td>VND/lô</td>
+        <td>40000000</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Giao hàng chặng cuối</td>
+        <td>VND/lô</td>
+        <td>1100000</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Tổng chi phí vận chuyển theo kg</td>
+        <td>VND/lô</td>
+        <td>103354540</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Tổng chi phí vận chuyển theo m3</td>
+        <td>VND/lô</td>
+        <td>85,954,540</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Chi phí theo kg</td>
+        <td>VND/kg</td>
+        <td>360,120</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Chi phí theo m3</td>
+        <td>VND/m3</td>
+        <td>8595</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Tổng chi phí/sản phẩm 1</td>
+        <td>VND/sản phẩm</td>
+        <td>16,313,120</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Tổng chi phí/sản phẩm 2</td>
+        <td>VND/sản phẩm</td>
+        <td>16,313,120</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Tổng chi phí/sản phẩm 3</td>
+        <td>VND/sản phẩm</td>
+        <td>16,313,120</td>
+        <td></td>
+    </tr>
+</table>
 </body>
 </html>

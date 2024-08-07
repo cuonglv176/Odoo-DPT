@@ -1,91 +1,475 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="report_service_saleorder">
-        <t t-call="web.html_container">
-            <t t-foreach="docs" t-as="doc">
-                <t t-call="web.external_layout">
-                    <div class="page">
-                        <img t-att-src="'dpt_sale_management/static/src/img/header.png'" alt="Header" style="display:flex; width:100%;top:-20px"/>
-<!--                        <table>-->
-<!--                            <tr>-->
-<!--                                <th><img t-att-src="image_data_uri(doc.company_id.logo)" class="mw-100"/></th>-->
-<!--                                <th class="w-75">-->
-<!--                                    <h2 style="color:orange">CÔNG TY TNHH DPT VINA HOLDINGS - 棋速</h2>-->
-<!--                                    <br/>-->
-<!--                                    <p>Địa chỉ văn phòng: Số 6A, Ngõ 183, Hoàng Văn Thái, Khương Trung, Thanh Xuân, Hà Nội</p>-->
-<!--                                    <br/>-->
-<!--                                    <p>MST: 0109366059</p>-->
-<!--                                </th>-->
-<!--                            </tr>-->
-<!--                        </table>-->
-                        <h2>BÁO GIÁ DỊCH VỤ</h2>
-                        <p>Hiệu lực từ 24/05/2024 đến 31/05/2024 (Thời gian đến 7 ngày)</p>
-                        <p>(Tỷ giá áp dụng mức tỷ giá tại ngày thanh toán)</p>
-                        <p>Khách hàng:</p>
-                        <p>Mặt hàng:</p>
-                        <p>Địa chỉ:</p>
-                        <p>Tỷ giá tệ từ hệ thống:</p>
-                        <p>Tỷ giá usd từ hệ thống:</p>
-                        <p>Cám ơn quý khách đã quan tâm tới dịch vụ của Kỳ Tốc Logistics. Chúng tôi xin được gửi tới quý
-                            khách giá cước cho hàng nhập của quý khách như sau:
-                        </p>
-                        <table border="1">
-                            <tr>
-                                <th>Tên hàng hóa</th>
-                                <th>Số lượng</th>
-                                <th>Chi phí (VND)</th>
-                            </tr>
-                            <tr>
-                                <td>Sản phẩm 1</td>
-                                <td>10</td>
-                                <td>13,642,000</td>
-                            </tr>
-                            <tr>
-                                <td>Sản phẩm 2</td>
-                                <td>20</td>
-                                <td>27,284,000</td>
-                            </tr>
-                            <tr>
-                                <td>Sản phẩm 3</td>
-                                <td>15</td>
-                                <td>20,463,000</td>
-                            </tr>
-                            <tr>
-                                <td>Cước vận chuyển nội địa TQ</td>
-                                <td>544,261</td>
-                                <td></td>
-                            </tr>
-                        </table>
-                        <p>Tổng tiền hàng + cước nội địa TQ: 61,933,261 VND</p>
-                        <p>Thế tích (m3): 10000</p>
-                        <p>Khối lượng (kg): 287</p>
-                        <p>Phí vận chuyến/ m3: 4,000</p>
-                        <p>Phí vận chuyển/ kg: 200,000</p>
-                        <p>Thuế VAT_Sản phẩm 3 (10%): 2,046,300 VND</p>
-                        <p>Thuế NK CO Form E_Sản phẩm 1 (5%): 682,100 VND</p>
-                        <p>Thuế NK CO Form E_Sản phẩm 2 (10%): 2,046,300 VND</p>
-                        <p>Thuế VAT_Sản phẩm 1 (10%): 1,364,200 VND</p>
-                        <p>Thuế VAT_Sản phẩm 2 (8%): 2,182,720 VND</p>
-                        <p>Giá trị kê khai dự kiến VND/lô: 33,020,000</p>
-                        <p>Thuế NK VND/lô: 4,911,120</p>
-                        <p>Thuế VAT VND/lô: 5,593,220</p>
-                        <p>Phí uỷ thác nhập khẩu VND/lô: 330,200</p>
-                        <p>Phí đầu mục VND/lô: 300,000</p>
-                        <p>Phí nâng hạ VND/lô: 700,000</p>
-                        <p>Cước VC BT-HN (kg) VND/lô: 57,400,000</p>
-                        <p>Cước VC BT-HN (m3) VND/lô: 40,000,000</p>
-                        <p>Giao hàng chặng cuối VND/lô: 1,100,000</p>
-                        <p>Tổng chi phí vận chuyển theo kg: 103,354,540 VND</p>
-                        <p>Tổng chi phí vận chuyển theo m3: 85,954,540 VND</p>
-                        <p>Chi phí theo kg: 360,120 VND</p>
-                        <p>Chi phí theo m3: 8,595 VND</p>
-                        <p>Chuyên viên: Nguyễn Phương</p>
-                        <p>Liên hệ: Ngọc Khánh</p>
-                        <p>SĐT: 0936 670 368</p>
-                        <p>Email: dpt.pl1207@gmail.com</p>
-                    </div>
-                </t>
-            </t>
-        </t>
+        <t t-set="body_classname" t-value="'container'"/>
+        &lt;!DOCTYPE html&gt;
+        <html t-att-lang="lang and lang.replace('_', '-')"
+              t-att-data-report-margin-top="data_report_margin_top"
+              t-att-data-report-header-spacing="data_report_header_spacing"
+              t-att-data-report-dpi="data_report_dpi"
+              t-att-data-report-landscape="data_report_landscape"
+              t-att-web-base-url="web_base_url">
+            <head>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="initial-scale=1"/>
+                <title>
+                    <t t-esc="title or 'Odoo Report'"/>
+                </title>
+                <t t-call-assets="web.report_assets_common"/>
+                <!-- Temporary code: only used to maintain CSS for legacy HTML reports (full width...) -->
+                <!-- Should be removed once the reports are fully converted. -->
+                <script type="text/javascript">
+                    document.addEventListener('DOMContentLoaded', () => {
+                    if (window.self !== window.top) {
+                    document.body.classList.add("o_in_iframe", "container-fluid");
+                    document.body.classList.remove("container");
+                    }
+                    });
+                </script>
+                <style type="text/css">
+                    table { page-break-inside:auto }
+                    tr { page-break-inside:avoid; page-break-before:auto }
+                    table, th, td {
+                    border: 1px solid black;
+                    border-collapse: collapse;
+                    }
+                </style>
+            </head>
+            <body t-att-class="'container' if not full_width else 'container-fluid'"
+                  t-att-dir="env['res.lang']._lang_get(lang or env.user.lang).direction or 'ltr'">
+                <div id="wrapwrap" style="page-break-before:always;">
+                    <main>
+                        <t t-if="not o" t-set="o" t-value="doc"/>
+
+                        <t t-if="not company">
+                            <!-- Multicompany -->
+                            <t t-if="company_id">
+                                <t t-set="company" t-value="company_id"/>
+                            </t>
+                            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                                <t t-set="company" t-value="o.company_id.sudo()"/>
+                            </t>
+                            <t t-else="else">
+                                <t t-set="company" t-value="res_company"/>
+                            </t>
+                        </t>
+                        <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
+                            <div class="row">
+                                <div class="col-3 mb4">
+                                    <t t-if="company.logo">
+                                        <img t-att-src="image_data_uri(company.logo)"
+                                             style="max-height: 45px;" alt="Logo"/>
+                                    </t>
+                                    <t t-else="">
+                                        <img t-att-src="'dpt_sale_management/static/src/img/logo.png'"/>
+                                    </t>
+                                </div>
+                                <div class="col-9 text-end" style="margin-top:22px;">Company tagline
+                                </div>
+                            </div>
+                            <!--                            <div t-if="company.logo or company.report_header" class="row zero_min_height">-->
+                            <div class="col-12">
+                                <div style="border-bottom: 1px solid black;"/>
+                            </div>
+                            <!--                            </div>-->
+                        </div>
+                        <div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout {{  'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}"
+                             t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else ''}});"
+                             t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+                             t-att-data-oe-lang="o and o.env.context.get('lang')">
+                            <!--                            <div class="pt-5">-->
+                            <!--                                &lt;!&ndash; This div ensures that the address is not cropped by the header. &ndash;&gt;-->
+                            <!--                                <t t-call="web.address_layout"/>-->
+                            <!--                            </div>-->
+                            <div class="page">
+                                <img t-att-src="'dpt_sale_management/static/src/img/header.png'" alt="Header"
+                                     style="display:flex; width:100%;top:-20px"/>
+                                <div class="center" style="text-align:center">
+                                    <h2>BÁO GIÁ DỊCH VỤ</h2>
+                                    <p>Hiệu lực từ 24/05/2024 đến 31/05/2024 (Thời gian đến 7 ngày)</p>
+                                    <p>(Tỷ giá áp dụng mức tỷ giá tại ngày thanh toán)</p>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <p>Khách hàng:</p>
+                                        <p>Địa chỉ:</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p>Mặt hàng:</p>
+                                    </div>
+                                </div>
+                                <p>Cám ơn quý khách đã quan tâm tới dịch vụ của Kỳ Tốc Logistics. Chúng tôi xin được gửi
+                                    tới quý
+                                    khách giá cước cho hàng nhập của quý khách như sau:
+                                </p>
+                                <table style="width:100%; border: 1px black solid; border-collapse: collapse; page-break-inside:auto">
+                                    <tr>
+                                        <th rowspan="10"
+                                            style="border: 1px black solid; border-collapse: collapse; text-align:center;vertical-align: middle">
+                                            Hàng hóa
+                                        </th>
+                                        <th>Tên hàng hóa
+                                        </th>
+                                        <th>Số lượng</th>
+                                        <th>Chi phí (VND)
+                                        </th>
+                                        <th>Ghi chú</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Sản phẩm 1</td>
+                                        <td>10</td>
+                                        <td>13,642,000</td>
+                                        <td>a</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Sản phẩm 2</td>
+                                        <td>20</td>
+                                        <td>27,284,000</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Sản phẩm 3</td>
+                                        <td>15</td>
+                                        <td>20,463,000</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">Cước vận chuyển nội địa TQ</td>
+                                        <td>544,261</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">Tổng tiền hàng + cước nội địa TQ</td>
+                                        <td>61,933,261</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Thể tích (m3)
+                                        </td>
+                                        <td></td>
+                                        <td>10000</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Khối lượng
+                                            (kg)
+                                        </td>
+                                        <td></td>
+                                        <td>287</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Phí vận
+                                            chuyển/m3
+                                        </td>
+                                        <td>VNĐ</td>
+                                        <td>4000</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Phí vận
+                                            chuyển/kg
+                                        </td>
+                                        <td>VNĐ</td>
+                                        <td>200000</td>
+                                        <td></td>
+                                    </tr>
+                                    <!--    #Thuế-->
+                                    <tr>
+                                        <th rowspan="6"
+                                            style="border: 1px black solid; border-collapse: collapse; text-align:center;vertical-align: middle">
+                                            Thuế
+                                        </th>
+                                        <td>NK CO Form E_Sản
+                                            phẩm 1
+                                        </td>
+                                        <td>5%</td>
+                                        <td>682100</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>NK CO Form E_Sản
+                                            phẩm 2
+                                        </td>
+                                        <td>8%</td>
+                                        <td>2,182,720</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>NK CO Form E_Sản
+                                            phẩm 3
+                                        </td>
+                                        <td>10%</td>
+                                        <td>2,046,300</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>VAT_Sản phẩm 1
+                                        </td>
+                                        <td>8%</td>
+                                        <td>2,182,720</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>VAT_Sản phẩm 2
+                                        </td>
+                                        <td>10%</td>
+                                        <td>2,046,300</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>VAT_Sản phẩm 3
+                                        </td>
+                                        <td>10%</td>
+                                        <td>2,046,300</td>
+                                        <td></td>
+                                    </tr>
+                                    <!--    Báo giá chi tiết-->
+                                    <tr>
+                                        <th rowspan="17"
+                                            style="border: 1px black solid; border-collapse: collapse; text-align:center;vertical-align: middle">
+                                            Báo giá chi tiết
+                                        </th>
+                                        <td colspan="3">Bằng Tường - HN</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Giá trị kê khai
+                                            dự kiến
+                                        </td>
+                                        <td>VND/lô</td>
+                                        <td>33,020,000</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Thuế NK</td>
+                                        <td>VND/lô</td>
+                                        <td>4911120</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Thuế VAT</td>
+                                        <td>VND/lô</td>
+                                        <td>5593220</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Phí ủy thác nhập
+                                            khẩu
+                                        </td>
+                                        <td>VND/lô</td>
+                                        <td>330200</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Phí đầu mục</td>
+                                        <td>VND/lô</td>
+                                        <td>300000</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Phí nâng hạ</td>
+                                        <td>VND/lô</td>
+                                        <td>70000</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cước VC BT-HN
+                                            (kg)
+                                        </td>
+                                        <td>VND/lô</td>
+                                        <td>57400000</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cước VC BT-HN
+                                            (m3)
+                                        </td>
+                                        <td>VND/lô</td>
+                                        <td>40000000</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Giao hàng chặng
+                                            cuối
+                                        </td>
+                                        <td>VND/lô</td>
+                                        <td>1100000</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tổng chi phí vận
+                                            chuyển theo kg
+                                        </td>
+                                        <td>VND/lô</td>
+                                        <td>103354540</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tổng chi phí vận
+                                            chuyển theo m3
+                                        </td>
+                                        <td>VND/lô</td>
+                                        <td>85,954,540</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr style="border: 1px black solid; border-collapse: collapse; page-break-inside:avoid; page-break-after:auto">
+                                        <td>Chi phí theo
+                                            kg
+                                        </td>
+                                        <td>VND/kg</td>
+                                        <td>360,120</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr style="border: 1px black solid; border-collapse: collapse; page-break-inside:avoid; page-break-after:auto">
+                                        <td>Chi phí theo
+                                            m3
+                                        </td>
+                                        <td>VND/m3</td>
+                                        <td>8595</td>
+                                        <td></td>
+                                    </tr>
+                                    <br/>
+                                    <tr>
+                                        <td>Tổng chi phí/sản
+                                            phẩm 1
+                                        </td>
+                                        <td>VND/sản phẩm
+                                        </td>
+                                        <td>16,313,120</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tổng chi phí/sản
+                                            phẩm 2
+                                        </td>
+                                        <td>VND/sản phẩm
+                                        </td>
+                                        <td>16,313,120</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tổng chi phí/sản
+                                            phẩm 3
+                                        </td>
+                                        <td>VND/sản phẩm
+                                        </td>
+                                        <td>16,313,120</td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                                <div class="row">
+                                    <div class="col-2 text-end">
+                                        <p>Liên hệ:</p>
+                                    </div>
+                                    <div class="col-5">
+                                        <p>Chuyên viên: Nguyễn Phương Ngọc Khánh</p>
+                                        <p>SĐT: 0936 670 368</p>
+                                        <p>Email: dpt.pl1207@gmail.com</p>
+                                    </div>
+                                    <div class="col-5">
+                                        <p>CÔNG TY TNHH DPT VINA HOLDINGS</p>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div style="border-bottom: 1px solid black;"/>
+                                </div>
+                                <p>Tỷ giá tệ từ hệ thống:</p>
+                                <p>Tỷ giá usd từ hệ thống:</p>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </body>
+        </html>
+        <!--        <t t-call="web.html_container">-->
+        <!--            <t t-foreach="docs" t-as="doc">-->
+        <!--                <t t-set="company" t-value="doc.company_id"/>-->
+        <!--                <t t-call="web.external_layout_standard">-->
+        <!--                    <div class="page">-->
+        <!--                        <img t-att-src="'dpt_sale_management/static/src/img/header.png'" alt="Header"-->
+        <!--                             style="display:flex; width:100%;top:-20px"/>-->
+        <!--                        &lt;!&ndash;                        <table>&ndash;&gt;-->
+        <!--                        &lt;!&ndash;                            <tr>&ndash;&gt;-->
+        <!--                        &lt;!&ndash;                                <th><img t-att-src="image_data_uri(doc.company_id.logo)" class="mw-100"/></th>&ndash;&gt;-->
+        <!--                        &lt;!&ndash;                                <th class="w-75">&ndash;&gt;-->
+        <!--                        &lt;!&ndash;                                    <h2 style="color:orange">CÔNG TY TNHH DPT VINA HOLDINGS - 棋速</h2>&ndash;&gt;-->
+        <!--                        &lt;!&ndash;                                    <br/>&ndash;&gt;-->
+        <!--                        &lt;!&ndash;                                    <p>Địa chỉ văn phòng: Số 6A, Ngõ 183, Hoàng Văn Thái, Khương Trung, Thanh Xuân, Hà Nội</p>&ndash;&gt;-->
+        <!--                        &lt;!&ndash;                                    <br/>&ndash;&gt;-->
+        <!--                        &lt;!&ndash;                                    <p>MST: 0109366059</p>&ndash;&gt;-->
+        <!--                        &lt;!&ndash;                                </th>&ndash;&gt;-->
+        <!--                        &lt;!&ndash;                            </tr>&ndash;&gt;-->
+        <!--                        &lt;!&ndash;                        </table>&ndash;&gt;-->
+        <!--                        <h2>BÁO GIÁ DỊCH VỤ</h2>-->
+        <!--                        <p>Hiệu lực từ 24/05/2024 đến 31/05/2024 (Thời gian đến 7 ngày)</p>-->
+        <!--                        <p>(Tỷ giá áp dụng mức tỷ giá tại ngày thanh toán)</p>-->
+        <!--                        <p>Khách hàng:</p>-->
+        <!--                        <p>Mặt hàng:</p>-->
+        <!--                        <p>Địa chỉ:</p>-->
+        <!--                        <p>Tỷ giá tệ từ hệ thống:</p>-->
+        <!--                        <p>Tỷ giá usd từ hệ thống:</p>-->
+        <!--                        <p>Cám ơn quý khách đã quan tâm tới dịch vụ của Kỳ Tốc Logistics. Chúng tôi xin được gửi tới quý-->
+        <!--                            khách giá cước cho hàng nhập của quý khách như sau:-->
+        <!--                        </p>-->
+        <!--                        <table border="1">-->
+        <!--                            <tr>-->
+        <!--                                <th>Tên hàng hóa</th>-->
+        <!--                                <th>Số lượng</th>-->
+        <!--                                <th>Chi phí (VND)</th>-->
+        <!--                            </tr>-->
+        <!--                            <tr>-->
+        <!--                                <td>Sản phẩm 1</td>-->
+        <!--                                <td>10</td>-->
+        <!--                                <td>13,642,000</td>-->
+        <!--                            </tr>-->
+        <!--                            <tr>-->
+        <!--                                <td>Sản phẩm 2</td>-->
+        <!--                                <td>20</td>-->
+        <!--                                <td>27,284,000</td>-->
+        <!--                            </tr>-->
+        <!--                            <tr>-->
+        <!--                                <td>Sản phẩm 3</td>-->
+        <!--                                <td>15</td>-->
+        <!--                                <td>20,463,000</td>-->
+        <!--                            </tr>-->
+        <!--                            <tr>-->
+        <!--                                <td>Cước vận chuyển nội địa TQ</td>-->
+        <!--                                <td>544,261</td>-->
+        <!--                                <td></td>-->
+        <!--                            </tr>-->
+        <!--                        </table>-->
+        <!--                        <p>Tổng tiền hàng + cước nội địa TQ: 61,933,261 VND</p>-->
+        <!--                        <p>Thế tích (m3): 10000</p>-->
+        <!--                        <p>Khối lượng (kg): 287</p>-->
+        <!--                        <p>Phí vận chuyến/ m3: 4,000</p>-->
+        <!--                        <p>Phí vận chuyển/ kg: 200,000</p>-->
+        <!--                        <p>Thuế VAT_Sản phẩm 3 (10%): 2,046,300 VND</p>-->
+        <!--                        <p>Thuế NK CO Form E_Sản phẩm 1 (5%): 682,100 VND</p>-->
+        <!--                        <p>Thuế NK CO Form E_Sản phẩm 2 (10%): 2,046,300 VND</p>-->
+        <!--                        <p>Thuế VAT_Sản phẩm 1 (10%): 1,364,200 VND</p>-->
+        <!--                        <p>Thuế VAT_Sản phẩm 2 (8%): 2,182,720 VND</p>-->
+        <!--                        <p>Giá trị kê khai dự kiến VND/lô: 33,020,000</p>-->
+        <!--                        <p>Thuế NK VND/lô: 4,911,120</p>-->
+        <!--                        <p>Thuế VAT VND/lô: 5,593,220</p>-->
+        <!--                        <p>Phí uỷ thác nhập khẩu VND/lô: 330,200</p>-->
+        <!--                        <p>Phí đầu mục VND/lô: 300,000</p>-->
+        <!--                        <p>Phí nâng hạ VND/lô: 700,000</p>-->
+        <!--                        <p>Cước VC BT-HN (kg) VND/lô: 57,400,000</p>-->
+        <!--                        <p>Cước VC BT-HN (m3) VND/lô: 40,000,000</p>-->
+        <!--                        <p>Giao hàng chặng cuối VND/lô: 1,100,000</p>-->
+        <!--                        <p>Tổng chi phí vận chuyển theo kg: 103,354,540 VND</p>-->
+        <!--                        <p>Tổng chi phí vận chuyển theo m3: 85,954,540 VND</p>-->
+        <!--                        <p>Chi phí theo kg: 360,120 VND</p>-->
+        <!--                        <p>Chi phí theo m3: 8,595 VND</p>-->
+        <!--                        <p>Chuyên viên: Nguyễn Phương</p>-->
+        <!--                        <p>Liên hệ: Ngọc Khánh</p>-->
+        <!--                        <p>SĐT: 0936 670 368</p>-->
+        <!--                        <p>Email: dpt.pl1207@gmail.com</p>-->
+        <!--                    </div>-->
+        <!--                </t>-->
+        <!--            </t>-->
+        <!--        </t>-->
     </template>
 </odoo>
