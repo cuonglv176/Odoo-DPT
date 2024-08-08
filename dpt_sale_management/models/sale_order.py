@@ -63,13 +63,13 @@ class SaleOrder(models.Model):
         for r in self.fields_ids:
             if r.env.context.get('onchange_sale_service_ids', False):
                 continue
-            if r.fields_id.type == 'required' and r.value_integer <= 0 and r.fields_type == 'integer':
+            if r.fields_id.type == 'required' and r.fields_type == 'integer' and r.value_integer <= 0:
                 raise ValidationError(_("Please fill required fields!!!"))
-            if r.fields_id.type == 'required' and r.value_char == '' and r.fields_type == 'char':
+            if r.fields_id.type == 'required' and r.fields_type == 'char' and not r.value_char:
                 raise ValidationError(_("Please fill required fields!!!"))
-            if r.fields_id.type == 'required' and not r.value_date and r.fields_type == 'date':
+            if r.fields_id.type == 'required' and r.fields_type == 'date' and not r.value_date:
                 raise ValidationError(_("Please fill required fields!!!"))
-            if r.fields_id.type == 'required' and not r.selection_value_id and r.ields_type == 'selection':
+            if r.fields_id.type == 'required' and r.fields_type == 'selection' and not r.selection_value_id:
                 raise ValidationError(_("Please fill required fields!!!"))
             # if r.fields_id.type == 'options' or (
             #         r.fields_id.type == 'required' and (
@@ -341,7 +341,6 @@ class SaleOrderField(models.Model):
     ], string='Fields type', default='char', related='fields_id.fields_type')
     using_calculation_price = fields.Boolean(related='fields_id.using_calculation_price')
     uom_id = fields.Many2one(related="fields_id.uom_id")
-
 
     def check_required_fields(self):
         for r in self:
