@@ -80,7 +80,7 @@ class AccountPayment(models.Model):
                     'price': sale_service_id.price,
                     'price_cny': sale_service_id.price_cny,
                 }))
-            self.detail_ids = detail_ids_records
+            self.detail_product_ids = detail_product_ids_records
 
     def send_payment_request_request(self):
         category_id = self.env['approval.category'].search([('sequence_code', '=', 'DNTT')])
