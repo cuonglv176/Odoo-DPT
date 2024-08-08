@@ -51,7 +51,7 @@ class SaleOrder(models.Model):
     @api.model
     def create(self, vals_list):
         res = super(SaleOrder, self).create(vals_list)
-        self.check_required_fields()
+        res.check_required_fields()
         return res
 
     def write(self, vals):
@@ -366,7 +366,7 @@ class SaleOrderField(models.Model):
     @api.model
     def create(self, vals_list):
         res = super(SaleOrderField, self).create(vals_list)
-        self.check_required_fields()
+        res.check_required_fields()
         return res
 
     @api.depends('fields_id', 'fields_id.type')
