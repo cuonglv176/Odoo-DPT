@@ -64,12 +64,25 @@ class DptExportImport(models.Model):
     estimated_total_amount = fields.Monetary(string='Estimated total amount', compute="_compute_estimated_total_amount",
                                              currency_field='currency_id')
     actual_total_amount = fields.Monetary(string='Actual total amount', currency_field='currency_id')
-    payment_exchange_rate = fields.Monetary(string='Payment exchange rate', currency_field='currency_id')
+    payment_exchange_rate = fields.Monetary(string='Rate ECUSS', currency_field='currency_id')
     shipping_slip = fields.Char(string='Shipping Slip')
     type_of_vehicle = fields.Char(string='Type of vehicle')
     driver_name = fields.Char(string='Driver Name')
     driver_phone_number = fields.Char(string='Driver Phone Number')
     vehicle_license_plate = fields.Char(string='Vehicle License Plate')
+    declaration_type = fields.Selection([
+        ('usd', 'USD'),
+        ('cny', 'CNY')
+    ], string='Declaration type', default='usd')
+
+    @api.onchange('declaration_type')
+    def onchange_update_value_declaration_type(self):
+        if self.declaration_type == 'usd':
+            exchange_rate = self.env['res.currency'].search([('name', '=', 'USD')])
+            self.payment_exchange_rate = exchange_rate.rate
+        if self.declaration_type == 'cny':
+            exchange_rate = self.env['res.currency'].search([('name', '=', 'CNY')])
+            self.payment_exchange_rate = exchange_rate.rate
 
     @api.onchange('dpt_tax_ecus5')
     def update_dpt_tax_ecus5(self):

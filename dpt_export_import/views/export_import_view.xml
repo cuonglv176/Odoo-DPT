@@ -48,6 +48,7 @@
                             <field name="user_id"/>
                             <field name="total_package"/>
                             <field name="declaration_flow" widget="radio" options="{'horizontal': true}"/>
+                            <field name="declaration_type" widget="radio" options="{'horizontal': true}"/>
                         </group>
                         <group>
                             <field name="date"/>
