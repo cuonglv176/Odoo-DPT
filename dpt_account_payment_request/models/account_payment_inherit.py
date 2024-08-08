@@ -62,6 +62,8 @@ class AccountPayment(models.Model):
         if self.purchase_id:
             detail_ids_records = []
             detail_product_ids_records = []
+            self.detail_product_ids = None
+            self.detail_ids = None
             for order_line in self.purchase_id.order_line:
                 detail_product_ids_records.append((0,0,{
                     'product_id': order_line.product_id.id,
