@@ -13,6 +13,17 @@ class SaleOrder(models.Model):
     declaration_line_count = fields.Integer(string='Declaration count line', compute="_compute_declaration_count")
     is_declaration = fields.Boolean(default=False, compute="_compute_is_declaration", store=True)
 
+    def write(self, vals):
+        res = super(SaleOrder, self).write(vals)
+        res.update_export_import_line()
+        return res
+
+    def update_export_import_line(self):
+        for line in self.order_line:
+            for dpt_export_import_line_id in line.dpt_export_import_line_ids:
+                dpt_export_import_line_id.dpt_uom1_id = line.product_uom
+                dpt_export_import_line_id.dpt_sl1 = line.product_uom_qty
+
     @api.depends('dpt_export_import_line_ids', 'dpt_export_import_line_ids.state')
     def _compute_is_declaration(self):
         for rec in self:
@@ -169,38 +180,39 @@ class SaleOrderLine(models.Model):
     def action_open_dpt_export_import_line(self):
         view_id = self.env.ref('dpt_export_import.view_dpt_export_import_line_form').id
         if not self.dpt_export_import_line_ids:
+            self.dpt_export_import_line_ids.create({
+                'sale_line_id': self.id,
+                'sale_id': self.order_id.id,
+                'product_id': self.product_id.id,
+                'dpt_english_name': self.product_id.dpt_english_name,
+                'dpt_description': self.product_id.dpt_description,
+                'dpt_n_w_kg': self.product_id.dpt_n_w_kg,
+                'dpt_g_w_kg': self.product_id.dpt_g_w_kg,
+                'dpt_uom_id': self.product_id.dpt_uom_id,
+                'dpt_uom2_ecus_id': self.product_id.dpt_uom2_ecus_id,
+                'dpt_uom2_id': self.product_id.dpt_uom2_id,
+                'dpt_price_kd': self.product_id.dpt_price_kd,
+                'import': self.import_tax_rate,
+                'dpt_amount_tax_import': self.import_tax_amount,
+                'dpt_tax_other': self.other_tax_rate,
+                'dpt_amount_tax_other': self.other_tax_amount,
+                'dpt_tax_ecus5': self.product_id.dpt_tax_ecus5,
+                'dpt_tax': self.vat_tax_rate,
+                'dpt_amount_tax': self.vat_tax_amount,
+                'dpt_exchange_rate': self.payment_exchange_rate,
+                'dpt_uom1_id': self.product_uom,
+                'dpt_sl1': self.product_uom_qty,
+                'dpt_sl2': self.product_id.dpt_sl2,
+                'hs_code_id': self.hs_code_id.id,
+            })
             return {
                 'type': 'ir.actions.act_window',
                 'name': _('Update Declaration Line'),
                 'view_mode': 'form',
                 'res_model': 'dpt.export.import.line',
                 'target': 'new',
+                'res_id': self.dpt_export_import_line_ids[0].id,
                 'views': [[view_id, 'form']],
-                'context': {
-                    'default_sale_line_id': self.id,
-                    'default_sale_id': self.order_id.id,
-                    'default_product_id': self.product_id.id,
-                    'default_dpt_english_name': self.product_id.dpt_english_name,
-                    'default_dpt_description': self.product_id.dpt_description,
-                    'default_dpt_n_w_kg': self.product_id.dpt_n_w_kg,
-                    'default_dpt_g_w_kg': self.product_id.dpt_g_w_kg,
-                    'default_dpt_uom_id': self.product_id.dpt_uom_id,
-                    'default_dpt_uom2_ecus_id': self.product_id.dpt_uom2_ecus_id,
-                    'default_dpt_uom2_id': self.product_id.dpt_uom2_id,
-                    'default_dpt_price_kd': self.product_id.dpt_price_kd,
-                    'default_dpt_tax_import': self.import_tax_rate,
-                    'default_dpt_amount_tax_import': self.import_tax_amount,
-                    'default_dpt_tax_other': self.other_tax_rate,
-                    'default_dpt_amount_tax_other': self.other_tax_amount,
-                    'default_dpt_tax_ecus5': self.product_id.dpt_tax_ecus5,
-                    'default_dpt_tax': self.vat_tax_rate,
-                    'default_dpt_amount_tax': self.vat_tax_amount,
-                    'default_dpt_exchange_rate': self.payment_exchange_rate,
-                    'default_dpt_uom1_id': self.product_uom,
-                    'default_dpt_sl1': self.product_uom_qty,
-                    'default_dpt_sl2': self.product_id.dpt_sl2,
-                    'default_hs_code_id': self.hs_code_id.id,
-                },
             }
         else:
             return {
