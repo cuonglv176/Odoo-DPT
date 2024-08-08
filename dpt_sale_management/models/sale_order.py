@@ -59,12 +59,6 @@ class SaleOrder(models.Model):
         self.check_required_fields()
         return res
 
-    fields_type = fields.Selection([
-        ('char', 'Char'),
-        ('integer', 'Integer'),
-        ('date', 'Date'),
-        ('selection', 'Selection'),
-    ], string='Fields type', default='char', related='fields_id.fields_type')
 
     def check_required_fields(self):
         for r in self.fields_ids:
