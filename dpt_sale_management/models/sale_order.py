@@ -66,7 +66,7 @@ class SaleOrder(models.Model):
                 continue
             if r.fields_id.type == 'required' and r.value_integer <= 0 and r.fields_id.fields_type == 'integer':
                 raise ValidationError(_("Please fill required fields!!!"))
-            elif r.fields_id.type == 'required' and not r.value_char and r.fields_id.fields_type == 'char':
+            elif r.fields_id.type == 'required' and r.value_char == '' and r.fields_id.fields_type == 'char':
                 raise ValidationError(_("Please fill required fields!!!"))
             elif r.fields_id.type == 'required' and not r.value_date and r.fields_id.fields_type == 'date':
                 raise ValidationError(_("Please fill required fields!!!"))
