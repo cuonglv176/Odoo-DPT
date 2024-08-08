@@ -93,6 +93,7 @@
                                     <field name="sale_user_id"/>
                                     <field name="sale_id"/>
                                     <field name="lot_code" invisible="1"/>
+                                    <field name="available_picking_ids" invisible="1"/>
                                     <field name="stock_picking_ids" widget="many2many_tags"/>
                                     <field name="partner_id"/>
                                     <field name="product_id"/>
@@ -104,6 +105,7 @@
                                     <field name="dpt_price_usd"/>
                                     <field name="dpt_n_w_kg"/>
                                     <field name="dpt_g_w_kg"/>
+                                    <field name="available_package_ids" invisible="1"/>
                                     <field name="package_ids" widget="many2many_tags"/>
                                     <field name="hs_code_id"/>
                                     <field name="dpt_tax_import" widget="percentage"/>
