@@ -63,6 +63,8 @@ class SaleOrder(models.Model):
         for r in self.fields_ids:
             if r.env.context.get('onchange_sale_service_ids', False):
                 continue
+            if r.fields_id.type == 'required' and r.value_integer <= 0:
+                raise ValidationError(_("Please fill required fields!!!"))
             if r.fields_id.type == 'options' or (
                     r.fields_id.type == 'required' and (
                     r.value_char or r.value_integer > 0 or r.value_date or r.selection_value_id)):
@@ -205,7 +207,8 @@ class SaleOrder(models.Model):
             current_uom_id = sale_service_id.uom_id
             service_price_ids = sale_service_id.service_id.get_active_pricelist(partner_id=self.partner_id)
             if current_uom_id:
-                service_price_ids = service_price_ids.filtered(lambda sp: sp.uom_id.id == current_uom_id.id and (sp.partner_id and sp.partner_id.id == self.partner_id.id or not sp.partner_id))
+                service_price_ids = service_price_ids.filtered(lambda sp: sp.uom_id.id == current_uom_id.id and (
+                            sp.partner_id and sp.partner_id.id == self.partner_id.id or not sp.partner_id))
             if not service_price_ids:
                 continue
             max_price = 0
