@@ -63,16 +63,16 @@ class AccountPayment(models.Model):
             detail_ids_records = []
             detail_product_ids_records = []
             for order_line in self.purchase_id.order_line:
-                detail_ids_records.append((0,0,{
+                detail_product_ids_records.append((0,0,{
                     'product_id': order_line.product_id.id,
                     'description': order_line.name,
                     'qty': order_line.product_qty,
                     'uom_id': order_line.product_uom.id,
                     'price': order_line.price_unit,
                 }))
-            self.detail_ids = detail_ids_records
+            self.detail_product_ids = detail_product_ids_records
             for sale_service_id in self.purchase_id.sale_service_ids:
-                detail_product_ids_records.append((0,0,{
+                detail_ids_records.append((0,0,{
                     'service_id': sale_service_id.service_id.id,
                     'description': '',
                     'qty': sale_service_id.qty,
@@ -80,7 +80,7 @@ class AccountPayment(models.Model):
                     'price': sale_service_id.price,
                     'price_cny': sale_service_id.price_cny,
                 }))
-            self.detail_product_ids = detail_product_ids_records
+            self.detail_ids = detail_ids_records
 
     def send_payment_request_request(self):
         category_id = self.env['approval.category'].search([('sequence_code', '=', 'DNTT')])
