@@ -65,7 +65,7 @@ class SaleOrder(models.Model):
                 continue
             if r.fields_id.type == 'options' or (
                     r.fields_id.type == 'required' and (
-                    r.value_char or r.value_integer or r.value_date or r.selection_value_id)):
+                    r.value_char or r.value_integer > 0 or r.value_date or r.selection_value_id)):
                 continue
             else:
                 raise ValidationError(_("Please fill required fields!!!"))
