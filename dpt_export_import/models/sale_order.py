@@ -192,7 +192,6 @@ class SaleOrderLine(models.Model):
                 'dpt_uom2_ecus_id': self.product_id.dpt_uom2_ecus_id,
                 'dpt_uom2_id': self.product_id.dpt_uom2_id,
                 'dpt_price_kd': self.product_id.dpt_price_kd,
-                'import': self.import_tax_rate,
                 'dpt_amount_tax_import': self.import_tax_amount,
                 'dpt_tax_other': self.other_tax_rate,
                 'dpt_amount_tax_other': self.other_tax_amount,
