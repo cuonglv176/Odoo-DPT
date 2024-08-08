@@ -84,6 +84,11 @@ class DptExportImport(models.Model):
             exchange_rate = self.env['res.currency'].search([('name', '=', 'CNY')])
             self.payment_exchange_rate = exchange_rate.rate
 
+    @api.onchange('payment_exchange_rate')
+    def onchange_update_line_payment_exchange_rate(self):
+        for line_id in self.line_ids:
+            line_id.dpt_exchange_rate = self.payment_exchange_rate
+
     @api.onchange('dpt_tax_ecus5')
     def update_dpt_tax_ecus5(self):
         for line_id in self.line_ids:
