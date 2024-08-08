@@ -65,13 +65,21 @@ class AccountPayment(models.Model):
             self.detail_product_ids = None
             self.detail_ids = None
             for order_line in self.purchase_id.order_line:
+                price_cny = 0
+                price = 0
+                if self.purchase_id.currency_id.name != 'VND':
+                    price_cny = order_line.price_unit
+                    price = order_line.price_unit * self.purchase_id.currency_id.rate
+                else:
+                    price = order_line.price_unit
                 detail_product_ids_records.append((0, 0, {
                     'product_id': order_line.product_id.id,
                     'description': order_line.name,
                     'qty': order_line.product_qty,
                     'uom_id': order_line.product_uom.id,
-                    'price': order_line.price_unit,
-                    'amount_total': order_line.price_unit * order_line.product_qty,
+                    'price': price,
+                    'price_cny': price_cny,
+                    'amount_total': price * order_line.product_qty,
 
                 }))
             self.detail_product_ids = detail_product_ids_records
