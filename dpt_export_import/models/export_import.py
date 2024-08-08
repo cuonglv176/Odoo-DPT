@@ -400,7 +400,22 @@ class DptExportImportLine(models.Model):
 
         })
         self.sale_line_id.write(val_update_sale_line)
+        if 'dpt_uom1_id' in vals or 'dpt_sl1' in vals:
+            update_query = """
+                    UPDATE sale_order_line
+                    SET product_uom = %s, product_uom_qty = %s
+                    WHERE id = %s
+                    """
+            self.env.cr.execute(update_query, (self.dpt_uom1_id.id, self.dpt_sl1, self.sale_line_id.id))
         return res
+
+    # def write(self, vals):
+    #     res = super(SaleOrderLine, self).write(vals)
+    #     if 'product_uom' in vals or 'product_uom_qty' in vals:
+    #         for dpt_export_import_line_id in self.dpt_export_import_line_ids:
+    #             dpt_export_import_line_id.dpt_uom1_id = self.product_uom
+    #             dpt_export_import_line_id.dpt_sl1 = self.product_uom_qty
+    #     return res
 
     @api.onchange('sale_line_id')
     def onchange_sale_order_line(self):
