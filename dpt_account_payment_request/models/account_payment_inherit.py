@@ -54,8 +54,8 @@ class AccountPayment(models.Model):
     ], string='Pháp nhân thanh toán')
     active = fields.Boolean(default=True)
     detail_ids = fields.One2many('dpt.account.payment.detail', 'payment_id', string='Chi tiết thanh toán Dịch vụ')
-    detail_product_ids = fields.One2many('dpt.account.payment.detail', 'payment_product_id', string='Chi tiết thanh toán Sản phẩm')
-
+    detail_product_ids = fields.One2many('dpt.account.payment.detail', 'payment_product_id',
+                                         string='Chi tiết thanh toán Sản phẩm')
 
     @api.onchange('purchase_id')
     def onchange_create_detail(self):
@@ -65,22 +65,30 @@ class AccountPayment(models.Model):
             self.detail_product_ids = None
             self.detail_ids = None
             for order_line in self.purchase_id.order_line:
-                detail_product_ids_records.append((0,0,{
+                detail_product_ids_records.append((0, 0, {
                     'product_id': order_line.product_id.id,
                     'description': order_line.name,
                     'qty': order_line.product_qty,
                     'uom_id': order_line.product_uom.id,
                     'price': order_line.price_unit,
+                    'amount_total': order_line.price_unit * order_line.product_qty,
+
                 }))
             self.detail_product_ids = detail_product_ids_records
             for sale_service_id in self.purchase_id.sale_service_ids:
-                detail_ids_records.append((0,0,{
+                price = 0
+                if sale_service_id.price_cny != 0:
+                    price = sale_service_id.price_cny * sale_service_id.currency_cny_id.rate
+                else:
+                    price = sale_service_id.price
+                detail_ids_records.append((0, 0, {
                     'service_id': sale_service_id.service_id.id,
                     'description': '',
                     'qty': sale_service_id.qty,
                     'uom_id': sale_service_id.uom_id.id,
-                    'price': sale_service_id.price,
+                    'price': price,
                     'price_cny': sale_service_id.price_cny,
+                    'amount_total': price * sale_service_id.qty,
                 }))
             self.detail_ids = detail_ids_records
 
