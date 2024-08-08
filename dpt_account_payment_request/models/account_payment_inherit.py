@@ -89,14 +89,18 @@ class AccountPayment(models.Model):
                     price = sale_service_id.price_cny * sale_service_id.currency_cny_id.rate
                 else:
                     price = sale_service_id.price
+                if sale_service_id.qty == 0:
+                    qty = 1
+                else:
+                    qty = sale_service_id.qty
                 detail_ids_records.append((0, 0, {
                     'service_id': sale_service_id.service_id.id,
                     'description': '',
-                    'qty': sale_service_id.qty,
+                    'qty': qty,
                     'uom_id': sale_service_id.uom_id.id,
                     'price': price,
                     'price_cny': sale_service_id.price_cny,
-                    'amount_total': price * sale_service_id.qty,
+                    'amount_total': price * qty,
                 }))
             self.detail_ids = detail_ids_records
 
