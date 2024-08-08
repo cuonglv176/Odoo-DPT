@@ -343,10 +343,32 @@ class SaleOrderField(models.Model):
     using_calculation_price = fields.Boolean(related='fields_id.using_calculation_price')
     uom_id = fields.Many2one(related="fields_id.uom_id")
 
+
+    def check_required_fields(self):
+        for r in self:
+            if r.env.context.get('onchange_sale_service_ids', False):
+                continue
+            if r.fields_id.type == 'required':
+                if r.value_integer <= 0 and r.fields_id.fields_type == 'integer':
+                    raise ValidationError(_("Please fill required fields!!!"))
+                elif r.value_char == '' and r.fields_id.fields_type == 'char':
+                    raise ValidationError(_("Please fill required fields!!!"))
+                elif not r.value_date and r.fields_id.fields_type == 'date':
+                    raise ValidationError(_("Please fill required fields!!!"))
+                elif not r.selection_value_id and r.fields_id.fields_type == 'selection':
+                    raise ValidationError(_("Please fill required fields!!!"))
+
     def write(self, vals):
         res = super(SaleOrderField, self).write(vals)
         if 'value_char' in vals or 'value_integer' in vals or 'value_date' in vals:
             self.sale_id.action_calculation()
+            self.check_required_fields()
+        return res
+
+    @api.model
+    def create(self, vals_list):
+        res = super(SaleOrderField, self).create(vals_list)
+        self.check_required_fields()
         return res
 
     @api.depends('fields_id', 'fields_id.type')
