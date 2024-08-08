@@ -91,6 +91,14 @@ class SaleOrderLine(models.Model):
         ('cancelled', 'Huỷ')
     ], string='State', default='draft', compute='compute_state_export_import_line')
 
+    @api.model
+    def create(self, vals_list):
+        res = super(SaleOrderLine, self).create(vals_list)
+        for dpt_export_import_line_id in self.dpt_export_import_line_ids:
+            dpt_export_import_line_id.dpt_uom1_id = self.product_uom
+            dpt_export_import_line_id.dpt_sl1 = self.product_uom_qty
+        return res
+
     def write(self, vals):
         res = super(SaleOrderLine, self).write(vals)
         if 'product_uom' in vals or 'product_uom_qty' in vals:
