@@ -10,6 +10,7 @@ class DPTAccountPaymentDetail(models.Model):
     product_id = fields.Many2one('product.product', string='Product')
     service_id = fields.Many2one('dpt.service.management', string='Service')
     payment_id = fields.Many2one('account.payment', string='Payment')
+    payment_product_id = fields.Many2one('account.payment', string='Payment Product')
     description = fields.Html(string='Description')
     qty = fields.Float(string='QTY', default=1)
     uom_id = fields.Many2one('uom.uom', string='Uom')

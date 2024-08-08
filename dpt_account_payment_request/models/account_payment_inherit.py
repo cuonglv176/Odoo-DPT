@@ -53,7 +53,34 @@ class AccountPayment(models.Model):
         ('dpt', 'DPT'),
     ], string='Pháp nhân thanh toán')
     active = fields.Boolean(default=True)
-    detail_ids = fields.One2many('dpt.account.payment.detail', 'payment_id', string='Chi tiết thanh toán')
+    detail_ids = fields.One2many('dpt.account.payment.detail', 'payment_id', string='Chi tiết thanh toán Dịch vụ')
+    detail_product_ids = fields.One2many('dpt.account.payment.detail', 'payment_product_id', string='Chi tiết thanh toán Sản phẩm')
+
+
+    @api.onchange('purchase_id')
+    def onchange_create_detail(self):
+        if self.purchase_id:
+            detail_ids_records = []
+            detail_product_ids_records = []
+            for order_line in self.purchase_id.order_line:
+                detail_ids_records.append((0,0,{
+                    'product_id': order_line.product_id.id,
+                    'description': order_line.name,
+                    'qty': order_line.product_qty,
+                    'uom_id': order_line.product_uom.id,
+                    'price': order_line.price_unit,
+                }))
+            self.detail_ids = detail_ids_records
+            for sale_service_id in self.purchase_id.sale_service_ids:
+                detail_product_ids_records.append((0,0,{
+                    'service_id': sale_service_id.service_id.id,
+                    'description': '',
+                    'qty': sale_service_id.qty,
+                    'uom_id': sale_service_id.uom_id.id,
+                    'price': sale_service_id.price,
+                    'price_cny': sale_service_id.price_cny,
+                }))
+            self.detail_ids = detail_ids_records
 
     def send_payment_request_request(self):
         category_id = self.env['approval.category'].search([('sequence_code', '=', 'DNTT')])
