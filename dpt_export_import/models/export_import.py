@@ -94,7 +94,8 @@ class DptExportImport(models.Model):
         for order_line_id in self.sale_ids:
             if order_line_id.dpt_export_import_line_ids:
                 for dpt_export_import_line_id in order_line_id.dpt_export_import_line_ids:
-                    dpt_export_import_line_id.export_import_id = self.id
+                    if not dpt_export_import_line_id.export_import_id:
+                        dpt_export_import_line_id.export_import_id = self.id
 
     def action_open_declaration_line(self):
         view_id = self.env.ref('dpt_export_import.view_dpt_export_import_line_tree').id
