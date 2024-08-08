@@ -13,17 +13,6 @@ class SaleOrder(models.Model):
     declaration_line_count = fields.Integer(string='Declaration count line', compute="_compute_declaration_count")
     is_declaration = fields.Boolean(default=False, compute="_compute_is_declaration", store=True)
 
-    def write(self, vals):
-        res = super(SaleOrder, self).write(vals)
-        res.update_export_import_line()
-        return res
-
-    def update_export_import_line(self):
-        for line in self.order_line:
-            for dpt_export_import_line_id in line.dpt_export_import_line_ids:
-                dpt_export_import_line_id.dpt_uom1_id = line.product_uom
-                dpt_export_import_line_id.dpt_sl1 = line.product_uom_qty
-
     @api.depends('dpt_export_import_line_ids', 'dpt_export_import_line_ids.state')
     def _compute_is_declaration(self):
         for rec in self:
