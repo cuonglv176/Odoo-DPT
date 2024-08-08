@@ -94,8 +94,13 @@ class SaleOrderLine(models.Model):
     def write(self, vals):
         res = super(SaleOrderLine, self).write(vals)
         for dpt_export_import_line_id in self.dpt_export_import_line_ids:
-            dpt_export_import_line_id.dpt_uom1_id = self.product_uom
-            dpt_export_import_line_id.dpt_sl1 = self.product_uom_qty
+            if 'product_uom' in vals or 'product_uom_qty' in vals:
+                update_query = """
+                        UPDATE dpt_export_import_line
+                        SET dpt_sl1 = %s, dpt_uom1_id = %s
+                        WHERE id = %s
+                        """
+                self.env.cr.execute(update_query, (self.product_uom.id,self.product_uom_qty, dpt_export_import_line_id.id))
         return res
 
     @api.onchange('price_unit_cny', 'product_uom_qty')
