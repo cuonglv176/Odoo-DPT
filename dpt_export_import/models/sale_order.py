@@ -203,6 +203,9 @@ class SaleOrderLine(models.Model):
                 },
             }
         else:
+            for dpt_export_import_line_id in self.dpt_export_import_line_ids:
+                dpt_export_import_line_id.dpt_uom1_id = self.product_uom
+                dpt_export_import_line_id.dpt_sl1 = self.product_uom_qty
             return {
                 'type': 'ir.actions.act_window',
                 'name': _('Update Declaration Line'),
