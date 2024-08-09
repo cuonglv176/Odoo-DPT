@@ -27,6 +27,7 @@
                 <page name="dpt_export_import" string="Import / Export">
                     <field name="order_line">
                         <tree editable="bottom">
+                            <button string="Item" class="btn-primary" name="update_item_description" type="object"/>
                             <field name="sequence" widget="handle"/>
                             <field name="product_id"/>
                             <field name="hs_code_id"/>
