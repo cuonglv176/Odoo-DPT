@@ -93,6 +93,31 @@ class SaleOrderLine(models.Model):
 
     def update_item_description(self):
         view_id = self.env.ref('dpt_export_import.view_dpt_export_import_line_update_item_form').id
+        if not self.dpt_export_import_line_ids:
+            self.dpt_export_import_line_ids.create({
+                'sale_line_id': self.id,
+                'sale_id': self.order_id.id,
+                'product_id': self.product_id.id,
+                'dpt_english_name': self.product_id.dpt_english_name,
+                'dpt_description': self.product_id.dpt_description,
+                'dpt_n_w_kg': self.product_id.dpt_n_w_kg,
+                'dpt_g_w_kg': self.product_id.dpt_g_w_kg,
+                'dpt_uom_id': self.product_id.dpt_uom_id.id,
+                'dpt_uom2_ecus_id': self.product_id.dpt_uom2_ecus_id,
+                'dpt_uom2_id': self.product_id.dpt_uom2_id.id,
+                'dpt_price_kd': self.product_id.dpt_price_kd,
+                'dpt_amount_tax_import': self.import_tax_amount,
+                'dpt_tax_other': self.other_tax_rate,
+                'dpt_amount_tax_other': self.other_tax_amount,
+                'dpt_tax_ecus5': self.product_id.dpt_tax_ecus5,
+                'dpt_tax': self.vat_tax_rate,
+                'dpt_amount_tax': self.vat_tax_amount,
+                'dpt_exchange_rate': self.payment_exchange_rate,
+                'dpt_uom1_id': self.product_uom.id,
+                'dpt_sl1': self.product_uom_qty,
+                'dpt_sl2': self.product_id.dpt_sl2,
+                'hs_code_id': self.hs_code_id.id,
+            })
         if not self.dpt_export_import_line_ids[0].item_description_en:
             self.dpt_export_import_line_ids[0].item_description_en = """
                         <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; width: 100%;">
