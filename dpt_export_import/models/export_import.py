@@ -215,7 +215,8 @@ class DptExportImportLine(models.Model):
     export_import_id = fields.Many2one('dpt.export.import', string='Export import')
     lot_code = fields.Char(string='Lot code')
     sale_id = fields.Many2one('sale.order', string='Sale order')
-    stock_picking_ids = fields.Many2many('stock.picking', string='Lot code', domain="[('id', 'in', available_picking_ids)]")
+    stock_picking_ids = fields.Many2many('stock.picking', string='Lot code',
+                                         domain="[('id', 'in', available_picking_ids)]")
     available_picking_ids = fields.Many2many('stock.picking', string='Lot code',
                                              compute="_compute_domain_picking_package")
     sale_user_id = fields.Many2one('res.users', string='User Sale', related='sale_id.user_id')
@@ -224,7 +225,8 @@ class DptExportImportLine(models.Model):
     product_tmpl_id = fields.Many2one('product.template', string='Product Template',
                                       related='product_id.product_tmpl_id')
     product_id = fields.Many2one('product.product', string='Product')
-    package_ids = fields.Many2many('purchase.order.line.package', string='Package', domain="[('id', 'in', available_package_ids)]")
+    package_ids = fields.Many2many('purchase.order.line.package', string='Package',
+                                   domain="[('id', 'in', available_package_ids)]")
     available_package_ids = fields.Many2many('purchase.order.line.package', string='Package',
                                              compute="_compute_domain_picking_package")
     dpt_english_name = fields.Char(string='English name', tracking=True)
@@ -282,6 +284,72 @@ class DptExportImportLine(models.Model):
         ('cny', 'CNY')
     ], string='Declaration type', default='usd')
     product_history_id = fields.Many2one('dpt.export.import.line', string='Description Selection')
+    is_readonly_item_description = fields.Boolean(string='Chỉ đọc item', default=False)
+    item_description_vn = fields.Html(string='Tem XNK (VN)')
+    item_description_en = fields.Html(string='Tem XNK (EN)')
+
+    def update_item_description(self):
+        view_id = self.env.ref('dpt_export_import.view_dpt_export_import_line_update_item_form').id
+        if not self.item_description_en:
+            self.item_description_en = """
+                        <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+                <tr>
+                    <td>
+                        <strong>Description of goods:</strong> ........<br>
+                        <strong>Model:</strong> ... - <strong>Brand:</strong> ... - <strong>Symbol:</strong> ....<br>
+                        <strong>Dimensions/Capacity/Material</strong><br>
+                        <strong>Manufacturing date:</strong> <br>
+                        <strong>N.W/ G.W:</strong> <br>
+                        <strong>Manufacturer:</strong> ...<br>
+                        <strong>Address:</strong> ...<br><br>
+            
+                        <strong>Importer:</strong> DPT VINA HOLDINGS CO., LTD<br>
+                        <strong>Address:</strong> Apartment NTT38, No. 82, Nguyen Tuan Street, Thanh Xuan Trung Ward, Thanh Xuan District, Hanoi City, Vietnam<br>
+                        <strong>MADE IN CHINA</strong><br><br>
+            
+                        &lt;Mã lô(Chữ)&gt;<br>
+                        &lt;Mã lô (QR)&gt;
+                    </td>
+                </tr>
+            </table>
+
+            """
+        if not self.item_description_vn:
+            self.item_description_vn = """
+                            <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+                    <tr>
+                        <td>
+                            <strong style="color: red;">Tên hàng:</strong> ......<br>
+                            <strong>Kiểu mẫu:</strong> ... - <strong>Nhãn hiệu:</strong> ... - <strong>Ký hiệu:</strong> ....<br>
+                            <strong>Kích thước/Dung tích/Chất liệu</strong><br>
+                            <strong>Ngày/Tháng/năm sản xuất:</strong> <br>
+                            <strong>Trọng lượng:</strong> ......<br>
+                            <strong>Nhà sản xuất:</strong> ......<br>
+                            <strong>Địa chỉ nhà sản xuất:</strong> ......<br><br>
+                
+                            <strong style="color: red;">Nhà nhập khẩu:</strong> CÔNG TY TNHH DPT VINA HOLDINGS<br>
+                            <strong style="color: red;">Địa chỉ nhà nhập khẩu:</strong> Liền kề NTT38, Số 82 Nguyễn Tuân, Phường Thanh Xuân Trung, Quận Thanh Xuân, Thành phố Hà Nội<br>
+                            <strong style="color: red;">XUẤT XỨ: TRUNG QUỐC</strong><br><br>
+                
+                            &lt;Mã lô(Chữ)&gt;<br>
+                            &lt;Mã lô (QR)&gt;
+                        </td>
+                    </tr>
+                </table>
+
+            """
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Update Declaration Line'),
+            'view_mode': 'form',
+            'res_model': 'dpt.export.import.line',
+            'target': 'new',
+            'res_id': self.id,
+            'views': [[view_id, 'form']],
+        }
+
+    def button_confirm_item_description(self):
+        self.is_readonly_item_description = True
 
     @api.depends('sale_id')
     def _compute_domain_picking_package(self):
