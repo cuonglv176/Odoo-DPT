@@ -71,9 +71,9 @@ class DPTSaleServiceManagement(models.Model):
         self.with_context(from_pricelist=True).write({
             'amount_total': 0,
             'price': 0,
-            'qty': 0,
+            'qty': 1,
             'pricelist_item_id': None,
             'price_in_pricelist': 0,
-            'compute_value': 0,
+            'compute_value': 1,
             'compute_uom_id': None,
         })
