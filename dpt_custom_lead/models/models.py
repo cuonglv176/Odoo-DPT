@@ -201,9 +201,9 @@ class RESPARTNER(models.Model):
     def name_get(self):
         res = []
         for partner in self:
-            phone = partner.phone and partner.phone or ''
+            dpt_user_name = partner.dpt_user_name and partner.dpt_user_name or ''
             name = partner.name and partner.name or ''
-            res.append((partner.id, f"{phone}-{name}"))
+            res.append((partner.id, f"{dpt_user_name}-{name}"))
         return res
 
     @api.model
