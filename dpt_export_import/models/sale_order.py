@@ -93,8 +93,8 @@ class SaleOrderLine(models.Model):
 
     def update_item_description(self):
         view_id = self.env.ref('dpt_export_import.view_dpt_export_import_line_update_item_form').id
-        if not self.item_description_en:
-            self.item_description_en = """
+        if not self.dpt_export_import_line_ids[0].item_description_en:
+            self.dpt_export_import_line_ids[0].item_description_en = """
                         <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; width: 100%;">
                 <tr>
                     <td>
@@ -117,8 +117,8 @@ class SaleOrderLine(models.Model):
             </table>
 
             """
-        if not self.item_description_vn:
-            self.item_description_vn = """
+        if not self.dpt_export_import_line_ids[0].item_description_vn:
+            self.dpt_export_import_line_ids[0].item_description_vn = """
                             <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; width: 100%;">
                     <tr>
                         <td>
