@@ -46,7 +46,7 @@ class BaseAutomation(models.Model):
             field_data = getattr(record_id, field.name)
             if not field_data:
                 continue
-            if field_data._name == 'res.user':
+            if field_data._name == 'res.users':
                 res_partner_ids += field_data.partner_id
                 continue
             if res_partner_ids and field_data:
