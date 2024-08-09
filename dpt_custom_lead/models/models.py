@@ -211,7 +211,7 @@ class RESPARTNER(models.Model):
         args = args or []
         domain = []
         if name:
-            domain = ['|', ('phone', operator, name), ('name', operator, name)]
+            domain = ['|','|', ('phone', operator, name), ('name', operator, name), ('dpt_user_name', operator, name)]
         partner = self.search(domain + args, limit=limit)
         return partner.name_get()
 
