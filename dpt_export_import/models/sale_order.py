@@ -91,6 +91,66 @@ class SaleOrderLine(models.Model):
         ('cancelled', 'Huỷ')
     ], string='State', default='draft', compute='compute_state_export_import_line')
 
+    def update_item_description(self):
+        view_id = self.env.ref('dpt_export_import.view_dpt_export_import_line_update_item_form').id
+        if not self.item_description_en:
+            self.item_description_en = """
+                        <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+                <tr>
+                    <td>
+                        <strong>Description of goods:</strong> ........<br>
+                        <strong>Model:</strong> ... - <strong>Brand:</strong> ... - <strong>Symbol:</strong> ....<br>
+                        <strong>Dimensions/Capacity/Material</strong><br>
+                        <strong>Manufacturing date:</strong> <br>
+                        <strong>N.W/ G.W:</strong> <br>
+                        <strong>Manufacturer:</strong> ...<br>
+                        <strong>Address:</strong> ...<br><br>
+
+                        <strong>Importer:</strong> DPT VINA HOLDINGS CO., LTD<br>
+                        <strong>Address:</strong> Apartment NTT38, No. 82, Nguyen Tuan Street, Thanh Xuan Trung Ward, Thanh Xuan District, Hanoi City, Vietnam<br>
+                        <strong>MADE IN CHINA</strong><br><br>
+
+                        &lt;Mã lô(Chữ)&gt;<br>
+                        &lt;Mã lô (QR)&gt;
+                    </td>
+                </tr>
+            </table>
+
+            """
+        if not self.item_description_vn:
+            self.item_description_vn = """
+                            <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+                    <tr>
+                        <td>
+                            <strong style="color: red;">Tên hàng:</strong> ......<br>
+                            <strong>Kiểu mẫu:</strong> ... - <strong>Nhãn hiệu:</strong> ... - <strong>Ký hiệu:</strong> ....<br>
+                            <strong>Kích thước/Dung tích/Chất liệu</strong><br>
+                            <strong>Ngày/Tháng/năm sản xuất:</strong> <br>
+                            <strong>Trọng lượng:</strong> ......<br>
+                            <strong>Nhà sản xuất:</strong> ......<br>
+                            <strong>Địa chỉ nhà sản xuất:</strong> ......<br><br>
+
+                            <strong style="color: red;">Nhà nhập khẩu:</strong> CÔNG TY TNHH DPT VINA HOLDINGS<br>
+                            <strong style="color: red;">Địa chỉ nhà nhập khẩu:</strong> Liền kề NTT38, Số 82 Nguyễn Tuân, Phường Thanh Xuân Trung, Quận Thanh Xuân, Thành phố Hà Nội<br>
+                            <strong style="color: red;">XUẤT XỨ: TRUNG QUỐC</strong><br><br>
+
+                            &lt;Mã lô(Chữ)&gt;<br>
+                            &lt;Mã lô (QR)&gt;
+                        </td>
+                    </tr>
+                </table>
+
+            """
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Update Declaration Line'),
+            'view_mode': 'form',
+            'res_model': 'dpt.export.import.line',
+            'target': 'new',
+            'res_id': self.dpt_export_import_line_ids[0].id,
+            'views': [[view_id, 'form']],
+        }
+
     def write(self, vals):
         res = super(SaleOrderLine, self).write(vals)
         if 'product_uom' in vals or 'product_uom_qty' in vals:
