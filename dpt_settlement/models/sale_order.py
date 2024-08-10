@@ -58,8 +58,6 @@ def _create_invoices(self, grouped=False, final=False, date=None):
                     'price_unit': 0 - deposit
                 }))
 
-            invoice_vals['invoice_line_ids'] += invoice_line_vals
-
         if sum(order.sale_service_ids.mapped('amount_total')) != 0:
             invoice_line_vals.append(Command.create(
                 {
@@ -69,8 +67,6 @@ def _create_invoices(self, grouped=False, final=False, date=None):
                     'quantity': 1,
                     'price_unit': sum(order.sale_service_ids.mapped('amount_total'))
                 }))
-
-            invoice_vals['invoice_line_ids'] += invoice_line_vals
 
         if not any(not line.display_type for line in invoiceable_lines):
             invoice_vals_list.append(invoice_vals)

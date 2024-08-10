@@ -21,12 +21,12 @@
             <button name="action_preview_sale_order" position="attributes">
                 <attribute name="invisible">1</attribute>
             </button>
-            <button name="action_unlock" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </button>
-            <button name="action_lock" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </button>
+<!--            <button name="action_unlock" position="attributes">-->
+<!--                <attribute name="invisible">0</attribute>-->
+<!--            </button>-->
+<!--            <button name="action_lock" position="attributes">-->
+<!--                <attribute name="invisible">0</attribute>-->
+<!--            </button>-->
             <page name="optional_products" position="attributes">
                 <attribute name="invisible">1</attribute>
             </page>
