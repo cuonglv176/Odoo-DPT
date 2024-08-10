@@ -5,9 +5,8 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="dpt_sale_management.view_sale_order_inherit_form"/>
         <field name="arch" type="xml">
-            <button id="create_invoice" position="after">
-                <button name="action_register_payment" string="Settlement Order" type="object" class="btn-primary"
-                        data-hotkey="i"/>
+            <button id="create_invoice" position="attributes">
+                <attribute name="string">Tất toán đơn hàng</attribute>
             </button>
         </field>
     </record>

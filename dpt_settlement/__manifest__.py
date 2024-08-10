@@ -8,5 +8,6 @@
     'depends': ['dpt_sale_management', 'sale', 'account'],
     'data': [
         'views/sale_order.xml',
+        'views/product.xml',
     ],
 }
