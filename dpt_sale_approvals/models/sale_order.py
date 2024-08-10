@@ -14,6 +14,13 @@ class SaleOrder(models.Model):
         ('approved', 'Approved'),
     ], string='Status', default='no_price', compute="_compute_price_status", stote=True)
 
+    def action_confirm(self):
+        res = super(SaleOrder, self).action_confirm()
+        for order_id in self:
+            if order_id.sale_service_ids.filtered(lambda ss: ss.approval_id.status in ('wait_approve')):
+                raise ValidationError(_('Please approve new price!'))
+        return res
+
     @api.depends('approval_ids', 'approval_ids.request_status')
     def _compute_price_status(self):
         for rec in self:
@@ -119,7 +126,7 @@ class SaleOrder(models.Model):
                     if r.type_value == 'numberic':
                         diff_value = rec.new_price - rec.price
                     elif r.type_value == 'rate':
-                        diff_value = (rec.new_price - rec.price)/rec.price * 100
+                        diff_value = (rec.new_price - rec.price) / rec.price * 100
                     else:
                         diff_value = 0
                     if r.type_compare == 'equal' and diff_value == 0:
