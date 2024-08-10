@@ -8,7 +8,8 @@ class SaleOrder(models.Model):
 
     deposit_ids = fields.One2many('account.payment', 'sale_id', string='Deposit')
     deposit_count = fields.Integer(string='Deposit count', compute="_compute_deposit_count")
-    deposit_amount_total = fields.Float(string='Deposit Amount', compute="_compute_deposit_count")
+    deposit_amount_total = fields.Monetary(string='Deposit Amount', compute="_compute_deposit_count",
+                                           currency_field='currency_id')
 
     def action_open_deposit(self):
         view_id = self.env.ref('account.view_account_payment_tree').id
