@@ -19,7 +19,7 @@ class DPTSaleServiceManagement(models.Model):
     def write(self, vals):
         old_price = self.price
         rec = super(DPTSaleServiceManagement, self).write(vals)
-        if self.env.context.get('check_price', False):
+        if self.env.context.get('check_price', False) and not self.env.context.get('from_pricelist', False):
             if 'price' in vals:
                 new_price = self.price
                 if old_price > new_price:
