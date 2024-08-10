@@ -15,7 +15,7 @@ class ApprovalRequest(models.Model):
 
     def action_approve(self, approver=None):
         res = super(ApprovalRequest, self).action_approve(approver)
-        approver = self.approver_ids.filtered(lambda sp: sp.request_status == 'pending')
+        approver = self.approver_ids.filtered(lambda sp: sp.status == 'approved')
         # if not approver or len(approver) == 1:
         if self.request_status == 'approved':
             self = self.with_context({'final_approved': True})

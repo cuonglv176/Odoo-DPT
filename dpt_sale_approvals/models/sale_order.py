@@ -17,7 +17,7 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
         for order_id in self:
-            if order_id.sale_service_ids.filtered(lambda ss: ss.approval_id.status in ('wait_approve')):
+            if order_id.approval_ids.filtered(lambda approval: approval.request_status in ('pending', 'new')):
                 raise ValidationError(_('Please approve new price!'))
         return res
 
