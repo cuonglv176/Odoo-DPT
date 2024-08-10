@@ -14,5 +14,5 @@ class ProductTemplate(models.Model):
         for product in self:
             product_deposit_id = self.env['product.template'].search(
                 [('is_product_deposit', '=', True), ('id', '!=', product.id)])
-            if product_deposit_id:
+            if len(product_deposit_id) > 1:
                 raise ValidationError(_("Chỉ có một sản phẩm cọc"))
