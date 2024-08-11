@@ -122,10 +122,8 @@ class StockPicking(models.Model):
         res.action_confirm()
         return res
 
-    @api.onchange('package_ids')
-    def onchange_package(self):
-        if not self._origin.id:
-            return
+    @api.constrains('package_ids')
+    def constrains_package(self):
         # remove package move
         package_move_ids = self.move_ids_without_package - self.move_ids_product
         package_move_ids.unlink()

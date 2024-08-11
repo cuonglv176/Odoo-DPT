@@ -64,12 +64,12 @@
                     </field>
                 </page>
                 <page name="fields_ids_page" string="Các trường thông tin">
-                    <field name="fields_ids">
-                        <tree editable="bottom" default_order="sequence desc" decoration-danger="type=='required'">
+                    <field name="fields_ids" readonly="0" >
+                        <tree editable="bottom" default_order="sequence desc" decoration-danger="type=='required'" delete="0" create="0">
                             <field name="using_calculation_price" column_invisible="1"/>
                             <field name="sequence" widget="handle"/>
                             <field name="service_id"/>
-                            <field name="fields_id"/>
+                            <field name="fields_id" readonly="1"/>
                             <field name="type" column_invisible="1"/>
                             <field name="fields_type" column_invisible="1"/>
                             <field name="value_char" invisible="fields_type != 'char'"

@@ -52,7 +52,57 @@ class AccountPayment(models.Model):
         ('ltv', 'LTV'),
         ('dpt', 'DPT'),
     ], string='Pháp nhân thanh toán')
-    active = fields.Boolean(default=True )
+    active = fields.Boolean(default=True)
+    detail_ids = fields.One2many('dpt.account.payment.detail', 'payment_id', string='Chi tiết thanh toán Dịch vụ')
+    detail_product_ids = fields.One2many('dpt.account.payment.detail', 'payment_product_id',
+                                         string='Chi tiết thanh toán Sản phẩm')
+
+    @api.onchange('purchase_id')
+    def onchange_create_detail(self):
+        if self.purchase_id:
+            detail_ids_records = []
+            detail_product_ids_records = []
+            self.detail_product_ids = None
+            self.detail_ids = None
+            for order_line in self.purchase_id.order_line:
+                price_cny = 0
+                price = 0
+                if self.purchase_id.currency_id.name != 'VND':
+                    price_cny = order_line.price_unit
+                    price = order_line.price_unit * self.purchase_id.currency_id.rate
+                else:
+                    price = order_line.price_unit
+                detail_product_ids_records.append((0, 0, {
+                    'product_id': order_line.product_id.id,
+                    'description': order_line.name,
+                    'qty': order_line.product_qty,
+                    'uom_id': order_line.product_uom.id,
+                    'price': price,
+                    'price_cny': price_cny,
+                    'amount_total': price * order_line.product_qty,
+
+                }))
+            self.detail_product_ids = detail_product_ids_records
+            for sale_service_id in self.purchase_id.sale_service_ids:
+                price = 0
+                if sale_service_id.price_cny != 0:
+                    price = sale_service_id.price_cny * sale_service_id.currency_cny_id.rate
+                else:
+                    price = sale_service_id.price
+                if sale_service_id.qty == 0:
+                    qty = 1
+                else:
+                    qty = sale_service_id.qty
+                detail_ids_records.append((0, 0, {
+                    'service_id': sale_service_id.service_id.id,
+                    'description': '',
+                    'qty': qty,
+                    'uom_id': sale_service_id.uom_id.id,
+                    'price': price,
+                    'price_cny': sale_service_id.price_cny,
+                    'amount_total': price * qty,
+                }))
+            self.detail_ids = detail_ids_records
 
     def send_payment_request_request(self):
         category_id = self.env['approval.category'].search([('sequence_code', '=', 'DNTT')])

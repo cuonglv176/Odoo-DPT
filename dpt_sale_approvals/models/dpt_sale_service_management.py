@@ -16,6 +16,16 @@ class DPTSaleServiceManagement(models.Model):
     approval_id = fields.Many2one('approval.request', string='Approval Change Price')
     is_edit_new_price = fields.Boolean(string='Edit new price', compute="_compute_is_edit_new_price", default=False)
 
+    def write(self, vals):
+        old_price = self.price
+        rec = super(DPTSaleServiceManagement, self).write(vals)
+        if self.env.context.get('check_price', False) and not self.env.context.get('from_pricelist', False):
+            if 'price' in vals:
+                new_price = self.price
+                if old_price > new_price:
+                    raise ValidationError(_(f"Giá mới {new_price} không được nhỏ hơn giá cũ {old_price}!!"))
+        return rec
+
     @api.depends('approval_id')
     def _compute_is_edit_new_price(self):
         for rec in self:
@@ -60,4 +70,7 @@ class DPTSaleServiceManagement(models.Model):
     @api.depends('new_price', 'qty')
     def _compute_new_amount_total(self):
         for item in self:
-            item.new_amount_total = item.compute_value * item.new_price
+            if item.compute_value > 0:
+                item.new_amount_total = item.compute_value * item.new_price
+            else:
+                item.new_amount_total = item.new_price

@@ -8,7 +8,9 @@
             <form string="Export import Form">
                 <header>
                     <field name="state" widget="statusbar"
-                           statusbar_visible="draft,declared,released,consulted,post_control,cancelled"/>
+                           statusbar_visible="draft,draft_declaration,declared,released,consulted,post_control,cancelled"/>
+                    <button string="Tờ Khai Nháp" type="object" name="action_draft_declaration" class="btn-primary"
+                            invisible="state == 'draft_declaration'"/>
                     <button string="Declared" type="object" name="action_declared" class="btn-primary"
                             invisible="state == 'declared'"/>
                     <button string="Released" type="object" name="action_released" class="btn-primary"
@@ -46,6 +48,7 @@
                             <field name="user_id"/>
                             <field name="total_package"/>
                             <field name="declaration_flow" widget="radio" options="{'horizontal': true}"/>
+                            <field name="declaration_type" widget="radio" options="{'horizontal': true}"/>
                         </group>
                         <group>
                             <field name="date"/>
@@ -93,7 +96,9 @@
                                            decoration-success="state in ('eligible','declared','released','consulted','post_control')"/>
                                     <field name="sale_user_id"/>
                                     <field name="sale_id"/>
-                                    <field name="lot_code"/>
+                                    <field name="lot_code" invisible="1"/>
+                                    <field name="available_picking_ids" invisible="1"/>
+                                    <field name="stock_picking_ids" widget="many2many_tags"/>
                                     <field name="partner_id"/>
                                     <field name="product_id"/>
                                     <field name="dpt_english_name"/>
@@ -104,6 +109,7 @@
                                     <field name="dpt_price_usd"/>
                                     <field name="dpt_n_w_kg"/>
                                     <field name="dpt_g_w_kg"/>
+                                    <field name="available_package_ids" invisible="1"/>
                                     <field name="package_ids" widget="many2many_tags"/>
                                     <field name="hs_code_id"/>
                                     <field name="dpt_tax_import"/>

@@ -34,20 +34,10 @@ class BaseAutomation(models.Model):
     def _execute_notification_web(self, record_id):
         res_partner_ids = self.get_partner_by_records(record_id)
         if record_id:
-            try:
-                # Nếu `record_id` là từ điển và có khóa 'record'
-                if isinstance(record_id, dict) and 'record' in record_id:
-                    formatted_message = self.message_notification.format(record=record_id['record'])
-                else:
-                    # Xử lý trường hợp `record_id` không phải là từ điển hoặc không có khóa 'record'
-                    formatted_message = "Record ID is not valid or missing 'record' key"
-            except KeyError as e:
-                formatted_message = f"Key error: {str(e)}"
-
             self.env['mail.message']._push_system_notification(
                 {self.create_uid.id},
-                res_partner_ids.ids, formatted_message,
-                '{result.model_id.model}', record_id.id
+                res_partner_ids.ids, self.message_notification.format(record=record_id),
+                self.model_id.model, record_id.id
             )
 
     def get_partner_by_records(self, record_id):
@@ -56,7 +46,7 @@ class BaseAutomation(models.Model):
             field_data = getattr(record_id, field.name)
             if not field_data:
                 continue
-            if field_data._name == 'res.user':
+            if field_data._name == 'res.users':
                 res_partner_ids += field_data.partner_id
                 continue
             if res_partner_ids and field_data:

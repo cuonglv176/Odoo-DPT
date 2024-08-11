@@ -30,6 +30,10 @@ def _create_invoices(self, grouped=False, final=False, date=None):
     if not product_service_id:
         raise ValidationError(_("No product service found."))
 
+    product_deposit_id = self.env['product.product'].sudo().search([('is_product_deposit', '=', True)], limit=1)
+    if not product_deposit_id:
+        raise ValidationError(_("No product deposit found."))
+
     # 1) Create invoices.
     invoice_vals_list = []
     invoice_item_sequence = 0  # Incremental sequencing to keep the lines order on the invoice.
@@ -39,7 +43,21 @@ def _create_invoices(self, grouped=False, final=False, date=None):
         invoice_vals = order._prepare_invoice()
         invoiceable_lines = order._get_invoiceable_lines(final)
 
+        # DEPOSIT
         invoice_line_vals = []
+        deposit = 0
+        for deposit_id in self.deposit_ids:
+            if deposit_id.state == 'posted':
+                deposit += deposit_id.amount
+        if deposit > 0:
+            invoice_line_vals.append(Command.create(
+                {
+                    'product_id': product_deposit_id.id,
+                    'display_type': 'product',
+                    'quantity': 1,
+                    'price_unit': 0 - deposit
+                }))
+
         if sum(order.sale_service_ids.mapped('amount_total')) != 0:
             invoice_line_vals.append(Command.create(
                 {
@@ -49,8 +67,6 @@ def _create_invoices(self, grouped=False, final=False, date=None):
                     'quantity': 1,
                     'price_unit': sum(order.sale_service_ids.mapped('amount_total'))
                 }))
-
-            invoice_vals['invoice_line_ids'] += invoice_line_vals
 
         if not any(not line.display_type for line in invoiceable_lines):
             invoice_vals_list.append(invoice_vals)
@@ -219,17 +235,23 @@ SaleOrder._create_invoices = _create_invoices
 class SaleOrderInherit(models.Model):
     _inherit = 'sale.order'
 
-    def action_register_payment(self):
-        if not self.invoice_ids:
-            payment_inv_id = self.env['sale.advance.payment.inv'].create({
-                'advance_payment_method': 'delivered',
-            })
-            payment_inv_id._create_invoices(self)
-        draft_invoice_id = self.invoice_ids.filtered(lambda invoice: invoice.state == 'draft')
-        draft_invoice_id.action_post()
-        # đối soát
-        action = self.invoice_ids.action_register_payment()
-        return action
+    # def action_register_payment(self):
+    #     if not self.invoice_ids:
+    #         payment_inv_id = self.env['sale.advance.payment.inv'].create({
+    #             'advance_payment_method': 'delivered',
+    #         })
+    #         payment_inv_id._create_invoices(self)
+    #     draft_invoice_id = self.invoice_ids.filtered(lambda invoice: invoice.state == 'draft')
+    #     # đối soát
+    #     action = self.invoice_ids.action_register_payment()
+    #     return action
+    def create_invoice(self):
+        res = super(SaleOrder, self).create_invoice()
+        deposit = 0
+        for deposit_id in self.deposit_ids:
+            if deposit_id.state == 'posted':
+                deposit += deposit_id.amount
+        return res
 
     @api.depends('order_line.invoice_lines', 'sale_service_ids')
     def _get_invoiced(self):

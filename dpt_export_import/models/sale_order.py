@@ -91,6 +91,99 @@ class SaleOrderLine(models.Model):
         ('cancelled', 'Huỷ')
     ], string='State', default='draft', compute='compute_state_export_import_line')
 
+    def update_item_description(self):
+        view_id = self.env.ref('dpt_export_import.view_dpt_export_import_line_update_item_form').id
+        if not self.dpt_export_import_line_ids:
+            self.dpt_export_import_line_ids.create({
+                'sale_line_id': self.id,
+                'sale_id': self.order_id.id,
+                'product_id': self.product_id.id,
+                'dpt_english_name': self.product_id.dpt_english_name,
+                'dpt_description': self.product_id.dpt_description,
+                'dpt_n_w_kg': self.product_id.dpt_n_w_kg,
+                'dpt_g_w_kg': self.product_id.dpt_g_w_kg,
+                'dpt_uom_id': self.product_id.dpt_uom_id.id,
+                'dpt_uom2_ecus_id': self.product_id.dpt_uom2_ecus_id,
+                'dpt_uom2_id': self.product_id.dpt_uom2_id.id,
+                'dpt_price_kd': self.product_id.dpt_price_kd,
+                'dpt_amount_tax_import': self.import_tax_amount,
+                'dpt_tax_other': self.other_tax_rate,
+                'dpt_amount_tax_other': self.other_tax_amount,
+                'dpt_tax_ecus5': self.product_id.dpt_tax_ecus5,
+                'dpt_tax': self.vat_tax_rate,
+                'dpt_amount_tax': self.vat_tax_amount,
+                'dpt_exchange_rate': self.payment_exchange_rate,
+                'dpt_uom1_id': self.product_uom.id,
+                'dpt_sl1': self.product_uom_qty,
+                'dpt_sl2': self.product_id.dpt_sl2,
+                'hs_code_id': self.hs_code_id.id,
+            })
+        if not self.dpt_export_import_line_ids[0].item_description_en:
+            self.dpt_export_import_line_ids[0].item_description_en = """
+                        <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+                <tr>
+                    <td>
+                        <strong>Description of goods:</strong> ........<br>
+                        <strong>Model:</strong> ... - <strong>Brand:</strong> ... - <strong>Symbol:</strong> ....<br>
+                        <strong>Dimensions/Capacity/Material</strong><br>
+                        <strong>Manufacturing date:</strong> <br>
+                        <strong>N.W/ G.W:</strong> <br>
+                        <strong>Manufacturer:</strong> ...<br>
+                        <strong>Address:</strong> ...<br><br>
+
+                        <strong>Importer:</strong> DPT VINA HOLDINGS CO., LTD<br>
+                        <strong>Address:</strong> Apartment NTT38, No. 82, Nguyen Tuan Street, Thanh Xuan Trung Ward, Thanh Xuan District, Hanoi City, Vietnam<br>
+                        <strong>MADE IN CHINA</strong><br><br>
+
+                        &lt;Mã lô(Chữ)&gt;<br>
+                        &lt;Mã lô (QR)&gt;
+                    </td>
+                </tr>
+            </table>
+
+            """
+        if not self.dpt_export_import_line_ids[0].item_description_vn:
+            self.dpt_export_import_line_ids[0].item_description_vn = """
+                            <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+                    <tr>
+                        <td>
+                            <strong style="color: red;">Tên hàng:</strong> ......<br>
+                            <strong>Kiểu mẫu:</strong> ... - <strong>Nhãn hiệu:</strong> ... - <strong>Ký hiệu:</strong> ....<br>
+                            <strong>Kích thước/Dung tích/Chất liệu</strong><br>
+                            <strong>Ngày/Tháng/năm sản xuất:</strong> <br>
+                            <strong>Trọng lượng:</strong> ......<br>
+                            <strong>Nhà sản xuất:</strong> ......<br>
+                            <strong>Địa chỉ nhà sản xuất:</strong> ......<br><br>
+
+                            <strong style="color: red;">Nhà nhập khẩu:</strong> CÔNG TY TNHH DPT VINA HOLDINGS<br>
+                            <strong style="color: red;">Địa chỉ nhà nhập khẩu:</strong> Liền kề NTT38, Số 82 Nguyễn Tuân, Phường Thanh Xuân Trung, Quận Thanh Xuân, Thành phố Hà Nội<br>
+                            <strong style="color: red;">XUẤT XỨ: TRUNG QUỐC</strong><br><br>
+
+                            &lt;Mã lô(Chữ)&gt;<br>
+                            &lt;Mã lô (QR)&gt;
+                        </td>
+                    </tr>
+                </table>
+
+            """
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Update Declaration Line'),
+            'view_mode': 'form',
+            'res_model': 'dpt.export.import.line',
+            'target': 'new',
+            'res_id': self.dpt_export_import_line_ids[0].id,
+            'views': [[view_id, 'form']],
+        }
+
+    def write(self, vals):
+        res = super(SaleOrderLine, self).write(vals)
+        if 'product_uom' in vals or 'product_uom_qty' in vals:
+            for dpt_export_import_line_id in self.dpt_export_import_line_ids:
+                dpt_export_import_line_id.dpt_uom1_id = self.product_uom
+                dpt_export_import_line_id.dpt_sl1 = self.product_uom_qty
+        return res
+
     @api.onchange('price_unit_cny', 'product_uom_qty')
     def onchange_price_unit_cny(self):
         if self.price_unit_cny != 0:
@@ -161,38 +254,38 @@ class SaleOrderLine(models.Model):
     def action_open_dpt_export_import_line(self):
         view_id = self.env.ref('dpt_export_import.view_dpt_export_import_line_form').id
         if not self.dpt_export_import_line_ids:
+            self.dpt_export_import_line_ids.create({
+                'sale_line_id': self.id,
+                'sale_id': self.order_id.id,
+                'product_id': self.product_id.id,
+                'dpt_english_name': self.product_id.dpt_english_name,
+                'dpt_description': self.product_id.dpt_description,
+                'dpt_n_w_kg': self.product_id.dpt_n_w_kg,
+                'dpt_g_w_kg': self.product_id.dpt_g_w_kg,
+                'dpt_uom_id': self.product_id.dpt_uom_id.id,
+                'dpt_uom2_ecus_id': self.product_id.dpt_uom2_ecus_id,
+                'dpt_uom2_id': self.product_id.dpt_uom2_id.id,
+                'dpt_price_kd': self.product_id.dpt_price_kd,
+                'dpt_amount_tax_import': self.import_tax_amount,
+                'dpt_tax_other': self.other_tax_rate,
+                'dpt_amount_tax_other': self.other_tax_amount,
+                'dpt_tax_ecus5': self.product_id.dpt_tax_ecus5,
+                'dpt_tax': self.vat_tax_rate,
+                'dpt_amount_tax': self.vat_tax_amount,
+                'dpt_exchange_rate': self.payment_exchange_rate,
+                'dpt_uom1_id': self.product_uom.id,
+                'dpt_sl1': self.product_uom_qty,
+                'dpt_sl2': self.product_id.dpt_sl2,
+                'hs_code_id': self.hs_code_id.id,
+            })
             return {
                 'type': 'ir.actions.act_window',
                 'name': _('Update Declaration Line'),
                 'view_mode': 'form',
                 'res_model': 'dpt.export.import.line',
                 'target': 'new',
+                'res_id': self.dpt_export_import_line_ids[0].id,
                 'views': [[view_id, 'form']],
-                'context': {
-                    'default_sale_line_id': self.id,
-                    'default_sale_id': self.order_id.id,
-                    'default_product_id': self.product_id.id,
-                    'default_dpt_english_name': self.product_id.dpt_english_name,
-                    'default_dpt_description': self.product_id.dpt_description,
-                    'default_dpt_n_w_kg': self.product_id.dpt_n_w_kg,
-                    'default_dpt_g_w_kg': self.product_id.dpt_g_w_kg,
-                    'default_dpt_uom_id': self.product_id.dpt_uom_id,
-                    'default_dpt_uom2_ecus_id': self.product_id.dpt_uom2_ecus_id,
-                    'default_dpt_uom2_id': self.product_id.dpt_uom2_id,
-                    'default_dpt_price_kd': self.product_id.dpt_price_kd,
-                    'default_dpt_tax_import': self.import_tax_rate,
-                    'default_dpt_amount_tax_import': self.import_tax_amount,
-                    'default_dpt_tax_other': self.other_tax_rate,
-                    'default_dpt_amount_tax_other': self.other_tax_amount,
-                    'default_dpt_tax_ecus5': self.product_id.dpt_tax_ecus5,
-                    'default_dpt_tax': self.vat_tax_rate,
-                    'default_dpt_amount_tax': self.vat_tax_amount,
-                    'default_dpt_exchange_rate': self.payment_exchange_rate,
-                    'default_dpt_uom1_id': self.product_uom,
-                    'default_dpt_sl1': self.product_uom_qty,
-                    'default_dpt_sl2': self.product_id.dpt_sl2,
-                    'default_hs_code_id': self.hs_code_id.id,
-                },
             }
         else:
             return {

@@ -51,7 +51,7 @@ class SaleOrder(models.Model):
     @api.model
     def create(self, vals_list):
         res = super(SaleOrder, self).create(vals_list)
-        self.check_required_fields()
+        res.check_required_fields()
         return res
 
     def write(self, vals):
@@ -63,12 +63,20 @@ class SaleOrder(models.Model):
         for r in self.fields_ids:
             if r.env.context.get('onchange_sale_service_ids', False):
                 continue
-            if r.fields_id.type == 'options' or (
-                    r.fields_id.type == 'required' and (
-                    r.value_char or r.value_integer or r.value_date or r.selection_value_id)):
-                continue
-            else:
+            if r.fields_id.type == 'required' and r.fields_type == 'integer' and r.value_integer <= 0:
                 raise ValidationError(_("Please fill required fields!!!"))
+            if r.fields_id.type == 'required' and r.fields_type == 'char' and not r.value_char:
+                raise ValidationError(_("Please fill required fields!!!"))
+            if r.fields_id.type == 'required' and r.fields_type == 'date' and not r.value_date:
+                raise ValidationError(_("Please fill required fields!!!"))
+            if r.fields_id.type == 'required' and r.fields_type == 'selection' and not r.selection_value_id:
+                raise ValidationError(_("Please fill required fields!!!"))
+            # if r.fields_id.type == 'options' or (
+            #         r.fields_id.type == 'required' and (
+            #         r.value_char or r.value_integer > 0 or r.value_date or r.selection_value_id)):
+            #     continue
+            # else:
+            #     raise ValidationError(_("Please fill required fields!!!"))
 
     @api.onchange('sale_service_ids')
     def onchange_sale_service_ids(self):
@@ -138,8 +146,8 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
         for order_id in self:
-            if order_id.sale_service_ids.filtered(lambda ss: ss.price_in_pricelist != ss.price):
-                raise ValidationError(_('Please approve new price!'))
+            # if order_id.sale_service_ids.filtered(lambda ss: ss.price_in_pricelist != ss.price):
+            #     raise ValidationError(_('Please approve new price!'))
             if not order_id.update_pricelist:
                 continue
             for sale_service_id in order_id.sale_service_ids.filtered(lambda ss: ss.price_in_pricelist != ss.price):
@@ -205,12 +213,13 @@ class SaleOrder(models.Model):
             current_uom_id = sale_service_id.uom_id
             service_price_ids = sale_service_id.service_id.get_active_pricelist(partner_id=self.partner_id)
             if current_uom_id:
-                service_price_ids = service_price_ids.filtered(lambda sp: sp.uom_id.id == current_uom_id.id and (sp.partner_id and sp.partner_id.id == self.partner_id.id or not sp.partner_id))
+                service_price_ids = service_price_ids.filtered(lambda sp: sp.uom_id.id == current_uom_id.id and (
+                        sp.partner_id and sp.partner_id.id == self.partner_id.id or not sp.partner_id))
             if not service_price_ids:
                 continue
             max_price = 0
             price_list_item_id = None
-            compute_value = 0
+            compute_value = 1
             compute_uom_id = None
             for service_price_id in service_price_ids:
                 if service_price_id.compute_price == 'fixed_price':
@@ -333,10 +342,30 @@ class SaleOrderField(models.Model):
     using_calculation_price = fields.Boolean(related='fields_id.using_calculation_price')
     uom_id = fields.Many2one(related="fields_id.uom_id")
 
+    def check_required_fields(self):
+        for r in self:
+            if r.env.context.get('onchange_sale_service_ids', False):
+                continue
+            if r.fields_id.type == 'required' and r.value_integer <= 0 and r.fields_type == 'integer':
+                raise ValidationError(_("Please fill required fields!!!"))
+            if r.fields_id.type == 'required' and r.value_char == '' and r.fields_type == 'char':
+                raise ValidationError(_("Please fill required fields!!!"))
+            if r.fields_id.type == 'required' and not r.value_date and r.fields_type == 'date':
+                raise ValidationError(_("Please fill required fields!!!"))
+            if r.fields_id.type == 'required' and not r.selection_value_id and r.fields_type == 'selection':
+                raise ValidationError(_("Please fill required fields!!!"))
+
     def write(self, vals):
         res = super(SaleOrderField, self).write(vals)
         if 'value_char' in vals or 'value_integer' in vals or 'value_date' in vals:
             self.sale_id.action_calculation()
+            self.check_required_fields()
+        return res
+
+    @api.model
+    def create(self, vals_list):
+        res = super(SaleOrderField, self).create(vals_list)
+        res.check_required_fields()
         return res
 
     @api.depends('fields_id', 'fields_id.type')
