@@ -201,7 +201,7 @@ msgstr "Hoàn thành Khai báo"
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_stock_picking__have_stock_label
 msgid "Have Stock Labels"
-msgstr "Đã in Tem phụ"
+msgstr "Đã có tem"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_get_picking_so_wizard__id

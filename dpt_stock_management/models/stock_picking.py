@@ -115,9 +115,10 @@ class StockPicking(models.Model):
 
     @api.model
     def create(self, vals):
-        res = super().create(vals)
+        res = super(StockPicking, self).create(vals)
+        res.check_required_fields()
         res.action_update_picking_name()
-        res.onchange_package()
+        res.constrains_package()
         # auto assign picking
         res.action_confirm()
         return res
@@ -365,12 +366,6 @@ class StockPicking(models.Model):
         picking.sale_service_ids = self.sale_service_ids
         picking.fields_ids = self.fields_ids
         return picking
-
-    @api.model
-    def create(self, vals_list):
-        res = super(StockPicking, self).create(vals_list)
-        self.check_required_fields()
-        return res
 
     def write(self, vals):
         res = super(StockPicking, self).write(vals)
