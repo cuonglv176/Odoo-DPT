@@ -445,61 +445,10 @@ class SaleOrder(models.Model):
         worksheet.write(f'E{row+2}', 'CÔNG TY TNHH DPT VINA HOLDINGS')
         worksheet.write(f'H7', 'Tỷ giá tệ từ hệ thống:')
         worksheet.write(f'H8', 'Tỷ giá USD từ hệ thống:')
-
-        # Thêm tiêu đề và thông tin công ty
-        # worksheet.write('A1', 'CÔNG TY TNHH DPT VINA HOLDINGS', bold)
-        # worksheet.write('A2', 'Địa chỉ văn phòng: Số 6A, Ngõ 183, Hoàng Văn Thái, Khương Trung, Thanh Xuân, Hà Nội')
-        # worksheet.write('A3', 'MST: 0109366059')
-        #
-        # # Thêm tiêu đề báo giá
-        # worksheet.write('A5', 'BÁO GIÁ DỊCH VỤ', bold)
-        # worksheet.write('A6', 'Hiệu lực từ 24/05/2024 đến 31/05/2024 (Thời gian đến 7 ngày)')
-        # worksheet.write('A7', '(Tỷ giá áp dụng mức tỷ giá tại ngày thanh toán)')
-        #
-        # # Thêm thông tin khách hàng
-        # worksheet.write('A9', 'Khách hàng:')
-        # worksheet.write('A10', 'Mặt hàng:')
-        # worksheet.write('A11', 'Địa chỉ:')
-        # worksheet.write('A12', 'Tỷ giá tệ từ hệ thống:')
-        # worksheet.write('A13', 'Tỷ giá usd từ hệ thống:')
-        #
-        # # Thêm bảng giá cước
-        # worksheet.write('A15', 'Tên hàng hóa', bold)
-        # worksheet.write('B15', 'Số lượng', bold)
-        # worksheet.write('C15', 'Chi phí (VND)', bold)
-        # worksheet.write('D15', 'Note', bold)
-        #
-        # # Thêm dữ liệu hàng hóa
-        # data = [
-        #     ['Sản phẩm 1', 10, 13642000],
-        #     ['Sản phẩm 2', 20, 27284000],
-        #     ['Sản phẩm 3', 15, 20463000],
-        #     ['Cước vận chuyển nội địa TQ', '', 544261]
-        # ]
-        #
-        # row = 15
-        # for item, quantity, cost in data:
-        #     worksheet.write(row, 0, item)
-        #     worksheet.write(row, 1, quantity)
-        #     worksheet.write(row, 2, cost)
-        #     row += 1
-        #
-        # # Thêm các chi phí khác
-        # worksheet.write('A20', 'Tổng tiền hàng + cước nội địa TQ', bold)
-        # worksheet.write('B20', '61,933,261')
-        #
-        # # Thêm thông tin liên hệ
-        # worksheet.write('A22', 'Chuyên viên: Nguyễn Phương')
-        # worksheet.write('A23', 'Liên hệ: Ngọc Khánh')
-        # worksheet.write('A24', 'SĐT: 0936 670 368')
-        # worksheet.write('A25', 'Email: dpt.pl1207@gmail.com')
-        # stream = stringIOModule.BytesIO()
-        # workbook.save(stream)
         workbook.close()
-        # xls = stream.getvalue()
         xls = output.getvalue()
         vals = {
-            'name': 'Template_ngan_sach' + '.xls',
+            'name': f'Bao_gia_{self.name}' + '.xls',
             'datas': base64.b64encode(xls),
             # 'datas_fname': 'Template_ngan_sach.xls',
             'type': 'binary',

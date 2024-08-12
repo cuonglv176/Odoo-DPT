@@ -520,3 +520,8 @@ msgstr "Nhân viên CS"
 #: model:ir.model.fields,field_description:dpt_sale_management.field_sale_order__employee_sale
 msgid "Employee Sale"
 msgstr "Nhân viên Sale"
+
+#. module: dpt_sale_management
+#: model_terms:ir.ui.view,arch_db:dpt_sale_management.view_sale_order_inherit_form
+msgid "Export Quotation"
+msgstr "Xuất file Báo Giá"
