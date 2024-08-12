@@ -391,45 +391,47 @@ class DptExportImportLine(models.Model):
     @api.model
     def create(self, vals_list):
         res = super(DptExportImportLine, self).create(vals_list)
-        val_update_sale_line = {}
-        val_update_sale_line.update({
-            'payment_exchange_rate': self.dpt_exchange_rate,
-            'import_tax_rate': self.dpt_tax_import,
-            'vat_tax_rate': self.dpt_tax,
-            'other_tax_rate': self.dpt_tax_other,
-            'total_tax_amount': self.dpt_total_vat,
-            'hs_code_id': self.hs_code_id,
-            'import_tax_amount': self.dpt_amount_tax_import,
-            'vat_tax_amount': self.dpt_amount_tax,
-            'other_tax_amount': self.dpt_amount_tax_other,
+        for rec in self:
+            val_update_sale_line = {}
+            val_update_sale_line.update({
+                'payment_exchange_rate': rec.dpt_exchange_rate,
+                'import_tax_rate': rec.dpt_tax_import,
+                'vat_tax_rate': rec.dpt_tax,
+                'other_tax_rate': rec.dpt_tax_other,
+                'total_tax_amount': rec.dpt_total_vat,
+                'hs_code_id': rec.hs_code_id,
+                'import_tax_amount': rec.dpt_amount_tax_import,
+                'vat_tax_amount': rec.dpt_amount_tax,
+                'other_tax_amount': rec.dpt_amount_tax_other,
 
-        })
-        self.sale_line_id.write(val_update_sale_line)
+            })
+            rec.sale_line_id.write(val_update_sale_line)
         return res
 
     def write(self, vals):
         res = super(DptExportImportLine, self).write(vals)
-        val_update_sale_line = {}
-        val_update_sale_line.update({
-            'payment_exchange_rate': self.dpt_exchange_rate,
-            'import_tax_rate': self.dpt_tax_import,
-            'vat_tax_rate': self.dpt_tax,
-            'other_tax_rate': self.dpt_tax_other,
-            'total_tax_amount': self.dpt_total_vat,
-            'hs_code_id': self.hs_code_id,
-            'import_tax_amount': self.dpt_amount_tax_import,
-            'vat_tax_amount': self.dpt_amount_tax,
-            'other_tax_amount': self.dpt_amount_tax_other,
+        for rec in self:
+            val_update_sale_line = {}
+            val_update_sale_line.update({
+                'payment_exchange_rate': rec.dpt_exchange_rate,
+                'import_tax_rate': rec.dpt_tax_import,
+                'vat_tax_rate': rec.dpt_tax,
+                'other_tax_rate': rec.dpt_tax_other,
+                'total_tax_amount': rec.dpt_total_vat,
+                'hs_code_id': rec.hs_code_id,
+                'import_tax_amount': rec.dpt_amount_tax_import,
+                'vat_tax_amount': rec.dpt_amount_tax,
+                'other_tax_amount': rec.dpt_amount_tax_other,
 
-        })
-        self.sale_line_id.write(val_update_sale_line)
-        if 'dpt_uom1_id' in vals or 'dpt_sl1' in vals:
-            update_query = """
-                    UPDATE sale_order_line
-                    SET product_uom = %s, product_uom_qty = %s
-                    WHERE id = %s
-                    """
-            self.env.cr.execute(update_query, (self.dpt_uom1_id.id, self.dpt_sl1, self.sale_line_id.id))
+            })
+            rec.sale_line_id.write(val_update_sale_line)
+            if 'dpt_uom1_id' in vals or 'dpt_sl1' in vals:
+                update_query = """
+                        UPDATE sale_order_line
+                        SET product_uom = %s, product_uom_qty = %s
+                        WHERE id = %s
+                        """
+                self.env.cr.execute(update_query, (rec.dpt_uom1_id.id, rec.dpt_sl1, rec.sale_line_id.id))
         return res
 
     # def write(self, vals):
