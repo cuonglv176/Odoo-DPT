@@ -13,7 +13,7 @@
                 <button string="Send Quotation Department" name="send_quotation_department" type="object"
                         invisible="state != 'draft'"/>
                 <field name="show_action_calculation" invisible="1"/>
-
+                <button string="Export Quotation" name="export_excel_quotation" type="object"/>
             </button>
             <button name="action_quotation_send" position="attributes">
                 <attribute name="invisible">1</attribute>
