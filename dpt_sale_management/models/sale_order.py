@@ -411,8 +411,6 @@ class SaleOrder(models.Model):
         # [Báo giá chi tiết]
         # [Báo giá chi tiết] Data
         data = []
-        for r in self.order_line:
-            data.append((f'Tổng chi phí/{r.product_id.name}', 'VND/sản phẩm', '', ''))
         start = row
         data.append(('Giá trị kê khai dự kiến', 'VND/lô', '', ''))
         data.append(('Thuế NK', 'VND/lô', nk_tax_amount, ''))
@@ -427,6 +425,8 @@ class SaleOrder(models.Model):
         data.append(('Tổng chi phí vận chuyển theo m3', 'VND/lô', '', ''))
         data.append(('Chi phí theo kg', 'VND/kg', '', ''))
         data.append(('Chi phí theo m3', 'VND/m3', '', ''))
+        for r in self.order_line:
+            data.append((f'Tổng chi phí/{r.product_id.name}', 'VND/sản phẩm', '', ''))
         for item, quantity, cost, note in data:
             format = None
             if item in ('Tổng chi phí vận chuyển theo kg', 'Tổng chi phí vận chuyển theo m3'):
