@@ -26,6 +26,10 @@ class BaseAutomation(models.Model):
         domain="[('model_id', '=', model_id), ('relation', 'in', ['res.users', 'res.partner'])]"
     )
 
+    def _get_display_value_selection_field(self, record, field_name):
+        result = dict(record._fields[field_name].selection).get(record[field_name])
+        return result
+
     @api.onchange('model_id')
     def _onchange_model_id(self):
         for rec in self:
