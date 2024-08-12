@@ -179,11 +179,8 @@ class StockPicking(models.Model):
                  ('picking_type_id.code', '=', self.picking_type_code)], order='id desc').filtered(
                 lambda sp: '.' not in sp.name)
             if nearest_picking_id:
-                try:
-                    number = int(nearest_picking_id.name[7:])
-                except:
-                    number = 0
-                self.name = prefix + str(number).zfill(3)
+                number = int(nearest_picking_id[:1].name[8:])
+                self.name = prefix + str(number + 1).zfill(3)
             else:
                 self.name = prefix + '001'
         if self.picking_type_code == 'outgoing' or self.x_transfer_type == 'outgoing_transfer':
