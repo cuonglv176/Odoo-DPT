@@ -219,7 +219,7 @@ class DptExportImportLine(models.Model):
                                          domain="[('id', 'in', available_picking_ids)]")
     available_picking_ids = fields.Many2many('stock.picking', string='Lot code',
                                              compute="_compute_domain_picking_package")
-    sale_user_id = fields.Many2one('res.users', string='User Sale', related='sale_id.user_id')
+    sale_user_id = fields.Many2one('res.users', string='User Sale', compute="compute_sale_user")
     partner_id = fields.Many2one('res.partner', string='Sale Partner', related='sale_id.partner_id')
     sale_line_id = fields.Many2one('sale.order.line', string='Sale order line', domain=[('order_id', '=', 'sale_id')])
     product_tmpl_id = fields.Many2one('product.template', string='Product Template',
@@ -288,7 +288,10 @@ class DptExportImportLine(models.Model):
     item_description_vn = fields.Html(string='Tem XNK (VN)')
     item_description_en = fields.Html(string='Tem XNK (EN)')
 
-
+    @api.depends('sale_id', 'sale_id.employee_cs')
+    def compute_sale_user(self):
+        for item in self:
+            item.sale_user_id = item.sale_id.employee_cs.user_id
 
     def button_confirm_item_description(self):
         self.is_readonly_item_description = True
