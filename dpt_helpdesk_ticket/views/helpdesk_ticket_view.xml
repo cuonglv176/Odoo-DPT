@@ -44,9 +44,7 @@
             <field name="priority" position="replace"/>
             <field name="user_id" position="replace"/>
             <field name="tag_ids" position="replace"/>
-            <field name="team_id" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </field>
+
             <page name="description" position="before">
                 <page name="service_lines_ids" string="Service">
                     <field name="service_lines_ids">
@@ -95,9 +93,6 @@
         <field name="model">helpdesk.ticket</field>
         <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='team_id']" position="attributes">
-                <attribute name="invisible">True</attribute>
-            </xpath>
             <xpath expr="//field[@name='team_id']" position="after">
                 <field name="lot_name"/>
 <!--                <field name="service_ids" widget="many2many_tags"/>-->
