@@ -26,6 +26,24 @@ class BaseAutomation(models.Model):
         domain="[('model_id', '=', model_id), ('relation', 'in', ['res.users', 'res.partner'])]"
     )
 
+    def exec_and_get_return(code, record, python_code):
+        # Create a local dictionary to hold the execution context
+        local_context = {}
+
+        # Define a function in the exec code to return a value
+        exec_code = f"""
+def dynamic_message(record):
+    {python_code}
+    return message  # Ensure 'message' is defined in the executed code
+        """
+
+        # Execute the code to define the function
+        exec(exec_code, {}, local_context)
+
+        # Call the dynamically created function with provided arguments
+        return local_context['dynamic_message'](record)
+
+
     @api.onchange('model_id')
     def _onchange_model_id(self):
         for rec in self:
@@ -34,9 +52,10 @@ class BaseAutomation(models.Model):
     def _execute_notification_web(self, record_id):
         res_partner_ids = self.get_partner_by_records(record_id)
         if record_id and res_partner_ids:
+            message = self.exec_and_get_return(record_id, self.message_notification)
             self.env['mail.message']._push_system_notification(
                 self.create_uid.id,
-                res_partner_ids.ids, self.message_notification.format(record=record_id),
+                res_partner_ids.ids, message,
                 self.model_id.model, record_id.id
             )
 
