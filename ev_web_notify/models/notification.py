@@ -33,7 +33,7 @@ class BaseAutomation(models.Model):
 
     def _execute_notification_web(self, record_id):
         res_partner_ids = self.get_partner_by_records(record_id)
-        if record_id:
+        if record_id and res_partner_ids:
             self.env['mail.message']._push_system_notification(
                 self.create_uid.id,
                 res_partner_ids.ids, self.message_notification.format(record=record_id),
