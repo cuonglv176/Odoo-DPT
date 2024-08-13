@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from ast import literal_eval
 from odoo import fields, models, _, api
 
 
@@ -287,6 +287,28 @@ class DptExportImportLine(models.Model):
     is_readonly_item_description = fields.Boolean(string='Chỉ đọc item', default=False)
     item_description_vn = fields.Html(string='Tem XNK (VN)')
     item_description_en = fields.Html(string='Tem XNK (EN)')
+
+    picking_count = fields.Integer('Picking Count', compute="_compute_picking_count")
+
+    def _compute_picking_count(self):
+        for item in self:
+            picking_ids = self.env['stock.picking'].sudo().search(
+                [('is_main_incoming', '=', True), ('sale_purchase_id', '=', item.sale_id.id)])
+            item.picking_count = len(picking_ids)
+
+    def action_view_main_incoming_picking(self):
+        picking_ids = self.env['stock.picking'].sudo().search(
+            [('is_main_incoming', '=', True), ('sale_purchase_id', '=', self.sale_id.id)])
+        action = self.env.ref('stock.stock_picking_action_picking_type').sudo().read()[0]
+        context = {
+            'delete': False,
+            'create': False,
+        }
+        action_context = literal_eval(action['context'])
+        context = {**action_context, **context}
+        action['context'] = context
+        action['domain'] = [('id', 'in', picking_ids.ids)]
+        return action
 
     @api.depends('sale_id', 'sale_id.employee_cs')
     def compute_sale_user(self):
