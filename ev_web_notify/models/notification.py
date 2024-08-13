@@ -1,5 +1,6 @@
 from odoo import models, fields, api
-
+import logging
+_logger = logging.getLogger(__name__)
 
 class BaseAutomation(models.Model):
     _inherit = 'base.automation'
@@ -36,7 +37,7 @@ def dynamic_message(record):
     {python_code}
     return message  # Ensure 'message' is defined in the executed code
         """
-
+        _logger.log(exec_code)
         # Execute the code to define the function
         exec(exec_code, {}, local_context)
 
