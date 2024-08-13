@@ -44,6 +44,13 @@ class SaleOrder(models.Model):
     employee_sale = fields.Many2one('hr.employee', string='Employee Sale')
     employee_cs = fields.Many2one('hr.employee', string='Employee CS')
 
+    @api.onchange('user_id')
+    def onchange_user_id(self):
+        if not self.employee_sale:
+            self.employee_sale = self.user_id.employee_id
+        if not self.employee_cs:
+            self.employee_cs = self.user_id.employee_id
+
     @api.onchange('weight', 'volume', 'order_line')
     def onchange_weight_volume(self):
         for fields_id in self.fields_ids:
