@@ -35,7 +35,7 @@ class BaseAutomation(models.Model):
         res_partner_ids = self.get_partner_by_records(record_id)
         if record_id:
             self.env['mail.message']._push_system_notification(
-                {self.create_uid.id},
+                self.create_uid.id,
                 res_partner_ids.ids, self.message_notification.format(record=record_id),
                 self.model_id.model, record_id.id
             )
