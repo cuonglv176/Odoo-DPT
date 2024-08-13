@@ -26,7 +26,8 @@ class BaseAutomation(models.Model):
         domain="[('model_id', '=', model_id), ('relation', 'in', ['res.users', 'res.partner'])]"
     )
 
-    def _get_display_value_selection_field(self, record, field_name):
+    @api.model
+    def get_display_value_selection_field(self, record, field_name):
         result = dict(record._fields[field_name].selection).get(record[field_name])
         return result
 
@@ -40,7 +41,7 @@ class BaseAutomation(models.Model):
         if record_id:
             self.env['mail.message']._push_system_notification(
                 {self.create_uid.id},
-                res_partner_ids.ids, self.message_notification.format(record=record_id, auto_id=self),
+                res_partner_ids.ids, self.message_notification.format(record=record_id, auto=self),
                 self.model_id.model, record_id.id
             )
 
