@@ -37,7 +37,7 @@ def dynamic_message(record):
     {python_code}
     return message  # Ensure 'message' is defined in the executed code
         """
-        _logger.log(exec_code)
+        _logger.log(logging.INFO, exec_code)
         # Execute the code to define the function
         exec(exec_code, {}, local_context)
 
