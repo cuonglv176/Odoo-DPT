@@ -33,16 +33,22 @@ class BaseAutomation(models.Model):
 
         # Define a function in the exec code to return a value
         exec_code = f"""
-def dynamic_message(record):
-    {python_code}
-    return message  # Ensure 'message' is defined in the executed code
+    def dynamic_message(record):
+        {python_code}
+        return message  # Ensure 'message' is defined in the executed code
         """
+
         _logger.log(logging.INFO, exec_code)
+
         # Execute the code to define the function
         exec(exec_code, {}, local_context)
 
-        # Call the dynamically created function with provided arguments
-        return local_context['dynamic_message'](record)
+        # Check if the function was created successfully
+        if 'dynamic_message' in local_context:
+            # Call the dynamically created function with provided arguments
+            return local_context['dynamic_message'](record)
+        else:
+            raise KeyError("The dynamic_message function was not created.")
 
 
     @api.onchange('model_id')
