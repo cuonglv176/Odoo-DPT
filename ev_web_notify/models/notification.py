@@ -33,9 +33,9 @@ class BaseAutomation(models.Model):
 
         # Define a function in the exec code to return a value
         exec_code = f"""
-    def dynamic_message(record):
-        {python_code}
-        return message  # Ensure 'message' is defined in the executed code
+def dynamic_message(record):
+    {python_code}
+    return message  # Ensure 'message' is defined in the executed code
         """
 
         _logger.log(logging.INFO, exec_code)
