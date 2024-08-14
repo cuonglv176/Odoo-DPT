@@ -24,14 +24,14 @@ class SalesOrder(models.Model):
         for rec in self:
             rec.payment_amount_total = rec.amount_total + rec.service_total_amount
 
-    @api.depends('purchase_ids', 'purchase_ids.amount_total')
+    @api.depends('purchase_ids', 'purchase_ids.amount_untaxed')
     def _compute_purchase_amount_total(self):
         for rec in self:
             purchase_amount_total = 0
             for purchase_id in rec.purchase_ids:
                 if purchase_id.purchase_type == 'external':
                     if purchase_id.currency_id.name == 'VND':
-                        purchase_amount_total += purchase_id.amount_total
+                        purchase_amount_total += purchase_id.amount_untaxed
                     else:
-                        purchase_amount_total += purchase_id.amount_total * purchase_id.currency_id.rate
+                        purchase_amount_total += purchase_id.amount_untaxed * purchase_id.currency_id.rate
             rec.purchase_amount_total = purchase_amount_total
