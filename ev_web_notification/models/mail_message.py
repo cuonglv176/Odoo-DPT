@@ -86,6 +86,8 @@ class Message(models.Model):
                    :param str record_name
                    :param datetime timestamp: time expected sent notification
                """
+        if model == 'mail.message':
+            return
         partner_id = self.env['res.partner'].sudo().browse([author_id])
         subtype_id = self.env.ref('mail.mt_note').id
         # FirebaseNotificationObj = self.env['firebase.notification']
@@ -111,7 +113,6 @@ class Message(models.Model):
                 'record_name': record_name,
                 'icon': icon,
                 'attachment_ids': []}
-
             message_id = self.env['mail.message'].sudo().create(values)
             message_ids.append(message_id)
         if author_id:
