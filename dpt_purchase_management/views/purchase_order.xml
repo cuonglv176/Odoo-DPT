@@ -145,41 +145,6 @@
         </field>
     </record>
 
-    <record id="purchase_order_trading_form" model="ir.ui.view">
-        <field name="name">purchase_order_trading_form</field>
-        <field name="model">purchase.order</field>
-        <field name="inherit_id" ref="dpt_purchase_management.purchase_order_form_package_line_inherit_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='order_line']/tree" position="replace">
-                <tree>
-                    <control>
-                        <create name="add_product_control" string="Add a product"/>
-                    </control>
-                    <field name="tax_calculation_rounding_method" column_invisible="True"/>
-                    <field name="display_type" column_invisible="True"/>
-                    <field name="company_id" column_invisible="True"/>
-                    <field name="currency_id" column_invisible="True"/>
-                    <field name="state" column_invisible="True"/>
-                    <field name="product_id" readonly="state in ('purchase', 'to approve', 'done', 'cancel')"
-                           required="not display_type" width="35%"
-                           context="{'partner_id':parent.partner_id, 'quantity':product_qty, 'company_id': parent.company_id}"
-                           force_save="1" domain="[('purchase_ok', '=', True)]"/>
-                    <field name="name" widget="section_and_note_text"/>
-                    <field name="buying_url"/>
-                    <field name="product_qty"/>
-                    <field name="product_uom"/>
-                    <field name="price_unit"/>
-                    <field name="price_unit2"/>
-                    <field name="price_unit3"/>
-                    <field name="price_subtotal"/>
-                    <field name="price_subtotal2"/>
-                    <field name="price_subtotal3"/>
-                </tree>
-
-            </xpath>
-        </field>
-    </record>
-
     <record id="purchase.purchase_form_action" model="ir.actions.act_window">
         <field name="domain">[('purchase_type','=', 'internal')]</field>
         <field name="name">Đơn mua hàng nội bộ</field>
@@ -189,31 +154,7 @@
     <menuitem name="Đơn mua hàng nội bộ" id="purchase.menu_purchase_form_action" action="purchase.purchase_form_action"
               parent="purchase.menu_procurement_management" sequence="6"/>
 
-    <record id="purchase_form_external_action" model="ir.actions.act_window">
-        <field name="name">Đơn mua hàng mua hộ</field>
-        <field name="res_model">purchase.order</field>
-        <field name="view_mode">tree,kanban,form,pivot,graph,calendar,activity</field>
-        <field name="view_ids" eval="[(5, 0, 0),
-                (0, 0, {'view_mode': 'tree', 'view_id': ref('purchase.purchase_order_view_tree')}),
-                (0, 0, {'view_mode': 'kanban', 'view_id': ref('purchase.purchase_order_view_kanban_without_dashboard')}),
-                (0, 0, {'view_mode': 'form', 'view_id': ref('dpt_purchase_management.purchase_order_trading_form')}),
-            ]"/>
-        <field name="domain">[('purchase_type','=', 'external')]</field>
-        <field name="search_view_id" ref="purchase.purchase_order_view_search"/>
-        <field name="context">{'from_purchase_order_confirm': True, 'default_purchase_type': 'external'}</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                No purchase order found. Let's create one!
-            </p>
-            <p>
-                Once you ordered your products to your supplier, confirm your request for quotation and it will turn
-                into a purchase order.
-            </p>
-        </field>
-    </record>
-    <menuitem name="Đơn mua hàng mua hộ" action="purchase_form_external_action" id="menu_purchase_form_external_action"
-              parent="purchase.menu_procurement_management"
-              sequence="6"/>
+
 
 
     <record id="purchase_form_buy_cny_action" model="ir.actions.act_window">
