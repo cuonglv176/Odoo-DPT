@@ -5,6 +5,7 @@ import xlrd, xlwt
 import xlsxwriter
 import base64
 import io as stringIOModule
+from odoo.modules.module import get_module_resource
 
 COLUMN = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q']
 
@@ -359,7 +360,7 @@ class SaleOrder(models.Model):
             'font_size': 14
         })
         # Header
-        worksheet.insert_image('B2', 'dpt_sale_management/static/src/img/logo.png', {'x_scale': 0.10, 'y_scale': 0.06})
+        worksheet.insert_image('B2', get_module_resource('dpt_sale_management', 'static/src/img', 'logo.png'), {'x_scale': 0.10, 'y_scale': 0.06})
         worksheet.write('C2', 'CÔNG TY TNHH DPT VINA HOLDINGS - 棋速', header_sp_format)
         worksheet.write('C3', 'Địa chỉ văn phòng: Số 6A, Ngõ 183, Hoàng Văn Thái, Khương Trung, Thanh Xuân, Hà Nội')
         worksheet.write('C4', 'MST: 0109366059')
