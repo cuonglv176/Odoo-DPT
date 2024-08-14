@@ -25,11 +25,6 @@ class Message(models.Model):
     action_id = fields.Char(string="Action_id", default=_default_action_id)
     comment_id = fields.Integer()
 
-    @api.model
-    def create(self, values):
-        record = super(Message, self).create(values)
-        return record
-
     def update_status_message(self):
         self.write({
             'status': 'seen'
@@ -55,7 +50,7 @@ class Message(models.Model):
         )
 
     def _notify_channel(
-            self, message, partner_id
+        self, message, partner_id
     ):
         # pylint: disable=protected-access
         # if not self.env.user._is_admin() and any(user.id != self.env.uid for user in self):
@@ -111,8 +106,7 @@ class Message(models.Model):
                 'record_name': record_name,
                 'icon': icon,
                 'attachment_ids': []}
-            if model == 'mail.message':
-                return
+
             message_id = self.env['mail.message'].sudo().create(values)
             message_ids.append(message_id)
         if author_id:
