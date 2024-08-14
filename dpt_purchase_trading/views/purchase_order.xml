@@ -4,8 +4,6 @@
     <record id="purchase_order_trading_form" model="ir.ui.view">
         <field name="name">purchase_order_trading_form</field>
         <field name="model">purchase.order</field>
-        <!--        <field name="inherit_id" ref="dpt_purchase_management.purchase_order_form_package_line_inherit_form"/>-->
-        <!--        <field name="priority" eval="1"/>-->
         <field name="arch" type="xml">
             <form>
                 <header>
@@ -215,6 +213,7 @@
                                     <field name="company_id" column_invisible="True" on_change="1"/>
                                     <field name="currency_id" column_invisible="True"/>
                                     <field name="state" column_invisible="True"/>
+                                    <field name="product_uom_category_id" column_invisible="True"/>
                                     <field name="product_id"
                                            readonly="state in ('purchase', 'to approve', 'done', 'cancel')"
                                            required="not display_type" width="35%"
