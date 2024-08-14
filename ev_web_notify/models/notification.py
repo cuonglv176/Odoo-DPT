@@ -75,7 +75,7 @@ def dynamic_message(record):
             if field_data._name == 'res.users':
                 res_partner_ids += field_data.partner_id
                 continue
-            if res_partner_ids and field_data:
+            if field_data:
                 res_partner_ids += field_data
         return res_partner_ids
 
