@@ -367,7 +367,7 @@ class SaleOrder(models.Model):
         # Title
         worksheet.merge_range('A5:F5', 'BÁO GIÁ DỊCH VỤ', merge_format)
         worksheet.write('B7', 'Khách hàng:', bold_format)
-        worksheet.write('D7', 'Khách hàng:', bold_format)
+        worksheet.write('D7', 'Địa chỉ:', bold_format)
         worksheet.write('B8', 'Mặt hàng:', bold_format)
         worksheet.merge_range('B9:F9', 'Cám ơn quý khách đã quan tâm tới dịch vụ của Kỳ Tốc Logistics.'
                                        ' Chúng tôi xin được gửi tới quý khách giá cước cho hàng nhập của quý khách như sau',
@@ -382,10 +382,10 @@ class SaleOrder(models.Model):
         data = []
         for r in self.order_line:
             data.append((r.product_id.name, r.product_uom_qty, r.price_subtotal, ''))
-        data.append(('Cuộc vận chuyển nội địa TQ', '', '', ''))
+        data.append(('Cước vận chuyển nội địa TQ', '', '', ''))
         data.append(('Tổng tiền hàng + cước nội địa TQ', '', '', ''))
-        data.append(('Thể tích (m3)', '', '', ''))
-        data.append(('Khối lượng (kg)', '', '', ''))
+        data.append(('Thể tích (m3)', self.volume, '', ''))
+        data.append(('Khối lượng (kg)', self.weight, '', ''))
         data.append(('Phí vận chuyển/ m3', '', '', ''))
         data.append(('Phí vận chuyển/ kg', '', '', ''))
 
@@ -460,8 +460,8 @@ class SaleOrder(models.Model):
         worksheet.write(f'C{row+3}', f'SĐT:')
         worksheet.write(f'C{row+4}', f'Email:')
         worksheet.write(f'E{row+2}', 'CÔNG TY TNHH DPT VINA HOLDINGS')
-        worksheet.write(f'H7', 'Tỷ giá tệ từ hệ thống:')
-        worksheet.write(f'H8', 'Tỷ giá USD từ hệ thống:')
+        worksheet.write(f'H7', f"Tỷ giá tệ từ hệ thống: {self.currency_id.search([('name', '=', 'CNY')]).rate}")
+        worksheet.write(f'H8', f"Tỷ giá USD từ hệ thống: {self.currency_id.search([('name', '=', 'USD')]).rate}")
         workbook.close()
         xls = output.getvalue()
         vals = {
