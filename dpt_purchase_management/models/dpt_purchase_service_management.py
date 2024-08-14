@@ -6,6 +6,13 @@ class DPTSaleServiceManagement(models.Model):
 
     purchase_id = fields.Many2one('purchase.order', ondelete='cascade')
 
+    @api.onchange('price_cny')
+    def onchange_price_cny_puchase(self):
+        if not self.purchase_id.last_rate_currency:
+            self.price = self.price_cny * self.currency_cny_id.rate
+        else:
+            self.price = self.price_cny * self.purchase_id.last_rate_currency
+
     @api.model
     def create(self, vals):
         if vals.get('purchase_id') and not vals.get('sale_id'):
