@@ -206,7 +206,7 @@
                             <field name="order_line" widget="section_and_note_one2many" mode="tree,kanban"
                                    context="{'default_state': 'draft'}" readonly="state in ('done', 'cancel')"
                                    on_change="1" field_id="order_line_0">
-                                <tree>
+                                <tree editable="bottom">
                                     <control>
                                         <create name="add_product_control" string="Add a product"/>
                                     </control>
