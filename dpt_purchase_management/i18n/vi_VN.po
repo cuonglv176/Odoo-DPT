@@ -724,3 +724,18 @@ msgstr ""
 #: model:ir.ui.menu,name:dpt_purchase_management.menu_purchase_form_buy_cny_action
 msgid "Đơn mua hàng mua tệ"
 msgstr ""
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line__price_cost2
+msgid "Price Cost 2"
+msgstr "Giá 2"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line__price_subtotal2
+msgid "Price Subtotal 2"
+msgstr "Tổng giá 2"
+
+#. module: dpt_purchase_management
+#: model:ir.model.fields,field_description:dpt_purchase_management.field_purchase_order_line__price_unit2
+msgid "Price Unit 2"
+msgstr "Đơn vị giá 2"
