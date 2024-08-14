@@ -69,7 +69,8 @@ class AccountPayment(models.Model):
                 price = 0
                 if self.purchase_id.currency_id.name != 'VND':
                     price_cny = order_line.price_unit
-                    price = order_line.price_unit * self.purchase_id.currency_id.rate
+                    # price = order_line.price_unit * self.purchase_id.currency_id.rate
+                    price = order_line.price_unit * self.purchase_id.last_rate_currency
                 else:
                     price = order_line.price_unit
                 detail_product_ids_records.append((0, 0, {
@@ -86,7 +87,8 @@ class AccountPayment(models.Model):
             for sale_service_id in self.purchase_id.sale_service_ids:
                 price = 0
                 if sale_service_id.price_cny != 0:
-                    price = sale_service_id.price_cny * sale_service_id.currency_cny_id.rate
+                    # price = sale_service_id.price_cny * sale_service_id.currency_cny_id.rate
+                    price = sale_service_id.price_cny * sale_service_id.purchase_id.last_rate_currency
                 else:
                     price = sale_service_id.price
                 if sale_service_id.qty == 0:
