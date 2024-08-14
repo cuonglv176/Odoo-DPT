@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="purchase_order_trading_form" model="ir.ui.view">
+        <field name="name">purchase_order_trading_form</field>
+        <field name="model">purchase.order</field>
+        <!--        <field name="inherit_id" ref="dpt_purchase_management.purchase_order_form_package_line_inherit_form"/>-->
+        <!--        <field name="priority" eval="1"/>-->
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_rfq_send" invisible="state != 'draft'" string="Gửi qua email" type="object"
+                            context="{'send_rfq':True}" class="oe_highlight" data-hotkey="g"/>
+                    <button name="action_view_picking" string="Nhận sản phẩm" class="oe_highlight" type="object"
+                            invisible="1" data-hotkey="y"/>
+                    <button name="print_quotation" string="In YCBG" type="object" invisible="state != 'draft'"
+                            class="oe_highlight" data-hotkey="k"/>
+                    <button name="button_confirm" type="object" invisible="1" string="Xác nhận đơn hàng"
+                            context="{'validate_analytic': True}" class="oe_highlight" id="bid_confirm"
+                            data-hotkey="q"/>
+                    <button name="button_approve" type="object" invisible="state != 'to approve'"
+                            string="Phê duyệt đơn hàng" class="oe_highlight" data-hotkey="z"/>
+                    <button name="action_create_invoice" string="Tạo hóa đơn" type="object" class="oe_highlight"
+                            context="{'create_bill':True}"
+                            invisible="state not in ('purchase', 'done') or invoice_status in ('no', 'invoiced')"
+                            data-hotkey="w"/>
+                    <button name="action_rfq_send" invisible="state != 'sent'" string="Gửi lại qua email" type="object"
+                            context="{'send_rfq':True}" data-hotkey="g"/>
+                    <button name="print_quotation" string="In YCBG" type="object" invisible="state != 'sent'"
+                            data-hotkey="k"/>
+                    <button name="button_confirm" type="object" invisible="1" context="{'validate_analytic': True}"
+                            string="Xác nhận đơn hàng" id="draft_confirm" data-hotkey="q"/>
+                    <button name="button_confirm_with_package" type="object" invisible="state != 'draft'"
+                            string="Xác nhận đơn hàng" data-hotkey="q"/>
+                    <button name="action_rfq_send" invisible="state != 'purchase'" string="Gửi đơn mua hàng qua email"
+                            type="object" context="{'send_rfq':False}" data-hotkey="g"/>
+                    <button name="confirm_reminder_mail" string="Xác nhận ngày nhận hàng" type="object"
+                            invisible="state not in ('purchase', 'done') or mail_reminder_confirmed or not date_planned or effective_date"
+                            data-hotkey="o"/>
+                    <button name="action_create_invoice" string="Tạo hóa đơn" type="object"
+                            context="{'create_bill':True}"
+                            invisible="state not in ('purchase', 'done') or invoice_status not in ('no', 'invoiced') or not order_line"
+                            data-hotkey="w"/>
+                    <button name="button_draft" invisible="state != 'cancel'" string="Đặt làm nháp" type="object"
+                            data-hotkey="o"/>
+                    <button name="button_cancel" invisible="state not in ('draft', 'to approve', 'sent', 'purchase')"
+                            string="Hủy" type="object" data-hotkey="x"/>
+                    <button name="button_done" type="object" string="Khoá" invisible="state != 'purchase'"
+                            data-hotkey="l"/>
+                    <button name="button_unlock" type="object" string="Mở khoá" invisible="state != 'done'"
+                            data-hotkey="l"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase" readonly="1"
+                           on_change="1" field_id="state_0"/>
+                    <button name="create_new_contract" string="Tạo Hợp đồng" type="object" class="oe_highlight"/>
+                    <button name="action_open_payment_popup" icon="fa-usd" string="Create Payment" type="object"
+                            class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object" name="action_view_invoice" class="oe_stat_button"
+                                icon="fa-pencil-square-o"
+                                invisible="invoice_count == 0 or state in ('draft', 'sent', 'to approve')">
+                            <field name="invoice_count" widget="statinfo" string="Hoá đơn mua hàng"
+                                   field_id="invoice_count_0"/>
+                            <field name="invoice_ids" invisible="1" field_id="invoice_ids_0"/>
+                        </button>
+                        <button class="oe_stat_button" name="action_view_sale_orders" type="object" icon="fa-dollar"
+                                invisible="sale_order_count == 0">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="sale_order_count" field_id="sale_order_count_0"/>
+                                </span>
+                                <span class="o_stat_text">Bán hàng</span>
+                            </div>
+                        </button>
+                        <button type="object" name="action_view_picking" class="oe_stat_button" icon="fa-truck"
+                                invisible="incoming_picking_count == 0">
+                            <field name="incoming_picking_count" widget="statinfo" string="Phiếu nhập kho"
+                                   help="Lô hàng đang nhập" field_id="incoming_picking_count_0"/>
+                        </button>
+                        <button class="oe_stat_button" type="object" name="get_origin_po"
+                                icon="fa-solid fa-cart-shopping">
+                            <field string="Đơn mua Tệ" name="count_buy_cny_po" widget="statinfo"
+                                   field_id="count_buy_cny_po_0"/>
+                        </button>
+                        <button class="oe_stat_button" type="object" name="action_open_sale_order" icon="fa-usd">
+                            <field string="Đơn hàng" name="count_so" widget="statinfo" field_id="count_so_0"/>
+                        </button>
+                        <button class="oe_stat_button" type="object" name="action_open_deposit" icon="fa-usd">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_value">
+                                    <field string="Deposit" name="deposit_amount_total" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"
+                                           field_id="deposit_amount_total_0"/>
+                                </span>
+                                <span class="o_stat_text">Deposit</span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button" type="object" name="action_open_payment" icon="fa-usd">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_value">
+                                    <field string="Đề nghị thanh toán" name="payment_amount_total" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"
+                                           field_id="payment_amount_total_0"/>
+                                </span>
+                                <span class="o_stat_text">Payment</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <span class="o_form_label" invisible="state not in ('draft', 'sent')">Yêu cầu báo giá</span>
+                        <span class="o_form_label" invisible="state in ('draft', 'sent')">Đơn mua hàng</span>
+                        <h1 class="d-flex">
+                            <field name="priority" widget="priority" class="me-3" field_id="priority_0"/>
+                            <field name="name" readonly="1" field_id="name_0"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="purchase_type" widget="radio" options="{'horizontal': true}"
+                                   invisible="context.get('from_purchase_order_confirm')" field_id="purchase_type_0"/>
+                            <field name="origin_po" invisible="purchase_type != 'buy_cny'" can_create="True"
+                                   can_write="True" field_id="origin_po_0"/>
+                            <field name="department_id" can_create="True" can_write="True" field_id="department_id_0"/>
+                            <field name="packing_lot_name" readonly="1" force_save="1" field_id="packing_lot_name_0"/>
+                            <field name="partner_id" widget="res_partner_many2one"
+                                   context="{'res_partner_search_mode': 'supplier', 'show_vat': True}"
+                                   placeholder="Tên, MST, email, hoặc mã"
+                                   readonly="state in ['cancel', 'done', 'purchase']" on_change="1" can_create="True"
+                                   can_write="True" field_id="partner_id_0"/>
+                            <field name="partner_ref" field_id="partner_ref_0"/>
+                            <field name="currency_id" force_save="1" readonly="state in ['cancel', 'done', 'purchase']"
+                                   on_change="1" can_create="True" can_write="True" field_id="currency_id_0"/>
+                            <field name="last_rate_currency" field_id="last_rate_currency_0"/>
+                            <field name="is_shipped" invisible="1" field_id="is_shipped_0"/>
+                            <field name="id" invisible="1" field_id="id_0"/>
+                            <field name="company_id" invisible="1" readonly="state in ['cancel', 'done', 'purchase']"
+                                   on_change="1" can_create="True" can_write="True" field_id="company_id_0"/>
+                            <field name="tax_calculation_rounding_method" invisible="1"
+                                   field_id="tax_calculation_rounding_method_0"/>
+                        </group>
+                        <group>
+                            <field name="sale_id" readonly="1" force_save="1" invisible="sale_id" on_change="1"
+                                   field_id="sale_id_0"/>
+                            <field name="date_order" invisible="state in ('purchase', 'done')"
+                                   readonly="state in ['cancel', 'done', 'purchase']" field_id="date_order_0"/>
+                            <label for="date_approve" invisible="state not in ('purchase', 'done')"/>
+                            <div name="date_approve" invisible="state not in ('purchase', 'done')" class="o_row">
+                                <field name="date_approve" field_id="date_approve_0"/>
+                                <field name="mail_reception_confirmed" invisible="1"
+                                       field_id="mail_reception_confirmed_0"/>
+                                <span class="text-muted" invisible="not mail_reception_confirmed">(được xác nhận bởi nhà
+                                    cung cấp)
+                                </span>
+                            </div>
+                            <label for="date_planned"/>
+                            <div name="date_planned_div" class="o_row">
+                                <field name="date_planned"
+                                       readonly="state not in ('draft', 'sent', 'to approve', 'purchase')" on_change="1"
+                                       field_id="date_planned_0"/>
+                                <field name="mail_reminder_confirmed" invisible="1"
+                                       field_id="mail_reminder_confirmed_0"/>
+                                <span class="text-muted" invisible="not mail_reminder_confirmed">(được xác nhận bởi nhà
+                                    cung cấp)
+                                </span>
+                                <button name="636" class="oe_link" type="action"
+                                        context="{'search_default_partner_id': partner_id}"
+                                        invisible="state in ['purchase', 'done'] or not partner_id">
+                                    <span invisible="on_time_rate &lt; 0"><field name="on_time_rate" widget="integer"
+                                                                                 class="oe_inline"
+                                                                                 field_id="on_time_rate_0"/>% Giao hàng
+                                        đúng hạn
+                                    </span>
+                                    <span invisible="on_time_rate &gt;= 0">Không có dữ liệu giao hàng đúng hạn</span>
+                                </button>
+                            </div>
+                            <label for="receipt_reminder_email" class="d-none" invisible="effective_date"/>
+                            <div name="reminder" class="o_row"
+                                 title="Tự động gửi email xác nhận cho nhà cung cấp X ngày trước ngày nhận hàng dự kiến, yêu cầu họ xác nhận ngày nhận hàng chính xác."
+                                 invisible="effective_date">
+                                <field name="receipt_reminder_email" field_id="receipt_reminder_email_0"/>
+                                <span>Yêu cầu xác nhận</span>
+                                <div class="o_row oe_inline" invisible="not receipt_reminder_email">
+                                    <field name="reminder_date_before_receipt"
+                                           field_id="reminder_date_before_receipt_0"/>
+                                    ngày trước
+                                    <widget name="toaster_button" button_name="send_reminder_preview"
+                                            title="Xem trước email nhắc nhở bằng cách gửi cho chính bạn."
+                                            invisible="not id" widget_id="widget_1"/>
+                                </div>
+                            </div>
+                            <field name="picking_type_id"
+                                   domain="[('code','=','incoming'), '|', ('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]"
+                                   options="{'no_create': True}" readonly="state in ['cancel', 'done', 'purchase']"
+                                   on_change="1" can_create="True" can_write="True" field_id="picking_type_id_0"/>
+                            <field name="dest_address_id" invisible="default_location_dest_id_usage != 'customer'"
+                                   readonly="state in ['cancel', 'done', 'purchase']"
+                                   required="default_location_dest_id_usage == 'customer'" can_create="True"
+                                   can_write="True" field_id="dest_address_id_0"/>
+                            <field name="effective_date" invisible="not effective_date" field_id="effective_date_0"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Sản phẩm" name="products">
+                            <field name="tax_country_id" invisible="1" field_id="tax_country_id_0"/>
+                            <field name="order_line" widget="section_and_note_one2many" mode="tree,kanban"
+                                   context="{'default_state': 'draft'}" readonly="state in ('done', 'cancel')"
+                                   on_change="1" field_id="order_line_0">
+                                <tree>
+                                    <control>
+                                        <create name="add_product_control" string="Add a product"/>
+                                    </control>
+                                    <field name="tax_calculation_rounding_method" column_invisible="True"/>
+                                    <field name="display_type" column_invisible="True"/>
+                                    <field name="company_id" column_invisible="True" on_change="1"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="state" column_invisible="True"/>
+                                    <field name="product_id"
+                                           readonly="state in ('purchase', 'to approve', 'done', 'cancel')"
+                                           required="not display_type" width="35%"
+                                           context="{'partner_id':parent.partner_id, 'quantity':product_qty, 'company_id': parent.company_id}"
+                                           force_save="1" domain="[('purchase_ok', '=', True)]" on_change="1"/>
+                                    <field name="name" widget="section_and_note_text"/>
+                                    <field name="buying_url"/>
+                                    <field name="product_qty" on_change="1"/>
+                                    <field name="product_uom" on_change="1"/>
+                                    <field name="price_unit" on_change="1"/>
+                                    <field name="price_unit2" on_change="1"/>
+                                    <field name="price_unit3" on_change="1"/>
+                                    <field name="price_subtotal" on_change="1"/>
+                                    <field name="price_subtotal2"/>
+                                    <field name="price_subtotal3"/>
+                                </tree>
+
+                                <form string="Dòng đơn mua hàng">
+                                    <field name="tax_calculation_rounding_method" invisible="1"/>
+                                    <field name="state" invisible="1"/>
+                                    <field name="display_type" invisible="1"/>
+                                    <field name="company_id" invisible="1" on_change="1"/>
+                                    <group invisible="display_type">
+                                        <group>
+                                            <field name="product_uom_category_id" invisible="1"/>
+                                            <field name="product_id" context="{'partner_id': parent.partner_id}"
+                                                   widget="many2one_barcode"
+                                                   domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
+                                                   readonly="state in ('purchase', 'to approve', 'done', 'cancel')"
+                                                   on_change="1" can_create="True" can_write="True"/>
+                                            <label for="product_qty"/>
+                                            <div class="o_row">
+                                                <field name="product_qty" on_change="1"/>
+                                                <field name="product_uom" required="not display_type" on_change="1"
+                                                       can_create="True" can_write="True"/>
+                                            </div>
+                                            <field name="qty_received_method" invisible="1" on_change="1"/>
+                                            <field name="qty_received" string="Số lượng đã nhận"
+                                                   invisible="parent.state not in ('purchase', 'done')"
+                                                   readonly="qty_received_method != 'manual'" on_change="1"/>
+                                            <field name="qty_invoiced" string="Số lượng đã lập hoá đơn"
+                                                   invisible="parent.state not in ('purchase', 'done')"/>
+                                            <field name="price_unit" on_change="1"/>
+                                            <field name="discount" on_change="1"/>
+                                            <field name="taxes_id" widget="many2many_tags"
+                                                   domain="[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]"
+                                                   options="{'no_create': True}" on_change="1" can_create="True"
+                                                   can_write="True"/>
+                                        </group>
+                                        <group>
+                                            <field name="date_planned" widget="date" required="not display_type"
+                                                   on_change="1"/>
+                                            <field name="propagate_cancel"/>
+                                        </group>
+                                        <group>
+                                            <notebook colspan="4">
+                                                <page string="Ghi chú" name="notes">
+                                                    <field name="name"/>
+                                                </page>
+                                                <page string="Hoá đơn và lô hàng sắp về"
+                                                      name="invoices_incoming_shiptments">
+                                                    <field name="invoice_lines" on_change="1"/>
+                                                    <field name="move_ids" on_change="1"/>
+                                                </page>
+                                            </notebook>
+                                        </group>
+                                    </group>
+                                    <label for="name" string="Tên phần (ví dụ: Sản phẩm, Dịch vụ)"
+                                           invisible="display_type != 'line_section'"/>
+                                    <label for="name" string="Ghi chú" invisible="display_type != 'line_note'"/>
+                                    <field name="name" nolabel="1" invisible="not display_type"/>
+                                </form>
+                                <kanban class="o_kanban_mobile">
+                                    <field name="name"/>
+                                    <field name="product_id" on_change="1"/>
+                                    <field name="product_qty" on_change="1"/>
+                                    <field name="product_uom" on_change="1"/>
+                                    <field name="price_subtotal" on_change="1"/>
+                                    <field name="price_tax"/>
+                                    <field name="price_total" on_change="1"/>
+                                    <field name="price_unit" on_change="1"/>
+                                    <field name="discount" on_change="1"/>
+                                    <field name="display_type"/>
+                                    <field name="taxes_id" on_change="1"/>
+                                    <field name="tax_calculation_rounding_method"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div t-attf-class="oe_kanban_card oe_kanban_global_click {{ record.display_type.raw_value ? 'o_is_' + record.display_type.raw_value : '' }}">
+                                                <t t-if="!record.display_type.raw_value">
+                                                    <div class="row">
+                                                        <div class="col-8">
+                                                            <strong>
+                                                                <span t-esc="record.product_id.value"/>
+                                                            </strong>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <strong>
+                                                                <span>
+                                                                    Chưa bao gồm thuế:
+                                                                    <t t-esc="record.price_subtotal.value"
+                                                                       class="float-end text-end"/>
+                                                                </span>
+                                                            </strong>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-8 text-muted">
+                                                            <span>
+                                                                Số lượng:
+                                                                <t t-esc="record.product_qty.value"/>
+                                                                <small>
+                                                                    <t t-esc="record.product_uom.value"/>
+                                                                </small>
+                                                            </span>
+                                                        </div>
+                                                        <div class="col-4"
+                                                             t-if="record.tax_calculation_rounding_method.raw_value === 'round_per_line'">
+                                                            <strong>
+                                                                <span>
+                                                                    Bao gồm thuế:
+                                                                    <t t-esc="record.price_total.value"/>
+                                                                </span>
+                                                            </strong>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-12 text-muted">
+                                                            <span>
+                                                                Đơn giá:
+                                                                <t t-esc="record.price_unit.value"/>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" t-if="record.discount.raw_value">
+                                                        <div class="col-12 text-muted">
+                                                            <span>
+                                                                Discount:<t t-out="record.discount.value"/>%
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </t>
+                                                <div t-elif="record.display_type.raw_value === 'line_section' || record.display_type.raw_value === 'line_note'"
+                                                     class="row">
+                                                    <div class="col-12">
+                                                        <span t-esc="record.name.value"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                            </field>
+                            <group>
+                                <group>
+                                    <field colspan="2" name="notes" nolabel="1"
+                                           placeholder="Xác định điều khoản và điều kiện của bạn..."
+                                           field_id="notes_0"/>
+                                </group>
+                                <group class="oe_subtotal_footer" invisible="1">
+                                    <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" colspan="2"
+                                           readonly="1" field_id="tax_totals_0"/>
+                                </group>
+                            </group>
+                            <div class="clearfix"/>
+                        </page>
+                        <page string="Thông tin kiện" name="package">
+                            <field name="import_package_stock" invisible="1" field_id="import_package_stock_0"/>
+                            <field name="package_line_ids" readonly="state in ('done', 'cancel')"
+                                   context="{'default_sale_id': sale_id}" on_change="1" field_id="package_line_ids_0">
+                                <tree string="Kiện hàng">
+                                    <field name="code"/>
+                                    <field name="sale_id"/>
+                                    <field name="purchase_id"/>
+                                    <field name="date"/>
+                                    <field name="quantity" on_change="1"/>
+                                    <field name="uom_id"/>
+                                    <field name="total_weight"/>
+                                    <field name="total_volume"/>
+                                    <field name="image" widget="image" class="oe_avatar"
+                                           options="{&quot;preview_image&quot;: &quot;image&quot;, &quot;size&quot;: [100, 100]}"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <!--                <page string="Service Cost" name="purchase_service">-->
+                        <!--                    <field name="purchase_service_ids">-->
+                        <!--                        <tree editable="bottom">-->
+                        <!--                            <field name="sequence" widget="handle"/>-->
+                        <!--                            <field name="currency_id" column_invisible="1" force_save="1"/>-->
+                        <!--                            <field name="currency_cny_id" column_invisible="1" force_save="1"/>-->
+                        <!--                            <field name="service_id"/>-->
+                        <!--                            <field name="uom_id"/>-->
+                        <!--                            <field name="qty" column_invisible="1" force_save="1"/>-->
+                        <!--                            <field name="uom_ids" column_invisible="1"/>-->
+                        <!--                            <field name="price" readonly="0" force_save="1"/>-->
+                        <!--                            <field name="price_cny" readonly="0" force_save="1"/>-->
+                        <!--                            <field name="amount_total" readonly="1" force_save="1"/>-->
+                        <!--                            <field name="department_id"/>-->
+                        <!--                        </tree>-->
+                        <!--                    </field>-->
+                        <!--                </page>-->
+                        <page name="sale_service" string="Dịch vụ">
+                            <field name="sale_service_ids" on_change="1" field_id="sale_service_ids_0">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="currency_id" column_invisible="1" force_save="1" can_create="True"
+                                           can_write="True"/>
+                                    <field name="currency_cny_id" optional="hide" can_create="True" can_write="True"/>
+                                    <field name="service_id" on_change="1" can_create="True" can_write="True"/>
+                                    <field name="uom_id" on_change="1" can_create="True" can_write="True"/>
+                                    <field name="compute_value" readonly="1" force_save="1"/>
+                                    <field name="compute_uom_id" readonly="1" force_save="1"/>
+                                    <field name="qty" column_invisible="1" force_save="1" on_change="1"/>
+                                    <field name="uom_ids" column_invisible="1"/>
+                                    <field name="price" readonly="0" force_save="1" on_change="1"/>
+                                    <field name="price_cny" readonly="0" force_save="1" on_change="1"/>
+                                    <field name="amount_total" readonly="1" force_save="1" on_change="1"/>
+                                    <field name="department_id" context="{'dpt_sale_management': 1}"/>
+                                    <field name="note"/>
+                                </tree>
+                            </field>
+                            <group col="6" class="mt-2 mt-md-0">
+                                <group class="oe_subtotal_footer" colspan="2">
+                                    <!--                            <field name="service_total_untax_amount" colspan="2" readonly="1"/>-->
+                                    <!--                            <field name="service_tax_amount" colspan="2" readonly="1"/>-->
+                                    <field name="service_total_amount" colspan="2" readonly="1"
+                                           field_id="service_total_amount_0"/>
+                                </group>
+                                <div class="clearfix"/>
+                            </group>
+                        </page>
+                        <page string="Thông tin khác" name="purchase_delivery_invoice">
+                            <group>
+                                <group name="other_info">
+                                    <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"
+                                           on_change="1" can_create="True" can_write="True" field_id="user_id_0"/>
+                                    <field name="company_id" options="{'no_create': True}"
+                                           readonly="state in ['cancel', 'done', 'purchase']" on_change="1"
+                                           can_create="True" can_write="True" field_id="company_id_1"/>
+                                    <field name="origin" field_id="origin_0"/>
+                                    <field name="default_location_dest_id_usage" invisible="1"
+                                           field_id="default_location_dest_id_usage_0"/>
+                                    <field name="incoterm_id" readonly="state == 'done'" can_create="True"
+                                           can_write="True" field_id="incoterm_id_0"/>
+                                    <field name="incoterm_location" readonly="state == 'done'"
+                                           field_id="incoterm_location_0"/>
+                                </group>
+                                <group name="invoice_info">
+                                    <field name="receipt_status" invisible="state not in ('purchase', 'done')"
+                                           field_id="receipt_status_0"/>
+                                    <field name="invoice_status"
+                                           invisible="state in ('draft', 'sent', 'to approve', 'cancel')"
+                                           field_id="invoice_status_0"/>
+                                    <field name="payment_term_id"
+                                           readonly="invoice_status == 'invoiced' or state == 'done'"
+                                           options="{'no_create': True}" can_create="True" can_write="True"
+                                           field_id="payment_term_id_0"/>
+                                    <field name="fiscal_position_id" options="{'no_create': True}"
+                                           readonly="invoice_status == 'invoiced' or state == 'done'" on_change="1"
+                                           can_create="True" can_write="True" field_id="fiscal_position_id_0"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="purchase_form_external_action" model="ir.actions.act_window">
+        <field name="name">Đơn mua hàng mua hộ</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">tree,kanban,form,pivot,graph,calendar,activity</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('purchase.purchase_order_view_tree')}),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('purchase.purchase_order_view_kanban_without_dashboard')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('dpt_purchase_trading.purchase_order_trading_form')}),
+            ]"/>
+        <field name="domain">[('purchase_type','=', 'external')]</field>
+        <field name="search_view_id" ref="purchase.purchase_order_view_search"/>
+        <field name="context">{'from_purchase_order_confirm': True, 'default_purchase_type': 'external'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No purchase order found. Let's create one!
+            </p>
+            <p>
+                Once you ordered your products to your supplier, confirm your request for quotation and it will turn
+                into a purchase order.
+            </p>
+        </field>
+    </record>
+    <menuitem name="Đơn mua hàng mua hộ" action="purchase_form_external_action" id="menu_purchase_form_external_action"
+              parent="purchase.menu_procurement_management"
+              sequence="6"/>
+
+</odoo>
