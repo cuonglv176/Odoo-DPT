@@ -6,9 +6,19 @@ class DPTSaleServiceManagement(models.Model):
     _inherit = 'dpt.sale.service.management'
 
     price_status = fields.Selection([
-        ('no_price', 'No Price'),
-        ('wait_approve', 'Wait Approve'),
-        ('approved', 'Approved'),
+        ('no_price', 'No Price'),  # Chưa có giá
+        ('wait_approve', 'Wait Approve'),  # Chờ duyệt giá
+        ('approved', 'Approved'),           # Đã duyệt
+        ('not_calculate', 'Not Calculate'),
+        ('calculated', 'Calculated'),  # Đã tính giá
+        ('sent_quotation', 'Sent Quotation'),
+        ('quoted', 'Quoted'),  # Đã báo giá
+        ('refuse_quoted', 'Refuse Quoted'),  # Từ chối báo giá
+        ('sent_approval', 'Sent Approval'),
+        ('approved_approval', 'Approved Approval'),
+        ('refuse_approval', 'Refuse Approval'), # Từ chối duyệt giá
+        ('ticket_status', 'Ticket Status'), # Thực hiện dịch vụ
+
     ], string='Status', default='no_price', compute="_compute_price_status")
     new_price = fields.Monetary(currency_field='currency_id', string='New Price')
     new_amount_total = fields.Monetary(currency_field='currency_id', string="New Amount Total",
@@ -49,23 +59,60 @@ class DPTSaleServiceManagement(models.Model):
     #             price_status = 'no_price'
     #         rec.price_status = price_status
 
-    @api.depends('approval_id', 'approval_id.request_status')
+    def action_accept_approval_price(self):
+        self.price_status = 'quoted'
+
+    def action_refuse_approval_price(self):
+        self.price_status = 'refuse_quoted'
+
+    @api.depends('approval_id', 'approval_id.request_status', 'price')
     def _compute_price_status(self):
+        approved_state = False
+        approved_approval = False
         for rec in self:
-            if rec.approval_id:
+            if rec.service_id.id == 23:
+                pass
+            if rec.sale_id.state == 'draft':
+                not_approved = rec.approval_id.filtered(
+                    lambda approval: approval.request_status in ('pending', 'new'))
+                if not_approved:
+                    rec.price_status = 'wait_approve'
+                    continue
+                if not rec.price:
+                    rec.price_status = 'no_price'
+                else:
+                    rec.price_status = 'calculated'
+            elif rec.sale_id.state == 'wait_price':
+                if rec.price_status != 'calculated':
+                    rec.price_status = 'not_calculate'
+                    continue
                 not_approved = rec.approval_id.filtered(lambda approval: approval.request_status in ('pending', 'new'))
                 if not_approved:
-                    price_status = 'wait_approve'
-                else:
-                    latest_approved = max(rec.approval_id, key=lambda line: line.date)
-
-                    if latest_approved.request_status in ('refused', 'cancel'):
-                        price_status = 'no_price'
-                    else:
-                        price_status = 'approved'
+                    rec.price_status = 'wait_approve'
+            elif rec.sale_id.state == 'sent':
+                rec.price_status = 'quoted'
+            elif rec.sale_id.state == 'sale':
+                rec.price_status = 'ticket_status'
             else:
-                price_status = 'no_price'
-            rec.price_status = price_status
+                rec.price_status = 'no_price'
+
+            # if rec.approval_id:
+            #     not_approved = rec.approval_id.filtered(lambda approval: approval.request_status in ('pending', 'new'))
+            #     if not_approved:
+            #         price_status = 'wait_approve'
+            #     else:
+            #         latest_approved = max(rec.approval_id, key=lambda line: line.date)
+            #
+            #         if latest_approved.request_status in ('refused', 'cancel'):
+            #             price_status = 'no_price'
+            #             approved_state = True
+            #         else:
+            #             price_status = 'approved'
+            #             approved_state = True
+            #             approved_approval = True
+            # else:
+            #     price_status = 'no_price'
+            # rec.price_status = price_status
 
     @api.depends('new_price', 'qty')
     def _compute_new_amount_total(self):
