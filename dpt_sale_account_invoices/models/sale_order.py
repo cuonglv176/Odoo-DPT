@@ -24,7 +24,7 @@ class SalesOrder(models.Model):
         for rec in self:
             rec.payment_amount_total = rec.amount_total + rec.service_total_amount
 
-    @api.depends('purchase_ids', 'purchase_ids.amount_untaxed')
+    @api.depends('purchase_ids', 'purchase_ids.amount_untaxed', 'purchase_ids.last_rate_currency')
     def _compute_purchase_amount_total(self):
         for rec in self:
             purchase_amount_total = 0
@@ -33,5 +33,6 @@ class SalesOrder(models.Model):
                     if purchase_id.currency_id.name == 'VND':
                         purchase_amount_total += purchase_id.amount_untaxed
                     else:
-                        purchase_amount_total += purchase_id.amount_untaxed * purchase_id.currency_id.rate
+                        purchase_amount_total += purchase_id.amount_untaxed * (
+                            purchase_id.currency_id.rate if not purchase_id.last_rate_currency else purchase_id.last_rate_currency)
             rec.purchase_amount_total = purchase_amount_total
