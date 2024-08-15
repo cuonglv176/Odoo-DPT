@@ -11,7 +11,7 @@ class DPTShippingSlip(models.Model):
     name = fields.Char('Name')
     transfer_code = fields.Char('Transfer Code')
     transfer_code_chinese = fields.Char('Transfer Code in Chinese')
-    main_in_picking_ids = fields.Many2many('stock.picking', 'stock_picking_main_in_shipping_rel', 'shipping_slip_id',
+    main_in_picking_ids = fields.Many2many('stock.picking', 'stock_picking_main_incoming_shipping_rel', 'shipping_slip_id',
                                            'picking_id', string='Main In Picking')
     out_picking_ids = fields.Many2many('stock.picking', 'stock_picking_out_shipping_rel', 'shipping_slip_id',
                                        'picking_id', string='Out Picking')
