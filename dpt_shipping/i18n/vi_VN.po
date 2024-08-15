@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-18 16:52+0000\n"
-"PO-Revision-Date: 2024-07-18 16:52+0000\n"
+"POT-Creation-Date: 2024-08-15 15:47+0000\n"
+"PO-Revision-Date: 2024-08-15 15:47+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -102,6 +102,11 @@ msgid "Create Shipping Receive"
 msgstr "Tạo phiếu vận chuyển (nhận)"
 
 #. module: dpt_shipping
+#: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_slip_form_view
+msgid "Create Transfer Picking"
+msgstr "Tạo phiếu điều chuyển"
+
+#. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_get_picking_so_wizard__create_uid
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__create_uid
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_split_wizard__create_uid
@@ -125,6 +130,11 @@ msgid "Current Stage"
 msgstr "Trạng thái ban đầu"
 
 #. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_get_picking_so_wizard__picking_type_id
+msgid "Default Picking Type"
+msgstr ""
+
+#. module: dpt_shipping
 #: model:ir.model,name:dpt_shipping.model_hr_department
 msgid "Department"
 msgstr "Bộ phận"
@@ -144,9 +154,24 @@ msgid "Display Name"
 msgstr ""
 
 #. module: dpt_shipping
+#: model:ir.model,name:dpt_shipping.model_dpt_export_import
+msgid "Dpt Export Import"
+msgstr "Xuất nhập khẩu"
+
+#. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__vehicle_driver_id
 msgid "Driver"
 msgstr "Tài xế"
+
+#. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_export_import__driver_name
+msgid "Driver Name"
+msgstr "Tên tài xế"
+
+#. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_export_import__driver_phone_number
+msgid "Driver Phone Number"
+msgstr "SĐT Tài xế"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,help:dpt_shipping.field_dpt_shipping_slip__vehicle_driver_id
@@ -319,6 +344,16 @@ msgid "Log Time"
 msgstr "Thời gian"
 
 #. module: dpt_shipping
+#: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_slip_form_view
+msgid "Main IN Picking"
+msgstr "Phiếu nhập TQ"
+
+#. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__main_in_picking_ids
+msgid "Main In Picking"
+msgstr "Phiếu nhập TQ"
+
+#. module: dpt_shipping
 #: model:ir.model,name:dpt_shipping.model_mail_message
 msgid "Message"
 msgstr "Tin nhắn"
@@ -473,6 +508,7 @@ msgid "Shipping Sent"
 msgstr "Phiếu gửi"
 
 #. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_export_import__shipping_slip_id
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_split_wizard__shipping_id
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage_log__shipping_slip_id
 msgid "Shipping Slip"
@@ -533,6 +569,16 @@ msgid "Type of the exception activity on record."
 msgstr ""
 
 #. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_export_import__type_of_vehicle
+msgid "Type of vehicle"
+msgstr ""
+
+#. module: dpt_shipping
+#: model_terms:ir.actions.act_window,help:dpt_shipping.action_valid_cutlist_stock_picking
+msgid "Tạo mới tài liệu"
+msgstr ""
+
+#. module: dpt_shipping
 #: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_sale_order_update_picking_tree_view
 msgid "Update Picking"
 msgstr "Cập nhật phiếu nhập"
@@ -544,8 +590,8 @@ msgstr "Cập nhật"
 
 #. module: dpt_shipping
 #: model:ir.actions.act_window,name:dpt_shipping.action_valid_cutlist_stock_picking
-#: model:ir.ui.menu,name:dpt_shipping.valid_cutlist_stock_picking_menu
 #: model:ir.ui.menu,name:dpt_shipping.valid_cutlist_stock_picking_in_stock_menu
+#: model:ir.ui.menu,name:dpt_shipping.valid_cutlist_stock_picking_menu
 msgid "Valid Cutlist"
 msgstr "Cutlist"
 
@@ -560,6 +606,11 @@ msgstr "Phương tiện"
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__vehicle_driver_phone
 msgid "Vehicle Driver Phone"
 msgstr "SĐT Tài xế"
+
+#. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_export_import__vehicle_license_plate
+msgid "Vehicle License Plate"
+msgstr "Biển số xe"
 
 #. module: dpt_shipping
 #: model:ir.actions.act_window,name:dpt_shipping.dpt_vehicle_stage_action
