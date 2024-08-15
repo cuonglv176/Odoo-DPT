@@ -8,9 +8,9 @@
             <form string="Shipping slip">
                 <header>
                     <button name="action_create_shipping_slip_receive" string="Create Shipping Receive"
-                            type="object" class="btn-primary"/>
+                            type="object" class="btn-primary" invisible="send_shipping_id"/>
                     <button name="action_create_stock_transfer" string="Create Transfer Picking"
-                            type="object" class="btn-primary"/>
+                            type="object" class="btn-primary" invisible="send_shipping_id"/>
                     <field name="vehicle_country" invisible="1"/>
                     <field name="vn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
                            invisible="vehicle_country != 'vietnamese'"/>
@@ -46,12 +46,17 @@
                         <page name="sale_order" string="Order">
                             <field name="sale_ids" readonly="1"/>
                         </page>
-                        <page name="out_picking" string="Out Picking">
+                        <page name="main_in_picking" string="Main IN Picking">
+                            <field name="main_in_picking_ids" context="{
+                                     'form_view_ref': 'stock.view_picking_form',
+                                     'tree_view_ref': 'stock.vpicktree'}" readonly="1"/>
+                        </page>
+                        <page name="out_picking" string="Out Picking" invisible="send_shipping_id">
                             <field name="out_picking_ids" context="{
                                      'form_view_ref': 'stock.view_picking_form',
                                      'tree_view_ref': 'stock.vpicktree'}" readonly="1"/>
                         </page>
-                        <page name="in_picking" string="In Picking">
+                        <page name="in_picking" string="In Picking" invisible="not send_shipping_id">
                             <field name="in_picking_ids" context="{
                                      'form_view_ref': 'stock.view_picking_form',
                                      'tree_view_ref': 'stock.vpicktree'}" readonly="1"/>

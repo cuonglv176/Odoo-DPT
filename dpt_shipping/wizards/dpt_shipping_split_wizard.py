@@ -19,8 +19,11 @@ class DPTShippingSplitWizard(models.TransientModel):
     shipping_id = fields.Many2one('dpt.shipping.slip', string='Shipping Slip')
 
     def create_shipping_receive(self):
+        export_import_ids = self.env['dpt.export.import'].sudo().search(
+            [('sale_id', 'in', self.picking_ids.mapped('sale_purchase_id').ids)])
         self.env['dpt.shipping.slip'].create({
             'send_shipping_id': self.shipping_id.id,
             'sale_ids': self.picking_ids.mapped('sale_purchase_id').ids,
             'out_picking_ids': self.picking_ids.ids,
+            'export_import_ids': export_import_ids.ids,
         })

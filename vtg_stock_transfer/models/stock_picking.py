@@ -8,12 +8,10 @@ class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
     # using for select location in internal picking
-    x_location_id = fields.Many2one('stock.location', 'Source Location', check_company=True,
-                                    states={'draft': [('readonly', False)]}, copy=True,
+    x_location_id = fields.Many2one('stock.location', 'Source Location', check_company=True, copy=True,
                                     default=lambda self: self.env['stock.picking.type'].browse(
                                         self._context.get('default_picking_type_id')).default_location_src_id)
     x_location_dest_id = fields.Many2one('stock.location', 'Destination Location', check_company=True, copy=True,
-                                         states={'draft': [('readonly', False)]},
                                          default=lambda self: self.env['stock.picking.type'].browse(
                                              self._context.get('default_picking_type_id')).default_location_dest_id)
     x_in_transfer_picking_id = fields.Many2one('stock.picking', 'Transfer Incoming Picking', copy=False)
@@ -65,7 +63,8 @@ class StockPicking(models.Model):
             new_picking_type_id = self.env['stock.picking.type'].sudo().search(
                 [('warehouse_id', '=', picking.x_location_dest_id.warehouse_id.id), ('code', '=', 'internal')], limit=1)
             if not new_picking_type_id:
-                raise ValidationError(f'Vui lòng tạo loại điều chuyển cho kho {picking.x_location_dest_id.warehouse_id.name}')
+                raise ValidationError(
+                    f'Vui lòng tạo loại điều chuyển cho kho {picking.x_location_dest_id.warehouse_id.name}')
             in_transfer_picking_id = picking.copy({
                 'name': picking.name,
                 'x_location_id': picking.x_location_id.id,
@@ -88,7 +87,7 @@ class StockPicking(models.Model):
                     'detail_ids': [(0, 0, {
                         'product_id': detail_id.product_id.id,
                         'uom_id': detail_id.uom_id.id,
-                        'quantity':  detail_id.quantity
+                        'quantity': detail_id.quantity
                     }) for detail_id in package_id.detail_ids] if package_id.detail_ids else None,
                     'lot_ids': package_id.lot_ids.ids if package_id.lot_ids else None
                 }) for package_id in picking.package_ids]
