@@ -165,6 +165,7 @@ class PurchaseOrder(models.Model):
         res = super(PurchaseOrder, self).write(vals)
         if vals.get('state'):
             self.update_last_rate_currency()
+        return res
 
     def update_last_rate_currency(self):
         self.ensure_one()
