@@ -56,6 +56,7 @@ class StockPicking(models.Model):
     sale_service_ids = fields.One2many('dpt.sale.service.management', 'picking_id', 'Sale Service')
     fields_ids = fields.One2many('dpt.sale.order.fields', 'picking_id', 'Fields')
     exported_label = fields.Boolean('Exported Label')
+    picking_lot_name = fields.Char('Picking Lot Name')
 
     def _compute_total_volume_weight(self):
         for item in self:
@@ -147,7 +148,7 @@ class StockPicking(models.Model):
                     'product_id': move_id.product_id.id,
                     'quantity': move_id.product_uom_qty,
                     'product_uom_id': move_id.product_uom.id,
-                    'lot_name': self.name if self.is_main_incoming else None,
+                    'lot_name': self.picking_lot_name if self.is_main_incoming else None,
                     'lot_id': self.env['stock.lot'].search(
                         [('product_id', '=', move_id.product_id.id), ('name', '=', self.lot_name)])[
                               :1].id if not self.is_main_incoming and self.lot_name else None
@@ -158,7 +159,7 @@ class StockPicking(models.Model):
         # update back to export import
         if self.x_transfer_type == 'outgoing_transfer' and self.location_id.warehouse_id.is_main_incoming_warehouse:
             for order_line in self.sale_purchase_id.order_line:
-                order_line.dpt_export_import_line_ids.write({'lot_code': self.name})
+                order_line.dpt_export_import_line_ids.write({'lot_code': self.picking_lot_name})
                 package_ids = self.package_ids.filtered(
                     lambda p: order_line.product_id.id in p.detail_ids.mapped('product_id').ids)
                 if not package_ids:
@@ -171,15 +172,15 @@ class StockPicking(models.Model):
         if self.is_main_incoming:
             prefix = f'KT{datetime.now().strftime("%y%m%d")}'
             nearest_picking_id = self.env['stock.picking'].sudo().search(
-                [('name', 'ilike', prefix + "%"), ('id', '!=', self.id),
+                [('picking_lot_name', 'ilike', prefix + "%"), ('id', '!=', self.id),
                  ('location_dest_id.warehouse_id', '=', self.location_dest_id.warehouse_id.id),
                  ('picking_type_id.code', '=', self.picking_type_code)], order='id desc').filtered(
-                lambda sp: '.' not in sp.name)
+                lambda sp: '.' not in sp.picking_lot_name)
             if nearest_picking_id:
-                number = int(nearest_picking_id[:1].name[8:])
-                self.name = prefix + str(number + 1).zfill(3)
+                number = int(nearest_picking_id[:1].picking_lot_name[8:])
+                self.picking_lot_name = prefix + str(number + 1).zfill(3)
             else:
-                self.name = prefix + '001'
+                self.picking_lot_name = prefix + '001'
         if self.picking_type_code == 'outgoing' or self.x_transfer_type == 'outgoing_transfer':
             if not self.picking_in_id:
                 return self
@@ -188,18 +189,18 @@ class StockPicking(models.Model):
                 last_picking_out_id = self.picking_in_id.picking_out_ids.filtered(lambda sp: sp.id != self.id).sorted(
                     key=lambda r: r.id)[:1]
                 if last_picking_out_id:
-                    num = last_picking_out_id.name.split('.')[:1]
-                    self.name = self.picking_in_id.name + f".{num + 1}"
+                    num = last_picking_out_id.picking_lot_name.split('.')[:1]
+                    self.picking_lot_name = self.picking_in_id.picking_lot_name + f".{num + 1}"
                 else:
-                    self.name = self.picking_in_id.name + ".1"
+                    self.picking_lot_name = self.picking_in_id.picking_lot_name + ".1"
             else:
-                self.name = self.picking_in_id.name
+                self.picking_lot_name = self.picking_in_id.picking_lot_name
         if self.x_transfer_type == 'incoming_transfer':
             transfer_picking_out_id = self.env['stock.picking'].sudo().search(
                 [('x_in_transfer_picking_id', '=', self.id)], limit=1)
             if transfer_picking_out_id:
                 return self
-            self.name = transfer_picking_out_id.name
+            self.picking_lot_name = transfer_picking_out_id.picking_lot_name
 
     def action_create_transfer_picking(self):
         # condition cutlift
@@ -226,7 +227,7 @@ class StockPicking(models.Model):
                 'default_x_location_dest_id': other_warehouse_id.lot_stock_id.id,
                 'default_picking_type_id': picking_type_id.id,
                 'default_x_transfer_type': 'outgoing_transfer',
-                'default_lot_name': self.name,
+                'default_lot_name': self.picking_lot_name,
                 'default_move_ids_without_package': [(0, 0, {
                     'location_id': self.location_dest_id.id,
                     'location_dest_id': transit_location_id.id,

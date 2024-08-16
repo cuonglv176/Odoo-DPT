@@ -7,6 +7,7 @@
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='origin']" position="after">
+                <field name="picking_lot_name" invisible="1"/>
                 <field name="packing_lot_name" readonly="1" force_save="1"/>
                 <field name="total_volume"/>
                 <field name="total_weight"/>
