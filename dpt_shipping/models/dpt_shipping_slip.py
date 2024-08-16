@@ -54,7 +54,8 @@ class DPTShippingSlip(models.Model):
     @api.constrains('export_import_ids')
     def constrains_export_import(self):
         for item in self:
-            sale_order_ids = item.export_import_ids.mapped('sale_id')
+            sale_order_ids = item.export_import_ids.mapped('sale_id') | item.export_import_ids.mapped(
+                'line_ids').mapped('sale_id')
             main_in_picking_ids = self.env['stock.picking'].search(
                 [('sale_purchase_id', 'in', sale_order_ids.ids), ('is_main_incoming', '=', True)])
             in_picking_ids = self.env['stock.picking'].search(
