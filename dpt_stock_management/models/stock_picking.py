@@ -95,14 +95,11 @@ class StockPicking(models.Model):
             if item.is_main_incoming:
                 continue
             for move_id in item.move_ids_without_package:
-                if move_id.product_id.tracking != 'lot':
+                if move_id.product_id.tracking != 'lot' or not move_id.move_line_ids:
                     continue
                 lot_id = self.env['stock.lot'].search(
                     [('product_id', '=', move_id.product_id.id), ('name', '=', item.lot_name)], limit=1)
-                if not lot_id:
-                    raise ValidationError(
-                        _('There is not Lot %s of Product %s !') % (move_id.product_id.display_name, item.lot_name))
-                move_id.move_line_ids.update({'lot_id': lot_id.id})
+                move_id.move_line_ids.write({'lot_id': lot_id.id if lot_id else None})
 
     def _compute_num_picking_out(self):
         for item in self:
@@ -229,6 +226,7 @@ class StockPicking(models.Model):
                 'default_x_location_dest_id': other_warehouse_id.lot_stock_id.id,
                 'default_picking_type_id': picking_type_id.id,
                 'default_x_transfer_type': 'outgoing_transfer',
+                'default_lot_name': self.name,
                 'default_move_ids_without_package': [(0, 0, {
                     'location_id': self.location_dest_id.id,
                     'location_dest_id': transit_location_id.id,

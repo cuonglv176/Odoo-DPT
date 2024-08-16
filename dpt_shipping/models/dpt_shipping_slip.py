@@ -144,5 +144,23 @@ class DPTShippingSlip(models.Model):
                 transfer_picking_id = self.env['stock.picking'].with_context(action['context']).create({
                     'sale_purchase_id': main_incoming_picking_id.sale_purchase_id.id,
                 })
+                # update move line
+                move_line_vals = []
+                for move_id in transfer_picking_id.move_ids_without_package:
+                    lot_id = self.env['stock.lot'].search(
+                        [('product_id', '=', move_id.product_id.id), ('name', '=', transfer_picking_id.lot_name)],
+                        limit=1)
+                    move_line_vals.append({
+                        'picking_id': transfer_picking_id.id,
+                        'move_id': move_id.id,
+                        'lot_id': lot_id.id,
+                        'location_id': move_id.location_id.id,
+                        'location_dest_id': move_id.location_dest_id.id,
+                        'product_id': move_id.product_id.id,
+                        'quantity': move_id.product_uom_qty,
+                        'product_uom_id': move_id.product_uom.id,
+                    })
+                if move_line_vals:
+                    self.env['stock.move.line'].create(move_line_vals)
                 transfer_picking_id.create_in_transfer_picking()
             item.constrains_export_import()

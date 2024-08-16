@@ -74,6 +74,7 @@ class StockPicking(models.Model):
                 'x_transfer_type': 'incoming_transfer',
                 'origin': picking.name,
                 'picking_type_id': new_picking_type_id.id,
+                'lot_name': picking.name,
                 'package_ids': [(0, 0, {
                     'code': package_id.code,
                     'date': package_id.date,
@@ -90,8 +91,33 @@ class StockPicking(models.Model):
                         'quantity': detail_id.quantity
                     }) for detail_id in package_id.detail_ids] if package_id.detail_ids else None,
                     # 'lot_ids': package_id.lot_ids.ids if package_id.lot_ids else None
-                }) for package_id in picking.package_ids]
+                }) for package_id in picking.package_ids],
+                'move_ids_without_package': [(0, 0, {
+                    'location_id': transit_location_id.id,
+                    'location_dest_id': picking.x_location_dest_id.id,
+                    'name': (move_line_id.product_id.display_name or '')[:2000],
+                    'product_id': move_line_id.product_id.id,
+                    'product_uom_qty': move_line_id.product_uom_qty,
+                    'product_uom': move_line_id.product_uom.id,
+                }) for move_line_id in picking.move_ids_without_package],
             })
+            move_line_vals = []
+            for move_id in in_transfer_picking_id.move_ids_without_package:
+                lot_id = self.env['stock.lot'].search(
+                    [('product_id', '=', move_id.product_id.id), ('name', '=', in_transfer_picking_id.lot_name)],
+                    limit=1)
+                move_line_vals.append({
+                    'picking_id': in_transfer_picking_id.id,
+                    'move_id': move_id.id,
+                    'lot_id': lot_id.id,
+                    'location_id': move_id.location_id.id,
+                    'location_dest_id': move_id.location_dest_id.id,
+                    'product_id': move_id.product_id.id,
+                    'quantity': move_id.product_uom_qty,
+                    'product_uom_id': move_id.product_uom.id,
+                })
+                if move_line_vals:
+                    self.env['stock.move.line'].create(move_line_vals)
             in_transfer_picking_id._onchange_get_location()
             # in_transfer_picking_id.action_confirm()
             picking.x_in_transfer_picking_id = in_transfer_picking_id.id
