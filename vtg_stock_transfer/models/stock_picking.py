@@ -89,7 +89,7 @@ class StockPicking(models.Model):
                         'uom_id': detail_id.uom_id.id,
                         'quantity': detail_id.quantity
                     }) for detail_id in package_id.detail_ids] if package_id.detail_ids else None,
-                    'lot_ids': package_id.lot_ids.ids if package_id.lot_ids else None
+                    # 'lot_ids': package_id.lot_ids.ids if package_id.lot_ids else None
                 }) for package_id in picking.package_ids]
             })
             in_transfer_picking_id._onchange_get_location()
