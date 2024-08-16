@@ -133,7 +133,7 @@ class StockPicking(models.Model):
         self.package_ids._create_stock_moves(self)
 
     def action_confirm(self):
-        if self.is_main_incoming or self.lot_name:
+        if self.is_main_incoming:
             # auto create move line with lot name is picking name
             move_line_vals = []
             for move_id in self.move_ids_without_package:
