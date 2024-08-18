@@ -7,7 +7,7 @@ from odoo.exceptions import ValidationError
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    is_product_service = fields.Boolean('Is Product Service')
+    is_product_service = fields.Boolean('Is Product Service', default=False)
 
     @api.constrains('is_product_service')
     def constraint_product_service(self):
