@@ -9,6 +9,7 @@
                 <span class="d-inline-block">
                     <field name="is_product_deposit"/>
                     <label for="is_product_deposit"/>
+                    <label for="is_product_buy"/>
                 </span>
             </xpath>
         </field>
