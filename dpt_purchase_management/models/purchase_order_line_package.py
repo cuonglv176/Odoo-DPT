@@ -39,7 +39,7 @@ class PurchaseOrderLinePackage(models.Model):
     #     sequence = self.env['ir.sequence'].next_by_code('purchase.order.line.package') or '00'
     #     return f'{sequence}'
 
-    @api.constrains('quantity', 'uom_id', 'uom_id.packing_code')
+    @api.constrains('quantity', 'uom_id')
     def constrains_package_name(self):
         for item in self:
             item.code = f"{item.quantity}{item.uom_id.packing_code}"

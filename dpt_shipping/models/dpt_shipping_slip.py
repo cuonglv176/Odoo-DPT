@@ -11,6 +11,8 @@ class DPTShippingSlip(models.Model):
     name = fields.Char('Name')
     transfer_code = fields.Char('Transfer Code')
     transfer_code_chinese = fields.Char('Transfer Code in Chinese')
+    main_in_picking_ids = fields.Many2many('stock.picking', 'stock_picking_main_incoming_shipping_rel', 'shipping_slip_id',
+                                           'picking_id', string='Main In Picking')
     out_picking_ids = fields.Many2many('stock.picking', 'stock_picking_out_shipping_rel', 'shipping_slip_id',
                                        'picking_id', string='Out Picking')
     export_import_ids = fields.Many2many('dpt.export.import', 'export_import_shipping_rel', 'shipping_slip_id',
@@ -52,14 +54,18 @@ class DPTShippingSlip(models.Model):
     @api.constrains('export_import_ids')
     def constrains_export_import(self):
         for item in self:
-            sale_order_ids = item.export_import_ids.mapped('sale_id')
+            sale_order_ids = item.export_import_ids.mapped('sale_id') | item.export_import_ids.mapped(
+                'sale_ids') | item.export_import_ids.mapped('line_ids').mapped('sale_id')
+            main_in_picking_ids = self.env['stock.picking'].search(
+                [('sale_purchase_id', 'in', sale_order_ids.ids), ('is_main_incoming', '=', True)])
             in_picking_ids = self.env['stock.picking'].search(
                 [('sale_purchase_id', 'in', sale_order_ids.ids), ('x_transfer_type', '=', 'outgoing_transfer')])
-            out_picking_ids = self.env['stock.picking'].search(
-                [('sale_purchase_id', 'in', sale_order_ids.ids), ('x_transfer_type', '=', 'incoming_transfer')])
+            # out_picking_ids = self.env['stock.picking'].search(
+            #     [('sale_purchase_id', 'in', sale_order_ids.ids), ('x_transfer_type', '=', 'incoming_transfer')])
             item.sale_ids = [(6, 0, sale_order_ids.ids)]
             item.in_picking_ids = [(6, 0, in_picking_ids.ids)]
-            item.out_picking_ids = [(6, 0, out_picking_ids.ids)]
+            # item.out_picking_ids = [(6, 0, out_picking_ids.ids)]
+            item.main_in_picking_ids = [(6, 0, main_in_picking_ids.ids)]
             item.export_import_ids.shipping_slip_id = item.id
 
     def _compute_vehicle_driver_phone(self):
@@ -133,16 +139,28 @@ class DPTShippingSlip(models.Model):
 
     def action_create_stock_transfer(self):
         for item in self:
-            for sale_id in item.sale_ids:
-                if sale_id.id in (item.in_picking_ids | item.out_picking_ids).mapped('sale_purchase_id').ids:
-                    continue
-                main_incoming_picking_id = self.env['stock.picking'].search(
-                    [('sale_purchase_id', '=', sale_id.id), ('is_main_incoming', '=', True)])
-                if not main_incoming_picking_id:
-                    raise ValidationError("Vui lòng tạo phiếu nhập cho đơn hàng %s" % sale_id.name)
+            for main_incoming_picking_id in item.main_in_picking_ids:
                 action = main_incoming_picking_id.action_create_transfer_picking()
                 transfer_picking_id = self.env['stock.picking'].with_context(action['context']).create({
-                    'sale_purchase_id': sale_id.id,
+                    'sale_purchase_id': main_incoming_picking_id.sale_purchase_id.id,
                 })
+                # update move line
+                move_line_vals = []
+                for move_id in transfer_picking_id.move_ids_without_package:
+                    lot_id = self.env['stock.lot'].search(
+                        [('product_id', '=', move_id.product_id.id), ('name', '=', transfer_picking_id.lot_name)],
+                        limit=1)
+                    move_line_vals.append({
+                        'picking_id': transfer_picking_id.id,
+                        'move_id': move_id.id,
+                        'lot_id': lot_id.id,
+                        'location_id': move_id.location_id.id,
+                        'location_dest_id': move_id.location_dest_id.id,
+                        'product_id': move_id.product_id.id,
+                        'quantity': move_id.product_uom_qty,
+                        'product_uom_id': move_id.product_uom.id,
+                    })
+                if move_line_vals:
+                    self.env['stock.move.line'].create(move_line_vals)
                 transfer_picking_id.create_in_transfer_picking()
             item.constrains_export_import()

@@ -248,6 +248,7 @@ class DptExportImportLine(models.Model):
     hs_code_id = fields.Many2one('dpt.export.import.acfta', string='HS Code')
     dpt_code_hs = fields.Char(string='H')
     dpt_sl1 = fields.Integer(string='SL1', tracking=True)
+    dpt_price_unit = fields.Monetary(string='Đơn giá xuất hoá đơn', tracking=True, currency_field='currency_id')
     dpt_uom1_id = fields.Many2one('uom.uom', string='ĐVT 1', tracking=True)
     dpt_sl2 = fields.Integer(string='SL2', tracking=True)
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
@@ -447,13 +448,15 @@ class DptExportImportLine(models.Model):
 
             })
             rec.sale_line_id.write(val_update_sale_line)
-            if 'dpt_uom1_id' in vals or 'dpt_sl1' in vals:
+            if 'dpt_uom1_id' in vals or 'dpt_sl1' in vals or 'dpt_price_unit' in vals:
                 update_query = """
                         UPDATE sale_order_line
-                        SET product_uom = %s, product_uom_qty = %s
+                        SET product_uom = %s, product_uom_qty = %s, price_unit = %s, price_subtotal = %s
                         WHERE id = %s
                         """
-                self.env.cr.execute(update_query, (rec.dpt_uom1_id.id, rec.dpt_sl1, rec.sale_line_id.id))
+                self.env.cr.execute(update_query,
+                                    (rec.dpt_uom1_id.id, rec.dpt_sl1, rec.dpt_price_unit,
+                                     rec.dpt_sl1 * rec.dpt_price_unit, rec.sale_line_id.id))
         return res
 
     # def write(self, vals):

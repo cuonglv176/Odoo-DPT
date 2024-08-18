@@ -40,6 +40,7 @@
                             <field name="declaration_type" widget="radio" options="{'horizontal': true}"/>
                             <field name="dpt_exchange_rate"/>
                             <field name="dpt_price_usd" invisible="declaration_type != 'usd'"/>
+                            <field name="dpt_price_unit"/>
                             <field name="dpt_total_usd" invisible="declaration_type != 'usd'"/>
                             <field name="dpt_total_usd_vnd" invisible="declaration_type != 'usd'"/>
                             <field name="dpt_price_cny_vnd" invisible="declaration_type != 'cny'"/>
