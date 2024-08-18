@@ -71,6 +71,11 @@ class DPTService(models.Model):
         for rec in self:
             rec.steps_count = len(rec.steps_ids)
 
+    def action_auto_create_product(self):
+        service_ids = self.env['dpt.service.management'].search([])
+        for service_id in service_ids:
+            service_id.action_create_product_id()
+
     def action_create_product_id(self):
         if not self.product_id:
             product_id = self.env['product.product'].create({
