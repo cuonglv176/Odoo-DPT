@@ -1,28 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
 
-    <record id="dpt_res_partner_personal_sale_rule" model="ir.rule">
-        <field name="name">DPT Personal sale res partner</field>
+    <record id="dpt_res_partner_personal_rule" model="ir.rule">
+        <field name="name">DPT Personal res partner</field>
         <field ref="model_res_partner" name="model_id"/>
-        <field name="domain_force">[('user_id','=',user.id)]
-        </field>
-        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
-    </record>
-
-
-    <record id="dpt_res_partner_personal_cs_rule" model="ir.rule">
-        <field name="name">DPT Personal cs res partner</field>
-        <field ref="model_res_partner" name="model_id"/>
-        <field name="domain_force">[('cs_user_id','=',user.id)]
-        </field>
-        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
-    </record>
-
-
-    <record id="dpt_res_partner_personal_all_employee_rule" model="ir.rule">
-        <field name="name">DPT Personal all employee res partner</field>
-        <field ref="model_res_partner" name="model_id"/>
-        <field name="domain_force">[('is_user','=',True)]
+        <field name="domain_force">['|','|','|',('user_id','=',user.id),('cs_user_id','=',user.id),('id','=',
+            user.partner_id.id),('is_user','=', True)]
         </field>
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
     </record>
@@ -30,9 +13,9 @@
     <record id="dpt_res_partner_salesman_all_leads_rule" model="ir.rule">
         <field name="name">DPT salesman all leads res partner</field>
         <field ref="model_res_partner" name="model_id"/>
-        <field name="domain_force">['|',('user_id.employee_id.department_id','=',
+        <field name="domain_force">['|','|','|',('user_id.employee_id.department_id','=',
             user.employee_id.department_id.id),('cs_user_id.employee_id.department_id','=',
-            user.employee_id.department_id.id)]
+            user.employee_id.department_id.id),('id','=', user.partner_id.id),('is_user','=', True)]
         </field>
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
     </record>
