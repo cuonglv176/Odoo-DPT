@@ -63,7 +63,7 @@ def _create_invoices(self, grouped=False, final=False, date=None):
             invoice_line_vals.append(Command.create(
                 {
                     'product_id': product_buy_id.id,
-                    'order_line_ids': order.order_line_ids.ids,
+                    'order_line_ids': order.order_line.ids,
                     'display_type': 'product',
                     'quantity': 1,
                     'price_unit': sum(order.order_line.mapped('price_subtotal'))
