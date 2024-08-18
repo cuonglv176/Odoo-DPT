@@ -32,11 +32,11 @@ class ResPartner(models.Model):
     cs_user_id = fields.Many2one('res.users', string='Nhân viên CS')
     is_user = fields.Boolean(string='Là nhân viên', default=False, compute="_compute_check_employee")
     dpt_type_of_partner = fields.Selection([('employee', 'Employee'),
-                                         ('customer', 'Customer'),
-                                         ('vendor', 'Vendor'),
-                                         ('shipping_address', 'Shipping Address'),
-                                         ('payment_address', 'Payment Address'),
-                                         ('other', 'Other')], string='Type Partner')
+                                            ('customer', 'Customer'),
+                                            ('vendor', 'Vendor'),
+                                            ('shipping_address', 'Shipping Address'),
+                                            ('payment_address', 'Payment Address'),
+                                            ('other', 'Other')], string='Type Partner')
 
     def _compute_check_employee(self):
         for rec in self:
@@ -81,3 +81,24 @@ class ResPartner(models.Model):
             msg += f'{_("Phone2 is invalid.")}\n'
         if msg:
             raise ValidationError(msg)
+
+    @api.model
+    def create(self, vals):
+        if vals.get('phone'):
+            existing_partner = self.search([('dpt_user_name', '=', vals['dpt_user_name'])])
+            if existing_partner:
+                raise ValidationError(
+                    f"Tài khoản {vals['dpt_user_name']} đã tồn tại trong hệ thống cho đối tác {existing_partner.name}.")
+
+        return super(ResPartner, self).create(vals)
+
+    def write(self, vals):
+        if vals.get('phone'):
+            for partner in self:
+                existing_partner = self.search(
+                    [('dpt_user_name', '=', vals['dpt_user_name']), ('id', '!=', partner.id)])
+                if existing_partner:
+                    raise ValidationError(
+                        f"Tài khoản {vals['dpt_user_name']} đã tồn tại trong hệ thống cho đối tác {existing_partner.name}.")
+
+        return super(ResPartner, self).write(vals)
