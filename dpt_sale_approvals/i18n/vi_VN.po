@@ -213,3 +213,8 @@ msgstr "Từ chối duyệt giá"
 #: model:ir.model.fields.selection,name:dpt_sale_approvals.selection__dpt_sale_service_management__price_status__ticket_status
 msgid "Ticket Status"
 msgstr "Thực hiện dịch vụ"
+
+#. module: dpt_sale_approvals
+#: model:ir.model.fields.selection,name:dpt_sale_approvals.selection__dpt_sale_service_management__price_status__not_calculate
+msgid "Not Calculate"
+msgstr "Chưa có giá"
