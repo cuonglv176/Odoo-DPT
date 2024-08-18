@@ -71,13 +71,14 @@ def _create_invoices(self, grouped=False, final=False, date=None):
 
         if order.sale_service_ids:
             for sale_service_id in order.sale_service_ids:
-                invoice_line_vals.append(Command.create(
-                    {
-                        'product_id': sale_service_id.service_id.product_id.id,
-                        'display_type': 'product',
-                        'quantity': sale_service_id.compute_value,
-                        'price_unit': sale_service_id.price
-                    }))
+                if sale_service_id.price != 0:
+                    invoice_line_vals.append(Command.create(
+                        {
+                            'product_id': sale_service_id.service_id.product_id.id,
+                            'display_type': 'product',
+                            'quantity': sale_service_id.compute_value,
+                            'price_unit': sale_service_id.price
+                        }))
 
         # if not any(not line.display_type for line in invoiceable_lines):
         #     invoice_vals_list.append(invoice_vals)
