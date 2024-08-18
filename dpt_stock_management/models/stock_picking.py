@@ -115,9 +115,10 @@ class StockPicking(models.Model):
 
     @api.model
     def create(self, vals):
-        res = super().create(vals)
+        res = super(StockPicking, self).create(vals)
+        res.check_required_fields()
         res.action_update_picking_name()
-        res.onchange_package()
+        res.constrains_package()
         # auto assign picking
         res.action_confirm()
         return res
@@ -178,11 +179,8 @@ class StockPicking(models.Model):
                  ('picking_type_id.code', '=', self.picking_type_code)], order='id desc').filtered(
                 lambda sp: '.' not in sp.name)
             if nearest_picking_id:
-                try:
-                    number = int(nearest_picking_id.name[7:])
-                except:
-                    number = 0
-                self.name = prefix + str(number).zfill(3)
+                number = int(nearest_picking_id[:1].name[8:])
+                self.name = prefix + str(number + 1).zfill(3)
             else:
                 self.name = prefix + '001'
         if self.picking_type_code == 'outgoing' or self.x_transfer_type == 'outgoing_transfer':
@@ -365,12 +363,6 @@ class StockPicking(models.Model):
         picking.sale_service_ids = self.sale_service_ids
         picking.fields_ids = self.fields_ids
         return picking
-
-    @api.model
-    def create(self, vals_list):
-        res = super(StockPicking, self).create(vals_list)
-        self.check_required_fields()
-        return res
 
     def write(self, vals):
         res = super(StockPicking, self).write(vals)

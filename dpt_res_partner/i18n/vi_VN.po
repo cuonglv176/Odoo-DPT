@@ -157,3 +157,34 @@ msgstr "Di động 1"
 #, python-format
 msgid "Mobile"
 msgstr "Di động 2"
+
+#. module: dpt_res_partner
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_partner__dpt_type_of_partner
+#: model:ir.model.fields,field_description:dpt_res_partner.field_res_users__dpt_type_of_partner
+msgid "Type Partner"
+msgstr "Loại liên hệ"
+
+#. module: dpt_res_partner
+#: model:ir.model.fields.selection,name:dpt_res_partner.selection__res_partner__dpt_type_of_partner__vendor
+msgid "Vendor"
+msgstr "Nhà cung cấp"
+
+#. module: dpt_res_partner
+#: model:ir.model.fields.selection,name:dpt_res_partner.selection__res_partner__dpt_type_of_partner__shipping_address
+msgid "Shipping Address"
+msgstr "Địa chỉ giao hàng"
+
+#. module: dpt_res_partner
+#: model:ir.model.fields.selection,name:dpt_res_partner.selection__res_partner__dpt_type_of_partner__payment_address
+msgid "Payment Address"
+msgstr "Địa chỉ xuất hóa đơn"
+
+#. module: dpt_res_partner
+#: model:ir.model.fields.selection,name:dpt_res_partner.selection__res_partner__dpt_type_of_partner__employee
+msgid "Employee"
+msgstr "Nhân viên"
+
+#. module: dpt_res_partner
+#: model:ir.model.fields.selection,name:dpt_res_partner.selection__res_partner__dpt_type_of_partner__customer
+msgid "Customer"
+msgstr "Khách hàng"

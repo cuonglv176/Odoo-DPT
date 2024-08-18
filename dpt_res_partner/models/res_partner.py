@@ -31,6 +31,12 @@ class ResPartner(models.Model):
     company_type = fields.Selection(selection_add=[('household_business', 'Household Business')])
     cs_user_id = fields.Many2one('res.users', string='Nhân viên CS')
     is_user = fields.Boolean(string='Là nhân viên', default=False, compute="_compute_check_employee")
+    dpt_type_of_partner = fields.Selection([('employee', 'Employee'),
+                                         ('customer', 'Customer'),
+                                         ('vendor', 'Vendor'),
+                                         ('shipping_address', 'Shipping Address'),
+                                         ('payment_address', 'Payment Address'),
+                                         ('other', 'Other')], string='Type Partner')
 
     def _compute_check_employee(self):
         for rec in self:

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-17 22:34+0000\n"
-"PO-Revision-Date: 2024-07-17 22:34+0000\n"
+"POT-Creation-Date: 2024-08-13 17:11+0000\n"
+"PO-Revision-Date: 2024-08-13 17:11+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -101,6 +101,7 @@ msgid "Attachment Count"
 msgstr ""
 
 #. module: dpt_export_import
+#: model:ir.model.fields.selection,name:dpt_export_import.selection__dpt_export_import__declaration_type__cny
 #: model:ir.model.fields.selection,name:dpt_export_import.selection__dpt_export_import_line__declaration_type__cny
 msgid "CNY"
 msgstr ""
@@ -114,6 +115,11 @@ msgstr "Hủy"
 #: model_terms:ir.ui.view,arch_db:dpt_export_import.view_dpt_export_import_form
 msgid "Cancelled"
 msgstr "Hủy"
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__is_readonly_item_description
+msgid "Chỉ đọc item"
+msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields.selection,name:dpt_export_import.selection__dpt_export_import_line__state__wait_confirm
@@ -227,6 +233,7 @@ msgid "Declaration line"
 msgstr "Dòng tờ khai"
 
 #. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__declaration_type
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__declaration_type
 msgid "Declaration type"
 msgstr "Loại tiền khai"
@@ -479,6 +486,11 @@ msgid "Huỷ"
 msgstr ""
 
 #. module: dpt_export_import
+#: model_terms:ir.ui.view,arch_db:dpt_export_import.view_dpt_export_import_line_update_item_form
+msgid "Hủy"
+msgstr ""
+
+#. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__id
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_acfta__id
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_gate__id
@@ -566,6 +578,11 @@ msgid "Is new"
 msgstr "Dòng tờ khai mới"
 
 #. module: dpt_export_import
+#: model_terms:ir.ui.view,arch_db:dpt_export_import.dpt_export_import_view_sale_order_inherit_form
+msgid "Item"
+msgstr ""
+
+#. module: dpt_export_import
 #: model:ir.model.fields.selection,name:dpt_export_import.selection__dpt_export_import__state__post_control
 #: model:ir.model.fields.selection,name:dpt_export_import.selection__dpt_export_import_line__state__post_control
 #: model:ir.model.fields.selection,name:dpt_export_import.selection__sale_order_line__state_export_import_line__post_control
@@ -589,6 +606,7 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__available_picking_ids
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__lot_code
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__stock_picking_ids
 msgid "Lot code"
@@ -735,6 +753,7 @@ msgid "Other tax rate(%)"
 msgstr "Thuế suất khác(%)"
 
 #. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__available_package_ids
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__package_ids
 #: model:ir.ui.menu,name:dpt_export_import.submenu_export_import_package_management
 msgid "Package"
@@ -751,10 +770,19 @@ msgid "Partner Importer"
 msgstr "Tên nhà nhập khẩu"
 
 #. module: dpt_export_import
-#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__payment_exchange_rate
 #: model:ir.model.fields,field_description:dpt_export_import.field_sale_order_line__payment_exchange_rate
 msgid "Payment exchange rate"
 msgstr "Tỷ giá thanh toán"
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__picking_count
+msgid "Picking Count"
+msgstr ""
+
+#. module: dpt_export_import
+#: model_terms:ir.ui.view,arch_db:dpt_export_import.view_dpt_export_import_line_form
+msgid "Pickings"
+msgstr "Phiếu nhập"
 
 #. module: dpt_export_import
 #: model_terms:ir.ui.view,arch_db:dpt_export_import.view_dpt_export_import_form
@@ -786,6 +814,11 @@ msgstr ""
 #: model:ir.ui.menu,name:dpt_export_import.menu_product_variant_config_dpt_export_import
 msgid "Products"
 msgstr "Sản phẩm"
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__payment_exchange_rate
+msgid "Rate ECUSS"
+msgstr "Tỷ giá ECUSS"
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__rating_ids
@@ -936,6 +969,16 @@ msgid "Tax import (%)"
 msgstr "Thuế nhập khẩu (%)"
 
 #. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__item_description_en
+msgid "Tem XNK (EN)"
+msgstr ""
+
+#. module: dpt_export_import
+#: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import_line__item_description_vn
+msgid "Tem XNK (VN)"
+msgstr ""
+
+#. module: dpt_export_import
 #: model:ir.model.fields.selection,name:dpt_export_import.selection__dpt_export_import__state__consulted
 #: model:ir.model.fields.selection,name:dpt_export_import.selection__dpt_export_import_line__state__consulted
 #: model:ir.model.fields.selection,name:dpt_export_import.selection__sale_order_line__state_export_import_line__consulted
@@ -1053,6 +1096,18 @@ msgid "Tên doanh nghiệp"
 msgstr ""
 
 #. module: dpt_export_import
+#: model_terms:ir.ui.view,arch_db:dpt_export_import.view_dpt_export_import_form
+msgid "Tờ Khai Nháp"
+msgstr ""
+
+#. module: dpt_export_import
+#: model:ir.model.fields.selection,name:dpt_export_import.selection__dpt_export_import__state__draft_declaration
+#: model:ir.model.fields.selection,name:dpt_export_import.selection__dpt_export_import_line__state__draft_declaration
+#: model:ir.model.fields.selection,name:dpt_export_import.selection__sale_order_line__state_export_import_line__draft_declaration
+msgid "Tờ khai nháp"
+msgstr ""
+
+#. module: dpt_export_import
 #: model:ir.model.fields.selection,name:dpt_export_import.selection__dpt_export_import__state__declared
 #: model:ir.model.fields.selection,name:dpt_export_import.selection__dpt_export_import_line__state__declared
 #: model:ir.model.fields.selection,name:dpt_export_import.selection__sale_order_line__state_export_import_line__declared
@@ -1060,6 +1115,7 @@ msgid "Tờ khai thông quan"
 msgstr ""
 
 #. module: dpt_export_import
+#: model:ir.model.fields.selection,name:dpt_export_import.selection__dpt_export_import__declaration_type__usd
 #: model:ir.model.fields.selection,name:dpt_export_import.selection__dpt_export_import_line__declaration_type__usd
 msgid "USD"
 msgstr ""
@@ -1079,6 +1135,7 @@ msgstr "Đơn vị xuất nhập khẩu"
 
 #. module: dpt_export_import
 #. odoo-python
+#: code:addons/dpt_export_import/models/sale_order.py:0
 #: code:addons/dpt_export_import/models/sale_order.py:0
 #: code:addons/dpt_export_import/models/sale_order.py:0
 #: model_terms:ir.ui.view,arch_db:dpt_export_import.dpt_export_import_view_sale_order_inherit_form
@@ -1129,7 +1186,7 @@ msgstr ""
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__vehicle_license_plate
 msgid "Vehicle License Plate"
-msgstr "Biển số xe"
+msgstr ""
 
 #. module: dpt_export_import
 #: model:ir.model.fields,field_description:dpt_export_import.field_dpt_export_import__website_message_ids
@@ -1151,6 +1208,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_product__dpt_xuat_xu
 #: model:ir.model.fields,field_description:dpt_export_import.field_product_template__dpt_xuat_xu
 msgid "Xuất xứ"
+msgstr ""
+
+#. module: dpt_export_import
+#: model_terms:ir.ui.view,arch_db:dpt_export_import.view_dpt_export_import_line_update_item_form
+msgid "Xác nhận"
 msgstr ""
 
 #. module: dpt_export_import

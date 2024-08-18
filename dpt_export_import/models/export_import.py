@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from ast import literal_eval
 from odoo import fields, models, _, api
 
 
@@ -219,7 +219,7 @@ class DptExportImportLine(models.Model):
                                          domain="[('id', 'in', available_picking_ids)]")
     available_picking_ids = fields.Many2many('stock.picking', string='Lot code',
                                              compute="_compute_domain_picking_package")
-    sale_user_id = fields.Many2one('res.users', string='User Sale', related='sale_id.user_id')
+    sale_user_id = fields.Many2one('res.users', string='User Sale', compute="compute_sale_user")
     partner_id = fields.Many2one('res.partner', string='Sale Partner', related='sale_id.partner_id')
     sale_line_id = fields.Many2one('sale.order.line', string='Sale order line', domain=[('order_id', '=', 'sale_id')])
     product_tmpl_id = fields.Many2one('product.template', string='Product Template',
@@ -288,7 +288,32 @@ class DptExportImportLine(models.Model):
     item_description_vn = fields.Html(string='Tem XNK (VN)')
     item_description_en = fields.Html(string='Tem XNK (EN)')
 
+    picking_count = fields.Integer('Picking Count', compute="_compute_picking_count")
 
+    def _compute_picking_count(self):
+        for item in self:
+            picking_ids = self.env['stock.picking'].sudo().search(
+                [('is_main_incoming', '=', True), ('sale_purchase_id', '=', item.sale_id.id)])
+            item.picking_count = len(picking_ids)
+
+    def action_view_main_incoming_picking(self):
+        picking_ids = self.env['stock.picking'].sudo().search(
+            [('is_main_incoming', '=', True), ('sale_purchase_id', '=', self.sale_id.id)])
+        action = self.env.ref('stock.stock_picking_action_picking_type').sudo().read()[0]
+        context = {
+            'delete': False,
+            'create': False,
+        }
+        action_context = literal_eval(action['context'])
+        context = {**action_context, **context}
+        action['context'] = context
+        action['domain'] = [('id', 'in', picking_ids.ids)]
+        return action
+
+    @api.depends('sale_id', 'sale_id.employee_cs')
+    def compute_sale_user(self):
+        for item in self:
+            item.sale_user_id = item.sale_id.employee_cs.user_id
 
     def button_confirm_item_description(self):
         self.is_readonly_item_description = True
@@ -388,45 +413,47 @@ class DptExportImportLine(models.Model):
     @api.model
     def create(self, vals_list):
         res = super(DptExportImportLine, self).create(vals_list)
-        val_update_sale_line = {}
-        val_update_sale_line.update({
-            'payment_exchange_rate': self.dpt_exchange_rate,
-            'import_tax_rate': self.dpt_tax_import,
-            'vat_tax_rate': self.dpt_tax,
-            'other_tax_rate': self.dpt_tax_other,
-            'total_tax_amount': self.dpt_total_vat,
-            'hs_code_id': self.hs_code_id,
-            'import_tax_amount': self.dpt_amount_tax_import,
-            'vat_tax_amount': self.dpt_amount_tax,
-            'other_tax_amount': self.dpt_amount_tax_other,
+        for rec in self:
+            val_update_sale_line = {}
+            val_update_sale_line.update({
+                'payment_exchange_rate': rec.dpt_exchange_rate,
+                'import_tax_rate': rec.dpt_tax_import,
+                'vat_tax_rate': rec.dpt_tax,
+                'other_tax_rate': rec.dpt_tax_other,
+                'total_tax_amount': rec.dpt_total_vat,
+                'hs_code_id': rec.hs_code_id,
+                'import_tax_amount': rec.dpt_amount_tax_import,
+                'vat_tax_amount': rec.dpt_amount_tax,
+                'other_tax_amount': rec.dpt_amount_tax_other,
 
-        })
-        self.sale_line_id.write(val_update_sale_line)
+            })
+            rec.sale_line_id.write(val_update_sale_line)
         return res
 
     def write(self, vals):
         res = super(DptExportImportLine, self).write(vals)
-        val_update_sale_line = {}
-        val_update_sale_line.update({
-            'payment_exchange_rate': self.dpt_exchange_rate,
-            'import_tax_rate': self.dpt_tax_import,
-            'vat_tax_rate': self.dpt_tax,
-            'other_tax_rate': self.dpt_tax_other,
-            'total_tax_amount': self.dpt_total_vat,
-            'hs_code_id': self.hs_code_id,
-            'import_tax_amount': self.dpt_amount_tax_import,
-            'vat_tax_amount': self.dpt_amount_tax,
-            'other_tax_amount': self.dpt_amount_tax_other,
+        for rec in self:
+            val_update_sale_line = {}
+            val_update_sale_line.update({
+                'payment_exchange_rate': rec.dpt_exchange_rate,
+                'import_tax_rate': rec.dpt_tax_import,
+                'vat_tax_rate': rec.dpt_tax,
+                'other_tax_rate': rec.dpt_tax_other,
+                'total_tax_amount': rec.dpt_total_vat,
+                'hs_code_id': rec.hs_code_id,
+                'import_tax_amount': rec.dpt_amount_tax_import,
+                'vat_tax_amount': rec.dpt_amount_tax,
+                'other_tax_amount': rec.dpt_amount_tax_other,
 
-        })
-        self.sale_line_id.write(val_update_sale_line)
-        if 'dpt_uom1_id' in vals or 'dpt_sl1' in vals:
-            update_query = """
-                    UPDATE sale_order_line
-                    SET product_uom = %s, product_uom_qty = %s
-                    WHERE id = %s
-                    """
-            self.env.cr.execute(update_query, (self.dpt_uom1_id.id, self.dpt_sl1, self.sale_line_id.id))
+            })
+            rec.sale_line_id.write(val_update_sale_line)
+            if 'dpt_uom1_id' in vals or 'dpt_sl1' in vals:
+                update_query = """
+                        UPDATE sale_order_line
+                        SET product_uom = %s, product_uom_qty = %s
+                        WHERE id = %s
+                        """
+                self.env.cr.execute(update_query, (rec.dpt_uom1_id.id, rec.dpt_sl1, rec.sale_line_id.id))
         return res
 
     # def write(self, vals):

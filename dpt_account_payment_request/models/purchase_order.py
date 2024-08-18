@@ -30,6 +30,7 @@ class PurchaseOrder(models.Model):
                 'default_partner_id': self.partner_id.id,
                 'default_amount': self.amount_untaxed,
                 'default_ref': _(f'Thanh toán cho {self.name}'),
+                'default_name': f"Thanh toán tiền mua hàng {self.name} {self.sale_id.name}",
             },
         }
 

@@ -30,7 +30,7 @@ class SalesOrder(models.Model):
             purchase_amount_total = 0
             for purchase_id in rec.purchase_ids:
                 if purchase_id.purchase_type == 'external':
-                    if purchase_id.currency_id.name != 'VND':
+                    if purchase_id.currency_id.name == 'VND':
                         purchase_amount_total += purchase_id.amount_total
                     else:
                         purchase_amount_total += purchase_id.amount_total * purchase_id.currency_id.rate

@@ -171,6 +171,8 @@
                                    readonly="state != 'draft'"/>
                             <field name="sale_id" string="Sale Order"/>
                             <field name="purchase_id"/>
+                            <field name="payment_user_type" widget="radio"/>
+                            <field name="payment_user" widget="radio"/>
                             <field name="partner_id" context="{'default_is_company': True}" string="Customer"
                                    options="{'no_quick_create': True}"
                                    invisible="partner_type != 'customer' or is_internal_transfer"
