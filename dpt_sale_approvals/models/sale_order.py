@@ -14,6 +14,12 @@ class SaleOrder(models.Model):
         ('approved', 'Approved'),
     ], string='Status', default='no_price', compute="_compute_price_status", stote=True)
 
+    @api.model
+    def create(self, vals):
+        res = super(SaleOrder, self).create(vals)
+        res.sale_service_ids._compute_price_status()
+        return res
+
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
         for order_id in self:
