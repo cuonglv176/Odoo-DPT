@@ -83,11 +83,13 @@ class DPTService(models.Model):
                 'type': 'service',
                 'uom_id': 1,
                 'is_product_service': True,
+                'default_code': self.code,
             })
             self.product_id = product_id
         else:
             self.product_id.write({
-                'name': self.name
+                'name': self.name,
+                'default_code': self.code,
             })
 
     def write(self, vals):
