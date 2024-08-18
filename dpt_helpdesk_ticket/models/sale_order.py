@@ -63,7 +63,7 @@ class SaleOrder(models.Model):
         # for department in list_department:
         for service in self.sale_service_ids:
             service_ids = []
-            if service.service_id.is_tth_service:
+            if service.service_id.is_tth_service and service.service_id.is_create_ticket:
                 vals = {
                     'purchase_type': 'buy_cny',
                     'department_id': service.department_id.id,
@@ -73,19 +73,20 @@ class SaleOrder(models.Model):
                 res = self.env['purchase.order'].create(vals)
                 continue
             # if department == service.department_id.id:
-            service_ids.append((0, 0, {
-                'service_id': service.service_id.id,
-                'description': service.description,
-                'qty': service.qty,
-                'uom_id': service.uom_id.id,
-                'price': service.price,
-                'currency_id': service.currency_id.id,
-                'amount_total': service.amount_total,
-                # 'status': r.price_status,
-            }))
+            if service.service_id.is_create_ticket:
+                service_ids.append((0, 0, {
+                    'service_id': service.service_id.id,
+                    'description': service.description,
+                    'qty': service.qty,
+                    'uom_id': service.uom_id.id,
+                    'price': service.price,
+                    'currency_id': service.currency_id.id,
+                    'amount_total': service.amount_total,
+                    # 'status': r.price_status,
+                }))
             stage_done_id = self.env['helpdesk.stage'].search(
                 [('is_done_stage', '=', True), ('team_ids', 'in', [service.service_id.helpdesk_team_id.id])])
-            if service.service_id.auo_complete:
+            if service.service_id.auo_complete and service.service_id.is_create_ticket:
                 self.env['helpdesk.ticket'].create({
                     'sale_id': self.id,
                     'partner_id': self.partner_id.id,
@@ -95,13 +96,14 @@ class SaleOrder(models.Model):
                     'stage_id': stage_done_id.id,
                 })
             else:
-                self.env['helpdesk.ticket'].create({
-                    'sale_id': self.id,
-                    'partner_id': self.partner_id.id,
-                    'service_lines_ids': service_ids,
-                    'department_id': service.department_id.id,
-                    'team_id': service.service_id.helpdesk_team_id.id,
-                })
+                if service.service_id.is_create_ticket:
+                    self.env['helpdesk.ticket'].create({
+                        'sale_id': self.id,
+                        'partner_id': self.partner_id.id,
+                        'service_lines_ids': service_ids,
+                        'department_id': service.department_id.id,
+                        'team_id': service.service_id.helpdesk_team_id.id,
+                    })
 
             # team_id = self.env['helpdesk.team'].search([('service_type_ids', 'in', [service.service_type_id.id])],
             #                                            limit=1)
