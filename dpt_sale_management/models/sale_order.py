@@ -346,6 +346,8 @@ class SaleOrder(models.Model):
 
         normal_format = workbook.add_format({'font_size': 8})
 
+        employee_contact_format = workbook.add_format({'align': 'right'})
+
         merge_format = workbook.add_format({
             'bold': True,
             'align': 'center',
@@ -429,16 +431,9 @@ class SaleOrder(models.Model):
         # [Báo giá chi tiết]
         # [Báo giá chi tiết] Data
         data = []
+        for r in self.sale_service_ids:
+            data.append((r.service_id.name, r.compute_value, r.price, ''))
         start = row
-        data.append(('Giá trị kê khai dự kiến', 'VND/lô', '', ''))
-        data.append(('Thuế NK', 'VND/lô', nk_tax_amount, ''))
-        data.append(('Thuế VAT', 'VND/lô', vat_tax_amount, ''))
-        data.append(('Phí uỷ thác nhập khẩu', 'VND/lô', '', ''))
-        data.append(('Phí đầu mục', 'VND/lô', '', ''))
-        data.append(('Phí nâng hạ', 'VND/lô', '', ''))
-        data.append(('Cước VC BT-HN (kg)', 'VND/lô', '', ''))
-        data.append(('Cước VC BT-HN (m3)', 'VND/lô', '', ''))
-        data.append(('Giao hàng chặng cuối', 'VND/lô', '', ''))
         data.append(('Tổng chi phí vận chuyển theo kg', 'VND/lô', '', ''))
         data.append(('Tổng chi phí vận chuyển theo m3', 'VND/lô', '', ''))
         data.append(('Chi phí theo kg', 'VND/kg', '', ''))
@@ -456,10 +451,10 @@ class SaleOrder(models.Model):
             row += 1
         worksheet.merge_range(f'B{start + 1}:B{row}', 'Báo giá chi tiết', merge_format)
 
-        worksheet.write(f'B{row+2}', 'Liên hệ:')
-        worksheet.write(f'C{row+2}', f'Chuyên viên:')
-        worksheet.write(f'C{row+3}', f'SĐT:')
-        worksheet.write(f'C{row+4}', f'Email:')
+        worksheet.write(f'B{row+2}', 'Liên hệ:', employee_contact_format)
+        worksheet.write(f'C{row+2}', f'Chuyên viên: {self.employee_sale.name or ""}')
+        worksheet.write(f'C{row+3}', f'SĐT: {self.employee_sale.mobile_phone or self.employee_sale.work_phone or ""}')
+        worksheet.write(f'C{row+4}', f'Email: {self.employee_sale.work_email or ""}')
         worksheet.write(f'E{row+2}', 'CÔNG TY TNHH DPT VINA HOLDINGS')
         worksheet.write(f'H7', f"Tỷ giá tệ từ hệ thống: {self.currency_id.search([('name', '=', 'CNY')]).rate}")
         worksheet.write(f'H8', f"Tỷ giá USD từ hệ thống: {self.currency_id.search([('name', '=', 'USD')]).rate}")
