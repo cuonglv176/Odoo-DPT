@@ -84,33 +84,16 @@ class DPTSaleServiceManagement(models.Model):
                 if not_approved:
                     rec.price_status = 'wait_approve'
                     continue
-                if rec.price_status != 'calculated':
+                elif rec.price:
+                    rec.price_status = 'calculated'
+                else:
                     rec.price_status = 'not_calculate'
-                    continue
             elif rec.sale_id.state == 'sent':
                 rec.price_status = 'quoted'
             elif rec.sale_id.state == 'sale':
                 rec.price_status = 'ticket_status'
             else:
                 rec.price_status = 'no_price'
-
-            # if rec.approval_id:
-            #     not_approved = rec.approval_id.filtered(lambda approval: approval.request_status in ('pending', 'new'))
-            #     if not_approved:
-            #         price_status = 'wait_approve'
-            #     else:
-            #         latest_approved = max(rec.approval_id, key=lambda line: line.date)
-            #
-            #         if latest_approved.request_status in ('refused', 'cancel'):
-            #             price_status = 'no_price'
-            #             approved_state = True
-            #         else:
-            #             price_status = 'approved'
-            #             approved_state = True
-            #             approved_approval = True
-            # else:
-            #     price_status = 'no_price'
-            # rec.price_status = price_status
 
     @api.depends('new_price', 'qty')
     def _compute_new_amount_total(self):
