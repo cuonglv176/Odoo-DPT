@@ -84,7 +84,7 @@ class ResPartner(models.Model):
 
     @api.model
     def create(self, vals):
-        if vals.get('phone'):
+        if vals.get('dpt_user_name'):
             existing_partner = self.search(
                 [('dpt_user_name', '=', vals['dpt_user_name']), ('dpt_user_name', '!=', False)])
             if existing_partner:
@@ -94,7 +94,7 @@ class ResPartner(models.Model):
         return super(ResPartner, self).create(vals)
 
     def write(self, vals):
-        if vals.get('phone'):
+        if vals.get('dpt_user_name'):
             for partner in self:
                 existing_partner = self.search(
                     [('dpt_user_name', '=', vals['dpt_user_name']), ('id', '!=', partner.id),
