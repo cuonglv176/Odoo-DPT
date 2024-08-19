@@ -45,6 +45,11 @@ class SaleOrder(models.Model):
     employee_sale = fields.Many2one('hr.employee', string='Employee Sale')
     employee_cs = fields.Many2one('hr.employee', string='Employee CS')
 
+    @api.onchange('partner_id')
+    def _onchange_partner_id_user(self):
+        if self.partner_id.user_id.id != self._uid:
+            self.user_id = self._uid
+
     @api.onchange('user_id')
     def onchange_user_id(self):
         if not self.employee_sale:
