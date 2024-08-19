@@ -86,7 +86,7 @@ class ResPartner(models.Model):
     def create(self, vals):
         if vals.get('dpt_user_name'):
             existing_partner = self.search(
-                [('dpt_user_name', '=', vals['dpt_user_name']), ('dpt_user_name', '!=', False)])
+                [('dpt_user_name', '=', vals['dpt_user_name']), ('dpt_user_name', '!=', False)], limit=1)
             if existing_partner:
                 raise ValidationError(
                     f"Tài khoản {vals['dpt_user_name']} đã tồn tại trong hệ thống cho đối tác {existing_partner.name}.")
@@ -98,7 +98,7 @@ class ResPartner(models.Model):
             for partner in self:
                 existing_partner = self.search(
                     [('dpt_user_name', '=', vals['dpt_user_name']), ('id', '!=', partner.id),
-                     ('dpt_user_name', '!=', False)])
+                     ('dpt_user_name', '!=', False)], limit=1)
                 if existing_partner:
                     raise ValidationError(
                         f"Tài khoản {vals['dpt_user_name']} đã tồn tại trong hệ thống cho đối tác {existing_partner.name}.")
