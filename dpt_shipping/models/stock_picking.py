@@ -34,17 +34,21 @@ class StockPicking(models.Model):
         picking_ids = self.env['stock.picking'].sudo().search([])
         picking_ids._compute_valid_cutlist()
 
-    @api.depends('sale_purchase_id', 'state', 'sale_purchase_id.ticket_ids', 'sale_purchase_id.dpt_export_import_ids')
+    @api.depends('sale_purchase_id', 'state', 'sale_purchase_id.ticket_ids', 'sale_purchase_id.dpt_export_import_ids',
+                 'exported_label')
     def _compute_valid_cutlist(self):
         # đã nhập đủ kiện, sản phẩm
         # đủ khai báo XNK
         # các ticket ở kho TQ đều hoàn thành
         for item in self:
-            item.finish_stock_services = item.sale_purchase_id and all(
+            item.finish_stock_services = item.sale_purchase_id and (all(
                 [ticket_id.stage_id.is_done_stage for ticket_id in item.sale_purchase_id.ticket_ids if
-                 ticket_id.department_id.is_chinese_stock_department])
+                 ticket_id.department_id.is_chinese_stock_department]) or not item.sale_purchase_id.ticket_ids.filtered(lambda t: t.department_id.is_chinese_stock_department))
             item.have_stock_label = item.exported_label
-            item.have_export_import = True if item.sale_purchase_id and item.sale_purchase_id.dpt_export_import_ids else False
+            dpt_export_import_ids = self.env['dpt.export.import'].sudo().search(
+                [('stock_picking_ids', 'in', [item.id])])
+            item.have_export_import = True if (
+                                                          item.sale_purchase_id and item.sale_purchase_id.dpt_export_import_ids) or dpt_export_import_ids else False
 
     @api.model
     def create(self, vals):

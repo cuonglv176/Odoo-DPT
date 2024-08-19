@@ -339,7 +339,7 @@ class StockPicking(models.Model):
             'res_id': self.id,
         }
         file_xls = self.env['ir.attachment'].create(vals)
-        self.exported_label = True
+        # self.exported_label = True
         return {
             'type': 'ir.actions.act_url',
             'url': '/web/content/' + str(file_xls.id) + '?download=true',

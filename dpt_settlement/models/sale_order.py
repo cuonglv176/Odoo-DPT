@@ -6,6 +6,7 @@ from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
 from odoo.addons.sale.models.sale_order import SaleOrder
+from odoo.tools import float_is_zero, format_amount, format_date, html_keep_url, is_html_empty
 
 
 def _create_invoices(self, grouped=False, final=False, date=None):
@@ -26,9 +27,9 @@ def _create_invoices(self, grouped=False, final=False, date=None):
         except AccessError:
             return self.env['account.move']
 
-    product_service_id = self.env['product.product'].sudo().search([('is_product_service', '=', True)], limit=1)
-    if not product_service_id:
-        raise ValidationError(_("No product service found."))
+    product_buy_id = self.env['product.product'].sudo().search([('is_product_buy', '=', True)], limit=1)
+    if not product_buy_id:
+        raise ValidationError(_("No product buy found."))
 
     product_deposit_id = self.env['product.product'].sudo().search([('is_product_deposit', '=', True)], limit=1)
     if not product_deposit_id:
@@ -41,7 +42,7 @@ def _create_invoices(self, grouped=False, final=False, date=None):
         order = order.with_company(order.company_id).with_context(lang=order.partner_invoice_id.lang)
 
         invoice_vals = order._prepare_invoice()
-        invoiceable_lines = order._get_invoiceable_lines(final)
+        # invoiceable_lines = order._get_invoiceable_lines(final)
 
         # DEPOSIT
         invoice_line_vals = []
@@ -58,38 +59,49 @@ def _create_invoices(self, grouped=False, final=False, date=None):
                     'price_unit': 0 - deposit
                 }))
 
-        if sum(order.sale_service_ids.mapped('amount_total')) != 0:
+        if sum(order.order_line.mapped('price_subtotal')) != 0:
             invoice_line_vals.append(Command.create(
                 {
-                    'product_id': product_service_id.id,
-                    'service_line_ids': order.sale_service_ids.ids,
+                    'product_id': product_buy_id.id,
+                    'order_line_ids': order.order_line.ids,
                     'display_type': 'product',
                     'quantity': 1,
-                    'price_unit': sum(order.sale_service_ids.mapped('amount_total'))
+                    'price_unit': sum(order.order_line.mapped('price_subtotal'))
                 }))
 
-        if not any(not line.display_type for line in invoiceable_lines):
-            invoice_vals_list.append(invoice_vals)
-            continue
+        if order.sale_service_ids:
+            for sale_service_id in order.sale_service_ids:
+                if sale_service_id.price != 0:
+                    invoice_line_vals.append(Command.create(
+                        {
+                            'product_id': sale_service_id.service_id.product_id.id,
+                            'display_type': 'product',
+                            'quantity': sale_service_id.compute_value,
+                            'price_unit': sale_service_id.price
+                        }))
+
+        # if not any(not line.display_type for line in invoiceable_lines):
+        #     invoice_vals_list.append(invoice_vals)
+        #     continue
 
         down_payment_section_added = False
-        for line in invoiceable_lines:
-            if not down_payment_section_added and line.is_downpayment:
-                # Create a dedicated section for the down payments
-                # (put at the end of the invoiceable_lines)
-                invoice_line_vals.append(
-                    Command.create(
-                        order._prepare_down_payment_section_line(sequence=invoice_item_sequence)
-                    ),
-                )
-                down_payment_section_added = True
-                invoice_item_sequence += 1
-            invoice_line_vals.append(
-                Command.create(
-                    line._prepare_invoice_line(sequence=invoice_item_sequence)
-                ),
-            )
-            invoice_item_sequence += 1
+        # for line in invoiceable_lines:
+        # if not down_payment_section_added and line.is_downpayment:
+        #     # Create a dedicated section for the down payments
+        #     # (put at the end of the invoiceable_lines)
+        #     invoice_line_vals.append(
+        #         Command.create(
+        #             order._prepare_down_payment_section_line(sequence=invoice_item_sequence)
+        #         ),
+        #     )
+        #     down_payment_section_added = True
+        #     invoice_item_sequence += 1
+        # invoice_line_vals.append(
+        #     Command.create(
+        #         line._prepare_invoice_line(sequence=invoice_item_sequence)
+        #     ),
+        # )
+        # invoice_item_sequence += 1
 
         invoice_vals['invoice_line_ids'] += invoice_line_vals
         invoice_vals_list.append(invoice_vals)

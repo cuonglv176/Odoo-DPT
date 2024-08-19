@@ -56,6 +56,10 @@ class AccountPayment(models.Model):
     detail_ids = fields.One2many('dpt.account.payment.detail', 'payment_id', string='Chi tiết thanh toán Dịch vụ')
     detail_product_ids = fields.One2many('dpt.account.payment.detail', 'payment_product_id',
                                          string='Chi tiết thanh toán Sản phẩm')
+    last_rate_currency = fields.Float('Last Rate Currency')
+    acc_number = fields.Char(related="partner_bank_id.acc_number")
+    acc_holder_name = fields.Char(related="partner_bank_id.acc_holder_name")
+    bank_id = fields.Many2one(related="partner_bank_id.bank_id")
 
     @api.onchange('purchase_id')
     def onchange_create_detail(self):

@@ -57,6 +57,7 @@ class DPTService(models.Model):
     active = fields.Boolean('Active', default='True')
     zezo_price = fields.Boolean('Zezo Price', default=False)
     auo_complete = fields.Boolean('Auto Complete', default=False)
+    product_id = fields.Many2one('product.product', string='Product')
     # image = fields.Image("Image", required=True, tracking=True)
 
     _sql_constraints = [
@@ -70,11 +71,41 @@ class DPTService(models.Model):
         for rec in self:
             rec.steps_count = len(rec.steps_ids)
 
+    def action_auto_create_product(self):
+        service_ids = self.env['dpt.service.management'].search([])
+        for service_id in service_ids:
+            service_id.action_create_product_id()
+
+    def action_create_product_id(self):
+        if not self.product_id:
+            product_id = self.env['product.product'].create({
+                'name': self.name,
+                'type': 'service',
+                'uom_id': 1,
+                'is_product_service': True,
+                'default_code': self.code,
+            })
+            self.product_id = product_id
+        else:
+            self.product_id.write({
+                'name': self.name,
+                'default_code': self.code,
+            })
+
+    def write(self, vals):
+        res = super(DPTService, self).write(vals)
+        for item in self:
+            if 'name' in vals:
+                item.action_create_product_id()
+        return res
+
     @api.model
     def create(self, vals):
         if vals.get('code', 'NEW') == 'NEW':
             vals['code'] = self._generate_service_code()
-        return super(DPTService, self).create(vals)
+        rec = super(DPTService, self).create(vals)
+        rec.action_create_product_id()
+        return rec
 
     def _generate_service_code(self):
         sequence = self.env['ir.sequence'].next_by_code('dpt.service.management') or '00'

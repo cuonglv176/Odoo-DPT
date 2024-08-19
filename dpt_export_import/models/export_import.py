@@ -318,6 +318,8 @@ class DptExportImportLine(models.Model):
 
     def button_confirm_item_description(self):
         self.is_readonly_item_description = True
+        picking_ids = self.env['stock.picking'].sudo().search([('sale_purchase_id', '=', self.sale_id.id)])
+        picking_ids.exported_label = True
 
     @api.depends('sale_id')
     def _compute_domain_picking_package(self):
@@ -434,6 +436,8 @@ class DptExportImportLine(models.Model):
     def write(self, vals):
         res = super(DptExportImportLine, self).write(vals)
         for rec in self:
+            if 'stock_picking_ids' in vals and rec.stock_picking_ids:
+                rec.stock_picking_ids._compute_valid_cutlist()
             val_update_sale_line = {}
             val_update_sale_line.update({
                 'payment_exchange_rate': rec.dpt_exchange_rate,

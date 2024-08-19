@@ -191,6 +191,7 @@
                                        readonly="state != 'draft'"
                                        groups="base.group_multi_currency"/>
                             </div>
+                            <field name="last_rate_currency"/>
                             <field name="date"
                                    readonly="state != 'draft'"/>
                             <field name="ref" string="Memo"/>
@@ -222,7 +223,8 @@
                                    context="{'default_partner_id': partner_id, 'display_account_trust': True}"
                                    invisible="not show_partner_bank_account or is_internal_transfer or payment_type == 'outbound'"
                                    required="require_partner_bank_account and not is_internal_transfer"/>
-
+                            <field name="acc_number"/>
+                            <field name="acc_holder_name"/>
                             <field name="destination_journal_id"
                                    placeholder="e.g. Cash"
                                    context="{'default_partner_id': partner_id}"

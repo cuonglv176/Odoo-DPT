@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-04 18:53+0000\n"
-"PO-Revision-Date: 2024-08-04 18:53+0000\n"
+"POT-Creation-Date: 2024-08-18 16:57+0000\n"
+"PO-Revision-Date: 2024-08-18 16:57+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -58,6 +58,16 @@ msgid "<span>Draft</span>"
 msgstr "Nháp"
 
 #. module: dpt_account_payment_request
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_account_payment__acc_holder_name
+msgid "Account Holder Name"
+msgstr "Tên chủ tài khoản"
+
+#. module: dpt_account_payment_request
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_account_payment__acc_number
+msgid "Account Number"
+msgstr "Số tài khoản"
+
+#. module: dpt_account_payment_request
 #: model:ir.ui.menu,name:dpt_account_payment_request.dpt_menu_action_account_payments_payable
 msgid "Account Payment"
 msgstr "Thanh toán"
@@ -66,6 +76,13 @@ msgstr "Thanh toán"
 #: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_type_form
 msgid "Account Payment Payment"
 msgstr "Thanh toán"
+
+#. module: dpt_account_payment_request
+#: model:ir.model.fields,help:dpt_account_payment_request.field_account_payment__acc_holder_name
+msgid ""
+"Account holder name, in case it is different than the name of the Account "
+"Holder"
+msgstr ""
 
 #. module: dpt_account_payment_request
 #: model:ir.model.fields,field_description:dpt_account_payment_request.field_account_payment__active
@@ -100,6 +117,11 @@ msgid "Approval request"
 msgstr "Phê duyệt"
 
 #. module: dpt_account_payment_request
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_account_payment__bank_id
+msgid "Bank"
+msgstr "Ngân hàng"
+
+#. module: dpt_account_payment_request
 #: model:ir.model.fields,field_description:dpt_account_payment_request.field_account_payment__payment_user_type
 msgid "Bên thanh toán"
 msgstr ""
@@ -110,13 +132,13 @@ msgid "Cancel"
 msgstr "Hủy"
 
 #. module: dpt_account_payment_request
-#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_form
-msgid "Chi tiết"
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_account_payment__detail_ids
+msgid "Chi tiết thanh toán Dịch vụ"
 msgstr ""
 
 #. module: dpt_account_payment_request
-#: model:ir.model.fields,field_description:dpt_account_payment_request.field_account_payment__detail_ids
-msgid "Chi tiết thanh toán"
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_account_payment__detail_product_ids
+msgid "Chi tiết thanh toán Sản phẩm"
 msgstr ""
 
 #. module: dpt_account_payment_request
@@ -209,6 +231,11 @@ msgid "Display Name"
 msgstr ""
 
 #. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_form
+msgid "Dịch Vụ"
+msgstr ""
+
+#. module: dpt_account_payment_request
 #: model:ir.model.fields.selection,name:dpt_account_payment_request.selection__dpt_account_payment_type_rule__type_compare__equal
 msgid "Equal"
 msgstr "Bằng"
@@ -244,6 +271,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:dpt_account_payment_request.selection__account_payment__payment_user__ltv
 msgid "LTV"
 msgstr ""
+
+#. module: dpt_account_payment_request
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_account_payment__last_rate_currency
+msgid "Last Rate Currency"
+msgstr "Tỉ giá cuối"
 
 #. module: dpt_account_payment_request
 #: model:ir.model.fields,field_description:dpt_account_payment_request.field_dpt_account_payment_detail__write_uid
@@ -303,6 +335,11 @@ msgstr "Mã ĐNTT"
 #. module: dpt_account_payment_request
 #: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_tree
 msgid "Payment Currency"
+msgstr ""
+
+#. module: dpt_account_payment_request
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_dpt_account_payment_detail__payment_product_id
+msgid "Payment Product"
 msgstr ""
 
 #. module: dpt_account_payment_request
@@ -441,6 +478,11 @@ msgstr "Dịch vụ"
 #: model:ir.model.fields,field_description:dpt_account_payment_request.field_account_payment__request_status
 msgid "Status approval"
 msgstr "Trạng thái duyệt"
+
+#. module: dpt_account_payment_request
+#: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_form
+msgid "Sản Phẩm"
+msgstr ""
 
 #. module: dpt_account_payment_request
 #: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_form
