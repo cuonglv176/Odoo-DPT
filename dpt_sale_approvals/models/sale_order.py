@@ -14,6 +14,12 @@ class SaleOrder(models.Model):
         ('approved', 'Approved'),
     ], string='Status', default='no_price', compute="_compute_price_status", stote=True)
 
+    def send_quotation_department(self):
+        res = super(SaleOrder, self).send_quotation_department()
+        for rec in self.sale_service_ids:
+            rec.price_status = 'wait_approve'
+        return res
+
     @api.model
     def create(self, vals):
         res = super(SaleOrder, self).create(vals)
