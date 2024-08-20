@@ -10,7 +10,7 @@
                     <button name="action_create_shipping_slip_receive" string="Create Shipping Receive"
                             type="object" class="btn-primary" invisible="send_shipping_id"/>
                     <button name="action_create_stock_transfer" string="Create Transfer Picking"
-                            type="object" class="btn-primary" invisible="send_shipping_id"/>
+                            type="object" class="btn-primary" invisible="send_shipping_id or out_picking_ids"/>
                     <field name="vehicle_country" invisible="1"/>
                     <field name="vn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
                            invisible="vehicle_country != 'vietnamese'"/>

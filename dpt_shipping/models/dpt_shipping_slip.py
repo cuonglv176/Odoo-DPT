@@ -59,13 +59,13 @@ class DPTShippingSlip(models.Model):
                 'sale_ids') | item.export_import_ids.mapped('line_ids').mapped('sale_id')
             main_in_picking_ids = self.env['stock.picking'].search(
                 [('sale_purchase_id', 'in', sale_order_ids.ids), ('is_main_incoming', '=', True)])
-            in_picking_ids = self.env['stock.picking'].search(
-                [('sale_purchase_id', 'in', sale_order_ids.ids), ('x_transfer_type', '=', 'outgoing_transfer')])
-            # out_picking_ids = self.env['stock.picking'].search(
+            # in_picking_ids = self.env['stock.picking'].search(
             #     [('sale_purchase_id', 'in', sale_order_ids.ids), ('x_transfer_type', '=', 'incoming_transfer')])
+            out_picking_ids = self.env['stock.picking'].search(
+                [('sale_purchase_id', 'in', sale_order_ids.ids), ('x_transfer_type', '=', 'outgoing_transfer')])
             item.sale_ids = [(6, 0, sale_order_ids.ids)]
-            item.in_picking_ids = [(6, 0, in_picking_ids.ids)]
-            # item.out_picking_ids = [(6, 0, out_picking_ids.ids)]
+            # item.in_picking_ids = [(6, 0, in_picking_ids.ids)]
+            item.out_picking_ids = [(6, 0, out_picking_ids.ids)]
             item.main_in_picking_ids = [(6, 0, main_in_picking_ids.ids)]
             item.export_import_ids.shipping_slip_id = item.id
 
