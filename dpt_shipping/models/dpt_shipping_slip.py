@@ -52,6 +52,7 @@ class DPTShippingSlip(models.Model):
                 item.total_num_packing = 0
 
     @api.constrains('export_import_ids')
+    @api.onchange('export_import_ids')
     def constrains_export_import(self):
         for item in self:
             sale_order_ids = item.export_import_ids.mapped('sale_id') | item.export_import_ids.mapped(
