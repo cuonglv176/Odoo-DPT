@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-11 16:01+0000\n"
-"PO-Revision-Date: 2024-07-11 16:01+0000\n"
+"POT-Creation-Date: 2024-08-20 04:10+0000\n"
+"PO-Revision-Date: 2024-08-20 04:10+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -122,6 +122,11 @@ msgid "Draft"
 msgstr "Nháp"
 
 #. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__exported_label
+msgid "Exported Label"
+msgstr "Đã có tem"
+
+#. module: dpt_stock_management
 #: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__fields_ids
 msgid "Fields"
 msgstr "Trường thông tin"
@@ -210,9 +215,14 @@ msgid "Picking In"
 msgstr "Phiếu nhập"
 
 #. module: dpt_stock_management
+#: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__picking_lot_name
+msgid "Picking Lot Name"
+msgstr "Mã lô"
+
+#. module: dpt_stock_management
 #: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__name
 msgid "Picking Name"
-msgstr "Mã lô"
+msgstr "Mã phiếu"
 
 #. module: dpt_stock_management
 #: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__picking_out_ids
@@ -251,7 +261,7 @@ msgstr "Đơn vị tính sản phẩm"
 #. module: dpt_stock_management
 #: model:ir.model,name:dpt_stock_management.model_purchase_order_line_package
 msgid "Purchase Package"
-msgstr ""
+msgstr "Kiện hàng"
 
 #. module: dpt_stock_management
 #: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
