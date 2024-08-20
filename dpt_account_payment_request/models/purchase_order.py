@@ -12,11 +12,8 @@ class PurchaseOrder(models.Model):
 
     def action_open_payment_popup(self):
         view_form_id = self.env.ref('dpt_account_payment_request.dpt_view_account_payment_request_form').id
-        amount_payment = self.currency_id._convert(
-            self.amount_untaxed + sum(self.sale_service_ids.mapped('amount_total')),
-            to_currency=self.env.company.currency_id,
-            company=self.env.company,
-            date=fields.Date.today())
+        amount_payment = (self.currency_id.rate or self.last_rate_currency) * sum(
+            self.order_line.mapped('price_subtotal3')) + sum(self.sale_service_ids.mapped('amount_total'))
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'account.payment',
