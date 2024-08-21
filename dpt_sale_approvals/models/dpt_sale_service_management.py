@@ -75,7 +75,7 @@ class DPTSaleServiceManagement(models.Model):
                 if not_approved:
                     rec.price_status = 'wait_approve'
                     continue
-                if not rec.price:
+                if not rec.service_id.pricelist_item_ids:
                     rec.price_status = 'no_price'
                 else:
                     rec.price_status = 'calculated'
