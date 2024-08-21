@@ -75,19 +75,19 @@ class DPTSaleServiceManagement(models.Model):
                 if not_approved:
                     rec.price_status = 'wait_approve'
                     continue
-                if not rec.service_id.pricelist_item_ids:
-                    rec.price_status = 'no_price'
-                else:
-                    rec.price_status = 'calculated'
+                # if not rec.service_id.pricelist_item_ids:
+                #     rec.price_status = 'no_price'
+                # else:
+                #     rec.price_status = 'calculated'
             elif rec.sale_id.state == 'wait_price':
                 not_approved = rec.approval_id.filtered(lambda approval: approval.request_status in ('pending', 'new'))
                 if not_approved:
                     rec.price_status = 'wait_approve'
                     continue
-                elif rec.price:
-                    rec.price_status = 'calculated'
-                else:
-                    rec.price_status = 'not_calculate'
+                # elif rec.price:
+                #     rec.price_status = 'calculated'
+                # else:
+                #     rec.price_status = 'not_calculate'
             elif rec.sale_id.state == 'sent':
                 rec.price_status = 'quoted'
             elif rec.sale_id.state == 'sale':
