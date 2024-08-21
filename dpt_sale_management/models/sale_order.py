@@ -242,11 +242,8 @@ class SaleOrder(models.Model):
             compute_value = 1
             compute_uom_id = None
             for service_price_id in service_price_ids:
-                if service_price_id.compute_price == 'fixed_price':
-                    price = max(service_price_id.currency_id._convert(service_price_id.fixed_price,
-                                                                      to_currency=self.env.company.currency_id,
-                                                                      company=self.env.company,
-                                                                      date=fields.Date.today()),
+                if service_price_id.compute_price == 'fixed':
+                    price = max(service_price_id.currency_id.rate * service_price_id.fixed_price,
                                 service_price_id.min_amount)
                     if price > max_price:
                         max_price = price
@@ -259,12 +256,9 @@ class SaleOrder(models.Model):
                     elif service_price_id.percent_based_on == 'declaration_total_amount':
                         price_base = sum(self.order_line.mapped('declared_unit_total'))
                     if price_base:
-                        price = max(service_price_id.currency_id._convert(
-                            from_amount=price_base * service_price_id.percent_price / 100,
-                            to_currency=self.env.company.currency_id,
-                            company=self.env.company,
-                            date=fields.Date.today(),
-                        ), service_price_id.min_amount)
+                        price = max(
+                            service_price_id.currency_id.rate * (price_base * service_price_id.percent_price / 100),
+                            service_price_id.min_amount)
                     if price and price > max_price:
                         max_price = price
                         price_list_item_id = service_price_id
@@ -277,12 +271,7 @@ class SaleOrder(models.Model):
                                                                                                         ptd: ptd.uom_id.id == compute_field_id.uom_id.id and compute_field_id.value_integer >= ptd.min_value and compute_field_id.value_integer <= ptd.max_value)
                             for detail_price_id in detail_price_ids:
                                 price = compute_field_id.value_integer * detail_price_id.amount if service_price_id.is_price else detail_price_id.amount
-                                price = max(service_price_id.currency_id._convert(
-                                    from_amount=price,
-                                    to_currency=self.env.company.currency_id,
-                                    company=self.env.company,
-                                    date=fields.Date.today(),
-                                ), service_price_id.min_amount)
+                                price = max(service_price_id.currency_id.rate * price, service_price_id.min_amount)
                                 if price > max_price:
                                     max_price = price
                                     price_list_item_id = service_price_id
@@ -301,12 +290,7 @@ class SaleOrder(models.Model):
                                 else:
                                     price = (
                                                     compute_field_id.value_integer - detail_price_id.min_value + 1) * detail_price_id.amount if service_price_id.is_price else detail_price_id.amount
-                                total_price += service_price_id.currency_id._convert(
-                                    from_amount=price,
-                                    to_currency=self.env.company.currency_id,
-                                    company=self.env.company,
-                                    date=fields.Date.today(),
-                                )
+                                total_price += service_price_id.currency_id.rate * price
                             if max(total_price, service_price_id.min_amount) > max_price:
                                 max_price = max(total_price, service_price_id.min_amount)
                                 price_list_item_id = service_price_id
