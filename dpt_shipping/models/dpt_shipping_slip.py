@@ -37,7 +37,8 @@ class DPTShippingSlip(models.Model):
 
     def _compute_information(self):
         for item in self:
-            item.sale_ids = (item.in_picking_ids | item.out_picking_ids).mapped('sale_purchase_id')
+            item.sale_ids = (item.in_picking_ids | item.out_picking_ids).mapped(
+                'sale_purchase_id') | item.export_import_ids.line_ids.mapped('sale_id')
             if item.vehicle_country == 'chinese':
                 item.total_volume = sum(item.out_picking_ids.mapped('total_volume'))
                 item.total_weight = sum(item.out_picking_ids.mapped('total_weight'))
