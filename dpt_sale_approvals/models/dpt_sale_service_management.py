@@ -86,8 +86,6 @@ class DPTSaleServiceManagement(models.Model):
                 rec.price_status = 'quoted'
             elif rec.sale_id.state == 'sale':
                 rec.price_status = 'ticket_status'
-            else:
-                rec.price_status = 'no_price'
 
     @api.depends('new_price', 'qty')
     def _compute_new_amount_total(self):
