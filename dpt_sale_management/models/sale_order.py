@@ -222,7 +222,6 @@ class SaleOrder(models.Model):
             item.show_action_calculation = True if not_compute_price_service_ids else False
 
     def action_calculation(self):
-        self.sale_service_ids._compute_price_status()
         # get default based on pricelist
         # for sale_service_id in self.sale_service_ids.filtered(
         #         lambda ss: ss.department_id.id == self.env.user.employee_ids[:1].department_id.id):
@@ -296,6 +295,7 @@ class SaleOrder(models.Model):
                                 price_list_item_id = service_price_id
                                 compute_value = compute_field_id.value_integer
                                 compute_uom_id = compute_field_id.uom_id.id
+            self.sale_service_ids._compute_price_status()
             price_status = sale_service_id.price_status
             if sale_service_id.service_id.pricelist_item_ids and price_status == 'no_price':
                 price_status = 'calculated'

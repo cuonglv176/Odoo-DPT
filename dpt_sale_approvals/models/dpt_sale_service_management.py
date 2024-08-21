@@ -65,7 +65,7 @@ class DPTSaleServiceManagement(models.Model):
     def action_refuse_approval_price(self):
         self.price_status = 'refuse_quoted'
 
-    @api.depends('approval_id', 'approval_id.request_status', 'price')
+    @api.depends('approval_id', 'approval_id.request_status')
     def _compute_price_status(self):
         for rec in self:
             rec.price_status = 'not_calculate'
@@ -75,19 +75,13 @@ class DPTSaleServiceManagement(models.Model):
                 if not_approved:
                     rec.price_status = 'wait_approve'
                     continue
-                # if not rec.service_id.pricelist_item_ids:
-                #     rec.price_status = 'no_price'
-                # else:
-                #     rec.price_status = 'calculated'
             elif rec.sale_id.state == 'wait_price':
                 not_approved = rec.approval_id.filtered(lambda approval: approval.request_status in ('pending', 'new'))
                 if not_approved:
                     rec.price_status = 'wait_approve'
                     continue
-                # elif rec.price:
-                #     rec.price_status = 'calculated'
-                # else:
-                #     rec.price_status = 'not_calculate'
+                else:
+                    rec.price_status = 'not_calculate'
             elif rec.sale_id.state == 'sent':
                 rec.price_status = 'quoted'
             elif rec.sale_id.state == 'sale':
