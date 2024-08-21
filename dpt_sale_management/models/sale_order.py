@@ -312,6 +312,9 @@ class SaleOrder(models.Model):
                                 price_list_item_id = service_price_id
                                 compute_value = compute_field_id.value_integer
                                 compute_uom_id = compute_field_id.uom_id.id
+            price_status = sale_service_id.price_status
+            if sale_service_id.service_id.pricelist_item_ids and price_status == 'no_price':
+                price_status = 'calculated'
 
             sale_service_id.with_context(from_pricelist=True).write({
                 'uom_id': price_list_item_id.uom_id.id if price_list_item_id else (
@@ -323,6 +326,7 @@ class SaleOrder(models.Model):
                 'price_in_pricelist': max_price,
                 'compute_value': compute_value,
                 'compute_uom_id': compute_uom_id,
+                'price_status': price_status,
             })
 
     @api.returns('self', lambda value: value.id)
