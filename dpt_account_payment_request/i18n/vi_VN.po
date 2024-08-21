@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-18 16:57+0000\n"
-"PO-Revision-Date: 2024-08-18 16:57+0000\n"
+"POT-Creation-Date: 2024-08-21 06:31+0000\n"
+"PO-Revision-Date: 2024-08-21 06:31+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -103,6 +103,11 @@ msgstr "Tổng"
 #: model_terms:ir.ui.view,arch_db:dpt_account_payment_request.dpt_view_account_payment_request_tree
 msgid "Amount in Currency"
 msgstr "Tiền tệ"
+
+#. module: dpt_account_payment_request
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_account_payment__amount_in_text
+msgid "Amount in Text"
+msgstr "Viết bằng chữ"
 
 #. module: dpt_account_payment_request
 #: model:ir.model.fields,field_description:dpt_account_payment_request.field_account_payment__approval_id
@@ -454,8 +459,13 @@ msgid "Sale Order"
 msgstr "Đơn hàng"
 
 #. module: dpt_account_payment_request
-#: model:ir.model.fields,field_description:dpt_account_payment_request.field_account_payment__service_sale_ids
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_account_payment__service_sale_id
 msgid "Sale line"
+msgstr ""
+
+#. module: dpt_account_payment_request
+#: model:ir.model.fields,field_description:dpt_account_payment_request.field_account_payment__service_sale_ids
+msgid "Sale lines"
 msgstr ""
 
 #. module: dpt_account_payment_request

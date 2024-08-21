@@ -73,7 +73,10 @@ class SaleServiceManagement(models.Model):
                 'default_sale_id': self.sale_id.id,
                 'default_partner_id': self.sale_id.partner_id.id,
                 'default_service_sale_ids': [(6, 0, self.id)],
+                'default_service_sale_id': self.id,
                 'default_amount': self.amount_total,
                 'default_ref': _(f'Thanh toán cho {self.sale_id.name}'),
+                'default_last_rate_currency': self.currency_cny_id.rate,
+                'default_partner_bank_id': self.sale_id.partner_id.bank_ids[:1] if self.sale_id.partner_id.bank_ids else None,
             },
         }

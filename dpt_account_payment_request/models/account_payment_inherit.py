@@ -4,6 +4,50 @@ from datetime import datetime
 from odoo.exceptions import ValidationError
 
 
+def number_to_vietnamese(n):
+    units = ["", "một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín"]
+    teens = ["mười", "mười một", "mười hai", "mười ba", "mười bốn", "mười lăm", "mười sáu", "mười bảy", "mười tám",
+             "mười chín"]
+    tens = ["", "", "hai mươi", "ba mươi", "bốn mươi", "năm mươi", "sáu mươi", "bảy mươi", "tám mươi", "chín mươi"]
+    thousands = ["", "nghìn", "triệu", "tỷ"]
+
+    def convert_hundreds(n):
+        if n == 0:
+            return ""
+        elif n < 10:
+            return units[n]
+        elif n < 20:
+            return teens[n - 10]
+        elif n < 100:
+            return tens[n // 10] + (" " + units[n % 10] if n % 10 != 0 else "")
+        else:
+            return units[n // 100] + " trăm" + (" " + convert_hundreds(n % 100) if n % 100 != 0 else "")
+
+    if n == 0:
+        return "không"
+
+    result = ""
+    thousand_counter = 0
+
+    while n > 0:
+        if n % 1000 != 0:
+            result = convert_hundreds(n % 1000) + " " + thousands[thousand_counter] + " " + result
+        n //= 1000
+        thousand_counter += 1
+
+    return result.strip()
+
+
+def convert_currency_to_text(amount):
+    whole_part = int(amount)
+    fractional_part = int(round((amount - whole_part) * 100))
+
+    whole_part_words = number_to_vietnamese(whole_part)
+    fractional_part_words = number_to_vietnamese(fractional_part)
+
+    return f"{whole_part_words} đồng và {fractional_part_words} xu" if fractional_part_words != 'không' else f"{whole_part_words} đồng"
+
+
 class AccountPaymentType(models.Model):
     _name = 'dpt.account.payment.type'
 
@@ -41,7 +85,8 @@ class AccountPayment(models.Model):
         ('refused', 'Refused'),
         ('cancel', 'Cancel'),
     ], string='Status approval', default="new", related="approval_id.request_status")
-    service_sale_ids = fields.Many2many('dpt.sale.service.management', string='Sale line')
+    service_sale_ids = fields.Many2many('dpt.sale.service.management', string='Sale lines')
+    service_sale_id = fields.Many2one('dpt.sale.service.management', string='Sale line')
     from_po = fields.Boolean()
     from_so = fields.Boolean()
     payment_user_type = fields.Selection([
@@ -60,6 +105,27 @@ class AccountPayment(models.Model):
     acc_number = fields.Char(related="partner_bank_id.acc_number")
     acc_holder_name = fields.Char(related="partner_bank_id.acc_holder_name")
     bank_id = fields.Many2one(related="partner_bank_id.bank_id")
+    amount_in_text = fields.Char('Amount in Text', compute="_compute_amount_in_text")
+
+    @api.depends('amount')
+    def _compute_amount_in_text(self):
+        for item in self:
+            item.amount_in_text = convert_currency_to_text(item.amount)
+
+    @api.onchange('service_sale_id')
+    def onchange_service_sale_create_detail(self):
+        if self.service_sale_id:
+            price = self.service_sale_id.price_cny * self.service_sale_id.sale_id.currency_id.rate if self.service_sale_id.price_cny != 0 else self.service_sale_id.price
+            qty = 1 if self.service_sale_id.qty == 0 else self.service_sale_id.qty
+            self.detail_ids = [(0, 0, {
+                'service_id': self.service_sale_id.service_id.id,
+                'description': '',
+                'qty': qty,
+                'uom_id': self.service_sale_id.uom_id.id,
+                'price': price,
+                'price_cny': self.service_sale_id.price_cny,
+                'amount_total': price * qty,
+            })]
 
     @api.onchange('purchase_id')
     def onchange_create_detail(self):

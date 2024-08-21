@@ -191,6 +191,8 @@
                                        readonly="state != 'draft'"
                                        groups="base.group_multi_currency"/>
                             </div>
+                            <field name="amount_in_text"/>
+                            <field name="service_sale_id" invisible="1"/>
                             <field name="last_rate_currency"/>
                             <field name="date"
                                    readonly="state != 'draft'"/>
