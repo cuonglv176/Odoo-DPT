@@ -188,7 +188,7 @@ class StockPicking(models.Model):
                 # get last picking out of this picking in
                 last_picking_out_id = self.picking_in_id.picking_out_ids.filtered(lambda sp: sp.id != self.id).sorted(
                     key=lambda r: r.id)[:1]
-                if last_picking_out_id:
+                if last_picking_out_id and '.' in last_picking_out_id.picking_lot_name:
                     num = last_picking_out_id.picking_lot_name.split('.')[:1]
                     self.picking_lot_name = self.picking_in_id.picking_lot_name + f".{num + 1}"
                 else:
@@ -225,6 +225,8 @@ class StockPicking(models.Model):
                 'default_picking_in_id': self.id,
                 'default_x_location_id': self.location_dest_id.id,
                 'default_x_location_dest_id': other_warehouse_id.lot_stock_id.id,
+                'default_location_id': self.location_dest_id.id,
+                'default_location_dest_id': transit_location_id.id,
                 'default_picking_type_id': picking_type_id.id,
                 'default_x_transfer_type': 'outgoing_transfer',
                 'default_lot_name': self.picking_lot_name,
