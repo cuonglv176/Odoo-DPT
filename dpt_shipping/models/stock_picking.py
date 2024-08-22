@@ -35,7 +35,7 @@ class StockPicking(models.Model):
         picking_ids._compute_valid_cutlist()
 
     @api.depends('sale_purchase_id', 'state', 'sale_purchase_id.ticket_ids', 'sale_purchase_id.dpt_export_import_ids',
-                 'exported_label')
+                 'exported_label', 'sale_purchase_id.dpt_export_import_line_ids')
     def _compute_valid_cutlist(self):
         # đã nhập đủ kiện, sản phẩm
         # đủ khai báo XNK
