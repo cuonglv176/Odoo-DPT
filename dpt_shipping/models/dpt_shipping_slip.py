@@ -53,8 +53,8 @@ class DPTShippingSlip(models.Model):
                 item.total_weight = 0
                 item.total_num_packing = 0
             item.num_not_confirm_picking = len(
-                item.in_picking_ids.filtered(lambda p: p.state != 'done')) if not item.send_shipping_id else len(
-                item.out_picking_ids.filtered(lambda p: p.state != 'done'))
+                item.out_picking_ids.filtered(lambda p: p.state != 'done')) if not item.send_shipping_id else len(
+                item.in_picking_ids.filtered(lambda p: p.state != 'done'))
 
     @api.constrains('export_import_ids')
     @api.onchange('export_import_ids')
