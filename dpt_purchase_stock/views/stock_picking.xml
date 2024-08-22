@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <field name="picking_type_id" position="before">
                 <field name="sale_purchase_id"/>
-                <field name="customer_id"/>
+                <field name="customer_id" invisible="1"/>
             </field>
             <field name="origin" position="before">
                 <field name="purchase_id" invisible="picking_type_code != 'incoming'"/>
@@ -23,7 +23,7 @@
         <field name="arch" type="xml">
             <field name="state" position="before">
                 <field name="sale_purchase_id"/>
-                <field name="customer_id"/>
+                <field name="customer_id" invisible="1"/>
             </field>
         </field>
     </record>

@@ -89,18 +89,18 @@ class StockPicking(models.Model):
                 [f"{package_id.quantity}{package_id.uom_id.packing_code}" for package_id in
                  item.package_ids if package_id.uom_id.packing_code])
 
-    @api.onchange('lot_name')
-    @api.constrains('lot_name')
-    def constrains_lot_name(self):
-        for item in self:
-            if item.is_main_incoming:
-                continue
-            for move_id in item.move_ids_without_package:
-                if move_id.product_id.tracking != 'lot' or not move_id.move_line_ids:
-                    continue
-                lot_id = self.env['stock.lot'].search(
-                    [('product_id', '=', move_id.product_id.id), ('name', '=', item.lot_name)], limit=1)
-                move_id.move_line_ids.write({'lot_id': lot_id.id if lot_id else None})
+    # @api.onchange('lot_name')
+    # @api.constrains('lot_name')
+    # def constrains_lot_name(self):
+    #     for item in self:
+    #         if item.is_main_incoming:
+    #             continue
+    #         for move_id in item.move_ids_without_package:
+    #             if move_id.product_id.tracking != 'lot' or not move_id.move_line_ids:
+    #                 continue
+    #             lot_id = self.env['stock.lot'].search(
+    #                 [('product_id', '=', move_id.product_id.id), ('name', '=', item.lot_name)], limit=1)
+    #             move_id.move_line_ids.write({'lot_id': lot_id.id if lot_id else None})
 
     def _compute_num_picking_out(self):
         for item in self:
@@ -444,3 +444,44 @@ class StockPicking(models.Model):
             self.fields_ids = [(0, 0, item) for item in val]
         if not self.sale_service_ids:
             self.fields_ids = [(5, 0, 0)]
+
+    @api.onchange('sale_purchase_id')
+    def onchange_get_detail(self):
+        if not self.location_id.warehouse_id.is_main_incoming_warehouse and self.picking_type_code == 'outgoing' and self.sale_purchase_id:
+            main_incoming_picking_ids = self.env['stock.picking'].sudo().search(
+                [('is_main_incoming', '=', True), ('sale_purchase_id', '=', self.sale_purchase_id.id)])
+            self.package_ids = None
+            self.move_ids_without_package = None
+            package_vals = []
+            move_vals = []
+            for picking_id in main_incoming_picking_ids:
+                for package_id in picking_id.package_ids:
+                    lot_id = self.env['stock.lot'].sudo().search(
+                        [('location_id', '=', self.location_id.id), ('name', '=', picking_id.picking_lot_name),
+                         ('product_id', '=', package_id.uom_id.product_id.id)], limit=1)
+                    if not lot_id:
+                        continue
+                    package_vals.append((0, 0, {
+                        'quantity': lot_id.product_qty,
+                        'uom_id': package_id.uom_id.id
+                    }))
+                    move_vals.append((0, 0, {
+                        'product_id': package_id.uom_id.product_id.id,
+                        'product_uom_qty': lot_id.product_qty,
+                        'product_uom': package_id.uom_id.product_id.uom_id.id,
+                        'partner_id': self.partner_id.id,
+                        'location_id': self.location_id.id,
+                        'location_dest_id': self.location_id.id,
+                        'picked': True,
+                        'move_line_ids': [(0, 0, {
+                            'product_id': package_id.uom_id.product_id.id,
+                            'lot_id': lot_id.id,
+                            'product_uom_id': package_id.uom_id.product_id.uom_id.id,
+                            'quantity': lot_id.product_qty,
+                            'location_id': self.location_id.id,
+                            'company_id': self.env.company.id,
+                            'location_dest_id': self.location_id.id,
+                        })],
+                    }))
+            self.package_ids = package_vals
+            self.move_ids_without_package = move_vals
