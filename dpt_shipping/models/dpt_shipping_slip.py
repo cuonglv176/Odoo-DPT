@@ -34,6 +34,7 @@ class DPTShippingSlip(models.Model):
     total_volume = fields.Float('Total Volume (m3)', compute="_compute_information")
     total_weight = fields.Float('Total Weight (kg)', compute="_compute_information")
     total_num_packing = fields.Float('Total Num Packing', compute="_compute_information")
+    num_not_confirm_picking = fields.Integer("Number of Not Confirm Picking", compute="_compute_information")
 
     def _compute_information(self):
         for item in self:
@@ -51,6 +52,9 @@ class DPTShippingSlip(models.Model):
                 item.total_volume = 0
                 item.total_weight = 0
                 item.total_num_packing = 0
+            item.num_not_confirm_picking = len(
+                item.in_picking_ids.filtered(lambda p: p.state != 'done')) if not item.send_shipping_id else len(
+                item.out_picking_ids.filtered(lambda p: p.state != 'done'))
 
     @api.constrains('export_import_ids')
     @api.onchange('export_import_ids')
@@ -132,10 +136,12 @@ class DPTShippingSlip(models.Model):
         action = self.env.ref('dpt_shipping.dpt_shipping_split_wizard_action').sudo().read()[0]
         action['context'] = {
             'default_shipping_id': self.id,
-            'default_picking_ids': self.out_picking_ids.mapped('x_in_transfer_picking_id').ids,
+            'default_picking_ids': self.out_picking_ids.filtered(lambda p: p.state == 'done').mapped(
+                'x_in_transfer_picking_id').ids,
             'default_sale_ids': self.sale_ids.ids,
             'default_available_sale_ids': self.sale_ids.ids,
-            'default_available_picking_ids': self.out_picking_ids.mapped('x_in_transfer_picking_id').ids,
+            'default_available_picking_ids': self.out_picking_ids.filtered(lambda p: p.state == 'done').mapped(
+                'x_in_transfer_picking_id').ids,
         }
         return action
 
@@ -166,3 +172,15 @@ class DPTShippingSlip(models.Model):
                     self.env['stock.move.line'].create(move_line_vals)
                 transfer_picking_id.create_in_transfer_picking()
             item.constrains_export_import()
+
+    def action_confirm_picking(self):
+        action = self.env.ref('dpt_shipping.dpt_picking_confirm_wizard_action').sudo().read()[0]
+        picking_ids = self.out_picking_ids.filtered(
+            lambda p: p.state != 'done') if not self.send_shipping_id else self.in_picking_ids.filtered(
+            lambda p: p.state != 'done')
+        action['context'] = {
+            'default_shipping_id': self.id,
+            'default_picking_ids': picking_ids.ids,
+            'default_available_picking_ids': picking_ids.ids,
+        }
+        return action

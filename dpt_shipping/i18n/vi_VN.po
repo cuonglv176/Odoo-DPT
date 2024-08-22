@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-15 15:47+0000\n"
-"PO-Revision-Date: 2024-08-15 15:47+0000\n"
+"POT-Creation-Date: 2024-08-22 02:48+0000\n"
+"PO-Revision-Date: 2024-08-22 02:48+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -62,6 +62,7 @@ msgid "Available Sale Order"
 msgstr ""
 
 #. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_picking_confirm_wizard__available_picking_ids
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_split_wizard__available_picking_ids
 msgid "Available Stock Picking"
 msgstr ""
@@ -73,6 +74,7 @@ msgstr ""
 
 #. module: dpt_shipping
 #: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_get_picking_so_wizard_form_view
+#: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_picking_confirm_wizard_form_view
 #: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_split_wizard_form_view
 msgid "Cancel"
 msgstr "Hủy"
@@ -82,6 +84,13 @@ msgstr "Hủy"
 #: model:ir.model.fields.selection,name:dpt_shipping.selection__fleet_vehicle__country__chinese
 msgid "Chinese"
 msgstr "Trung Quốc"
+
+#. module: dpt_shipping
+#: model:ir.actions.act_window,name:dpt_shipping.dpt_picking_confirm_wizard_action
+#: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_picking_confirm_wizard_form_view
+#: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_slip_form_view
+msgid "Confirm Picking"
+msgstr "Xác nhận Phiếu kho"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__vehicle_country
@@ -108,6 +117,7 @@ msgstr "Tạo phiếu điều chuyển"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_get_picking_so_wizard__create_uid
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_picking_confirm_wizard__create_uid
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__create_uid
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_split_wizard__create_uid
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage__create_uid
@@ -117,6 +127,7 @@ msgstr ""
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_get_picking_so_wizard__create_date
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_picking_confirm_wizard__create_date
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__create_date
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_split_wizard__create_date
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage__create_date
@@ -146,6 +157,7 @@ msgstr "Mô tả"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_get_picking_so_wizard__display_name
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_picking_confirm_wizard__display_name
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__display_name
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_split_wizard__display_name
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage__display_name
@@ -230,6 +242,7 @@ msgstr "Đã có tem"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_get_picking_so_wizard__id
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_picking_confirm_wizard__id
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__id
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_split_wizard__id
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage__id
@@ -307,6 +320,7 @@ msgstr "Là trạng thái Sẵn sàng"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_get_picking_so_wizard__write_uid
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_picking_confirm_wizard__write_uid
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__write_uid
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_split_wizard__write_uid
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage__write_uid
@@ -316,6 +330,7 @@ msgstr ""
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_get_picking_so_wizard__write_date
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_picking_confirm_wizard__write_date
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__write_date
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_split_wizard__write_date
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage__write_date
@@ -423,6 +438,11 @@ msgid "Number of Actions"
 msgstr ""
 
 #. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__num_not_confirm_picking
+msgid "Number of Not Confirm Picking"
+msgstr "Số Phiếu kho chưa xác nhận"
+
+#. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__message_has_error_counter
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage_log__message_has_error_counter
 msgid "Number of errors"
@@ -453,11 +473,13 @@ msgstr "Phiếu xuất"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_get_picking_so_wizard__picking_ids
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_picking_confirm_wizard__picking_ids
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_split_wizard__picking_ids
 msgid "Picking"
 msgstr "Phiếu nhập"
 
 #. module: dpt_shipping
+#: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_picking_confirm_wizard_form_view
 #: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_split_wizard_form_view
 msgid "Pickings"
 msgstr "Phiếu kho"
@@ -509,6 +531,7 @@ msgstr "Phiếu gửi"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_export_import__shipping_slip_id
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_picking_confirm_wizard__shipping_id
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_split_wizard__shipping_id
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage_log__shipping_slip_id
 msgid "Shipping Slip"
@@ -652,6 +675,11 @@ msgstr ""
 #. module: dpt_shipping
 #: model:ir.model,name:dpt_shipping.model_dpt_get_picking_so_wizard
 msgid "dpt.get.picking.so.wizard"
+msgstr ""
+
+#. module: dpt_shipping
+#: model:ir.model,name:dpt_shipping.model_dpt_picking_confirm_wizard
+msgid "dpt.picking.confirm.wizard"
 msgstr ""
 
 #. module: dpt_shipping

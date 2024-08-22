@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="dpt_picking_confirm_wizard_form_view" model="ir.ui.view">
+        <field name="name">dpt_picking_confirm_wizard_form_view</field>
+        <field name="model">dpt.picking.confirm.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Confirm Picking">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="shipping_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="stock_picking" string="Pickings">
+                            <field name="available_picking_ids" invisible="1"/>
+                            <field name="picking_ids" domain="[('id', 'in', available_picking_ids)]"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button name="action_confirm_picking" type="object" string="Confirm Picking" class="oe_highlight"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="dpt_picking_confirm_wizard_action" model="ir.actions.act_window">
+        <field name="name">Confirm Picking</field>
+        <field name="res_model">dpt.picking.confirm.wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_id" ref="dpt_shipping.dpt_picking_confirm_wizard_form_view"/>
+        <field name="context">{}</field>
+        <field name="target">new</field>
+        <field name="view_mode">form</field>
+    </record>
+
+</odoo>

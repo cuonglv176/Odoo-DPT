@@ -10,12 +10,16 @@
                     <button name="action_create_shipping_slip_receive" string="Create Shipping Receive"
                             type="object" class="btn-primary" invisible="send_shipping_id"/>
                     <button name="action_create_stock_transfer" string="Create Transfer Picking"
-                            type="object" class="btn-primary" invisible="send_shipping_id or out_picking_ids"/>
+                            type="object" class="btn-primary"
+                            invisible="send_shipping_id or out_picking_ids"/>
+                    <button name="action_confirm_picking" string="Confirm Picking"
+                            type="object" class="btn-primary" invisible="not num_not_confirm_picking"/>
                     <field name="vehicle_country" invisible="1"/>
                     <field name="vn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
                            invisible="vehicle_country != 'vietnamese'"/>
                     <field name="cn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
                            invisible="vehicle_country != 'chinese'"/>
+                    <field name="num_not_confirm_picking" invisible="1"/>
                 </header>
                 <sheet>
                     <group>
