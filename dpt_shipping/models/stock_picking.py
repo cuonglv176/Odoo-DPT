@@ -46,7 +46,8 @@ class StockPicking(models.Model):
                  ticket_id.department_id.is_chinese_stock_department]) or not item.sale_purchase_id.ticket_ids.filtered(lambda t: t.department_id.is_chinese_stock_department))
             item.have_stock_label = item.exported_label
             dpt_export_import_line_ids = self.env['dpt.export.import.line'].sudo().search(
-                [('stock_picking_ids', 'in', [item.id])])
+                [('stock_picking_ids', 'in', [item.id]),
+                 ('state', 'in', ['eligible', 'declared', 'released', 'consulted', 'post_control'])])
             item.have_export_import = True if (
                                                           item.sale_purchase_id and item.sale_purchase_id.dpt_export_import_line_ids) or dpt_export_import_line_ids else False
 
