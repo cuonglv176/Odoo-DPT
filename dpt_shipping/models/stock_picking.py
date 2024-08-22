@@ -49,7 +49,10 @@ class StockPicking(models.Model):
                 [('stock_picking_ids', 'in', [item.id]),
                  ('state', 'in', ['eligible', 'declared', 'released', 'consulted', 'post_control'])])
             item.have_export_import = True if (
-                                                          item.sale_purchase_id and item.sale_purchase_id.dpt_export_import_line_ids) or dpt_export_import_line_ids else False
+                                                          item.sale_purchase_id and item.sale_purchase_id.dpt_export_import_line_ids.filtered(
+                                                      lambda eil: eil.state in ['eligible', 'declared', 'released',
+                                                                                'consulted',
+                                                                                'post_control'])) or dpt_export_import_line_ids else False
 
     @api.model
     def create(self, vals):
