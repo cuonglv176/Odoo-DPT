@@ -11,9 +11,8 @@ class PurchaseOrderLinePackage(models.Model):
 
     def compute_created_picking_qty(self):
         for item in self:
-            out_picking_ids = self.env['stock.picking'].sudo().search([('picking_in_id', '=', item.picking_id.id)])
-            out_picking_ids = out_picking_ids.filtered(
-                lambda op: op.picking_type_id.code != 'incoming' or op.x_transfer_type != 'incoming')
+            out_picking_ids = self.env['stock.picking'].sudo().search(
+                [('picking_in_id', '=', item.picking_id.id), ('x_transfer_type', '=', 'outgoing_transfer')])
             item.created_picking_qty = sum([package_id.quantity for package_id in out_picking_ids.package_ids.filtered(
                 lambda p: p.uom_id.id == item.uom_id.id)])
 
