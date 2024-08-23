@@ -447,7 +447,7 @@ class StockPicking(models.Model):
 
     @api.onchange('sale_purchase_id')
     def onchange_get_detail(self):
-        if not self.location_id.warehouse_id.is_main_incoming_warehouse and self.picking_type_code == 'outgoing' and self.sale_purchase_id:
+        if not self.location_id.warehouse_id.is_main_incoming_warehouse and self.location_id.usage == 'internal' and self.picking_type_code == 'outgoing' and self.sale_purchase_id:
             main_incoming_picking_ids = self.env['stock.picking'].sudo().search(
                 [('is_main_incoming', '=', True), ('sale_purchase_id', '=', self.sale_purchase_id.id)])
             self.package_ids = None
