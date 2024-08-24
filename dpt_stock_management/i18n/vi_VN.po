@@ -167,11 +167,6 @@ msgid "Is main incoming Warehouse"
 msgstr "Là kho nhập hàng chính"
 
 #. module: dpt_stock_management
-#: model:ir.model.fields,field_description:dpt_stock_management.field_stock_picking__lot_name
-msgid "Lot"
-msgstr "Mã Lô"
-
-#. module: dpt_stock_management
 #: model:ir.model.fields,field_description:dpt_stock_management.field_purchase_order_line_package__move_ids
 msgid "Move"
 msgstr ""

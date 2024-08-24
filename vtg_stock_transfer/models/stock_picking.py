@@ -73,7 +73,6 @@ class StockPicking(models.Model):
                 'x_transfer_type': 'incoming_transfer',
                 'origin': picking.name,
                 'picking_type_id': new_picking_type_id.id,
-                'lot_name': picking.picking_lot_name,
                 'picking_lot_name': picking.picking_lot_name,
                 'package_ids': [(0, 0, {
                     'code': package_id.code,
@@ -104,7 +103,7 @@ class StockPicking(models.Model):
             move_line_vals = []
             for move_id in in_transfer_picking_id.move_ids_without_package:
                 lot_id = self.env['stock.lot'].search(
-                    [('product_id', '=', move_id.product_id.id), ('name', '=', in_transfer_picking_id.lot_name)],
+                    [('product_id', '=', move_id.product_id.id), ('name', '=', in_transfer_picking_id.picking_lot_name)],
                     limit=1)
                 move_line_vals.append({
                     'picking_id': in_transfer_picking_id.id,

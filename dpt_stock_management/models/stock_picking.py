@@ -22,7 +22,6 @@ class StockPicking(models.Model):
     packing_lot_name = fields.Char('Packing Lot name', compute="compute_packing_lot_name", store=True)
     is_main_incoming = fields.Boolean('Is Main Incoming', compute="_compute_main_incoming",
                                       search="search_main_incoming")
-    lot_name = fields.Char('Lot')
     total_volume = fields.Float('Total Volume (m3)', compute="_compute_total_volume_weight")
     total_weight = fields.Float('Total Weight (kg)', compute="_compute_total_volume_weight")
 
@@ -89,19 +88,6 @@ class StockPicking(models.Model):
                 [f"{package_id.quantity}{package_id.uom_id.packing_code}" for package_id in
                  item.package_ids if package_id.uom_id.packing_code])
 
-    # @api.onchange('lot_name')
-    # @api.constrains('lot_name')
-    # def constrains_lot_name(self):
-    #     for item in self:
-    #         if item.is_main_incoming:
-    #             continue
-    #         for move_id in item.move_ids_without_package:
-    #             if move_id.product_id.tracking != 'lot' or not move_id.move_line_ids:
-    #                 continue
-    #             lot_id = self.env['stock.lot'].search(
-    #                 [('product_id', '=', move_id.product_id.id), ('name', '=', item.lot_name)], limit=1)
-    #             move_id.move_line_ids.write({'lot_id': lot_id.id if lot_id else None})
-
     def _compute_num_picking_out(self):
         for item in self:
             item.num_picking_out = len(item.picking_out_ids)
@@ -150,8 +136,8 @@ class StockPicking(models.Model):
                     'product_uom_id': move_id.product_uom.id,
                     'lot_name': self.picking_lot_name if self.is_main_incoming else None,
                     'lot_id': self.env['stock.lot'].search(
-                        [('product_id', '=', move_id.product_id.id), ('name', '=', self.lot_name)])[
-                              :1].id if not self.is_main_incoming and self.lot_name else None
+                        [('product_id', '=', move_id.product_id.id), ('name', '=', self.picking_lot_name)])[
+                              :1].id if not self.is_main_incoming and self.picking_lot_name else None
                 })
             if move_line_vals:
                 self.env['stock.move.line'].create(move_line_vals)
@@ -229,7 +215,8 @@ class StockPicking(models.Model):
                 'default_location_dest_id': transit_location_id.id,
                 'default_picking_type_id': picking_type_id.id,
                 'default_x_transfer_type': 'outgoing_transfer',
-                'default_lot_name': self.picking_lot_name,
+                'default_partner_id': self.partner_id.id,
+                'default_sale_purchase_id': self.sale_purchase_id.id,
                 'default_move_ids_without_package': [(0, 0, {
                     'location_id': self.location_dest_id.id,
                     'location_dest_id': transit_location_id.id,
