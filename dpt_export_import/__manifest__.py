@@ -8,7 +8,7 @@
     'maintainer': 'Your Name',
     'website': 'http://dpt.com',
     'depends': ['sale', 'sale_management', 'dpt_service_management', 'dpt_purchase_management', 'hr', 'purchase',
-                'stock'],
+                'stock', 'dpt_purchase_stock', 'dpt_stock_management'],
     'data': [
         'security/ir.model.access.csv',
         'views/menu.xml',

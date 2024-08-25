@@ -44,7 +44,190 @@
             <field name="date_order" position="before">
                 <field name="sale_id" readonly="1" force_save="1" invisible="sale_id"/>
             </field>
+            <page name="products" position="attributes">
+                <attribute name="invisible">purchase_type in ('external', 'buy_cny')</attribute>
+            </page>
             <page name="products" position="after">
+                <page string="Sản phẩm" invisible="purchase_type == 'internal'" name="products">
+                            <field name="tax_country_id" invisible="1" field_id="tax_country_id_0"/>
+                            <field name="order_line" widget="section_and_note_one2many" mode="tree,kanban"
+                                   context="{'default_state': 'draft'}" readonly="state in ('done', 'cancel')"
+                                   on_change="1" field_id="order_line_0">
+                                <tree editable="bottom">
+                                    <control>
+                                        <create name="add_product_control" string="Add a product"/>
+                                    </control>
+                                    <field name="tax_calculation_rounding_method" column_invisible="True"/>
+                                    <field name="display_type" column_invisible="True"/>
+                                    <field name="company_id" column_invisible="True" on_change="1"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="state" column_invisible="True"/>
+                                    <field name="product_uom_category_id" column_invisible="True"/>
+                                    <field name="product_id"
+                                           readonly="state in ('purchase', 'to approve', 'done', 'cancel')"
+                                           required="not display_type" width="35%"
+                                           context="{'partner_id':parent.partner_id, 'quantity':product_qty, 'company_id': parent.company_id}"
+                                           force_save="1" domain="[('purchase_ok', '=', True)]" on_change="1"/>
+                                    <field name="name" widget="section_and_note_text"/>
+                                    <field name="buying_url"/>
+                                    <field name="product_qty" on_change="1"/>
+                                    <field name="product_uom" on_change="1"/>
+                                    <field name="price_unit" on_change="1"/>
+                                    <field name="price_unit2" on_change="1"/>
+                                    <field name="price_unit3" on_change="1"/>
+                                    <field name="price_subtotal" on_change="1"/>
+                                    <field name="price_subtotal2"/>
+                                    <field name="price_subtotal3"/>
+                                </tree>
+
+                                <form string="Dòng đơn mua hàng">
+                                    <field name="tax_calculation_rounding_method" invisible="1"/>
+                                    <field name="state" invisible="1"/>
+                                    <field name="display_type" invisible="1"/>
+                                    <field name="company_id" invisible="1" on_change="1"/>
+                                    <group invisible="display_type">
+                                        <group>
+                                            <field name="product_uom_category_id" invisible="1"/>
+                                            <field name="product_id" context="{'partner_id': parent.partner_id}"
+                                                   widget="many2one_barcode"
+                                                   domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
+                                                   readonly="state in ('purchase', 'to approve', 'done', 'cancel')"
+                                                   on_change="1" can_create="True" can_write="True"/>
+                                            <label for="product_qty"/>
+                                            <div class="o_row">
+                                                <field name="product_qty" on_change="1"/>
+                                                <field name="product_uom" required="not display_type" on_change="1"
+                                                       can_create="True" can_write="True"/>
+                                            </div>
+                                            <field name="qty_received_method" invisible="1" on_change="1"/>
+                                            <field name="qty_received" string="Số lượng đã nhận"
+                                                   invisible="parent.state not in ('purchase', 'done')"
+                                                   readonly="qty_received_method != 'manual'" on_change="1"/>
+                                            <field name="qty_invoiced" string="Số lượng đã lập hoá đơn"
+                                                   invisible="parent.state not in ('purchase', 'done')"/>
+                                            <field name="price_unit" on_change="1"/>
+                                            <field name="discount" on_change="1"/>
+                                            <field name="taxes_id" widget="many2many_tags"
+                                                   domain="[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]"
+                                                   options="{'no_create': True}" on_change="1" can_create="True"
+                                                   can_write="True"/>
+                                        </group>
+                                        <group>
+                                            <field name="date_planned" widget="date" required="not display_type"
+                                                   on_change="1"/>
+                                            <field name="propagate_cancel"/>
+                                        </group>
+                                        <group>
+                                            <notebook colspan="4">
+                                                <page string="Ghi chú" name="notes">
+                                                    <field name="name"/>
+                                                </page>
+                                                <page string="Hoá đơn và lô hàng sắp về"
+                                                      name="invoices_incoming_shiptments">
+                                                    <field name="invoice_lines" on_change="1"/>
+                                                    <field name="move_ids" on_change="1"/>
+                                                </page>
+                                            </notebook>
+                                        </group>
+                                    </group>
+                                    <label for="name" string="Tên phần (ví dụ: Sản phẩm, Dịch vụ)"
+                                           invisible="display_type != 'line_section'"/>
+                                    <label for="name" string="Ghi chú" invisible="display_type != 'line_note'"/>
+                                    <field name="name" nolabel="1" invisible="not display_type"/>
+                                </form>
+                                <kanban class="o_kanban_mobile">
+                                    <field name="name"/>
+                                    <field name="product_id" on_change="1"/>
+                                    <field name="product_qty" on_change="1"/>
+                                    <field name="product_uom" on_change="1"/>
+                                    <field name="price_subtotal" on_change="1"/>
+                                    <field name="price_tax"/>
+                                    <field name="price_total" on_change="1"/>
+                                    <field name="price_unit" on_change="1"/>
+                                    <field name="discount" on_change="1"/>
+                                    <field name="display_type"/>
+                                    <field name="taxes_id" on_change="1"/>
+                                    <field name="tax_calculation_rounding_method"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div t-attf-class="oe_kanban_card oe_kanban_global_click {{ record.display_type.raw_value ? 'o_is_' + record.display_type.raw_value : '' }}">
+                                                <t t-if="!record.display_type.raw_value">
+                                                    <div class="row">
+                                                        <div class="col-8">
+                                                            <strong>
+                                                                <span t-esc="record.product_id.value"/>
+                                                            </strong>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <strong>
+                                                                <span>
+                                                                    Chưa bao gồm thuế:
+                                                                    <t t-esc="record.price_subtotal.value"
+                                                                       class="float-end text-end"/>
+                                                                </span>
+                                                            </strong>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-8 text-muted">
+                                                            <span>
+                                                                Số lượng:
+                                                                <t t-esc="record.product_qty.value"/>
+                                                                <small>
+                                                                    <t t-esc="record.product_uom.value"/>
+                                                                </small>
+                                                            </span>
+                                                        </div>
+                                                        <div class="col-4"
+                                                             t-if="record.tax_calculation_rounding_method.raw_value === 'round_per_line'">
+                                                            <strong>
+                                                                <span>
+                                                                    Bao gồm thuế:
+                                                                    <t t-esc="record.price_total.value"/>
+                                                                </span>
+                                                            </strong>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-12 text-muted">
+                                                            <span>
+                                                                Đơn giá:
+                                                                <t t-esc="record.price_unit.value"/>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" t-if="record.discount.raw_value">
+                                                        <div class="col-12 text-muted">
+                                                            <span>
+                                                                Discount:<t t-out="record.discount.value"/>%
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </t>
+                                                <div t-elif="record.display_type.raw_value === 'line_section' || record.display_type.raw_value === 'line_note'"
+                                                     class="row">
+                                                    <div class="col-12">
+                                                        <span t-esc="record.name.value"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                            </field>
+                            <group>
+                                <group>
+                                    <field colspan="2" name="notes" nolabel="1"
+                                           placeholder="Xác định điều khoản và điều kiện của bạn..."
+                                           field_id="notes_0"/>
+                                </group>
+                                <group class="oe_subtotal_footer" invisible="1">
+                                    <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" colspan="2"
+                                           readonly="1" field_id="tax_totals_0"/>
+                                </group>
+                            </group>
+                            <div class="clearfix"/>
+                        </page>
                 <page string="Package" name="package">
                     <field name="import_package_stock" invisible="1"/>
                     <field name="package_line_ids" readonly="state in ('done', 'cancel')"
@@ -145,7 +328,6 @@
         </field>
     </record>
 
-
     <record id="purchase.purchase_form_action" model="ir.actions.act_window">
         <field name="domain">[('purchase_type','=', 'internal')]</field>
         <field name="name">Đơn mua hàng nội bộ</field>
@@ -155,30 +337,7 @@
     <menuitem name="Đơn mua hàng nội bộ" id="purchase.menu_purchase_form_action" action="purchase.purchase_form_action"
               parent="purchase.menu_procurement_management" sequence="6"/>
 
-    <record id="purchase_form_external_action" model="ir.actions.act_window">
-        <field name="name">Đơn mua hàng mua hộ</field>
-        <field name="res_model">purchase.order</field>
-        <field name="view_mode">tree,kanban,form,pivot,graph,calendar,activity</field>
-        <field name="view_ids" eval="[(5, 0, 0),
-                (0, 0, {'view_mode': 'tree', 'view_id': ref('purchase.purchase_order_view_tree')}),
-                (0, 0, {'view_mode': 'kanban', 'view_id': ref('purchase.purchase_order_view_kanban_without_dashboard')}),
-            ]"/>
-        <field name="domain">[('purchase_type','=', 'external')]</field>
-        <field name="search_view_id" ref="purchase.purchase_order_view_search"/>
-        <field name="context">{'from_purchase_order_confirm': True, 'default_purchase_type': 'external'}</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                No purchase order found. Let's create one!
-            </p>
-            <p>
-                Once you ordered your products to your supplier, confirm your request for quotation and it will turn
-                into a purchase order.
-            </p>
-        </field>
-    </record>
-    <menuitem name="Đơn mua hàng mua hộ" action="purchase_form_external_action" id="menu_purchase_form_external_action"
-              parent="purchase.menu_procurement_management"
-              sequence="6"/>
+
 
 
     <record id="purchase_form_buy_cny_action" model="ir.actions.act_window">

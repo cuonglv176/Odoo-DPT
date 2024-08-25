@@ -9,8 +9,8 @@
                 <group col="6" class="mt-2 mt-md-0">
                     <group class="oe_subtotal_footer" colspan="2">
                         <field name="service_total_amount" colspan="2" readonly="1" string="Total service"/>
-                        <field name="amount_total" colspan="2" readonly="1" string="Total product"/>
-                        <field name="purchase_amount_total" colspan="2" invisible="1"/>
+                        <field name="amount_total" colspan="2" readonly="1" ivisible="1"/>
+                        <field name="purchase_amount_total" colspan="2" string="Total product"/>
                         <field name="payment_amount_total" colspan="2" readonly="1"/>
                         <field name="deposit_amount_total" colspan="2" readonly="1" string="Total deposit"/>
                         <field name="invoice_amount_total" colspan="2" readonly="1"/>

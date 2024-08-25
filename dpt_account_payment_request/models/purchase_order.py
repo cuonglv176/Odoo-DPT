@@ -12,6 +12,8 @@ class PurchaseOrder(models.Model):
 
     def action_open_payment_popup(self):
         view_form_id = self.env.ref('dpt_account_payment_request.dpt_view_account_payment_request_form').id
+        amount_payment = (self.currency_id.rate or self.last_rate_currency) * sum(
+            self.order_line.mapped('price_subtotal3')) + sum(self.sale_service_ids.mapped('amount_total'))
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'account.payment',
@@ -28,8 +30,11 @@ class PurchaseOrder(models.Model):
                 'default_purchase_id': self.id,
                 'default_sale_id': self.sale_id.id,
                 'default_partner_id': self.partner_id.id,
-                'default_amount': self.amount_untaxed,
+                'default_amount': amount_payment,
+                'default_last_rate_currency': self.last_rate_currency,
+                'default_partner_bank_id': self.partner_id.bank_ids[:1] if self.partner_id.bank_ids else None,
                 'default_ref': _(f'Thanh toán cho {self.name}'),
+                'default_name': f"Thanh toán tiền mua hàng {self.name} {self.sale_id.name}",
             },
         }
 

@@ -171,6 +171,8 @@
                                    readonly="state != 'draft'"/>
                             <field name="sale_id" string="Sale Order"/>
                             <field name="purchase_id"/>
+                            <field name="payment_user_type" widget="radio"/>
+                            <field name="payment_user" widget="radio"/>
                             <field name="partner_id" context="{'default_is_company': True}" string="Customer"
                                    options="{'no_quick_create': True}"
                                    invisible="partner_type != 'customer' or is_internal_transfer"
@@ -189,6 +191,9 @@
                                        readonly="state != 'draft'"
                                        groups="base.group_multi_currency"/>
                             </div>
+                            <field name="amount_in_text"/>
+                            <field name="service_sale_id" invisible="1"/>
+                            <field name="last_rate_currency"/>
                             <field name="date"
                                    readonly="state != 'draft'"/>
                             <field name="ref" string="Memo"/>
@@ -220,7 +225,8 @@
                                    context="{'default_partner_id': partner_id, 'display_account_trust': True}"
                                    invisible="not show_partner_bank_account or is_internal_transfer or payment_type == 'outbound'"
                                    required="require_partner_bank_account and not is_internal_transfer"/>
-
+                            <field name="acc_number"/>
+                            <field name="acc_holder_name"/>
                             <field name="destination_journal_id"
                                    placeholder="e.g. Cash"
                                    context="{'default_partner_id': partner_id}"
@@ -235,6 +241,40 @@
                             </div>
                         </group>
                     </group>
+                    <notebook>
+                        <page name="dpt_account_payment_service_detail" string="Dịch Vụ">
+                            <field name="detail_ids">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="currency_id" column_invisible="1" force_save="1"/>
+                                    <field name="currency_cny_id" optional="hide"/>
+                                    <field name="service_id"/>
+                                    <field name="uom_id"/>
+                                    <field name="qty" force_save="1"/>
+                                    <field name="price" readonly="0" force_save="1" context="{'check_price': True}"/>
+                                    <field name="price_cny" readonly="0" force_save="1"/>
+                                    <field name="amount_total" readonly="1" force_save="1"/>
+                                    <field name="description"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="dpt_account_payment_product_detail" string="Sản Phẩm">
+                            <field name="detail_product_ids">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="currency_id" column_invisible="1" force_save="1"/>
+                                    <field name="currency_cny_id" optional="hide"/>
+                                    <field name="product_id"/>
+                                    <field name="uom_id"/>
+                                    <field name="qty" force_save="1"/>
+                                    <field name="price" readonly="0" force_save="1" context="{'check_price': True}"/>
+                                    <field name="price_cny" readonly="0" force_save="1"/>
+                                    <field name="amount_total" readonly="1" force_save="1"/>
+                                    <field name="description"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
                 <div class="o_attachment_preview"/>
                 <div class="oe_chatter">

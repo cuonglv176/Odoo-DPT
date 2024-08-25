@@ -108,7 +108,7 @@ msgstr "Giá thay đổi"
 #: model:ir.model.fields.selection,name:dpt_sale_approvals.selection__sale_order__price_status__no_price
 #: model:ir.model.fields.selection,name:dpt_sale_approvals.selection__sale_order_line__price_status__no_price
 msgid "No Price"
-msgstr "Không duyệt giá"
+msgstr "Chưa có giá"
 
 #. module: dpt_sale_approvals
 #: model_terms:ir.ui.view,arch_db:dpt_sale_approvals.approval_request_view_form_inherit_form
@@ -183,3 +183,38 @@ msgstr "Đang chờ duyệt giá"
 #: model_terms:ir.ui.view,arch_db:dpt_sale_approvals.view_sale_order_inherit_form
 msgid "Wait Approve Price"
 msgstr "Đang chờ duyệt giá"
+
+#. module: dpt_sale_approvals
+#: model:ir.model.fields.selection,name:dpt_sale_approvals.selection__dpt_sale_service_management__price_status__approved_approval
+msgid "Approved Approval"
+msgstr "Đã duyệt"
+
+#. module: dpt_sale_approvals
+#: model:ir.model.fields.selection,name:dpt_sale_approvals.selection__dpt_sale_service_management__price_status__calculated
+msgid "Calculated"
+msgstr "Đã tính giá"
+
+#. module: dpt_sale_approvals
+#: model:ir.model.fields.selection,name:dpt_sale_approvals.selection__dpt_sale_service_management__price_status__quoted
+msgid "Quoted"
+msgstr "Đã báo giá"
+
+#. module: dpt_sale_approvals
+#: model:ir.model.fields.selection,name:dpt_sale_approvals.selection__dpt_sale_service_management__price_status__refuse_quoted
+msgid "Refuse Quoted"
+msgstr "Từ chối báo giá"
+
+#. module: dpt_sale_approvals
+#: model:ir.model.fields.selection,name:dpt_sale_approvals.selection__dpt_sale_service_management__price_status__refuse_approval
+msgid "Refuse Approval"
+msgstr "Từ chối duyệt giá"
+
+#. module: dpt_sale_approvals
+#: model:ir.model.fields.selection,name:dpt_sale_approvals.selection__dpt_sale_service_management__price_status__ticket_status
+msgid "Ticket Status"
+msgstr "Thực hiện dịch vụ"
+
+#. module: dpt_sale_approvals
+#: model:ir.model.fields.selection,name:dpt_sale_approvals.selection__dpt_sale_service_management__price_status__not_calculate
+msgid "Not Calculate"
+msgstr "Chưa có giá"

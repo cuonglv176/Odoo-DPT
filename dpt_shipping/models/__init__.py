@@ -8,3 +8,5 @@ from . import hr_department
 from . import dpt_vehicle_stage_log
 from . import fleet_vehicle
 from . import mail_message
+from . import export_import
+from . import helpdesk_ticket

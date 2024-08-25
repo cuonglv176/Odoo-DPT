@@ -165,6 +165,7 @@ class PurchaseOrder(models.Model):
         res = super(PurchaseOrder, self).write(vals)
         if vals.get('state'):
             self.update_last_rate_currency()
+        return res
 
     def update_last_rate_currency(self):
         self.ensure_one()
@@ -175,3 +176,10 @@ class PurchaseOrder(models.Model):
     def _onchange_currency_id(self):
         if self.currency_id:
             self.last_rate_currency = self.currency_id.rate
+
+    @api.onchange('last_rate_currency')
+    def _onchange_last_rate_currency(self):
+        if self.last_rate_currency:
+            for r in self.sale_service_ids:
+                r.price = r.price_cny * r.purchase_id.last_rate_currency
+                r.amount_total = r.price * r.qty * r.compute_value if r.pricelist_item_id.is_price and r.pricelist_item_id.compute_price == 'table' else r.qty * r.price

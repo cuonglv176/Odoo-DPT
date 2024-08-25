@@ -8,15 +8,9 @@ class StockPicking(models.Model):
 
     in_draft_shipping = fields.Boolean('In Draft Shipping', compute="_compute_in_draft_shipping",
                                        search="_search_in_draft_shipping")
-    finish_stock_services = fields.Boolean('Finish Stock Services', compute="_compute_valid_cutlist",
-                                           inverse='_inverse_finish_stock_services', store=True)
-    have_stock_label = fields.Boolean('Have Stock Labels', compute="_compute_valid_cutlist",
-                                      inverse='_inverse_have_stock_label', store=True)
-    have_export_import = fields.Boolean('Have Export Import', compute="_compute_valid_cutlist",
-                                        inverse='_inverse_have_export_import', store=True)
-    edited_finish_stock_services = fields.Boolean('Edited Finish Stock Services')
-    edited_have_stock_label = fields.Boolean('Edited Have Stock Labels')
-    edited_have_export_import = fields.Boolean('Edited Have Export Import')
+    finish_stock_services = fields.Boolean('Finish Stock Services', compute="_compute_valid_cutlist", store=True)
+    have_stock_label = fields.Boolean('Have Stock Labels', compute="_compute_valid_cutlist", store=True)
+    have_export_import = fields.Boolean('Have Export Import', compute="_compute_valid_cutlist", store=True)
 
     def _compute_in_draft_shipping(self):
         for item in self:
@@ -40,57 +34,38 @@ class StockPicking(models.Model):
         picking_ids = self.env['stock.picking'].sudo().search([])
         picking_ids._compute_valid_cutlist()
 
-    def _inverse_finish_stock_services(self):
-        for item in self:
-            item.edited_finish_stock_services = True
-
-    def _inverse_have_stock_label(self):
-        for item in self:
-            item.edited_have_stock_label = True
-
-    def _inverse_have_export_import(self):
-        for item in self:
-            item.edited_have_export_import = True
-
-    @api.depends('sale_purchase_id', 'state', 'sale_purchase_id.ticket_ids', 'sale_purchase_id.dpt_export_import_ids')
+    @api.depends('sale_purchase_id', 'state', 'sale_purchase_id.ticket_ids', 'sale_purchase_id.dpt_export_import_ids',
+                 'exported_label', 'sale_purchase_id.dpt_export_import_line_ids')
     def _compute_valid_cutlist(self):
         # đã nhập đủ kiện, sản phẩm
         # đủ khai báo XNK
         # các ticket ở kho TQ đều hoàn thành
         for item in self:
-            if not item.edited_finish_stock_services:
-                item.finish_stock_services = item.sale_purchase_id and all(
-                    [ticket_id.stage_id.is_done_stage for ticket_id in item.sale_purchase_id.ticket_ids if
-                     ticket_id.department_id.is_chinese_stock_department])
-            if not item.edited_have_stock_label:
-                item.have_stock_label = item.exported_label
-            if not item.edited_have_export_import:
-                item.have_export_import = True if item.sale_purchase_id and item.sale_purchase_id.dpt_export_import_ids else False
+            item.finish_stock_services = item.sale_purchase_id and (all(
+                [ticket_id.stage_id.is_done_stage for ticket_id in item.sale_purchase_id.ticket_ids if
+                 ticket_id.department_id.is_chinese_stock_department]) or not item.sale_purchase_id.ticket_ids.filtered(lambda t: t.department_id.is_chinese_stock_department))
+            item.have_stock_label = item.exported_label
+            dpt_export_import_line_ids = self.env['dpt.export.import.line'].sudo().search(
+                [('stock_picking_ids', 'in', [item.id]),
+                 ('state', 'in', ['eligible', 'declared', 'released', 'consulted', 'post_control'])])
+            item.have_export_import = True if (
+                                                          item.sale_purchase_id and item.sale_purchase_id.dpt_export_import_line_ids.filtered(
+                                                      lambda eil: eil.state in ['eligible', 'declared', 'released',
+                                                                                'consulted',
+                                                                                'post_control'])) or dpt_export_import_line_ids else False
 
     @api.model
     def create(self, vals):
         res = super().create(vals)
-        res._compute_valid_cutlist()
+        if not ('finish_stock_services' in vals or 'have_stock_label' in vals or 'have_export_import' in vals):
+            res._compute_valid_cutlist()
         return res
 
     def write(self, vals):
-        if self.edited_finish_stock_services and 'finish_stock_services' in vals:
-            vals.pop('finish_stock_services', None)
-        if self.edited_have_stock_label and 'have_stock_label' in vals:
-            vals.pop('have_stock_label', None)
-        if self.edited_have_export_import and 'have_export_import' in vals:
-            vals.pop('have_export_import', None)
-        if self.env.context.get('edit_valid_cutlist', False):
-            if 'finish_stock_services' in vals:
-                vals.update({'edited_finish_stock_services': True})
-            if 'have_stock_label' in vals:
-                vals.update({'edited_have_stock_label': True})
-            if 'have_export_import' in vals:
-                vals.update({'edited_have_export_import': True})
-            return super().write(vals)
         res = super().write(vals)
         for item in self:
-            item._compute_valid_cutlist()
+            if not ('finish_stock_services' in vals or 'have_stock_label' in vals or 'have_export_import' in vals):
+                item._compute_valid_cutlist()
             # update shipping split
             item.update_shipping_split()
         return res

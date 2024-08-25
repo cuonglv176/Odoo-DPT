@@ -29,6 +29,21 @@ class ResPartner(models.Model):
     dpt_order_status = fields.Char('Order status')
     dpt_date_of_delivery = fields.Char('Date of delivery')
     company_type = fields.Selection(selection_add=[('household_business', 'Household Business')])
+    cs_user_id = fields.Many2one('res.users', string='Nhân viên CS')
+    is_user = fields.Boolean(string='Là nhân viên', default=False, compute="_compute_check_employee")
+    dpt_type_of_partner = fields.Selection([('employee', 'Employee'),
+                                            ('customer', 'Customer'),
+                                            ('vendor', 'Vendor'),
+                                            ('shipping_address', 'Shipping Address'),
+                                            ('payment_address', 'Payment Address'),
+                                            ('other', 'Other')], string='Type Partner')
+
+    def _compute_check_employee(self):
+        for rec in self:
+            rec.is_user = False
+            user_id = self.env['res.users'].search([('partner_id', '=', rec.id)])
+            if user_id:
+                rec.is_user = True
 
     @api.depends('complete_name', 'email', 'vat', 'state_id', 'country_id', 'commercial_company_name', 'dpt_user_name')
     @api.depends_context('show_address', 'partner_show_db_id', 'address_inline', 'show_email', 'show_vat', 'lang')
@@ -39,7 +54,6 @@ class ResPartner(models.Model):
             else:
                 name = f'{partner.name}'
             partner.display_name = name
-
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
@@ -68,3 +82,25 @@ class ResPartner(models.Model):
         if msg:
             raise ValidationError(msg)
 
+    @api.model
+    def create(self, vals):
+        if vals.get('dpt_user_name'):
+            existing_partner = self.search(
+                [('dpt_user_name', '=', vals['dpt_user_name']), ('dpt_user_name', '!=', False)], limit=1)
+            if existing_partner:
+                raise ValidationError(
+                    f"Tài khoản {vals['dpt_user_name']} đã tồn tại trong hệ thống cho đối tác {existing_partner.name}.")
+
+        return super(ResPartner, self).create(vals)
+
+    def write(self, vals):
+        if vals.get('dpt_user_name'):
+            for partner in self:
+                existing_partner = self.search(
+                    [('dpt_user_name', '=', vals['dpt_user_name']), ('id', '!=', partner.id),
+                     ('dpt_user_name', '!=', False)], limit=1)
+                if existing_partner:
+                    raise ValidationError(
+                        f"Tài khoản {vals['dpt_user_name']} đã tồn tại trong hệ thống cho đối tác {existing_partner.name}.")
+
+        return super(ResPartner, self).write(vals)

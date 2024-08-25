@@ -14,6 +14,25 @@ class SaleOrder(models.Model):
         ('approved', 'Approved'),
     ], string='Status', default='no_price', compute="_compute_price_status", stote=True)
 
+    def send_quotation_department(self):
+        res = super(SaleOrder, self).send_quotation_department()
+        for rec in self.sale_service_ids:
+            rec.price_status = 'wait_approve'
+        return res
+
+    @api.model
+    def create(self, vals):
+        res = super(SaleOrder, self).create(vals)
+        res.sale_service_ids._compute_price_status()
+        return res
+
+    def action_confirm(self):
+        res = super(SaleOrder, self).action_confirm()
+        for order_id in self:
+            if order_id.approval_ids.filtered(lambda approval: approval.request_status in ('pending', 'new')):
+                raise ValidationError(_('Please approve new price!'))
+        return res
+
     @api.depends('approval_ids', 'approval_ids.request_status')
     def _compute_price_status(self):
         for rec in self:
@@ -87,8 +106,8 @@ class SaleOrder(models.Model):
                         sale_service_id.approval_id = approval_id
                     list_service.append(sale_service_id)
             for line in self.order_line:
-                if line.new_price_unit != 0 and line.new_price_unit != line.price_unit:
-                    line.approval_id = approval_id
+                # if line.new_price_unit != 0 and line.new_price_unit != line.price_unit:
+                line.approval_id = approval_id
         if list_service:
             list_approver = self.compute_approver_approval_price_list(list_service)
             if list_approver:
@@ -119,7 +138,7 @@ class SaleOrder(models.Model):
                     if r.type_value == 'numberic':
                         diff_value = rec.new_price - rec.price
                     elif r.type_value == 'rate':
-                        diff_value = (rec.new_price - rec.price)/rec.price * 100
+                        diff_value = (rec.new_price - rec.price) / rec.price * 100
                     else:
                         diff_value = 0
                     if r.type_compare == 'equal' and diff_value == 0:

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 
 class DPTShippingSlip(models.Model):
@@ -10,9 +11,12 @@ class DPTShippingSlip(models.Model):
     name = fields.Char('Name')
     transfer_code = fields.Char('Transfer Code')
     transfer_code_chinese = fields.Char('Transfer Code in Chinese')
+    main_in_picking_ids = fields.Many2many('stock.picking', 'stock_picking_main_incoming_shipping_rel', 'shipping_slip_id',
+                                           'picking_id', string='Main In Picking')
     out_picking_ids = fields.Many2many('stock.picking', 'stock_picking_out_shipping_rel', 'shipping_slip_id',
                                        'picking_id', string='Out Picking')
-    export_import_ids = fields.Many2many('dpt.export.import', string='Export Import', compute="_compute_information")
+    export_import_ids = fields.Many2many('dpt.export.import', 'export_import_shipping_rel', 'shipping_slip_id',
+                                         'export_import_id', string='Export Import', store=True)
     in_picking_ids = fields.Many2many('stock.picking', 'stock_picking_in_shipping_rel', 'shipping_slip_id',
                                       'picking_id', string='In Picking')
     sale_ids = fields.Many2many('sale.order', string='Sale Order', compute="_compute_information")
@@ -30,12 +34,12 @@ class DPTShippingSlip(models.Model):
     total_volume = fields.Float('Total Volume (m3)', compute="_compute_information")
     total_weight = fields.Float('Total Weight (kg)', compute="_compute_information")
     total_num_packing = fields.Float('Total Num Packing', compute="_compute_information")
+    num_not_confirm_picking = fields.Integer("Number of Not Confirm Picking", compute="_compute_information")
 
     def _compute_information(self):
         for item in self:
-            item.sale_ids = (item.in_picking_ids | item.out_picking_ids).mapped('sale_purchase_id')
-            item.export_import_ids = (item.in_picking_ids | item.out_picking_ids).mapped('sale_purchase_id').mapped(
-                'dpt_export_import_ids')
+            item.sale_ids = (item.in_picking_ids | item.out_picking_ids).mapped(
+                'sale_purchase_id') | item.export_import_ids.line_ids.mapped('sale_id')
             if item.vehicle_country == 'chinese':
                 item.total_volume = sum(item.out_picking_ids.mapped('total_volume'))
                 item.total_weight = sum(item.out_picking_ids.mapped('total_weight'))
@@ -48,6 +52,27 @@ class DPTShippingSlip(models.Model):
                 item.total_volume = 0
                 item.total_weight = 0
                 item.total_num_packing = 0
+            item.num_not_confirm_picking = len(
+                item.out_picking_ids.filtered(lambda p: p.state != 'done')) if not item.send_shipping_id else len(
+                item.in_picking_ids.filtered(lambda p: p.state != 'done'))
+
+    @api.constrains('export_import_ids')
+    @api.onchange('export_import_ids')
+    def constrains_export_import(self):
+        for item in self:
+            sale_order_ids = item.export_import_ids.mapped('sale_id') | item.export_import_ids.mapped(
+                'sale_ids') | item.export_import_ids.mapped('line_ids').mapped('sale_id')
+            main_in_picking_ids = self.env['stock.picking'].search(
+                [('sale_purchase_id', 'in', sale_order_ids.ids), ('is_main_incoming', '=', True)])
+            # in_picking_ids = self.env['stock.picking'].search(
+            #     [('sale_purchase_id', 'in', sale_order_ids.ids), ('x_transfer_type', '=', 'incoming_transfer')])
+            out_picking_ids = self.env['stock.picking'].search(
+                [('sale_purchase_id', 'in', sale_order_ids.ids), ('x_transfer_type', '=', 'outgoing_transfer')])
+            item.sale_ids = [(6, 0, sale_order_ids.ids)]
+            # item.in_picking_ids = [(6, 0, in_picking_ids.ids)]
+            item.out_picking_ids = [(6, 0, out_picking_ids.ids)]
+            item.main_in_picking_ids = [(6, 0, main_in_picking_ids.ids)]
+            item.export_import_ids.shipping_slip_id = item.id
 
     def _compute_vehicle_driver_phone(self):
         for item in self:
@@ -111,10 +136,49 @@ class DPTShippingSlip(models.Model):
         action = self.env.ref('dpt_shipping.dpt_shipping_split_wizard_action').sudo().read()[0]
         action['context'] = {
             'default_shipping_id': self.id,
-            'default_picking_ids': self.out_picking_ids.mapped('x_in_transfer_picking_id').ids,
+            'default_picking_ids': self.out_picking_ids.filtered(lambda p: p.state == 'done').ids,
             'default_sale_ids': self.sale_ids.ids,
             'default_available_sale_ids': self.sale_ids.ids,
-            'default_available_picking_ids': self.out_picking_ids.mapped('x_in_transfer_picking_id').ids,
+            'default_available_picking_ids': self.out_picking_ids.filtered(lambda p: p.state == 'done').ids,
         }
         return action
 
+    def action_create_stock_transfer(self):
+        for item in self:
+            for main_incoming_picking_id in item.main_in_picking_ids:
+                action = main_incoming_picking_id.action_create_transfer_picking()
+                transfer_picking_id = self.env['stock.picking'].with_context(action['context']).create({
+                    'sale_purchase_id': main_incoming_picking_id.sale_purchase_id.id,
+                })
+                # update move line
+                move_line_vals = []
+                for move_id in transfer_picking_id.move_ids_without_package.filtered(lambda m: not m.move_line_ids):
+                    lot_id = self.env['stock.lot'].search(
+                        [('product_id', '=', move_id.product_id.id), ('name', '=', main_incoming_picking_id.picking_lot_name)],
+                        limit=1)
+                    move_line_vals.append({
+                        'picking_id': transfer_picking_id.id,
+                        'move_id': move_id.id,
+                        'lot_id': lot_id.id,
+                        'location_id': move_id.location_id.id,
+                        'location_dest_id': move_id.location_dest_id.id,
+                        'product_id': move_id.product_id.id,
+                        'quantity': move_id.product_uom_qty,
+                        'product_uom_id': move_id.product_uom.id,
+                    })
+                if move_line_vals:
+                    self.env['stock.move.line'].create(move_line_vals)
+                # transfer_picking_id.create_in_transfer_picking()
+            item.constrains_export_import()
+
+    def action_confirm_picking(self):
+        action = self.env.ref('dpt_shipping.dpt_picking_confirm_wizard_action').sudo().read()[0]
+        picking_ids = self.out_picking_ids.filtered(
+            lambda p: p.state != 'done') if not self.send_shipping_id else self.in_picking_ids.filtered(
+            lambda p: p.state != 'done')
+        action['context'] = {
+            'default_shipping_id': self.id,
+            'default_picking_ids': picking_ids.ids,
+            'default_available_picking_ids': picking_ids.ids,
+        }
+        return action

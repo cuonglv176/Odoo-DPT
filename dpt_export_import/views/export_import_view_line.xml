@@ -8,19 +8,27 @@
             <form string="Export import line Form">
                 <header>
                     <field name="state" widget="statusbar"
-                           statusbar_visible="draft,wait_confirm,eligible,declared,released,consulted,post_control,cancelled"/>
+                           statusbar_visible="draft,draft_declaration,wait_confirm,eligible,declared,released,consulted,post_control,cancelled"/>
                     <button string="Gửi yêu cầu" type="object" name="action_wait_confirm" class="btn-primary"
                             invisible="state != 'draft'"/>
                     <button string="Eligible" type="object" name="action_update_eligible" class="btn-primary"
                             invisible="state != 'wait_confirm'" groups="sales_team.group_sale_salesman_all_leads"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_main_incoming_picking" type="object" class="oe_stat_button"
+                                icon="fa-pencil-square-o">
+                            <field name="picking_count" widget="statinfo" string="Pickings"/>
+                        </button>
+                    </div>
                     <group>
                         <group>
                             <field name="id" invisible="1"/>
                             <field name="sale_user_id"/>
                             <field name="sale_id"/>
-                            <field name="lot_code"/>
+                            <field name="lot_code" invisible="1"/>
+                            <field name="available_picking_ids" invisible="1"/>
+                            <field name="stock_picking_ids" widget="many2many_tags"/>
                             <field name="partner_id"/>
                             <field name="product_id"/>
                             <field name="product_history_id" domain="[('product_id','=', product_id), ('id', '!=', id)]"
@@ -32,6 +40,7 @@
                             <field name="declaration_type" widget="radio" options="{'horizontal': true}"/>
                             <field name="dpt_exchange_rate"/>
                             <field name="dpt_price_usd" invisible="declaration_type != 'usd'"/>
+                            <field name="dpt_price_unit"/>
                             <field name="dpt_total_usd" invisible="declaration_type != 'usd'"/>
                             <field name="dpt_total_usd_vnd" invisible="declaration_type != 'usd'"/>
                             <field name="dpt_price_cny_vnd" invisible="declaration_type != 'cny'"/>
@@ -55,6 +64,7 @@
                             <field name="currency_id" invisible="1"/>
                             <field name="currency_usd_id" invisible="1"/>
                             <field name="currency_cny_id" invisible="1"/>
+                            <field name="available_package_ids" invisible="1"/>
                             <field name="package_ids" widget="many2many_tags"/>
                             <field name="dpt_n_w_kg"/>
                             <field name="dpt_g_w_kg"/>
@@ -83,7 +93,9 @@
                        decoration-success="state in ('eligible','declared','released','consulted','post_control')"/>
                 <field name="sale_user_id"/>
                 <field name="sale_id"/>
-                <field name="lot_code"/>
+                <field name="lot_code" invisible="1"/>
+                <field name="available_picking_ids" invisible="1"/>
+                <field name="stock_picking_ids" widget="many2many_tags"/>
                 <field name="partner_id"/>
                 <field name="product_id"/>
                 <field name="dpt_english_name"/>
@@ -96,6 +108,7 @@
                 <field name="dpt_price_cny_vnd"/>
                 <field name="dpt_n_w_kg"/>
                 <field name="dpt_g_w_kg"/>
+                <field name="available_package_ids" invisible="1"/>
                 <field name="package_ids" widget="many2many_tags"/>
                 <field name="hs_code_id"/>
                 <field name="dpt_tax_import" widget="percentage"/>
@@ -132,4 +145,23 @@
               action="action_dpt_export_import_line_management"
               groups="sales_team.group_sale_salesman_all_leads"
               sequence="20"/>
+
+
+    <record id="view_dpt_export_import_line_update_item_form" model="ir.ui.view">
+        <field name="name">dpt.export.import.line.form</field>
+        <field name="model">dpt.export.import.line</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="is_readonly_item_description" invisible="1"/>
+                    <field name="item_description_vn" widget="html" readonly="is_readonly_item_description == True"/>
+                    <field name="item_description_en" widget="html" readonly="is_readonly_item_description == True"/>
+                </group>
+                <footer>
+                    <button string="Xác nhận" class="btn-primary" name="button_confirm_item_description" type="object"/>
+                    <button string="Hủy" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
 </odoo>

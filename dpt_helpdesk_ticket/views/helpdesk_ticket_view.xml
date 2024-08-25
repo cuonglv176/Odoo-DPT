@@ -44,9 +44,7 @@
             <field name="priority" position="replace"/>
             <field name="user_id" position="replace"/>
             <field name="tag_ids" position="replace"/>
-            <field name="team_id" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </field>
+
             <page name="description" position="before">
                 <page name="service_lines_ids" string="Service">
                     <field name="service_lines_ids">
@@ -64,12 +62,12 @@
                     </field>
                 </page>
                 <page name="fields_ids_page" string="Các trường thông tin">
-                    <field name="fields_ids">
-                        <tree editable="bottom" default_order="sequence desc" decoration-danger="type=='required'">
+                    <field name="fields_ids" readonly="0" >
+                        <tree editable="bottom" default_order="sequence desc" decoration-danger="type=='required'" delete="0" create="0">
                             <field name="using_calculation_price" column_invisible="1"/>
                             <field name="sequence" widget="handle"/>
                             <field name="service_id"/>
-                            <field name="fields_id"/>
+                            <field name="fields_id" readonly="1"/>
                             <field name="type" column_invisible="1"/>
                             <field name="fields_type" column_invisible="1"/>
                             <field name="value_char" invisible="fields_type != 'char'"
@@ -95,9 +93,6 @@
         <field name="model">helpdesk.ticket</field>
         <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='team_id']" position="attributes">
-                <attribute name="invisible">True</attribute>
-            </xpath>
             <xpath expr="//field[@name='team_id']" position="after">
                 <field name="lot_name"/>
 <!--                <field name="service_ids" widget="many2many_tags"/>-->

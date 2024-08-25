@@ -22,7 +22,6 @@ class StockPicking(models.Model):
     packing_lot_name = fields.Char('Packing Lot name', compute="compute_packing_lot_name", store=True)
     is_main_incoming = fields.Boolean('Is Main Incoming', compute="_compute_main_incoming",
                                       search="search_main_incoming")
-    lot_name = fields.Char('Lot')
     total_volume = fields.Float('Total Volume (m3)', compute="_compute_total_volume_weight")
     total_weight = fields.Float('Total Weight (kg)', compute="_compute_total_volume_weight")
 
@@ -56,6 +55,7 @@ class StockPicking(models.Model):
     sale_service_ids = fields.One2many('dpt.sale.service.management', 'picking_id', 'Sale Service')
     fields_ids = fields.One2many('dpt.sale.order.fields', 'picking_id', 'Fields')
     exported_label = fields.Boolean('Exported Label')
+    picking_lot_name = fields.Char('Picking Lot Name')
 
     def _compute_total_volume_weight(self):
         for item in self:
@@ -88,22 +88,6 @@ class StockPicking(models.Model):
                 [f"{package_id.quantity}{package_id.uom_id.packing_code}" for package_id in
                  item.package_ids if package_id.uom_id.packing_code])
 
-    @api.onchange('lot_name')
-    @api.constrains('lot_name')
-    def constrains_lot_name(self):
-        for item in self:
-            if item.is_main_incoming:
-                continue
-            for move_id in item.move_ids_without_package:
-                if move_id.product_id.tracking != 'lot':
-                    continue
-                lot_id = self.env['stock.lot'].search(
-                    [('product_id', '=', move_id.product_id.id), ('name', '=', item.lot_name)], limit=1)
-                if not lot_id:
-                    raise ValidationError(
-                        _('There is not Lot %s of Product %s !') % (move_id.product_id.display_name, item.lot_name))
-                move_id.move_line_ids.update({'lot_id': lot_id.id})
-
     def _compute_num_picking_out(self):
         for item in self:
             item.num_picking_out = len(item.picking_out_ids)
@@ -115,29 +99,33 @@ class StockPicking(models.Model):
 
     @api.model
     def create(self, vals):
-        res = super().create(vals)
+        res = super(StockPicking, self).create(vals)
+        res.check_required_fields()
         res.action_update_picking_name()
-        res.onchange_package()
+        res.constrains_package()
         # auto assign picking
         res.action_confirm()
+        # for picking in res:
+        #     if picking.x_transfer_type != 'outgoing_transfer':
+        #         continue
+        #     picking.create_in_transfer_picking()
         return res
 
-    @api.onchange('package_ids')
-    def onchange_package(self):
-        if not self._origin.id:
-            return
-        # remove package move
-        package_move_ids = self.move_ids_without_package - self.move_ids_product
-        package_move_ids.unlink()
-        if self.purchase_id:
-            self.package_ids.update({
-                'purchase_id': self.purchase_id.id
-            })
-        # create package move
-        self.package_ids._create_stock_moves(self)
+    @api.constrains('package_ids')
+    def constrains_package(self):
+        if self.is_main_incoming:
+            # remove package move
+            package_move_ids = self.move_ids_without_package - self.move_ids_product
+            package_move_ids.unlink()
+            if self.purchase_id:
+                self.package_ids.update({
+                    'purchase_id': self.purchase_id.id
+                })
+            # create package move
+            self.package_ids._create_stock_moves(self)
 
     def action_confirm(self):
-        if self.is_main_incoming or self.lot_name:
+        if self.is_main_incoming:
             # auto create move line with lot name is picking name
             move_line_vals = []
             for move_id in self.move_ids_without_package:
@@ -151,13 +139,23 @@ class StockPicking(models.Model):
                     'product_id': move_id.product_id.id,
                     'quantity': move_id.product_uom_qty,
                     'product_uom_id': move_id.product_uom.id,
-                    'lot_name': self.name if self.is_main_incoming else None,
+                    'lot_name': self.picking_lot_name if self.is_main_incoming else None,
                     'lot_id': self.env['stock.lot'].search(
-                        [('product_id', '=', move_id.product_id.id), ('name', '=', self.lot_name)])[
-                              :1].id if not self.is_main_incoming and self.lot_name else None
+                        [('product_id', '=', move_id.product_id.id), ('name', '=', self.picking_lot_name)])[
+                              :1].id if not self.is_main_incoming and self.picking_lot_name else None
                 })
             if move_line_vals:
                 self.env['stock.move.line'].create(move_line_vals)
+
+        # update back to export import
+        if self.x_transfer_type == 'outgoing_transfer' and self.location_id.warehouse_id.is_main_incoming_warehouse:
+            for order_line in self.sale_purchase_id.order_line:
+                order_line.dpt_export_import_line_ids.write({'lot_code': self.picking_lot_name})
+                package_ids = self.package_ids.filtered(
+                    lambda p: order_line.product_id.id in p.detail_ids.mapped('product_id').ids)
+                if not package_ids:
+                    continue
+                order_line.dpt_export_import_line_ids.package_ids = order_line.dpt_export_import_line_ids.package_ids | package_ids
         return super().action_confirm()
 
     def action_update_picking_name(self):
@@ -165,38 +163,35 @@ class StockPicking(models.Model):
         if self.is_main_incoming:
             prefix = f'KT{datetime.now().strftime("%y%m%d")}'
             nearest_picking_id = self.env['stock.picking'].sudo().search(
-                [('name', 'ilike', prefix + "%"), ('id', '!=', self.id),
+                [('picking_lot_name', 'ilike', prefix + "%"), ('id', '!=', self.id),
                  ('location_dest_id.warehouse_id', '=', self.location_dest_id.warehouse_id.id),
                  ('picking_type_id.code', '=', self.picking_type_code)], order='id desc').filtered(
-                lambda sp: '.' not in sp.name)
+                lambda sp: '.' not in sp.picking_lot_name)
             if nearest_picking_id:
-                try:
-                    number = int(nearest_picking_id.name[7:])
-                except:
-                    number = 0
-                self.name = prefix + str(number).zfill(3)
+                number = int(nearest_picking_id[:1].picking_lot_name[8:])
+                self.picking_lot_name = prefix + str(number + 1).zfill(3)
             else:
-                self.name = prefix + '001'
+                self.picking_lot_name = prefix + '001'
         if self.picking_type_code == 'outgoing' or self.x_transfer_type == 'outgoing_transfer':
             if not self.picking_in_id:
                 return self
-            if sum(self.picking_in_id.package_ids.mapped('quantity')) < sum(self.package_ids.mapped('quantity')):
+            if sum(self.picking_in_id.package_ids.mapped('quantity')) > sum(self.package_ids.mapped('quantity')):
                 # get last picking out of this picking in
                 last_picking_out_id = self.picking_in_id.picking_out_ids.filtered(lambda sp: sp.id != self.id).sorted(
                     key=lambda r: r.id)[:1]
-                if last_picking_out_id:
-                    num = last_picking_out_id.name.split('.')[:1]
-                    self.name = self.picking_in_id.name + f".{num + 1}"
+                if last_picking_out_id and '.' in last_picking_out_id.picking_lot_name:
+                    num = last_picking_out_id.picking_lot_name.split('.')[:1]
+                    self.picking_lot_name = self.picking_in_id.picking_lot_name + f".{num + 1}"
                 else:
-                    self.name = self.picking_in_id.name + ".1"
+                    self.picking_lot_name = self.picking_in_id.picking_lot_name + ".1"
             else:
-                self.name = self.picking_in_id.name
+                self.picking_lot_name = self.picking_in_id.picking_lot_name
         if self.x_transfer_type == 'incoming_transfer':
             transfer_picking_out_id = self.env['stock.picking'].sudo().search(
                 [('x_in_transfer_picking_id', '=', self.id)], limit=1)
             if transfer_picking_out_id:
                 return self
-            self.name = transfer_picking_out_id.name
+            self.picking_lot_name = transfer_picking_out_id.picking_lot_name
 
     def action_create_transfer_picking(self):
         # condition cutlift
@@ -221,8 +216,12 @@ class StockPicking(models.Model):
                 'default_picking_in_id': self.id,
                 'default_x_location_id': self.location_dest_id.id,
                 'default_x_location_dest_id': other_warehouse_id.lot_stock_id.id,
+                'default_location_id': self.location_dest_id.id,
+                'default_location_dest_id': transit_location_id.id,
                 'default_picking_type_id': picking_type_id.id,
                 'default_x_transfer_type': 'outgoing_transfer',
+                'default_partner_id': self.partner_id.id,
+                'default_sale_purchase_id': self.sale_purchase_id.id,
                 'default_move_ids_without_package': [(0, 0, {
                     'location_id': self.location_dest_id.id,
                     'location_dest_id': transit_location_id.id,
@@ -334,7 +333,7 @@ class StockPicking(models.Model):
             'res_id': self.id,
         }
         file_xls = self.env['ir.attachment'].create(vals)
-        self.exported_label = True
+        # self.exported_label = True
         return {
             'type': 'ir.actions.act_url',
             'url': '/web/content/' + str(file_xls.id) + '?download=true',
@@ -357,12 +356,6 @@ class StockPicking(models.Model):
         picking.sale_service_ids = self.sale_service_ids
         picking.fields_ids = self.fields_ids
         return picking
-
-    @api.model
-    def create(self, vals_list):
-        res = super(StockPicking, self).create(vals_list)
-        self.check_required_fields()
-        return res
 
     def write(self, vals):
         res = super(StockPicking, self).write(vals)
@@ -443,3 +436,45 @@ class StockPicking(models.Model):
             self.fields_ids = [(0, 0, item) for item in val]
         if not self.sale_service_ids:
             self.fields_ids = [(5, 0, 0)]
+
+    @api.onchange('sale_purchase_id')
+    def onchange_get_detail(self):
+        if not self.location_id.warehouse_id.is_main_incoming_warehouse and self.location_id.usage == 'internal' and self.picking_type_code == 'outgoing' and self.sale_purchase_id:
+            main_incoming_picking_ids = self.env['stock.picking'].sudo().search(
+                [('is_main_incoming', '=', True), ('sale_purchase_id', '=', self.sale_purchase_id.id)])
+            self.package_ids = None
+            self.move_ids_without_package = None
+            package_vals = []
+            move_vals = []
+            for picking_id in main_incoming_picking_ids:
+                for package_id in picking_id.package_ids:
+                    lot_id = self.env['stock.lot'].sudo().search(
+                        [('location_id', '=', self.location_id.id), ('name', '=', picking_id.picking_lot_name),
+                         ('product_id', '=', package_id.uom_id.product_id.id)], limit=1)
+                    if not lot_id:
+                        continue
+                    package_vals.append((0, 0, {
+                        'quantity': lot_id.product_qty,
+                        'uom_id': package_id.uom_id.id
+                    }))
+                    move_vals.append((0, 0, {
+                        'product_id': package_id.uom_id.product_id.id,
+                        'product_uom_qty': lot_id.product_qty,
+                        'product_uom': package_id.uom_id.product_id.uom_id.id,
+                        'partner_id': self.partner_id.id,
+                        'location_id': self.location_id.id,
+                        'location_dest_id': self.location_id.id,
+                        'name': (package_id.uom_id.product_id.display_name or '')[:2000],
+                        'picked': True,
+                        'move_line_ids': [(0, 0, {
+                            'product_id': package_id.uom_id.product_id.id,
+                            'lot_id': lot_id.id,
+                            'product_uom_id': package_id.uom_id.product_id.uom_id.id,
+                            'quantity': lot_id.product_qty,
+                            'location_id': self.location_id.id,
+                            'company_id': self.env.company.id,
+                            'location_dest_id': self.location_id.id,
+                        })],
+                    }))
+            self.package_ids = package_vals
+            self.move_ids_without_package = move_vals

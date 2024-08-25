@@ -22,7 +22,7 @@ class DPTSaleServiceManagement(models.Model):
     pricelist_item_id = fields.Many2one('product.pricelist.item', 'Pricelist Item')
     price_in_pricelist = fields.Monetary(currency_field='currency_id', string='Price in Pricelist')
     compute_uom_id = fields.Many2one('uom.uom', 'Compute Unit')
-    compute_value = fields.Float('Compute Value')
+    compute_value = fields.Float('Compute Value', default=1)
     note = fields.Text(string='Note')
 
     def write(self, vals):
@@ -71,9 +71,9 @@ class DPTSaleServiceManagement(models.Model):
         self.with_context(from_pricelist=True).write({
             'amount_total': 0,
             'price': 0,
-            'qty': 0,
+            'qty': 1,
             'pricelist_item_id': None,
             'price_in_pricelist': 0,
-            'compute_value': 0,
+            'compute_value': 1,
             'compute_uom_id': None,
         })

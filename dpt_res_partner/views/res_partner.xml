@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//group" position="after">
                 <group string="DPT Information">
+                    <field name="dpt_type_of_partner"/>
                     <field name="dpt_user_name"/>
                     <field name="dpt_ul"/>
                     <field name="dpt_shipping_type"/>
@@ -20,9 +21,13 @@
                     <field name="dpt_output_status"/>
                     <field name="dpt_order_status"/>
                     <field name="dpt_date_of_delivery"/>
+                    <field name="cs_user_id"/>
+                    <field name="is_user"/>
                 </group>
             </xpath>
+            <xpath expr="//group/group[1]" position="inside">
 
+            </xpath>
         </field>
     </record>
 

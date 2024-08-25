@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from ast import literal_eval
 from odoo import fields, models, _, api
 
 
@@ -36,6 +36,7 @@ class DptExportImport(models.Model):
     description = fields.Text(string='Description')
     state = fields.Selection([
         ('draft', 'Nháp'),
+        ('draft_declaration', 'Tờ khai nháp'),
         ('confirm', 'Xác nhận tờ khai'),
         ('declared', 'Tờ khai thông quan'),
         ('released', 'Giải phóng'),
@@ -63,12 +64,30 @@ class DptExportImport(models.Model):
     estimated_total_amount = fields.Monetary(string='Estimated total amount', compute="_compute_estimated_total_amount",
                                              currency_field='currency_id')
     actual_total_amount = fields.Monetary(string='Actual total amount', currency_field='currency_id')
-    payment_exchange_rate = fields.Monetary(string='Payment exchange rate', currency_field='currency_id')
+    payment_exchange_rate = fields.Monetary(string='Rate ECUSS', currency_field='currency_id')
     shipping_slip = fields.Char(string='Shipping Slip')
     type_of_vehicle = fields.Char(string='Type of vehicle')
     driver_name = fields.Char(string='Driver Name')
     driver_phone_number = fields.Char(string='Driver Phone Number')
     vehicle_license_plate = fields.Char(string='Vehicle License Plate')
+    declaration_type = fields.Selection([
+        ('usd', 'USD'),
+        ('cny', 'CNY')
+    ], string='Declaration type', default='usd')
+
+    @api.onchange('declaration_type')
+    def onchange_update_value_declaration_type(self):
+        if self.declaration_type == 'usd':
+            exchange_rate = self.env['res.currency'].search([('name', '=', 'USD')])
+            self.payment_exchange_rate = exchange_rate.rate
+        if self.declaration_type == 'cny':
+            exchange_rate = self.env['res.currency'].search([('name', '=', 'CNY')])
+            self.payment_exchange_rate = exchange_rate.rate
+
+    @api.onchange('payment_exchange_rate')
+    def onchange_update_line_payment_exchange_rate(self):
+        for line_id in self.line_ids:
+            line_id.dpt_exchange_rate = self.payment_exchange_rate
 
     @api.onchange('dpt_tax_ecus5')
     def update_dpt_tax_ecus5(self):
@@ -80,7 +99,8 @@ class DptExportImport(models.Model):
         for order_line_id in self.sale_ids:
             if order_line_id.dpt_export_import_line_ids:
                 for dpt_export_import_line_id in order_line_id.dpt_export_import_line_ids:
-                    dpt_export_import_line_id.export_import_id = self.id
+                    if not dpt_export_import_line_id.export_import_id:
+                        dpt_export_import_line_id.export_import_id = self.id
 
     def action_open_declaration_line(self):
         view_id = self.env.ref('dpt_export_import.view_dpt_export_import_line_tree').id
@@ -137,6 +157,11 @@ class DptExportImport(models.Model):
             else:
                 rec.total_package = ''
 
+    def action_draft_declaration(self):
+        self.state = 'draft_declaration'
+        for line_id in self.line_ids:
+            line_id.state = 'draft_declaration'
+
     def action_declared(self):
         self.state = 'declared'
         for line_id in self.line_ids:
@@ -190,17 +215,24 @@ class DptExportImportLine(models.Model):
     export_import_id = fields.Many2one('dpt.export.import', string='Export import')
     lot_code = fields.Char(string='Lot code')
     sale_id = fields.Many2one('sale.order', string='Sale order')
-    sale_user_id = fields.Many2one('res.users', string='User Sale', related='sale_id.user_id')
+    stock_picking_ids = fields.Many2many('stock.picking', string='Lot code',
+                                         domain="[('id', 'in', available_picking_ids)]")
+    available_picking_ids = fields.Many2many('stock.picking', string='Lot code',
+                                             compute="_compute_domain_picking_package")
+    sale_user_id = fields.Many2one('res.users', string='User Sale', compute="compute_sale_user")
     partner_id = fields.Many2one('res.partner', string='Sale Partner', related='sale_id.partner_id')
     sale_line_id = fields.Many2one('sale.order.line', string='Sale order line', domain=[('order_id', '=', 'sale_id')])
     product_tmpl_id = fields.Many2one('product.template', string='Product Template',
                                       related='product_id.product_tmpl_id')
     product_id = fields.Many2one('product.product', string='Product')
-    package_ids = fields.Many2many('purchase.order.line.package', string='Package')
+    package_ids = fields.Many2many('purchase.order.line.package', string='Package',
+                                   domain="[('id', 'in', available_package_ids)]")
+    available_package_ids = fields.Many2many('purchase.order.line.package', string='Package',
+                                             compute="_compute_domain_picking_package")
     dpt_english_name = fields.Char(string='English name', tracking=True)
     dpt_description = fields.Text(string='Description Product', size=240, tracking=True)
-    dpt_n_w_kg = fields.Integer(string='N.W (KG)', tracking=True)
-    dpt_g_w_kg = fields.Integer(string='G.W (KG)', tracking=True)
+    dpt_n_w_kg = fields.Float(string='N.W (KG)', tracking=True)
+    dpt_g_w_kg = fields.Float(string='G.W (KG)', tracking=True)
     dpt_uom_id = fields.Many2one('uom.uom', string='Uom Export/Import', tracking=True)
     dpt_uom2_ecus_id = fields.Many2one('uom.uom', string='ĐVT SL2 (Ecus)', tracking=True)
     dpt_uom2_id = fields.Many2one('uom.uom', string='ĐVT 2', tracking=True)
@@ -216,6 +248,7 @@ class DptExportImportLine(models.Model):
     hs_code_id = fields.Many2one('dpt.export.import.acfta', string='HS Code')
     dpt_code_hs = fields.Char(string='H')
     dpt_sl1 = fields.Integer(string='SL1', tracking=True)
+    dpt_price_unit = fields.Monetary(string='Đơn giá xuất hoá đơn', tracking=True, currency_field='currency_id')
     dpt_uom1_id = fields.Many2one('uom.uom', string='ĐVT 1', tracking=True)
     dpt_sl2 = fields.Integer(string='SL2', tracking=True)
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
@@ -238,6 +271,7 @@ class DptExportImportLine(models.Model):
     dpt_is_new = fields.Boolean(string='Is new', tracking=True, default=False)
     state = fields.Selection([
         ('draft', 'Nháp'),
+        ('draft_declaration', 'Tờ khai nháp'),
         ('wait_confirm', 'Chờ xác nhận'),
         ('eligible', 'Đủ điều kiện khai báo'),
         ('declared', 'Tờ khai thông quan'),
@@ -251,6 +285,49 @@ class DptExportImportLine(models.Model):
         ('cny', 'CNY')
     ], string='Declaration type', default='usd')
     product_history_id = fields.Many2one('dpt.export.import.line', string='Description Selection')
+    is_readonly_item_description = fields.Boolean(string='Chỉ đọc item', default=False)
+    item_description_vn = fields.Html(string='Tem XNK (VN)')
+    item_description_en = fields.Html(string='Tem XNK (EN)')
+
+    picking_count = fields.Integer('Picking Count', compute="_compute_picking_count")
+
+    def _compute_picking_count(self):
+        for item in self:
+            picking_ids = self.env['stock.picking'].sudo().search(
+                [('is_main_incoming', '=', True), ('sale_purchase_id', '=', item.sale_id.id)])
+            item.picking_count = len(picking_ids)
+
+    def action_view_main_incoming_picking(self):
+        picking_ids = self.env['stock.picking'].sudo().search(
+            [('is_main_incoming', '=', True), ('sale_purchase_id', '=', self.sale_id.id)])
+        action = self.env.ref('stock.stock_picking_action_picking_type').sudo().read()[0]
+        context = {
+            'delete': False,
+            'create': False,
+        }
+        action_context = literal_eval(action['context'])
+        context = {**action_context, **context}
+        action['context'] = context
+        action['domain'] = [('id', 'in', picking_ids.ids)]
+        return action
+
+    @api.depends('sale_id', 'sale_id.employee_cs')
+    def compute_sale_user(self):
+        for item in self:
+            item.sale_user_id = item.sale_id.employee_cs.user_id
+
+    def button_confirm_item_description(self):
+        self.is_readonly_item_description = True
+        picking_ids = self.env['stock.picking'].sudo().search([('sale_purchase_id', '=', self.sale_id.id)])
+        picking_ids.exported_label = True
+
+    @api.depends('sale_id')
+    def _compute_domain_picking_package(self):
+        for item in self:
+            picking_ids = self.env['stock.picking'].search(
+                [('sale_purchase_id', '=', item.sale_id.id), ('is_main_incoming', '=', True)])
+            item.available_picking_ids = picking_ids
+            item.available_package_ids = picking_ids.package_ids
 
     def action_wait_confirm(self):
         self.state = 'wait_confirm'
@@ -339,39 +416,60 @@ class DptExportImportLine(models.Model):
     @api.model
     def create(self, vals_list):
         res = super(DptExportImportLine, self).create(vals_list)
-        val_update_sale_line = {}
-        val_update_sale_line.update({
-            'payment_exchange_rate': self.dpt_exchange_rate,
-            'import_tax_rate': self.dpt_tax_import,
-            'vat_tax_rate': self.dpt_tax,
-            'other_tax_rate': self.dpt_tax_other,
-            'total_tax_amount': self.dpt_total_vat,
-            'hs_code_id': self.hs_code_id,
-            'import_tax_amount': self.dpt_amount_tax_import,
-            'vat_tax_amount': self.dpt_amount_tax,
-            'other_tax_amount': self.dpt_amount_tax_other,
+        for rec in self:
+            val_update_sale_line = {}
+            val_update_sale_line.update({
+                'payment_exchange_rate': rec.dpt_exchange_rate,
+                'import_tax_rate': rec.dpt_tax_import,
+                'vat_tax_rate': rec.dpt_tax,
+                'other_tax_rate': rec.dpt_tax_other,
+                'total_tax_amount': rec.dpt_total_vat,
+                'hs_code_id': rec.hs_code_id,
+                'import_tax_amount': rec.dpt_amount_tax_import,
+                'vat_tax_amount': rec.dpt_amount_tax,
+                'other_tax_amount': rec.dpt_amount_tax_other,
 
-        })
-        self.sale_line_id.write(val_update_sale_line)
+            })
+            rec.sale_line_id.write(val_update_sale_line)
         return res
 
     def write(self, vals):
         res = super(DptExportImportLine, self).write(vals)
-        val_update_sale_line = {}
-        val_update_sale_line.update({
-            'payment_exchange_rate': self.dpt_exchange_rate,
-            'import_tax_rate': self.dpt_tax_import,
-            'vat_tax_rate': self.dpt_tax,
-            'other_tax_rate': self.dpt_tax_other,
-            'total_tax_amount': self.dpt_total_vat,
-            'hs_code_id': self.hs_code_id,
-            'import_tax_amount': self.dpt_amount_tax_import,
-            'vat_tax_amount': self.dpt_amount_tax,
-            'other_tax_amount': self.dpt_amount_tax_other,
+        for rec in self:
+            if 'stock_picking_ids' in vals and rec.stock_picking_ids:
+                rec.stock_picking_ids._compute_valid_cutlist()
+            val_update_sale_line = {}
+            val_update_sale_line.update({
+                'payment_exchange_rate': rec.dpt_exchange_rate,
+                'import_tax_rate': rec.dpt_tax_import,
+                'vat_tax_rate': rec.dpt_tax,
+                'other_tax_rate': rec.dpt_tax_other,
+                'total_tax_amount': rec.dpt_total_vat,
+                'hs_code_id': rec.hs_code_id,
+                'import_tax_amount': rec.dpt_amount_tax_import,
+                'vat_tax_amount': rec.dpt_amount_tax,
+                'other_tax_amount': rec.dpt_amount_tax_other,
 
-        })
-        self.sale_line_id.write(val_update_sale_line)
+            })
+            rec.sale_line_id.write(val_update_sale_line)
+            if 'dpt_uom1_id' in vals or 'dpt_sl1' in vals or 'dpt_price_unit' in vals:
+                update_query = """
+                        UPDATE sale_order_line
+                        SET product_uom = %s, product_uom_qty = %s, price_unit = %s, price_subtotal = %s
+                        WHERE id = %s
+                        """
+                self.env.cr.execute(update_query,
+                                    (rec.dpt_uom1_id.id, rec.dpt_sl1, rec.dpt_price_unit,
+                                     rec.dpt_sl1 * rec.dpt_price_unit, rec.sale_line_id.id))
         return res
+
+    # def write(self, vals):
+    #     res = super(SaleOrderLine, self).write(vals)
+    #     if 'product_uom' in vals or 'product_uom_qty' in vals:
+    #         for dpt_export_import_line_id in self.dpt_export_import_line_ids:
+    #             dpt_export_import_line_id.dpt_uom1_id = self.product_uom
+    #             dpt_export_import_line_id.dpt_sl1 = self.product_uom_qty
+    #     return res
 
     @api.onchange('sale_line_id')
     def onchange_sale_order_line(self):

@@ -9,6 +9,7 @@ class DPTGetPickingSOWizard(models.TransientModel):
     sale_id = fields.Many2one('sale.order', 'Sale Order')
     picking_ids = fields.Many2many('stock.picking', 'Pickings',
                                    domain=[('sale_purchase_id', '=', False), ('is_main_incoming', '=', True)])
+    picking_type_id = fields.Many2one('stock.picking.type', 'Default Picking Type')
 
     def action_update_picking_to_so(self):
         for picking_id in self.picking_ids:

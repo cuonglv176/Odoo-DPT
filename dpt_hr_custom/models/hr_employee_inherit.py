@@ -8,3 +8,7 @@ class HrEmployee(models.Model):
     code = fields.Char('Code')
 
 
+class HrEmployeePublic(models.Model):
+    _inherit = 'hr.employee.public'
+
+    code = fields.Char('Code', related='employee_id.code', compute_sudo=True)

@@ -1,6 +1,13 @@
 from odoo import models, fields, api, _
 from datetime import datetime
 from odoo.exceptions import ValidationError
+import xlrd, xlwt
+import xlsxwriter
+import base64
+import io as stringIOModule
+from odoo.modules.module import get_module_resource
+
+COLUMN = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q']
 
 SALE_ORDER_STATE = [
     ('draft', "Quotation"),
@@ -38,6 +45,18 @@ class SaleOrder(models.Model):
     employee_sale = fields.Many2one('hr.employee', string='Employee Sale')
     employee_cs = fields.Many2one('hr.employee', string='Employee CS')
 
+    @api.onchange('partner_id')
+    def _onchange_partner_id_user(self):
+        if self.partner_id.user_id.id != self._uid:
+            self.user_id = self._uid
+
+    @api.onchange('user_id')
+    def onchange_user_id(self):
+        if not self.employee_sale:
+            self.employee_sale = self.user_id.employee_id
+        if not self.employee_cs:
+            self.employee_cs = self.user_id.employee_id
+
     @api.onchange('weight', 'volume', 'order_line')
     def onchange_weight_volume(self):
         for fields_id in self.fields_ids:
@@ -51,7 +70,7 @@ class SaleOrder(models.Model):
     @api.model
     def create(self, vals_list):
         res = super(SaleOrder, self).create(vals_list)
-        self.check_required_fields()
+        res.check_required_fields()
         return res
 
     def write(self, vals):
@@ -63,12 +82,20 @@ class SaleOrder(models.Model):
         for r in self.fields_ids:
             if r.env.context.get('onchange_sale_service_ids', False):
                 continue
-            if r.fields_id.type == 'options' or (
-                    r.fields_id.type == 'required' and (
-                    r.value_char or r.value_integer or r.value_date or r.selection_value_id)):
-                continue
-            else:
+            if r.fields_id.type == 'required' and r.fields_type == 'integer' and r.value_integer <= 0:
                 raise ValidationError(_("Please fill required fields!!!"))
+            if r.fields_id.type == 'required' and r.fields_type == 'char' and not r.value_char:
+                raise ValidationError(_("Please fill required fields!!!"))
+            if r.fields_id.type == 'required' and r.fields_type == 'date' and not r.value_date:
+                raise ValidationError(_("Please fill required fields!!!"))
+            if r.fields_id.type == 'required' and r.fields_type == 'selection' and not r.selection_value_id:
+                raise ValidationError(_("Please fill required fields!!!"))
+            # if r.fields_id.type == 'options' or (
+            #         r.fields_id.type == 'required' and (
+            #         r.value_char or r.value_integer > 0 or r.value_date or r.selection_value_id)):
+            #     continue
+            # else:
+            #     raise ValidationError(_("Please fill required fields!!!"))
 
     @api.onchange('sale_service_ids')
     def onchange_sale_service_ids(self):
@@ -138,8 +165,8 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
         for order_id in self:
-            if order_id.sale_service_ids.filtered(lambda ss: ss.price_in_pricelist != ss.price):
-                raise ValidationError(_('Please approve new price!'))
+            # if order_id.sale_service_ids.filtered(lambda ss: ss.price_in_pricelist != ss.price):
+            #     raise ValidationError(_('Please approve new price!'))
             if not order_id.update_pricelist:
                 continue
             for sale_service_id in order_id.sale_service_ids.filtered(lambda ss: ss.price_in_pricelist != ss.price):
@@ -195,6 +222,7 @@ class SaleOrder(models.Model):
             item.show_action_calculation = True if not_compute_price_service_ids else False
 
     def action_calculation(self):
+        self.sale_service_ids._compute_price_status()
         # get default based on pricelist
         # for sale_service_id in self.sale_service_ids.filtered(
         #         lambda ss: ss.department_id.id == self.env.user.employee_ids[:1].department_id.id):
@@ -205,19 +233,17 @@ class SaleOrder(models.Model):
             current_uom_id = sale_service_id.uom_id
             service_price_ids = sale_service_id.service_id.get_active_pricelist(partner_id=self.partner_id)
             if current_uom_id:
-                service_price_ids = service_price_ids.filtered(lambda sp: sp.uom_id.id == current_uom_id.id and (sp.partner_id and sp.partner_id.id == self.partner_id.id or not sp.partner_id))
+                service_price_ids = service_price_ids.filtered(lambda sp: sp.uom_id.id == current_uom_id.id and (
+                        sp.partner_id and sp.partner_id.id == self.partner_id.id or not sp.partner_id))
             if not service_price_ids:
                 continue
             max_price = 0
             price_list_item_id = None
-            compute_value = 0
+            compute_value = 1
             compute_uom_id = None
             for service_price_id in service_price_ids:
-                if service_price_id.compute_price == 'fixed_price':
-                    price = max(service_price_id.currency_id._convert(service_price_id.fixed_price,
-                                                                      to_currency=self.env.company.currency_id,
-                                                                      company=self.env.company,
-                                                                      date=fields.Date.today()),
+                if service_price_id.compute_price == 'fixed':
+                    price = max(service_price_id.currency_id.rate * service_price_id.fixed_price,
                                 service_price_id.min_amount)
                     if price > max_price:
                         max_price = price
@@ -230,12 +256,9 @@ class SaleOrder(models.Model):
                     elif service_price_id.percent_based_on == 'declaration_total_amount':
                         price_base = sum(self.order_line.mapped('declared_unit_total'))
                     if price_base:
-                        price = max(service_price_id.currency_id._convert(
-                            from_amount=price_base * service_price_id.percent_price / 100,
-                            to_currency=self.env.company.currency_id,
-                            company=self.env.company,
-                            date=fields.Date.today(),
-                        ), service_price_id.min_amount)
+                        price = max(
+                            service_price_id.currency_id.rate * (price_base * service_price_id.percent_price / 100),
+                            service_price_id.min_amount)
                     if price and price > max_price:
                         max_price = price
                         price_list_item_id = service_price_id
@@ -248,12 +271,7 @@ class SaleOrder(models.Model):
                                                                                                         ptd: ptd.uom_id.id == compute_field_id.uom_id.id and compute_field_id.value_integer >= ptd.min_value and compute_field_id.value_integer <= ptd.max_value)
                             for detail_price_id in detail_price_ids:
                                 price = compute_field_id.value_integer * detail_price_id.amount if service_price_id.is_price else detail_price_id.amount
-                                price = max(service_price_id.currency_id._convert(
-                                    from_amount=price,
-                                    to_currency=self.env.company.currency_id,
-                                    company=self.env.company,
-                                    date=fields.Date.today(),
-                                ), service_price_id.min_amount)
+                                price = max(service_price_id.currency_id.rate * price, service_price_id.min_amount)
                                 if price > max_price:
                                     max_price = price
                                     price_list_item_id = service_price_id
@@ -272,17 +290,15 @@ class SaleOrder(models.Model):
                                 else:
                                     price = (
                                                     compute_field_id.value_integer - detail_price_id.min_value + 1) * detail_price_id.amount if service_price_id.is_price else detail_price_id.amount
-                                total_price += service_price_id.currency_id._convert(
-                                    from_amount=price,
-                                    to_currency=self.env.company.currency_id,
-                                    company=self.env.company,
-                                    date=fields.Date.today(),
-                                )
+                                total_price += service_price_id.currency_id.rate * price
                             if max(total_price, service_price_id.min_amount) > max_price:
                                 max_price = max(total_price, service_price_id.min_amount)
                                 price_list_item_id = service_price_id
                                 compute_value = compute_field_id.value_integer
                                 compute_uom_id = compute_field_id.uom_id.id
+            price_status = sale_service_id.price_status
+            if sale_service_id.service_id.pricelist_item_ids and price_status == 'no_price':
+                price_status = 'calculated'
 
             sale_service_id.with_context(from_pricelist=True).write({
                 'uom_id': price_list_item_id.uom_id.id if price_list_item_id else (
@@ -294,6 +310,7 @@ class SaleOrder(models.Model):
                 'price_in_pricelist': max_price,
                 'compute_value': compute_value,
                 'compute_uom_id': compute_uom_id,
+                'price_status': price_status,
             })
 
     @api.returns('self', lambda value: value.id)
@@ -302,6 +319,154 @@ class SaleOrder(models.Model):
         sale.sale_service_ids = self.sale_service_ids
         sale.fields_ids = self.fields_ids
         return sale
+
+    def export_excel_quotation(self):
+
+        output = stringIOModule.BytesIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+
+        # workbook = xlsxwriter.Workbook('Báo_Giá_Dịch_Vụ.xlsx')
+        worksheet = workbook.add_worksheet()
+        worksheet.set_column('A:A', 1)
+        worksheet.set_column('B:B', 17)
+        worksheet.set_column('C:C', 30)
+        worksheet.set_column('E:E', 14)
+
+        # Định dạng tiêu đề
+        bold = workbook.add_format({'bold': True})
+
+        bold_format = workbook.add_format({'bold': True})
+
+        normal_format = workbook.add_format({'font_size': 8})
+
+        employee_contact_format = workbook.add_format({'align': 'right'})
+
+        merge_format = workbook.add_format({
+            'bold': True,
+            'align': 'center',
+            'valign': 'vcenter'
+        })
+        special_format = workbook.add_format({
+            'bold': True,
+            'bg_color': '#f9cb9c'
+        })
+        header_sp_format = workbook.add_format({
+            'bold': True,
+            'font_color': '#f0681e',
+            'font_size': 14
+        })
+        # Header
+        worksheet.insert_image('B2', get_module_resource('dpt_sale_management', 'static/src/img', 'logo.png'), {'x_scale': 0.10, 'y_scale': 0.06})
+        worksheet.write('C2', 'CÔNG TY TNHH DPT VINA HOLDINGS - 棋速', header_sp_format)
+        worksheet.write('C3', 'Địa chỉ văn phòng: Số 6A, Ngõ 183, Hoàng Văn Thái, Khương Trung, Thanh Xuân, Hà Nội')
+        worksheet.write('C4', 'MST: 0109366059')
+        # Title
+        worksheet.merge_range('A5:F5', 'BÁO GIÁ DỊCH VỤ', merge_format)
+        worksheet.write('B7', 'Khách hàng:', bold_format)
+        worksheet.write('D7', 'Địa chỉ:', bold_format)
+        worksheet.write('B8', 'Mặt hàng:', bold_format)
+        worksheet.merge_range('B9:F9', 'Cám ơn quý khách đã quan tâm tới dịch vụ của Kỳ Tốc Logistics.'
+                                       ' Chúng tôi xin được gửi tới quý khách giá cước cho hàng nhập của quý khách như sau',
+                              )
+        # [Hàng hóa] title cột
+        worksheet.write('C10', 'Tên hàng hóa', bold_format)
+        worksheet.write('D10', 'Số lượng', bold_format)
+        worksheet.write('E10', 'Chi phí (VND)', bold_format)
+        worksheet.write('F10', 'Note', bold_format)
+
+        # [Hàng hóa] data
+        data = []
+        for r in self.order_line:
+            data.append((r.product_id.name, r.product_uom_qty, r.price_subtotal, ''))
+        data.append(('Cước vận chuyển nội địa TQ', '', '', ''))
+        data.append(('Tổng tiền hàng + cước nội địa TQ', '', '', ''))
+        data.append(('Thể tích (m3)', self.volume, '', ''))
+        data.append(('Khối lượng (kg)', self.weight, '', ''))
+        data.append(('Phí vận chuyển/ m3', '', '', ''))
+        data.append(('Phí vận chuyển/ kg', '', '', ''))
+
+        # Bắt đầu từ hàng thứ hai, viết dữ liệu vào worksheet
+        row = 10
+        for item, quantity, cost, note in data:
+            format = None
+            if item == 'Tổng tiền hàng + cước nội địa TQ':
+                format = special_format
+            worksheet.write(row, 2, item, format)
+            worksheet.write(row, 3, quantity, format)
+            worksheet.write(row, 4, cost, format)
+            worksheet.write(row, 5, note, format)
+            row += 1
+
+        # [Hàng hóa] Merge cells cho cột 'Tên hàng hóa'
+        worksheet.merge_range(f'B10:B{row}', 'Hàng hóa', merge_format)
+        # worksheet.add_table('B11:F42')
+
+        # [Thuế]
+        # [Thuế] Title data
+        data = []
+        nk_tax_amount = 0
+        for r in self.order_line:
+            data.append((f'NK CO Form E_{r.product_id.name}', r.import_tax_rate, r.import_tax_amount, ''))
+            nk_tax_amount += r.import_tax_amount
+        vat_tax_amount = 0
+        for r in self.order_line:
+            data.append((f'VAT_{r.product_id.name}', r.vat_tax_rate, r.vat_tax_amount, ''))
+            vat_tax_amount += r.vat_tax_amount
+        start = row
+        for item, quantity, cost, note in data:
+            worksheet.write(row, 2, item)
+            worksheet.write(row, 3, quantity)
+            worksheet.write(row, 4, cost)
+            worksheet.write(row, 5, note)
+            row += 1
+        worksheet.merge_range(f'B{start+1}:B{row}', 'Thuế', merge_format)
+
+        # [Báo giá chi tiết]
+        # [Báo giá chi tiết] Data
+        data = []
+        for r in self.sale_service_ids:
+            data.append((r.service_id.name, r.compute_value, r.price, ''))
+        start = row
+        data.append(('Tổng chi phí vận chuyển theo kg', 'VND/lô', '', ''))
+        data.append(('Tổng chi phí vận chuyển theo m3', 'VND/lô', '', ''))
+        data.append(('Chi phí theo kg', 'VND/kg', '', ''))
+        data.append(('Chi phí theo m3', 'VND/m3', '', ''))
+        for r in self.order_line:
+            data.append((f'Tổng chi phí/{r.product_id.name}', 'VND/sản phẩm', '', ''))
+        for item, quantity, cost, note in data:
+            format = None
+            if item in ('Tổng chi phí vận chuyển theo kg', 'Tổng chi phí vận chuyển theo m3'):
+                format = special_format
+            worksheet.write(row, 2, item, format)
+            worksheet.write(row, 3, quantity, format)
+            worksheet.write(row, 4, cost, format)
+            worksheet.write(row, 5, note, format)
+            row += 1
+        worksheet.merge_range(f'B{start + 1}:B{row}', 'Báo giá chi tiết', merge_format)
+
+        worksheet.write(f'B{row+2}', 'Liên hệ:', employee_contact_format)
+        worksheet.write(f'C{row+2}', f'Chuyên viên: {self.employee_sale.name or ""}')
+        worksheet.write(f'C{row+3}', f'SĐT: {self.employee_sale.mobile_phone or self.employee_sale.work_phone or ""}')
+        worksheet.write(f'C{row+4}', f'Email: {self.employee_sale.work_email or ""}')
+        worksheet.write(f'E{row+2}', 'CÔNG TY TNHH DPT VINA HOLDINGS')
+        worksheet.write(f'H7', f"Tỷ giá tệ từ hệ thống: {self.currency_id.search([('name', '=', 'CNY')]).rate}")
+        worksheet.write(f'H8', f"Tỷ giá USD từ hệ thống: {self.currency_id.search([('name', '=', 'USD')]).rate}")
+        workbook.close()
+        xls = output.getvalue()
+        vals = {
+            'name': f'Bao_gia_{self.name}' + '.xls',
+            'datas': base64.b64encode(xls),
+            # 'datas_fname': 'Template_ngan_sach.xls',
+            'type': 'binary',
+            'res_model': 'sale.order',
+            'res_id': self.id,
+        }
+        file_xls = self.env['ir.attachment'].create(vals)
+        return {
+            'type': 'ir.actions.act_url',
+            'url': '/web/content/' + str(file_xls.id) + '?download=true',
+            'target': 'new',
+        }
 
 
 class SaleOrderField(models.Model):
@@ -333,10 +498,30 @@ class SaleOrderField(models.Model):
     using_calculation_price = fields.Boolean(related='fields_id.using_calculation_price')
     uom_id = fields.Many2one(related="fields_id.uom_id")
 
+    def check_required_fields(self):
+        for r in self:
+            if r.env.context.get('onchange_sale_service_ids', False):
+                continue
+            if r.fields_id.type == 'required' and r.value_integer <= 0 and r.fields_type == 'integer':
+                raise ValidationError(_("Please fill required fields!!!"))
+            if r.fields_id.type == 'required' and r.value_char == '' and r.fields_type == 'char':
+                raise ValidationError(_("Please fill required fields!!!"))
+            if r.fields_id.type == 'required' and not r.value_date and r.fields_type == 'date':
+                raise ValidationError(_("Please fill required fields!!!"))
+            if r.fields_id.type == 'required' and not r.selection_value_id and r.fields_type == 'selection':
+                raise ValidationError(_("Please fill required fields!!!"))
+
     def write(self, vals):
         res = super(SaleOrderField, self).write(vals)
         if 'value_char' in vals or 'value_integer' in vals or 'value_date' in vals:
             self.sale_id.action_calculation()
+            self.check_required_fields()
+        return res
+
+    @api.model
+    def create(self, vals_list):
+        res = super(SaleOrderField, self).create(vals_list)
+        res.check_required_fields()
         return res
 
     @api.depends('fields_id', 'fields_id.type')

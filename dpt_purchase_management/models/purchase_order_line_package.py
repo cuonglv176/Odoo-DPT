@@ -6,6 +6,7 @@ class PurchaseOrderLinePackage(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin']
     _description = 'Purchase Package'
     _order = 'create_date DESC'
+    _rec_name = 'code'
 
     purchase_id = fields.Many2one('purchase.order', 'Purchase', tracking=True)
     sale_id = fields.Many2one('sale.order', 'Sale Order', tracking=True)
@@ -28,15 +29,20 @@ class PurchaseOrderLinePackage(models.Model):
     image = fields.Binary(string='Image')
     detail_ids = fields.One2many('purchase.order.line.package.detail', 'package_id', 'Package detail', tracking=True)
 
-    @api.model
-    def create(self, vals):
-        if vals.get('code', 'NEW') == 'NEW':
-            vals['code'] = self._generate_service_code()
-        return super(PurchaseOrderLinePackage, self).create(vals)
+    # @api.model
+    # def create(self, vals):
+    #     if vals.get('code', 'NEW') == 'NEW':
+    #         vals['code'] = self._generate_service_code()
+    #     return super(PurchaseOrderLinePackage, self).create(vals)
 
-    def _generate_service_code(self):
-        sequence = self.env['ir.sequence'].next_by_code('purchase.order.line.package') or '00'
-        return f'{sequence}'
+    # def _generate_service_code(self):
+    #     sequence = self.env['ir.sequence'].next_by_code('purchase.order.line.package') or '00'
+    #     return f'{sequence}'
+
+    @api.constrains('quantity', 'uom_id')
+    def constrains_package_name(self):
+        for item in self:
+            item.code = f"{item.quantity}{item.uom_id.packing_code}"
 
     @api.onchange('length', 'width', 'height')
     def onchange_size(self):
