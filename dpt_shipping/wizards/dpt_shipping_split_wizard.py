@@ -19,13 +19,25 @@ class DPTShippingSplitWizard(models.TransientModel):
     shipping_id = fields.Many2one('dpt.shipping.slip', string='Shipping Slip')
 
     def create_shipping_receive(self):
+        for picking_id in self.picking_ids:
+            picking_id.create_in_transfer_picking()
+        in_picking_ids = self.picking_ids.mapped('x_in_transfer_picking_id')
         export_import_ids = self.env['dpt.export.import.line'].sudo().search(
-            [('sale_id', 'in', self.picking_ids.mapped('sale_purchase_id').ids)]).mapped('export_import_id') | self.env[
+            [('sale_id', 'in', in_picking_ids.mapped('sale_purchase_id').ids)]).mapped('export_import_id') | self.env[
                                 'dpt.export.import'].sudo().search(
-            [('sale_id', 'in', self.picking_ids.mapped('sale_purchase_id').ids)])
-        self.env['dpt.shipping.slip'].create({
+            [('sale_id', 'in', in_picking_ids.mapped('sale_purchase_id').ids)])
+        shipping_slip_receive_id = self.env['dpt.shipping.slip'].create({
             'send_shipping_id': self.shipping_id.id,
-            'sale_ids': self.picking_ids.mapped('sale_purchase_id').ids,
-            'in_picking_ids': self.picking_ids.ids,
+            'sale_ids': in_picking_ids.mapped('sale_purchase_id').ids,
+            'in_picking_ids': in_picking_ids.ids,
             'export_import_ids': export_import_ids.ids,
         })
+        return {
+            'name': "Shipping Slip Receive",
+            'type': 'ir.actions.act_window',
+            'res_model': 'dpt.shipping.slip',
+            'target': 'self',
+            'view_mode': 'form',
+            'res_id': shipping_slip_receive_id.id,
+            'views': [(False, 'form')],
+        }

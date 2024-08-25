@@ -105,6 +105,10 @@ class StockPicking(models.Model):
         res.constrains_package()
         # auto assign picking
         res.action_confirm()
+        # for picking in res:
+        #     if picking.x_transfer_type != 'outgoing_transfer':
+        #         continue
+        #     picking.create_in_transfer_picking()
         return res
 
     @api.constrains('package_ids')
@@ -170,7 +174,7 @@ class StockPicking(models.Model):
         if self.picking_type_code == 'outgoing' or self.x_transfer_type == 'outgoing_transfer':
             if not self.picking_in_id:
                 return self
-            if sum(self.picking_in_id.package_ids.mapped('quantity')) < sum(self.package_ids.mapped('quantity')):
+            if sum(self.picking_in_id.package_ids.mapped('quantity')) > sum(self.package_ids.mapped('quantity')):
                 # get last picking out of this picking in
                 last_picking_out_id = self.picking_in_id.picking_out_ids.filtered(lambda sp: sp.id != self.id).sorted(
                     key=lambda r: r.id)[:1]

@@ -136,12 +136,10 @@ class DPTShippingSlip(models.Model):
         action = self.env.ref('dpt_shipping.dpt_shipping_split_wizard_action').sudo().read()[0]
         action['context'] = {
             'default_shipping_id': self.id,
-            'default_picking_ids': self.out_picking_ids.filtered(lambda p: p.state == 'done').mapped(
-                'x_in_transfer_picking_id').ids,
+            'default_picking_ids': self.out_picking_ids.filtered(lambda p: p.state == 'done').ids,
             'default_sale_ids': self.sale_ids.ids,
             'default_available_sale_ids': self.sale_ids.ids,
-            'default_available_picking_ids': self.out_picking_ids.filtered(lambda p: p.state == 'done').mapped(
-                'x_in_transfer_picking_id').ids,
+            'default_available_picking_ids': self.out_picking_ids.filtered(lambda p: p.state == 'done').ids,
         }
         return action
 
@@ -156,7 +154,7 @@ class DPTShippingSlip(models.Model):
                 move_line_vals = []
                 for move_id in transfer_picking_id.move_ids_without_package:
                     lot_id = self.env['stock.lot'].search(
-                        [('product_id', '=', move_id.product_id.id), ('name', '=', transfer_picking_id.picking_lot_name)],
+                        [('product_id', '=', move_id.product_id.id), ('name', '=', main_incoming_picking_id.picking_lot_name)],
                         limit=1)
                     move_line_vals.append({
                         'picking_id': transfer_picking_id.id,
@@ -170,7 +168,7 @@ class DPTShippingSlip(models.Model):
                     })
                 if move_line_vals:
                     self.env['stock.move.line'].create(move_line_vals)
-                transfer_picking_id.create_in_transfer_picking()
+                # transfer_picking_id.create_in_transfer_picking()
             item.constrains_export_import()
 
     def action_confirm_picking(self):

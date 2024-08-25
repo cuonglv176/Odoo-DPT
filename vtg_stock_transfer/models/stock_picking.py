@@ -44,15 +44,6 @@ class StockPicking(models.Model):
             line.location_id = self.location_id
             line.location_dest_id = self.location_dest_id
 
-    @api.model
-    def create(self, vals):
-        res = super(StockPicking, self).create(vals)
-        for picking in res:
-            if picking.x_transfer_type != 'outgoing_transfer':
-                continue
-            picking.create_in_transfer_picking()
-        return res
-
     def create_in_transfer_picking(self):
         # logic transfer - create incoming picking
         transit_location_id = self.env['stock.location'].sudo().search(
@@ -103,7 +94,7 @@ class StockPicking(models.Model):
             move_line_vals = []
             for move_id in in_transfer_picking_id.move_ids_without_package:
                 lot_id = self.env['stock.lot'].search(
-                    [('product_id', '=', move_id.product_id.id), ('name', '=', in_transfer_picking_id.picking_lot_name)],
+                    [('product_id', '=', move_id.product_id.id), ('name', '=', picking.picking_in_id.picking_lot_name)],
                     limit=1)
                 move_line_vals.append({
                     'picking_id': in_transfer_picking_id.id,
