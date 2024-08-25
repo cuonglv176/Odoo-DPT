@@ -45,6 +45,18 @@ class SaleOrder(models.Model):
     employee_sale = fields.Many2one('hr.employee', string='Employee Sale')
     employee_cs = fields.Many2one('hr.employee', string='Employee CS')
 
+    @api.onchange('order_line')
+    def onchange_calculation_tax(self):
+        for r in self.sale_service_ids:
+            if r.service_id.code in ('SERV-2407-0058', 'SERV-2407-0059', 'SERV-2407-0057'):
+                if r.service_id.code == 'SERV-2407-0058':
+                    r.price = sum(self.order_line.mapped('import_tax_amount'))
+                elif r.service_id.code == 'SERV-2407-0059':
+                    r.price = sum(self.order_line.mapped('other_tax_amount'))
+                elif r.service_id.code == 'SERV-2407-0057':
+                    r.price = sum(self.order_line.mapped('vat_tax_amount'))
+                r.amount_total = r.price * r.compute_value
+
     @api.onchange('partner_id')
     def _onchange_partner_id_user(self):
         if self.partner_id.user_id.id != self._uid:
@@ -76,6 +88,7 @@ class SaleOrder(models.Model):
     def write(self, vals):
         res = super(SaleOrder, self).write(vals)
         self.check_required_fields()
+        self.onchange_calculation_tax()
         return res
 
     def check_required_fields(self):
