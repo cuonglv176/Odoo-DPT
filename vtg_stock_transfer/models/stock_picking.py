@@ -82,17 +82,17 @@ class StockPicking(models.Model):
                     }) for detail_id in package_id.detail_ids] if package_id.detail_ids else None,
                     # 'lot_ids': package_id.lot_ids.ids if package_id.lot_ids else None
                 }) for package_id in picking.package_ids],
-                'move_ids_without_package': [(0, 0, {
-                    'location_id': transit_location_id.id,
-                    'location_dest_id': picking.x_location_dest_id.id,
-                    'name': (move_line_id.product_id.display_name or '')[:2000],
-                    'product_id': move_line_id.product_id.id,
-                    'product_uom_qty': move_line_id.product_uom_qty,
-                    'product_uom': move_line_id.product_uom.id,
-                }) for move_line_id in picking.move_ids_without_package],
+                # 'move_ids_without_package': [(0, 0, {
+                #     'location_id': transit_location_id.id,
+                #     'location_dest_id': picking.x_location_dest_id.id,
+                #     'name': (move_line_id.product_id.display_name or '')[:2000],
+                #     'product_id': move_line_id.product_id.id,
+                #     'product_uom_qty': move_line_id.product_uom_qty,
+                #     'product_uom': move_line_id.product_uom.id,
+                # }) for move_line_id in picking.move_ids_without_package],
             })
             move_line_vals = []
-            for move_id in in_transfer_picking_id.move_ids_without_package:
+            for move_id in in_transfer_picking_id.move_ids_without_package.filtered(lambda m: not m.move_line_ids):
                 lot_id = self.env['stock.lot'].search(
                     [('product_id', '=', move_id.product_id.id), ('name', '=', picking.picking_in_id.picking_lot_name)],
                     limit=1)

@@ -113,15 +113,16 @@ class StockPicking(models.Model):
 
     @api.constrains('package_ids')
     def constrains_package(self):
-        # remove package move
-        package_move_ids = self.move_ids_without_package - self.move_ids_product
-        package_move_ids.unlink()
-        if self.purchase_id:
-            self.package_ids.update({
-                'purchase_id': self.purchase_id.id
-            })
-        # create package move
-        self.package_ids._create_stock_moves(self)
+        if self.is_main_incoming:
+            # remove package move
+            package_move_ids = self.move_ids_without_package - self.move_ids_product
+            package_move_ids.unlink()
+            if self.purchase_id:
+                self.package_ids.update({
+                    'purchase_id': self.purchase_id.id
+                })
+            # create package move
+            self.package_ids._create_stock_moves(self)
 
     def action_confirm(self):
         if self.is_main_incoming:
@@ -436,43 +437,44 @@ class StockPicking(models.Model):
         if not self.sale_service_ids:
             self.fields_ids = [(5, 0, 0)]
 
-    # @api.onchange('sale_purchase_id')
-    # def onchange_get_detail(self):
-    #     if not self.location_id.warehouse_id.is_main_incoming_warehouse and self.location_id.usage == 'internal' and self.picking_type_code == 'outgoing' and self.sale_purchase_id:
-    #         main_incoming_picking_ids = self.env['stock.picking'].sudo().search(
-    #             [('is_main_incoming', '=', True), ('sale_purchase_id', '=', self.sale_purchase_id.id)])
-    #         self.package_ids = None
-    #         self.move_ids_without_package = None
-    #         package_vals = []
-    #         move_vals = []
-    #         for picking_id in main_incoming_picking_ids:
-    #             for package_id in picking_id.package_ids:
-    #                 lot_id = self.env['stock.lot'].sudo().search(
-    #                     [('location_id', '=', self.location_id.id), ('name', '=', picking_id.picking_lot_name),
-    #                      ('product_id', '=', package_id.uom_id.product_id.id)], limit=1)
-    #                 if not lot_id:
-    #                     continue
-    #                 package_vals.append((0, 0, {
-    #                     'quantity': lot_id.product_qty,
-    #                     'uom_id': package_id.uom_id.id
-    #                 }))
-    #                 move_vals.append((0, 0, {
-    #                     'product_id': package_id.uom_id.product_id.id,
-    #                     'product_uom_qty': lot_id.product_qty,
-    #                     'product_uom': package_id.uom_id.product_id.uom_id.id,
-    #                     'partner_id': self.partner_id.id,
-    #                     'location_id': self.location_id.id,
-    #                     'location_dest_id': self.location_id.id,
-    #                     'picked': True,
-    #                     'move_line_ids': [(0, 0, {
-    #                         'product_id': package_id.uom_id.product_id.id,
-    #                         'lot_id': lot_id.id,
-    #                         'product_uom_id': package_id.uom_id.product_id.uom_id.id,
-    #                         'quantity': lot_id.product_qty,
-    #                         'location_id': self.location_id.id,
-    #                         'company_id': self.env.company.id,
-    #                         'location_dest_id': self.location_id.id,
-    #                     })],
-    #                 }))
-    #         self.package_ids = package_vals
-    #         self.move_ids_without_package = move_vals
+    @api.onchange('sale_purchase_id')
+    def onchange_get_detail(self):
+        if not self.location_id.warehouse_id.is_main_incoming_warehouse and self.location_id.usage == 'internal' and self.picking_type_code == 'outgoing' and self.sale_purchase_id:
+            main_incoming_picking_ids = self.env['stock.picking'].sudo().search(
+                [('is_main_incoming', '=', True), ('sale_purchase_id', '=', self.sale_purchase_id.id)])
+            self.package_ids = None
+            self.move_ids_without_package = None
+            package_vals = []
+            move_vals = []
+            for picking_id in main_incoming_picking_ids:
+                for package_id in picking_id.package_ids:
+                    lot_id = self.env['stock.lot'].sudo().search(
+                        [('location_id', '=', self.location_id.id), ('name', '=', picking_id.picking_lot_name),
+                         ('product_id', '=', package_id.uom_id.product_id.id)], limit=1)
+                    if not lot_id:
+                        continue
+                    package_vals.append((0, 0, {
+                        'quantity': lot_id.product_qty,
+                        'uom_id': package_id.uom_id.id
+                    }))
+                    move_vals.append((0, 0, {
+                        'product_id': package_id.uom_id.product_id.id,
+                        'product_uom_qty': lot_id.product_qty,
+                        'product_uom': package_id.uom_id.product_id.uom_id.id,
+                        'partner_id': self.partner_id.id,
+                        'location_id': self.location_id.id,
+                        'location_dest_id': self.location_id.id,
+                        'name': (package_id.uom_id.product_id.display_name or '')[:2000],
+                        'picked': True,
+                        'move_line_ids': [(0, 0, {
+                            'product_id': package_id.uom_id.product_id.id,
+                            'lot_id': lot_id.id,
+                            'product_uom_id': package_id.uom_id.product_id.uom_id.id,
+                            'quantity': lot_id.product_qty,
+                            'location_id': self.location_id.id,
+                            'company_id': self.env.company.id,
+                            'location_dest_id': self.location_id.id,
+                        })],
+                    }))
+            self.package_ids = package_vals
+            self.move_ids_without_package = move_vals

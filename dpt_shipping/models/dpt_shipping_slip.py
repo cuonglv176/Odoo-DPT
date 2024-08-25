@@ -152,7 +152,7 @@ class DPTShippingSlip(models.Model):
                 })
                 # update move line
                 move_line_vals = []
-                for move_id in transfer_picking_id.move_ids_without_package:
+                for move_id in transfer_picking_id.move_ids_without_package.filtered(lambda m: not m.move_line_ids):
                     lot_id = self.env['stock.lot'].search(
                         [('product_id', '=', move_id.product_id.id), ('name', '=', main_incoming_picking_id.picking_lot_name)],
                         limit=1)
