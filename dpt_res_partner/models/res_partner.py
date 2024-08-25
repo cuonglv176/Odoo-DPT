@@ -30,7 +30,7 @@ class ResPartner(models.Model):
     dpt_date_of_delivery = fields.Char('Date of delivery')
     company_type = fields.Selection(selection_add=[('household_business', 'Household Business')])
     cs_user_id = fields.Many2one('res.users', string='Nhân viên CS')
-    is_user = fields.Boolean(string='Là nhân viên', default=False, compute="_compute_check_employee")
+    is_user = fields.Boolean(string='Là nhân viên', default=False, compute="_compute_check_employee", store=True)
     dpt_type_of_partner = fields.Selection([('employee', 'Employee'),
                                             ('customer', 'Customer'),
                                             ('vendor', 'Vendor'),
