@@ -4,8 +4,15 @@ from odoo.osv.expression import AND, OR
 
 class HrJoB(models.Model):
     _inherit = 'hr.job'
+    _rec_name = 'display_name'
 
     code = fields.Char('Code')
+    display_name = fields.Char('Display name', compute="_compute_display_name", store=True)
+
+    @api.depends('code', 'name')
+    def _compute_display_name(self):
+        for rec in self:
+            rec.display_name = f"{rec.code}-{rec.job_name}"
 
     def name_get(self):
         res = []
@@ -20,6 +27,6 @@ class HrJoB(models.Model):
         args = args or []
         domain = []
         if name:
-            domain = ['|',  ('name', operator, name), ('code', operator, name)]
+            domain = ['|', ('name', operator, name), ('code', operator, name)]
         job = self.search(domain + args, limit=limit)
         return job.name_get()
