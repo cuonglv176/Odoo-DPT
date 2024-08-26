@@ -12,7 +12,7 @@ class HrJoB(models.Model):
     @api.depends('code', 'name')
     def _compute_display_name(self):
         for rec in self:
-            rec.display_name = f"{rec.code}-{rec.job_name}"
+            rec.display_name = f"{rec.code}-{rec.name}"
 
     def name_get(self):
         res = []
