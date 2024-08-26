@@ -15,3 +15,11 @@ class HrJoB(models.Model):
             res.append((job.id, f"{code}-{job_name}"))
         return res
 
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=10):
+        args = args or []
+        domain = []
+        if name:
+            domain = ['|',  ('name', operator, name), ('code', operator, name)]
+        job = self.search(domain + args, limit=limit)
+        return job.name_get()
