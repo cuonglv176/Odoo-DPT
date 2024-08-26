@@ -11,5 +11,6 @@
     'data': [
         'views/hr_department.xml',
         'views/hr_employee.xml',
+        'views/hr_job.xml',
     ],
 }
