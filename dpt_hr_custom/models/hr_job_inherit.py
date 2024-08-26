@@ -8,6 +8,13 @@ class HrJoB(models.Model):
 
     code = fields.Char('Code')
     display_name = fields.Char('Display name', compute="_compute_display_name", store=True)
+    parent_department_id = fields.Many2one('hr.department', string='Phòng')
+    center_code = fields.Char(string='Trung tâm')
+    bod_code = fields.Char(string='Mã BOD')
+
+    @api.onchange('department_id')
+    def onchange_department_id(self):
+        self.parent_department_id = self.department_id.parent_id
 
     @api.depends('code', 'name')
     def _compute_display_name(self):

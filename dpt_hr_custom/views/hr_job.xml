@@ -8,6 +8,11 @@
             <field name="name" position="after">
                 <field name="code"/>
             </field>
+            <field name="department_id" position="after">
+                <field name="bod_code"/>
+                <field name="center_code"/>
+                <field name="parent_department_id"/>
+            </field>
         </field>
     </record>
 
