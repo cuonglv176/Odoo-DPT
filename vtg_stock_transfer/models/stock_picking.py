@@ -23,26 +23,26 @@ class StockPicking(models.Model):
         if not self.picking_type_id or self.picking_type_id.code != 'internal':
             return
         self.x_transfer_type = 'outgoing_transfer'
-        self._onchange_get_location()
+        # self._onchange_get_location()
 
-    @api.onchange('x_location_id', 'x_location_dest_id', 'x_in_transfer_picking_id')
-    def _onchange_get_location(self):
-        if self.picking_type_code != 'internal':
-            return
-        transit_location_id = self.env['stock.location'].sudo().search(
-            [('usage', '=', 'transit'), ('company_id', '=', self.env.company.id)], limit=1)
-        if not transit_location_id:
-            raise ValidationError(_('Please configurate 1 Inter-warehouse Transit location'))
-        if self.x_location_id:
-            self.location_id = self.x_location_id if self.x_transfer_type == 'outgoing_transfer' else transit_location_id
-        if self.x_location_dest_id:
-            self.location_dest_id = transit_location_id if self.x_transfer_type == 'outgoing_transfer' else self.x_location_dest_id
-        for line in self.move_line_ids_without_package:
-            line.location_id = self.location_id
-            line.location_dest_id = self.location_dest_id
-        for line in self.move_ids_without_package:
-            line.location_id = self.location_id
-            line.location_dest_id = self.location_dest_id
+    # @api.onchange('x_location_id', 'x_location_dest_id', 'x_in_transfer_picking_id')
+    # def _onchange_get_location(self):
+    #     if self.picking_type_code != 'internal':
+    #         return
+    #     transit_location_id = self.env['stock.location'].sudo().search(
+    #         [('usage', '=', 'transit'), ('company_id', '=', self.env.company.id)], limit=1)
+    #     if not transit_location_id:
+    #         raise ValidationError(_('Please configurate 1 Inter-warehouse Transit location'))
+    #     if self.x_location_id:
+    #         self.location_id = self.x_location_id if self.x_transfer_type == 'outgoing_transfer' else transit_location_id
+    #     if self.x_location_dest_id:
+    #         self.location_dest_id = transit_location_id if self.x_transfer_type == 'outgoing_transfer' else self.x_location_dest_id
+    #     for line in self.move_line_ids_without_package:
+    #         line.location_id = self.location_id
+    #         line.location_dest_id = self.location_dest_id
+    #     for line in self.move_ids_without_package:
+    #         line.location_id = self.location_id
+    #         line.location_dest_id = self.location_dest_id
 
     def create_in_transfer_picking(self):
         # logic transfer - create incoming picking
@@ -57,8 +57,6 @@ class StockPicking(models.Model):
                 raise ValidationError(
                     f'Vui lòng tạo loại điều chuyển cho kho {picking.x_location_dest_id.warehouse_id.name}')
             in_transfer_picking_id = picking.copy({
-                'x_location_id': picking.x_location_id.id,
-                'x_location_dest_id': picking.x_location_dest_id.id,
                 'location_id': transit_location_id.id,
                 'location_dest_id': picking.x_location_dest_id.id,
                 'x_transfer_type': 'incoming_transfer',
@@ -108,6 +106,6 @@ class StockPicking(models.Model):
                 })
                 if move_line_vals:
                     self.env['stock.move.line'].create(move_line_vals)
-            in_transfer_picking_id._onchange_get_location()
+            # in_transfer_picking_id._onchange_get_location()
             # in_transfer_picking_id.action_confirm()
             picking.x_in_transfer_picking_id = in_transfer_picking_id.id

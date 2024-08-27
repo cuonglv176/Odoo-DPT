@@ -11,6 +11,10 @@ class StockPicking(models.Model):
     finish_stock_services = fields.Boolean('Finish Stock Services', compute="_compute_valid_cutlist", store=True)
     have_stock_label = fields.Boolean('Have Stock Labels', compute="_compute_valid_cutlist", store=True)
     have_export_import = fields.Boolean('Have Export Import', compute="_compute_valid_cutlist", store=True)
+    out_shipping_ids = fields.Many2many('dpt.shipping.slip', 'stock_picking_out_shipping_rel', 'picking_id',
+                                        'shipping_slip_id', string='Out Shipping')
+    in_shipping_ids = fields.Many2many('dpt.shipping.slip', 'stock_picking_in_shipping_rel', 'picking_id',
+                                       'shipping_slip_id', string='In Shipping')
 
     def _compute_in_draft_shipping(self):
         for item in self:
@@ -43,22 +47,28 @@ class StockPicking(models.Model):
         for item in self:
             item.finish_stock_services = item.sale_purchase_id and (all(
                 [ticket_id.stage_id.is_done_stage for ticket_id in item.sale_purchase_id.ticket_ids if
-                 ticket_id.department_id.is_chinese_stock_department]) or not item.sale_purchase_id.ticket_ids.filtered(lambda t: t.department_id.is_chinese_stock_department))
+                 ticket_id.department_id.is_chinese_stock_department]) or not item.sale_purchase_id.ticket_ids.filtered(
+                lambda t: t.department_id.is_chinese_stock_department))
             item.have_stock_label = item.exported_label
             dpt_export_import_line_ids = self.env['dpt.export.import.line'].sudo().search(
                 [('stock_picking_ids', 'in', [item.id]),
                  ('state', 'in', ['eligible', 'declared', 'released', 'consulted', 'post_control'])])
             item.have_export_import = True if (
-                                                          item.sale_purchase_id and item.sale_purchase_id.dpt_export_import_line_ids.filtered(
-                                                      lambda eil: eil.state in ['eligible', 'declared', 'released',
-                                                                                'consulted',
-                                                                                'post_control'])) or dpt_export_import_line_ids else False
+                                                      item.sale_purchase_id and item.sale_purchase_id.dpt_export_import_line_ids.filtered(
+                                                  lambda eil: eil.state in ['eligible', 'declared', 'released',
+                                                                            'consulted',
+                                                                            'post_control'])) or dpt_export_import_line_ids else False
 
     @api.model
     def create(self, vals):
         res = super().create(vals)
         if not ('finish_stock_services' in vals or 'have_stock_label' in vals or 'have_export_import' in vals):
             res._compute_valid_cutlist()
+        if res.x_transfer_type == 'outgoing_transfer' and res.picking_in_id:
+            shipping_slip_ids = self.env['dpt.shipping.slip'].sudo().search(
+                [('main_in_picking_ids', 'in', res.picking_in_id.ids)])
+            if shipping_slip_ids:
+                shipping_slip_ids.constrains_export_import()
         return res
 
     def write(self, vals):
