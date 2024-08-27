@@ -8,7 +8,7 @@
             <field name="mobile_phone" position="before">
                 <field name="code"/>
                 <field name="bod_code"/>
-                <field name="center_code"/>
+                <field name="center_id"/>
                 <field name="parent_department_id"/>
                 <field name="dpt_level"/>
             </field>
