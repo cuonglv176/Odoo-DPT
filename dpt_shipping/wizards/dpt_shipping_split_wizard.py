@@ -11,7 +11,7 @@ class DPTShippingSplitWizard(models.TransientModel):
     sale_ids = fields.Many2many('sale.order', 'dpt_shipping_split_sale_rel', 'shipping_slip_id', 'sale_id',
                                 string='Sale Order')
 
-    available_picking_ids = fields.Many2many('sale.order', 'dpt_shipping_split_available_picking_rel',
+    available_picking_ids = fields.Many2many('stock.picking', 'dpt_shipping_split_available_picking_rel',
                                              'shipping_split_id', 'available_picking_id',
                                              string='Available Stock Picking')
     picking_ids = fields.Many2many('stock.picking', 'dpt_shipping_split_picking_rel', 'shipping_split_id', 'picking_id',
