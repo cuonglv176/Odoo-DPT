@@ -8,6 +8,7 @@ class StockMove(models.Model):
 
     package_line_id = fields.Many2one('purchase.order.line.package', 'Package Line')
     is_package = fields.Boolean('Is Package', compute="_compute_is_package", search="_search_is_package")
+    from_picking_id = fields.Many2one('stock.picking', 'From Picking')
 
     def _compute_is_package(self):
         uom_object = self.env['uom.uom'].sudo()

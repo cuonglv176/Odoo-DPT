@@ -15,7 +15,7 @@ class StockPicking(models.Model):
     package_ids = fields.One2many('purchase.order.line.package', 'picking_id', 'Packages')
     move_ids_product = fields.One2many('stock.move', 'picking_id', string="Stock move",
                                        domain=[('is_package', '=', False)], copy=False)
-    picking_in_id = fields.Many2one('stock.picking', 'Picking In')
+    picking_in_id = fields.Many2one('stock.picking', 'Picking In', copy=True)
     picking_out_ids = fields.One2many('stock.picking', 'picking_in_id', 'Picking Out')
     num_picking_out = fields.Integer('Num Picking Out', compute="_compute_num_picking_out")
     finish_create_picking = fields.Boolean('Finish Create Picking', compute="_compute_finish_create_picking")
@@ -125,8 +125,9 @@ class StockPicking(models.Model):
             self.package_ids._create_stock_moves(self)
 
     def action_confirm(self):
-        if self.is_main_incoming:
+        if self.is_main_incoming or (self.x_transfer_type == 'outgoing_transfer' and self.location_id.warehouse_id.is_main_incoming_warehouse):
             # auto create move line with lot name is picking name
+            self.move_line_ids.unlink()
             move_line_vals = []
             for move_id in self.move_ids_without_package:
                 if move_id.product_id.tracking != 'lot':
@@ -143,6 +144,27 @@ class StockPicking(models.Model):
                     'lot_id': self.env['stock.lot'].search(
                         [('product_id', '=', move_id.product_id.id), ('name', '=', self.picking_lot_name)])[
                               :1].id if not self.is_main_incoming and self.picking_lot_name else None
+                })
+            if move_line_vals:
+                self.env['stock.move.line'].create(move_line_vals)
+        if self.picking_type_code == 'outgoing' and not self.location_id.warehouse_id.is_main_incoming_warehouse:
+            # auto create move line with lot name is picking name
+            self.move_line_ids.unlink()
+            move_line_vals = []
+            for move_id in self.move_ids_without_package:
+                if move_id.product_id.tracking != 'lot':
+                    continue
+                move_line_vals.append({
+                    'move_id': move_id.id,
+                    'picking_id': self.id,
+                    'location_id': move_id.location_id.id,
+                    'location_dest_id': move_id.location_dest_id.id,
+                    'product_id': move_id.product_id.id,
+                    'quantity': move_id.product_uom_qty,
+                    'product_uom_id': move_id.product_uom.id,
+                    'lot_id': self.env['stock.lot'].search([('product_id', '=', move_id.product_id.id),
+                                                            ('name', '=', move_id.from_picking_id.picking_lot_name)],
+                                                           limit=1).id
                 })
             if move_line_vals:
                 self.env['stock.move.line'].create(move_line_vals)
@@ -189,7 +211,7 @@ class StockPicking(models.Model):
         if self.x_transfer_type == 'incoming_transfer':
             transfer_picking_out_id = self.env['stock.picking'].sudo().search(
                 [('x_in_transfer_picking_id', '=', self.id)], limit=1)
-            if transfer_picking_out_id:
+            if not transfer_picking_out_id:
                 return self
             self.picking_lot_name = transfer_picking_out_id.picking_lot_name
 
@@ -458,23 +480,14 @@ class StockPicking(models.Model):
                         'uom_id': package_id.uom_id.id
                     }))
                     move_vals.append((0, 0, {
+                        'from_picking_id': picking_id.id,
                         'product_id': package_id.uom_id.product_id.id,
                         'product_uom_qty': lot_id.product_qty,
                         'product_uom': package_id.uom_id.product_id.uom_id.id,
                         'partner_id': self.partner_id.id,
                         'location_id': self.location_id.id,
-                        'location_dest_id': self.location_id.id,
+                        'location_dest_id': self.location_dest_id.id,
                         'name': (package_id.uom_id.product_id.display_name or '')[:2000],
-                        'picked': True,
-                        'move_line_ids': [(0, 0, {
-                            'product_id': package_id.uom_id.product_id.id,
-                            'lot_id': lot_id.id,
-                            'product_uom_id': package_id.uom_id.product_id.uom_id.id,
-                            'quantity': lot_id.product_qty,
-                            'location_id': self.location_id.id,
-                            'company_id': self.env.company.id,
-                            'location_dest_id': self.location_id.id,
-                        })],
                     }))
             self.package_ids = package_vals
             self.move_ids_without_package = move_vals

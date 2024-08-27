@@ -44,21 +44,23 @@ class StockPicking(models.Model):
     #         line.location_id = self.location_id
     #         line.location_dest_id = self.location_dest_id
 
-    def create_in_transfer_picking(self):
+    def create_in_transfer_picking(self, location_dest_id):
         # logic transfer - create incoming picking
         transit_location_id = self.env['stock.location'].sudo().search(
             [('usage', '=', 'transit'), ('company_id', '=', self.env.company.id)], limit=1)
         if not transit_location_id:
             raise ValidationError(_('Please configurate 1 Inter-warehouse Transit location'))
+        if not location_dest_id:
+            raise ValidationError(_('Missing another Internal Location. Please check other Internal location'))
         for picking in self:
             new_picking_type_id = self.env['stock.picking.type'].sudo().search(
-                [('warehouse_id', '=', picking.x_location_dest_id.warehouse_id.id), ('code', '=', 'internal')], limit=1)
+                [('warehouse_id', '=', location_dest_id.warehouse_id.id), ('code', '=', 'internal')], limit=1)
             if not new_picking_type_id:
                 raise ValidationError(
-                    f'Vui lòng tạo loại điều chuyển cho kho {picking.x_location_dest_id.warehouse_id.name}')
+                    f'Vui lòng tạo loại điều chuyển cho kho {location_dest_id.warehouse_id.name}')
             in_transfer_picking_id = picking.copy({
                 'location_id': transit_location_id.id,
-                'location_dest_id': picking.x_location_dest_id.id,
+                'location_dest_id': location_dest_id.id,
                 'x_transfer_type': 'incoming_transfer',
                 'origin': picking.name,
                 'picking_type_id': new_picking_type_id.id,
@@ -82,14 +84,21 @@ class StockPicking(models.Model):
                 }) for package_id in picking.package_ids],
                 # 'move_ids_without_package': [(0, 0, {
                 #     'location_id': transit_location_id.id,
-                #     'location_dest_id': picking.x_location_dest_id.id,
+                #     'location_dest_id': location_dest_id.id,
                 #     'name': (move_line_id.product_id.display_name or '')[:2000],
                 #     'product_id': move_line_id.product_id.id,
                 #     'product_uom_qty': move_line_id.product_uom_qty,
                 #     'product_uom': move_line_id.product_uom.id,
                 # }) for move_line_id in picking.move_ids_without_package],
             })
+            in_transfer_picking_id.move_ids_without_package.write({
+                'location_id': transit_location_id.id,
+                'location_dest_id': location_dest_id.id,
+            })
+            picking.x_in_transfer_picking_id = in_transfer_picking_id.id
+            in_transfer_picking_id.action_update_picking_name()
             move_line_vals = []
+            in_transfer_picking_id.move_line_ids.unlink()
             for move_id in in_transfer_picking_id.move_ids_without_package.filtered(lambda m: not m.move_line_ids):
                 lot_id = self.env['stock.lot'].search(
                     [('product_id', '=', move_id.product_id.id), ('name', '=', picking.picking_in_id.picking_lot_name)],
@@ -99,7 +108,7 @@ class StockPicking(models.Model):
                     'move_id': move_id.id,
                     'lot_id': lot_id.id,
                     'location_id': move_id.location_id.id,
-                    'location_dest_id': move_id.location_dest_id.id,
+                    'location_dest_id': location_dest_id.id,
                     'product_id': move_id.product_id.id,
                     'quantity': move_id.product_uom_qty,
                     'product_uom_id': move_id.product_uom.id,
@@ -108,4 +117,3 @@ class StockPicking(models.Model):
                     self.env['stock.move.line'].create(move_line_vals)
             # in_transfer_picking_id._onchange_get_location()
             # in_transfer_picking_id.action_confirm()
-            picking.x_in_transfer_picking_id = in_transfer_picking_id.id

@@ -68,7 +68,7 @@ class StockPicking(models.Model):
             shipping_slip_ids = self.env['dpt.shipping.slip'].sudo().search(
                 [('main_in_picking_ids', 'in', res.picking_in_id.ids)])
             if shipping_slip_ids:
-                shipping_slip_ids.constrains_export_import()
+                shipping_slip_ids.out_picking_ids = shipping_slip_ids.out_picking_ids | res
         return res
 
     def write(self, vals):

@@ -18,6 +18,7 @@
                             <field name="sale_ids" domain="[('id', 'in', available_sale_ids)]"/>
                         </page>
                         <page name="stock_picking" string="Pickings">
+                            <field name="location_dest_id" invisible="1"/>
                             <field name="available_picking_ids" invisible="1"/>
                             <field name="picking_ids" domain="[('id', 'in', available_picking_ids)]"/>
                         </page>
