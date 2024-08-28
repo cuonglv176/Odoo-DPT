@@ -14,6 +14,6 @@ class SaleOrderLine(models.Model):
         return res
 
     def write(self, vals):
-        res = super(SaleOrder, self).write(vals)
+        res = super(SaleOrderLine, self).write(vals)
         self.order_id.onchange_calculation_tax()
         return res
