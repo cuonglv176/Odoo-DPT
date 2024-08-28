@@ -67,7 +67,9 @@ class DPTShippingSlip(models.Model):
             # in_picking_ids = self.env['stock.picking'].search(
             #     [('sale_purchase_id', 'in', sale_order_ids.ids), ('x_transfer_type', '=', 'incoming_transfer')])
             out_picking_ids = self.env['stock.picking'].search(
-                [('sale_purchase_id', 'in', sale_order_ids.ids), ('x_transfer_type', '=', 'outgoing_transfer')])
+                [('sale_purchase_id', 'in', sale_order_ids.ids),
+                 ('x_transfer_type', '=', 'outgoing_transfer')]).filtered(
+                lambda sp: not sp.out_shipping_ids or item.id in sp.out_shipping_ids.ids)
             item.sale_ids = [(6, 0, sale_order_ids.ids)]
             # item.in_picking_ids = [(6, 0, in_picking_ids.ids)]
             item.out_picking_ids = [(6, 0, out_picking_ids.ids)]
@@ -134,8 +136,11 @@ class DPTShippingSlip(models.Model):
 
     def action_create_shipping_slip_receive(self):
         action = self.env.ref('dpt_shipping.dpt_shipping_split_wizard_action').sudo().read()[0]
+        location_dest_id = self.env['stock.location'].sudo().search(
+            [('usage', '=', 'internal'), ('id', 'not in', self.out_picking_ids.mapped('location_id').ids)], limit=1)
         action['context'] = {
             'default_shipping_id': self.id,
+            'default_location_dest_id': location_dest_id.id,
             'default_picking_ids': self.out_picking_ids.filtered(lambda p: p.state == 'done').ids,
             'default_sale_ids': self.sale_ids.ids,
             'default_available_sale_ids': self.sale_ids.ids,

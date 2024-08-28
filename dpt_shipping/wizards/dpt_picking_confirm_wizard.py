@@ -6,7 +6,7 @@ from odoo import fields, models, api, _
 class DPTShippingSplitWizard(models.TransientModel):
     _name = 'dpt.picking.confirm.wizard'
 
-    available_picking_ids = fields.Many2many('sale.order', 'dpt_picking_confirm_available_picking_rel',
+    available_picking_ids = fields.Many2many('stock.picking', 'dpt_picking_confirm_available_picking_rel',
                                              'picking_confirm_id', 'available_picking_id',
                                              string='Available Stock Picking')
     picking_ids = fields.Many2many('stock.picking', 'dpt_picking_confirm_picking_rel', 'picking_confirm_id',
