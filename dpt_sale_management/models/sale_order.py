@@ -83,6 +83,7 @@ class SaleOrder(models.Model):
     def create(self, vals_list):
         res = super(SaleOrder, self).create(vals_list)
         res.check_required_fields()
+        res.onchange_calculation_tax()
         return res
 
     def write(self, vals):
