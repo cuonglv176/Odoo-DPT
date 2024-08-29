@@ -326,6 +326,7 @@ class SaleOrder(models.Model):
                 'compute_uom_id': compute_uom_id,
                 'price_status': price_status,
             })
+        self.onchange_calculation_tax()
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
