@@ -9,6 +9,7 @@ import io as stringIOModule
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
+    _rec_name = 'picking_lot_name'
 
     transfer_code = fields.Char('Transfer Code')
     transfer_code_chinese = fields.Char('Transfer Code in Chinese')
