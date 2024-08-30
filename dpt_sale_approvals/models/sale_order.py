@@ -104,7 +104,7 @@ class SaleOrder(models.Model):
                 if not sale_service_id.service_id.zezo_price:
                     if sale_service_id.new_price != 0 and sale_service_id.new_price != sale_service_id.price:
                         sale_service_id.approval_id = approval_id
-                    list_service.append(sale_service_id)
+                        list_service.append(sale_service_id)
             for line in self.order_line:
                 # if line.new_price_unit != 0 and line.new_price_unit != line.price_unit:
                 line.approval_id = approval_id
