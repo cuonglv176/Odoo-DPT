@@ -68,10 +68,13 @@ class DPTSaleServiceManagement(models.Model):
     @api.depends('approval_id', 'approval_id.request_status', 'price')
     def _compute_price_status(self):
         for rec in self:
+            if not rec.price_status:
+                rec.price_status = 'not_calculate'
+            not_approved = rec.approval_id.filtered(lambda approval: approval.request_status in ('pending', 'new'))
+            if rec.price_status not in ('not_calculate', 'calculated') and not not_approved:
+                continue
             rec.price_status = 'not_calculate'
             if rec.sale_id.state == 'draft':
-                not_approved = rec.approval_id.filtered(
-                    lambda approval: approval.request_status in ('pending', 'new'))
                 if not_approved:
                     rec.price_status = 'wait_approve'
                     continue
