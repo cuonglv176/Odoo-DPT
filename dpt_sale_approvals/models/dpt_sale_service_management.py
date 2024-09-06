@@ -70,8 +70,8 @@ class DPTSaleServiceManagement(models.Model):
         for rec in self:
             if not rec.price_status:
                 rec.price_status = 'not_calculate'
-            not_approved = rec.approval_id.filtered(lambda approval: approval.request_status in ('pending', 'new'))
-            if rec.price_status not in ('not_calculate', 'calculated') and not not_approved:
+            approved = rec.approval_id.filtered(lambda approval: approval.request_status in ('approved', 'refused'))
+            if rec.price_status not in ('not_calculate', 'calculated') or approved:
                 continue
             rec.price_status = 'not_calculate'
             if rec.sale_id.state == 'draft':
