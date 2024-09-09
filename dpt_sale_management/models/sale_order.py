@@ -244,6 +244,9 @@ class SaleOrder(models.Model):
         for sale_service_id in self.sale_service_ids:
             if not sale_service_id.uom_id:
                 continue
+            approved = sale_service_id.approval_id.filtered(lambda approval: approval.request_status in ('approved', 'refused'))
+            if approved:
+                continue
             current_uom_id = sale_service_id.uom_id
             service_price_ids = sale_service_id.service_id.get_active_pricelist(partner_id=self.partner_id)
             if current_uom_id:
