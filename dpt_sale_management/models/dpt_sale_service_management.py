@@ -31,6 +31,9 @@ class DPTSaleServiceManagement(models.Model):
         return res
 
     def action_confirm_quote(self):
+
+        if self.sale_id.state == 'sent':
+            return
         a = 1
         # a = 0
         # for line in self.sale_id.sale_service_ids:
