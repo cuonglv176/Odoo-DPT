@@ -31,10 +31,13 @@ class DPTSaleServiceManagement(models.Model):
         return res
 
     def action_confirm_quote(self):
-        a = 0
-        for line in self.sale_id.sale_service_ids:
-            if line.price < 1 or line.price_status == 'wait_approve':
-                a = 1
+        a = 1
+        # a = 0
+        # for line in self.sale_id.sale_service_ids:
+        #     if line.price < 1 or line.price_status == 'wait_approve':
+        #         a = 1
+        if all(line.price_status in ('quoted', 'approved', 'approved_approval') for line in self.sale_id.sale_service_ids):
+            a = 0
         if a == 0:
             self.sale_id.state = 'sent'
 
