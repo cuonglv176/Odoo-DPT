@@ -89,7 +89,8 @@ class SaleOrder(models.Model):
     def write(self, vals):
         res = super(SaleOrder, self).write(vals)
         self.check_required_fields()
-        self.onchange_calculation_tax()
+        if self.state != 'sale':
+            self.onchange_calculation_tax()
         return res
 
     def check_required_fields(self):
