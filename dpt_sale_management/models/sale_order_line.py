@@ -15,5 +15,6 @@ class SaleOrderLine(models.Model):
 
     def write(self, vals):
         res = super(SaleOrderLine, self).write(vals)
-        self.order_id.onchange_calculation_tax()
+        if self.order_id.state != 'sale':
+            self.order_id.onchange_calculation_tax()
         return res
