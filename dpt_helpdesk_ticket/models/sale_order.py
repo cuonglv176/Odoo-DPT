@@ -11,28 +11,29 @@ class SaleOrder(models.Model):
         ret = super(SaleOrder, self).write(vals)
         if 'sale_service_ids' not in vals:
             return ret
-        for value in vals['sale_service_ids']:
-            if value[0] != 0:
-                continue
-            val_create = value[2]
-            service_id = self.env['dpt.service.management'].browse(val_create['service_id'])
-            ticket_id = self.env['helpdesk.ticket'].create({
-                'sale_id': self.id,
-                'partner_id': self.partner_id.id,
-                'department_id': service_id.department_id.id,
-                'team_id': service_id.helpdesk_team_id.id,
-            })
-            self.env['dpt.helpdesk.servie.line'].create({
-                'service_id': val_create.get('service_id'),
-                'description': val_create.get('description'),
-                'qty': val_create.get('qty'),
-                'uom_id': val_create.get('uom_id'),
-                'price': val_create.get('price'),
-                'currency_id': val_create.get('currency_id'),
-                'amount_total': val_create.get('amount_total'),
-                'parent_id': ticket_id.id
-                # 'status': r.price_status,
-            })
+        if self.state == 'sale':
+            for value in vals['sale_service_ids']:
+                if value[0] != 0:
+                    continue
+                val_create = value[2]
+                service_id = self.env['dpt.service.management'].browse(val_create['service_id'])
+                ticket_id = self.env['helpdesk.ticket'].create({
+                    'sale_id': self.id,
+                    'partner_id': self.partner_id.id,
+                    'department_id': service_id.department_id.id,
+                    'team_id': service_id.helpdesk_team_id.id,
+                })
+                self.env['dpt.helpdesk.servie.line'].create({
+                    'service_id': val_create.get('service_id'),
+                    'description': val_create.get('description'),
+                    'qty': val_create.get('qty'),
+                    'uom_id': val_create.get('uom_id'),
+                    'price': val_create.get('price'),
+                    'currency_id': val_create.get('currency_id'),
+                    'amount_total': val_create.get('amount_total'),
+                    'parent_id': ticket_id.id
+                    # 'status': r.price_status,
+                })
         return ret
 
     def get_tickets(self):
