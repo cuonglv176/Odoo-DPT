@@ -77,7 +77,8 @@ def _create_invoices(self, grouped=False, final=False, date=None):
                             'product_id': sale_service_id.service_id.product_id.id,
                             'display_type': 'product',
                             'quantity': sale_service_id.compute_value,
-                            'price_unit': sale_service_id.price
+                            'price_unit': sale_service_id.price,
+                            'service_line_ids': [(6, 0, sale_service_id.ids)],
                         }))
 
         # if not any(not line.display_type for line in invoiceable_lines):
