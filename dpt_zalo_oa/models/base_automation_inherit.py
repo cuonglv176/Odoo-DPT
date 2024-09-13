@@ -1,8 +1,11 @@
 from odoo import models, fields, api
 import requests
 
+
 class BaseAutomation(models.Model):
     _inherit = 'base.automation'
+
+    zalo_template_id = fields.Many2one('dpt.zalo.template', string='Template Zalo')
 
     def send_zalo_notification(self, order):
         # Lấy cấu hình và template từ record action
