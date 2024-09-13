@@ -1,6 +1,7 @@
 import requests
 from odoo import models, fields, api
-
+import logging
+_logger = logging.getLogger(__name__)
 
 class DptZaloTemplate(models.Model):
     _name = 'dpt.zalo.template'
@@ -33,6 +34,10 @@ class DptZaloTemplate(models.Model):
         }
 
         response = requests.post(url, data=payload)
+        _logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        _logger.info(payload)
+        _logger.info(response)
+        _logger.info(response.status_code)
         if response.status_code == 200:
             data = response.json()
             access_token = data.get('access_token')
