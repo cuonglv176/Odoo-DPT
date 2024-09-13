@@ -19,7 +19,6 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="action_confirm" type="object" string="Confirm" class="oe_highlight" states="draft"/>
                 </header>
                 <sheet>
                     <group>
@@ -31,9 +30,6 @@
             </form>
         </field>
     </record>
-
-    <!-- Menu Item -->
-    <menuitem id="menu_dpt_zalo_template" name="Zalo Templates" parent="base.menu_custom" sequence="10"/>
 
     <!-- Action -->
     <record id="action_dpt_zalo_template" model="ir.actions.act_window">
