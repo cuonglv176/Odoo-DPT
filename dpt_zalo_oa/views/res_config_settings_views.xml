@@ -2,40 +2,19 @@
     <record id="view_res_config_settings_form_zalo" model="ir.ui.view">
         <field name="name">res.config.settings.form.zalo</field>
         <field name="model">res.config.settings</field>
-        <field name="inherit_id" ref="base.view_res_config_settings"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@id='settings']" position="inside">
-                <div class="app_settings_block" data-string="Zalo API Configuration" string="Zalo API Configuration">
-                    <h2>Zalo API Configuration</h2>
-                    <div class="row mt16 o_settings_container">
-                        <div class="col-12 col-lg-6">
-                            <label for="zalo_app_id"/>
-                            <field name="zalo_app_id"/>
-                        </div>
-                        <div class="col-12 col-lg-6">
-                            <label for="zalo_secret_key"/>
-                            <field name="zalo_secret_key"/>
-                        </div>
-                        <div class="col-12 col-lg-6">
-                            <label for="zalo_redirect_uri"/>
-                            <field name="zalo_redirect_uri"/>
-                        </div>
-                        <div class="col-12 col-lg-6">
-                            <label for="zalo_authorization_code"/>
-                            <field name="zalo_authorization_code"/>
-                        </div>
-                        <div class="col-12 col-lg-6">
-                            <label for="zalo_access_token"/>
-                            <field name="zalo_access_token" readonly="1"/>
-                        </div>
-                        <div class="col-12 col-lg-6">
-                            <label for="zalo_refresh_token"/>
-                            <field name="zalo_refresh_token" readonly="1"/>
-                        </div>
-                    </div>
-                </div>
-            </xpath>
+            <form string="Zalo API Configuration">
+                <sheet>
+                    <group>
+                        <field name="zalo_app_id"/>
+                        <field name="zalo_secret_key"/>
+                        <field name="zalo_redirect_uri"/>
+                        <field name="zalo_authorization_code"/>
+                        <field name="zalo_access_token" readonly="1"/>
+                        <field name="zalo_refresh_token" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
         </field>
     </record>
 </odoo>
-
