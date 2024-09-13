@@ -1,0 +1,12 @@
+<odoo>
+    <record id="ir_cron_fetch_zalo_templates" model="ir.cron">
+        <field name="name">Fetch Zalo Templates</field>
+        <field name="model_id" ref="model_dpt_zalo_template"/>
+        <field name="state">code</field>
+        <field name="code">model.fetch_zalo_templates()</field>
+        <field name="interval_number">4</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+    </record>
+</odoo>

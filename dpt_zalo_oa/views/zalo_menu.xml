@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <menuitem id="dpt_zalo_oa_menu" name="ZALO OA"
+              sequence="40"
+              web_icon="dpt_zalo_oa,static/description/icon.png">
+
+        <menuitem id="menu_base_automation_zalo_action" name="Zalo Automation"
+                  action="action_base_automation_zalo"/>
+
+        <menuitem id="menu_dpt_zalo_template_action" name="Zalo Templates"
+                  action="action_dpt_zalo_template"/>
+
+    </menuitem>
+
+</odoo>
