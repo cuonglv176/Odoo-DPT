@@ -7,7 +7,7 @@
     'author': 'CuongLV',
     'maintainer': 'Your Name',
     'website': 'http://dpt.com',
-    'depends': ['base', 'base_automation', 'ev_web_notify'],
+    'depends': ['base', 'base_automation', 'base_setup', 'ev_web_notify'],
     'data': [
         'security/ir.model.access.csv',
         'views/res_config_settings_views.xml',
