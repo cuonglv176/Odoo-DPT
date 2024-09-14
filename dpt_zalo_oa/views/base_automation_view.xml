@@ -6,6 +6,7 @@
         <field name="inherit_id" ref="base_automation.view_base_automation_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='model_id']" position="after">
+                <button name="fetch_zalo_templates" type="object" string="Lấy Zalo Template"/>
                 <field name="zalo_template_id" string="Zalo Template ID"/>
             </xpath>
         </field>

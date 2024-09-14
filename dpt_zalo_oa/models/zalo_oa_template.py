@@ -50,6 +50,7 @@ class DptZaloTemplate(models.Model):
                 'zalo_access_token': access_token,
                 'zalo_refresh_token': refresh_token
             })
+            return access_token
         else:
             raise ValueError("Error getting access token: " + response.text)
 
@@ -98,10 +99,7 @@ class DptZaloTemplate(models.Model):
         # Lấy access token nếu cần thiết
         access_token = self.env['ir.config_parameter'].sudo().get_param('zalo_access_token')
         if not access_token:
-            self.get_zalo_tokens()
-
-        access_token = self.env['ir.config_parameter'].sudo().get_param('zalo_access_token')
-
+            access_token = self.get_zalo_tokens()
         # Gọi API để lấy danh sách templates
         url = 'https://api.zaloapp.com/v4/template'
         headers = {
