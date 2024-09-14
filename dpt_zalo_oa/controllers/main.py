@@ -1,4 +1,5 @@
 from odoo import http
+from datetime import datetime, timedelta
 from odoo.http import request
 import logging
 import hashlib
@@ -67,11 +68,14 @@ class ZaloController(http.Controller):
         response = requests.request("POST", url, headers=headers, data=payload)
         if response.status_code == 200:
             token_data = response.json()
-            _logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-            _logger.info(token_data)
             access_token = token_data.get('access_token')
+            refresh_token = token_data.get('refresh_token')
+            expires_in = token_data.get('expires_in')
+            zalo_expired_date = datetime.now() + timedelta(seconds=expires_in)
             # Lưu access_token để sử dụng sau này
             request.env['ir.config_parameter'].sudo().set_param('zalo_access_token', access_token)
+            request.env['ir.config_parameter'].sudo().set_param('zalo_refresh_token', refresh_token)
+            request.env['ir.config_parameter'].sudo().set_param('zalo_expired_date', zalo_expired_date)
             _logger.info(f"Access token received: {access_token}")
             return access_token
         else:
