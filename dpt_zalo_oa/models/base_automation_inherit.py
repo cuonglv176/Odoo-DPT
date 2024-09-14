@@ -57,6 +57,10 @@ class BaseAutomation(models.Model):
             token_data = response.json()
             access_token = token_data.get('access_token')
             self.env['ir.config_parameter'].sudo().set_param('zalo_access_token', access_token)
+            _logger.info(">>>>>>>>>>>>>>>>>>code>>>>>>>>>>>>>>>>>>")
+            _logger.info(code)
+            _logger.info(response)
+            _logger.info(access_token)
             return access_token
         else:
             # Xử lý lỗi nếu có
@@ -88,10 +92,7 @@ class BaseAutomation(models.Model):
             # Lưu lại access_token và refresh_token trong System Parameters và model
             self.env['ir.config_parameter'].sudo().set_param('zalo_access_token', access_token)
             self.env['ir.config_parameter'].sudo().set_param('zalo_refresh_token', refresh_token)
-            _logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-            _logger.info(data)
-            _logger.info(response)
-            _logger.info(access_token)
+
             return access_token
         else:
             raise ValueError("Error getting access token: " + response.text)
@@ -100,7 +101,7 @@ class BaseAutomation(models.Model):
         # Lấy access token nếu cần thiết
         access_token = self.env['ir.config_parameter'].sudo().get_param('zalo_access_token')
         if not access_token:
-            access_token = self.get_zalo_tokens()
+            access_token = self.get_access_token()
         # Gọi API để lấy danh sách templates
         url = 'https://api.zaloapp.com/v4/template'
         headers = {
