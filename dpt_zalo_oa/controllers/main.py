@@ -4,10 +4,12 @@ import logging
 import hashlib
 import base64
 import os
+import requests  # Import requests to handle HTTP requests
+
 _logger = logging.getLogger(__name__)
 
 class ZaloController(http.Controller):
-    @http.route('/zalo/callback', type='json', auth='public', methods=['GET', 'POST'])
+    @http.route('/zalo/callback', type='http', auth='public', methods=['GET', 'POST'])
     def zalo_callback(self, **kwargs):
         code = kwargs.get('code')
         if code:
@@ -77,4 +79,3 @@ class ZaloController(http.Controller):
         else:
             _logger.error(f"Error fetching access token: {response.text}")
             return None
-
