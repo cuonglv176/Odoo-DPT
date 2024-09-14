@@ -43,9 +43,9 @@ class ZaloController(http.Controller):
         """
         Hàm này sẽ thực hiện việc lấy access token từ Zalo bằng cách sử dụng code_verifier và code_challenge
         """
-        app_id = self.env['ir.config_parameter'].sudo().get_param('zalo_app_id')
-        secret_key = self.env['ir.config_parameter'].sudo().get_param('zalo_secret_key')
-        redirect_uri = self.env['ir.config_parameter'].sudo().get_param('zalo_redirect_uri')
+        app_id = request.env['ir.config_parameter'].sudo().get_param('zalo_app_id')
+        secret_key = request.env['ir.config_parameter'].sudo().get_param('zalo_secret_key')
+        redirect_uri = request.env['ir.config_parameter'].sudo().get_param('zalo_redirect_uri')
 
         # Tạo code_verifier và code_challenge cho PKCE
         code_verifier = self.generate_code_verifier()
@@ -54,7 +54,7 @@ class ZaloController(http.Controller):
         code_challenge = self.generate_code_challenge(code_verifier)
 
         # Lưu code_verifier để dùng cho yêu cầu tiếp theo
-        self.env['ir.config_parameter'].sudo().set_param('zalo_code_verifier', code_verifier)
+        request.env['ir.config_parameter'].sudo().set_param('zalo_code_verifier', code_verifier)
 
         # Dữ liệu để gửi yêu cầu lấy access token
         payload = {
@@ -73,7 +73,7 @@ class ZaloController(http.Controller):
             token_data = response.json()
             access_token = token_data.get('access_token')
             # Lưu access_token để sử dụng sau này
-            self.env['ir.config_parameter'].sudo().set_param('zalo_access_token', access_token)
+            request.env['ir.config_parameter'].sudo().set_param('zalo_access_token', access_token)
             _logger.info(f"Access token received: {access_token}")
             return access_token
         else:
