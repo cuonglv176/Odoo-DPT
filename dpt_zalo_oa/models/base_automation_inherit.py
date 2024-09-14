@@ -15,6 +15,32 @@ class BaseAutomation(models.Model):
     ], default='normal')
     zalo_template_id = fields.Many2one('dpt.zalo.template', string='Template Zalo')
 
+    @api.model
+    def get_access_token(self, code):
+        app_id = self.env['ir.config_parameter'].sudo().get_param('zalo_app_id')
+        secret_key = self.env['ir.config_parameter'].sudo().get_param('zalo_secret_key')
+        redirect_uri = self.env['ir.config_parameter'].sudo().get_param('zalo_redirect_uri')
+        payload = {
+            'app_id': app_id,
+            'app_secret': secret_key,
+            'code': code,
+            'redirect_uri': redirect_uri,
+            'grant_type': 'authorization_code'
+        }
+
+        response = requests.post(self.access_token_url, data=payload)
+
+        if response.status_code == 200:
+            # Lấy access token từ JSON response
+            token_data = response.json()
+            access_token = token_data.get('access_token')
+            self.env['ir.config_parameter'].sudo().set_param('zalo_access_token', access_token)
+            return access_token
+        else:
+            # Xử lý lỗi
+            print(f"Error fetching access token: {response.text}")
+            return None
+
     def get_zalo_tokens(self):
         # Lấy thông tin cấu hình từ System Parameters
         app_id = self.env['ir.config_parameter'].sudo().get_param('zalo_app_id')
