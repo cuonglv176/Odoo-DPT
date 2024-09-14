@@ -37,20 +37,27 @@ class BaseAutomation(models.Model):
             'Content-Type': 'application/json',
             'access_token': access_token
         }
-
         response = requests.request("GET", url, headers=headers, data=payload)
-
         if response.status_code == 200:
             templates = response.json().get('data', [])
             for template in templates:
                 template_id = template.get('templateId')
                 template_content = template.get('templateName')
-                self.save_zalo_template(template_id, template_content)
+                url_detail = f"https://business.openapi.zalo.me/template/info?template_id={template_id}"
+                payload_detail = {}
+                headers_detail = {
+                    'Content-Type': 'application/json',
+                    'access_token': access_token
+                }
+                response_detail = requests.request("GET", url_detail, headers=headers_detail, data=payload_detail)
+                detail = response_detail.json().get('data', [])
+                zalo_list_params = detail.get('listParams')
+                self.save_zalo_template(template_id, template_content, zalo_list_params)
         else:
             _logger.error(f"Error fetching templates: {response.text}")
             raise ValueError("Error fetching templates: " + response.text)
 
-    def save_zalo_template(self, template_id, template_content):
+    def save_zalo_template(self, template_id, template_content, zalo_list_params):
         """
         Lưu hoặc cập nhật template Zalo vào database Odoo
         """
@@ -62,12 +69,14 @@ class BaseAutomation(models.Model):
                 'name': template_content,
                 'zalo_template_id': template_id,
                 'zalo_template_content': template_content,
+                'zalo_list_params': zalo_list_params,
             })
         else:
             # Cập nhật nếu template đã tồn tại
             existing_template.write({
                 'zalo_template_content': template_content,
                 'name': template_content,
+                'zalo_list_params': zalo_list_params,
             })
 
     def send_zalo_notification(self, order):

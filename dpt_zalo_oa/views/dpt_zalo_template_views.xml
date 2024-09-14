@@ -25,6 +25,7 @@
                         <field name="name"/>
                         <field name="zalo_template_id"/>
                         <field name="zalo_template_content"/>
+                        <field name="zalo_list_params" widget="ace" options="{'mode':'python'}"/>
                     </group>
                 </sheet>
             </form>
