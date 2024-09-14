@@ -21,7 +21,6 @@ class BaseAutomation(models.Model):
         secret_key = self.env['ir.config_parameter'].sudo().get_param('zalo_secret_key')
         authorization_code = self.env['ir.config_parameter'].sudo().get_param('zalo_authorization_code')
         redirect_uri = self.env['ir.config_parameter'].sudo().get_param('zalo_redirect_uri')
-
         # Gọi API để lấy access token
         url = 'https://oauth.zaloapp.com/v4/access_token'
         payload = {
@@ -41,14 +40,10 @@ class BaseAutomation(models.Model):
             data = response.json()
             access_token = data.get('access_token')
             refresh_token = data.get('refresh_token')
-
             # Lưu lại access_token và refresh_token trong System Parameters và model
             self.env['ir.config_parameter'].sudo().set_param('zalo_access_token', access_token)
             self.env['ir.config_parameter'].sudo().set_param('zalo_refresh_token', refresh_token)
-            self.write({
-                'zalo_access_token': access_token,
-                'zalo_refresh_token': refresh_token
-            })
+
             return access_token
         else:
             raise ValueError("Error getting access token: " + response.text)
