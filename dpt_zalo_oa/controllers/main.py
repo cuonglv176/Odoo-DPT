@@ -71,6 +71,8 @@ class ZaloController(http.Controller):
 
         if response.status_code == 200:
             token_data = response.json()
+            _logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+            _logger.info(token_data)
             access_token = token_data.get('access_token')
             # Lưu access_token để sử dụng sau này
             request.env['ir.config_parameter'].sudo().set_param('zalo_access_token', access_token)
