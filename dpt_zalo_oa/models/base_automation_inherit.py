@@ -32,10 +32,7 @@ class BaseAutomation(models.Model):
         }
 
         response = requests.post(url, data=payload)
-        _logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-        _logger.info(payload)
-        _logger.info(response)
-        _logger.info(response.status_code)
+
         if response.status_code == 200:
             data = response.json()
             access_token = data.get('access_token')
@@ -43,7 +40,10 @@ class BaseAutomation(models.Model):
             # Lưu lại access_token và refresh_token trong System Parameters và model
             self.env['ir.config_parameter'].sudo().set_param('zalo_access_token', access_token)
             self.env['ir.config_parameter'].sudo().set_param('zalo_refresh_token', refresh_token)
-
+            _logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+            _logger.info(payload)
+            _logger.info(response)
+            _logger.info(access_token)
             return access_token
         else:
             raise ValueError("Error getting access token: " + response.text)
@@ -58,8 +58,11 @@ class BaseAutomation(models.Model):
         headers = {
             'Authorization': f'Bearer {access_token}'
         }
+        _logger.info(">>>>>>>>>>>>>>>>>>>>TEMPLATE>>>>>>>>>>>>>>>>")
+        _logger.info(access_token)
 
         response = requests.get(url, headers=headers)
+        _logger.info(response)
         if response.status_code == 200:
             templates = response.json().get('data', [])
             for template in templates:
