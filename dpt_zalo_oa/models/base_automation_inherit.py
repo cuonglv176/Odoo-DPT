@@ -59,7 +59,7 @@ class BaseAutomation(models.Model):
         if not existing_template:
             # Tạo mới nếu template chưa tồn tại
             template_obj.create({
-                'name': f'Template {template_id}',
+                'name': template_content,
                 'zalo_template_id': template_id,
                 'zalo_template_content': template_content,
             })
@@ -67,6 +67,7 @@ class BaseAutomation(models.Model):
             # Cập nhật nếu template đã tồn tại
             existing_template.write({
                 'zalo_template_content': template_content,
+                'name': template_content,
             })
 
     def send_zalo_notification(self, order):
