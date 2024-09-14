@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form string="Automation Rule Zalo">
                 <header>
-                    <button name="fetch_zalo_templates" type="object" string="Lấy Template Zalo" class="oe_stat_button">
+                    <button name="fetch_zalo_templates" type="object" string="Lấy Template Zalo" class="oe_highlight">
                     </button>
                 </header>
                 <sheet>

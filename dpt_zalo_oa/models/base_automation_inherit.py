@@ -31,17 +31,20 @@ class BaseAutomation(models.Model):
             self.refresh_zalo_access_token()
         if not access_token:
             raise ValueError("Access token not found, please authenticate first.")
-        url = 'https://api.zaloapp.com/v4/template'  # URL API lấy template Zalo
+        url = "https://business.openapi.zalo.me/template/all?offset=0&limit=100"
+        payload = {}
         headers = {
-            'Authorization': f'Bearer {access_token}'
+            'Content-Type': 'application/json',
+            'access_token': access_token
         }
-        response = requests.get(url, headers=headers)
+
+        response = requests.request("GET", url, headers=headers, data=payload)
 
         if response.status_code == 200:
             templates = response.json().get('data', [])
             for template in templates:
-                template_id = template.get('id')
-                template_content = template.get('content')
+                template_id = template.get('templateId')
+                template_content = template.get('templateName')
                 self.save_zalo_template(template_id, template_content)
         else:
             _logger.error(f"Error fetching templates: {response.text}")
