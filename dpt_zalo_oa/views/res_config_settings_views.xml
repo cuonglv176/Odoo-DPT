@@ -37,6 +37,10 @@
                                             <label for="zalo_refresh_token">Zalo Refresh Token</label>
                                             <field name="zalo_refresh_token" class="form-control" readonly="1"/>
                                         </div>
+                                        <div class="form-group">
+                                            <label for="zalo_expired_date">Expired</label>
+                                            <field name="zalo_expired_date" class="form-control" readonly="1"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

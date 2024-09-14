@@ -47,8 +47,6 @@ class ZaloController(http.Controller):
         """
         app_id = request.env['ir.config_parameter'].sudo().get_param('zalo_app_id')
         secret_key = request.env['ir.config_parameter'].sudo().get_param('zalo_secret_key')
-        redirect_uri = request.env['ir.config_parameter'].sudo().get_param('zalo_redirect_uri')
-
         # Tạo code_verifier và code_challenge cho PKCE
         code_verifier = self.generate_code_verifier()
         _logger.info("code_verifier>>>>>>>>>>>>>>>>>>>>>")
