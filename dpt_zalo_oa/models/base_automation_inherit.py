@@ -45,6 +45,8 @@ class BaseAutomation(models.Model):
 
         # Tạo code_verifier và code_challenge cho PKCE
         code_verifier = self.generate_code_verifier()
+        _logger.info("code_verifier>>>>>>>>>>>>>>>>>>>>>")
+        _logger.info(code_verifier)
         code_challenge = self.generate_code_challenge(code_verifier)
 
         # Lưu code_verifier để dùng cho yêu cầu tiếp theo
