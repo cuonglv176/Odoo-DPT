@@ -25,6 +25,8 @@ class BaseAutomation(models.Model):
         """
         zalo_expired_date = self.env['ir.config_parameter'].sudo().get_param('zalo_expired_date')
         access_token = self.env['ir.config_parameter'].sudo().get_param('zalo_access_token')
+        date_format = "%Y-%m-%d %H:%M:%S"
+        zalo_expired_date = datetime.strptime(zalo_expired_date, date_format)
         if zalo_expired_date < datetime.now():
             self.refresh_zalo_access_token()
         if not access_token:
