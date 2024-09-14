@@ -41,7 +41,7 @@ class BaseAutomation(models.Model):
             self.env['ir.config_parameter'].sudo().set_param('zalo_access_token', access_token)
             self.env['ir.config_parameter'].sudo().set_param('zalo_refresh_token', refresh_token)
             _logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-            _logger.info(payload)
+            _logger.info(data)
             _logger.info(response)
             _logger.info(access_token)
             return access_token
