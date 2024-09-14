@@ -8,6 +8,7 @@ import requests  # Import requests to handle HTTP requests
 
 _logger = logging.getLogger(__name__)
 
+
 class ZaloController(http.Controller):
     @http.route('/zalo/callback', type='http', auth='public', methods=['GET', 'POST'])
     def zalo_callback(self, **kwargs):
@@ -51,24 +52,19 @@ class ZaloController(http.Controller):
         code_verifier = self.generate_code_verifier()
         _logger.info("code_verifier>>>>>>>>>>>>>>>>>>>>>")
         _logger.info(code_verifier)
-        code_challenge = self.generate_code_challenge(code_verifier)
 
         # Lưu code_verifier để dùng cho yêu cầu tiếp theo
         request.env['ir.config_parameter'].sudo().set_param('zalo_code_verifier', code_verifier)
 
         # Dữ liệu để gửi yêu cầu lấy access token
-        payload = {
-            'app_id': app_id,
-            'app_secret': secret_key,
-            'code': code,
-            'redirect_uri': redirect_uri,
-            'grant_type': 'authorization_code',
-            'code_verifier': code_verifier,
+
+        url = "https://oauth.zaloapp.com/v4/oa/access_token"
+        payload = f'code={code}&app_id={app_id}&grant_type=authorization_code&code_verifier={code_verifier}'
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'secret_key': secret_key
         }
-
-        access_token_url = 'https://oauth.zaloapp.com/v4/access_token'  # URL lấy token
-        response = requests.post(access_token_url, data=payload)
-
+        response = requests.request("POST", url, headers=headers, data=payload)
         if response.status_code == 200:
             token_data = response.json()
             _logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
