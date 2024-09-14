@@ -1,7 +1,9 @@
 from odoo import models, fields, api
 import requests
 import logging
-
+import hashlib
+import base64
+import os
 _logger = logging.getLogger(__name__)
 
 
@@ -16,20 +18,40 @@ class BaseAutomation(models.Model):
     zalo_template_id = fields.Many2one('dpt.zalo.template', string='Template Zalo')
 
     @api.model
+    def generate_code_verifier(self, length=128):
+        # Tạo code_verifier ngẫu nhiên
+        verifier = base64.urlsafe_b64encode(os.urandom(length)).rstrip(b'=').decode('utf-8')
+        return verifier
+
+    @api.model
+    def generate_code_challenge(self, code_verifier):
+        # Mã hóa code_verifier sang SHA-256
+        sha256_digest = hashlib.sha256(code_verifier.encode('ascii')).digest()
+        # Mã hóa Base64 không padding
+        code_challenge = base64.urlsafe_b64encode(sha256_digest).rstrip(b'=').decode('utf-8')
+        return code_challenge
+
+    @api.model
     def get_access_token(self, code):
         app_id = self.env['ir.config_parameter'].sudo().get_param('zalo_app_id')
         secret_key = self.env['ir.config_parameter'].sudo().get_param('zalo_secret_key')
         redirect_uri = self.env['ir.config_parameter'].sudo().get_param('zalo_redirect_uri')
+        # Tạo code_verifier và code_challenge
+        code_verifier = self.generate_code_verifier()
+        code_challenge = self.generate_code_challenge(code_verifier)
+        # Lưu code_verifier vào Odoo để sử dụng sau này
+        self.env['ir.config_parameter'].sudo().set_param('zalo_code_verifier', code_verifier)
+        # Dữ liệu để yêu cầu lấy access token
         payload = {
             'app_id': app_id,
             'app_secret': secret_key,
             'code': code,
             'redirect_uri': redirect_uri,
-            'grant_type': 'authorization_code'
+            'grant_type': 'authorization_code',
+            'code_verifier': code_verifier,  # Sử dụng code_verifier để xác thực PKCE
         }
-
+        # Gửi yêu cầu đến Zalo API để lấy access token
         response = requests.post(self.access_token_url, data=payload)
-
         if response.status_code == 200:
             # Lấy access token từ JSON response
             token_data = response.json()
@@ -37,7 +59,7 @@ class BaseAutomation(models.Model):
             self.env['ir.config_parameter'].sudo().set_param('zalo_access_token', access_token)
             return access_token
         else:
-            # Xử lý lỗi
+            # Xử lý lỗi nếu có
             print(f"Error fetching access token: {response.text}")
             return None
 
