@@ -8,6 +8,11 @@ _logger = logging.getLogger(__name__)
 class BaseAutomation(models.Model):
     _inherit = 'base.automation'
 
+    type = fields.Selection([
+        ('normal', 'Normal'),
+        ('notification', 'Notification'),
+        ('zalo', 'Zalo'),
+    ], default='normal')
     zalo_template_id = fields.Many2one('dpt.zalo.template', string='Template Zalo')
 
     def get_zalo_tokens(self):
