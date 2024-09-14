@@ -10,7 +10,7 @@ class ResConfigSettings(models.TransientModel):
     zalo_authorization_code = fields.Char(string="Zalo Authorization Code")
     zalo_access_token = fields.Char(string="Zalo Access Token", readonly=True)
     zalo_refresh_token = fields.Char(string="Zalo Refresh Token", readonly=True)
-    zalo_expired_date = fields.Datetime(string="Expired_date", readonly=True)
+    zalo_expired_date = fields.Char(string="Expired Date", readonly=True)
 
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()

@@ -119,7 +119,7 @@ class BaseAutomation(models.Model):
             # Lưu access_token để sử dụng sau này
             self.env['ir.config_parameter'].sudo().set_param('zalo_access_token', access_token)
             self.env['ir.config_parameter'].sudo().set_param('zalo_refresh_token', refresh_token)
-            self.env['ir.config_parameter'].sudo().set_param('zalo_expired_date', zalo_expired_date)
+            self.env['ir.config_parameter'].sudo().set_param('zalo_expired_date', str(zalo_expired_date))
             return access_token
         else:
             _logger.error(f"Error fetching access token: {response.text}")

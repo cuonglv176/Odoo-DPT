@@ -78,7 +78,7 @@ class ZaloController(http.Controller):
             # Lưu access_token để sử dụng sau này
             request.env['ir.config_parameter'].sudo().set_param('zalo_access_token', access_token)
             request.env['ir.config_parameter'].sudo().set_param('zalo_refresh_token', refresh_token)
-            request.env['ir.config_parameter'].sudo().set_param('zalo_expired_date', zalo_expired_date)
+            request.env['ir.config_parameter'].sudo().set_param('zalo_expired_date', str(zalo_expired_date))
             _logger.info(f"Access token received: {access_token}")
             return access_token
         else:
