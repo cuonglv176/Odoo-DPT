@@ -110,6 +110,11 @@ class BaseAutomation(models.Model):
             access_token = token_data.get('access_token')
             refresh_token = token_data.get('refresh_token')
             expires_in = token_data.get('expires_in')
+            try:
+                expires_in = int(expires_in)  # Ensure expires_in is an integer
+            except ValueError:
+                _logger.error(f"Invalid expires_in value: {expires_in}")
+                return None
             zalo_expired_date = datetime.now() + timedelta(seconds=expires_in)
             # Lưu access_token để sử dụng sau này
             self.env['ir.config_parameter'].sudo().set_param('zalo_access_token', access_token)
