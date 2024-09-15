@@ -50,6 +50,5 @@ class ServerActions(models.Model):
                     param_id.name: f'record.{param_id.fields_id.name}'
                 })
             params = str(params)
-            self.code = f"""template_id = env['dpt.zalo.template'].browse({self.zalo_template_id.id})
-            template_id._action_send_zalo_notification(record,'{template_id}',{recipient},"{params}")
+            self.code = f"""template_id = env['dpt.zalo.template'].browse({self.zalo_template_id.id}) template_id.action_send_zalo_notification(record,'{template_id}',{recipient},"{params}")
             """

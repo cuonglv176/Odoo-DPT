@@ -17,7 +17,6 @@ class DptZaloTemplate(models.Model):
     zalo_template_content = fields.Text(string="Template Content", readonly=True)
     zalo_list_params = fields.Json(string='List Params')
 
-    @api.model
     def action_send_zalo_notification(self, records, template_id, recipient, params):
         if records:
             for record_id in records:
@@ -39,7 +38,6 @@ class DptZaloTemplate(models.Model):
         recipient_id = f'84989277662'
 
         url = "https://business.openapi.zalo.me/message/template"
-        params = json.dumps(params)
         payload = json.dumps({
             "phone": recipient_id,
             "template_id": template_id,
