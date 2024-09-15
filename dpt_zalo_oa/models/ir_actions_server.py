@@ -7,4 +7,6 @@ class ServerActions(models.Model):
     _description = 'Server Action'
     _inherit = ['ir.actions.server']
 
-    state = fields.Selection(selection_add=[('zalo_zns', 'Zalo ZNS')])
+    state = fields.Selection(selection_add=[
+        ('zalo_zns', 'Send Zalo ZNS'),
+    ], ondelete={'zalo_zns': 'cascade'})
