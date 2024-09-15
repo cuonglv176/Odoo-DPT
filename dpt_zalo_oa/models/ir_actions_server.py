@@ -27,6 +27,7 @@ class ServerActions(models.Model):
     @api.onchange('zalo_template_id')
     def onchange_update_params_zalo_zns(self):
         if self.zalo_template_id:
+            self.param_ids = [(5, 0, 0)]
             new_lines = []
             zalo_list_params = json.loads(self.zalo_template_id.zalo_list_params)
             for param in zalo_list_params:
