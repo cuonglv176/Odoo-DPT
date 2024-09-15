@@ -26,13 +26,17 @@
                         <label for="state"/>
                         <field name="state" widget="selection_badge" options="{'size': 'sm'}"/>
                     </div>
-                    <group string="Technical Settings" groups="base.group_no_one">
-                        <group>
-                            <field name="model_id" options="{'no_create': True, 'no_open': True}"/>
-                            <field name="groups_id" widget="many2many_tags"/>
-                        </group>
-                    </group>
                     <separator string="Action Details" groups="base.group_no_one"/>
+                    <div class="d-flex flex-row flex-wrap gap-2" invisible="state != 'zalo_zns'">
+                        <field name="zalo_template_id"/>
+                        <field name="param_ids">
+                            <tree editable="bottom">
+                                <field name="model_id" readonly="1"/>
+                                <field name="name" readonly="1" force_save="1"/>
+                                <field name="fields_id"/>
+                            </tree>
+                        </field>
+                    </div>
                     <div class="d-flex flex-row flex-wrap gap-2" invisible="state != 'object_write'">
                         <field name="evaluation_type" class="oe_inline"/>
                         <field name="update_path" widget="DynamicModelFieldSelectorChar" class="oe_inline"
