@@ -26,7 +26,8 @@ class ServerActions(models.Model):
     def onchange_update_params_zalo_zns(self):
         if self.zalo_template_id:
             new_lines = []
-            for param in self.zalo_template_id.zalo_list_params:
+            zalo_list_params = json.loads(self.zalo_template_id.zalo_list_params)
+            for param in zalo_list_params:
                 new_lines.append(
                     (0, 0, {
                         'name': param.get('name')

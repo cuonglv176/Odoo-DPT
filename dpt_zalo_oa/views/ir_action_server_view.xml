@@ -29,6 +29,7 @@
                     </div>
                     <separator string="Action Details" groups="base.group_no_one"/>
                     <div class="d-flex flex-row flex-wrap gap-2" invisible="state != 'zalo_zns'">
+                        <label for="zalo_template_id"/>
                         <field name="zalo_template_id"/>
                         <field name="param_ids">
                             <tree editable="bottom">
