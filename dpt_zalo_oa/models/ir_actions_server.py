@@ -16,9 +16,6 @@ class ServerActions(models.Model):
     _description = 'Server Action'
     _inherit = ['ir.actions.server']
 
-    state = fields.Selection(selection_add=[
-        ('zalo_zns', 'Send Zalo ZNS'),
-    ], ondelete={'zalo_zns': 'cascade'})
     zalo_template_id = fields.Many2one('dpt.zalo.template', string='Template Zalo')
     recipient_id = fields.Many2one('ir.model.fields', string='Gửi Cho',
                                    domain="[('model_id','=',model_id),('ttype','=','many2one'),('relation','=','res.partner')]")
@@ -45,7 +42,7 @@ class ServerActions(models.Model):
     @api.onchange('zalo_template_id', 'param_ids')
     def _update_action_code_zalo(self):
         if self.param_ids:
-            template_id = self.zalo_template_id.zalo_app_id
+            template_id = self.zalo_template_id.zalo_template_id
             recipient = f'record.{self.recipient_id.name}.phone'
             params = []
             for param_id in self.param_ids:
@@ -53,7 +50,6 @@ class ServerActions(models.Model):
                     param_id.name: f'record.{param_id.fields_id.name}'
                 })
             params = str(params)
-            self.code = f"""
-                template_id = env['dpt.zalo.template'].browse({self.zalo_template_id.id})
-                template_id._action_send_zalo_notification(record,'{template_id}',{recipient},{params})
+            self.code = f"""template_id = env['dpt.zalo.template'].browse({self.zalo_template_id.id})
+            template_id._action_send_zalo_notification(record,'{template_id}',{recipient},"{params}")
             """

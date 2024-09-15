@@ -28,7 +28,7 @@
                         <field name="model_id" invisible="1"/>
                     </div>
                     <separator string="Action Details" groups="base.group_no_one"/>
-                    <div class="d-flex flex-row flex-wrap gap-2" invisible="state != 'zalo_zns'">
+                    <div class="d-flex flex-row flex-wrap gap-2">
                         <label for="zalo_template_id"/>
                         <field name="zalo_template_id"/>
                         <label for="recipient_id"/>
@@ -141,9 +141,9 @@
                         This may happen when having server actions executing code that returns an action, or server
                         actions returning a client action.
                     </p>
-                    <notebook invisible="state not in ('code','zalo_zns')">
+                    <notebook invisible="state != 'code'">
                         <page string="Code">
-                            <field name="code" invisible="state not in ('code','zalo_zns')" widget="code"
+                            <field name="code" invisible="state != 'code'" widget="code"
                                    options="{'mode': 'python'}"
                                    placeholder="Enter Python code here. Help about Python expression is available in the help tab of this document."/>
                         </page>
