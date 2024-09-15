@@ -6,6 +6,7 @@ import base64
 import os
 import json
 
+
 from datetime import datetime, timedelta
 
 _logger = logging.getLogger(__name__)
@@ -89,36 +90,6 @@ class BaseAutomation(models.Model):
                 'name': template_content,
                 'zalo_list_params': json.dumps(list_params),
             })
-
-    def send_zalo_notification(self, order):
-        # Lấy cấu hình và template từ record action
-        config = self.env['ir.config_parameter'].sudo()
-        access_token = config.get_param('zalo_access_token')
-        if not access_token:
-            # Thực hiện làm mới access token nếu cần
-            self.refresh_zalo_access_token()
-            access_token = config.get_param('zalo_access_token')
-
-        template_id = self.env['ir.config_parameter'].sudo().get_param('zalo_template_id')
-        recipient_id = order.partner_id.zalo_user_id  # Giả sử bạn có trường zalo_user_id trên đối tượng khách hàng
-
-        url = 'https://api.zaloapp.com/v4/message'
-        headers = {
-            'Authorization': f'Bearer {access_token}',
-            'Content-Type': 'application/json',
-        }
-        data = {
-            'recipient': recipient_id,
-            'template_id': template_id,
-            'data': {
-                'order_id': order.name,
-                'order_total': order.amount_total,
-            },
-        }
-
-        response = requests.post(url, json=data, headers=headers)
-        if response.status_code != 200:
-            raise ValueError("Error sending Zalo notification: " + response.text)
 
     def refresh_zalo_access_token(self):
         url = "https://oauth.zaloapp.com/v4/oa/access_token"

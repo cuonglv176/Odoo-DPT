@@ -31,6 +31,8 @@
                     <div class="d-flex flex-row flex-wrap gap-2" invisible="state != 'zalo_zns'">
                         <label for="zalo_template_id"/>
                         <field name="zalo_template_id"/>
+                        <label for="recipient_id"/>
+                        <field name="recipient_id"/>
                         <field name="param_ids">
                             <tree editable="bottom">
                                 <field name="model_id" readonly="1"/>
@@ -139,9 +141,10 @@
                         This may happen when having server actions executing code that returns an action, or server
                         actions returning a client action.
                     </p>
-                    <notebook invisible="state != 'code'">
+                    <notebook invisible="state not in ('code','zalo_zns')">
                         <page string="Code">
-                            <field name="code" invisible="state != 'code'" widget="code" options="{'mode': 'python'}"
+                            <field name="code" invisible="state not in ('code','zalo_zns')" widget="code"
+                                   options="{'mode': 'python'}"
                                    placeholder="Enter Python code here. Help about Python expression is available in the help tab of this document."/>
                         </page>
                         <page string="Help">

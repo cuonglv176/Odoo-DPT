@@ -20,6 +20,8 @@ class ServerActions(models.Model):
         ('zalo_zns', 'Send Zalo ZNS'),
     ], ondelete={'zalo_zns': 'cascade'})
     zalo_template_id = fields.Many2one('dpt.zalo.template', string='Template Zalo')
+    recipient_id = fields.Many2one('ir.model.fields', string='Gửi Cho',
+                                   domain="[('model_id','=',model_id),('ttype','=','many2one'),('relation','=','res.partner')]")
     param_ids = fields.One2many('zalo.actions.server.params', 'actions_server_id', string='Params')
 
     @api.onchange('zalo_template_id')
@@ -39,7 +41,27 @@ class ServerActions(models.Model):
         else:
             self.param_ids = [(5, 0, 0)]
 
-    def _run_action_zalo_zns_multi(self):
-        _logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-        _logger.info(self.zalo_template_id)
-        _logger.info(self.param_ids)
+    @api.model
+    def create(self, vals):
+        res = super(ServerActions, self).create(vals)
+        self._update_action_code_zalo()
+        return res
+
+    def write(self, vals):
+        res = super(ServerActions, self).write(vals)
+        self._update_action_code_zalo()
+        return res
+
+    def _update_action_code_zalo(self):
+        if self.param_ids:
+            template_id = self.zalo_template_id.name
+            recipient = f'record.{self.recipient_id.name}.phone'
+            params = []
+            for param_id in self.param_ids:
+                params.append({
+                    param_id.name: f'record.{param_id.fields_id.name}'
+                })
+            self.code = f"""
+                template_id = env['dpt.zalo.template'].browse({self.zalo_template_id.id})
+                template_id._action_send_zalo_notification(record,{template_id},{recipient},{params})
+            """
