@@ -44,7 +44,7 @@ class ServerActions(models.Model):
     @api.onchange('zalo_template_id', 'param_ids')
     def _update_action_code_zalo(self):
         if self.param_ids:
-            template_id = self.zalo_template_id.name
+            template_id = self.zalo_template_id.zalo_app_id
             recipient = f'record.{self.recipient_id.name}.phone'
             params = []
             for param_id in self.param_ids:
@@ -53,5 +53,5 @@ class ServerActions(models.Model):
                 })
             self.code = f"""
                 template_id = env['dpt.zalo.template'].browse({self.zalo_template_id.id})
-                template_id._action_send_zalo_notification(record,{template_id},{recipient},{params})
+                template_id._action_send_zalo_notification(record,'{template_id}',{recipient},'{params}')
             """
