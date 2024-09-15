@@ -25,7 +25,7 @@
                     <div class="d-flex flex-column">
                         <label for="state"/>
                         <field name="state" widget="selection_badge" options="{'size': 'sm'}"/>
-                        <field name="model_id" readonly="1"/>
+                        <field name="model_id" invisible="1"/>
                     </div>
                     <separator string="Action Details" groups="base.group_no_one"/>
                     <div class="d-flex flex-row flex-wrap gap-2" invisible="state != 'zalo_zns'">
