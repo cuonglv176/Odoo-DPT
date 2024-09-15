@@ -41,17 +41,7 @@ class ServerActions(models.Model):
         else:
             self.param_ids = [(5, 0, 0)]
 
-    @api.model
-    def create(self, vals):
-        res = super(ServerActions, self).create(vals)
-        self._update_action_code_zalo()
-        return res
-
-    def write(self, vals):
-        res = super(ServerActions, self).write(vals)
-        self._update_action_code_zalo()
-        return res
-
+    @api.onchange('zalo_template_id', 'param_ids')
     def _update_action_code_zalo(self):
         if self.param_ids:
             template_id = self.zalo_template_id.name
