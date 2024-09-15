@@ -4,6 +4,8 @@ import logging
 import hashlib
 import base64
 import os
+import json
+
 from datetime import datetime, timedelta
 
 _logger = logging.getLogger(__name__)
@@ -63,20 +65,29 @@ class BaseAutomation(models.Model):
         """
         template_obj = self.env['dpt.zalo.template']
         existing_template = template_obj.search([('zalo_template_id', '=', template_id)])
+        list_params = []
+        for param in zalo_list_params:
+            list_params.append(
+                {
+                    'name': param.get('name'),
+                    'require': param.get('require'),
+                    'type': param.get('type'),
+                }
+            )
         if not existing_template:
             # Tạo mới nếu template chưa tồn tại
             template_obj.create({
                 'name': template_content,
                 'zalo_template_id': template_id,
                 'zalo_template_content': template_content,
-                'zalo_list_params': zalo_list_params,
+                'zalo_list_params': json.dumps(list_params),
             })
         else:
             # Cập nhật nếu template đã tồn tại
             existing_template.write({
                 'zalo_template_content': template_content,
                 'name': template_content,
-                'zalo_list_params': zalo_list_params,
+                'zalo_list_params': json.dumps(list_params),
             })
 
     def send_zalo_notification(self, order):
