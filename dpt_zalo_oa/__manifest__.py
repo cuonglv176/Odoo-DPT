@@ -13,6 +13,7 @@
         'views/res_config_settings_views.xml',
         'views/base_automation_view.xml',
         'views/dpt_zalo_template_views.xml',
+        'views/ir_action_server_view.xml',
         'views/zalo_menu.xml',
         'data/ir_cron_data.xml',
     ],
