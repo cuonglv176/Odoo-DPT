@@ -254,9 +254,9 @@ class DptExportImportLine(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
     currency_usd_id = fields.Many2one('res.currency', string='Currency USD', default=1)
     currency_cny_id = fields.Many2one('res.currency', string='Currency CNY', default=6)
-    dpt_price_usd = fields.Monetary(string='Giá khai (USD)', tracking=True, currency_field='currency_usd_id')
+    dpt_price_usd = fields.Monetary(string='Giá khai (USD)', tracking=True, currency_field='currency_usd_id', digits=(12, 4))
     dpt_total_usd = fields.Monetary(string='Total (USD)', currency_field='currency_usd_id',
-                                    compute="_compute_dpt_total_usd")
+                                    compute="_compute_dpt_total_usd", digits=(12, 4))
     dpt_total_usd_vnd = fields.Monetary(string='Total USD (VND)', currency_field='currency_id',
                                         compute="_compute_dpt_total_usd_vnd")
     dpt_total_cny_vnd = fields.Monetary(string='Total CNY (VND)', currency_field='currency_id',
