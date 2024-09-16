@@ -35,7 +35,7 @@ class DptZaloTemplate(models.Model):
             raise ValueError("Access token not found, please authenticate first.")
 
         # recipient_id = record_id.recipient.phone
-        recipient_id = f'84989277662'
+        recipient_id = f'84967121669'
 
         url = "https://business.openapi.zalo.me/message/template"
         payload = json.dumps({

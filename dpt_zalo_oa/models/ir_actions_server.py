@@ -44,13 +44,11 @@ class ServerActions(models.Model):
         if self.param_ids:
             template_id = self.zalo_template_id.zalo_template_id
             recipient = f'record.{self.recipient_id.name}.phone'
-            params = {}
+            params = '{'
             for param_id in self.param_ids:
-                params.update({
-                    param_id.name: f'record.{param_id.fields_id.name}'
-                })
-            params = str(params)
+                params += f"""{param_id.name}: record.{param_id.fields_id.name},"""
+            params += '}'
             self.code = f"""
-            template_id = env['dpt.zalo.template'].browse({self.zalo_template_id.id}) 
-            template_id.action_send_zalo_notification(record,'{template_id}',{recipient},{params})
+template_id = env['dpt.zalo.template'].browse({self.zalo_template_id.id}) 
+template_id.action_send_zalo_notification(record,'{template_id}',{recipient},{params})
             """
