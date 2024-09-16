@@ -46,7 +46,7 @@ class ServerActions(models.Model):
             recipient = f'record.{self.recipient_id.name}.phone'
             params = '{'
             for param_id in self.param_ids:
-                params += f"""{param_id.name}: record.{param_id.fields_id.name},"""
+                params += f"""'{param_id.name}' : record.{param_id.fields_id.name},"""
             params += '}'
             self.code = f"""
 template_id = env['dpt.zalo.template'].browse({self.zalo_template_id.id}) 
