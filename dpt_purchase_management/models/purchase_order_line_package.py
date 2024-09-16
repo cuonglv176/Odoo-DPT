@@ -23,8 +23,8 @@ class PurchaseOrderLinePackage(models.Model):
     weight = fields.Float('Weight (kg)', tracking=True)
     volume = fields.Float('Volume (m3)', tracking=True, digits=(12, 5))
 
-    total_weight = fields.Float('Total Weight (kg)', tracking=True, digits=(12, 5))
-    total_volume = fields.Float('Total Volume (m3)', tracking=True, digits=(12, 5))
+    total_weight = fields.Float('Total Weight (kg)', tracking=True, digits=(12, 0))
+    total_volume = fields.Float('Total Volume (m3)', tracking=True, digits=(12, 2))
     note = fields.Text('Note', tracking=True)
     image = fields.Binary(string='Image')
     detail_ids = fields.One2many('purchase.order.line.package.detail', 'package_id', 'Package detail', tracking=True)
