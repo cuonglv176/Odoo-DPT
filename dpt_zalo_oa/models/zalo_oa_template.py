@@ -53,8 +53,10 @@ class DptZaloTemplate(models.Model):
         response = requests.request("POST", url, headers=headers, data=payload)
         _logger.info(response.text)
         record_id.message_post(
-            body=f"<p><b style='font-weight: 700 !important'>SEND ZALO NOTI:</b> {str(payload)}</p>"
-                 f"<p><b style='font-weight: 700 !important'>RESPONSE</b> {response.text}</p>",
+            body=f">>>>>>>>>>>SEND ZALO NOTI<<<<<<<<<<<<<<"
+                 f"{str(payload)}"
+                 f">>>>>>>>>>>RESPONSE<<<<<<<<<<<<<<"
+                 f"{response.text}",
             message_type="notification",
         )
         if response.status_code != 200:
