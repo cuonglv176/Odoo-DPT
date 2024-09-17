@@ -262,8 +262,8 @@ class SaleOrderLine(models.Model):
                 'product_id': self.product_id.id,
                 'dpt_english_name': self.product_id.dpt_english_name,
                 'dpt_description': self.product_id.dpt_description,
-                'dpt_n_w_kg': self.product_id.dpt_n_w_kg,
-                'dpt_g_w_kg': self.product_id.dpt_g_w_kg,
+                'dpt_n_w_kg': float(self.product_id.dpt_n_w_kg),
+                'dpt_g_w_kg': float(self.product_id.dpt_g_w_kg),
                 'dpt_uom_id': self.product_id.dpt_uom_id.id,
                 'dpt_uom2_ecus_id': self.product_id.dpt_uom2_ecus_id,
                 'dpt_uom2_id': self.product_id.dpt_uom2_id.id,
@@ -276,8 +276,8 @@ class SaleOrderLine(models.Model):
                 'dpt_amount_tax': self.vat_tax_amount,
                 'dpt_exchange_rate': self.payment_exchange_rate,
                 'dpt_uom1_id': self.product_uom.id,
-                'dpt_sl1': self.product_uom_qty,
-                'dpt_sl2': self.product_id.dpt_sl2,
+                'dpt_sl1': float(self.product_uom_qty),
+                'dpt_sl2': float(self.product_id.dpt_sl2),
                 'hs_code_id': self.hs_code_id.id,
             })
             return {
