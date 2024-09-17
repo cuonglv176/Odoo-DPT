@@ -108,11 +108,11 @@ class SaleOrder(models.Model):
             for line in self.order_line:
                 # if line.new_price_unit != 0 and line.new_price_unit != line.price_unit:
                 line.approval_id = approval_id
-        # if list_service:
-        #     list_approver = self.compute_approver_approval_price_list(list_service)
-        #     if list_approver:
-        #         approval_id.approver_ids = None
-        #         approval_id.approver_ids = list_approver
+        if list_service:
+            list_approver = self.compute_approver_approval_price_list(list_service)
+            if list_approver:
+                approval_id.approver_ids = None
+                approval_id.approver_ids = list_approver
         approval_id.action_confirm()
         view_id = self.env.ref('approvals.approval_request_view_form').id
         return {
@@ -161,7 +161,7 @@ class SaleOrder(models.Model):
                     required = False
                 if not required:
                     continue
-                list_approver.append((0, 0, {
+                list_approver.append((5, 0, {
                     'sequence': r.sequence,
                     'user_id': r.user_id.id,
                     'required': required
