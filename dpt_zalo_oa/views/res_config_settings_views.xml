@@ -1,0 +1,53 @@
+<odoo>
+    <record id="view_res_config_settings_form_zalo" model="ir.ui.view">
+        <field name="name">res.config.settings.form.zalo</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Zalo API Configuration" string="Zalo API Configuration" name="zalo">
+                    <h2>Zalo API Configuration</h2>
+                    <block>
+                        <setting id="zalo_api_setting" string="Zalo API Configuration">
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <!-- Cột duy nhất cho các trường -->
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="zalo_app_id">Zalo App ID</label>
+                                            <field name="zalo_app_id" class="form-control"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="zalo_secret_key">Zalo Secret Key</label>
+                                            <field name="zalo_secret_key" class="form-control"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="zalo_redirect_uri">Zalo Redirect URI</label>
+                                            <field name="zalo_redirect_uri" class="form-control"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="zalo_authorization_code">Zalo Authorization Code</label>
+                                            <field name="zalo_authorization_code" class="form-control"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="zalo_access_token">Zalo Access Token</label>
+                                            <field name="zalo_access_token" class="form-control" readonly="1"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="zalo_refresh_token">Zalo Refresh Token</label>
+                                            <field name="zalo_refresh_token" class="form-control" readonly="1"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="zalo_expired_date">Expired</label>
+                                            <field name="zalo_expired_date" class="form-control" readonly="1"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>

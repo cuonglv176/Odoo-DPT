@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+dpt.zalo.template,dpt.zalo.template,model_dpt_zalo_template,,1,1,1,1
+zalo.actions.server.params,zalo.actions.server.params,model_zalo_actions_server_params,,1,1,1,1
