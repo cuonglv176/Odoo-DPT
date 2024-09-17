@@ -59,7 +59,7 @@ def _create_invoices(self, grouped=False, final=False, date=None):
                     'price_unit': 0 - deposit
                 }))
 
-        if sum(order.purchase_amount_total) != 0:
+        if order.purchase_amount_total != 0:
             invoice_line_vals.append(Command.create(
                 {
                     'product_id': product_buy_id.id,
@@ -67,7 +67,7 @@ def _create_invoices(self, grouped=False, final=False, date=None):
                     'display_type': 'product',
                     'quantity': 1,
                     # 'price_unit': sum(order.order_line.mapped('price_subtotal')),
-                    'price_unit': sum(order.purchase_amount_total)
+                    'price_unit': order.purchase_amount_total
                 }))
 
         if order.sale_service_ids:
