@@ -115,8 +115,8 @@ class SaleOrderLine(models.Model):
                 'dpt_amount_tax': self.vat_tax_amount,
                 'dpt_exchange_rate': self.payment_exchange_rate,
                 'dpt_uom1_id': self.product_uom.id,
-                'dpt_sl1': self.product_uom_qty,
-                'dpt_sl2': self.product_id.dpt_sl2,
+                'dpt_sl1': float(self.product_uom_qty),
+                'dpt_sl2': float(self.product_id.dpt_sl2),
                 'hs_code_id': self.hs_code_id.id,
             })
         if not self.dpt_export_import_line_ids[0].item_description_en:
