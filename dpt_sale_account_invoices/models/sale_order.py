@@ -22,7 +22,7 @@ class SalesOrder(models.Model):
     @api.depends('amount_total', 'service_total_amount')
     def _compute_payment_amount_total(self):
         for rec in self:
-            rec.payment_amount_total = rec.amount_total + rec.service_total_amount
+            rec.payment_amount_total = rec.purchase_amount_total + rec.service_total_amount
 
     @api.depends('purchase_ids', 'purchase_ids.amount_untaxed', 'purchase_ids.last_rate_currency')
     def _compute_purchase_amount_total(self):
