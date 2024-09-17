@@ -53,9 +53,9 @@ class DptZaloTemplate(models.Model):
         response = requests.request("POST", url, headers=headers, data=payload)
         _logger.info(response.text)
         record_id.message_post(
-            body=f">>>>>>>>>>>SEND ZALO NOTI<<<<<<<<<<<<<<"
-                 f"{str(payload)}"
-                 f">>>>>>>>>>>RESPONSE<<<<<<<<<<<<<<"
+            body=f">>>>>>>>>>>SEND ZALO NOTI<<<<<<<<<<<<<< \n"
+                 f"{str(payload)} \n"
+                 f">>>>>>>>>>>RESPONSE<<<<<<<<<<<<<< \n"
                  f"{response.text}",
             message_type="notification",
         )
