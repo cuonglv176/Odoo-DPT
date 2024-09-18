@@ -6,7 +6,8 @@ from odoo.exceptions import ValidationError
 class ApprovalRequestHistory(models.Model):
     _name = 'dpt.approval.request.sale.line.history'
 
-    service_management_id = fields.Many2one('dpt.sale.service.management', string='Dịch vụ')
+    service_management_id = fields.Many2one('dpt.sale.service.management')
+    service_id = fields.Many2one('dpt.service.management', string='Dịch vụ')
     approval_id = fields.Many2one('approval.request',string='Phê duyệt')
     new_price = fields.Monetary(currency_field='currency_id', string='Giá mới')
     price = fields.Monetary(currency_field='currency_id', string='Giá cũ')

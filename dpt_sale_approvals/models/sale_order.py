@@ -3,7 +3,6 @@ from datetime import datetime
 from odoo.exceptions import ValidationError
 
 
-
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
@@ -109,6 +108,7 @@ class SaleOrder(models.Model):
                     list_service.append(sale_service_id)
                     history.append({
                         'service_management_id': sale_service_id.id,
+                        'service_id': sale_service_id.service_id.id,
                         'approval_id': approval_id.id,
                         'price': sale_service_id.price,
                         'new_price': sale_service_id.new_price,

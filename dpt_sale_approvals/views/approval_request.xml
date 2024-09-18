@@ -77,7 +77,7 @@
                 <page string="Lịch sử" name="history" invisible="sequence_code != 'BAOGIA'">
                     <field name="history_ids" widget="section_and_note_one2many" readonly="1">
                         <tree>
-                            <field name="service_management_id"/>
+                            <field name="service_id"/>
                             <field name="price"/>
                             <field name="new_price"/>
                             <field name="currency_id" column_invisible="True"/>
