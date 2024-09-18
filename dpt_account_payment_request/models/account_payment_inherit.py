@@ -183,7 +183,8 @@ class AccountPayment(models.Model):
         create_values = {
             'request_owner_id': self.env.user.id,
             'category_id': category_id.id,
-            'sale_id': self.id,
+            # 'sale_id': self.id,
+            'payment_id': self.id,
             'date': datetime.now(),
         }
         if self.sale_id:
