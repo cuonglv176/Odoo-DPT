@@ -30,7 +30,6 @@ _logger = logging.getLogger(__name__)
 class CRMLEAD(models.Model):
     _inherit = 'crm.lead'
 
-
     phone = fields.Char(
         'Phone', tracking=50,
         compute='_compute_phone', inverse='_inverse_phone', readonly=False, store=True, required=True)
@@ -61,7 +60,9 @@ class CRMLEAD(models.Model):
     def _get_date_order(self):
         for s in self:
             if s.order_ids:
-                order_id = self.env['sale.order'].sudo().search([('opportunity_id','=',s.id),('state','in',('sale','done'))],limit=1, order='date_order desc')
+                order_id = self.env['sale.order'].sudo().search(
+                    [('opportunity_id', '=', s.id), ('state', 'in', ('sale', 'done'))], limit=1,
+                    order='date_order desc')
                 if order_id:
                     s.date_buy = order_id.date_order
                 else:
@@ -125,13 +126,14 @@ class CRMLEAD(models.Model):
             else:
                 s.is_exist = False
 
-
     @api.onchange('phone')
     def onchange_check_exist(self):
         if self.phone:
             lead_exist_ids = self.env['crm.lead'].sudo().search(
-                [('phone', '=', self.phone), ('id', '!=', self.env.context.get('active_ids'))])
+                [('phone', '=', self.phone), ('id', '!=', self.env.context.get('active_ids'))], limit=1)
             if lead_exist_ids:
+                raise UserError(
+                    f"Bạn vui lòng kiểm tra lại số điện thoại {self.phone} đã tồn tại: {lead_exist_ids.name}")
                 for lead_exist_id in lead_exist_ids:
                     if lead_exist_id.id != self.env.context.get('active_ids'):
                         self.lead_exist_ids.create({
@@ -164,7 +166,6 @@ class CRMLEAD(models.Model):
             'flags': {'form': {'action_buttons': True, 'options': {'mode': 'edit'}}}
         }
 
-
     def write(self, vals):
         for lead_id in self:
             stage_id_old = lead_id.stage_id.id
@@ -186,6 +187,7 @@ class CRMLEAD(models.Model):
         note = self.env['crm.lead.log.note'].search([('lead_id', '=', lead_id.id), ('stage_id', '=', stage_id.id)])
         return note
 
+
 class CRMLEADexist(models.Model):
     _name = 'crm.lead.exist'
 
@@ -194,6 +196,7 @@ class CRMLEADexist(models.Model):
     stage_id = fields.Many2one('crm.stage', string='Stage', related="lead_exist_id.stage_id")
     user_id = fields.Many2one('res.users', string='User', related="lead_exist_id.user_id")
     team_id = fields.Many2one('crm.team', string='Team', related="lead_exist_id.team_id")
+
 
 class RESPARTNER(models.Model):
     _inherit = 'res.partner'
@@ -211,7 +214,7 @@ class RESPARTNER(models.Model):
         args = args or []
         domain = []
         if name:
-            domain = ['|','|', ('phone', operator, name), ('name', operator, name), ('dpt_user_name', operator, name)]
+            domain = ['|', '|', ('phone', operator, name), ('name', operator, name), ('dpt_user_name', operator, name)]
         partner = self.search(domain + args, limit=limit)
         return partner.name_get()
 
