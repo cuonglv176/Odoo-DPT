@@ -1,2 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 dpt.approval.sale.price,dpt.approval.sale.price,model_dpt_approval_sale_price,,1,1,1,1
+approval_request_sale_line_history,approval_request_sale_line_history,model_dpt_approval_request_sale_line_history,,1,1,1,
