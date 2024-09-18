@@ -32,7 +32,7 @@ class DPTSaleServiceManagement(models.Model):
 
     def action_confirm_quote(self):
 
-        if self.sale_id.state == 'sent':
+        if self.sale_id.state in ('sent, sale'):
             return
         a = 1
         # a = 0
