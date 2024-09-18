@@ -114,14 +114,14 @@ class SaleOrder(models.Model):
         for line in self.order_line:
             # if line.new_price_unit != 0 and line.new_price_unit != line.price_unit:
             line.approval_id = approval_id
-        if history:
-            self.env['dpt.approval.request.sale.line.history'].create(history)
         if list_service:
             list_approver = self.compute_approver_approval_price_list(list_service)
             if list_approver:
                 # approval_id.approver_ids = None
                 approval_id.approver_ids = list_approver
         approval_id.action_confirm()
+        if history:
+            self.env['dpt.approval.request.sale.line.history'].create(history)
         view_id = self.env.ref('approvals.approval_request_view_form').id
         return {
             'type': 'ir.actions.act_window',
