@@ -366,12 +366,14 @@ class StockPicking(models.Model):
     @api.constrains('sale_purchase_id', 'sale_service_ids', 'fields_ids')
     def constrains_update_sale_service(self):
         for item in self:
-            item.sale_service_ids.write({
-                'sale_id': item.sale_purchase_id.id
-            })
-            item.fields_ids.write({
-                'sale_id': item.sale_purchase_id.id
-            })
+            for sale_service_id in item.sale_service_ids:
+                sale_service_id.write({
+                    'sale_id': item.sale_purchase_id.id
+                })
+            for fields_id in item.fields_ids:
+                fields_id.write({
+                    'sale_id': item.sale_purchase_id.id
+                })
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
