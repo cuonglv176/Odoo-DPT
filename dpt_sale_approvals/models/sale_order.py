@@ -3,7 +3,6 @@ from datetime import datetime
 from odoo.exceptions import ValidationError
 
 
-
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
@@ -98,24 +97,25 @@ class SaleOrder(models.Model):
             'sale_id': self.id,
             'date': datetime.now(),
         })
-        for r in self.sale_service_ids:
-            list_service = []
-            history = []
-            for sale_service_id in self.sale_service_ids:
-                # if sale_service_id.department_id == department and not sale_service_id.service_id.zezo_price:
-                if not sale_service_id.service_id.zezo_price:
-                    if sale_service_id.new_price != 0 and sale_service_id.new_price != sale_service_id.price:
-                        sale_service_id.approval_id = approval_id
-                        list_service.append(sale_service_id)
-                        history.append({
-                            'service_management_id': sale_service_id.id,
-                            'approval_id': approval_id.id,
-                            'price': sale_service_id.price,
-                            'new_price': sale_service_id.new_price,
-                        })
-            for line in self.order_line:
-                # if line.new_price_unit != 0 and line.new_price_unit != line.price_unit:
-                line.approval_id = approval_id
+        list_service = []
+        history = []
+        for sale_service_id in self.sale_service_ids:
+            # if sale_service_id.department_id == department and not sale_service_id.service_id.zezo_price:
+            if not sale_service_id.service_id.zezo_price:
+                if sale_service_id.new_price != 0 and sale_service_id.new_price != sale_service_id.price:
+                    sale_service_id.approval_id = approval_id
+                    list_service.append(sale_service_id)
+                    history.append({
+                        'service_management_id': sale_service_id.id,
+                        'approval_id': approval_id.id,
+                        'price': sale_service_id.price,
+                        'new_price': sale_service_id.new_price,
+                    })
+        for line in self.order_line:
+            # if line.new_price_unit != 0 and line.new_price_unit != line.price_unit:
+            line.approval_id = approval_id
+        if history:
+            self.env['dpt.approval.request.sale.line.history'].create(history)
         if list_service:
             list_approver = self.compute_approver_approval_price_list(list_service)
             if list_approver:
