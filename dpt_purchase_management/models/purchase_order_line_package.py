@@ -30,21 +30,14 @@ class PurchaseOrderLinePackage(models.Model):
     image = fields.Binary(string='Image')
     detail_ids = fields.One2many('purchase.order.line.package.detail', 'package_id', 'Package detail', tracking=True)
 
-    @api.model
-    def create(self, vals):
-        if vals.get('total_weight'):
-            vals.update({
-                'total_weight': math.ceil(vals.get('total_weight')),
-            })
-        return super(PurchaseOrderLinePackage, self).create(vals)
-
-    def write(self, vals):
-        if 'total_weight' in vals:
-            vals.update({
-                'total_weight': math.ceil(vals.get('total_weight')),
-            })
-        res = super(PurchaseOrderLinePackage, self).write(vals)
-        return res
+    @api.onchange('total_weight', 'total_volume')
+    def _onchange_total_fields(self):
+        if self.total_weight:
+            # Làm tròn lên cho trọng lượng
+            self.total_weight = math.ceil(self.total_weight)
+        if self.total_volume:
+            # Làm tròn lên cho thể tích tới 2 chữ số thập phân
+            self.total_volume = math.ceil(self.total_volume * 100) / 100
 
     @api.constrains('quantity', 'uom_id')
     def constrains_package_name(self):
