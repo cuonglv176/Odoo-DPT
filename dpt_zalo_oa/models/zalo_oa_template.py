@@ -21,6 +21,7 @@ class DptZaloTemplate(models.Model):
         if records:
             for record_id in records:
                 self.send_zalo_notification(record_id, template_id, recipient, params)
+            self.refresh_zalo_access_token()
 
     def send_zalo_notification(self, record_id, template_id, recipient, params):
         # Lấy cấu hình và template từ record action
@@ -79,7 +80,7 @@ class DptZaloTemplate(models.Model):
             refresh_token = token_data.get('refresh_token')
             expires_in = token_data.get('expires_in')
             try:
-                expires_in = int(expires_in) - 2000 # Ensure expires_in is an integer
+                expires_in = int(expires_in) - 2000  # Ensure expires_in is an integer
             except ValueError:
                 _logger.error(f"Invalid expires_in value: {expires_in}")
                 return None
