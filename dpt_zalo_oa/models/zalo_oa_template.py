@@ -82,7 +82,7 @@ class DptZaloTemplate(models.Model):
             refresh_token = token_data.get('refresh_token')
             expires_in = token_data.get('expires_in')
             try:
-                expires_in = int(expires_in)  # Ensure expires_in is an integer
+                expires_in = int(expires_in) - 2000 # Ensure expires_in is an integer
             except ValueError:
                 _logger.error(f"Invalid expires_in value: {expires_in}")
                 return None
