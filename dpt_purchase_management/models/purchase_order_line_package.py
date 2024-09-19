@@ -1,4 +1,5 @@
 from odoo import fields, models, api, _
+import math
 
 
 class PurchaseOrderLinePackage(models.Model):
@@ -29,15 +30,21 @@ class PurchaseOrderLinePackage(models.Model):
     image = fields.Binary(string='Image')
     detail_ids = fields.One2many('purchase.order.line.package.detail', 'package_id', 'Package detail', tracking=True)
 
-    # @api.model
-    # def create(self, vals):
-    #     if vals.get('code', 'NEW') == 'NEW':
-    #         vals['code'] = self._generate_service_code()
-    #     return super(PurchaseOrderLinePackage, self).create(vals)
+    @api.model
+    def create(self, vals):
+        if vals.get('total_weight'):
+            vals.update({
+                'total_weight': math.ceil(vals.get('total_weight')),
+            })
+        return super(PurchaseOrderLinePackage, self).create(vals)
 
-    # def _generate_service_code(self):
-    #     sequence = self.env['ir.sequence'].next_by_code('purchase.order.line.package') or '00'
-    #     return f'{sequence}'
+    def write(self, vals):
+        if 'total_weight' in vals:
+            vals.update({
+                'total_weight': math.ceil(vals.get('total_weight')),
+            })
+        res = super(PurchaseOrderLinePackage, self).write(vals)
+        return res
 
     @api.constrains('quantity', 'uom_id')
     def constrains_package_name(self):
