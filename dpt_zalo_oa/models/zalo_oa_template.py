@@ -74,13 +74,14 @@ class DptZaloTemplate(models.Model):
             'secret_key': secret_key
         }
         response = requests.request("POST", url, headers=headers, data=payload)
+
         if response.status_code == 200:
             token_data = response.json()
             access_token = token_data.get('access_token')
             refresh_token = token_data.get('refresh_token')
-            expires_in = token_data.get('expires_in')
+            expires_in = token_data.get('expires_in') or "10"
             try:
-                expires_in = int(expires_in) - 2000  # Ensure expires_in is an integer
+                expires_in = int(expires_in) - 2000 
             except ValueError:
                 _logger.error(f"Invalid expires_in value: {expires_in}")
                 return None
