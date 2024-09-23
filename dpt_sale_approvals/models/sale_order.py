@@ -16,8 +16,9 @@ class SaleOrder(models.Model):
 
     def send_quotation_department(self):
         res = super(SaleOrder, self).send_quotation_department()
-        for rec in self.sale_service_ids:
-            rec.price_status = 'wait_approve'
+        for sale_service_id in self.sale_service_ids:
+            if not sale_service_id.service_id.pricelist_item_ids:
+                sale_service_id.price_status = 'wait_approve'
         return res
 
     @api.model
