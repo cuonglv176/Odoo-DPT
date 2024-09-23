@@ -11,7 +11,7 @@ class DPTSaleServiceManagement(models.Model):
         ('approved', 'Approved'),           # Đã duyệt
         ('not_calculate', 'Not Calculate'),
         ('calculated', 'Calculated'),  # Đã tính giá
-        ('sent_quotation', 'Sent Quotation'),
+        ('wait_quotation', 'Chờ báo giá'),
         ('quoted', 'Quoted'),  # Đã báo giá
         ('refuse_quoted', 'Refuse Quoted'),  # Từ chối báo giá
         ('sent_approval', 'Sent Approval'),

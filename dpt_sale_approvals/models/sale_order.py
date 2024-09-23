@@ -18,7 +18,7 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self).send_quotation_department()
         for sale_service_id in self.sale_service_ids:
             if not sale_service_id.service_id.pricelist_item_ids:
-                sale_service_id.price_status = 'wait_approve'
+                sale_service_id.price_status = 'wait_quotation'
         return res
 
     @api.model
@@ -106,6 +106,7 @@ class SaleOrder(models.Model):
             if not sale_service_id.service_id.zezo_price:
                 if sale_service_id.new_price != 0 and sale_service_id.new_price != sale_service_id.price:
                     sale_service_id.approval_id = approval_id
+                    sale_service_id.price_status = 'wait_approve'
                     list_service.append(sale_service_id)
                     history.append({
                         'service_management_id': sale_service_id.id,
