@@ -34,8 +34,8 @@
                             <field name="created_picking_qty" column_invisible="1"/>
                             <field name="quantity"/>
                             <field name="uom_id"/>
-                            <field name="total_weight"/>
-                            <field name="total_volume"/>
+                            <field name="total_weight" widget="integer"/>
+                            <field name="total_volume" digits="[12,2]"/>
                             <field name="note"/>
                         </tree>
                         <form>
@@ -58,8 +58,8 @@
                                         <field name="weight"/>
                                     </group>
                                     <group string="Total">
-                                        <field name="total_volume"/>
-                                        <field name="total_weight"/>
+                                        <field name="total_volume" digits="[12,2]"/>
+                                        <field name="total_weight" widget="integer"/>
                                     </group>
                                 </group>
                                 <notebook>
