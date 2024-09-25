@@ -23,8 +23,8 @@ class StockPicking(models.Model):
     packing_lot_name = fields.Char('Packing Lot name', compute="compute_packing_lot_name", store=True)
     is_main_incoming = fields.Boolean('Is Main Incoming', compute="_compute_main_incoming",
                                       search="search_main_incoming")
-    total_volume = fields.Float('Total Volume (m3)', compute="_compute_total_volume_weight")
-    total_weight = fields.Float('Total Weight (kg)', compute="_compute_total_volume_weight")
+    total_volume = fields.Float('Total Volume (m3)', compute="_compute_total_volume_weight", store=True)
+    total_weight = fields.Float('Total Weight (kg)', compute="_compute_total_volume_weight", store=True)
 
     # re-define for translation
     name = fields.Char(
@@ -58,6 +58,7 @@ class StockPicking(models.Model):
     exported_label = fields.Boolean('Exported Label')
     picking_lot_name = fields.Char('Picking Lot Name')
 
+    @api.depends('package_ids.total_volume', 'package_ids.total_weight')
     def _compute_total_volume_weight(self):
         for item in self:
             item.total_volume = sum(item.package_ids.mapped('total_volume'))
