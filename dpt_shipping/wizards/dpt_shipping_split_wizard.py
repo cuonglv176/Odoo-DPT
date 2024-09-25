@@ -23,6 +23,7 @@ class DPTShippingSplitWizard(models.TransientModel):
         for picking_id in self.picking_ids:
             picking_id.create_in_transfer_picking(self.location_dest_id)
         in_picking_ids = self.picking_ids.mapped('x_in_transfer_picking_id')
+        in_picking_ids._compute_total_volume_weight()
         export_import_ids = self.env['dpt.export.import.line'].sudo().search(
             [('sale_id', 'in', in_picking_ids.mapped('sale_purchase_id').ids)]).mapped('export_import_id') | self.env[
                                 'dpt.export.import'].sudo().search(

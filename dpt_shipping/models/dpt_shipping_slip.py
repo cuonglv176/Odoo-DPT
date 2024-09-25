@@ -155,6 +155,7 @@ class DPTShippingSlip(models.Model):
                 transfer_picking_id = self.env['stock.picking'].with_context(action['context']).create({
                     'sale_purchase_id': main_incoming_picking_id.sale_purchase_id.id,
                 })
+                transfer_picking_id._compute_total_volume_weight()
                 # update move line
                 move_line_vals = []
                 for move_id in transfer_picking_id.move_ids_without_package.filtered(lambda m: not m.move_line_ids):
