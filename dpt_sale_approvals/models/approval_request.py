@@ -25,6 +25,7 @@ class ApprovalRequest(models.Model):
                 self = self.with_context({'final_approved': True})
                 for sale_service_id in self.sale_service_ids:
                     sale_service_id.price = sale_service_id.new_price
+                    sale_service_id.price_status = 'approved'
                 for order_line_id in self.order_line_ids:
                     order_line_id.price_unit = order_line_id.new_price_unit
         return res
@@ -37,6 +38,7 @@ class ApprovalRequest(models.Model):
                 self.sale_id.price_status = 'refuse_approval'
                 for sale_service_id in self.sale_service_ids:
                     sale_service_id.new_price = sale_service_id.price
+                    sale_service_id.price_status = 'refuse_quoted'
                 for order_line_id in self.order_line_ids:
                     order_line_id.new_price_unit = sale_service_id.price_unit
         return res
