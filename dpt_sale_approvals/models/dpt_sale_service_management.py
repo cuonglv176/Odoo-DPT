@@ -61,6 +61,9 @@ class DPTSaleServiceManagement(models.Model):
 
     def action_accept_approval_price(self):
         self.price_status = 'quoted'
+        sale_service_quoted = self.sale_id.sale_service_ids.filtered(lambda m: m.price_status == 'quoted')
+        if len(sale_service_quoted) == len(self.sale_id.sale_service_ids):
+            self.sale_id.state = 'sent'
 
     def action_refuse_approval_price(self):
         self.price_status = 'refuse_quoted'
