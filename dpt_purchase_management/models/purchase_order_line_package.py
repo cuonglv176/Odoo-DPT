@@ -1,5 +1,8 @@
 from odoo import fields, models, api, _
 import math
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class PurchaseOrderLinePackage(models.Model):
@@ -33,11 +36,15 @@ class PurchaseOrderLinePackage(models.Model):
     @api.onchange('total_weight', 'total_volume')
     def _onchange_total_fields(self):
         if self.total_weight:
+            _logger.info('total_weight 1: %s', self.total_weight)
             # Làm tròn lên cho trọng lượng
             self.total_weight = math.ceil(self.total_weight)
+            _logger.info('total_weight 2: %s', self.total_weight)
         if self.total_volume:
+            _logger.info('total_volume 1: %s', self.total_volume)
             # Làm tròn lên cho thể tích tới 2 chữ số thập phân
             self.total_volume = math.ceil(self.total_volume * 100) / 100
+            _logger.info('total_volume 2: %s', self.total_volume)
 
     @api.constrains('quantity', 'uom_id')
     def constrains_package_name(self):
