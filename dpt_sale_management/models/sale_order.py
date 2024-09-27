@@ -328,7 +328,7 @@ class SaleOrder(models.Model):
                 'price_in_pricelist': max_price,
                 'compute_value': compute_value,
                 'compute_uom_id': compute_uom_id,
-                'price_status': price_status,
+                'price_status': price_status or 'no_price',
             })
         self.onchange_calculation_tax()
 
