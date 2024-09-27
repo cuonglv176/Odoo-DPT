@@ -245,7 +245,8 @@ class SaleOrder(models.Model):
         for sale_service_id in self.sale_service_ids:
             if not sale_service_id.uom_id:
                 continue
-            approved = sale_service_id.approval_id.filtered(lambda approval: approval.request_status in ('approved', 'refused'))
+            approved = sale_service_id.approval_id.filtered(
+                lambda approval: approval.request_status in ('approved', 'refused'))
             if approved:
                 continue
             current_uom_id = sale_service_id.uom_id
@@ -314,7 +315,7 @@ class SaleOrder(models.Model):
                                 price_list_item_id = service_price_id
                                 compute_value = compute_field_id.value_integer
                                 compute_uom_id = compute_field_id.uom_id.id
-            price_status = sale_service_id.price_status
+            price_status = sale_service_id.price_status or 'no_price'
             if sale_service_id.service_id.pricelist_item_ids and price_status == 'no_price':
                 price_status = 'calculated'
 
@@ -328,7 +329,7 @@ class SaleOrder(models.Model):
                 'price_in_pricelist': max_price,
                 'compute_value': compute_value,
                 'compute_uom_id': compute_uom_id,
-                'price_status': price_status or 'no_price',
+                'price_status': price_status,
             })
         self.onchange_calculation_tax()
 
@@ -375,7 +376,8 @@ class SaleOrder(models.Model):
             'font_size': 14
         })
         # Header
-        worksheet.insert_image('B2', get_module_resource('dpt_sale_management', 'static/src/img', 'logo.png'), {'x_scale': 0.10, 'y_scale': 0.06})
+        worksheet.insert_image('B2', get_module_resource('dpt_sale_management', 'static/src/img', 'logo.png'),
+                               {'x_scale': 0.10, 'y_scale': 0.06})
         worksheet.write('C2', 'CÔNG TY TNHH DPT VINA HOLDINGS - 棋速', header_sp_format)
         worksheet.write('C3', 'Địa chỉ văn phòng: Số 6A, Ngõ 183, Hoàng Văn Thái, Khương Trung, Thanh Xuân, Hà Nội')
         worksheet.write('C4', 'MST: 0109366059')
@@ -438,7 +440,7 @@ class SaleOrder(models.Model):
             worksheet.write(row, 4, cost)
             worksheet.write(row, 5, note)
             row += 1
-        worksheet.merge_range(f'B{start+1}:B{row}', 'Thuế', merge_format)
+        worksheet.merge_range(f'B{start + 1}:B{row}', 'Thuế', merge_format)
 
         # [Báo giá chi tiết]
         # [Báo giá chi tiết] Data
@@ -463,11 +465,11 @@ class SaleOrder(models.Model):
             row += 1
         worksheet.merge_range(f'B{start + 1}:B{row}', 'Báo giá chi tiết', merge_format)
 
-        worksheet.write(f'B{row+2}', 'Liên hệ:', employee_contact_format)
-        worksheet.write(f'C{row+2}', f'Chuyên viên: {self.employee_sale.name or ""}')
-        worksheet.write(f'C{row+3}', f'SĐT: {self.employee_sale.mobile_phone or self.employee_sale.work_phone or ""}')
-        worksheet.write(f'C{row+4}', f'Email: {self.employee_sale.work_email or ""}')
-        worksheet.write(f'E{row+2}', 'CÔNG TY TNHH DPT VINA HOLDINGS')
+        worksheet.write(f'B{row + 2}', 'Liên hệ:', employee_contact_format)
+        worksheet.write(f'C{row + 2}', f'Chuyên viên: {self.employee_sale.name or ""}')
+        worksheet.write(f'C{row + 3}', f'SĐT: {self.employee_sale.mobile_phone or self.employee_sale.work_phone or ""}')
+        worksheet.write(f'C{row + 4}', f'Email: {self.employee_sale.work_email or ""}')
+        worksheet.write(f'E{row + 2}', 'CÔNG TY TNHH DPT VINA HOLDINGS')
         worksheet.write(f'H7', f"Tỷ giá tệ từ hệ thống: {self.currency_id.search([('name', '=', 'CNY')]).rate}")
         worksheet.write(f'H8', f"Tỷ giá USD từ hệ thống: {self.currency_id.search([('name', '=', 'USD')]).rate}")
         workbook.close()
