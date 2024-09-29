@@ -14,6 +14,7 @@
                 <field name="transfer_code"/>
                 <field name="transfer_code_chinese" invisible="1"/>
                 <field name="is_main_incoming" invisible="1"/>
+                <field name="is_main_outgoing" invisible="1"/>
             </xpath>
             <button name="action_open_label_type" position="after">
                 <button name="export_wrong_import_data" string="Print Sub Label" type="object"/>

@@ -23,6 +23,8 @@ class StockPicking(models.Model):
     packing_lot_name = fields.Char('Packing Lot name', compute="compute_packing_lot_name", store=True)
     is_main_incoming = fields.Boolean('Is Main Incoming', compute="_compute_main_incoming",
                                       search="search_main_incoming")
+    is_main_outgoing = fields.Boolean('Is Main Outgoing', compute="_compute_main_outgoing",
+                                      search="search_main_outgoing")
     total_volume = fields.Float('Total Volume (m3)', compute="_compute_total_volume_weight", store=True)
     total_weight = fields.Float('Total Weight (kg)', compute="_compute_total_volume_weight", store=True)
 
@@ -74,6 +76,7 @@ class StockPicking(models.Model):
             item.is_main_incoming = item.picking_type_code == 'incoming' and item.location_dest_id.warehouse_id.is_main_incoming_warehouse
 
     def search_main_incoming(self, operator, value):
+        domain = []
         main_warehouse_ids = self.env['stock.warehouse'].sudo().search([('is_main_incoming_warehouse', '=', True)])
         if (operator == '=' and value) or (operator == '!=' and not value):
             domain = [('picking_type_code', '=', 'incoming'),
@@ -81,6 +84,26 @@ class StockPicking(models.Model):
         if (operator == '!=' and value) or (operator == '=' and not value):
             domain = ['|', ('picking_type_code', '!=', 'incoming'),
                       ('location_dest_id.warehouse_id', 'not in', main_warehouse_ids.ids)]
+        return domain
+
+    def _compute_main_outgoing(self):
+        for item in self:
+            item.is_main_outgoing = item.picking_type_code == 'outgoing' and item.location_id.warehouse_id.is_main_incoming_warehouse
+
+    @api.onchange('picking_type_code', 'location_id')
+    def _onchange_main_outgoing(self):
+        for item in self:
+            item.is_main_outgoing = item.picking_type_code == 'outgoing' and item.location_id.warehouse_id.is_main_incoming_warehouse
+
+    def search_main_outgoing(self, operator, value):
+        domain = []
+        main_warehouse_ids = self.env['stock.warehouse'].sudo().search([('is_main_incoming_warehouse', '=', True)])
+        if (operator == '=' and value) or (operator == '!=' and not value):
+            domain = [('picking_type_code', '=', 'outgoing'),
+                      ('location_id.warehouse_id', 'in', main_warehouse_ids.ids)]
+        if (operator == '!=' and value) or (operator == '=' and not value):
+            domain = ['|', ('picking_type_code', '!=', 'outgoing'),
+                      ('location_id.warehouse_id', 'not in', main_warehouse_ids.ids)]
         return domain
 
     @api.depends('package_ids.quantity', 'package_ids.uom_id.packing_code')
@@ -127,7 +150,8 @@ class StockPicking(models.Model):
             self.package_ids._create_stock_moves(self)
 
     def action_confirm(self):
-        if self.is_main_incoming or (self.x_transfer_type == 'outgoing_transfer' and self.location_id.warehouse_id.is_main_incoming_warehouse):
+        if self.is_main_incoming or (
+                self.x_transfer_type == 'outgoing_transfer' and self.location_id.warehouse_id.is_main_incoming_warehouse):
             # auto create move line with lot name is picking name
             self.move_line_ids.unlink()
             move_line_vals = []
@@ -462,36 +486,3 @@ class StockPicking(models.Model):
             self.fields_ids = [(0, 0, item) for item in val]
         if not self.sale_service_ids:
             self.fields_ids = [(5, 0, 0)]
-
-    @api.onchange('sale_purchase_id')
-    def onchange_get_detail(self):
-        if not self.location_id.warehouse_id.is_main_incoming_warehouse and self.location_id.usage == 'internal' and self.picking_type_code == 'outgoing' and self.sale_purchase_id:
-            main_incoming_picking_ids = self.env['stock.picking'].sudo().search(
-                [('is_main_incoming', '=', True), ('sale_purchase_id', '=', self.sale_purchase_id.id)])
-            self.package_ids = None
-            self.move_ids_without_package = None
-            package_vals = []
-            move_vals = []
-            for picking_id in main_incoming_picking_ids:
-                for package_id in picking_id.package_ids:
-                    lot_id = self.env['stock.lot'].sudo().search(
-                        [('location_id', '=', self.location_id.id), ('name', '=', picking_id.picking_lot_name),
-                         ('product_id', '=', package_id.uom_id.product_id.id)], limit=1)
-                    if not lot_id:
-                        continue
-                    package_vals.append((0, 0, {
-                        'quantity': lot_id.product_qty,
-                        'uom_id': package_id.uom_id.id
-                    }))
-                    move_vals.append((0, 0, {
-                        'from_picking_id': picking_id.id,
-                        'product_id': package_id.uom_id.product_id.id,
-                        'product_uom_qty': lot_id.product_qty,
-                        'product_uom': package_id.uom_id.product_id.uom_id.id,
-                        'partner_id': self.partner_id.id,
-                        'location_id': self.location_id.id,
-                        'location_dest_id': self.location_dest_id.id,
-                        'name': (package_id.uom_id.product_id.display_name or '')[:2000],
-                    }))
-            self.package_ids = package_vals
-            self.move_ids_without_package = move_vals
