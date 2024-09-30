@@ -281,12 +281,12 @@ class CRMLEADLOGNOTE(models.Model):
         elif note.result == 'other':
             result = 'Khác'
 
-        chatter_message = _('''<b> Nội dung liên hệ: </b> %s <br/>
-                                <b> Hình thức liên hệ: </b> %s <br/>
-                                <b> Kết quả: </b> %s <br/>
-                                <b> Ghi chú: </b> %s <br/>
-                                <b> Trạng thái Note: </b> %s <br/>
-                             ''') % (
+        chatter_message = '''<b> Nội dung liên hệ: </b> %s <br/>
+                             <b> Hình thức liên hệ: </b> %s <br/>
+                             <b> Kết quả: </b> %s <br/>
+                             <b> Ghi chú: </b> %s <br/>
+                             <b> Trạng thái Note: </b> %s <br/>
+                          ''' % (
             content,
             contact_form,
             result,
@@ -296,7 +296,8 @@ class CRMLEADLOGNOTE(models.Model):
 
         note.lead_id.message_post(
             body=chatter_message,
-            message_type='notification'
+            message_type='comment',  # Dùng comment để hiển thị HTML đúng
+            subtype_id=self.env.ref('mail.mt_note').id  # Sử dụng subtype cho ghi chú nếu cần
         )
 
         return note
