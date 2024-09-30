@@ -282,15 +282,14 @@ class CRMLEADLOGNOTE(models.Model):
             result = 'Khác'
 
         chatter_message = (f"Nội dung liên hệ:  {content} "
-                           f"\nHình thức liên hệ:{contact_form} "
-                           f"\nKết quả: {result} "
-                           f"\nGhi chú: {note.note} "
-                           f"\nTrạng thái Note: {note.stage_id.name} "
+                           f"\n Hình thức liên hệ:{contact_form} "
+                           f"\n Kết quả: {result} "
+                           f"\n Ghi chú: {note.note} "
+                           f"\n Trạng thái Note: {note.stage_id.name} "
                            )
         note.lead_id.message_post(
             body=chatter_message,
-            message_type='comment',
-            subtype_id=self.env.ref('mail.mt_note').id 
+            message_type='notification'
         )
 
         return note
