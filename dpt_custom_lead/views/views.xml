@@ -70,8 +70,34 @@
                                 <field name="contact_form" optional="show"/>
                                 <field name="content" optional="show"/>
                                 <field name="result" optional="show"/>
-                                <field name="note" optional="show"/>
+                                <field name="note" optional="show" widget="html"/>
                             </tree>
+                            <form string="dpt crm lead log note">
+                                <sheet>
+                                    <h3 class="text-center">CẬP NHẬT GHI CHÚ:
+                                    </h3>
+                                    <group>
+                                        <group>
+                                            <field name="content"/>
+                                            <field name="contact_form"/>
+                                        </group>
+                                        <group>
+                                            <field name="result"/>
+                                            <field name="lead_id" readonly="1" force_save="1"/>
+                                            <field name="stage_id" readonly="1" force_save="1"/>
+                                        </group>
+                                    </group>
+                                    <notebook>
+                                        <page string="Ghi chú">
+                                            <field name="note" widget="html"/>
+                                        </page>
+                                    </notebook>
+                                </sheet>
+                                <footer>
+                                    <button string="Lưu" class="btn-primary" special="save" data-hotkey="v"/>
+                                    <button string="Hủy" special="cancel" data-hotkey="z"/>
+                                </footer>
+                            </form>
                         </field>
                     </page>
                     <page string="Lead exist" name="page_lead_exist_ids">
