@@ -56,7 +56,7 @@ class StockPicking(models.Model):
                         'volume': package_id.volume,
                         'total_volume': package_id.total_volume,
                         'total_weight': package_id.total_weight,
-                        'sale_id': package_id.sale_purchase_id.id,
+                        'sale_id': picking_id.sale_purchase_id.id,
                         'lot_id': lot_id.id,
                     }))
                     move_vals.append((0, 0, {

@@ -26,7 +26,7 @@ class ReturnPicking(models.TransientModel):
                 'volume': package_id.volume,
                 'total_volume': package_id.total_volume,
                 'total_weight': package_id.total_weight,
-                'sale_id': package_id.sale_purchase_id.id,
+                'sale_id': self.picking_id.sale_purchase_id.id,
                 'lot_id': lot_id.id,
             }))
         if package_vals:
