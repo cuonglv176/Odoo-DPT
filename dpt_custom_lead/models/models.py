@@ -251,12 +251,15 @@ class CRMLEADLOGNOTE(models.Model):
     @api.model
     def create(self, vals):
         note = super(CRMLEADLOGNOTE, self).create(vals)
+
+        # Xác định nội dung liên hệ
         content = ''
         if note.content == 'pre_sale':
             content = 'Tư vấn trước bán'
         elif note.content == 'after_sale':
             content = 'Chăm sóc sau bán'
 
+        # Xác định hình thức liên hệ
         contact_form = ''
         if note.contact_form == 'video':
             contact_form = 'Video Call'
@@ -269,6 +272,7 @@ class CRMLEADLOGNOTE(models.Model):
         elif note.contact_form == 'other':
             contact_form = 'Khác'
 
+        # Xác định kết quả liên hệ
         result = ''
         if note.result == 'interacted':
             result = 'Đã tương tác'
@@ -281,15 +285,18 @@ class CRMLEADLOGNOTE(models.Model):
         elif note.result == 'other':
             result = 'Khác'
 
-        chatter_message = (f"Nội dung liên hệ:  {content} "
-                           f"\n Hình thức liên hệ:{contact_form} "
-                           f"\n Kết quả: {result} "
-                           f"\n Ghi chú: {note.note} "
-                           f"\n Trạng thái Note: {note.stage_id.name} "
-                           )
+        # Tạo nội dung thông báo (chatter_message) với định dạng HTML
+        chatter_message = (f"<b>Nội dung liên hệ:</b> {content} <br/>"
+                           f"<b>Hình thức liên hệ:</b> {contact_form} <br/>"
+                           f"<b>Kết quả:</b> {result} <br/>"
+                           f"<b>Ghi chú:</b> {note.note} <br/>"
+                           f"<b>Trạng thái Note:</b> {note.stage_id.name} <br/>")
+
+        # Đăng thông báo với định dạng HTML
         note.lead_id.message_post(
             body=chatter_message,
-            message_type='notification'
+            message_type='comment',  # Sử dụng 'comment' để render HTML
+            subtype_xmlid='mail.mt_note'  # Đặt subtype cho ghi chú nếu cần
         )
 
         return note
