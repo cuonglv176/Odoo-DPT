@@ -280,9 +280,14 @@ class StockPicking(models.Model):
                 }) for move_line_id in self.move_ids_without_package],
                 'default_package_ids': [(0, 0, {
                     'quantity': package_id.quantity - package_id.created_picking_qty,
+                    'length': package_id.length,
+                    'width': package_id.width,
+                    'height': package_id.height,
                     'size': package_id.size,
                     'weight': package_id.weight,
+                    'total_weight': package_id.total_weight,
                     'volume': package_id.volume,
+                    'total_volume': package_id.total_volume,
                     'uom_id': package_id.uom_id.id,
                     'detail_ids': [(0, 0, {
                         'product_id': detail_id.product_id.id,
