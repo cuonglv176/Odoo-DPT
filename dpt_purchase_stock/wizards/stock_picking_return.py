@@ -10,7 +10,8 @@ class ReturnPicking(models.TransientModel):
         res = super()._prepare_picking_default_values()
         package_vals = []
         for package_id in self.picking_id.package_ids:
-            lot_id = package_id.lot_id
+            lot_id = self.env['stock.lot'].sudo().search(
+                [('product_id', '=', package_id.uom_id.product_id.id), ('name', '=', self.picking_id.picking_lot_name)])
             if not lot_id:
                 continue
             return_line_id = self.product_return_moves.filtered(lambda rl: rl.product_id.id == package_id.uom_id.product_id.id)
