@@ -295,6 +295,6 @@ class CRMLEADLOGNOTE(models.Model):
             note.stage_id.name,
         )
 
-        note.lead_id.message_post(body=chatter_message)
+        note.lead_id.message_post(body=chatter_message, subtype='html')
 
         return note
