@@ -282,12 +282,11 @@ class CRMLEADLOGNOTE(models.Model):
             result = 'Khác'
 
         chatter_message = _('''<b> Nội dung liên hệ: </b> %s <br/>
-                               <b> Hình thức liên hệ: </b> %s <br/>
-                               <b> Kết quả: </b> %s <br/>
-                               <b> Ghi chú: </b> %s <br/>
-                               <b> Trạng thái Note: </b> %s <br/>
-                                       
-                                     ''') % (
+                                <b> Hình thức liên hệ: </b> %s <br/>
+                                <b> Kết quả: </b> %s <br/>
+                                <b> Ghi chú: </b> %s <br/>
+                                <b> Trạng thái Note: </b> %s <br/>
+                             ''') % (
             content,
             contact_form,
             result,
@@ -295,6 +294,9 @@ class CRMLEADLOGNOTE(models.Model):
             note.stage_id.name,
         )
 
-        note.lead_id.message_post(body=chatter_message, subtype='html')
+        note.lead_id.message_post(
+            body=chatter_message,
+            message_type='notification'
+        )
 
         return note
