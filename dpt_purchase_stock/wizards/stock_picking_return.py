@@ -31,5 +31,5 @@ class ReturnPicking(models.TransientModel):
                 'lot_id': lot_id.id,
             }))
         if package_vals:
-            res['package_id'] = package_vals
+            res['package_ids'] = package_vals
         return res
