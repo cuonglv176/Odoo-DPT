@@ -221,6 +221,7 @@ class RESPARTNER(models.Model):
 
 class CRMLEADLOGNOTE(models.Model):
     _name = 'crm.lead.log.note'
+    _order = 'create_date desc'
 
     lead_id = fields.Many2one('crm.lead', string='Lead')
     stage_id = fields.Many2one('crm.stage', string="State")
@@ -286,11 +287,11 @@ class CRMLEADLOGNOTE(models.Model):
             result = 'Khác'
 
         # Tạo nội dung thông báo (chatter_message) với định dạng HTML
-        chatter_message = (f"<b>Nội dung liên hệ:</b> {content} <br/>"
-                           f"<b>Hình thức liên hệ:</b> {contact_form} <br/>"
-                           f"<b>Kết quả:</b> {result} <br/>"
-                           f"<b>Ghi chú:</b> {note.note} <br/>"
-                           f"<b>Trạng thái Note:</b> {note.stage_id.name} <br/>")
+        chatter_message = (f"Nội dung liên hệ: {content} ---->\n"
+                           f"Hình thức liên hệ:</b> {contact_form} ---->\n"
+                           f"Kết quả:</b> {result} ---->\n"
+                           f"Ghi chú:</b> {note.note} ---->\n"
+                           f"Trạng thái Note:</b> {note.stage_id.name} ---->\n")
 
         # Đăng thông báo với định dạng HTML
         note.lead_id.message_post(
