@@ -58,11 +58,12 @@ class DPTSaleServiceManagement(models.Model):
     #         raise UserError(_("Cannot lower price, only increase price."))
     #     return res
 
+    @api.depends('qty','price','compute_value')
     def _compute_amount_total(self):
         for item in self:
             item.amount_total = item.qty * item.price * item.compute_value if item.pricelist_item_id.is_price and item.pricelist_item_id.compute_price == 'table' else item.qty * item.price
 
-    @api.onchange('price', 'qty')
+    @api.onchange('price', 'qty','compute_value')
     def onchange_amount_total(self):
         if self.price and self.qty:
             self.amount_total = self.price * self.qty * self.compute_value if self.pricelist_item_id.is_price and self.pricelist_item_id.compute_price == 'table' else self.qty * self.price
