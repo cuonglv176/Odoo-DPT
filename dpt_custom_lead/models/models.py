@@ -224,7 +224,7 @@ class CRMLEADLOGNOTE(models.Model):
 
     lead_id = fields.Many2one('crm.lead', string='Lead')
     stage_id = fields.Many2one('crm.stage', string="State")
-    note = fields.Char('Ghi chú')
+    note = fields.Html('Ghi chú')
     content = fields.Selection([('pre_sale', 'Pre Sale'), ('after_sale', 'After Sale')],
                                string="Content",
                                default='pre_sale')
