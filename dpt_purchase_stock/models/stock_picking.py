@@ -32,14 +32,14 @@ class StockPicking(models.Model):
     @api.onchange('outgoing_sale_ids')
     def onchange_get_detail(self):
         if not self.location_id.warehouse_id.is_main_incoming_warehouse and self.location_id.usage == 'internal' and self.picking_type_code == 'outgoing' and self.outgoing_sale_ids:
-            main_incoming_picking_ids = self.env['stock.picking'].sudo().search(
-                [('is_main_incoming', '=', True), ('sale_purchase_id', 'in', self.outgoing_sale_ids.ids),
+            incoming_picking_ids = self.env['stock.picking'].sudo().search(
+                [('sale_purchase_id', 'in', self.outgoing_sale_ids.ids), ('location_dest_id', '=', self.location_id.id),
                  ('state', '=', 'done')])
             self.package_ids = None
             self.move_ids_without_package = None
             package_vals = []
             move_vals = []
-            for picking_id in main_incoming_picking_ids:
+            for picking_id in incoming_picking_ids:
                 for package_id in picking_id.package_ids:
                     lot_id = self.env['stock.lot'].sudo().search(
                         [('location_id', '=', self.location_id.id), ('name', '=', picking_id.picking_lot_name),
