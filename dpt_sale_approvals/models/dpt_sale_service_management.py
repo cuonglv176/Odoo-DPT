@@ -19,7 +19,7 @@ class DPTSaleServiceManagement(models.Model):
         ('refuse_approval', 'Refuse Approval'), # Từ chối duyệt giá
         ('ticket_status', 'Ticket Status'), # Thực hiện dịch vụ
 
-    ], string='Status', default='no_price', compute="_compute_price_status", store=True)
+    ], string='Status', default='no_price', store=True)
     new_price = fields.Monetary(currency_field='currency_id', string='New Price')
     new_amount_total = fields.Monetary(currency_field='currency_id', string="New Amount Total",
                                        compute="_compute_new_amount_total")
@@ -68,38 +68,38 @@ class DPTSaleServiceManagement(models.Model):
     def action_refuse_approval_price(self):
         self.price_status = 'refuse_quoted'
 
-    @api.depends('approval_id', 'approval_id.request_status', 'price','service_id','service_id.pricelist_item_ids')
-    def _compute_price_status(self):
-        for rec in self:
-            if not rec.service_id.pricelist_item_ids:
-                rec.price_status = 'not_calculate'
-            approved = rec.approval_id.filtered(lambda approval: approval.request_status in ('approved', 'refused'))
-            if rec.price_status not in ('not_calculate', 'calculated') or approved:
-                continue
-            # rec.price_status = 'not_calculate'
-            not_approved = rec.approval_id.filtered(lambda approval: approval.request_status in ('pending', 'new'))
-            if rec.sale_id.state == 'draft':
-                if not_approved:
-                    rec.price_status = 'wait_approve'
-                    continue
-                if not rec.service_id.pricelist_item_ids:
-                    rec.price_status = 'no_price'
-                else:
-                    rec.price_status = 'calculated'
-            elif rec.sale_id.state == 'wait_price':
-                if not_approved:
-                    rec.price_status = 'wait_approve'
-                    continue
-                elif rec.price:
-                    rec.price_status = 'calculated'
-                else:
-                    rec.price_status = 'not_calculate'
-            elif rec.sale_id.state == 'sent':
-                rec.price_status = 'quoted'
-            elif rec.sale_id.state == 'sale':
-                rec.price_status = 'ticket_status'
-            else:
-                rec.price_status = 'no_price'
+    # @api.depends('approval_id', 'approval_id.request_status', 'price','service_id','service_id.pricelist_item_ids')
+    # def _compute_price_status(self):
+    #     for rec in self:
+    #         if not rec.service_id.pricelist_item_ids:
+    #             rec.price_status = 'not_calculate'
+    #         approved = rec.approval_id.filtered(lambda approval: approval.request_status in ('approved', 'refused'))
+    #         if rec.price_status not in ('not_calculate', 'calculated') or approved:
+    #             continue
+    #         # rec.price_status = 'not_calculate'
+    #         not_approved = rec.approval_id.filtered(lambda approval: approval.request_status in ('pending', 'new'))
+    #         if rec.sale_id.state == 'draft':
+    #             if not_approved:
+    #                 rec.price_status = 'wait_approve'
+    #                 continue
+    #             if not rec.service_id.pricelist_item_ids:
+    #                 rec.price_status = 'no_price'
+    #             else:
+    #                 rec.price_status = 'calculated'
+    #         elif rec.sale_id.state == 'wait_price':
+    #             if not_approved:
+    #                 rec.price_status = 'wait_approve'
+    #                 continue
+    #             elif rec.price:
+    #                 rec.price_status = 'calculated'
+    #             else:
+    #                 rec.price_status = 'not_calculate'
+    #         elif rec.sale_id.state == 'sent':
+    #             rec.price_status = 'quoted'
+    #         elif rec.sale_id.state == 'sale':
+    #             rec.price_status = 'ticket_status'
+    #         else:
+    #             rec.price_status = 'no_price'
 
     @api.depends('new_price', 'qty')
     def _compute_new_amount_total(self):

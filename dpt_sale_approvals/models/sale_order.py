@@ -24,7 +24,7 @@ class SaleOrder(models.Model):
     @api.model
     def create(self, vals):
         res = super(SaleOrder, self).create(vals)
-        res.sale_service_ids._compute_price_status()
+        # res.sale_service_ids._compute_price_status()
         return res
 
     def action_confirm(self):
