@@ -79,13 +79,13 @@ class DptZaloTemplate(models.Model):
             token_data = response.json()
             access_token = token_data.get('access_token')
             refresh_token = token_data.get('refresh_token')
-            expires_in = 3000
+            expires_in = 20
             # try:
             #     expires_in = int(expires_in) - 2000
             # except ValueError:
             #     _logger.error(f"Invalid expires_in value: {expires_in}")
             #     return None
-            zalo_expired_date = datetime.now() + timedelta(seconds=expires_in)
+            zalo_expired_date = datetime.now() + timedelta(hours=expires_in)
             # Lưu access_token để sử dụng sau này
             self.env['ir.config_parameter'].sudo().set_param('zalo_access_token', access_token)
             self.env['ir.config_parameter'].sudo().set_param('zalo_refresh_token', refresh_token)
