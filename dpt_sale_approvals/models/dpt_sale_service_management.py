@@ -8,7 +8,7 @@ class DPTSaleServiceManagement(models.Model):
     price_status = fields.Selection([
         ('no_price', 'No Price'),  # Chưa có giá
         ('wait_approve', 'Wait Approve'),  # Chờ duyệt giá
-        ('approved', 'Approved'),           # Đã duyệt
+        ('approved', 'Approved'),  # Đã duyệt
         ('not_calculate', 'Not Calculate'),
         ('calculated', 'Calculated'),  # Đã tính giá
         ('wait_quotation', 'Chờ báo giá'),
@@ -16,8 +16,8 @@ class DPTSaleServiceManagement(models.Model):
         ('refuse_quoted', 'Refuse Quoted'),  # Từ chối báo giá
         ('sent_approval', 'Sent Approval'),
         ('approved_approval', 'Approved Approval'),
-        ('refuse_approval', 'Refuse Approval'), # Từ chối duyệt giá
-        ('ticket_status', 'Ticket Status'), # Thực hiện dịch vụ
+        ('refuse_approval', 'Refuse Approval'),  # Từ chối duyệt giá
+        ('ticket_status', 'Ticket Status'),  # Thực hiện dịch vụ
 
     ], string='Status', default='no_price', store=True)
     new_price = fields.Monetary(currency_field='currency_id', string='New Price')
@@ -32,7 +32,8 @@ class DPTSaleServiceManagement(models.Model):
         if self.env.context.get('check_price', False) and not self.env.context.get('from_pricelist', False):
             if 'price' in vals:
                 new_price = self.price
-                if old_price > new_price and not (self._fields.get('purchase_id', False) and not self.purchase_id.last_rate_currency):
+                if old_price > new_price and not (
+                        self._fields.get('purchase_id', False) and not self.purchase_id.last_rate_currency):
                     raise ValidationError(_(f"Giá mới {new_price} không được nhỏ hơn giá cũ {old_price}!!"))
         return rec
 
@@ -61,7 +62,8 @@ class DPTSaleServiceManagement(models.Model):
 
     def action_accept_approval_price(self):
         self.price_status = 'quoted'
-        sale_service_quoted = self.sale_id.sale_service_ids.filtered(lambda m: m.price_status == 'quoted')
+        sale_service_quoted = self.sale_id.sale_service_ids.filtered(
+            lambda m: m.price_status in ('quoted', 'approved', 'calculated'))
         if len(sale_service_quoted) == len(self.sale_id.sale_service_ids):
             self.sale_id.state = 'sent'
 
