@@ -19,7 +19,7 @@ class ApprovalRequest(models.Model):
         res = super(ApprovalRequest, self).action_approve(approver)
         approver = self.approver_ids.filtered(lambda sp: sp.status == 'approved')
         # if not approver or len(approver) == 1:
-        if self.sequence_code =='BAOGIA':
+        if self.sequence_code == 'BAOGIA':
             if self.request_status == 'approved':
                 self.sale_id.price_status = 'approved'
                 self = self.with_context({'final_approved': True})
@@ -28,6 +28,9 @@ class ApprovalRequest(models.Model):
                     sale_service_id.price_status = 'approved'
                 for order_line_id in self.order_line_ids:
                     order_line_id.price_unit = order_line_id.new_price_unit
+                for sale_service_id in self.sale_id.sale_service_ids:
+                    if sale_service_id.price_status in ('quoted', 'calculated'):
+                        sale_service_id.price_status = 'approved'
                 a = 1
                 for sale_service_id in self.sale_id.sale_service_ids:
                     if sale_service_id.price_status != 'approved':
