@@ -28,6 +28,12 @@ class ApprovalRequest(models.Model):
                     sale_service_id.price_status = 'approved'
                 for order_line_id in self.order_line_ids:
                     order_line_id.price_unit = order_line_id.new_price_unit
+                a = 1
+                for sale_service_id in self.sale_id.sale_service_ids:
+                    if sale_service_id.price_status != 'approved':
+                        a = 0
+                if a == 1:
+                    self.sale_id.state = 'sent'
         return res
 
     def action_refuse(self, approver=None):
