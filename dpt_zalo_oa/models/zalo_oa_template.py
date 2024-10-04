@@ -21,7 +21,7 @@ class DptZaloTemplate(models.Model):
         if records:
             for record_id in records:
                 self.send_zalo_notification(record_id, template_id, recipient, params)
-            self.refresh_zalo_access_token()
+            # self.refresh_zalo_access_token()
 
     def send_zalo_notification(self, record_id, template_id, recipient, params):
         # Lấy cấu hình và template từ record action
