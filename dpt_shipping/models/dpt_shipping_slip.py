@@ -33,7 +33,7 @@ class DPTShippingSlip(models.Model):
 
     total_volume = fields.Float('Total Volume (m3)', compute="_compute_information")
     total_weight = fields.Float('Total Weight (kg)', compute="_compute_information")
-    total_num_packing = fields.Float('Total Num Packing', compute="_compute_information")
+    total_num_packing = fields.Char('Total Num Packing', compute="_compute_information")
     num_not_confirm_picking = fields.Integer("Number of Not Confirm Picking", compute="_compute_information")
     estimate_arrival_warehouse_vn = fields.Date('Estimate Arrival Warehouse VN')
 
@@ -48,18 +48,23 @@ class DPTShippingSlip(models.Model):
         for item in self:
             item.sale_ids = (item.in_picking_ids | item.out_picking_ids).mapped(
                 'sale_purchase_id') | item.export_import_ids.line_ids.mapped('sale_id')
-            if item.vehicle_country == 'chinese':
+            if item.vehicle_country == 'chinese' or not item.send_shipping_id:
                 item.total_volume = sum(item.out_picking_ids.mapped('total_volume'))
                 item.total_weight = sum(item.out_picking_ids.mapped('total_weight'))
-                item.total_num_packing = sum(item.out_picking_ids.mapped('package_ids').mapped('quantity'))
-            elif item.vehicle_country == 'vietnamese':
+                item.total_num_packing = '.'.join(
+                    [f"{package_id.quantity}{package_id.uom_id.packing_code}" for package_id in
+                     item.out_picking_ids.mapped('package_ids')])
+            elif item.vehicle_country == 'vietnamese' or item.send_shipping_id:
                 item.total_volume = sum(item.in_picking_ids.mapped('total_volume'))
                 item.total_weight = sum(item.in_picking_ids.mapped('total_weight'))
-                item.total_num_packing = sum(item.in_picking_ids.mapped('package_ids').mapped('quantity'))
+
+                item.total_num_packing = '.'.join(
+                    [f"{package_id.quantity}{package_id.uom_id.packing_code}" for package_id in
+                     item.in_picking_ids.mapped('package_ids')])
             else:
                 item.total_volume = 0
                 item.total_weight = 0
-                item.total_num_packing = 0
+                item.total_num_packing = None
             item.num_not_confirm_picking = len(
                 item.out_picking_ids.filtered(lambda p: p.state != 'done')) if not item.send_shipping_id else len(
                 item.in_picking_ids.filtered(lambda p: p.state != 'done'))
