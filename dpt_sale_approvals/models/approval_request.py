@@ -37,6 +37,8 @@ class ApprovalRequest(models.Model):
                         a = 0
                 if a == 1:
                     self.sale_id.state = 'sent'
+                for order_line_id in self.order_line_ids:
+                    order_line_id.price_unit = order_line_id.new_price_unit
         return res
 
     def action_refuse(self, approver=None):
