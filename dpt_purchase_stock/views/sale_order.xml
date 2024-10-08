@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="purchase_order_form_confirm_with_package_inherit_form" model="ir.ui.view">
+        <field name="name">purchase_order_form_confirm_with_package_inherit_form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_show_main_incoming_picking" type="object" class="oe_stat_button"
+                        icon="fa-list-ul"
+                        invisible="number_main_incoming_picking == 0">
+                    <field name="number_main_incoming_picking" widget="statinfo" string="Main Incoming Pickings"/>
+                </button>
+                <button name="action_show_transfer" type="object" class="oe_stat_button" icon="fa-list-ul"
+                        invisible="number_transfer == 0">
+                    <field name="number_transfer" widget="statinfo" string="Shipping Slips"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

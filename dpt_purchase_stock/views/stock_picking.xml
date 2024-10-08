@@ -28,6 +28,9 @@
                 <field name="sale_purchase_id"/>
                 <field name="customer_id"/>
             </field>
+            <field name="state" position="after">
+                <field name="note"/>
+            </field>
         </field>
     </record>
 
