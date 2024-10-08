@@ -15,6 +15,7 @@ class StockPicking(models.Model):
                                         'shipping_slip_id', string='Out Shipping')
     in_shipping_ids = fields.Many2many('dpt.shipping.slip', 'stock_picking_in_shipping_rel', 'picking_id',
                                        'shipping_slip_id', string='In Shipping')
+    estimate_arrival_warehouse_vn = fields.Date('Estimate Arrival Warehouse VN')
 
     def _compute_in_draft_shipping(self):
         for item in self:

@@ -55,7 +55,7 @@
                             <field name="description"/>
                             <field name="qty" column_invisible="1" force_save="1"/>
                             <field name="uom_id"/>
-                            <field name="price" readonly="1" force_save="1"/>
+                            <field name="price" readonly="0" force_save="1"/>
                             <field name="amount_total" readonly="1" force_save="1"/>
                             <field name="department_id"/>
                         </tree>
