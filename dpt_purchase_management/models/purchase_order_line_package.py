@@ -1,4 +1,8 @@
 from odoo import fields, models, api, _
+import math
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class PurchaseOrderLinePackage(models.Model):
@@ -23,21 +27,20 @@ class PurchaseOrderLinePackage(models.Model):
     weight = fields.Float('Weight (kg)', tracking=True)
     volume = fields.Float('Volume (m3)', tracking=True, digits=(12, 5))
 
-    total_weight = fields.Float('Total Weight (kg)', tracking=True, digits=(12, 0))
-    total_volume = fields.Float('Total Volume (m3)', tracking=True, digits=(12, 2))
+    total_weight = fields.Float('Total Weight (kg)', tracking=True, digits=(12, 2))
+    total_volume = fields.Float('Total Volume (m3)', tracking=True, digits=(12, 3))
     note = fields.Text('Note', tracking=True)
     image = fields.Binary(string='Image')
     detail_ids = fields.One2many('purchase.order.line.package.detail', 'package_id', 'Package detail', tracking=True)
 
-    # @api.model
-    # def create(self, vals):
-    #     if vals.get('code', 'NEW') == 'NEW':
-    #         vals['code'] = self._generate_service_code()
-    #     return super(PurchaseOrderLinePackage, self).create(vals)
-
-    # def _generate_service_code(self):
-    #     sequence = self.env['ir.sequence'].next_by_code('purchase.order.line.package') or '00'
-    #     return f'{sequence}'
+    @api.onchange('total_weight', 'total_volume')
+    def _onchange_total_fields(self):
+        if self.total_weight:
+            # Làm tròn lên cho trọng lượng
+            self.total_weight = math.ceil(self.total_weight)
+        if self.total_volume:
+            # Làm tròn lên cho thể tích tới 2 chữ số thập phân
+            self.total_volume = math.ceil(self.total_volume * 100) / 100
 
     @api.constrains('quantity', 'uom_id')
     def constrains_package_name(self):

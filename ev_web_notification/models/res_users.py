@@ -37,12 +37,18 @@ class Users(models.Model):
                 day = create_date.day if create_date.day >= 10 else f'0{create_date.day}'
                 month = create_date.month if create_date.month >= 10 else f'0{create_date.month}'
                 str_create_date = f'{day}-{month}-{create_date.year} {time}'
+                activity_model = activity['model']
+                activity_res_id =  activity['res_id']
+                if activity_model == 'mail.message':
+                    message_id = self.env['mail.message'].browse(activity_res_id)
+                    activity_model = message_id.model
+                    activity_res_id = message_id.res_id
                 user_activities[(activity['message_id'], activity['model'])] = {
                     'id': activity['message_id'],
                     'name': model_names[activity['model_id']],
                     'url_portal': activity['url_portal'],
-                    'model': activity['model'],
-                    'res_id': activity['res_id'],
+                    'model': activity_model,
+                    'res_id': activity_res_id,
                     'res_name': activity['subject'],
                     'status': activity['status'],
                     'create_date': str_create_date,

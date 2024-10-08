@@ -15,6 +15,18 @@
         </field>
     </record>
 
+
+    <record id="view_picking_form_shipping_slip_stock_inherit" model="ir.ui.view">
+        <field name="name">view_picking_form_shipping_slip_stock_inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='scheduled_date']" position="after">
+                <field name="estimate_arrival_warehouse_vn" invisible="x_transfer_type != 'incoming_transfer'" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
     <record id="action_valid_cutlist_stock_picking" model="ir.actions.act_window">
         <field name="name">Valid Cutlist</field>
         <field name="res_model">stock.picking</field>

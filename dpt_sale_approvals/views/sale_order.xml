@@ -31,8 +31,8 @@
                        decoration-warning="price_status == 'wait_approve'"
                        decoration-danger="price_status in ('refuse_approval', 'refuse_quoted')"
                        widget="badge"/>
-                <button name="action_accept_approval_price"  type="object" icon="fa-check" invisible="price_status != 'wait_approve'"/>
-                <button name="action_refuse_approval_price"  type="object" icon="fa-minus-circle" invisible="price_status != 'wait_approve'"/>
+                <button name="action_accept_approval_price"  type="object" icon="fa-check" invisible="price_status != 'wait_quotation'"/>
+                <button name="action_refuse_approval_price"  type="object" icon="fa-minus-circle" invisible="price_status != 'wait_quotation'"/>
             </xpath>
 
             <xpath expr="//field[@name='sale_service_ids']/tree/field[@name='price']" position="attributes">

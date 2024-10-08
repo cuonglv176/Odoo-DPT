@@ -18,11 +18,17 @@ class DPTShippingSplitWizard(models.TransientModel):
                                    string='Picking')
     shipping_id = fields.Many2one('dpt.shipping.slip', string='Shipping Slip')
     location_dest_id = fields.Many2one('stock.location', 'Destination Location')
+    estimate_arrival_warehouse_vn = fields.Date('Estimate Arrival Warehouse VN')
 
     def create_shipping_receive(self):
         for picking_id in self.picking_ids:
             picking_id.create_in_transfer_picking(self.location_dest_id)
         in_picking_ids = self.picking_ids.mapped('x_in_transfer_picking_id')
+        if self.estimate_arrival_warehouse_vn:
+            in_picking_ids.write({
+                'estimate_arrival_warehouse_vn': self.estimate_arrival_warehouse_vn
+            })
+        in_picking_ids._compute_total_volume_weight()
         export_import_ids = self.env['dpt.export.import.line'].sudo().search(
             [('sale_id', 'in', in_picking_ids.mapped('sale_purchase_id').ids)]).mapped('export_import_id') | self.env[
                                 'dpt.export.import'].sudo().search(
@@ -32,6 +38,7 @@ class DPTShippingSplitWizard(models.TransientModel):
             'sale_ids': in_picking_ids.mapped('sale_purchase_id').ids,
             'in_picking_ids': in_picking_ids.ids,
             'export_import_ids': export_import_ids.ids,
+            'estimate_arrival_warehouse_vn': self.estimate_arrival_warehouse_vn
         })
         return {
             'name': "Shipping Slip Receive",

@@ -11,8 +11,8 @@ class DPTShippingSlip(models.Model):
     name = fields.Char('Name')
     transfer_code = fields.Char('Transfer Code')
     transfer_code_chinese = fields.Char('Transfer Code in Chinese')
-    main_in_picking_ids = fields.Many2many('stock.picking', 'stock_picking_main_incoming_shipping_rel', 'shipping_slip_id',
-                                           'picking_id', string='Main In Picking')
+    main_in_picking_ids = fields.Many2many('stock.picking', 'stock_picking_main_incoming_shipping_rel',
+                                           'shipping_slip_id', 'picking_id', string='Main In Picking')
     out_picking_ids = fields.Many2many('stock.picking', 'stock_picking_out_shipping_rel', 'shipping_slip_id',
                                        'picking_id', string='Out Picking')
     export_import_ids = fields.Many2many('dpt.export.import', 'export_import_shipping_rel', 'shipping_slip_id',
@@ -35,6 +35,14 @@ class DPTShippingSlip(models.Model):
     total_weight = fields.Float('Total Weight (kg)', compute="_compute_information")
     total_num_packing = fields.Float('Total Num Packing', compute="_compute_information")
     num_not_confirm_picking = fields.Integer("Number of Not Confirm Picking", compute="_compute_information")
+    estimate_arrival_warehouse_vn = fields.Date('Estimate Arrival Warehouse VN')
+
+    @api.constrains('estimate_arrival_warehouse_vn')
+    def _constrains_get_arrival_warehouse_date(self):
+        for item in self:
+            if not item.send_shipping_id or not item.in_picking_ids:
+                continue
+            item.in_picking_ids.write({'estimate_arrival_warehouse_vn': self.estimate_arrival_warehouse_vn})
 
     def _compute_information(self):
         for item in self:
@@ -155,11 +163,13 @@ class DPTShippingSlip(models.Model):
                 transfer_picking_id = self.env['stock.picking'].with_context(action['context']).create({
                     'sale_purchase_id': main_incoming_picking_id.sale_purchase_id.id,
                 })
+                transfer_picking_id._compute_total_volume_weight()
                 # update move line
                 move_line_vals = []
                 for move_id in transfer_picking_id.move_ids_without_package.filtered(lambda m: not m.move_line_ids):
                     lot_id = self.env['stock.lot'].search(
-                        [('product_id', '=', move_id.product_id.id), ('name', '=', main_incoming_picking_id.picking_lot_name)],
+                        [('product_id', '=', move_id.product_id.id),
+                         ('name', '=', main_incoming_picking_id.picking_lot_name)],
                         limit=1)
                     move_line_vals.append({
                         'picking_id': transfer_picking_id.id,

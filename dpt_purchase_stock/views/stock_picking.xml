@@ -7,7 +7,10 @@
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
             <field name="picking_type_id" position="before">
-                <field name="sale_purchase_id"/>
+                <field name="sale_purchase_id"
+                       invisible="picking_type_code == 'outgoing' and not is_main_incoming and not is_main_outgoing"/>
+                <field name="outgoing_sale_ids" widget="many2many_tags" options="{'no_create': True}"
+                       invisible="not (picking_type_code == 'outgoing' and not is_main_incoming and not is_main_outgoing)"/>
                 <field name="customer_id" invisible="1"/>
             </field>
             <field name="origin" position="before">
@@ -25,6 +28,17 @@
                 <field name="sale_purchase_id"/>
                 <field name="customer_id" invisible="1"/>
             </field>
+        </field>
+    </record>
+
+    <record id="view_picking_form_stock_lot_in_package_inherit" model="ir.ui.view">
+        <field name="name">view_picking_form_stock_lot_in_package_inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="dpt_stock_management.view_picking_form_stock_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='package_ids']/form//field[@name='quantity']" position="before">
+                <field name="lot_id" invisible="not lot_id" readonly="1" force_save="1"/>
+            </xpath>
         </field>
     </record>
 

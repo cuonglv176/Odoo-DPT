@@ -18,13 +18,13 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self).send_quotation_department()
         for sale_service_id in self.sale_service_ids:
             if not sale_service_id.service_id.pricelist_item_ids:
-                sale_service_id.price_status = 'wait_approve'
+                sale_service_id.price_status = 'wait_quotation'
         return res
 
     @api.model
     def create(self, vals):
         res = super(SaleOrder, self).create(vals)
-        res.sale_service_ids._compute_price_status()
+        # res.sale_service_ids._compute_price_status()
         return res
 
     def action_confirm(self):
@@ -98,17 +98,28 @@ class SaleOrder(models.Model):
             'sale_id': self.id,
             'date': datetime.now(),
         })
-        for r in self.sale_service_ids:
-            list_service = []
-            for sale_service_id in self.sale_service_ids:
-                # if sale_service_id.department_id == department and not sale_service_id.service_id.zezo_price:
-                if not sale_service_id.service_id.zezo_price:
-                    if sale_service_id.new_price != 0 and sale_service_id.new_price != sale_service_id.price:
-                        sale_service_id.approval_id = approval_id
-                        list_service.append(sale_service_id)
-            for line in self.order_line:
-                # if line.new_price_unit != 0 and line.new_price_unit != line.price_unit:
-                line.approval_id = approval_id
+
+        list_service = []
+        history = []
+        for sale_service_id in self.sale_service_ids:
+            # if sale_service_id.department_id == department and not sale_service_id.service_id.zezo_price:
+            if not sale_service_id.service_id.zezo_price:
+                if sale_service_id.new_price != 0 and sale_service_id.new_price != sale_service_id.price:
+                    sale_service_id.approval_id = approval_id
+                    sale_service_id.price_status = 'wait_approve'
+                    list_service.append(sale_service_id)
+                    history.append({
+                        'service_management_id': sale_service_id.id,
+                        'service_id': sale_service_id.service_id.id,
+                        'approval_id': approval_id.id,
+                        'price': sale_service_id.price,
+                        'new_price': sale_service_id.new_price,
+                    })
+        for line in self.order_line:
+            # if line.new_price_unit != 0 and line.new_price_unit != line.price_unit:
+            line.approval_id = approval_id
+        if history:
+            self.env['dpt.approval.request.sale.line.history'].create(history)
         if list_service:
             list_approver = self.compute_approver_approval_price_list(list_service)
             if list_approver:

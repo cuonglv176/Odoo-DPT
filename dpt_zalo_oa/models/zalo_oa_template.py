@@ -37,6 +37,9 @@ class DptZaloTemplate(models.Model):
 
         # recipient_id = record_id.recipient.phone
         recipient_id = f'84967121669'
+        if recipient:
+            if recipient.startswith('0'):
+                recipient = '84' + recipient[1:]
 
         url = "https://business.openapi.zalo.me/message/template"
         payload = json.dumps({

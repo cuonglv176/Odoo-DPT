@@ -9,6 +9,7 @@
                 <sheet>
                     <group>
                         <group>
+                            <field name="estimate_arrival_warehouse_vn"/>
                             <field name="shipping_id" invisible="1"/>
                         </group>
                     </group>

@@ -8,18 +8,18 @@ class DPTSaleServiceManagement(models.Model):
     price_status = fields.Selection([
         ('no_price', 'No Price'),  # Chưa có giá
         ('wait_approve', 'Wait Approve'),  # Chờ duyệt giá
-        ('approved', 'Approved'),           # Đã duyệt
+        ('approved', 'Approved'),  # Đã duyệt
         ('not_calculate', 'Not Calculate'),
         ('calculated', 'Calculated'),  # Đã tính giá
-        ('sent_quotation', 'Sent Quotation'),
+        ('wait_quotation', 'Chờ báo giá'),
         ('quoted', 'Quoted'),  # Đã báo giá
         ('refuse_quoted', 'Refuse Quoted'),  # Từ chối báo giá
         ('sent_approval', 'Sent Approval'),
         ('approved_approval', 'Approved Approval'),
-        ('refuse_approval', 'Refuse Approval'), # Từ chối duyệt giá
-        ('ticket_status', 'Ticket Status'), # Thực hiện dịch vụ
+        ('refuse_approval', 'Refuse Approval'),  # Từ chối duyệt giá
+        ('ticket_status', 'Ticket Status'),  # Thực hiện dịch vụ
 
-    ], string='Status', default='no_price', compute="_compute_price_status", store=True)
+    ], string='Status', default='no_price', store=True)
     new_price = fields.Monetary(currency_field='currency_id', string='New Price')
     new_amount_total = fields.Monetary(currency_field='currency_id', string="New Amount Total",
                                        compute="_compute_new_amount_total")
@@ -32,7 +32,8 @@ class DPTSaleServiceManagement(models.Model):
         if self.env.context.get('check_price', False) and not self.env.context.get('from_pricelist', False):
             if 'price' in vals:
                 new_price = self.price
-                if old_price > new_price and not (self._fields.get('purchase_id', False) and not self.purchase_id.last_rate_currency):
+                if old_price > new_price and not (
+                        self._fields.get('purchase_id', False) and not self.purchase_id.last_rate_currency):
                     raise ValidationError(_(f"Giá mới {new_price} không được nhỏ hơn giá cũ {old_price}!!"))
         return rec
 
@@ -61,42 +62,46 @@ class DPTSaleServiceManagement(models.Model):
 
     def action_accept_approval_price(self):
         self.price_status = 'quoted'
+        sale_service_quoted = self.sale_id.sale_service_ids.filtered(
+            lambda m: m.price_status in ('quoted', 'approved', 'calculated'))
+        if len(sale_service_quoted) == len(self.sale_id.sale_service_ids):
+            self.sale_id.state = 'sent'
 
     def action_refuse_approval_price(self):
         self.price_status = 'refuse_quoted'
 
-    @api.depends('approval_id', 'approval_id.request_status', 'price')
-    def _compute_price_status(self):
-        for rec in self:
-            if not rec.price_status:
-                rec.price_status = 'not_calculate'
-            approved = rec.approval_id.filtered(lambda approval: approval.request_status in ('approved', 'refused'))
-            if rec.price_status not in ('not_calculate', 'calculated') or approved:
-                continue
-            rec.price_status = 'not_calculate'
-            not_approved = rec.approval_id.filtered(lambda approval: approval.request_status in ('pending', 'new'))
-            if rec.sale_id.state == 'draft':
-                if not_approved:
-                    rec.price_status = 'wait_approve'
-                    continue
-                if not rec.service_id.pricelist_item_ids:
-                    rec.price_status = 'no_price'
-                else:
-                    rec.price_status = 'calculated'
-            elif rec.sale_id.state == 'wait_price':
-                if not_approved:
-                    rec.price_status = 'wait_approve'
-                    continue
-                elif rec.price:
-                    rec.price_status = 'calculated'
-                else:
-                    rec.price_status = 'not_calculate'
-            elif rec.sale_id.state == 'sent':
-                rec.price_status = 'quoted'
-            elif rec.sale_id.state == 'sale':
-                rec.price_status = 'ticket_status'
-            else:
-                rec.price_status = 'no_price'
+    # @api.depends('approval_id', 'approval_id.request_status', 'price','service_id','service_id.pricelist_item_ids')
+    # def _compute_price_status(self):
+    #     for rec in self:
+    #         if not rec.service_id.pricelist_item_ids:
+    #             rec.price_status = 'not_calculate'
+    #         approved = rec.approval_id.filtered(lambda approval: approval.request_status in ('approved', 'refused'))
+    #         if rec.price_status not in ('not_calculate', 'calculated') or approved:
+    #             continue
+    #         # rec.price_status = 'not_calculate'
+    #         not_approved = rec.approval_id.filtered(lambda approval: approval.request_status in ('pending', 'new'))
+    #         if rec.sale_id.state == 'draft':
+    #             if not_approved:
+    #                 rec.price_status = 'wait_approve'
+    #                 continue
+    #             if not rec.service_id.pricelist_item_ids:
+    #                 rec.price_status = 'no_price'
+    #             else:
+    #                 rec.price_status = 'calculated'
+    #         elif rec.sale_id.state == 'wait_price':
+    #             if not_approved:
+    #                 rec.price_status = 'wait_approve'
+    #                 continue
+    #             elif rec.price:
+    #                 rec.price_status = 'calculated'
+    #             else:
+    #                 rec.price_status = 'not_calculate'
+    #         elif rec.sale_id.state == 'sent':
+    #             rec.price_status = 'quoted'
+    #         elif rec.sale_id.state == 'sale':
+    #             rec.price_status = 'ticket_status'
+    #         else:
+    #             rec.price_status = 'no_price'
 
     @api.depends('new_price', 'qty')
     def _compute_new_amount_total(self):
