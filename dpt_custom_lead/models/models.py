@@ -176,7 +176,7 @@ class CRMLEAD(models.Model):
             stage_new = lead_id.stage_id
             user_new_id = lead_id.user_id
             if 'stage_id' in vals:
-                if stage_old.sequence + 1 != stage_new.sequence and stage_id_old != stage_id_new:
+                if stage_old.sequence + 1 != stage_new.sequence and stage_id_old != stage_id_new and stage_old.sequence < stage_new.sequence:
                     raise UserError("Bạn vui lòng cập nhật đúng trình tự trạng thái")
             if stage_id_old != stage_id_new and stage_old.sequence < stage_new.sequence:
                 note = lead_id.check_lead_log_note_action(lead_id, stage_old)
