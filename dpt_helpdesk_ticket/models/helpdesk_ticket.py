@@ -223,7 +223,43 @@ class HelpdeskTicket(models.Model):
         return f'{sequence}'
 
     def action_create_po(self):
-        pass
+        default_order_line = []
+        for order_line in self.sale_id.order_line:
+            product_id = self.env['product.product'].search(
+                [('product_tmpl_id', '=', order_line.product_template_id.id)], limit=1)
+            default_order_line.append((0, 0, {
+                'product_id': product_id.id if product_id else None,
+                'name': order_line.name,
+                'product_qty': order_line.product_uom_qty,
+                'product_uom': order_line.product_uom.id,
+                'price_unit': order_line.price_unit,
+                'date_planned': fields.Datetime.now(),
+            }))
+        default_package_unit_id = self.env['uom.uom'].sudo().search([('is_default_package_unit', '=', True)], limit=1)
+        default_package_line_ids = [(0, 0, {
+            'uom_id': default_package_unit_id.id if default_package_unit_id else None,
+            'quantity': 1,
+        })]
+        return {
+            'name': _('Create PO'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'purchase.order',
+            'target': 'new',
+            'view_mode': 'form',
+            'views': [(self.env.ref('purchase.purchase_order_form').sudo().id, "form")],
+            'context': {
+                'default_sale_id': self.sale_id.id,
+                'default_partner_id': self.env.ref('dpt_purchase_management.partner_default_supplier').id,
+                'default_order_line': default_order_line,
+                'default_package_line_ids': default_package_line_ids,
+                'default_date_planned': fields.Datetime.now(),
+                'default_import_package_stock': True,
+                'default_purchase_type': 'buy_cny',
+                'default_currency_id': 6,
+                'no_compute_price': True,
+                'create_from_so': True
+            }
+        }
 
 
 class DPTSaleChangePriceServiceLine(models.Model):
