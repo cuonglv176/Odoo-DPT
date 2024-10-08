@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-29 10:00+0000\n"
-"PO-Revision-Date: 2024-09-29 10:00+0000\n"
+"POT-Creation-Date: 2024-10-08 11:12+0000\n"
+"PO-Revision-Date: 2024-10-08 11:12+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,14 +16,29 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: dpt_purchase_stock
-#: model_terms:ir.ui.view,arch_db:dpt_purchase_stock.purchase_order_form_confirm_with_package_inherit_form
-msgid "Confirm Order"
-msgstr "Xác nhận đơn hàng"
-
-#. module: dpt_purchase_stock
 #: model:ir.model.fields,field_description:dpt_purchase_stock.field_stock_picking__customer_id
 msgid "Customer"
 msgstr "Khách hàng"
+
+#. module: dpt_purchase_stock
+#: model:ir.model.fields,field_description:dpt_purchase_stock.field_purchase_order_line_package__lot_id
+msgid "Lot"
+msgstr ""
+
+#. module: dpt_purchase_stock
+#: model_terms:ir.ui.view,arch_db:dpt_purchase_stock.purchase_order_form_confirm_with_package_inherit_form
+msgid "Main Incoming Pickings"
+msgstr "Phiếu nhập TQ"
+
+#. module: dpt_purchase_stock
+#: model:ir.model.fields,field_description:dpt_purchase_stock.field_sale_order__number_main_incoming_picking
+msgid "Number Main Incoming Picking"
+msgstr ""
+
+#. module: dpt_purchase_stock
+#: model:ir.model.fields,field_description:dpt_purchase_stock.field_sale_order__number_transfer
+msgid "Number Transfer"
+msgstr ""
 
 #. module: dpt_purchase_stock
 #. odoo-python
@@ -54,6 +69,16 @@ msgid "Purchase Order"
 msgstr "Đơn mua hàng"
 
 #. module: dpt_purchase_stock
+#: model:ir.model,name:dpt_purchase_stock.model_purchase_order_line_package
+msgid "Purchase Package"
+msgstr "Kiện hàng"
+
+#. module: dpt_purchase_stock
+#: model:ir.model,name:dpt_purchase_stock.model_stock_return_picking
+msgid "Return Picking"
+msgstr "Phiếu lấy hàng trả lại"
+
+#. module: dpt_purchase_stock
 #: model:ir.model.fields,field_description:dpt_purchase_stock.field_stock_picking__sale_purchase_id
 msgid "Sale"
 msgstr "Đơn hàng"
@@ -72,3 +97,8 @@ msgstr "Đơn bán hàng"
 #: model:ir.model,name:dpt_purchase_stock.model_stock_picking
 msgid "Transfer"
 msgstr "Điều chuyển"
+
+#. module: dpt_purchase_stock
+#: model_terms:ir.ui.view,arch_db:dpt_purchase_stock.purchase_order_form_confirm_with_package_inherit_form
+msgid "Shipping Slips"
+msgstr "Phiếu vận chuyển"
