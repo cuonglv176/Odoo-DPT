@@ -11,7 +11,7 @@
                         style="background-color: purple, color: white"
                         invisible="not show_action_calculation"/>
                 <button string="Send Quotation Department" name="send_quotation_department" type="object"
-                        invisible="state != 'draft'"/>
+                        invisible="state not in ('draft','sent')"/>
                 <field name="show_action_calculation" invisible="1"/>
                 <button string="Export Quotation" name="export_excel_quotation" type="object"/>
             </button>
@@ -35,6 +35,7 @@
                 <field name="line_transfer"/>
                 <field name="employee_sale"/>
                 <field name="employee_cs"/>
+                <field name="times_of_quotation" readonly="1"/>
             </field>
             <xpath expr="//page[@name='order_lines']/field[@name='order_line']/tree/field[@name='product_template_id']" position="before">
                 <field name="legal_xhd"/>
