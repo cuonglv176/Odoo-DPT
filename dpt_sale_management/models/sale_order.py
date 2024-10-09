@@ -47,7 +47,7 @@ class SaleOrder(models.Model):
     times_of_quotation = fields.Integer(default=0, string='Số lần báo giá')
     is_quotation = fields.Boolean(default=False, compute='compute_show_is_quotation')
 
-    @api.depends('sale_service_ids', 'sale_service_id.service_id', 'sale_service_id.service_id.pricelist_item_ids')
+    @api.depends('sale_service_ids', 'sale_service_ids.service_id', 'sale_service_ids.service_id.pricelist_item_ids')
     def compute_show_is_quotation(self):
         for rec in self:
             is_quotation = False
