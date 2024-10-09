@@ -282,7 +282,8 @@ class DptExportImportLine(models.Model):
     ], string='State', default='draft')
     declaration_type = fields.Selection([
         ('usd', 'USD'),
-        ('cny', 'CNY')
+        ('cny', 'CNY'),
+        ('krw', 'KRW'),
     ], string='Declaration type', default='usd')
     product_history_id = fields.Many2one('dpt.export.import.line', string='Description Selection')
     is_readonly_item_description = fields.Boolean(string='Chỉ đọc item', default=False)
