@@ -44,6 +44,7 @@ class SaleOrder(models.Model):
                                       ('flying', 'Flying')], string='Line Transfer')
     employee_sale = fields.Many2one('hr.employee', string='Employee Sale')
     employee_cs = fields.Many2one('hr.employee', string='Employee CS')
+    times_of_quotation = fields.Integer(default=0, string='Số lần báo giá')
 
     @api.onchange('order_line')
     def onchange_calculation_tax(self):
@@ -216,6 +217,7 @@ class SaleOrder(models.Model):
         return res
 
     def send_quotation_department(self):
+        self.times_of_quotation = self.times_of_quotation + 1
         self.state = 'wait_price'
 
     @api.depends('sale_service_ids.amount_total')
