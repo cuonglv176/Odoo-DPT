@@ -228,7 +228,7 @@ class HelpdeskTicket(models.Model):
             product_id = self.env['product.product'].search(
                 [('product_tmpl_id', '=', order_line.product_template_id.id)], limit=1)
             default_order_line.append((0, 0, {
-                'product_id': product_id.id if product_id else None,
+                'product_id': order_line.product_id.id,
                 'name': order_line.name,
                 'product_qty': order_line.product_uom_qty,
                 'product_uom': order_line.product_uom.id,
