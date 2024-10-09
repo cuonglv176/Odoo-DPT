@@ -52,7 +52,7 @@ class SaleOrder(models.Model):
         for rec in self:
             is_quotation = False
             for sale_service_id in rec.sale_service_ids:
-                if sale_service_id.service_id.pricelist_item_ids:
+                if not sale_service_id.service_id.pricelist_item_ids:
                     is_quotation = True
             rec.is_quotation = is_quotation
 
