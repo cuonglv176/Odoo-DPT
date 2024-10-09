@@ -78,6 +78,7 @@
                                     <field name="price_subtotal" on_change="1"/>
                                     <field name="price_subtotal2"/>
                                     <field name="price_subtotal3"/>
+                                    <field name="date_planned"/>
                                 </tree>
 
                                 <form string="Dòng đơn mua hàng">
