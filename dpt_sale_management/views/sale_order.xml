@@ -11,7 +11,7 @@
                         style="background-color: purple, color: white"
                         invisible="not show_action_calculation"/>
                 <button string="Send Quotation Department" name="send_quotation_department" type="object"
-                        invisible="state not in ('draft','sent') or is_quotation"/>
+                        invisible="state not in ('draft','sent') or not is_quotation"/>
                 <field name="is_quotation" invisible="1"/>
                 <field name="show_action_calculation" invisible="1"/>
                 <button string="Export Quotation" name="export_excel_quotation" type="object"/>
