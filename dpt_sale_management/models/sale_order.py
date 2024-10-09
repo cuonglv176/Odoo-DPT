@@ -45,6 +45,15 @@ class SaleOrder(models.Model):
     employee_sale = fields.Many2one('hr.employee', string='Employee Sale')
     employee_cs = fields.Many2one('hr.employee', string='Employee CS')
     times_of_quotation = fields.Integer(default=0, string='Số lần báo giá')
+    is_quotation = fields.Boolean(default=False, compute='compute_show_is_quotation')
+
+    def compute_show_is_quotation(self):
+        for rec in self:
+            is_quotation = False
+            for sale_service_id in rec.sale_service_ids:
+                if sale_service_id.service_id.pricelist_item_ids:
+                    is_quotation = True
+            rec.is_quotation = is_quotation
 
     @api.onchange('order_line')
     def onchange_calculation_tax(self):
