@@ -110,4 +110,6 @@
     <menuitem id="dpt_shipping_slip_menu" name="Shipping slip" sequence="40" action="dpt_shipping_slip_action"
               parent="stock.menu_stock_warehouse_mgmt"/>
 
+    <menuitem id="dpt_shipping_slip_sale_order_menu" name="Shipping slip" sequence="40"
+              action="dpt_shipping_slip_action" parent="sale.sale_order_menu"/>
 </odoo>

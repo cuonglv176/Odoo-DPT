@@ -547,6 +547,7 @@ msgstr "Phiếu vận chuyển"
 #. module: dpt_shipping
 #: model:ir.actions.act_window,name:dpt_shipping.dpt_shipping_slip_action
 #: model:ir.ui.menu,name:dpt_shipping.dpt_shipping_slip_menu
+#: model:ir.ui.menu,name:dpt_shipping.dpt_shipping_slip_sale_order_menu
 #: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_slip_form_view
 #: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_slip_tree_views
 msgid "Shipping slip"
