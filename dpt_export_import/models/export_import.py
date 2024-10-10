@@ -453,15 +453,16 @@ class DptExportImportLine(models.Model):
 
             })
             rec.sale_line_id.write(val_update_sale_line)
-            if 'dpt_uom1_id' in vals or 'dpt_sl1' in vals or 'dpt_price_unit' in vals:
-                update_query = """
-                        UPDATE sale_order_line
-                        SET product_uom = %s, product_uom_qty = %s, price_unit = %s, price_subtotal = %s
-                        WHERE id = %s
-                        """
-                self.env.cr.execute(update_query,
-                                    (rec.dpt_uom1_id.id, rec.dpt_sl1, rec.dpt_price_unit,
-                                     rec.dpt_sl1 * rec.dpt_price_unit, rec.sale_line_id.id))
+            if rec.sale_line_id.id:
+                if 'dpt_uom1_id' in vals or 'dpt_sl1' in vals or 'dpt_price_unit' in vals:
+                    update_query = """
+                            UPDATE sale_order_line
+                            SET product_uom = %s, product_uom_qty = %s, price_unit = %s, price_subtotal = %s
+                            WHERE id = %s
+                            """
+                    self.env.cr.execute(update_query,
+                                        (rec.dpt_uom1_id.id, rec.dpt_sl1, rec.dpt_price_unit,
+                                         rec.dpt_sl1 * rec.dpt_price_unit, rec.sale_line_id.id))
         return res
 
     # def write(self, vals):
