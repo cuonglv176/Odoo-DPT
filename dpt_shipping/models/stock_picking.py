@@ -17,6 +17,9 @@ class StockPicking(models.Model):
                                        'shipping_slip_id', string='In Shipping')
     estimate_arrival_warehouse_vn = fields.Date('Estimate Arrival Warehouse VN')
 
+    employee_sale = fields.Many2one('hr.employee', string='Employee Sale', related='sale_purchase_id.employee_sale')
+    employee_cs = fields.Many2one('hr.employee', string='Employee CS', related='sale_purchase_id.employee_sale')
+
     def _compute_in_draft_shipping(self):
         for item in self:
             draft_shipping_slip_ids = self.env['dpt.shipping.slip'].sudo().search(
