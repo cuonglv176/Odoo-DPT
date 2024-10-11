@@ -291,6 +291,7 @@ class DptExportImportLine(models.Model):
     item_description_en = fields.Html(string='Tem XNK (EN)')
 
     picking_count = fields.Integer('Picking Count', compute="_compute_picking_count")
+    is_history = fields.Boolean(string='History', default=False)
 
     def _compute_picking_count(self):
         for item in self:

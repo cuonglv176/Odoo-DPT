@@ -137,6 +137,7 @@
         <field name="name">Export import</field>
         <field name="res_model">dpt.export.import.line</field>
         <field name="view_mode">tree,form</field>
+        <field name="domain">[('is_history','=',False)]</field>
     </record>
 
 
