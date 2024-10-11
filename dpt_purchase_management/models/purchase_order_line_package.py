@@ -27,8 +27,8 @@ class PurchaseOrderLinePackage(models.Model):
     weight = fields.Float('Weight (kg)', tracking=True)
     volume = fields.Float('Volume (m3)', tracking=True, digits=(12, 5))
 
-    total_weight = fields.Float('Total Weight (kg)', tracking=True, digits=(12, 2))
-    total_volume = fields.Float('Total Volume (m3)', tracking=True, digits=(12, 3))
+    total_weight = fields.Float('Total Weight (kg)', tracking=True, digits=(12, 2), compute="onchange_volume", store=True)
+    total_volume = fields.Float('Total Volume (m3)', tracking=True, digits=(12, 3), compute="onchange_height", store=True)
     note = fields.Text('Note', tracking=True)
     image = fields.Binary(string='Image')
     detail_ids = fields.One2many('purchase.order.line.package.detail', 'package_id', 'Package detail', tracking=True)
@@ -52,9 +52,13 @@ class PurchaseOrderLinePackage(models.Model):
         self.volume = self.length * self.width * self.height / 1000000
 
     @api.onchange('quantity', 'volume')
+    @api.depends('quantity', 'volume')
     def onchange_volume(self):
-        self.total_volume = self.quantity * self.volume
+        for item in self:
+            item.total_volume = item.quantity * item.volume
 
     @api.onchange('quantity', 'weight')
+    @api.depends('quantity', 'weight')
     def onchange_height(self):
-        self.total_weight = self.weight * self.quantity
+        for item in self:
+            item.total_weight = item.weight * item.quantity
