@@ -305,8 +305,8 @@
                 <field name="purchase_id"/>
             </field>
             <field name="scheduled_date" position="after">
-                <field name="total_volume"/>
-                <field name="total_weight"/>
+                <field name="total_volume" sum="Totals"/>
+                <field name="total_weight" sum="Totals"/>
             </field>
             <field name="origin" position="attributes">
                 <attribute name="column_invisible">1</attribute>
