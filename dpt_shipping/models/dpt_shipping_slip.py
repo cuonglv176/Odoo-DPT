@@ -12,13 +12,14 @@ class DPTShippingSlip(models.Model):
     transfer_code = fields.Char('Transfer Code')
     transfer_code_chinese = fields.Char('Transfer Code in Chinese')
     main_in_picking_ids = fields.Many2many('stock.picking', 'stock_picking_main_incoming_shipping_rel',
-                                           'shipping_slip_id', 'picking_id', string='Main In Picking')
+                                           'shipping_slip_id', 'picking_id', string='Main In Picking',
+                                           domain=[('state', '!=', 'cancel')])
     out_picking_ids = fields.Many2many('stock.picking', 'stock_picking_out_shipping_rel', 'shipping_slip_id',
-                                       'picking_id', string='Out Picking')
+                                       'picking_id', string='Out Picking', domain=[('state', '!=', 'cancel')])
     export_import_ids = fields.Many2many('dpt.export.import', 'export_import_shipping_rel', 'shipping_slip_id',
                                          'export_import_id', string='Export Import', store=True)
     in_picking_ids = fields.Many2many('stock.picking', 'stock_picking_in_shipping_rel', 'shipping_slip_id',
-                                      'picking_id', string='In Picking')
+                                      'picking_id', string='In Picking', domain=[('state', '!=', 'cancel')])
     sale_ids = fields.Many2many('sale.order', string='Sale Order', compute="_compute_information")
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle')
     vehicle_country = fields.Selection(related='vehicle_id.country')
@@ -51,23 +52,31 @@ class DPTShippingSlip(models.Model):
             if item.vehicle_country == 'chinese' or not item.send_shipping_id:
                 item.total_volume = sum(item.out_picking_ids.mapped('total_volume'))
                 item.total_weight = sum(item.out_picking_ids.mapped('total_weight'))
-                item.total_num_packing = '.'.join(
-                    [f"{package_id.quantity}{package_id.uom_id.packing_code}" for package_id in
-                     item.out_picking_ids.mapped('package_ids')])
+                package_ids = item.out_picking_ids.mapped('package_ids')
             elif item.vehicle_country == 'vietnamese' or item.send_shipping_id:
                 item.total_volume = sum(item.in_picking_ids.mapped('total_volume'))
                 item.total_weight = sum(item.in_picking_ids.mapped('total_weight'))
-
-                item.total_num_packing = '.'.join(
-                    [f"{package_id.quantity}{package_id.uom_id.packing_code}" for package_id in
-                     item.in_picking_ids.mapped('package_ids')])
+                package_ids = item.in_picking_ids.mapped('package_ids')
             else:
                 item.total_volume = 0
                 item.total_weight = 0
-                item.total_num_packing = None
+                package_ids = None
             item.num_not_confirm_picking = len(
                 item.out_picking_ids.filtered(lambda p: p.state != 'done')) if not item.send_shipping_id else len(
                 item.in_picking_ids.filtered(lambda p: p.state != 'done'))
+
+            # calculate total num packing
+            total_num_packing_value = {}
+            for package_id in package_ids:
+                if not package_id.quantity:
+                    continue
+                if f'{package_id.uom_id.packing_code}' in total_num_packing_value:
+                    total_num_packing_value[f'{package_id.uom_id.packing_code}'] = total_num_packing_value.get(
+                        f'{package_id.uom_id.packing_code}') + package_id.quantity
+                else:
+                    total_num_packing_value[f'{package_id.uom_id.packing_code}'] = package_id.quantity
+            item.total_num_packing = '.'.join([f"{quantity}{packing_code}" for packing_code, quantity in
+                                               total_num_packing_value.items()]) if total_num_packing_value else None
 
     @api.constrains('export_import_ids')
     @api.onchange('export_import_ids')
