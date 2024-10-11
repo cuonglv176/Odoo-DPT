@@ -2,6 +2,7 @@
 from datetime import datetime
 from odoo import models, fields, api, _
 import xlrd, xlwt
+import math
 import base64
 from odoo.exceptions import ValidationError, UserError
 import io as stringIOModule
@@ -63,8 +64,8 @@ class StockPicking(models.Model):
     @api.depends('package_ids.total_volume', 'package_ids.total_weight')
     def _compute_total_volume_weight(self):
         for item in self:
-            item.total_volume = sum(item.package_ids.mapped('total_volume'))
-            item.total_weight = sum(item.package_ids.mapped('total_weight'))
+            item.total_volume = math.ceil(sum(item.package_ids.mapped('total_volume')))
+            item.total_weight = math.ceil(sum(item.package_ids.mapped('total_weight')) * 100) / 100
 
     def _compute_main_incoming(self):
         for item in self:
