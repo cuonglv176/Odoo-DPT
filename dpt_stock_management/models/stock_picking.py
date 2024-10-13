@@ -61,6 +61,13 @@ class StockPicking(models.Model):
     exported_label = fields.Boolean('Exported Label')
     picking_lot_name = fields.Char('Picking Lot Name')
 
+    @api.model
+    def action_update_old_package_information(self):
+        for item in self:
+            item.package_ids.onchange_volume()
+            item.package_ids.onchange_weight()
+            item.package_ids._onchange_total_fields()
+
     @api.depends('package_ids.total_volume', 'package_ids.total_weight')
     def _compute_total_volume_weight(self):
         for item in self:
