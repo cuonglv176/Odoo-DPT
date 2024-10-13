@@ -26,8 +26,10 @@ class StockPicking(models.Model):
     @api.depends('main_incoming_shipping_ids')
     def _compute_shipping_name(self):
         for item in self:
-            item.shipping_name = ','.join(item.main_incoming_shipping_ids.mapped(
-                'name')) if item.main_incoming_shipping_ids and item.main_incoming_shipping_ids.mapped('name') else None
+            if item.main_incoming_shipping_ids and item.main_incoming_shipping_ids.mapped('name'):
+                item.shipping_name = ','.join(item.main_incoming_shipping_ids.mapped('name'))
+            else:
+                item.shipping_name = None
 
     def _compute_in_draft_shipping(self):
         for item in self:
