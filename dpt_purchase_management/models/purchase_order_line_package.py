@@ -27,20 +27,21 @@ class PurchaseOrderLinePackage(models.Model):
     weight = fields.Float('Weight (kg)', tracking=True)
     volume = fields.Float('Volume (m3)', tracking=True, digits=(12, 5))
 
-    total_weight = fields.Float('Total Weight (kg)', tracking=True, digits=(12, 2), compute="onchange_volume", store=True)
-    total_volume = fields.Float('Total Volume (m3)', tracking=True, digits=(12, 3), compute="onchange_height", store=True)
+    total_weight = fields.Float('Total Weight (kg)', tracking=True, digits=(12, 2), compute="onchange_weight", store=True)
+    total_volume = fields.Float('Total Volume (m3)', tracking=True, digits=(12, 3), compute="onchange_volume", store=True)
     note = fields.Text('Note', tracking=True)
     image = fields.Binary(string='Image')
     detail_ids = fields.One2many('purchase.order.line.package.detail', 'package_id', 'Package detail', tracking=True)
 
     @api.onchange('total_weight', 'total_volume')
     def _onchange_total_fields(self):
-        if self.total_weight:
-            # Làm tròn lên cho trọng lượng
-            self.total_weight = math.ceil(round(self.total_weight, 2))
-        if self.total_volume:
-            # Làm tròn lên cho thể tích tới 2 chữ số thập phân
-            self.total_volume = math.ceil(round(self.total_volume * 100, 4)) / 100
+        for item in self:
+            if item.total_weight:
+                # Làm tròn lên cho trọng lượng
+                item.total_weight = math.ceil(round(item.total_weight, 2))
+            if item.total_volume:
+                # Làm tròn lên cho thể tích tới 2 chữ số thập phân
+                item.total_volume = math.ceil(round(item.total_volume * 100, 4)) / 100
 
     @api.constrains('quantity', 'uom_id')
     def constrains_package_name(self):
@@ -59,6 +60,6 @@ class PurchaseOrderLinePackage(models.Model):
 
     @api.onchange('quantity', 'weight')
     @api.depends('quantity', 'weight')
-    def onchange_height(self):
+    def onchange_weight(self):
         for item in self:
             item.total_weight = item.weight * item.quantity
