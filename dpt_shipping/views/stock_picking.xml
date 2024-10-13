@@ -8,6 +8,7 @@
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
+                <field name="shipping_name" readonly="1"/>
                 <field name="employee_sale" readonly="1"/>
                 <field name="employee_cs" readonly="1"/>
                 <field name="finish_stock_services" readonly="1"/>
