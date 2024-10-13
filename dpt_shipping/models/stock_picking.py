@@ -30,7 +30,7 @@ class StockPicking(models.Model):
             for shipping_id in item.main_incoming_shipping_ids:
                 if shipping_id.name:
                     shipping_name.append(shipping_id.name)
-            item.shipping_name = ','.join(shipping_name) else None
+            item.shipping_name = ','.join(shipping_name) if shipping_name else None
 
     def _compute_in_draft_shipping(self):
         for item in self:
