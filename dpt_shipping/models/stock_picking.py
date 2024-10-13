@@ -15,10 +15,18 @@ class StockPicking(models.Model):
                                         'shipping_slip_id', string='Out Shipping')
     in_shipping_ids = fields.Many2many('dpt.shipping.slip', 'stock_picking_in_shipping_rel', 'picking_id',
                                        'shipping_slip_id', string='In Shipping')
+    main_incoming_shipping_ids = fields.Many2many('dpt.shipping.slip', 'stock_picking_main_incoming_shipping_rel',
+                                                  'picking_id', 'shipping_slip_id', string='Main Incoming Shipping')
     estimate_arrival_warehouse_vn = fields.Date('Estimate Arrival Warehouse VN')
 
     employee_sale = fields.Many2one('hr.employee', string='Employee Sale', related='sale_purchase_id.employee_sale')
     employee_cs = fields.Many2one('hr.employee', string='Employee CS', related='sale_purchase_id.employee_sale')
+    shipping_name = fields.Char('Phiếu vận chuyển', compute='_compute_shipping_name', store=True)
+
+    @api.depends('main_incoming_shipping_ids')
+    def _compute_shipping_name(self):
+        for item in self:
+            item.shipping_name = ','.join(item.main_incoming_shipping_ids.mapped('name'))
 
     def _compute_in_draft_shipping(self):
         for item in self:

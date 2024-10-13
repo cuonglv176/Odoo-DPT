@@ -37,10 +37,10 @@ class PurchaseOrderLinePackage(models.Model):
     def _onchange_total_fields(self):
         if self.total_weight:
             # Làm tròn lên cho trọng lượng
-            self.total_weight = math.ceil(self.total_weight)
+            self.total_weight = math.ceil(round(self.total_weight, 2))
         if self.total_volume:
             # Làm tròn lên cho thể tích tới 2 chữ số thập phân
-            self.total_volume = math.ceil(self.total_volume * 100) / 100
+            self.total_volume = math.ceil(round(self.total_volume * 100, 4)) / 100
 
     @api.constrains('quantity', 'uom_id')
     def constrains_package_name(self):
