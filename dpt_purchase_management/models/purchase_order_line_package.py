@@ -55,11 +55,15 @@ class PurchaseOrderLinePackage(models.Model):
     @api.onchange('quantity', 'volume')
     @api.depends('quantity', 'volume')
     def onchange_volume(self):
+        if self.env.context.get('get_data_from_incoming', False):
+            return
         for item in self:
             item.total_volume = item.quantity * item.volume
 
     @api.onchange('quantity', 'weight')
     @api.depends('quantity', 'weight')
     def onchange_weight(self):
+        if self.env.context.get('get_data_from_incoming', False):
+            return
         for item in self:
             item.total_weight = item.weight * item.quantity
