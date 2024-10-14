@@ -20,7 +20,7 @@ class DPTShippingSlip(models.Model):
                                          'export_import_id', string='Export Import', store=True)
     in_picking_ids = fields.Many2many('stock.picking', 'stock_picking_in_shipping_rel', 'shipping_slip_id',
                                       'picking_id', string='In Picking', domain=[('state', '!=', 'cancel')])
-    sale_ids = fields.Many2many('sale.order', string='Sale Order', compute="g")
+    sale_ids = fields.Many2many('sale.order', string='Sale Order', compute="_compute_information")
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle')
     vehicle_country = fields.Selection(related='vehicle_id.country')
     vn_vehicle_stage_id = fields.Many2one('dpt.vehicle.stage', 'Vehicle Stage', domain=[('country', '=', 'vietnamese')])
