@@ -13,7 +13,7 @@ class SaleOrder(models.Model):
     declaration_line_count = fields.Integer(string='Declaration count line', compute="_compute_declaration_count")
     is_declaration = fields.Boolean(default=False, compute="_compute_is_declaration", store=True)
 
-    @api.depends('dpt_export_import_line_ids', 'dpt_export_import_line_ids.state')
+    @api.depends('dpt_export_import_line_ids', 'dpt_export_import_line_ids.state','dpt_export_import_line_ids.export_import_id')
     def _compute_is_declaration(self):
         for rec in self:
             is_declaration = True
