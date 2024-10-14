@@ -64,7 +64,7 @@ class DptExportImport(models.Model):
     estimated_total_amount = fields.Monetary(string='Estimated total amount', compute="_compute_estimated_total_amount",
                                              currency_field='currency_id')
     actual_total_amount = fields.Monetary(string='Actual total amount', currency_field='currency_id')
-    payment_exchange_rate = fields.Monetary(string='Rate ECUSS', currency_field='currency_id')
+    payment_exchange_rate = fields.Monetary(string='Rate ECUSS', currency_field='currency_id', digits=(12, 4))
     shipping_slip = fields.Char(string='Shipping Slip')
     type_of_vehicle = fields.Char(string='Type of vehicle')
     driver_name = fields.Char(string='Driver Name')
