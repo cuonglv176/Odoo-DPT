@@ -74,10 +74,10 @@ class StockPicking(models.Model):
                     'width': package_id.width,
                     'height': package_id.height,
                     'size': package_id.size,
-                    # 'total_weight': package_id.weight * package_id.quantity,
+                    'total_weight': package_id.total_weight * (package_id.quantity - package_id.created_picking_qty) / package_id.quantity,
                     'weight': package_id.weight,
                     'volume': package_id.volume,
-                    # 'total_volume': package_id.volume * package_id.quantity,
+                    'total_volume': package_id.total_volume * (package_id.quantity - package_id.created_picking_qty) / package_id.quantity,
                     'note': package_id.note,
                     'image': package_id.image,
                     'detail_ids': [(0, 0, {

@@ -293,9 +293,9 @@ class StockPicking(models.Model):
                     'height': package_id.height,
                     'size': package_id.size,
                     'weight': package_id.weight,
-                    # 'total_weight': package_id.weight * (package_id.quantity - package_id.created_picking_qty),
+                    'total_weight': package_id.total_weight * (package_id.quantity - package_id.created_picking_qty) / package_id.quantity,
                     'volume': package_id.volume,
-                    # 'total_volume': package_id.volume * (package_id.quantity - package_id.created_picking_qty),
+                    'total_volume': package_id.total_volume * (package_id.quantity - package_id.created_picking_qty) / package_id.quantity,
                     'uom_id': package_id.uom_id.id,
                     'detail_ids': [(0, 0, {
                         'product_id': detail_id.product_id.id,

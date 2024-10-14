@@ -54,8 +54,8 @@ class StockPicking(models.Model):
                         'height': package_id.height,
                         'weight': package_id.weight,
                         'volume': package_id.volume,
-                        # 'total_volume': package_id.total_volume,
-                        # 'total_weight': package_id.total_weight,
+                        'total_volume': package_id.total_volume,
+                        'total_weight': package_id.total_weight,
                         'sale_id': picking_id.sale_purchase_id.id,
                         'lot_id': lot_id.id,
                     }))

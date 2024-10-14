@@ -20,7 +20,7 @@ class DPTShippingSlip(models.Model):
                                          'export_import_id', string='Export Import', store=True)
     in_picking_ids = fields.Many2many('stock.picking', 'stock_picking_in_shipping_rel', 'shipping_slip_id',
                                       'picking_id', string='In Picking', domain=[('state', '!=', 'cancel')])
-    sale_ids = fields.Many2many('sale.order', string='Sale Order', compute="_compute_information")
+    sale_ids = fields.Many2many('sale.order', string='Sale Order', compute="g")
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle')
     vehicle_country = fields.Selection(related='vehicle_id.country')
     vn_vehicle_stage_id = fields.Many2one('dpt.vehicle.stage', 'Vehicle Stage', domain=[('country', '=', 'vietnamese')])
@@ -174,9 +174,14 @@ class DPTShippingSlip(models.Model):
         for item in self:
             for main_incoming_picking_id in item.main_in_picking_ids:
                 action = main_incoming_picking_id.action_create_transfer_picking()
-                transfer_picking_id = self.env['stock.picking'].with_context(action['context']).create({
+                ctx = action['context']
+                ctx.update({
+                    'get_data_from_incoming': True
+                })
+                transfer_picking_id = self.env['stock.picking'].with_context(ctx).create({
                     'sale_purchase_id': main_incoming_picking_id.sale_purchase_id.id,
                 })
+                transfer_picking_id.action_update_old_package_information()
                 transfer_picking_id._compute_total_volume_weight()
                 # update move line
                 move_line_vals = []
