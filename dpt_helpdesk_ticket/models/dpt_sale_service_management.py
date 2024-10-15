@@ -5,11 +5,11 @@ class DPTSaleServiceManagement(models.Model):
     _inherit = 'dpt.sale.service.management'
 
     def write(self, vals):
-        if 'service_id' not in vals:
+        if 'service_id' in vals:
             return super().write(vals)
         for item in self:
             ticket_line_ids = item.sale_id.ticket_ids.mapped('service_lines_ids').filtered(
-                lambda sl: sl.service_id.id == item.service_id.id)
+                lambda sl: sl.service_id.id == item.service_id.id and sl.uom_id.id == item.uom_id.id)
             if not ticket_line_ids:
                 continue
             service_line_ticket_vals = {}
