@@ -107,6 +107,15 @@ class SaleOrder(models.Model):
     def action_unlock(self):
         self.with_context(onchange_sale_service_ids=True).locked = False
 
+    def action_lock(self):
+        self = self.with_context(onchange_sale_service_ids=True)
+        for order in self:
+            tx = order.sudo().transaction_ids._get_last()
+            if tx and tx.state == 'pending' and tx.provider_id.code == 'custom' and tx.provider_id.custom_mode == 'wire_transfer':
+                tx._set_done()
+                tx.write({'is_post_processed': True})
+        self.locked = True
+
     def check_required_fields(self):
         for r in self.fields_ids:
             if r.env.context.get('onchange_sale_service_ids', False):
