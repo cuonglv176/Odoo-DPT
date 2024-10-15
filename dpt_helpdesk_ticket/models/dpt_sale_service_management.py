@@ -17,10 +17,17 @@ class DPTSaleServiceManagement(models.Model):
                 service_line_ticket_vals.update({
                     'uom_id': vals.get('uom_id')
                 })
-
             if 'price' in vals:
                 service_line_ticket_vals.update({
                     'price': vals.get('price')
+                })
+            if 'qty' in vals:
+                service_line_ticket_vals.update({
+                    'qty': vals.get('qty')
+                })
+            if 'amount_total' in vals:
+                service_line_ticket_vals.update({
+                    'amount_total': vals.get('amount_total')
                 })
             ticket_line_ids.write(service_line_ticket_vals)
         return super().write(vals)
