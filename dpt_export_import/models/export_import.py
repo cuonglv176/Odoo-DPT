@@ -261,7 +261,7 @@ class DptExportImportLine(models.Model):
                                         compute="_compute_dpt_total_usd_vnd")
     dpt_total_cny_vnd = fields.Monetary(string='Total CNY (VND)', currency_field='currency_id',
                                         compute="_compute_dpt_total_cny_vnd")
-    dpt_price_cny_vnd = fields.Monetary(string='Price CNY (VND)', tracking=True, currency_field='currency_cny_id',
+    dpt_price_cny_vnd = fields.Float(string='Price CNY (VND)', tracking=True, currency_field='currency_cny_id',
                                         digits=(12, 4))
     dpt_tax_other = fields.Float(string='Tax Other (%)', tracking=True)
     dpt_amount_tax_other = fields.Monetary(string='Amount Tax Other', currency_field='currency_id',
