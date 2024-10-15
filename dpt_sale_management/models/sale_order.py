@@ -104,6 +104,9 @@ class SaleOrder(models.Model):
             self.onchange_calculation_tax()
         return res
 
+    def action_unlock(self):
+        self.with_context(onchange_sale_service_ids=True).locked = False
+
     def check_required_fields(self):
         for r in self.fields_ids:
             if r.env.context.get('onchange_sale_service_ids', False):
