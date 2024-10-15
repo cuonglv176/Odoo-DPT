@@ -107,6 +107,7 @@
                                     <field name="dpt_uom1_id"/>
                                     <field name="dpt_price_kd"/>
                                     <field name="dpt_price_usd"/>
+                                    <field name="dpt_price_cny_vnd"/>
                                     <field name="dpt_n_w_kg"/>
                                     <field name="dpt_g_w_kg"/>
                                     <field name="available_package_ids" invisible="1"/>
