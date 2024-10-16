@@ -268,6 +268,7 @@ class DPTSaleChangePriceServiceLine(models.Model):
     sequence = fields.Integer()
     parent_id = fields.Many2one('helpdesk.ticket')
     service_id = fields.Many2one('dpt.service.management', string='Service')
+    sale_service_id = fields.Many2one('dpt.sale.service.management', string='Sale Service')
     description = fields.Char(string='Description')
     qty = fields.Float(string='QTY')
     uom_id = fields.Many2one('uom.uom')
@@ -276,6 +277,20 @@ class DPTSaleChangePriceServiceLine(models.Model):
     amount_total = fields.Float(string="Amount Total")
     status = fields.Char(string='Status')
     department_id = fields.Many2one('hr.department', related='parent_id.department_id')
+
+    def write(self, vals):
+        rec = super(DPTSaleChangePriceServiceLine, self).write(vals)
+        sale_service_vals = {}
+        if 'uom_id' in vals:
+            sale_service_vals.update({
+                'uom_id': vals.get('uom_id')
+            })
+        if 'qty' in vals:
+            sale_service_vals.update({
+                'qty': vals.get('qty')
+            })
+        self.sale_service_id.write(sale_service_vals)
+        return rec
 
 
 
