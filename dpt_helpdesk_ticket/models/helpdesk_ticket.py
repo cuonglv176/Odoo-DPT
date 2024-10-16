@@ -287,7 +287,11 @@ class DPTSaleChangePriceServiceLine(models.Model):
             })
         if 'qty' in vals:
             sale_service_vals.update({
-                'qty': vals.get('qty')
+                'compute_value': vals.get('qty')
+            })
+        if 'price' in vals:
+            sale_service_vals.update({
+                'price': vals.get('price')
             })
         self.sale_service_id.write(sale_service_vals)
         return rec
