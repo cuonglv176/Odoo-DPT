@@ -8,9 +8,9 @@ class SaleOrder(models.Model):
     ticket_ids = fields.One2many('helpdesk.ticket', 'sale_id', 'Tickets')
 
     def write(self, vals):
-        ret = super(SaleOrder, self).write(vals)
+        rec = super(SaleOrder, self).write(vals)
         if 'sale_service_ids' not in vals:
-            return ret
+            return rec
         if self.state == 'sale':
             for value in vals['sale_service_ids']:
                 if value[0] != 0:
@@ -23,7 +23,9 @@ class SaleOrder(models.Model):
                     'department_id': service_id.department_id.id,
                     'team_id': service_id.helpdesk_team_id.id,
                 })
+                sale_service_id = self.sale_service_ids.search([('service_id', '=', service_id.id)], limit=1)
                 self.env['dpt.helpdesk.servie.line'].create({
+                    'sale_service_id': sale_service_id.id,
                     'service_id': val_create.get('service_id'),
                     'description': val_create.get('description'),
                     'qty': val_create.get('qty'),
@@ -34,7 +36,7 @@ class SaleOrder(models.Model):
                     'parent_id': ticket_id.id
                     # 'status': r.price_status,
                 })
-        return ret
+        return rec
 
     def get_tickets(self):
         return {
@@ -77,6 +79,7 @@ class SaleOrder(models.Model):
             if service.service_id.is_create_ticket:
                 service_ids.append((0, 0, {
                     'service_id': service.service_id.id,
+                    'sale_service_id': service.id,
                     'description': service.description,
                     'qty': service.qty,
                     'uom_id': service.uom_id.id,
