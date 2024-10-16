@@ -270,27 +270,12 @@ class DPTSaleChangePriceServiceLine(models.Model):
     service_id = fields.Many2one('dpt.service.management', string='Service')
     sale_service_id = fields.Many2one('dpt.sale.service.management', string='Sale Service')
     description = fields.Char(string='Description')
-    qty = fields.Float(string='QTY')
-    uom_id = fields.Many2one('uom.uom')
-    price = fields.Monetary(currency_field='currency_id', string='Price')
+    qty = fields.Float(string='QTY', related='sale_service_id.qty')
+    uom_id = fields.Many2one('uom.uom', related='sale_service_id.uom_id')
+    price = fields.Monetary(currency_field='currency_id', string='Price', related='sale_service_id.price')
     currency_id = fields.Many2one('res.currency', string='Currency')
-    amount_total = fields.Float(string="Amount Total")
+    amount_total = fields.Float(string="Amount Total", related='sale_service_id.amount_total')
     status = fields.Char(string='Status')
     department_id = fields.Many2one('hr.department', related='parent_id.department_id')
-
-    def write(self, vals):
-        rec = super(DPTSaleChangePriceServiceLine, self).write(vals)
-        sale_service_vals = {}
-        if 'uom_id' in vals:
-            sale_service_vals.update({
-                'uom_id': vals.get('uom_id')
-            })
-        if 'qty' in vals:
-            sale_service_vals.update({
-                'qty': vals.get('qty')
-            })
-        self.sale_service_id.write(sale_service_vals)
-        return rec
-
 
 
