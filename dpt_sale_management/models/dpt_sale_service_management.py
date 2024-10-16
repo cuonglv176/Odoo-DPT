@@ -61,12 +61,22 @@ class DPTSaleServiceManagement(models.Model):
     @api.depends('qty','price','compute_value')
     def _compute_amount_total(self):
         for item in self:
-            item.amount_total = item.qty * item.price * item.compute_value if item.pricelist_item_id.is_price and item.pricelist_item_id.compute_price == 'table' else item.compute_value * item.price
+            if item.pricelist_item_id.is_price and item.pricelist_item_id.compute_price == 'table':
+                item.amount_total = item.qty * item.price * item.compute_value
+            elif not item.pricelist_item_id.is_price and item.pricelist_item_id.compute_price == 'table':
+                item.amount_total = item.price
+            else:
+                item.amount_total = item.compute_value * item.price
 
     @api.onchange('price', 'qty','compute_value')
     def onchange_amount_total(self):
         if self.price and self.qty:
-            self.amount_total = self.price * self.qty * self.compute_value if self.pricelist_item_id.is_price and self.pricelist_item_id.compute_price == 'table' else self.compute_value * self.price
+            if self.pricelist_item_id.is_price and self.pricelist_item_id.compute_price == 'table':
+                self.amount_total = self.price * self.qty * self.compute_value
+            elif not self.pricelist_item_id.is_price and self.pricelist_item_id.compute_price == 'table':
+                self.amount_total = self.price
+            else: 
+                self.amount_total = self.compute_value * self.price
 
     @api.onchange('service_id')
     def onchange_service(self):
