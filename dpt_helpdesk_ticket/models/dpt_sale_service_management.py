@@ -52,9 +52,8 @@ class DPTSaleServiceManagement(models.Model):
             if 'compute_value' in vals:
                 updates.append("qty = %s")
                 params.append(vals.get('compute_value'))
-            if 'amount_total' in vals:
-                updates.append("amount_total = %s")
-                params.append(vals.get('amount_total'))
+            updates.append("amount_total = %s")
+            params.append(vals.get('amount_total'))
             if updates:
                 update_query = f"""
                     UPDATE dpt_helpdesk_servie_line
