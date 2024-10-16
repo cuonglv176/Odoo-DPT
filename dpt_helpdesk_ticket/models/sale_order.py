@@ -28,11 +28,11 @@ class SaleOrder(models.Model):
                     'sale_service_id': sale_service_id.id,
                     'service_id': val_create.get('service_id'),
                     'description': val_create.get('description'),
-                    # 'qty': val_create.get('qty'),
-                    # 'uom_id': val_create.get('uom_id'),
-                    # 'price': val_create.get('price'),
-                    # 'currency_id': val_create.get('currency_id'),
-                    # 'amount_total': val_create.get('amount_total'),
+                    'qty': val_create.get('qty'),
+                    'uom_id': val_create.get('uom_id'),
+                    'price': val_create.get('price'),
+                    'currency_id': val_create.get('currency_id'),
+                    'amount_total': val_create.get('amount_total'),
                     'parent_id': ticket_id.id
                     # 'status': r.price_status,
                 })
@@ -81,11 +81,11 @@ class SaleOrder(models.Model):
                     'service_id': service.service_id.id,
                     'sale_service_id': service.id,
                     'description': service.description,
-                    # 'qty': service.qty,
-                    # 'uom_id': service.uom_id.id,
-                    # 'price': service.price,
-                    # 'currency_id': service.currency_id.id,
-                    # 'amount_total': service.amount_total,
+                    'qty': service.qty,
+                    'uom_id': service.uom_id.id,
+                    'price': service.price,
+                    'currency_id': service.currency_id.id,
+                    'amount_total': service.amount_total,
                     # 'status': r.price_status,
                 }))
             stage_done_id = self.env['helpdesk.stage'].search(
