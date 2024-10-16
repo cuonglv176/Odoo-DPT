@@ -51,10 +51,11 @@
                         <tree editable="bottom">
                             <field name="sequence" widget="handle"/>
                             <field name="currency_id" column_invisible="1" force_save="1"/>
+                            <field name="sale_service_id" column_invisible="1" force_save="1"/>
                             <field name="service_id"/>
                             <field name="description"/>
-                            <field name="qty" column_invisible="1" force_save="1"/>
-                            <field name="uom_id"/>
+                            <field name="qty"  force_save="1" readonly="0"/>
+                            <field name="uom_id" readonly="0"/>
                             <field name="price" readonly="0" force_save="1"/>
                             <field name="amount_total" readonly="1" force_save="1"/>
                             <field name="department_id"/>
