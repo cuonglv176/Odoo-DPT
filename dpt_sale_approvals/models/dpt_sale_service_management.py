@@ -24,7 +24,13 @@ class DPTSaleServiceManagement(models.Model):
     new_amount_total = fields.Monetary(currency_field='currency_id', string="New Amount Total",
                                        compute="_compute_new_amount_total")
     approval_id = fields.Many2one('approval.request', string='Approval Change Price')
+    is_zero_price = fields.Boolean(string='Giá 0 Đồng', default=False)
     is_edit_new_price = fields.Boolean(string='Edit new price', compute="_compute_is_edit_new_price", default=False)
+
+    @api.onchange('is_zero_price')
+    def update_is_zero_price(self):
+        if self.is_zero_price:
+            self.new_price = 0
 
     def write(self, vals):
         old_price = self.price

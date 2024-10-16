@@ -115,6 +115,17 @@ class SaleOrder(models.Model):
                         'price': sale_service_id.price,
                         'new_price': sale_service_id.new_price,
                     })
+                if sale_service_id.is_zero_price and sale_service_id.new_price != sale_service_id.price:
+                    sale_service_id.approval_id = approval_id
+                    sale_service_id.price_status = 'wait_approve'
+                    list_service.append(sale_service_id)
+                    history.append({
+                        'service_management_id': sale_service_id.id,
+                        'service_id': sale_service_id.service_id.id,
+                        'approval_id': approval_id.id,
+                        'price': sale_service_id.price,
+                        'new_price': sale_service_id.new_price,
+                    })
         for line in self.order_line:
             # if line.new_price_unit != 0 and line.new_price_unit != line.price_unit:
             line.approval_id = approval_id
