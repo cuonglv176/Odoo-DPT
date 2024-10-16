@@ -21,9 +21,9 @@ class DPTSaleServiceManagement(models.Model):
                 service_line_ticket_vals.update({
                     'price': vals.get('price')
                 })
-            if 'qty' in vals:
+            if 'compute_value' in vals:
                 service_line_ticket_vals.update({
-                    'qty': vals.get('qty')
+                    'qty': vals.get('compute_value')
                 })
             if 'amount_total' in vals:
                 service_line_ticket_vals.update({
