@@ -273,9 +273,8 @@ class DPTSaleChangePriceServiceLine(models.Model):
     qty = fields.Float(string='QTY', related='sale_service_id.qty')
     uom_id = fields.Many2one('uom.uom', related='sale_service_id.uom_id')
     price = fields.Monetary(currency_field='currency_id', string='Price', related='sale_service_id.price')
-    currency_id = fields.Many2one('res.currency', string='Currency', related='sale_service_id.currency_id')
-    # amount_total = fields.Float(string="Amount Total", related='sale_service_id.amount_total')
-    amount_total = fields.Monetary(currency_field='currency_id', string="Amount Total", related='sale_service_id.amount_total')
+    currency_id = fields.Many2one('res.currency', string='Currency')
+    amount_total = fields.Float(string="Amount Total", related='sale_service_id.amount_total')
     status = fields.Char(string='Status')
     department_id = fields.Many2one('hr.department', related='parent_id.department_id')
 
