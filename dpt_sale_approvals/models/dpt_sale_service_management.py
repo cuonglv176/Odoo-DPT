@@ -33,15 +33,15 @@ class DPTSaleServiceManagement(models.Model):
             self.new_price = 0
 
     def write(self, vals):
-        old_price = self.price
-        rec = super(DPTSaleServiceManagement, self).write(vals)
-        if self.env.context.get('check_price', False) and not self.env.context.get('from_pricelist', False):
-            if 'price' in vals:
-                new_price = self.price
-                if old_price > new_price and not (
-                        self._fields.get('purchase_id', False) and not self.purchase_id.last_rate_currency):
-                    raise ValidationError(_(f"Giá mới {new_price} không được nhỏ hơn giá cũ {old_price}!!"))
-        return rec
+        for item in self:
+            old_price = item.price
+            if self.env.context.get('check_price', False) and not self.env.context.get('from_pricelist', False):
+                if 'price' in vals:
+                    new_price = vals.get('price')
+                    if old_price > new_price and not (
+                            self._fields.get('purchase_id', False) and not item.purchase_id.last_rate_currency):
+                        raise ValidationError(_(f"Giá mới {new_price} không được nhỏ hơn giá cũ {old_price}!!"))
+        return super(DPTSaleServiceManagement, self).write(vals)
 
     @api.depends('approval_id')
     def _compute_is_edit_new_price(self):
