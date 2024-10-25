@@ -72,7 +72,7 @@ class SaleServiceManagement(models.Model):
                 'default_move_journal_types': ('bank', 'cash'),
                 'default_sale_id': self.sale_id.id,
                 'default_partner_id': self.sale_id.partner_id.id,
-                'default_service_sale_ids': [(6, 0, self.id)],
+                'default_service_sale_ids': [(6, 0, self.ids)],
                 'default_service_sale_id': self.id,
                 'default_amount': self.amount_total,
                 'default_ref': _(f'Thanh toán cho {self.sale_id.name}'),
