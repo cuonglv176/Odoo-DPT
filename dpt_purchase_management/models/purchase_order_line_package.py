@@ -38,10 +38,10 @@ class PurchaseOrderLinePackage(models.Model):
         for item in self:
             if item.total_weight:
                 # Làm tròn lên cho trọng lượng
-                item.total_weight = math.ceil(round(item.total_weight, 2))
+                item.total_weight = math.ceil(round(item.total_weight, 5))
             if item.total_volume:
                 # Làm tròn lên cho thể tích tới 2 chữ số thập phân
-                item.total_volume = math.ceil(round(item.total_volume * 100, 4)) / 100
+                item.total_volume = math.ceil(round(item.total_volume * 100, 5)) / 100
 
     @api.constrains('quantity', 'uom_id')
     def constrains_package_name(self):
