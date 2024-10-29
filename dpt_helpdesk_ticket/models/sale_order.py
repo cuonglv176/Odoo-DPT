@@ -23,7 +23,8 @@ class SaleOrder(models.Model):
                     'department_id': service_id.department_id.id,
                     'team_id': service_id.helpdesk_team_id.id,
                 })
-                sale_service_id = self.sale_service_ids.search([('service_id', '=', service_id.id)], limit=1)
+                sale_service_id = self.sale_service_ids.search(
+                    [('service_id', '=', service_id.id), ('sale_id', '=', self.id)], limit=1)
                 self.env['dpt.helpdesk.servie.line'].create({
                     'sale_service_id': sale_service_id.id,
                     'service_id': val_create.get('service_id'),
