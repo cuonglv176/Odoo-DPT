@@ -295,7 +295,7 @@ class SaleOrder(models.Model):
                     price_base = 0
                     price = 0
                     if service_price_id.percent_based_on == 'product_total_amount':
-                        price_base = sum(self.order_line.mapped('price_total'))
+                        price_base = sum(self.order_line.mapped('price_subtotal'))
                     elif service_price_id.percent_based_on == 'declaration_total_amount':
                         price_base = sum(self.order_line.mapped('declared_unit_total'))
                     if price_base:
