@@ -25,7 +25,8 @@ class ProductPricelistItem(models.Model):
     version = fields.Integer('Version', default=1, tracking=True, copy=True)
     percent_based_on = fields.Selection([
         ('product_total_amount', 'Product Total Amount'),
-        ('declaration_total_amount', 'Declaration Total Amount')
+        ('declaration_total_amount', 'Declaration Total Amount'),
+        ('purchase_total_amount', 'Purchase Total Amount'),
     ], 'Based On', tracking=True, copy=True)
     min_amount = fields.Float(string="Min Amount", digits='Product Price', tracking=True, copy=True)
     # re define

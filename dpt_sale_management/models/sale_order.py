@@ -298,6 +298,11 @@ class SaleOrder(models.Model):
                         price_base = sum(self.order_line.mapped('price_subtotal'))
                     elif service_price_id.percent_based_on == 'declaration_total_amount':
                         price_base = sum(self.order_line.mapped('declared_unit_total'))
+                    elif service_price_id.percent_based_on == 'purchase_total_amount':
+                        purchase_ids = self.purchase_ids.filtered(lambda po: po.purchase_type == 'external')
+                        price_base = 0
+                        for order_line in purchase_ids.mapped('order_line'):
+                            price_base += order_line.price_subtotal * order_line.order_id.last_rate_currency
                     if price_base:
                         price = max(
                             service_price_id.currency_id.rate * (price_base * service_price_id.percent_price / 100),
