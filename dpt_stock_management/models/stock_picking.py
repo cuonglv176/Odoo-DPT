@@ -178,7 +178,7 @@ class StockPicking(models.Model):
                         'lot_name': item.picking_lot_name if item.is_main_incoming else None,
                         'lot_id': self.env['stock.lot'].search(
                             [('product_id', '=', move_id.product_id.id), ('name', '=', item.picking_lot_name)])[
-                                  :1].id if not self.is_main_incoming and item.picking_lot_name else None
+                                  :1].id if not item.is_main_incoming and item.picking_lot_name else None
                     })
                 if move_line_vals:
                     self.env['stock.move.line'].create(move_line_vals)
