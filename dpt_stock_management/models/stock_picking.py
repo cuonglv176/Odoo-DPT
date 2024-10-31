@@ -158,60 +158,61 @@ class StockPicking(models.Model):
             self.package_ids._create_stock_moves(self)
 
     def action_confirm(self):
-        if self.is_main_incoming or (
-                self.x_transfer_type == 'outgoing_transfer' and self.location_id.warehouse_id.is_main_incoming_warehouse):
-            # auto create move line with lot name is picking name
-            self.move_line_ids.unlink()
-            move_line_vals = []
-            for move_id in self.move_ids_without_package:
-                if move_id.product_id.tracking != 'lot':
-                    continue
-                move_line_vals.append({
-                    'move_id': move_id.id,
-                    'picking_id': self.id,
-                    'location_id': move_id.location_id.id,
-                    'location_dest_id': move_id.location_dest_id.id,
-                    'product_id': move_id.product_id.id,
-                    'quantity': move_id.product_uom_qty,
-                    'product_uom_id': move_id.product_uom.id,
-                    'lot_name': self.picking_lot_name if self.is_main_incoming else None,
-                    'lot_id': self.env['stock.lot'].search(
-                        [('product_id', '=', move_id.product_id.id), ('name', '=', self.picking_lot_name)])[
-                              :1].id if not self.is_main_incoming and self.picking_lot_name else None
-                })
-            if move_line_vals:
-                self.env['stock.move.line'].create(move_line_vals)
-        if self.picking_type_code == 'outgoing' and not self.location_id.warehouse_id.is_main_incoming_warehouse:
-            # auto create move line with lot name is picking name
-            self.move_line_ids.unlink()
-            move_line_vals = []
-            for move_id in self.move_ids_without_package:
-                if move_id.product_id.tracking != 'lot':
-                    continue
-                move_line_vals.append({
-                    'move_id': move_id.id,
-                    'picking_id': self.id,
-                    'location_id': move_id.location_id.id,
-                    'location_dest_id': move_id.location_dest_id.id,
-                    'product_id': move_id.product_id.id,
-                    'quantity': move_id.product_uom_qty,
-                    'product_uom_id': move_id.product_uom.id,
-                    'lot_id': self.env['stock.lot'].search([('product_id', '=', move_id.product_id.id),
-                                                            ('name', '=', move_id.from_picking_id.picking_lot_name)],
-                                                           limit=1).id
-                })
-            if move_line_vals:
-                self.env['stock.move.line'].create(move_line_vals)
+        for item in self:
+            if item.is_main_incoming or (
+                    item.x_transfer_type == 'outgoing_transfer' and item.location_id.warehouse_id.is_main_incoming_warehouse):
+                # auto create move line with lot name is picking name
+                item.move_line_ids.unlink()
+                move_line_vals = []
+                for move_id in item.move_ids_without_package:
+                    if move_id.product_id.tracking != 'lot':
+                        continue
+                    move_line_vals.append({
+                        'move_id': move_id.id,
+                        'picking_id': item.id,
+                        'location_id': move_id.location_id.id,
+                        'location_dest_id': move_id.location_dest_id.id,
+                        'product_id': move_id.product_id.id,
+                        'quantity': move_id.product_uom_qty,
+                        'product_uom_id': move_id.product_uom.id,
+                        'lot_name': item.picking_lot_name if item.is_main_incoming else None,
+                        'lot_id': self.env['stock.lot'].search(
+                            [('product_id', '=', move_id.product_id.id), ('name', '=', item.picking_lot_name)])[
+                                  :1].id if not self.is_main_incoming and item.picking_lot_name else None
+                    })
+                if move_line_vals:
+                    self.env['stock.move.line'].create(move_line_vals)
+            if item.picking_type_code == 'outgoing' and not item.location_id.warehouse_id.is_main_incoming_warehouse:
+                # auto create move line with lot name is picking name
+                item.move_line_ids.unlink()
+                move_line_vals = []
+                for move_id in item.move_ids_without_package:
+                    if move_id.product_id.tracking != 'lot':
+                        continue
+                    move_line_vals.append({
+                        'move_id': move_id.id,
+                        'picking_id': item.id,
+                        'location_id': move_id.location_id.id,
+                        'location_dest_id': move_id.location_dest_id.id,
+                        'product_id': move_id.product_id.id,
+                        'quantity': move_id.product_uom_qty,
+                        'product_uom_id': move_id.product_uom.id,
+                        'lot_id': self.env['stock.lot'].search([('product_id', '=', move_id.product_id.id),
+                                                                ('name', '=', move_id.from_picking_id.picking_lot_name)],
+                                                               limit=1).id
+                    })
+                if move_line_vals:
+                    self.env['stock.move.line'].create(move_line_vals)
 
-        # update back to export import
-        if self.x_transfer_type == 'outgoing_transfer' and self.location_id.warehouse_id.is_main_incoming_warehouse:
-            for order_line in self.sale_purchase_id.order_line:
-                order_line.dpt_export_import_line_ids.write({'lot_code': self.picking_lot_name})
-                package_ids = self.package_ids.filtered(
-                    lambda p: order_line.product_id.id in p.detail_ids.mapped('product_id').ids)
-                if not package_ids:
-                    continue
-                order_line.dpt_export_import_line_ids.package_ids = order_line.dpt_export_import_line_ids.package_ids | package_ids
+            # update back to export import
+            if item.x_transfer_type == 'outgoing_transfer' and item.location_id.warehouse_id.is_main_incoming_warehouse:
+                for order_line in item.sale_purchase_id.order_line:
+                    order_line.dpt_export_import_line_ids.write({'lot_code': item.picking_lot_name})
+                    package_ids = item.package_ids.filtered(
+                        lambda p: order_line.product_id.id in p.detail_ids.mapped('product_id').ids)
+                    if not package_ids:
+                        continue
+                    order_line.dpt_export_import_line_ids.package_ids = order_line.dpt_export_import_line_ids.package_ids | package_ids
         return super().action_confirm()
 
     def action_update_picking_name(self):
