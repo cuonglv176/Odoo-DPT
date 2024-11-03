@@ -48,7 +48,7 @@ class PurchaseOrderLinePackage(models.Model):
         if self.env.context.get('get_data_from_incoming', False):
             return
         for item in self:
-            item.total_volume = math.ceil(round(item.volume * item.quantity * 100, 4)) / 100
+            item.total_volume = math.ceil(round(item.quantity * item.volume, 2))
 
     @api.onchange('quantity', 'weight')
     @api.depends('quantity', 'weight')
@@ -56,4 +56,4 @@ class PurchaseOrderLinePackage(models.Model):
         if self.env.context.get('get_data_from_incoming', False):
             return
         for item in self:
-            item.total_weight = math.ceil(round(item.weight * item.quantity, 2))
+            item.total_weight = math.ceil(round(item.weight * item.quantity * 100, 4)) / 100
