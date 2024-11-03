@@ -66,6 +66,7 @@ class StockPicking(models.Model):
         for item in self:
             item.package_ids.onchange_volume()
             item.package_ids.onchange_weight()
+            item.package_ids._onchange_total_fields()
 
     @api.depends('package_ids.total_volume', 'package_ids.total_weight')
     def _compute_total_volume_weight(self):
