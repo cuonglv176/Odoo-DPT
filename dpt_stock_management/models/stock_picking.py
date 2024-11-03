@@ -70,8 +70,8 @@ class StockPicking(models.Model):
     @api.depends('package_ids.total_volume', 'package_ids.total_weight')
     def _compute_total_volume_weight(self):
         for item in self:
-            item.total_volume = sum(item.package_ids.mapped('total_volume'))
-            item.total_weight = sum(item.package_ids.mapped('total_weight'))
+            item.total_volume = math.ceil(round(sum(item.package_ids.mapped('total_volume')) * 100, 4)) / 100
+            item.total_weight = math.ceil(round(sum(item.package_ids.mapped('total_weight')), 2))
 
     def _compute_main_incoming(self):
         for item in self:
