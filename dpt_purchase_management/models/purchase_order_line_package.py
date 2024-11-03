@@ -33,6 +33,16 @@ class PurchaseOrderLinePackage(models.Model):
     image = fields.Binary(string='Image')
     detail_ids = fields.One2many('purchase.order.line.package.detail', 'package_id', 'Package detail', tracking=True)
 
+    @api.onchange('total_weight', 'total_volume')
+    def _onchange_total_fields(self):
+        for item in self:
+            if item.total_weight:
+                # Làm tròn lên cho trọng lượng
+                item.total_weight = math.ceil(round(item.total_weight, 5))
+            if item.total_volume:
+                # Làm tròn lên cho thể tích tới 2 chữ số thập phân
+                item.total_volume = math.ceil(round(item.total_volume * 100, 5)) / 100
+
     @api.constrains('quantity', 'uom_id')
     def constrains_package_name(self):
         for item in self:
@@ -48,7 +58,7 @@ class PurchaseOrderLinePackage(models.Model):
         if self.env.context.get('get_data_from_incoming', False):
             return
         for item in self:
-            item.total_volume = math.ceil(round(item.quantity * item.volume, 2))
+            item.total_volume = item.quantity * item.volume
 
     @api.onchange('quantity', 'weight')
     @api.depends('quantity', 'weight')
@@ -56,4 +66,4 @@ class PurchaseOrderLinePackage(models.Model):
         if self.env.context.get('get_data_from_incoming', False):
             return
         for item in self:
-            item.total_weight = math.ceil(round(item.weight * item.quantity * 100, 4)) / 100
+            item.total_weight = item.weight * item.quantity

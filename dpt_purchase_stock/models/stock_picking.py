@@ -1,4 +1,3 @@
-import math
 from odoo import fields, models, api
 
 
@@ -55,8 +54,8 @@ class StockPicking(models.Model):
                         'height': package_id.height,
                         'weight': package_id.weight,
                         'volume': package_id.volume,
-                        'total_volume': math.ceil(round(package_id.quantity * package_id.volume, 2)),
-                        'total_weight': math.ceil(round(package_id.weight * package_id.quantity * 100, 4)) / 100,
+                        'total_volume': package_id.total_volume,
+                        'total_weight': package_id.total_weight,
                         'sale_id': picking_id.sale_purchase_id.id,
                         'lot_id': lot_id.id,
                     }))
