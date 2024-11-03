@@ -25,8 +25,8 @@ class ReturnPicking(models.TransientModel):
                 'height': package_id.height,
                 'weight': package_id.weight,
                 'volume': package_id.volume,
-                'total_volume': math.ceil(round(package_id.quantity * package_id.volume, 2)),
-                'total_weight': math.ceil(round(package_id.weight * package_id.quantity * 100, 4)) / 100,
+                'total_volume': math.ceil(round(package_id.volume * package_id.quantity * 100, 4)) / 100,
+                'total_weight': math.ceil(round(package_id.weight * package_id.quantity, 2)),
                 'sale_id': self.picking_id.sale_purchase_id.id,
                 'lot_id': lot_id.id,
             }))
