@@ -293,7 +293,7 @@ class StockPicking(models.Model):
                     'height': package_id.height,
                     'size': package_id.size,
                     'weight': package_id.weight,
-                    'total_weight': (math.ceil(round(package_id.weight * package_id.quantity * 100, 4)) / 100) * (package_id.quantity - package_id.created_picking_qty) / package_id.quantity,
+                    'total_weight': math.ceil(round(package_id.weight * package_id.quantity * 100, 4)) * (package_id.quantity - package_id.created_picking_qty) / (package_id.quantity * 100),
                     'volume': package_id.volume,
                     'total_volume': math.ceil(round(package_id.quantity * package_id.volume, 2)) * (package_id.quantity - package_id.created_picking_qty) / package_id.quantity,
                     'uom_id': package_id.uom_id.id,
