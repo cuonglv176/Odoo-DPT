@@ -166,9 +166,9 @@ class SaleOrder(models.Model):
                         diff_value = 0
                     if r.type_compare == 'equal' and diff_value == 0:
                         required = True
-                    elif r.type_compare == 'higher' and diff_value > 0 and diff_value >= r.value_compare:
+                    elif r.type_compare == 'higher' and diff_value > 0 and abs(diff_value) >= r.value_compare:
                         required = True
-                    elif r.type_compare == 'lower' and diff_value < 0 and abs(diff_value) >= r.value_compare:
+                    elif r.type_compare == 'lower' and diff_value < 0 and abs(diff_value) <= r.value_compare:
                         required = True
                     else:
                         required = False
