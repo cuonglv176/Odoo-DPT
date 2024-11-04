@@ -164,11 +164,11 @@ class SaleOrder(models.Model):
                         diff_value = (rec.new_price - rec.price) / rec.price * 100
                     else:
                         diff_value = 0
-                    if r.type_compare == 'equal' and diff_value == 0:
+                    if r.type_compare == 'equal' and abs(diff_value) == r.value_compare:
                         required = True
-                    elif r.type_compare == 'higher' and diff_value > 0 and abs(diff_value) >= r.value_compare:
+                    elif r.type_compare == 'higher' and abs(diff_value) > r.value_compare:
                         required = True
-                    elif r.type_compare == 'lower' and diff_value < 0 and abs(diff_value) <= r.value_compare:
+                    elif r.type_compare == 'lower' and abs(diff_value) < r.value_compare:
                         required = True
                     else:
                         required = False
