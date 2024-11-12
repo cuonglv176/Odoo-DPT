@@ -74,10 +74,10 @@
                                     <field name="product_uom" on_change="1"/>
                                     <field name="price_unit" on_change="1"/>
                                     <field name="price_unit2" on_change="1"/>
-                                    <field name="price_unit3" on_change="1"/>
+                                    <field name="price_unit3" on_change="1" groups="purchase.group_purchase_manager"/>
                                     <field name="price_subtotal" on_change="1"/>
                                     <field name="price_subtotal2"/>
-                                    <field name="price_subtotal3"/>
+                                    <field name="price_subtotal3" groups="purchase.group_purchase_manager"/>
                                     <field name="date_planned"/>
                                 </tree>
 
