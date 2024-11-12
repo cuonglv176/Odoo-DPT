@@ -51,7 +51,7 @@ class DptExportImport(models.Model):
     ], string='Declaration Flow', default='red')
     dpt_n_w_kg = fields.Integer(string='Total N.W (KG)', compute="_compute_total_sum_line")
     dpt_g_w_kg = fields.Integer(string='Total G.W (KG)', compute="_compute_total_sum_line")
-    total_cubic_meters = fields.Integer(string='Total cubic meters')
+    total_cubic_meters = fields.Float(string='Total cubic meters', compute="_compute_total_cubic_meters")
     total_package = fields.Char(string='Total package', compute="_compute_total_package_line")
     dpt_amount_tax_import = fields.Monetary(string='Total Amount import', compute="_compute_total_sum_line",
                                             currency_field='currency_id')
@@ -74,6 +74,14 @@ class DptExportImport(models.Model):
         ('usd', 'USD'),
         ('cny', 'CNY')
     ], string='Declaration type', default='usd')
+
+    @api.depends('sale_ids','sale_ids.volume')
+    def _compute_total_cubic_meters(self):
+        for rec in self:
+            total_cubic_meters = 0
+            for sale_id in rec.sale_ids:
+                total_cubic_meters += sale_id.volume
+            rec.total_cubic_meters = total_cubic_meters
 
     @api.onchange('declaration_type')
     def onchange_update_value_declaration_type(self):
