@@ -30,7 +30,7 @@ class SaleOrder(models.Model):
             export_import_ids = self.env['dpt.export.import.line'].sudo().search(
                 [('sale_id', '=', item.id)]).mapped('export_import_id')
             item.number_transfer = self.env['dpt.shipping.slip'].sudo().search_count(
-                ['|', '|', ('export_import_ids', 'in', export_import_ids.id),
+                ['|', '|', ('export_import_ids', 'in', export_import_ids.ids),
                  ('in_picking_ids', 'in', in_out_picking_ids.ids), ('out_picking_ids', 'in', in_out_picking_ids.ids)])
 
     def action_show_main_incoming_picking(self):
@@ -46,7 +46,7 @@ class SaleOrder(models.Model):
         export_import_ids = self.env['dpt.export.import.line'].sudo().search(
             [('sale_id', '=', self.id)]).mapped('export_import_id')
         shipping_ids = self.env['dpt.shipping.slip'].sudo().search(
-            ['|', '|', ('export_import_ids', 'in', export_import_ids.id),
+            ['|', '|', ('export_import_ids', 'in', export_import_ids.ids),
              ('in_picking_ids', 'in', in_out_picking_ids.ids), ('out_picking_ids', 'in', in_out_picking_ids.ids)])
         action['domain'] = [('id', 'in', shipping_ids.ids)]
         return action
