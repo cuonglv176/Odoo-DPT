@@ -236,7 +236,48 @@ class SaleOrder(models.Model):
                         'fixed_price': sale_service_id.price,
                         'is_price': False,
                     })
+            self.action_update_fields()
         return res
+
+    @api.onchange('partner_id')
+    def onchange_get_data_required_fields(self):
+        if self.partner_id.service_field_ids:
+            for sale_service_id in self.sale_service_ids:
+                if sale_service_id.fields_id.is_template:
+                    for partner_service_field_id in self.partner_id.service_field_ids:
+                        if sale_service_id.fields_id.code == partner_service_field_id.code:
+                            sale_service_id.write({
+                                'value_char': partner_service_field_id.value_char,
+                                'value_integer': partner_service_field_id.value_integer,
+                                'value_date': partner_service_field_id.value_date,
+                                'selection_value_id': partner_service_field_id.selection_value_id.id,
+                            })
+
+    def action_update_fields(self):
+        for field_id in self.fields_ids:
+            if field_id.fields_id.is_template:
+                partner_field_id = self.env['dpt.partner.required.fields'].search(
+                    [('partner_id', '=', self.partner_id.id), ('code', '=', field_id.fields_id.code)])
+                if not partner_field_id:
+                    self.env['dpt.partner.required.fields'].create({
+                        'name': field_id.fields_id.name,
+                        'description': field_id.fields_id.description,
+                        'fields_type': field_id.fields_id.fields_type,
+                        'uom_id': field_id.fields_id.uom_id.id,
+                        'code': field_id.fields_id.code,
+                        'value_char': field_id.value_char,
+                        'value_integer': field_id.value_integer,
+                        'value_date': field_id.value_date,
+                        'selection_value_id': field_id.selection_value_id.id,
+                        'partner_id': self.partner_id.id,
+                    })
+                else:
+                    partner_field_id.write({
+                        'value_char': field_id.value_char,
+                        'value_integer': field_id.value_integer,
+                        'value_date': field_id.value_date,
+                        'selection_value_id': field_id.selection_value_id.id,
+                    })
 
     def send_quotation_department(self):
         self.times_of_quotation = self.times_of_quotation + 1
@@ -547,6 +588,17 @@ class SaleOrderField(models.Model):
     ], string='Fields type', default='char', related='fields_id.fields_type')
     using_calculation_price = fields.Boolean(related='fields_id.using_calculation_price')
     uom_id = fields.Many2one(related="fields_id.uom_id")
+
+    @api.onchange('sale_id')
+    def onchange_get_data_required_fields(self):
+        if self.sale_id.partner_id.service_field_ids:
+            if self.fields_id.is_template:
+                for partner_service_field_id in self.sale_id.partner_id.service_field_ids:
+                    if self.fields_id.code == partner_service_field_id.code:
+                        self.value_char = partner_service_field_id.value_char
+                        self.value_integer = partner_service_field_id.value_integer
+                        self.value_date = partner_service_field_id.value_date
+                        self.selection_value_id = partner_service_field_id.selection_value_id.id
 
     def check_required_fields(self):
         for r in self:

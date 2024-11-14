@@ -175,6 +175,8 @@ class RequiredField(models.Model):
         ('packing_num_in_po', 'Packing Num in PO'),
         ('declared_price_in_so', 'Declared Price in SO'),
     ], string='Default From', tracking=True)
+    code = fields.Char(string='Mã')
+    is_template = fields.Boolean(string='Sử dụng lại')
 
     def get_default_value(self, so):
         if not so:
