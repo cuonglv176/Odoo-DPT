@@ -5,7 +5,7 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//page[0]" position="after">
+            <xpath expr="//page[@name='contact_addresses']" name="partner_field" position="after">
                 <page string="Thông tin Fields">
                     <field name="service_field_ids" nolable="1" >
                         <tree editable="bottom">
