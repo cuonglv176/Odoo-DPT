@@ -54,7 +54,7 @@
                         <page string="Required Fields" name="required_fields">
                             <field name="required_fields_ids" nolabel="1">
                                 <tree editable="bottom">
-                                    <field name="code" required="is_template = True"/>
+                                    <field name="code" required="is_template == True"/>
                                     <field name="is_template" widget="boolean_toggle"/>
                                     <field name="fields_id" domain="[('relation','=','sale.order')]"
                                            column_invisible="1"/>
