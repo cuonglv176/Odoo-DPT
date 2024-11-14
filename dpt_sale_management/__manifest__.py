@@ -12,6 +12,7 @@
         'security/ir.model.access.csv',
         'wizards/dpt_sale_calculation.xml',
         'views/sale_order.xml',
+        'views/res_partner.xml',
     ],
     'installable': True,
     'application': True,

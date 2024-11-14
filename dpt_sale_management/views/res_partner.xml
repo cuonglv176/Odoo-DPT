@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_partner_field_inherit_form" model="ir.ui.view">
+        <field name="name">res.partner.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[0]" position="after">
+                <page string="Thông tin Fields">
+                    <field name="service_field_ids" nolable="1" >
+                        <tree editable="bottom">
+                            <field name="code"/>
+                            <field name="description"/>
+                            <field name="fields_type"/>
+                            <field name="uom_id"/>
+                            <field name="value_char" invisible="fields_type != 'char'"
+                                   required="type == 'required' and fields_type == 'char'"/>
+                            <field name="value_integer" invisible="fields_type != 'integer'"
+                                   required="type == 'required' and fields_type == 'integer'"/>
+                            <field name="value_date" invisible="fields_type != 'date'"
+                                   required="type == 'required' and fields_type == 'date'"/>
+                            <field name="selection_value_id" invisible="fields_type != 'selection'"
+                                   required="type == 'required' and fields_type == 'selection'"
+                                   domain="[('fields_id','=',fields_id)]"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
