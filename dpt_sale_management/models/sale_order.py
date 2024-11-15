@@ -237,7 +237,7 @@ class SaleOrder(models.Model):
                         'fixed_price': sale_service_id.price,
                         'is_price': False,
                     })
-            self.action_update_fields()
+            order_id.action_update_fields()
         return res
 
     @api.onchange('partner_id')
