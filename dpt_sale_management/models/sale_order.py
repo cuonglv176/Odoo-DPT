@@ -199,6 +199,7 @@ class SaleOrder(models.Model):
             self.fields_ids = [(0, 0, item) for item in val]
         if not self.sale_service_ids:
             self.fields_ids = [(5, 0, 0)]
+        self.onchange_get_data_required_fields()
 
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
