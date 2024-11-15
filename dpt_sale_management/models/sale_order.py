@@ -242,7 +242,7 @@ class SaleOrder(models.Model):
     @api.onchange('partner_id')
     def onchange_get_data_required_fields(self):
         if self.partner_id.service_field_ids:
-            for sale_service_id in self.sale_service_ids:
+            for sale_service_id in self.fields_ids:
                 if sale_service_id.fields_id.is_template:
                     for partner_service_field_id in self.partner_id.service_field_ids:
                         if sale_service_id.fields_id.code == partner_service_field_id.code:
