@@ -102,6 +102,8 @@ class SaleOrder(models.Model):
         self.check_required_fields()
         if self.state != 'sale':
             self.onchange_calculation_tax()
+        if vals.get('state') == 'sale':
+            self.action_update_fields()
         return res
 
     def action_unlock(self):
