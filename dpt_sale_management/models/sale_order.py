@@ -392,18 +392,18 @@ class SaleOrder(models.Model):
             if sale_service_id.service_id.pricelist_item_ids and price_status == 'no_price':
                 price_status = 'calculated'
 
-            # sale_service_id.with_context(from_pricelist=True).write({
-            #     'uom_id': price_list_item_id.uom_id.id if price_list_item_id else (
-            #         service_price_ids[:1].uom_id.id if service_price_ids and service_price_ids[:1].uom_id else None),
-            #     'price': max_price / compute_value if price_list_item_id and price_list_item_id.is_price else max_price,
-            #     'qty': 1,
-            #     'pricelist_item_id': price_list_item_id.id if price_list_item_id else (
-            #         service_price_ids[:1].id if service_price_ids else None),
-            #     'price_in_pricelist': max_price,
-            #     'compute_value': compute_value,
-            #     'compute_uom_id': compute_uom_id,
-            #     'price_status': price_status,
-            # })
+            sale_service_id.with_context(from_pricelist=True).write({
+                'uom_id': price_list_item_id.uom_id.id if price_list_item_id else (
+                    service_price_ids[:1].uom_id.id if service_price_ids and service_price_ids[:1].uom_id else None),
+                'price': max_price / compute_value if price_list_item_id and price_list_item_id.is_price else max_price,
+                'qty': 1,
+                'pricelist_item_id': price_list_item_id.id if price_list_item_id else (
+                    service_price_ids[:1].id if service_price_ids else None),
+                'price_in_pricelist': max_price,
+                'compute_value': compute_value,
+                'compute_uom_id': compute_uom_id,
+                'price_status': price_status,
+            })
         self.onchange_calculation_tax()
 
     @api.returns('self', lambda value: value.id)
@@ -619,7 +619,7 @@ class SaleOrderField(models.Model):
     def write(self, vals):
         res = super(SaleOrderField, self).write(vals)
         if 'value_char' in vals or 'value_integer' in vals or 'value_date' in vals:
-            self.sale_id.action_calculation()
+            # self.sale_id.action_calculation()
             self.check_required_fields()
         return res
 
