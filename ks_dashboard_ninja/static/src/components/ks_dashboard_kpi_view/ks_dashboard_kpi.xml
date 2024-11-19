@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="Ksdashboardkpiview">
+        <t t-if="props.item.ks_model_id_2 == false and (props.item.target_view == 'Number' || !props.item.ks_enable_goal)">
+            <t t-call="ks_kpi_template"/>
+        </t>
+        <t t-elif="props.item.ks_model_id_2 == false and (props.item.target_view == 'Progress Bar' and  props.item.ks_goal_enable)">
+            <t t-call="ks_kpi_template_3"/>
+        </t>
+        <t t-else="">
+            <t t-call="ks_kpi_template_2"/>
+        </t>
+    </t>
+
+    <t t-name="ks_kpi_template">
+        <div t-att-class="'ks_item_click grid-stack-item'+ previewclass" t-att-id="state.item_info_kpi1.item.id" t-ref="ks_kpi">
+            <div class="ks_dashboard_kpi ks_dashboard_kpi_dashboard ks_dashboard_custom_srollbar ks_dashboarditem_id ks_dashboard_item_hover ks_db_item_preview_color_picker grid-stack-item-content"
+                 t-att-title="state.item_info_kpi1.item.ks_info" t-att-id="state.item_info_kpi1.item.id">
+                <div class="ks_dashboard_icon_l5 ks_dashboard_icon_color_picker ">
+                    <t t-if="state.item_info_kpi1.icon_select=='Custom'">
+                        <t t-if="state.item_info_kpi1.ks_icon_url">
+                            <img t-att-src="state.item_info_kpi1.ks_icon_url"/>
+                        </t>
+                    </t>
+                    <t t-elif="state.item_info_kpi1.icon_select=='Default'">
+                        <span t-att-style="'color:'+ state.item_info_kpi1.icon_color + ';'"
+                              t-att-class="'fa fa-' + state.item_info_kpi1.default_icon + ' fa-4x'"/>
+                    </t>
+                </div>
+                <div class="ks_dashboard_item_main_body_l5 ks_kpi_main_body">
+                    <div class="ks_dashboard_kpi_name_preview" t-att-title="state.item_info_kpi1.name">
+                        <t t-esc="state.item_info_kpi1.name"/>
+                    </div>
+                    <div class="ks_dashboard_kpi_count_preview" t-att-title="state.item_info_kpi1.count_1_tooltip">
+                        <t t-esc="state.item_info_kpi1.count_1"/>
+                    </div>
+                </div>
+                <div class=" d-flex ks_target_previous">
+                    <t t-if="state.item_info_kpi1.ks_enable_goal">
+                        <div>
+                            <div style="color: rgba(0, 0, 0, 0.61); text-align:center;">
+                                <span>vs Target</span>
+                            </div>
+                            <div>
+                                <span class="target_deviation" style="font-size : medium;">
+                                    <t t-esc="state.item_info_kpi1.target_deviation"/>
+                                    <t t-if="state.item_info_kpi1.target_arrow">
+                                        <i t-att-class="'fa fa-arrow-'+ state.item_info_kpi1.target_arrow"/>
+                                    </t>
+                                </span>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-if="state.item_info_kpi1.ks_previous_period">
+                        <div style="text-align: center;">
+                            <div style="color: rgba(0, 0, 0, 0.61);">
+                                <span>vs Prev</span>
+                            </div>
+                            <div>
+                                <span class="pre_deviation " style="font-size:medium;">
+                                    <t t-esc="state.item_info_kpi1.pre_deviation"/>
+                                    <i t-att-class="'fa fa-arrow-'+ pre_arrow"/>
+                                </span>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+<!--                for ai dashboard-->
+                <img src="ks_dashboard_ninja/static/description/images/selected.svg" class="ks_img_display d-none" width="30"/>
+<!---->
+                <div class="ks_dashboard_item_button_container ks_dropdown_container ks_dashboard_item_header_l6 ks_dashboard_item_header_hover"
+                     t-att-data-item_id="state.item_info_kpi1.item.id">
+                    <t t-if="state.item_info_kpi1.item.ksIsDashboardManager">
+                        <!--  Dashboard Item Move/Copy Feature -->
+                        <button title="Move/Duplicate" data-bs-toggle="dropdown"
+                                class="ks_dashboard_item_action btn dropdown-toggle btn-xs d-md-block d-none"
+                                type="button"
+                                t-att-style="'color:'+ state.item_info_kpi1.ks_rgba_button_color + ';'"
+                                aria-expanded="true">
+                            <i class="fa fa-files-o"/>
+                        </button>
+                        <ul role="menu" class="ks_dashboard_menu_container dropdown-menu dropdown-menu-right">
+                            <li class="ks_md_heading">
+                                <span>Select Dashboard</span>
+                            </li>
+                            <li class="my-3">
+                                <select class="o_input o_group_selector o_add_group ks_dashboard_select">
+                                    <t t-foreach="state.item_info_kpi1.ks_dashboard_list" t-as="ks_dashboard" t-key="ks_dashboard.id">
+                                        <option t-att-value="ks_dashboard['id']">
+                                            <t t-esc="ks_dashboard['name']"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </li>
+                            <li class="mt-3">
+                                <button class="btn btn-primary o_apply_group o_add_group ks_duplicate_item"
+                                        tabindex="-1" type="button">Duplicate
+                                </button>
+                                <button class="btn btn-primary o_apply_group o_add_group ks_move_item" tabindex="-1"
+                                        type="button">Move
+                                </button>
+                            </li>
+                        </ul>
+
+                        <button title="Quick Customize"
+                                class="ks_dashboard_quick_edit_action_popup   d-md-block d-none "
+                                t-att-style="'color:'+ state.item_info_kpi1.ks_rgba_button_color + ';'"
+                                type="button" t-att-data-item-id="state.item_info_kpi1.item.id">
+                            <i class="fa fa-pencil"/>
+                        </button>
+
+                        <button type="button" title="Customize Item"
+                                class="ks_dashboard_item_customize ks_dashboard_item_fa_con d-block d-sm-none"
+                                t-att-style="'color:'+ state.item_info_kpi1.ks_rgba_button_color + ';'">
+                            <i class="fa fa-pencil"/>
+                        </button>
+                        <button type="button" title="Remove Item"
+                                class="ks_dashboard_item_delete d-md-block d-none"
+                                t-att-style="'color:'+ state.item_info_kpi1.ks_rgba_button_color + ';'">
+                            <i class="fa fa-times"/>
+                        </button>
+                        <div class="ks_chart_inner_buttons dropdown d-md-none dn-setting-panel">
+                            <button data-bs-toggle="dropdown"
+                                    class="ks_dashboard_item_action  btn dropdown-toggle btn-xs o-no-caret btn"
+                                    type="button"
+                                    t-att-style="'color:'+ state.item_info_kpi1.ks_rgba_button_color + ';'"
+                                    aria-expanded="true">
+                                    <i class="fa fa-cog"/>
+                                </button>
+                            <div role="menu" class="dropdown-menu dropdown-menu-right ks_chart_inner_min_width">
+                                    <!--Dynamic Rendering-->
+                                <div class="ks_chart_export_menu">
+                                    <div class="ks_dashboard_item_customize ks_chart_export_menu_item"
+                                         t-att-data-item-id="state.item_info_kpi1.item_id"
+                                         data-format="chart_xls">
+                                        <i class="fa fa-pencil"></i>
+                                        <span>Customize Item</span>
+                                    </div>
+                                    <div class="ks_dashboard_item_delete ks_chart_export_menu_item"
+                                         t-att-data-item-id="state.item_info_kpi1.item_id"
+                                         data-format="chart_xls">
+                                            <i class="fa fa-times"></i>
+                                        <span>Remove Item</span>
+                                    </div>
+                             </div>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-if="state.item_info_kpi1.item.ksIsUser">
+                        <div class="ks_chart_inner_buttons d-md-block d-none">
+                                <button title="Export Item" data-bs-toggle="dropdown"
+                                        class="ks_dashboard_item_action  btn dropdown-toggle btn-xs o-no-caret btn"
+                                        type="button"
+                                        t-att-style="'color:'+ state.item_info_kpi1.ks_rgba_button_color + ';'"
+                                        aria-expanded="true">
+                                        <i class="fa fa-ellipsis-v"/>
+                                    </button>
+                            <div role="menu" class="dropdown-menu dropdown-menu-right">
+                                        <!--Dynamic Rendering-->
+                                <div class="ks_chart_export_menu">
+                                    <div class="ks_chart_export_menu_header">
+                                        <span>Export</span>
+                                    </div>
+                                    <div class="ks_chart_json_export ks_chart_export_menu_item"
+                                         t-att-data-item-id="item_id"
+                                         data-format="chart_xls">
+                                        <i class="fa fa-file-code-o"/>
+                                        <span>Export Item</span>
+                                    </div>
+                                 </div>
+                                </div>
+                            </div>
+                    </t>
+                    <t t-if="state.item_info_kpi1.item.ksIsUser">
+                        <div class="ks_chart_inner_buttons dropdown">
+                            <button title="Info" data-bs-toggle="dropdown"
+                                    class="ks_item_description btn dropdown-toggle btn-xs o-no-caret btn"
+                                    type="button"
+                                    t-att-style="'color:'+ state.item_info_kpi1.ks_rgba_button_color + ';'"
+                                    aria-expanded="true">
+                                <i class="fa fa-book"/>
+                            </button>
+                            <div role="menu" class="dropdown-menu dropdown-menu-right" style="width:20rem">
+                                <!--Dynamic Rendering-->
+                                <div class="ks_chart_export_menu">
+                                    <div class="ks_chart_export_menu_header" style="margin-left:-10px">
+                                        <span>Info</span>
+                                    </div>
+                                    <div class="ks_info" style="margin-left:10px">
+                                        <span>Company: <t t-esc="state.item_info_kpi1.item.ks_company"/></span>
+                                    </div>
+                                    <div class="ks_info" style="margin-left:10px">
+                                        <t t-if="state.item_info_kpi1.ks_info">
+                                            <t t-foreach="state.item_info_kpi1.ks_info" t-as="ks_description" t-key="ks_description_index">
+                                                <span><t t-esc="ks_description"/></span>
+                                                <br></br>
+                                             </t>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ks_kpi_template_3">
+        <div class="ks_item_click grid-stack-item template-3-checking" t-att-id="state.item_info_kpi3.item.id" t-ref="ks_kpi">
+            <div t-att-id="state.item_info_kpi3.id"
+                 class="ks_dashboard_kpi ks_dashboard_custom_srollbar ks_dashboarditem_id ks_dashboard_item_hover ks_db_item_preview_color_picker grid-stack-item-content"
+                t-att-title="state.item_info_kpi3.item.ks_info">
+                <div class="ks_dashboard_icon_l5 ks_dashboard_icon_color_picker ">
+                    <t t-if="state.item_info_kpi3.icon_select=='Custom'">
+                        <t t-if="state.item_info_kpi3.ks_icon_url">
+                            <img t-att-src="state.item_info_kpi3.ks_icon_url"/>
+                        </t>
+                    </t>
+                    <t t-elif="state.item_info_kpi3.icon_select=='Default'">
+                        <span t-att-style="'color:'+ state.item_info_kpi3.icon_color + ';'"
+                              t-att-class="'fa fa-' + state.item_info_kpi3.default_icon + ' fa-4x'"/>
+                    </t>
+                </div>
+                <div class="ks_dashboard_item_main_body_l5 ks_kpi_main_body">
+                    <div class="ks_dashboard_kpi_name_preview">
+                        <t t-esc="state.item_info_kpi3.name"/>
+                    </div>
+                    <div class="ks_dashboard_kpi_count_preview" t-att-title="count_1_tooltip">
+                        <span class="ks_count">
+                            <t t-esc="state.item_info_kpi3.count_1"/>
+                        </span>
+                        /
+                        <span>
+                            <t t-esc="state.item_info_kpi3.target"/>
+                        </span>
+                    </div>
+                </div>
+                <div class="text-center ks_progress">
+                    <div>
+                        <progress id="ks_progressbar" value="0" max="100"/>
+                    </div>
+                    <div class="text-center">
+                        <t t-esc="state.item_info_kpi3.target_progress_deviation"/>%
+                    </div>
+                </div>
+                <t t-if="ks_previous_period and previous_period_data">
+                    <div class="text-center mt-1">
+                        <div>
+                            <span>vs Prev</span>
+                        </div>
+                        <div>
+                            <t t-esc="state.item_info_kpi3.previous_period_data"/>
+                            <span class="pre_deviation">
+                                <t t-esc="state.item_info_kpi3.pre_deviation"/>
+                                <i t-att-class="'fa fa-arrow-'+ state.item_info_kpi3.pre_arrow"/>
+                            </span>
+                        </div>
+                    </div>
+                </t>
+
+                <div class="ks_dashboard_item_button_container ks_dropdown_container ks_dashboard_item_header_l6 ks_dashboard_item_header_hover"
+                     t-att-data-item_id="state.item_info_kpi3.item.id">
+                    <t t-if="state.item_info_kpi3.item.ksIsDashboardManager">
+                        <!--  Dashboard Item Move/Copy Feature -->
+                        <button title="Move/Duplicate" data-bs-toggle="dropdown"
+                                class="ks_dashboard_item_action btn dropdown-toggle btn-xs d-md-block d-none" type="button"
+                                t-att-style="'color:'+ state.item_info_kpi3.ks_rgba_button_color + ';'"
+                                aria-expanded="true">
+                            <i class="fa fa-files-o"/>
+                        </button>
+                        <ul role="menu" class="ks_dashboard_menu_container dropdown-menu dropdown-menu-right">
+                            <li class="ks_md_heading">
+                                <span>Select Dashboard</span>
+                            </li>
+                            <li class="my-3">
+                                <select class="o_input o_group_selector o_add_group ks_dashboard_select">
+                                    <t t-foreach="state.item_info_kpi3.ks_dashboard_list" t-as="ks_dashboard" t-key="ks_dashboard_index">
+                                        <option t-att-value="ks_dashboard['id']">
+                                            <t t-esc="ks_dashboard['name']"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </li>
+                            <li class="mt-3">
+                                <button class="btn btn-primary o_apply_group o_add_group ks_duplicate_item"
+                                        tabindex="-1" type="button">Duplicate
+                                </button>
+                                <button class="btn btn-primary o_apply_group o_add_group ks_move_item" tabindex="-1"
+                                        type="button">Move
+                                </button>
+                            </li>
+                        </ul>
+
+                        <button title="Quick Customize"
+                                class="ks_dashboard_quick_edit_action_popup   d-md-block d-none "
+                                 t-att-style="'color:'+ state.item_info_kpi3.ks_rgba_button_color + ';'"
+                                type="button" t-att-data-item-id="state.item_info_kpi3.item.id">
+                            <i class="fa fa-pencil"/>
+                        </button>
+
+                        <button type="button" title="Customize Item"
+                                class="ks_dashboard_item_customize ks_dashboard_item_fa_con d-block d-sm-none"
+                                t-att-style="'color:'+ state.item_info_kpi3.ks_rgba_button_color + ';'">
+                            <i class="fa fa-pencil"/>
+                        </button>
+                        <button type="button" title="Remove Item"
+                                class="ks_dashboard_item_delete d-md-block d-none"
+                                t-att-style="'color:'+ state.item_info_kpi3.ks_rgba_button_color + ';'">
+                            <i class="fa fa-times"/>
+                        </button>
+                        <div class="ks_chart_inner_buttons dropdown d-md-none dn-setting-panel">
+                            <button  data-bs-toggle="dropdown"
+                                        class="ks_dashboard_item_action  btn dropdown-toggle btn-xs o-no-caret btn"
+                                        type="button"
+                                         t-att-style="'color:'+ state.item_info_kpi3.ks_rgba_button_color + ';'"
+                                        aria-expanded="true">
+                                    <i class="fa fa-cog"/>
+                                </button>
+                                <div role="menu" class="dropdown-menu dropdown-menu-right ks_chart_inner_min_width">
+                                    <!--Dynamic Rendering-->
+                                    <div class="ks_chart_export_menu">
+                                        <div class="ks_dashboard_item_customize ks_chart_export_menu_item" t-att-data-item-id="state.item_info_kpi3.item_id"
+                                             data-format="chart_xls">
+                                            <i class="fa fa-pencil"></i>
+                                            <span>Customize Item</span>
+                                        </div>
+                                        <div class="ks_dashboard_item_delete ks_chart_export_menu_item" t-att-data-item-id="state.item_info_kpi3.item_id"
+                                             data-format="chart_xls">
+                                            <i class="fa fa-times"></i>
+                                            <span>Remove Item</span>
+                                        </div>
+                             </div>
+                            </div>
+                            </div>
+                    </t>
+                    <t t-if="state.item_info_kpi3.item.ksIsUser">
+                        <div class="ks_chart_inner_buttons d-md-block d-none">
+                            <button title="Export Item" data-bs-toggle="dropdown"
+                                        class="ks_dashboard_item_action  btn dropdown-toggle btn-xs o-no-caret btn"
+                                        type="button"
+                                         t-att-style="'color:'+ state.item_info_kpi3.ks_rgba_button_color + ';'"
+                                        aria-expanded="true">
+                                    <i class="fa fa-ellipsis-v"/>
+                                </button>
+                                <div role="menu" class="dropdown-menu dropdown-menu-right">
+                                    <!--Dynamic Rendering-->
+                                    <div class="ks_chart_export_menu">
+                                <div class="ks_chart_export_menu_header">
+                                    <span>Export</span>
+                                </div>
+                                <div class="ks_chart_json_export ks_chart_export_menu_item"
+                                     t-att-data-item-id="item_id"
+                                     data-format="chart_xls">
+                                    <i class="fa fa-file-code-o"/>
+                                    <span>Export Item</span>
+                                </div>
+                             </div>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-if="state.item_info_kpi3.item.ksIsUser">
+                    <div class="ks_chart_inner_buttons dropdown">
+                        <button title="Info" data-bs-toggle="dropdown"
+                                class="ks_item_description btn dropdown-toggle btn-xs o-no-caret btn"
+                                type="button"
+                                t-att-style="'color:'+ state.item_info_kpi3.ks_rgba_button_color + ';'"
+                                aria-expanded="true">
+                            <i class="fa fa-book"/>
+                        </button>
+                        <div role="menu" class="dropdown-menu dropdown-menu-right" style="width:20rem">
+                            <!--Dynamic Rendering-->
+                            <div class="ks_chart_export_menu">
+                                <div class="ks_chart_export_menu_header" style="margin-left:-10px">
+                                    <span>Info</span>
+                                </div>
+                                <div class="ks_info" style="margin-left:10px">
+                                    <span>Company: <t t-esc="state.item_info_kpi3.item.ks_company"/></span>
+                                </div>
+                                <div class="ks_info" style="margin-left:10px">
+                                    <t t-if="ks_info">
+                                        <t t-foreach="state.item_info_kpi3.ks_info" t-as="ks_description" t-key="ks_description_index">
+                                            <span><t t-esc="ks_description"/></span> <br></br>
+                                         </t>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ks_kpi_template_2">
+        <div class="ks_item_click grid-stack-item" t-att-id="state.item_info_kpi2.item.id" t-ref="ks_kpi">
+            <div t-att-id="state.item_info_kpi2.id"
+                 class="ks_dashboard_kpi ks_dashboard_kpi_dashboard ks_dashboard_custom_srollbar ks_dashboarditem_id ks_dashboard_item_hover ks_db_item_preview_color_picker grid-stack-item-content"
+                t-att-title="state.item_info_kpi2.item.ks_info">
+                <div class="ks_dashboard_icon_l5 ks_dashboard_icon_color_picker">
+                    <t t-if="state.item_info_kpi2.icon_select=='Custom'">
+                        <t t-if="state.item_info_kpi2.ks_icon_url">
+                            <img t-att-src="state.item_info_kpi2.ks_icon_url"/>
+                        </t>
+                    </t>
+                    <t t-elif="state.item_info_kpi2.icon_select=='Default'">
+                        <span t-att-style="'color:'+ state.item_info_kpi2.icon_color + ';'"
+                              t-att-class="'fa fa-' + state.item_info_kpi2.default_icon + ' fa-4x'"/>
+                    </t>
+                </div>
+                <div class="ks_dashboard_item_main_body_l5 ks_kpi_main_body">
+                    <div class="ks_dashboard_kpi_name_preview">
+                        <t t-esc="state.item_info_kpi2.name"/>
+                    </div>
+                    <div class="ks_dashboard_kpi_count_preview" t-att-title="state.item_info_kpi2.count_tooltip">
+                        <span>
+                            <t t-esc="state.item_info_kpi2.count"/>
+                            <t t-if="state.item_info_kpi2.target_view =='Progress Bar' and state.item_info_kpi2.target_enable">/
+                                <t t-esc="state.item_info_kpi2.target"/>
+                            </t>
+                        </span>
+                    </div>
+                </div>
+                <t t-if="state.item_info_kpi2.ks_enable_goal and state.item_info_kpi2.target_enable">
+                    <t t-if="state.item_info_kpi2.target_deviation and state.item_info_kpi2.target_view =='Number'">
+                        <div class="text-center">
+                            <div>
+                                <span class="ks_kpi_target_grey">vs Target</span>
+                            </div>
+                            <div>
+                                <span class="target_deviation">
+                                    <t t-esc="state.item_info_kpi2.target_deviation"/>
+                                    <t t-if="state.item_info_kpi2.pre_arrow">
+                                        <i t-att-class="'fa fa-arrow-'+ state.item_info_kpi2.pre_arrow"/>
+                                    </t>
+                                </span>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-if="state.item_info_kpi2.target_progress_deviation and state.item_info_kpi2.target_view =='Progress Bar'">
+                        <div class="text-center  ks_progress">
+                            <div>
+                                <progress id="ks_progressbar" value="0" max="100"/>
+                            </div>
+                            <div class="text-center">
+                                <t t-esc="state.item_info_kpi2.target_progress_deviation"/>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+
+                <div class="ks_dashboard_item_button_container ks_dropdown_container ks_dashboard_item_header_l6 ks_dashboard_item_header_hover"
+                     t-att-data-item_id="state.item_info_kpi2.item.id">
+                    <t t-if="state.item_info_kpi2.item.ksIsDashboardManager">
+                        <!--  Dashboard Item Move/Copy Feature -->
+                        <button title="Move/Duplicate" data-bs-toggle="dropdown"
+                                class="ks_dashboard_item_action btn dropdown-toggle btn-xs d-md-block d-none" type="button"
+                                t-att-style="'color:'+ state.item_info_kpi2.ks_rgba_button_color + ';'"
+                                aria-expanded="true">
+                            <i class="fa fa-files-o"/>
+                        </button>
+                        <ul role="menu" class="ks_dashboard_menu_container dropdown-menu dropdown-menu-right">
+                            <li class="ks_md_heading">
+                                <span>Select Dashboard</span>
+                            </li>
+                            <li class="my-3">
+                                <select class="o_input o_group_selector o_add_group ks_dashboard_select">
+                                    <t t-foreach="state.item_info_kpi2.ks_dashboard_list" t-as="ks_dashboard" t-key="ks_dashboard_index">
+                                        <option t-att-value="ks_dashboard['id']">
+                                            <t t-esc="ks_dashboard['name']"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </li>
+                            <li class="mt-3">
+                                <button class="btn btn-primary o_apply_group o_add_group ks_duplicate_item"
+                                        tabindex="-1" type="button">Duplicate
+                                </button>
+                                <button class="btn btn-primary o_apply_group o_add_group ks_move_item" tabindex="-1"
+                                        type="button">Move
+                                </button>
+                            </li>
+                        </ul>
+
+                        <button title="Quick Customize"
+                                class="ks_dashboard_quick_edit_action_popup   d-md-block d-none "
+                                 t-att-style="'color:'+ state.item_info_kpi2.ks_rgba_button_color + ';'"
+                                type="button" t-att-data-item-id="state.item_info_kpi2.item.id">
+                            <i class="fa fa-pencil"/>
+                        </button>
+
+                        <button type="button" title="Customize Item"
+                                class="ks_dashboard_item_customize ks_dashboard_item_fa_con d-block d-sm-none"
+                                t-att-style="'color:'+ state.item_info_kpi2.ks_rgba_button_color + ';'">
+                            <i class="fa fa-pencil"/>
+                        </button>
+                        <button type="button" title="Remove Item"
+                                class="ks_dashboard_item_delete d-md-block d-none"
+                                t-att-style="'color:'+ state.item_info_kpi2.ks_rgba_button_color + ';'">
+                            <i class="fa fa-times"/>
+                        </button>
+                        <div class="ks_chart_inner_buttons dropdown d-md-none dn-setting-panel">
+                            <button  data-bs-toggle="dropdown"
+                                        class="ks_dashboard_item_action  btn dropdown-toggle btn-xs o-no-caret btn"
+                                        type="button"
+                                         t-att-style="'color:'+ state.item_info_kpi2.ks_rgba_button_color + ';'"
+                                        aria-expanded="true">
+                                    <i class="fa fa-cog"/>
+                                </button>
+                                <div role="menu" class="dropdown-menu dropdown-menu-right ks_chart_inner_min_width">
+                                    <!--Dynamic Rendering-->
+                                    <div class="ks_chart_export_menu">
+                                        <div class="ks_dashboard_item_customize ks_chart_export_menu_item" t-att-data-item-id="state.item_info_kpi2.item_id"
+                                             data-format="chart_xls">
+                                            <i class="fa fa-pencil"></i>
+                                            <span>Customize Item</span>
+                                        </div>
+                                        <div class="ks_dashboard_item_delete ks_chart_export_menu_item" t-att-data-item-id="state.item_info_kpi2.item_id"
+                                             data-format="chart_xls">
+                                            <i class="fa fa-times"></i>
+                                            <span>Remove Item</span>
+                                        </div>
+                             </div>
+                            </div>
+                            </div>
+                    </t>
+                     <t t-if="state.item_info_kpi2.item.ksIsUser">
+                        <div class="ks_chart_inner_buttons d-md-block d-none">
+                            <button title="Export Item" data-bs-toggle="dropdown"
+                                        class="ks_dashboard_item_action  btn dropdown-toggle btn-xs o-no-caret btn"
+                                        type="button"
+                                         t-att-style="'color:'+ state.item_info_kpi2.ks_rgba_button_color + ';'"
+                                        aria-expanded="true">
+                                    <i class="fa fa-ellipsis-v"/>
+                                </button>
+                                <div role="menu" class="dropdown-menu dropdown-menu-right">
+                                    <!--Dynamic Rendering-->
+                                    <div class="ks_chart_export_menu">
+                                <div class="ks_chart_export_menu_header">
+                                    <span>Export</span>
+                                </div>
+                                <div class="ks_chart_json_export ks_chart_export_menu_item"
+                                     t-att-data-item-id="state.item_info_kpi2.item_id"
+                                     data-format="chart_xls">
+                                    <i class="fa fa-file-code-o"/>
+                                    <span>Export Item</span>
+                                </div>
+                             </div>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-if="state.item_info_kpi2.item.ksIsUser">
+                        <div class="ks_chart_inner_buttons dropdown">
+                            <button title="Info" data-bs-toggle="dropdown"
+                                    class="ks_item_description btn dropdown-toggle btn-xs o-no-caret btn"
+                                    type="button"
+                                    t-att-style="'color:'+ state.item_info_kpi2.ks_rgba_button_color + ';'"
+                                    aria-expanded="true">
+                                <i class="fa fa-book"/>
+                            </button>
+                            <div role="menu" class="dropdown-menu dropdown-menu-right" style="width:20rem">
+                                <!--Dynamic Rendering-->
+                                <div class="ks_chart_export_menu">
+                                    <div class="ks_chart_export_menu_header" style="margin-left:-10px">
+                                        <span>Info</span>
+                                    </div>
+                                    <div class="ks_info" style="margin-left:10px">
+                                        <span>Company: <t t-esc="state.item_info_kpi2.item.ks_company"/></span>
+                                    </div>
+                                    <div class="ks_info" style="margin-left:10px">
+                                        <t t-if="state.item_info_kpi2.ks_info">
+                                            <t t-foreach="state.item_info_kpi2.ks_info" t-as="ks_description" t-key="ks_description_index">
+                                                <span><t t-esc="ks_description"/></span> <br></br>
+                                             </t>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

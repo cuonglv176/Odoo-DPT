@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="image_widget">
+        <div class="d-flex flex-column py-3">
+            <t t-if="props.record.data.ks_icon_select == 'Default'">
+                <div class="o_field_image" aria-atomic="true">
+                    <t t-if="props.readonly != true">
+                        <div class="o_form_image_controls">
+                            <div class="d-flex mb-3">
+                            <button type="button" class=" fa fa-image fa-lg ks_image_widget_icon_container"
+                                title="Select Icons" t-on-click="(ev) => this.ks_image_widget_icon_container(ev)">
+                            </button>
+                            <button class="fa fa-trash-o fa-lg o_clear_file_button" title="Clear"
+                                aria-label="Clear" t-on-click="(ev) => this.ks_remove_icon(ev)">
+                            </button>
+                            </div>
+                            <span class="o_form_binary_progress">Uploading...</span>
+                            <t t-if="props.record.data.ks_icon_select == 'Default'">
+                                <span t-att-class="'fa fa-' + props.record.data.ks_default_icon + ' fa-5x'" style="color:black">
+                                </span>
+                            </t>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </div>
+    </t>
+
+
+</templates>

@@ -1,0 +1,701 @@
+/* TO make whole page in white ks_dashboard_linkbackground(below grey screen start) : Hiding it for now */
+.ks_dashboard_form {
+    min-height: 100%;
+}
+.ks_dashboard_ninja {
+      margin-bottom: 20px;
+}
+
+.ks_dashboard_main_content {
+    overflow: auto;
+    height: calc(100vh - 175px);
+    max-height:100%;
+}
+.ks_dashboard_ninja_header{
+    text-align : right;
+    display: flex ;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 15px 8px;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.ks_overflow {
+    overflow: auto;
+}
+
+.ks_dashboard_header_name {
+        margin: 0;
+        max-width: 35%;
+}
+
+.ks_header_container_div{
+     float:none;
+     background: #f2f2f2;
+     margin-top: -20px;
+     box-shadow: 2px 3px 6px #bbb5b5;
+}
+
+
+.ks_white_background{
+    background-color : white;
+}
+
+
+.ks_dashboard_header_name {
+    margin: 0;
+    width: 80vmin;
+    overflow-wrap: break-word;
+    text-align: left;
+}
+
+.ks_layout_color{
+    background-color : #F9F9F9;
+    margin-left : 35px;
+    margin-top : 20px;
+}
+
+
+.ks_dashboard_item{
+    padding: 8px 15px 20px 15px;
+    /*border : 1px solid #CDD1D9;*/
+    color : black;
+    margin-top: 15px;
+    border-radius : 6px;
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    overflow:visible !important;
+}
+.ks_dashboard_item:hover{
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+.ks_dashboard_item_header{
+    text-align : right;
+    min-height: 21px;
+}
+
+.ks_dashboard_item_main_body{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ks_dashboard_item_info{
+    margin-left : 10px;
+    width : calc(100% - 100px);
+}
+
+.ks_dashboard_item_name{
+    font-weight : bold;
+    font-size: 23px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-transform: none;
+    min-height : 34px;
+}
+
+.ks_dashboard_item_domain_count{
+    font-size: 28px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks_dashboard_icon{
+    display: block;
+    margin: auto;
+}
+
+.ks_dashboard_icon>img {
+    width : 50px;
+    height : 50px;
+}
+
+.ks_dashboard_item_header>button{
+    visibility:hidden;
+    background: transparent;
+    border: none;
+}
+.ks_dashboard_item_hover:hover .ks_dashboard_item_header_hover > button {
+    visibility: visible;
+}
+
+.ks_dashboard_item_menu_show > button{
+    visibility: visible !important;
+}
+
+.ks_dashboard_item_header_hover>button:hover{
+    transition: 0.2s linear;
+    transform: scale(1.1);
+    cursor: pointer !important;
+}
+
+
+.ks_item_not_click {
+   cursor : move;
+}
+
+
+/* For Layout 2 Css */
+
+.ks_dashboard_item_l2{
+    display : flex;
+    border-radius: 6px;
+    margin-top : 15px;
+    height: 132px;
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.ks_dashboard_item_l2:hover{
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+
+.ks_dashboard_icon_l2{
+    padding : 20px;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+    width: 100px;
+    /* width: 36%; */
+    padding-top: 35px;
+    position:relative;
+    display: flex;
+    justify-content: center;
+}
+
+/* font awesome resposive CSS for layou 2*/
+.ks_dashboard_icon_l2>span{
+    font-size:5em;
+}
+
+
+.ks_dashboard_icon_l2>img {
+    width: 60px;
+    height : 60px;
+}
+
+.ks_dashboard_item_main_body_l2{
+    position : relative;
+    width: calc(100% - 100px);
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+.ks_dashboard_item_header_l2{
+    position : absolute;
+    right: 5px;
+    top: 5px;
+}
+
+.ks_dashboard_item_header_l2>button{
+    visibility:hidden;
+    background: transparent;
+    border: none;
+}
+
+.ks_dashboard_item_domain_count_l2{
+    font-size: 35px;
+    margin-left: 20px;
+    margin-top: 25px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks_dashboard_item_name_l2{
+    font-weight: bold;
+    font-size: medium;
+    width: 80%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 20px;
+    margin-bottom: 10px;
+    text-transform: none;
+}
+
+
+
+/* layout 3 */
+
+.ks_dashboard_item_info_l3{
+    padding-left: 10px;
+    width: calc(100% - 60px);
+    margin-left: 0px;
+}
+
+.ks_dashboard_icon_l3 {
+    display: block;
+    max-width: 70px;
+}
+
+.ks_dashboard_icon_l3 > img{
+    width: 50px;
+    height : 50px;
+}
+
+.ks_dashboard_item_name_l3{
+    text-transform: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: right;
+    font-size: medium;
+    min-height : 24px;
+}
+
+.ks_dashboard_item_domain_count_l3{
+    text-align: right;
+    font-weight: bold;
+    font-size: 35px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Item Layout 4 */
+
+.ks_dashboard_item_l4{
+    display: flex;
+    border-radius: 6px;
+    margin-top: 15px;
+    height: 132px;
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.ks_dashboard_item_l4:hover{
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+
+.ks_dashboard_icon_l4{
+    padding : 20px;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    width : 100px;
+    padding-top: 35px;
+    display: flex;
+    justify-content: center;
+}
+
+.ks_dashboard_icon_l4>img {
+    width: 60px;
+    height : 60px;
+}
+
+.ks_dashboard_item_main_body_l5{
+    display: flex;
+    width: 100%;
+}
+
+.ks_dashboard_item_l5{
+    position : relative;
+    margin-top: 15px;
+    height: 132px;
+    border-radius: 6px;
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.ks_dashboard_item_l5:hover{
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.ks_dashboard_icon_l5{
+    position : absolute;
+    z-index: 1;
+}
+
+.ks_dashboard_icon_l5 > img{
+    width: 20px !important;
+    height: 20px;
+    margin: 10px;
+}
+
+.ks_dashboard_item_main_body_l5{
+    text-align: center;
+    padding: 0 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+.ks_dashboard_item_domain_count_l5{
+    font-size: 50px;
+    margin-left: 10px;
+    margin-top: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks_dashboard_item_name_l5{
+    font-weight: bold;
+    font-size: medium;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    text-transform: none;
+}
+
+.ks_dashboard_item_header_l5{
+    position: absolute;
+    right: 5px;
+    top: 5px;
+}
+.ks_dashboard_icon_l5 span
+{
+    font-size: 20px;
+    margin: 10px;
+}
+
+.ks_dashboard_item_header_l6{
+    position : absolute;
+    right: 25px;
+    top: 20px;
+}
+
+.ks_dashboard_item_header_l6>button{
+    visibility:hidden;
+    background: transparent;
+    border: none;
+}
+
+.ks_item_click{
+    cursor:pointer;
+}
+
+
+/* Dashboard filter related CSS */
+
+.ks_action_btns{
+    display: flex;
+    align-items: center;
+}
+
+.welcome_note{
+margin-top:10px;
+}
+.welcome_note h3{
+    font-size: 26px;
+    font-weight: bold;
+}
+    .welcome_note h3 span{
+    color:#777777
+    }
+
+    .welcome_note img {
+    width: 30px;
+}
+@media (max-width: 1075px){
+    .ks_dashboard_header_name {
+        max-width: 100%;
+    }
+    .ks_dashboard_top_menu{
+
+      margin-top: 10px;
+    }
+        .ks_dashboard_top_menu.filter_design{
+
+      margin-top: 0 !important;
+    }
+}
+
+
+.ks_dashboard_header_sticky{
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 0px;
+  z-index: 10;
+}
+
+.ks_dashboard_datepicker_z-index{
+  z-index: 10 !important;
+}
+
+
+/* Date Filter Selection CSS*/
+#ks_date_filter_selection, #ks_dn_filter_selection{
+    font-family: inherit;
+    font-weight: bold;
+    padding: 0px 8px 0px 8px;
+}
+
+.ks_date_filter_selection_input{
+    display: flex;
+    flex-direction: row;
+}
+
+.ks_date_selection_box{
+    display: flex;
+    align-items: center;
+}
+
+.ks_date_input_fields{
+    display: flex;
+//     align-items: center;
+}
+
+.flex_column_datetimerow .ks_date_input_fields{
+    display: flex;
+    width:350px;
+}
+.flex_column_datetimerow .ks_date_apply_clear_print{margin-left:5px}
+.flex_column_datetimerow #ks_btn_middle_child{margin:0 10px}
+
+.ks_date_filter_selected > span, .ks_layout_selected > span{
+    font-weight: bold;
+}
+.ks_date_filter_selected > span::before, .ks_layout_selected > span::before{
+    font-family: FontAwesome;
+    position: absolute;
+    left: 6px;
+    content: "\f00c";
+}
+
+ul.nav li.dropdown:hover ul.dropdown-menu{ display: block; }
+
+.df_selection_text{
+    display: block;
+    padding: 3px 25px;
+    font-weight: normal;
+    line-height: 1.42857143;
+    white-space: nowrap;
+    cursor: pointer;
+}
+.df_selection_text:hover{
+    color: #333333;
+    background-color: #f5f5f5;
+}
+
+.ks_date_filter_dropdown{
+    padding: 0.375rem 0.75rem;
+    border-color: #dee2e6;
+    border-radius: 3px !important;
+}
+
+.ks_btn_first_child_radius{
+    border-bottom-right-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-left-radius: 3px !important;
+    border-top-left-radius: 3px !important;
+}
+
+#ks_btn_middle_child{
+    border-radius: 0 !important;
+    height: 100%;
+    margin-right:10px;
+
+}
+
+#ks_btn_middle_child, #ks_btn_last_child {
+    padding: inherit !important;
+}
+
+.ks_btn_last_child{
+    border-bottom-left-radius: 0 !important;
+    border-top-left-radius: 0 !important;
+    height: 100%;
+}
+
+.ks_hide{
+    display:none !important;
+}
+
+
+
+.ks_dashboard_item_action{
+    background-color : inherit;
+}
+
+
+/* Dev Code here */
+.ks_dashboard_header{
+    border-bottom: 1px solid #cccccc;
+}
+
+.ks_select_none{
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  user-select: none;
+}
+
+#ks_dashboard_title_input{
+        width: 300px;
+}
+
+#ks_dashboard_title{
+    padding-left: 1rem !important;
+}
+#ks_dashboard_title{
+    position: absolute;
+    left: 60px !important;
+}
+
+.ks_preview_item {
+    width: calc(50% - 30px);
+    position: fixed;
+    margin-left:53%;
+    margin-top:3%;
+}
+
+
+.ks_dashboard_ninja_toggle_menu{
+    position:relative;
+}
+
+.ks_dashboard_ninja_toggle_menu:before {
+    font-family: FontAwesome;
+    top:0;
+    left:-5px;
+    padding-right:10px;
+    content: "\f013";
+    font-size: 2em;
+    cursor:pointer;
+}
+
+.ks_bg_white{
+    background : white;
+}
+/*
+
+.dropdown-submenu {
+    position: relative;
+}
+*/
+
+#ks_dashboard_title_label{
+    color: #777777;
+    font-size: 25px;
+}
+
+@media (max-width: 992px){
+    .ks_dashboard_ninja_toggle_menu:before {
+        content: "\f142";
+    }
+
+
+    #ks_dashboard_title_label{
+        font-size: 25px;
+    }
+
+    #ks_dashboard_title{
+        display: flex;
+        justify-content: space-between;
+    }
+}
+
+  .config_dropdown .dropdown-item{
+        padding: 6px 20px;
+    }
+    .config_dropdown .dropdown-item .fa{
+        opacity: 0.8;
+    }
+    .config_dropdown .dropdown-item-lable {
+        display: block;
+        width: 100%;
+        padding: 5px 20px;
+        clear: both;
+        font-weight: bold;
+        color: #495057;
+        text-align: inherit;
+        white-space: nowrap;
+        margin: 3px 0px;
+    }
+
+.button-50 {
+  appearance: button;
+  background-color: #000;
+  background-image: none;
+  border: 1px solid #000;
+  border-radius: 4px;
+  box-shadow: #fff 4px 4px 0 0,#000 4px 4px 0 1px;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: ITCAvantGardeStd-Bk,Arial,sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  margin: 0 5px 10px 0;
+  overflow: visible;
+  padding: 4px 15px;
+  text-align: center;
+  text-transform: none;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.button-50:focus {
+  text-decoration: none;
+}
+
+.button-50:hover {
+  text-decoration: none;
+}
+
+.button-50:active {
+  box-shadow: rgba(0, 0, 0, .125) 0 3px 5px inset;
+  outline: 0;
+}
+
+.button-50:not([disabled]):active {
+  box-shadow: #fff 2px 2px 0 0, #000 2px 2px 0 1px;
+  transform: translate(2px, 2px);
+}
+
+@media (min-width: 768px) {
+  .button-50 {
+    padding: 4px 15px;
+  }
+}
+
+@media (max-width: 350px) {
+    .ks_dashboard_item_button_container {
+        flex-wrap: wrap;
+        position: relative;
+        z-index: 11
+    }
+}
+@media (max-width: 575px){
+    #ks_date_filter_selection{
+        display:none;
+    }
+}
+@media (max-width: 575px){
+    #play_button{
+        display:none;
+    }
+}
+@media (max-width: 575px){
+    #print_dashboard{
+        display:none;
+    }
+}
+
+
+.ks_dashboard_quick_edit_action .ks_qe_form_view .o_field_translate.btn.btn-link {
+    display: none;
+}
+
+.ks_import_dashboard_d_none .btn.btn-secondary.fa.fa-download {
+    display:none;
+}
+
+.ks_dashboard_ninja .o_view_nocontent {
+    background-image: NONE !important;
+}
+.ks_user{
+    position:relative !important;
+}

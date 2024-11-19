@@ -1,0 +1,160 @@
+.ks_list_view_container .nav-tabs-wrapper .nav-tabs-title{
+    float: left;
+    line-height: 33px;
+    color: #fff;
+    font-size: 14px;
+}
+.ks_list_view_container .nav-tabs-wrapper .nav-tabs{
+  border: none;
+  flex-grow: 1;
+}
+.ks_list_view_container .nav-tabs-wrapper .nav-tabs  .nav-item{
+  margin-right: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+.ks_list_view_container .nav-tabs-wrapper .nav-tabs .nav-link {
+  border: none;
+  background: none;
+  color: #fff;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.ks_list_view_container .nav-tabs-wrapper .nav-tabs  .nav-link.active{
+  background-color: hsla(0,0%,100%,.2);
+  transition: background-color .3s .2s;
+}
+.ks_list_view_container .card{
+  border: none;
+  /*box-shadow: 0 1px 4px 0 rgb(0 0 0 / 14%);*/
+}
+.ks_list_view_container .card-header{
+  border: none;
+  border-radius: 0px;
+  background: none;
+  padding: 0 12px 0px;
+}
+
+
+
+.ks_to_do_card_body{
+  padding: 0px;
+}
+
+.ks_to_do_card_body .form-check {
+	padding: 0;
+	margin: -22px 0 0;
+}
+.form-check .form-check-label {
+    cursor: pointer;
+    padding: 0;
+    position: relative;
+}
+.ks_custom_check .form-check .form-check-input {
+    opacity: 0;
+    height: 0;
+    width: 0;
+    overflow: hidden;
+    position: absolute;
+    margin: 0;
+    z-index: -1;
+    left: 0;
+    pointer-events: none;
+}
+
+.ks_custom_check.form-check .form-check-label span {
+    display: block;
+    position: absolute;
+    left: -1px;
+    top: -1px;
+    transition-duration: .2s;
+}
+.ks_custom_check.form-check .form-check-sign {
+    vertical-align: middle;
+    position: relative;
+    top: -2px;
+    float: left;
+    padding-right: 0px;
+    display: inline-block;
+}
+
+
+.form-check .form-check-sign:before {
+    display: block;
+    position: absolute;
+    left: 0;
+    content: "";
+    background-color: rgba(0,0,0,.84);
+    height: 20px;
+    width: 20px;
+    border-radius: 100%;
+    z-index: 1;
+    opacity: 0;
+    margin: 0;
+    top: 0;
+    transform: scale3d(2.3,2.3,1);
+}
+
+.ks_custom_check .form-check .form-check-input:checked~.form-check-sign .check {
+    background: #9c27b0;
+}
+.form-check .form-check-sign .check {
+    position: relative;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 1px solid rgba(0,0,0,.54);
+    overflow: hidden;
+    z-index: 1;
+    border-radius: 3px;
+}
+.ks_custom_check .form-check .form-check-input:checked~.form-check-sign .check:before {
+    color: #fff;
+    box-shadow: 0 0 0 10px, 10px -10px 0 10px, 32px 0 0 20px, 0 32px 0 20px, -5px 5px 0 10px, 20px -12px 0 11px;
+}
+.form-check .form-check-sign .check:before {
+    position: absolute;
+    content: "";
+    transform: rotate(45deg);
+    display: block;
+    margin-top: -3px;
+    margin-left: 7px;
+    width: 0;
+    color: #fff;
+    height: 0;
+    box-shadow: 0 0 0 0, 0 0 0 0, 0 0 0 0, 0 0 0 0, 0 0 0 0, 0 0 0 0, inset 0 0 0 0;
+}
+
+.ks_to_do_card_body .ks_description{
+    text-align: left;
+}
+.ks_to_do_card_body .td-actions{
+  width: 70px;
+}
+.ks_to_do_card_body .ks_custom_check{
+  width: 30px;
+  vertical-align: middle;
+}
+.ks_to_do_card_body .ks_edit_content{
+  background: none;
+  border:none;
+}
+
+.ks_card_header{
+}
+.ks_card_header .nav-tabs-wrapper{
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+}
+.ks_card_header .nav-tabs-wrapper .header_add_btn{
+  background: none;
+  margin-left: auto;
+  border: none;
+  background: none;
+  outline: none;
+  color: #fff;
+}
+
+.ks_do_item_line_through {
+    text-decoration: line-through;
+}

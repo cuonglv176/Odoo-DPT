@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!--    Dashboard Header : Show title and dashboard settings button-->
+    <t t-name="ksaiDashboardNinjaHeader" owl="1">
+
+        <div class="ks_dashboard_header d-flex p-3 w-100 bg-white justify-content-between flex-column flex-lg-row"
+             t-ref="ks_dashboard_header">
+            <t t-if="state.ks_ai_dashboard">
+                <div class="ks_select_text ks-helping-text">
+
+                        Here are your generated Items, kindly select to add them in your current dashboard
+
+                </div>
+            </t>
+            <!--            <t t-call="ks_dn_filter_container"/>-->
+            <div class="ks_dashboard_top_menu ks_select_none">
+                <t t-if="state.ks_ai_dashboard">
+                <button id="ks_ai_add_all_item" class="btn btn-primary" style="margin-right:5px" t-on-click="onselectallitems">
+                    <span class="fa fa-plus"/>
+                    Select all
+                </button>
+                <button id="ks_ai_remove_all_item" class="btn btn-primary d-none" style="margin-right:5px" t-on-click="onremoveallitems">
+                    <span class="fa fa-times"/>
+                    Select None
+                </button>
+
+                <button id="ks_ai_add_item" class="btn btn-primary d-none" style="margin-right:5px" t-on-click="onKsaddItemClick">
+                    <span class="fa fa-plus"/>
+                    Save
+                </button>
+                <button id="ks_close_dialog" class="btn btn-primary" t-on-click="onksaideletedash">
+                    <span class="fa fa-times"/>
+                    Close
+                </button>
+            </t>
+
+            </div>
+        </div>
+        <t t-call="ks_ai_main_body_container"/>
+    </t>
+
+    <!--    Dashboard Main Body Container -->
+    <t t-name="ks_ai_main_body_container" owl="1">
+        <div class="ks_dashboard_main_content" t-ref="ks_main_body">
+            <t t-if="state.ks_dashboard_item_length != 0">
+                <div class="ks_dashboard_item_content grid-stack ks_dashboard_items_list m-3" gs-w="36" t-ref="ks_grid_stack"/>
+                <t t-call="ks_ai_dashboard_item_template"/>
+            </t>
+        </div>
+        <t t-if="state.ks_dashboard_item_length == 0">
+            <t t-call="ksaiNoItemView"/>
+        </t>
+    </t>
+
+    <!--    Empty Dashboard View Layout-->
+    <t t-name="ksaiNoItemView">
+        <div class="o_view_nocontent">
+            <div class="o_nocontent_help">
+                <p class="o_view_nocontent_neutral_face">
+                    Your AI dashboard is empty
+                </p>
+                <p>
+                    To Generate items with AI, use
+                    <a>
+                        <strong class="ks_add_dashboard_item_on_empty">Generate items with AI button</strong>
+                    </a>
+                    on top right.
+                </p>
+            </div>
+        </div>
+    </t>
+
+    <!--Item Layouts : -->
+    <t t-name="ks_ai_dashboard_item_template">
+
+        <t t-foreach="state.ks_dashboard_items" t-as="items" t-key="items.id">
+            <t t-if="items.ks_dashboard_item_type === 'ks_tile'">
+                <Ksdashboardtile item="items" dashboard_data="ks_dashboard_data" ksdatefilter = "state.ksDateFilterSelection" pre_defined_filter = "state.pre_defined_filter"/>
+            </t>
+            <t t-elif="items.ks_dashboard_item_type === 'ks_kpi'">
+                <Ksdashboardkpiview item="items" dashboard_data="ks_dashboard_data" ksdatefilter = "state.ksDateFilterSelection" pre_defined_filter = "state.pre_defined_filter"/>
+            </t>
+            <t t-elif="items.ks_dashboard_item_type === 'ks_to_do'">
+                <Ksdashboardtodo item="items" dashboard_data="ks_dashboard_data" ksdatefilter = "state.ksDateFilterSelection" pre_defined_filter = "state.pre_defined_filter"/>
+            </t>
+            <t t-else="">
+                <Ksdashboardgraph item="items" dashboard_data="ks_dashboard_data" ksdatefilter = "state.ksDateFilterSelection" pre_defined_filter = "state.pre_defined_filter"/>
+            </t>
+        </t>
+    </t>
+
+
+
+
+</templates>

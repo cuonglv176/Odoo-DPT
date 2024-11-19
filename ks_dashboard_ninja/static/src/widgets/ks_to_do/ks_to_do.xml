@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="ks_to_do_container">
+        <div class="ks_list_view_container container-fluid p-0">
+            <div class="row">
+                <div class="shadow col-md-9 p-0 m-0">
+                    <div class="ks_card_header" t-att-style="'background-color:'+ value.ks_header_color + ';' + 'color: ' + value.ks_font_color+ ';'">
+                        <div class="p-3 py-3 d-flex flex-row align-items-center justify-content-between ">
+                            <h6 class="m-0 font-weight-bold h3 ks_chart_heading" t-att-title="value.ks_to_do_view_name" t-att-style="'color: ' + value.ks_font_color+ ';'">
+                                <t t-esc="value.ks_to_do_view_name"/>
+                            </h6>
+                        </div>
+
+                        <div class="card-header ">
+                            <t t-if="value.to_do_view_data['label']">
+                                <div class="nav-tabs-navigation">
+                                    <div class="nav-tabs-wrapper">
+                                        <t t-if="value.to_do_view_data['label']">
+                                            <ul class="nav nav-tabs" data-tabs="tabs">
+                                                <t t-set="ks_rec_count" t-value="0"/>
+                                                <t t-foreach="value.to_do_view_data['label']" t-as="table_header" t-key="table_header_index">
+                                                    <li class="nav-item">
+                                                        <t t-if="ks_rec_count==0">
+                                                            <a class="nav-link active ks_li_tab" t-on-click="ksOnToDoClick"
+                                                               data-toggle="pill"
+                                                               t-att-href="value.to_do_view_data['ks_link'][ks_rec_count]" t-att-style="'color: ' + value.ks_font_color+ ';'">
+                                                                <t t-esc="table_header"/>
+                                                            </a>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <a class="nav-link ks_li_tab" t-on-click="ksOnToDoClick"
+                                                               data-toggle="pill"
+                                                               t-att-href="value.to_do_view_data['ks_link'][ks_rec_count]" t-att-style="'color: ' + value.ks_font_color+ ';'">
+                                                                <t t-esc="table_header"/>
+                                                            </a>
+                                                        </t>
+
+                                                    </li>
+                                                    <t t-set="ks_rec_count" t-value="ks_rec_count+1"/>
+                                                </t>
+                                            </ul>
+                                            <!--                                    <button class="header_add_btn"-->
+                                            <!--                                            t-att-data-item-id="item_id"-->
+                                            <!--                                            t-att-data-section-id="to_do_view_data['ks_section_id'][0]">-->
+                                            <!--                                        <span class="fa fa-lg fa-plus-circle"></span>-->
+                                            <!--                                    </button>-->
+                                        </t>
+                                        <t t-else="">
+                                            <ul class="nav nav-tabs" data-tabs="tabs">
+                                                <li class="nav-item">
+                                                    No Section Available.
+                                                </li>
+                                            </ul>
+                                        </t>
+
+                                    </div>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <ul class="nav nav-tabs" data-tabs="tabs">
+                                    <li class="nav-item">
+                                        No Section Available.
+                                    </li>
+                                </ul>
+                            </t>
+                        </div>
+
+                    </div>
+
+                    <div class="card">
+
+
+                        <div class="ks_to_do_card_body card-body table-responsive">
+                            <div class="container-fluid p-0">
+                                <div class="card-body table-responsive ksMaxTableContent">
+
+                                    <t t-if="value.to_do_view_data['label']">
+                                        <div class="tab-content">
+                                            <t t-set="ks_section_count" t-value="0"/>
+                                            <t t-foreach="value.to_do_view_data['ks_href_id']" t-as="ks_href_id" t-key="ks_href_id_index">
+                                                <t t-if="ks_section_count===0">
+                                                    <div class="tab-pane active ks_tab_section"
+                                                         t-att-id="ks_href_id">
+                                                        <t t-if="value.to_do_view_data['ks_content'][ks_href_id]">
+                                                            <table class="table">
+                                                                <t t-if="value.to_do_view_data['ks_content'][ks_href_id]">
+                                                                    <t t-set="ks_temp_count" t-value="0"/>
+                                                                    <t t-foreach="value.to_do_view_data['ks_content'][ks_href_id]"
+                                                                       t-as="table_row" t-key="table_row_index">
+                                                                        <tr>
+                                                                            <t t-if="value.to_do_view_data['ks_content_active'][ks_href_id][ks_temp_count]=='True'">
+                                                                                <td class="ks_description"
+                                                                                    t-att-value="table_row">
+                                                                                    <t t-esc="table_row"/>
+                                                                                </td>
+                                                                            </t>
+
+                                                                            <t t-else="">
+                                                                                <td class="ks_description ks_do_item_line_through"
+                                                                                    t-att-value="table_row">
+                                                                                    <t t-esc="table_row"/>
+                                                                                </td>
+                                                                            </t>
+                                                                            <t t-set="ks_temp_count"
+                                                                               t-value="ks_temp_count+1"/>
+                                                                        </tr>
+                                                                    </t>
+
+                                                                </t>
+                                                            </table>
+
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span class="nav-tabs-title">No Tasks Available</span>
+                                                        </t>
+                                                        <t t-set="ks_section_count" t-value="ks_section_count+1"/>
+
+                                                    </div>
+                                                </t>
+                                                <t t-else="">
+                                                    <div class="tab-pane fade ks_tab_section"
+                                                         t-att-id="ks_href_id">
+                                                        <t t-if="value.to_do_view_data['ks_content'][ks_href_id]">
+                                                            <table class="table">
+                                                                <t t-if="value.to_do_view_data['ks_content'][ks_href_id]">
+                                                                    <t t-set="ks_temp_count" t-value="0"/>
+                                                                    <t t-foreach="value.to_do_view_data['ks_content'][ks_href_id]"
+                                                                       t-as="table_row" t-key="table_row_index">
+                                                                        <tr>
+
+                                                                            <t t-if="value.to_do_view_data['ks_content_active'][ks_href_id][ks_temp_count]=='True'">
+                                                                                <td class="ks_description"
+                                                                                    t-att-value="table_row">
+                                                                                    <t t-esc="table_row"/>
+                                                                                </td>
+                                                                            </t>
+
+                                                                            <t t-else="">
+                                                                                <td class="ks_description ks_do_item_line_through"
+                                                                                    t-att-value="table_row">
+                                                                                    <t t-esc="table_row"/>
+                                                                                </td>
+                                                                            </t>
+                                                                            <t t-set="ks_temp_count"
+                                                                               t-value="ks_temp_count+1"/>
+                                                                        </tr>
+                                                                    </t>
+
+                                                                </t>
+                                                            </table>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span class="nav-tabs-title">No Tasks Available</span>
+                                                        </t>
+                                                        <t t-set="ks_section_count" t-value="ks_section_count+1"/>
+                                                    </div>
+                                                </t>
+                                            </t>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <div class="tab-content">
+                                            <span class="nav-tabs-title">No Tasks Available</span>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

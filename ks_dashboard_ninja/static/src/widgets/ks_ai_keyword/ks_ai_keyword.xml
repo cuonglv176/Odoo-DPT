@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="KsKeywordSelection" owl="1">
+        <div>
+            <div class="ks_input_custom">
+                <input type="text" id="ks_selection_field" placeholder="Search items with AI..."
+                       t-ref="ks_input"
+                       class="o_input input_bar"
+                       t-on-keyup="_onKeyup"
+                />
+            </div>
+            <div class="createAI-panel scrollbar" t-ref="ks_search">
+                <t t-foreach="state.values" t-as="val" t-key="val.id">
+                    <t t-if="val.id==0">
+                        <div class=" generate-item createAI-card" t-on-click="_onResponseSelect">
+                            <div class="ai-title">
+                                <t t-esc="val['value']"/>
+                            </div>
+                            <div class="ks_dashboard_option_category">
+                                <span class="ks_dashboard_option">Generate With AI</span>
+                            </div>
+                        </div>
+
+                    </t>
+                    <t t-else="">
+                        <div class="createAI-card" t-on-click="_onResponseSelect">
+                            <div class="ai-thum-img">
+                                <img t-att-src="'ks_dashboard_ninja/static/description/images/'+val['type']+'-chart.svg'"
+                                     alt=""/>
+                            </div>
+                            <div class="ai-title">
+                                <t t-esc="val['value']"/>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

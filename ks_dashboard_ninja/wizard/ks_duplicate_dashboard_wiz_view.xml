@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    duplicate dashboard form view    -->
+
+    <record id="ks_duplicate_dashboard_wizard_form" model="ir.ui.view">
+        <field name="name">ks.dashboard.duplicate.wizard.form.view</field>
+        <field name="model">ks.dashboard.duplicate.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Dashboard Manager">
+                <group>
+                    <field name="ks_top_menu_id"/>
+                </group>
+                <footer>
+                    <button class="btn-primary" name="ks_duplicate_record" type="object" string="Duplicate"/>
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!--    duplicate dashboard action   -->
+
+
+    <record id="ks_duplicate_dashboard_wizard" model="ir.actions.act_window">
+        <field name="name">Duplicate Dashboard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ks.dashboard.duplicate.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="ks_duplicate_dashboard_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+
+<!--    delete dashboard form view   -->
+
+    <record id="ks_delete_dashboard_wizard_form" model="ir.ui.view">
+        <field name="name">ks.dashboard.delete.wizard.form.view</field>
+        <field name="model">ks.dashboard.delete.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Dashboard Manager">
+                <h6 style="color: #71639e;">Are you sure you want to delete this dashboard ?</h6>
+                <footer>
+                    <button class="btn-primary" name="ks_delete_record" type="object" string="Delete"/>
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+<!--    delete dashboard action-->
+
+    <record id="ks_delete_dashboard_wizard" model="ir.actions.act_window">
+        <field name="name">Delete Dashboard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ks.dashboard.delete.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="ks_delete_dashboard_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

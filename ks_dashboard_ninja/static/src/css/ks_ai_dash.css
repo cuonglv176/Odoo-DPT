@@ -1,0 +1,52 @@
+.ks_new_tag{
+    position: absolute;
+    font-size: 6px;
+    background: #71639e;
+    padding: 2px 6px;
+    margin: 0px;
+    border-radius: 4px;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-right: 6px;
+    letter-spacing: 0.5px;
+    margin-top: -4px;
+    margin-left: 6px;
+}
+.ks_img_selected{
+background:#f2f2f2;
+}
+.ks_dashboard_kpi_dashboard .ks_img_display{
+    display: block;
+    margin-left: auto;
+    margin-top: -7em
+    }
+.ks_breadcrumb {
+  padding: 5px 5px;
+}
+.ks_breadcrumb ul {
+  padding: 0;
+  margin: 0;
+}
+.ks_breadcrumb ul li {
+  list-style: none;
+  display: inline;
+  text-transform: uppercase;
+  font-size: 15px;
+}
+.ks_breadcrumb ul li+li:before {
+  content: "\27E9";
+  padding: 0 8px;
+  color: #EA4335;
+}
+.ks_breadcrumb ul li:last-child:after {
+  content: "";
+}
+.ks_breadcrumb ul li span {
+  color: #4285F4;
+  text-decoration: none;
+}
+
+.ks_breadcrumb ul li span:hover {
+  color: #202f47;
+}

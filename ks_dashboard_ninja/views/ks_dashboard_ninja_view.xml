@@ -1,0 +1,267 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="ks_dashboard_ninja.board_form">
+            <field name="name">ks_dashboard_ninja View</field>
+            <field name="model">ks_dashboard_ninja.board</field>
+            <field name="arch" type="xml">
+                <form string="Dashboards" duplicate="false">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="ks_dashboard_state" invisible="1"/>
+                                <field name="name" readonly="(ks_dashboard_state == 'Locked')"/>
+                                <field name="ks_dashboard_menu_name" readonly="(ks_dashboard_state == 'Locked')"
+                                       required="(ks_dashboard_state != 'Locked')"/>
+
+                            </group>
+                            <group>
+                                <field name="ks_dashboard_default_template"
+                                       readonly ="(id > 0)" required="(id &lt;= 1)"
+                                       options="{'no_create': True, 'no_create_edit':True, 'no_open': True}"/>
+                                <!--                                <field name="ks_set_interval"/>-->
+                                <field name="ks_dashboard_top_menu_id"
+                                       options="{'no_create': True, 'no_create_edit':True, 'no_open': True}"
+                                       readonly="(ks_dashboard_state == 'Locked')"
+                                       required="(ks_dashboard_state != 'Locked')"
+                                />
+                                <field name="ks_dashboard_menu_sequence"/>
+                                <field name="ks_dashboard_active"
+                                       readonly="(ks_dashboard_state == 'Locked')"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="pre_defined_filters" string="Pre Defined Filters">
+                                <field name="ks_dashboard_defined_filters_ids" widget="section_and_note_one2many">
+                                    <tree>
+                                        <control>
+                                            <create name="add_filter_control" string="Add a filter"/>
+                                            <create name="add_section_control" string="Add a separator"
+                                                    context="{'default_display_type': 'line_section'}"/>
+                                        </control>
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="display_type" column_invisible="True"/>
+                                        <field name="id" column_invisible="True"/>
+                                        <field name="ks_model_name" column_invisible="True"/>
+                                        <field name="name"/>
+                                        <field name="ks_model_id"/>
+                                        <field name="ks_domain"/>
+                                        <field name="ks_is_active"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page name="custom_defined_filters" string="Custom Filters">
+                                <field name="ks_dashboard_custom_filters_ids">
+                                    <tree editable="bottom">
+                                        <field name="name" required="1"/>
+                                        <field name="ks_model_id" required="1"/>
+                                        <field name="ks_domain_field_id" required="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page name="advance_setting" string="Advance Settings">
+                                <group>
+                                    <group>
+                                        <field name="multi_layouts"/>
+                                        <field name="ks_dashboard_group_access" widget="many2many_tags"/>
+                                    </group>
+                                    <group>
+                                        <field name="ks_date_filter_selection" required="1"/>
+                                        <field name="ks_dashboard_start_date"
+                                               readonly="(ks_date_filter_selection != 'l_custom')"
+                                        required ="(ks_date_filter_selection == 'l_custom')"/>
+                                        <field name="ks_dashboard_end_date"
+                                               readonly="(ks_date_filter_selection != 'l_custom')"
+                                        required ="(ks_date_filter_selection == 'l_custom')"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Auto Update" name="update_settings" >
+                                <group>
+                                    <field name="ks_set_interval"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="ks_dashboard_ninja.board_tree">
+            <field name="name">ks_dashboard_ninja View</field>
+            <field name="model">ks_dashboard_ninja.board</field>
+            <field name="arch" type="xml">
+                <tree import="0" string="My Dashboard">
+                    <field name="ks_dashboard_state" column_invisible="True"/>
+<!--                           invisible="1" nolabel="1"/>-->
+                    <field name="id" column_invisible="True"/>
+<!--                           invisible="1" nolabel="1"/>-->
+
+                    <field name="name"/>
+                    <field name="ks_dashboard_menu_name"
+                           required="(ks_dashboard_state != 'Locked')"/>
+                    <field name="ks_dashboard_menu_sequence"/>
+                    <field name="ks_dashboard_top_menu_id"
+                           options="{'no_create': True, 'no_create_edit':True, 'no_open': True}" readonly="(ks_dashboard_state == 'Locked')"
+                                       required="(ks_dashboard_state != 'Locked')"/>
+                    <field name="ks_dashboard_active" readonly="(ks_dashboard_state == 'Locked')"/>
+                    <field name="ks_dashboard_default_template"
+                           readonly ="(id > 0)" required="(id &lt;= 1)"
+                           options="{'no_create': True, 'no_create_edit':True, 'no_open': True}"/>
+                    <field name="ks_set_interval"/>
+                    <field name="ks_date_filter_selection" required="1"/>
+                    <field name="ks_dashboard_start_date"
+                           readonly="(ks_date_filter_selection != 'l_custom')"
+                                        required ="(ks_date_filter_selection == 'l_custom')"
+                           />
+                    <field name="ks_dashboard_end_date"
+                           readonly="(ks_date_filter_selection != 'l_custom')"
+                                        required ="(ks_date_filter_selection == 'l_custom')"
+                            />
+                    <field name="ks_dashboard_group_access" widget="many2many_tags"/>
+                    <button name="ks_view_items_view" string="View Items" type="object" class="btn-primary"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="ks_dashboard_ninja.board_template_form">
+            <field name="name">Dashboard Template Form View</field>
+            <field name="model">ks_dashboard_ninja.board_template</field>
+            <field name="arch" type="xml">
+                <form string="Dashboard Template">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="ks_template_type" readonly="1"/>
+                                <field name="ks_dashboard_board_id" invisible="(ks_template_type != 'ks_custom')"
+                                                                                         required ="(ks_template_type == 'ks_code')"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="ks_dashboard_ninja.board_defined_filters">
+            <field name="name">Dashboard Defined Filter Form View</field>
+            <field name="model">ks_dashboard_ninja.board_defined_filters</field>
+            <field name="arch" type="xml">
+                <form string="Dashboard Defined Filter">
+                    <sheet>
+                        <group>
+                            <label for="name" string="Separator Name (eg. Order States, Deadlines)"
+                                   invisible="(display_type !=  'line_section')"
+                                   required ="(display_type == 'line_section')"/>
+                            <field name="name" nolabel="1"
+                                   invisible="(display_type !=  'line_section')"
+                                   required ="(display_type == 'line_section')"/>
+                            <group invisible="(display_type == 'line_section')">
+                                <field name="id" invisible="1"/>
+                                <field name="display_type" invisible="1"/>
+                                <field name="ks_model_name" invisible="1"/>
+                                <field name="name" required ="(display_type !=  'line_section')"/>
+                                <field name="ks_domain_temp" invisible="1"/>
+                                <field name="ks_domain" widget="domain" class="ks_domain_content"
+                                       context="{'current_id': id}"
+                                       options="{'model': 'ks_model_name', 'in_dialog': True}"
+                                       required ="(display_type !=  'line_section')"/>
+                            </group>
+                            <group invisible="(display_type ==  'line_section')">
+                                <field name="ks_model_id"
+                                       required ="(display_type !=  'line_section')"/>
+                                <field name="ks_is_active"
+                                       required ="(display_type !=  'line_section')"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="ks_dashboard_ninja.board_template_tree">
+            <field name="name">Dashboard Template Tree View</field>
+            <field name="model">ks_dashboard_ninja.board_template</field>
+            <field name="arch" type="xml">
+                <tree string="Dashboard Template" editable="top">
+                    <field name="name"/>
+                    <field name="ks_template_type" invisible="1"/>
+                    <field name="ks_dashboard_board_id" readonly="(ks_template_type != 'ks_custom')"
+                        required="(ks_template_type == 'ks_custom')"
+                           options="{'no_create': True, 'no_create_edit':True, 'no_open': True}"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="ks_dashboard_ninja.child_board_tree">
+            <field name="name">Dashboard Layout Tree View</field>
+            <field name="model">ks_dashboard_ninja.child_board</field>
+            <field name="arch" type="xml">
+                <tree string="Dashboard Layout" editable="top" create="0">
+                    <field name="name"/>
+                    <field name="ks_dashboard_ninja_id" string="Dashboard"/>
+                    <field name="company_id" string="Company"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Dashboard -->
+        <record id="ks_dashboard_ninja.board_dashboard_action_window" model="ir.actions.client">
+            <field name="name">My Dashboard</field>
+            <field name="tag">ks_dashboard_ninja</field>
+            <field name="params" eval="{'ks_dashboard_id': ref('ks_dashboard_ninja.ks_my_default_dashboard_board')}"/>
+            <field name="res_model">ks_dashboard_ninja.board</field>
+            <field name="context" eval="{'ks_dashboard_id': ref('ks_dashboard_ninja.ks_my_default_dashboard_board')}"/>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="ks_dashboard_ninja.board_form_tree_action_window">
+            <field name="name">Dashboard Manager</field>
+            <field name="res_model">ks_dashboard_ninja.board</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'form_view_ref':'ks_dashboard_ninja.board_form',
+                'tree_view_ref':'ks_dashboard_ninja.board_tree'}
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="ks_dashboard_ninja.template_tree_action_window">
+            <field name="name">Dashboard Template</field>
+            <field name="res_model">ks_dashboard_ninja.board_template</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'default_ks_template_type':'ks_custom'}
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="ks_dashboard_ninja.layout_tree_action_window">
+            <field name="name">Dashboard layout</field>
+            <field name="res_model">ks_dashboard_ninja.child_board</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('board_type', '!=', 'default')]</field>
+            <field name="context">{'group_by':'ks_dashboard_menu_name'}
+            </field>
+        </record>
+
+        <menuitem name="My Dashboard" id="ks_dashboard_ninja.board_menu_root"
+                  web_icon="ks_dashboard_ninja,static/description/icon.png"
+                  action="ks_dashboard_ninja.board_dashboard_action_window"/>
+
+        <menuitem name="Configuration" id="ks_dashboard_ninja.configuration_menu"
+                  parent="ks_dashboard_ninja.board_menu_root"
+                  groups="ks_dashboard_ninja_group_manager" sequence="100"/>
+
+        <menuitem name="Dashboards" id="ks_dashboard_ninja.dashboard_menu"
+                  parent="ks_dashboard_ninja.configuration_menu"
+                  action="ks_dashboard_ninja.board_form_tree_action_window" groups="ks_dashboard_ninja_group_manager"/>
+
+        <menuitem name="Dashboard Layouts" id="ks_dashboard_ninja.dashboard_layout_menu"
+                  parent="ks_dashboard_ninja.configuration_menu"
+                  action="ks_dashboard_ninja.layout_tree_action_window" groups="ks_dashboard_ninja_group_manager"/>
+
+        <!--        <menuitem name="Dashboard Templates" id="ks_dashboard_ninja.dashboard_template_menu"-->
+        <!--                  parent="ks_dashboard_ninja.configuration_menu"-->
+        <!--                  action="ks_dashboard_ninja.template_tree_action_window" groups="ks_dashboard_ninja_group_manager"/>-->
+
+    </data>
+</odoo>

@@ -1,0 +1,212 @@
+.ks_dashboard_item {
+    height: 132px;
+}
+
+/* Form pie chart no data */
+.ks_dn_graph_preview > .nv-noData > .ks_pie_chart_nocontent{
+    padding: 100px 0 0 137px;
+    min-height: 327px;
+    font-size: 125%;
+}
+
+.ks_dashboard_item_action {
+    color: black;
+}
+
+.ks_group_width {
+    width : 40% !important;
+}
+.ks_dashboard_quick_edit_action_popup {
+    color: black;
+}
+
+.ks_dashboard_item_button_container > .ks_chart_inner_buttons > button {
+    color:black;
+}
+/* Chart No Content Css */
+.ks_chart_nocontent_form {
+    display: inherit !important;
+}
+
+.ks_pie_chart_nocontent > .nv-noData {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+    font-size: 125%;
+}
+
+.ks_pie_chart_nocontent > .ksChartTitle {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+}
+
+
+.ks_dashboarditem_id, .ks_dashboarditem_chart_container{
+    overflow-x : visible !important;
+    overflow-y : visible !important;
+}
+
+.ks_previous_period .ks_dashboard_kpi{
+    overflow-y : auto !important;
+}
+
+.ks_dashboarditem_chart_container{
+    background : white;
+}
+
+/* Layout 6 exception case CSS */
+.ks_dashboard_item_header_l6{
+    top: 5px !important;
+    right: 10px;
+}
+
+.ks_chart_json_export {
+    padding-right: 10px !important;
+}
+
+
+.ks_chart_card_body{
+    position: absolute;
+    top: 53px;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+}
+
+.ks_chart_card_body{
+    position: absolute;
+    top: 53px;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+}
+
+
+/*---------------------------------------------------*/
+table#ksListViewTable {
+  margin: 0 auto;
+  border-collapse: collapse;
+  font-family: Agenda-Light, sans-serif;
+  /*font-weight: 100;*/
+  /*background: #333;*/ /*color: #fff;*/
+  text-rendering: optimizeLegibility;
+  border-radius: 5px;
+  width: -webkit-fill-available;
+}
+
+
+#ks_item_info {
+    cursor:pointer;
+}
+
+.ks_chart_heading{
+    /*width: 50%; */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks_dashboard_item_drill_up {
+    min-width:110px;
+    margin-left:50px
+}
+
+.ks_list_view_heading{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks_pager {
+    min-width:98px;
+}
+
+.ks_dashboard_item_hover:hover .ks_dashboard_item_header_hover > .ks_chart_inner_buttons{
+    visibility: visible;
+}
+
+ .ks_chart_inner_buttons{
+    visibility: hidden;
+
+}
+
+.ks_chart_color_options, .ks_item_size_options{
+        display: block;
+    padding: 3px 10px;
+    font-weight: normal;
+    line-height: 1.42857143;
+    white-space: nowrap;
+    cursor: pointer;
+        margin-left: 24px;
+    text-transform: capitalize;
+}
+
+.ks_chart_color_options:hover, .ks_item_size_options:hover{
+        color: #333333;
+    background-color: #f5f5f5;
+}
+
+.ks_pro_print_hide{
+    display:none !important;
+}
+
+.ks_dashboard_item_menu_show > .ks_chart_inner_buttons{
+    visibility: visible !important;
+}
+
+.ksMaxTableContent{
+    max-height: 300px;
+}
+
+
+.ks_list_view_container{
+    background : white;
+}
+
+.ks_chart_export_menu{
+    padding: 6px 0 6px 0;
+}
+
+.ks_chart_export_menu_header{
+    font-weight: 600;
+    padding: 0 14px 10px 14px;
+}
+
+.ks_chart_export_menu_item{
+    padding: 5px 14px 5px 14px;
+    cursor : pointer;
+}
+
+.ks_chart_image_export{
+    line-height: 29.5px;
+    padding-top: 7.5px;
+    padding-bottom: 7px;
+}
+.ks_chart_export_menu_item{
+    color: #4c4c4c;;
+}
+
+
+.ks_chart_export_menu_item:hover{
+    color: #4d4c4c;
+    background-color: #f5f5f5;
+}
+
+
+.ks_chart_export_menu_item > i{
+    padding-right: 10px;
+}
+
+
+.ks_date_filters_menu_drop_down {
+    max-height: 270px !important;
+    overflow: auto !important;
+    background-clip:unset;
+}

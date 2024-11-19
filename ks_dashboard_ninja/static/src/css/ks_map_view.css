@@ -1,0 +1,21 @@
+#map_chart {
+    width: 100%;
+    height: 300px;
+ }
+#text {
+    margin-left:70px;
+    margin-top:25px;
+}
+
+.ks_map_item_container{
+    margin-right:25px;
+}
+
+.map_text{
+    font:2rem Lucida Grande;
+    align-items:center;
+    display:flex;
+    justify-content:center;
+    width:100%;
+    height:100%;
+ }

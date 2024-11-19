@@ -1,0 +1,190 @@
+.ks_item_icon {
+    width : 110px !important;
+}
+
+.ks_item_icon>img {
+    width : 50px;
+}
+
+.ks_field_required{
+    color : red;
+}
+
+.ks_db_item_preview{
+    width: 280px;
+}
+
+.ks_not_click{
+    pointer-events: none;
+}
+
+.ks_color_picker{
+    margin-right: 10px;
+}
+
+.ks_color_opacity{
+    vertical-align:middle;
+}
+
+/* Icon Container in image widget render view*/
+.ks_image_widget_icon_container{
+    background : transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.ks_domain_content{
+    overflow : auto;
+}
+
+
+/* Preview Footer Note */
+.ks_db_item_preview_footer_note{
+    margin-top : 10px;
+}
+
+
+/*Container CSS*/
+
+.ks_md_heading{
+    justify-content: center;
+    font-size: 16px;
+}
+
+
+/* Dashboard Menu CSS*/
+.ks_dashboard_menu_container{
+    padding: 10px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+    border-radius: 5px;
+    max-width: 174px;
+}
+
+
+.ks_dashboard_menu_container > li{
+    margin: 2px;
+    display:flex;
+}
+
+
+.ks_dashboard_menu_container > li > button, .ks_dashboard_layout_dropdown_container > li > button{
+    margin-top : 5px;
+    margin-left: 2px;
+    border-radius: 5px;
+}
+
+
+#ks_add_item_selection,#ks_date_selector_container{
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+}
+
+#ks_dashboard_layout_edit{
+    border-radius: 3px;
+    color: #fff;
+    /*background-color: #357bb7;*/
+    /*border: 1px solid #357bb7;*/
+}
+
+.ks_add_item_type_button{
+    color:#fff;
+    /*background-color: #357bb7;
+    border: 1px solid #357bb7;*/
+    border-radius: 3px;
+}
+
+/* kpi css*/
+
+.ks_dashboard_kpi_name_preview {
+    font-size: 21px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-top: 30px;
+    overflow: hidden;
+}
+
+.ks_kpi_main_body {
+    width: 100%;
+/*
+    height: 67%;
+*/
+}
+
+.ks_dashboard_kpi_count_preview {
+    font-weight: bold;
+    width:auto;
+    font-size: x-large;
+    text-align: center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-transform: none;
+    overflow: hidden;
+}
+
+.ks_dashboard_kpi_arrow_preview {
+    font-size: medium;
+    font-weight: bold;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    text-transform: none;
+}
+
+.ks_db_kpi_preview {
+        width: 249px;
+}
+
+.ks_dashboard_kpi {
+    position : relative;
+    margin-top: 15px;
+    height: auto;
+    border-radius: 6px;
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.ks_target_previous {
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0 15px 0px 15px;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+}
+
+ .ks_progress progress {
+    background-color: #000;
+    border: 0;
+    width: 80%;
+    height: 5px;
+    border-radius: 9px;
+}
+ .ks_progress progress::-webkit-progress-bar {
+    background-color: #000;
+    border-radius: 9px;
+}
+.ks_progress progress::progress-value {
+    background: #fff;
+    border-radius: 9px;
+}
+.ks_progress progress::progress-bar {
+    background: #fff;
+    border-radius: 9px;
+}
+
+.ks_list_view_layout_3 .ks_tr:nth-child(even),
+.ks_list_view_layout_1 .ks_tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.ks_list_view_layout_3 .ks_tr:hover,
+.ks_list_view_layout_1 .ks_tr:hover {
+    color: #666666 !important;
+    background-color: rgba(0, 0, 0, 0.26) !important;
+
+}
+.ks_map_card_body{
+    z-index:1;
+}

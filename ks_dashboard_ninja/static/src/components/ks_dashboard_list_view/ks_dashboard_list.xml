@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="ks_dashboard_ninja.Ksdashboardlistview">
+        <div class="grid-stack-item ks_dashboarditem_id" t-att-id="item_id" t-ref="ks_list_view">
+            <div class="grid-stack-item-content ks_list_view_container ks_dashboarditem_chart_container ks_dashboard_item_hover card shadow"
+                 t-att-title="ks_info">
+                <div class="p-3 py-3 d-flex flex-row align-items-center justify-content-between ">
+                    <div class="d-flex align-items-center  w-50">
+                        <h6 class="m-0 font-weight-bold h3 mr-3 ks_list_view_heading" t-att-title="ks_chart_title">
+                            <t t-esc="ks_chart_title"/>
+                        </h6>
+                        <t t-if="ks_breadcrumb.length >= 1">
+                            <nav class="ks_breadcrumb">
+                            <ul>
+                                <li class="d-none" t-att-id="'item'+'_'+'-1'">
+                                       <span t-att-data-sequence = '-1' t-att-data-item-id="item_id" t-on-click="ksOnDrillUp">
+                                           <t t-esc="ks_chart_title"/>
+                                       </span>
+                                </li>
+                                <t t-foreach="ks_breadcrumb" t-as="chart_breadcrumb" t-key="chart_breadcrumb_index">
+                                        <li class="d-none" t-att-id="chart_breadcrumb['name'] + '_' + chart_breadcrumb_index">
+                                        <span t-att-data-sequence="chart_breadcrumb_index" t-att-data-item-id="item_id" t-on-click="ksOnDrillUp">
+                                           <t t-esc="chart_breadcrumb['name']"/>
+                                        </span>
+                                    </li>
+                                </t>
+                            </ul>
+                            </nav>
+                        </t>
+                    </div>
+                    <div class="ks_pager_name">
+                        <t t-if="ks_pager" t-call="ks_pager_template"/>
+                    </div>
+<!--                    for ai dashboard-->
+                    <img src="ks_dashboard_ninja/static/description/images/selected.svg" class="ks_img_display d-none" width="30"/>
+<!--                    -->
+                    <!--  Dashboard Item Move/Copy Feature -->
+                    <div class="ks_dashboard_item_button_container ks_dropdown_container ks_dashboard_item_header ks_dashboard_item_header_hover chart_button_container d-md-flex d-none"
+                         t-att-data-item_id="item_id">
+                        <t t-if="ksIsDashboardManager">
+                            <button title="Move/Duplicate" data-bs-toggle="dropdown" t-att-data-item-id="item_id"
+                                    class="ks_dashboard_item_action btn dropdown-toggle btn-xs" type="button"
+                                    aria-expanded="true">
+                                <i class="fa fa-files-o"/>
+                            </button>
+                            <ul role="menu" class="ks_dashboard_menu_container dropdown-menu dropdown-menu-right">
+                                <li class="ks_md_heading">
+                                    <span>Select Dashboard</span>
+                                </li>
+                                <li class="my-3">
+                                    <select class="o_input o_group_selector o_add_group ks_dashboard_select">
+                                        <t t-foreach="ks_dashboard_list" t-as="ks_dashboard" t-key="ks_dashboard_index">
+                                            <option t-att-value="ks_dashboard['id']">
+                                                <t t-esc="ks_dashboard['name']"/>
+                                            </option>
+                                        </t>
+                                    </select>
+                                </li>
+                                <li class="mt-3">
+                                    <button class="btn btn-primary o_apply_group o_add_group ks_duplicate_item"
+                                            tabindex="-1" type="button">Duplicate
+                                    </button>
+                                    <button class="btn btn-primary o_apply_group o_add_group ks_move_item" tabindex="-1"
+                                            type="button">Move
+                                    </button>
+                                </li>
+                            </ul>
+                            <button title="Quick Customize"
+                                    class="ks_dashboard_quick_edit_action_popup  btn d-sm-block d-none"
+                                    type="button" t-att-data-item-id="item_id">
+                                <i class="fa fa-pencil"/>
+                            </button>
+
+                            <button class="ks_dashboard_item_customize d-block d-sm-none" title="Customize Item"
+                                    type="button">
+                                <i class="fa fa-pencil"/>
+                            </button>
+                            <button class="ks_dashboard_item_delete" title="Remove Item" type="button">
+                                <i class="fa fa-times"/>
+                            </button>
+                        </t>
+                        <t t-if="ksIsUser">
+                            <div class="ks_chart_inner_buttons">
+                                <button title="Export Item" data-bs-toggle="dropdown"
+                                        class="ks_dashboard_item_action_export btn dropdown-toggle btn-xs o-no-caret btn ks_next_previous_bg_color"
+                                        type="button"
+                                        aria-expanded="true">
+                                    <i class="fa fa-ellipsis-v"/>
+                                </button>
+                                <div role="menu" class="dropdown-menu dropdown-menu-right">
+                                    <!--Dynamic Rendering-->
+                                    <div class="ks_chart_export_menu">
+                                        <div class="ks_chart_export_menu_header">
+                                            <span>Export</span>
+                                        </div>
+                                        <div class="chart_xls_export ks_chart_xls_csv_export ks_chart_export_menu_item"
+                                             t-att-data-chart-id="item_id"
+                                             data-format="list_xls">
+                                            <i class="fa fa-file-excel-o"/>
+                                            <span>Export to Excel</span>
+                                        </div>
+                                        <div class="ks_chart_xls_csv_export ks_chart_export_menu_item"
+                                             t-att-data-chart-id="item_id"
+                                             data-format="list_csv">
+                                            <i class="fa fa-file-code-o"/>
+                                            <span>Export to CSV</span>
+                                        </div>
+                                        <div class="ks_chart_json_export ks_chart_export_menu_item"
+                                             t-att-data-item-id="item_id"
+                                             data-format="chart_xls">
+                                            <i class="fa fa-file-code-o"/>
+                                            <span>Export Item</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                        <div class="ks_chart_inner_buttons dropdown">
+                        <button title="Info" data-bs-toggle="dropdown"
+                                class="ks_item_description btn dropdown-toggle btn-xs o-no-caret btn"
+                                type="button"
+                                t-att-style="'color:'+ ks_rgba_button_color + ';'"
+                                aria-expanded="true">
+                            <i class="fa fa-book"/>
+                        </button>
+                            <div role="menu" class="dropdown-menu dropdown-menu-right" style="width:20rem">
+                            <!--Dynamic Rendering-->
+                                <div class="ks_chart_export_menu">
+                                <div class="ks_chart_export_menu_header" style="margin-left:-10px">
+                                    <span>Info</span>
+                                </div>
+                                    <div class="ks_info" style="margin-left:10px">
+                                    <span>Company: <t t-esc="ks_company"/></span>
+                                </div>
+                                    <div class="ks_info" style="margin-left:10px">
+                                    <t t-if="ks_info">
+                                        <t t-foreach="ks_info" t-as="ks_description" t-key="ks_description_index">
+                                            <span><t t-esc="ks_description"/></span>
+                                            <br></br>
+                                         </t>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <t t-if="ksIsDashboardManager">
+                        <div class="dropdown d-md-none dn-setting-panel">
+                            <button class="btn btn-secondary border-0" type="button" id="dropdownSettingButton"
+                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                             <i class="fa fa-cog"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownSettingButton">
+                                 <a class="dropdown-item ks_dashboard_item_customize">
+                                    <i class="fa fa-pencil"></i>Customize Item
+                                 </a>
+                                 <a class="dropdown-item ks_dashboard_item_delete">
+                                    <i class="fa fa-times"></i>Remove Item
+                                 </a>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+                <div class="card-body table-responsive">
+                    <t t-call="ks_dashboard_ninja.ks_list_view_table"/>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ks_dashboard_ninja.ks_list_view_tmpl">
+        <t t-foreach="state.list_view_data['data_rows']" t-as="table_row" t-key="table_row_index">
+            <tr class="ks_tr" t-att-data-record-id="table_row['id']" t-att-data-domain="table_row['domain']"
+                t-att-data-item-Id="item_id"
+                t-att-data-sequence="table_row['sequence']" t-att-data-last_seq="table_row['last_seq']">
+                <t t-set="ks_rec_count" t-value="0"/>
+                <t t-foreach="table_row['data']" t-as="row_data" t-key="row_data_index">
+                    <t t-if="table_row['ks_column_type'][ks_rec_count]=='html'">
+                        <td class="ks_list_canvas_click" t-on-click="onChartCanvasClick">
+<!--                            <t t-out="row_data"/>-->
+                            <t t-raw="row_data"/>
+                        </td>
+                        <t t-set="ks_rec_count" t-value="ks_rec_count+1"/>
+                    </t>
+                    <t t-else="">
+                        <td class="ks_list_canvas_click" t-on-click="onChartCanvasClick">
+                            <t t-esc="row_data"/>
+                        </td>
+                        <t t-set="ks_rec_count" t-value="ks_rec_count+1"/>
+                    </t>
+                </t>
+                <td class="ks_info">
+                    <t t-if="ks_show_records">
+                    <i id="ks_item_info" t-att-data-model="state.list_view_data['model']"
+                       t-att-data-list-type="state.list_view_data['list_view_type']"
+                       t-att-data-groupby="state.list_view_data['groupby']"
+                       t-att-data-record-id="table_row['id']" t-att-data-item-id="item_id"
+                       t-att-data-list-view-type="tmpl_list_type"
+                       t-att-data-domain="table_row['domain']"
+                       t-on-click="ksOnListItemInfoClick"
+                       class="fa fa-pencil"/>
+                    </t>
+                </td>
+            </tr>
+        </t>
+    </t>
+
+    <t t-name="ks_dashboard_ninja.ks_list_view_table">
+        <t t-if="state.list_view_data">
+            <table id="ksListViewTable" class="table table-hover ks_list_view_layout_1"
+                   t-att-data-model="state.list_view_data['model']">
+                <thead>
+                    <t t-call="ks_list_view_header"/>
+                </thead>
+                <tbody class="ks_table_body">
+                    <t t-call="ks_dashboard_ninja.ks_list_view_tmpl"/>
+                </tbody>
+            </table>
+        </t>
+        <t t-else="">
+            No Data Present
+        </t>
+    </t>
+        <t t-name="ks_list_view_header">
+        <tr>
+            <t t-foreach="state.list_view_data['label']" t-as="table_header" t-key="table_header_index">
+                <th>
+                    <t t-esc="table_header"/>
+                </th>
+            </t>
+            <th/>
+        </tr>
+    </t>
+        <div t-name="ks_pager_template" class="ks_pager">
+        <span class="ks_counter">
+            <span class="ks_value">
+                <t t-esc="count"/>
+            </span>
+        </span>
+        <span class="btn-group" aria-atomic="true" t-att-data-next_offset="intial_count"
+              t-att-data-prev-offset="offset">
+            <button type="button"
+                    class="fa fa-chevron-left btn  ks_load_previous ks_event_offer_list"
+                    t-att-data-item-id="item_id" title="Previous" t-on-click="ksLoadPreviousRecords"/>
+            <button type="button" class="fa fa-chevron-right btn  ks_load_next"
+                    t-att-data-item-id="item_id" title="Next" t-on-click="ksLoadMoreRecords"/>
+        </span>
+    </div>
+
+</templates>
