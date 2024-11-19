@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+
+
+      <t t-name="Ksdashboardtodo">
+        <div class="grid-stack-item ks_dashboarditem_id" t-att-id="item_id">
+            <div class="grid-stack-item-content ks_list_view_container  ks_dashboard_item_hover card shadow"
+                    t-att-title="ks_info">
+                <div class="ks_card_header" t-att-style="'background-color:'+ ks_header_color + ';' + 'color:'+ ks_font_color + '!important;'">
+                    <div class="p-3 py-3 d-flex flex-row align-items-center justify-content-between ">
+                        <div class="d-flex align-items-center  w-50">
+                            <h6 class="m-0 font-weight-bold h3 mr-3 ks_list_view_heading"
+                                t-att-style="'color:'+ ks_font_color + ' !important' + ';'"
+                                t-att-title="ks_chart_title">
+                                <t t-esc="ks_chart_title"/>
+                            </h6>
+                        </div>
+
+                        <!--  Dashboard Item Move/Copy Feature -->
+                        <div class="ks_dashboard_item_button_container ks_dropdown_container ks_dashboard_item_header ks_dashboard_item_header_hover chart_button_container d-md-flex d-none"
+                             t-att-data-item_id="item_id">
+                            <t t-if="ksIsDashboardManager">
+                                <button title="Move/Duplicate" data-bs-toggle="dropdown"
+                                        t-att-data-item-id="item_id"
+                                        t-att-style="'color:'+ ks_rgba_button_color + ' !important' + ';'"
+                                        class="ks_dashboard_item_action text-white btn dropdown-toggle btn-xs"
+                                        type="button"
+                                        aria-expanded="true">
+                                    <i class="fa fa-files-o"/>
+                                </button>
+                                <ul role="menu" class="ks_dashboard_menu_container dropdown-menu dropdown-menu-right">
+                                    <li class="ks_md_heading ">
+                                        <span>Select Dashboard</span>
+                                    </li>
+                                    <li class="my-3">
+                                        <select class="o_input o_group_selector o_add_group ks_dashboard_select">
+                                            <t t-foreach="ks_dashboard_list" t-as="ks_dashboard" t-key="ks_dashboard_index">
+                                                <option t-att-value="ks_dashboard['id']">
+                                                    <t t-esc="ks_dashboard['name']"/>
+                                                </option>
+                                        </t>
+                                        </select>
+                                    </li>
+                                    <li class="mt-3">
+                                        <button class="btn btn-primary o_apply_group o_add_group ks_duplicate_item text-white"
+                                                tabindex="-1" type="button">Duplicate
+                                        </button>
+                                        <button class="btn btn-primary text-white o_apply_group o_add_group ks_move_item"
+                                                tabindex="-1"
+                                                type="button">Move
+                                        </button>
+                                    </li>
+                                </ul>
+                                <button title="Quick Customize"
+                                        class="ks_dashboard_quick_edit_action_popup text-white btn d-sm-block d-none"
+                                        t-att-style="'color:'+ ks_rgba_button_color + ' !important' + ';'"
+                                        type="button" t-att-data-item-id="item_id">
+                                    <i class="fa fa-pencil"/>
+                                </button>
+
+                                <button class="ks_dashboard_item_customize d-block text-white d-sm-none"
+                                        title="Customize Item"
+                                        t-att-style="'color:'+ ks_rgba_button_color + ' !important' + ';'"
+                                        type="button">
+                                    <i class="fa fa-pencil"/>
+                                </button>
+                                <button class="ks_dashboard_item_delete text-white"
+                                        t-att-style="'color:'+ ks_rgba_button_color + ' !important' + ';'"
+                                        title="Remove Item" type="button">
+                                    <i class="fa fa-times"/>
+                                </button>
+                            </t>
+                            <t t-if="ksIsUser">
+                                <div class="ks_chart_inner_buttons">
+                                <button title="Export List" data-bs-toggle="dropdown"
+                                        class="ks_dashboard_item_action_export text-white btn dropdown-toggle btn-xs o-no-caret btn"
+                                        t-att-style="'color:'+ ks_rgba_button_color + ' !important' + ';'"
+                                        type="button"
+                                        aria-expanded="true">
+                                    <i class="fa fa-ellipsis-v"/>
+                                </button>
+                                <div role="menu" class="dropdown-menu dropdown-menu-right">
+                                    <!--Dynamic Rendering-->
+                                    <div class="ks_chart_export_menu">
+                                        <div class="ks_chart_export_menu_header">
+                                            <span>Export</span>
+                                        </div>
+                                        <div class="ks_chart_json_export ks_chart_export_menu_item"
+                                             t-att-data-item-id="item_id"
+                                             data-format="chart_xls">
+                                            <i class="fa fa-file-code-o"/>
+                                            <span>Export Item</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </t>
+                            <div class="ks_chart_inner_buttons dropdown">
+                        <button title="Item description" data-bs-toggle="dropdown"
+                                class="ks_item_description btn dropdown-toggle btn-xs o-no-caret btn"
+                                type="button"
+                                t-att-style="'color:'+ ks_rgba_button_color + ';'"
+                                aria-expanded="true">
+                            <i class="fa fa-book"/>
+                        </button>
+                        <div role="menu" class="dropdown-menu dropdown-menu-right" style="width:20rem">
+                            <!--Dynamic Rendering-->
+                            <div class="ks_chart_export_menu">
+                                <div class="ks_chart_export_menu_header" style="margin-left:-10px">
+                                    <span>Info</span>
+                                </div>
+                               <div class="ks_info" style="margin-left:10px">
+                                    <span>Company: <t t-esc="ks_company"/></span>
+                                </div>
+                                <div class="ks_info" style="margin-left:10px">
+                                    <t t-if="ks_info">
+                                        <t t-foreach="ks_info" t-as="ks_description" t-key="ks_description_index">
+                                            <span><t t-esc="ks_description"/></span>
+                                            <br></br>
+                                         </t>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        </div>
+                        <t t-if="ksIsDashboardManager">
+                            <div class="dropdown d-md-none dn-setting-panel">
+                            <button class="btn btn-secondary border-0" type="button" id="dropdownSettingButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                             <i class="fa fa-cog"></i>
+                         </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownSettingButton">
+                                 <a class="dropdown-item ks_dashboard_item_customize" >
+                                    <i class="fa fa-pencil"></i> Customize Item
+                                 </a>
+
+                                <a class="dropdown-item ks_dashboard_item_delete" >
+                                    <i class="fa fa-times"></i> Remove Item
+                                 </a>
+                        </div>
+                        </div>
+                        </t>
+                    </div>
+
+
+                    <div class="card-header">
+                        <div class="nav-tabs-navigation">
+                            <div class="nav-tabs-wrapper">
+                                <t t-if="state.to_do_view_data['label']">
+                                    <ul class="nav nav-tabs" data-tabs="tabs">
+                                        <t t-set="ks_rec_count" t-value="0"/>
+                                        <t t-foreach="state.to_do_view_data['label']" t-as="table_header" t-key="table_header_index">
+                                            <li class="nav-item">
+                                                <t t-if="ks_rec_count==0">
+                                                    <a class="nav-link active ks_li_tab" t-on-click="ksOnToDoClick"
+                                                       t-att-style="'color:'+ ks_font_color + ' !important' + ';'"
+                                                       t-att-data-item-id="item_id"
+                                                       t-att-data-section-id="state.to_do_view_data['ks_section_id'][ks_rec_count]"
+                                                       data-toggle="pill"
+                                                       t-att-href="state.to_do_view_data['ks_link'][ks_rec_count]">
+                                                        <t t-esc="table_header"/>
+                                                    </a>
+                                                </t>
+                                                <t t-else="">
+                                                    <a class="nav-link ks_li_tab" t-on-click="ksOnToDoClick"
+                                                       t-att-data-item-id="item_id"
+                                                       t-att-style="'color:'+ ks_font_color + ' !important' + ';'"
+                                                       t-att-data-section-id="state.to_do_view_data['ks_section_id'][ks_rec_count]"
+                                                       data-toggle="pill"
+                                                       t-att-href="state.to_do_view_data['ks_link'][ks_rec_count]">
+                                                        <t t-esc="table_header"/>
+                                                    </a>
+                                                </t>
+
+                                            </li>
+                                            <t t-set="ks_rec_count" t-value="ks_rec_count+1"/>
+                                        </t>
+                                    </ul>
+                                    <button class="header_add_btn" t-on-click="_onKsAddTask"
+                                            t-att-data-item-id="item_id"
+                                            t-att-style="'color:'+ ks_rgba_button_color + ' !important' + ';'"
+                                            t-att-data-section-id="state.to_do_view_data['ks_section_id'][0]">
+                                        <span class="fa fa-lg fa-plus-circle"></span>
+                                    </button>
+                                </t>
+                                <t t-else="">
+                                    <ul class="nav nav-tabs" data-tabs="tabs">
+                                        <li class="nav-item">
+                                            No Section Available.
+                                        </li>
+                                    </ul>
+                                </t>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ks_to_do_card_body card-body table-responsive">
+                    <t t-call="ks_to_do_dashboard_inner_body"/>
+                </div>
+            </div>
+        </div>
+    </t>
+
+
+    <t t-name="ks_to_do_dashboard_inner_body">
+        <div class="container-fluid p-0">
+            <div>
+                <div>
+
+                    <div class="card">
+                        <t t-if="state.to_do_view_data['label']">
+
+                            <div class="card-body">
+                                <div class="tab-content">
+                                    <t t-set="ks_section_count" t-value="0"/>
+                                    <t t-foreach="state.to_do_view_data['ks_href_id']" t-as="ks_href_id" t-key="ks_href_id_index">
+                                        <t t-if="ks_section_count===0">
+                                            <div class="tab-pane active ks_tab_section"
+                                                 t-att-data-item-id="item_id"
+                                                 t-att-data-section-id="state.to_do_view_data['ks_section_id'][ks_section_count]"
+                                                 t-att-id="ks_href_id">
+                                                <t t-if="state.to_do_view_data['ks_content'][ks_href_id]">
+                                                    <table class="table">
+                                                        <t t-if="state.to_do_view_data['ks_content'][ks_href_id]">
+                                                            <t t-set="ks_temp_count" t-value="0"/>
+                                                            <t t-foreach="state.to_do_view_data['ks_content'][ks_href_id]"
+                                                               t-as="table_row" t-key="table_row_index">
+                                                                <tr>
+                                                                    <t t-if="!ks_tv_play">
+                                                                        <td class="ks_custom_check">
+                                                                            <div class="form-check">
+                                                                                <label class="form-check-label">
+
+                                                                                    <t t-if="state.to_do_view_data['ks_content_active'][ks_href_id][ks_temp_count]=='True'">
+                                                                                        <input class="form-check-input"
+                                                                                               type="checkbox"
+                                                                                               value=""/>
+                                                                                    </t>
+                                                                                    <t t-else="">
+                                                                                        <input class="form-check-input"
+                                                                                               type="checkbox" value=""
+                                                                                               checked=""/>
+                                                                                    </t>
+
+                                                                                    <span class="form-check-sign ks_do_item_active_handler" t-on-click="_onKsActiveHandler"
+                                                                                          t-att-data-item-id="item_id"
+                                                                                          t-att-data-content-id="state.to_do_view_data['ks_content_record_id'][ks_href_id][ks_temp_count]"
+                                                                                          t-att-data-section-id="state.to_do_view_data['ks_section_id'][ks_section_count]"
+                                                                                          t-att-data-value-id="state.to_do_view_data['ks_content_active'][ks_href_id][ks_temp_count]">
+                                                                                        <span class="check"></span>
+                                                                                    </span>
+                                                                                </label>
+                                                                            </div>
+                                                                        </td>
+                                                                    </t>
+                                                                    <t t-if="state.to_do_view_data['ks_content_active'][ks_href_id][ks_temp_count]=='True'">
+                                                                        <td class="ks_description"
+                                                                            t-att-value="table_row"
+                                                                            t-att-data-content-id="state.to_do_view_data['ks_content_record_id'][ks_href_id][ks_temp_count]">
+                                                                            <t t-esc="table_row"/>
+                                                                        </td>
+                                                                    </t>
+
+                                                                    <t t-else="">
+                                                                        <td class="ks_description ks_do_item_line_through"
+                                                                            t-att-value="table_row"
+                                                                            t-att-data-content-id="state.to_do_view_data['ks_content_record_id'][ks_href_id][ks_temp_count]">
+                                                                            <t t-esc="table_row"/>
+                                                                        </td>
+                                                                    </t>
+                                                                    <t t-if="!ks_tv_play">
+                                                                        <td class="td-actions text-right">
+                                                                            <button type="button" rel="tooltip"
+                                                                                    t-att-data-item-id="item_id"
+                                                                                    t-att-data-content-id="state.to_do_view_data['ks_content_record_id'][ks_href_id][ks_temp_count]"
+                                                                                    t-att-data-section-id="state.to_do_view_data['ks_section_id'][ks_section_count]"
+                                                                                    class="btn-link btn-sm ks_edit_content" t-on-click="_onKsEditTask"
+                                                                                    data-original-title="Edit Task">
+                                                                                <!--                                                <i class="material-icons">Edit</i>-->
+                                                                                <span class="fa fa-lg fa-pencil"></span>
+                                                                            </button>
+                                                                            <button type="button"
+                                                                                    t-att-data-item-id="item_id"
+                                                                                    t-att-data-section-id="state.to_do_view_data['ks_section_id'][ks_section_count]"
+                                                                                    t-att-data-content-id="state.to_do_view_data['ks_content_record_id'][ks_href_id][ks_temp_count]"
+                                                                                    class="btn btn-danger btn-link btn-sm ks_delete_content" t-on-click="_onKsDeleteContent"
+                                                                                    data-original-title="Remove">
+                                                                                <i class="fa fa-trash-o"></i>
+                                                                            </button>
+                                                                        </td>
+                                                                    </t>
+                                                                    <t t-set="ks_temp_count" t-value="ks_temp_count+1"/>
+                                                                </tr>
+                                                            </t>
+
+                                                        </t>
+                                                    </table>
+                                                </t>
+                                                <t t-else="">
+                                                    <span class="nav-tabs-title">No Tasks Available</span>
+                                                </t>
+
+                                                <t t-set="ks_section_count" t-value="ks_section_count+1"/>
+                                            </div>
+                                        </t>
+                                        <t t-else="">
+                                            <div class="tab-pane fade ks_tab_section"
+                                                 t-att-data-item-id="item_id"
+                                                 t-att-data-section-id="state.to_do_view_data['ks_section_id'][ks_section_count]"
+                                                 t-att-id="ks_href_id">
+                                                <t t-if="state.to_do_view_data['ks_content'][ks_href_id]">
+                                                    <table class="table">
+                                                        <t t-if="state.to_do_view_data['ks_content'][ks_href_id]">
+                                                            <t t-set="ks_temp_count" t-value="0"/>
+                                                            <t t-foreach="state.to_do_view_data['ks_content'][ks_href_id]"
+                                                               t-as="table_row" t-key="table_row_index">
+                                                                <tr>
+                                                                    <t t-if="!ks_tv_play">
+                                                                        <td class="ks_custom_check">
+                                                                            <div class="form-check">
+                                                                                <label class="form-check-label">
+                                                                                    <t t-if="state.to_do_view_data['ks_content_active'][ks_href_id][ks_temp_count]=='True'">
+                                                                                        <input class="form-check-input"
+                                                                                               type="checkbox"
+                                                                                               value="True"/>
+                                                                                    </t>
+                                                                                    <t t-else="">
+                                                                                        <input class="form-check-input"
+                                                                                               type="checkbox"
+                                                                                               value="False"
+                                                                                               checked=""/>
+                                                                                    </t>
+                                                                                    <span class="form-check-sign ks_do_item_active_handler" t-on-click="_onKsActiveHandler"
+                                                                                          t-att-data-item-id="item_id"
+                                                                                          t-att-data-content-id="state.to_do_view_data['ks_content_record_id'][ks_href_id][ks_temp_count]"
+                                                                                          t-att-data-section-id="state.to_do_view_data['ks_section_id'][ks_section_count]"
+                                                                                          t-att-data-value-id="state.to_do_view_data['ks_content_active'][ks_href_id][ks_temp_count]">
+                                                                                        <span class="check"></span>
+                                                                                    </span>
+                                                                                </label>
+                                                                            </div>
+                                                                        </td>
+                                                                    </t>
+                                                                    <t t-if="state.to_do_view_data['ks_content_active'][ks_href_id][ks_temp_count]=='True'">
+                                                                        <td class="ks_description"
+                                                                            t-att-value="table_row"
+                                                                            t-att-data-content-id="state.to_do_view_data['ks_content_record_id'][ks_href_id][ks_temp_count]">
+                                                                            <t t-esc="table_row"/>
+                                                                        </td>
+                                                                    </t>
+
+                                                                    <t t-else="">
+                                                                        <td class="ks_description ks_do_item_line_through"
+                                                                            t-att-value="table_row"
+                                                                            t-att-data-content-id="state.to_do_view_data['ks_content_record_id'][ks_href_id][ks_temp_count]">
+                                                                            <t t-esc="table_row"/>
+                                                                        </td>
+                                                                    </t>
+                                                                    <t t-if="!ks_tv_play">
+                                                                        <td class="td-actions text-right">
+                                                                            <button type="button" rel="tooltip"
+                                                                                    t-att-data-item-id="item_id"
+                                                                                    t-att-data-content-id="state.to_do_view_data['ks_content_record_id'][ks_href_id][ks_temp_count]"
+                                                                                    t-att-data-section-id="state.to_do_view_data['ks_section_id'][ks_section_count]"
+                                                                                    class="btn-link btn-sm ks_edit_content" t-on-click="_onKsEditTask"
+                                                                                    data-original-title="Edit Task">
+                                                                                <!--                                                <i class="material-icons">Edit</i>-->
+                                                                                <span class="fa fa-lg fa-pencil"></span>
+                                                                            </button>
+                                                                            <button type="button"
+                                                                                    t-att-data-item-id="item_id"
+                                                                                    t-att-data-section-id="state.to_do_view_data['ks_section_id'][ks_section_count]"
+                                                                                    t-att-data-content-id="state.to_do_view_data['ks_content_record_id'][ks_href_id][ks_temp_count]"
+                                                                                    class="btn btn-danger btn-link btn-sm ks_delete_content" t-on-click="_onKsDeleteContent"
+                                                                                    data-original-title="Remove">
+                                                                                <i class="fa fa-trash-o"></i>
+                                                                            </button>
+                                                                        </td>
+                                                                    </t>
+                                                                    <t t-set="ks_temp_count" t-value="ks_temp_count+1"/>
+                                                                </tr>
+                                                            </t>
+
+                                                        </t>
+                                                    </table>
+                                                </t>
+                                                <t t-else="">
+                                                    <span class="nav-tabs-title">No Tasks Available</span>
+                                                </t>
+                                                <t t-set="ks_section_count" t-value="ks_section_count+1"/>
+                                            </div>
+                                        </t>
+                                    </t>
+                                </div>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <div class="card-body">
+                                <div class="tab-content">
+                                    <span class="nav-tabs-title">No Tasks Available</span>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

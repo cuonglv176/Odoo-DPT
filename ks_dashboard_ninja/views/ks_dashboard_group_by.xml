@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_group_by_tree" model="ir.ui.view">
+        <field name="name">ks.dashboard.group.by.tree</field>
+        <field name="model">ks.dashboard.group.by</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="ttype"/>
+                <field name="ks_dashboard_group_by_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_group_by_form" model="ir.ui.view">
+        <field name="name">ks.dashboard.group.by.form</field>
+        <field name="model">ks.dashboard.group.by</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="ttype"/>
+                            <field name="ks_dashboard_group_by_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_group_by" model="ir.actions.act_window">
+        <field name="name">Group By</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ks.dashboard.group.by</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+<!--    <menuitem id="menu_group_by"-->
+<!--              name="Group By"-->
+<!--              parent="ks_dashboard_ninja.configuration_menu"-->
+<!--              action="action_group_by"-->
+<!--              sequence="20"/>-->
+</odoo>

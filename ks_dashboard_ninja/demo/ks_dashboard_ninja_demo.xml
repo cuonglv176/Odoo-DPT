@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Three Default Demo Dashboard with Templates : Template1, Template2, Template3-->
+
+        <record id="demo_template1_dashboard" model="ks_dashboard_ninja.board">
+            <field name="name">Template1 Dashboard</field>
+            <field name="ks_dashboard_menu_name">Template1</field>
+            <field name="ks_dashboard_top_menu_id" eval="ref('ks_dashboard_ninja.board_menu_root')"/>
+            <field name="ks_dashboard_default_template" eval="ref('ks_dashboard_ninja.ks_template_1')"/>
+            <field name="ks_dashboard_active">1</field>
+            <field name="ks_dashboard_group_access" eval="False"/>
+        </record>
+
+        <record id="demo_template2_dashboard" model="ks_dashboard_ninja.board">
+            <field name="name">Template2 Dashboard</field>
+            <field name="ks_dashboard_menu_name">Template2</field>
+            <field name="ks_dashboard_top_menu_id" eval="ref('ks_dashboard_ninja.board_menu_root')"/>
+            <field name="ks_dashboard_default_template" eval="ref('ks_dashboard_ninja.ks_template_2')"/>
+            <field name="ks_dashboard_active">1</field>
+            <field name="ks_dashboard_group_access" eval="False"/>
+        </record>
+
+        <record id="demo_template3_dashboard" model="ks_dashboard_ninja.board">
+            <field name="name">Template3 Dashboard</field>
+            <field name="ks_dashboard_menu_name">Template3</field>
+            <field name="ks_dashboard_top_menu_id" eval="ref('ks_dashboard_ninja.board_menu_root')"/>
+            <field name="ks_dashboard_default_template" eval="ref('ks_dashboard_ninja.ks_template_3')"/>
+            <field name="ks_dashboard_active">1</field>
+            <field name="ks_dashboard_group_access" eval="False"/>
+        </record>
+    </data>
+</odoo>

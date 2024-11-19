@@ -1,0 +1,75 @@
+.ks_dashboard_theme_input::before {
+    content: '';
+    position: relative;
+    width: 25px;
+    height: 20px;
+    color: white;
+    display: flex;
+    justify-content: center;
+}
+.ks_color_white::before {
+    background: #ffffff;
+    color:black;
+}
+
+.ks_color_white {
+    border: 1px solid #bdbdbd
+}
+
+.ks_color_blue::before {
+    background: #337ab7;
+}
+.ks_color_red::before{
+    background: #d9534f;
+}
+.ks_color_yellow::before{
+    background: #f0ad4e;
+}
+.ks_color_green::before{
+    background: #5cb85c;
+}
+.ks_dashboard_theme_view_render{
+    display: flex;
+}
+.ks_dashboard_theme_input:checked:before{
+    content: '✔';
+}
+
+.ks_dashboard_theme_input_container{
+        margin-right: 20px;
+}
+
+
+
+.ks_dashboard_top_settings .fa-cog{
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.ks_dashboard_setting_container{
+    padding: 5px 10px 5px 10px;
+    cursor: pointer;
+}
+
+.ks_dashboard_setting_container:hover{
+    color: #333333;
+    background-color: #f5f5f5;
+}
+
+
+.ks_dashboard_ninja_toggle_menu::after {
+    display:none !important;
+}
+
+/*
+  Define here the CSS styles applied only to Safari browsers
+  (any version and any device)
+ */
+.ks_dashboard_theme_input{
+    -webkit-appearance: none;
+}
+
+/*Kpi CSS here*/
+.ks_kpi_target_grey {
+    color: #777777;
+}

@@ -1,0 +1,150 @@
+.ks_toggle_icon_input{
+    vertical-align: middle;
+}
+
+.ks_select_dashboard_item_toggle{
+    display: flex;
+}
+
+.ks_select_icon_div{
+    margin-right : 45px;
+}
+
+
+/*New Quick Edit View*/
+.ks_dashboard_item_button_container{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.ks_dashboard_quick_edit_action > button{
+    position: absolute;
+    right: -30px;
+    visibility: hidden;
+}
+
+.ks_dashboard_quick_edit_action{
+    z-index: 99;
+}
+
+
+/*UI CHANGES*/
+
+.ks_qe_footer_span{
+    display: block;
+    width: 18px;
+    height: 18px;
+    -webkit-transform: rotate(-135deg) translateZ(0);
+    transform: rotate(-135deg) translateZ(0);
+    outline: 1px solid transparent;
+    background-color: white;
+    border-top: 1px solid #c7c7c7;
+    border-right: 1px solid #c7c7c7;
+    position: absolute;
+    left: -9px;
+    top: 22px;
+}
+
+
+.ks_qe_dropdown_menu{
+   max-width: 280px;
+   box-shadow: 3px 7px 12px 1px rgba(0, 0, 0, 0.32);
+}
+
+.ks_item_field_info{
+    /*width: 230px;*/
+    max-height: 225px;
+    overflow-y: scroll;
+}
+
+.ks_quick_edit_footer{
+padding-top: 1rem !important;
+padding-bottom: 0.7rem !important;
+border-top: 1px solid #dcdada;
+    display: flex;
+    justify-content: center;
+}
+
+.ks_qe_form_view{
+    padding-bottom: 0px !important;
+        padding-top: 0px !important;
+}
+
+.ks_qe_form_view > .ks_qe_form_view_group{
+    margin-bottom: 0 !important;
+}
+
+
+
+/* width */
+.ks_item_field_info::-webkit-scrollbar,
+.ks_dashboard_custom_srollbar::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* Track */
+.ks_item_field_info::-webkit-scrollbar-track,
+.ks_dashboard_custom_srollbar::-webkit-scrollbar-track,
+ {
+  background: #f1f1f1;
+}
+
+/* Handle */
+.ks_item_field_info::-webkit-scrollbar-thumb,
+.ks_dashboard_custom_srollbar::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+.ks_item_field_info::-webkit-scrollbar-thumb:hover,
+.ks_dashboard_custom_srollbar::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.ks_quick_edit_footer > .ks_discard {
+        border-color: #dee2e6;
+}
+
+
+  @media(min-width: 768px){
+     .ks_dashboard_item_hover .ks_dashboard_item_header_hover > .dn-setting-panel{
+         visibility: hidden;
+     }
+     .ks_dashboard_item_hover:hover .ks_dashboard_item_header_hover > .dn-setting-panel{
+        visibility: visible;
+     }
+
+ }
+  @media(max-width: 768px){
+     .ks_dashboard_header {
+        height: 145px !important;
+    }
+    .ks_dashboard_top_menu{
+
+      margin-top: -6px;
+
+}
+}
+ @media(max-width: 767.8px){
+     .ks_dashboard_item_name{
+        font-size: 16px;
+     }
+     .ks_dashboard_item_hover .ks_dashboard_item_header_hover > .dn-setting-panel button {
+         background: transparent;
+     }
+
+     a.dropdown-item.ks_dashboard_item_chart_info.d-none {
+            display: block !important;
+        }
+    .ks_dashboard_item_fa_con {
+        display: none !important;
+    }
+
+}
+
+.ks_chart_inner_min_width {
+        min-width: 14rem;
+}
+.ks_info_display {
+display: block !important;
+}

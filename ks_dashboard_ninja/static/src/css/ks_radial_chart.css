@@ -1,0 +1,22 @@
+#radial_chart {
+  width: 100%;
+  height: 300px;
+}
+
+#text {
+    margin-left:70px;
+    margin-top:25px;
+}
+
+.ks_radial_item_container{
+    margin-right:25px;
+}
+
+.radial_text{
+    font:3rem Lucida Grande;
+    align-items:center;
+    display:flex;
+    justify-content:center;
+    width:100%;
+    height:100%;
+ }

@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ks_kpi" owl="1">
+
+        <t t-if ="props.record.data.ks_model_id and props.record.data.ks_dashboard_item_type == 'ks_kpi'">
+            <t t-if="props.record.data.ks_model_id_2 == ''">
+                <t t-if="props.record.data.ks_record_field and props.record.data.ks_record_count_type != 'count'">
+                    <t t-call="ks_layout_select"/>
+                </t>
+                <t t-elif="props.record.data.ks_record_count_type == 'count'">
+                     <t t-call="ks_layout_select"/>
+                </t>
+                <t t-else="">
+                    <div>
+                        Select a record field
+                    </div>
+                </t>
+            </t>
+            <t t-else="">
+                <t t-if="props.record.data.ks_record_field_2 and props.record.data.ks_record_field and props.record.data.ks_record_count_type != 'count' and props.record.data.ks_record_count_type_2 != 'count'">
+                    <t t-call="ks_layout_select"/>
+                </t>
+                <t t-elif="props.record.data.ks_record_count_type == 'count' and props.record.data.ks_record_count_type_2 == 'count'">
+                     <t t-call="ks_layout_select"/>
+                </t>
+                <t t-elif="(props.record.data.ks_record_count_type == 'count' and props.record.data.ks_record_count_type_2 != 'count' and props.record.data.ks_record_field_2 ) or (props.record.data.ks_record_field and props.record.data.ks_record_count_type != 'count' and props.record.data.ks_record_count_type_2 == 'count')">
+                     <t t-call="ks_layout_select"/>
+                </t>
+                <t t-else="">
+                    <div>
+                        Select a reocrd field
+                    </div>
+                </t>
+            </t>
+        </t>
+        <t t-elif="props.record.data.ks_data_calculation_type == 'query'">
+            <t t-if="props.record.data.ks_query_result">
+                <t t-call="ks_layout_select"/>
+            </t>
+            <t t-else="">
+                <div>
+                    Please run the appropriate Query
+                </div>
+            </t>
+        </t>
+        <t t-else="">
+            <div>
+                Select a model first
+            </div>
+        </t>
+    </t>
+    <t t-name="ks_layout_select">
+
+        <t t-if="value.count_2 == '' and (value.target_view == 'Number' || value.ks_enable_goal=='')">
+            <t t-call="ks_kpi_preview_template"/>
+        </t>
+        <t t-elif="value.count_2 == '' and (value.target_view == 'Progress Bar' || value.ks_goal_enable)">
+            <t t-call="ks_kpi_preview_template_3"/>
+        </t>
+        <t t-else="">
+            <t t-call="ks_kpi_preview_template_2"/>
+        </t>
+    </t>
+    <t t-name="ks_kpi_preview_template">
+
+        <div class="ks_dashboard_kpi ks_dashboard_custom_srollbar  ks_db_kpi_preview ks_db_item_preview_color_picker"  t-att-style="'background-color:'+ value.ks_rgba_background_color + ';' + 'color: ' + value.ks_rgba_font_color+ ';'" t-ref="ks_kpi">
+            <div class="ks_dashboard_icon_l5 ks_dashboard_icon_color_picker">
+                <t t-if="value.icon_select=='Custom'">
+                    <t t-if="value.img_src">
+                        <img t-att-src="value.img_src" class="ks_db_list_image"/>
+                    </t>
+                </t>
+                <t t-elif="value.icon_select=='Default'">
+                    <span t-att-style="'color:'+ value.icon_color + ';'" t-att-class="'fa fa-' + value.default_icon + ' fa-5x'"/>
+                </t>
+            </div>
+            <div class="ks_dashboard_item_main_body_l5">
+                <div class="ks_dashboard_kpi_name_preview">
+                    <t t-esc="value.name"/>
+                </div>
+                <div class="ks_dashboard_kpi_count_preview" t-att-title="value.count_1_tooltip">
+                    <t t-esc="value.count_1"/>
+                </div>
+            </div>
+            <div class="row d-flex ml-auto mr-auto">
+                <t t-if="value.ks_enable_goal">
+                    <div class="col">
+                        <div style="color: rgba(0, 0, 0, 0.61);">
+                            <span>vs Target</span>
+                        </div>
+                        <div>
+
+                            <span class="target_deviation" style="font-size : medium;">
+                                <t t-esc="value.target_deviation"/>
+                                <t t-if="value.target_arrow">
+                                    <i t-att-class="'fa fa-arrow-'+ value.target_arrow"/>
+                                </t>
+                            </span>
+                        </div>
+                    </div>
+                </t>
+                <t t-if="value.ks_previous_period">
+                    <div class="col" style="text-align:right;">
+                        <div style="color: rgba(0, 0, 0, 0.61);">
+                            <span>vs Prev</span>
+                        </div>
+                        <div>
+                            <span class="pre_deviation" style="font-size : medium;">
+                                <t t-esc="value.pre_deviation"/>
+                                <i t-att-class="'fa fa-arrow-'+ value.pre_arrow"/>
+                            </span>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ks_kpi_preview_template_3">
+        <div class="ks_dashboard_kpi ks_dashboard_custom_srollbar  ks_db_kpi_preview ks_db_item_preview_color_picker" t-att-style="'background-color:'+ value.ks_rgba_background_color + ';' + 'color: ' + value.ks_rgba_font_color+ ';'" t-ref="ks_kpi">
+            <div class="ks_dashboard_icon_l5 ks_dashboard_icon_color_picker">
+                <t t-if="value.icon_select=='Custom'">
+                    <t t-if="value.img_src">
+                        <img t-att-src="value.img_src" class="ks_db_list_image"/>
+                    </t>
+                </t>
+                <t t-elif="value.icon_select=='Default'">
+                    <span t-att-style="'color:'+ value.icon_color + ';'" t-att-class="'fa fa-' + value.default_icon + ' fa-5x'"/>
+                </t>
+            </div>
+            <div class="ks_dashboard_item_main_body_l5">
+                <div class="ks_dashboard_kpi_name_preview">
+                    <t t-esc="value.name"/>
+                </div>
+                <div class="ks_dashboard_kpi_count_preview" t-att-title="value.count_1_tooltip">
+                    <span class="ks_count">
+                        <t t-esc="value.count_1"/>
+                    </span>
+                    /
+                    <span>
+                        <t t-esc="value.target"/>
+                    </span>
+                </div>
+            </div>
+            <div class="text-center ks_progress">
+                <div>
+                    <progress id="ks_progressbar" value="0" max="100"/>
+                </div>
+                <div class="text-center">
+                    <t t-esc="value.target_progress_deviation"/>%
+                </div>
+            </div>
+            <t t-if="value.ks_previous_period and value.previous_period_data">
+                <div class="text-center mt-1">
+                    <div>
+                        <span>vs Prev</span>
+                    </div>
+                    <div>
+                        <t t-esc="value.previous_period_data"/>
+                        <span class="pre_deviation">
+                            <t t-esc="value.pre_deviation"/>
+                            <i t-att-class="'fa fa-arrow-'+ value.pre_arrow"/>
+                        </span>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="ks_kpi_preview_template_2">
+        <div class="ks_dashboard_kpi ks_dashboard_custom_srollbar  ks_db_kpi_preview ks_db_item_preview_color_picker" t-att-style="'background-color:'+ value.ks_rgba_background_color + ';' + 'color: ' + value.ks_rgba_font_color+ ';'" t-ref="ks_kpi">
+            <div class="ks_dashboard_icon_l5 ks_dashboard_icon_color_picker">
+                <t t-if="value.icon_select=='Custom'">
+                    <t t-if="value.img_src">
+                        <img t-att-src="value.img_src" class="ks_db_list_image"/>
+                    </t>
+                </t>
+                <t t-elif="value.icon_select=='Default'">
+                    <span t-att-style="'color:'+ value.icon_color + ';'" t-att-class="'fa fa-' + value.default_icon + ' fa-5x'"/>
+                </t>
+            </div>
+            <div class="ks_dashboard_item_main_body_l5">
+                <div class="ks_dashboard_kpi_name_preview">
+                    <t t-esc="value.name"/>
+                </div>
+                <div class="ks_dashboard_kpi_count_preview" t-att-title="value.count_tooltip">
+                    <span>
+                        <t t-esc="value.count"/>
+                        <t t-if="value.target_view =='Progress Bar' and value.target_enable">/
+                            <t t-esc="value.target"/>
+                        </t>
+                    </span>
+                </div>
+            </div>
+            <t t-if="value.ks_enable_goal and value.target_enable">
+                <t t-if="value.target_deviation and value.target_view =='Number'">
+                    <div class="text-center">
+                        <div>
+                            <span class="ks_kpi_target_grey">vs Target</span>
+                        </div>
+                        <div>
+                            <span class="target_deviation">
+                                <t t-esc="value.target_deviation"/>
+                                <t t-if="value.pre_arrow">
+                                    <i t-att-class="'fa fa-arrow-'+ value.pre_arrow"/>
+                                </t>
+                            </span>
+                        </div>
+                    </div>
+                </t>
+                <t t-if="value.target_progress_deviation and value.target_view =='Progress Bar'">
+                    <div class="text-center  ks_progress">
+                        <div>
+                            <progress id="ks_progressbar" value="0" max="100"/>
+                        </div>
+                        <div class="text-center">
+                            <t t-esc="value.target_progress_deviation"/>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </div>
+    </t>
+
+</templates>

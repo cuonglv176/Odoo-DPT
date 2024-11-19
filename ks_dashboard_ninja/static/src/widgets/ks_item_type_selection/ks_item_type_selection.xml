@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-name="ks_dashboard_item_view_owl" owl="1">
+        <div class="chart-list mb-3 scrollbar">
+
+            <t t-foreach="state.charts" t-as="val" t-key="val.id">
+                <t t-if="val.Tech_name == props.record.data.ks_dashboard_item_type">
+                    <div class="chart-card active" t-on-click="onselectitemtype">
+                        <div class="chart-thum">
+                            <img t-att-src="'ks_dashboard_ninja/static/description/images/'+val['name']+'.svg'"
+                                 alt="image"/>
+                        </div>
+                        <div class="chart-content">
+                            <t t-esc="val['name']"/>
+                        </div>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="chart-card" t-on-click="onselectitemtype">
+                        <div class="chart-thum">
+                            <img t-att-src="'ks_dashboard_ninja/static/description/images/'+val['name']+'.svg'"
+                                 alt="image"/>
+                        </div>
+                        <div class="chart-content">
+                            <t t-esc="val['name']"/>
+                        </div>
+                    </div>
+                </t>
+            </t>
+
+        </div>
+    </t>
+</templates>

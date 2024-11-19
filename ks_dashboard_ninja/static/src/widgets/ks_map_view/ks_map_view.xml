@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="KsMapPreview" owl="1">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="card shadow p-0 m-0 w-100">
+                    <div class="p-3 py-3 d-flex flex-row align-items-center justify-content-between ">
+                        <h6 class="m-0 font-weight-bold h3 ks_chart_heading" t-att-title="props.record.data.name || props.record.data.ks_model_id[1] || '' ">
+                            <t t-esc="props.record.data.name || props.record.data.ks_model_id[1] || ''"/>
+                        </h6>
+                    </div>
+                    <div class="card-body" id="ksChart">
+                         <div id="map_chart" t-ref="mapContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

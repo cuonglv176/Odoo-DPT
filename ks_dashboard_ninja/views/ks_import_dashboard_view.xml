@@ -1,0 +1,41 @@
+<odoo>
+    <data>
+
+        <record id="ks_import_dashboard_form_view" model="ir.ui.view">
+            <field name="name">ks_dashboard_ninja.import form</field>
+            <field name="model">ks_dashboard_ninja.import</field>
+            <field name="arch" type="xml">
+                 <form string="Import Dashboard" class="ks_import_dashboard_d_none">
+                <group>
+                    <group>
+                        <field name="ks_import_dashboard" string="Upload Dashboard Json" required="1"/>
+                        <field name="ks_top_menu_id" string="Show Under Menu" required="1"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="ks_do_action" string="Save" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+            </field>
+        </record>
+
+
+        <record id="ks_import_dashboard_action" model="ir.actions.act_window">
+            <field name="name">Import Dashboard</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ks_dashboard_ninja.import</field>
+            <field name="view_mode">form</field>
+             <field name="target">new</field>
+        </record>
+
+        <menuitem name="Import Dashboards" id="ks_dashboard_ninja.ks_import_dashboard_menu"
+                  parent="ks_dashboard_ninja.configuration_menu"
+                  action="ks_dashboard_ninja.ks_import_dashboard_action" groups="base.group_system"/>
+
+<!--                <menuitem name="Dashboard Import" id="ks_dashboard_ninja.dashboard_layout_menu"-->
+<!--                  parent="ks_dashboard_ninja.configuration_menu"-->
+<!--                  action="ks_dashboard_ninja.layout_tree_action_window" groups="ks_dashboard_ninja_group_manager"/>-->
+    </data>
+
+</odoo>

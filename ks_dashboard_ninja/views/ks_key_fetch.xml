@@ -1,0 +1,37 @@
+<odoo>
+    <data>
+
+        <record id="ks_fetch_key_form_view" model="ir.ui.view">
+            <field name="name">ks_dashboard_ninja.fetch_key_form</field>
+            <field name="model">ks_dashboard_ninja.fetch_key</field>
+            <field name="arch" type="xml">
+                 <form string="Fetch API key">
+                <group>
+                    <group>
+                        <field name="ks_email_id" required="1"/>
+                        <field name="ks_api_key" invisible="(ks_show_api_key == False)" widget="CopyClipboardChar"/>
+                        <field name="ks_show_api_key" invisible="1"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="ks_fetch_details" string="Fetch Key" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+            </field>
+        </record>
+
+
+        <record id="ks_fetch_key" model="ir.actions.act_window">
+            <field name="name">Fetch API key</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ks_dashboard_ninja.fetch_key</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="ks_fetch_key_form_view"></field>
+            <field name="target">new</field>
+        </record>
+
+
+    </data>
+
+</odoo>

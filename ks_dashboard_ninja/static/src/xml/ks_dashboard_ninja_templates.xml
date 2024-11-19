@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!--    Dashboard Header : Show title and dashboard settings button-->
+    <t t-name="ks_dashboard_ninja.KsDashboardNinjaHeader" owl="1">
+
+        <div class="ks_dashboard_header d-flex p-3 w-100 bg-white justify-content-between flex-column flex-lg-row"
+             t-ref="ks_dashboard_header">
+            <t t-if="state.ks_dashboard_manager">
+                <div class="dropdown config_dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                            style="color: black;">
+                        <i class="fa fa-sliders"></i>
+                    </button>
+                    <!-- HTML !-->
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"
+                         style="background-color: rgba(255,255,255);">
+                        <div class="dropdown-item-lable" style="color: #71639e;">Configure this dashboard</div>
+                        <a class="dropdown-item" href="#" id="dashboard_settings" t-on-click="ksOnDashboardSettingClick">
+                            <i class="fa fa-wrench mr-2"></i>
+                            Dashboard Setting
+                        </a>
+                        <a class="dropdown-item" href="#" id="dashboard_export" t-on-click="ksOnDashboardExportClick">
+                            <i class="fa fa-upload mr-2"></i>
+                            Export Dashboard
+                        </a>
+                        <a class="dropdown-item" href="#" id="dashboard_delete" t-on-click="ksOnDashboardDeleteClick">
+                            <i class="fa fa-trash-o mr-2"></i>
+                            Delete this dashboard
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item-lable" style="color: #71639e;">Create a New Dashboard</div>
+                        <a class="dropdown-item" href="#" id="dashboard_create" t-on-click="ksOnDashboardCreateClick">
+                            <i class="fa fa-plus mr-2"></i>
+                            New Dashboard
+                        </a>
+                        <a class="dropdown-item" href="#" id="create_ai_dashboard" t-on-click="kscreateaidashboard">
+                            Generate Dashboard with AI
+                            <span class="ks_new_tag p-1" style="margin-left:3px">
+                                Beta
+                            </span>
+                        </a>
+                        <a class="dropdown-item" href="#" id="dashboard_import" t-on-click="ksOnDashboardImportClick">
+                            <i class="fa fa-download mr-2"></i>
+                            Import Dashboard
+                        </a>
+                        <a class="dropdown-item" href="#" id="dashboard_duplicate" t-on-click="ksOnDashboardDuplicateClick">
+                            <i class="fa fa-files-o mr-2"></i>
+                            Duplicate current Dashboard
+                        </a>
+                    </div>
+                </div>
+            </t>
+            <div id="ks_dashboard_title">
+                <t t-if="state.ks_show_layout">
+                    <t t-call="ks_dn_layout_container"/>
+                </t>
+                <t t-else="">
+                    <span id="ks_dashboard_title_label" class="ks_am_element">
+                        <t t-esc="state.ks_dashboard_name"/>
+                    </span>
+                </t>
+
+
+                <input id="ks_dashboard_title_input" typ="text" maxlength="30"
+                       class="form-control form-control-lg ks_em_element ks_hide"
+                />
+                <t t-if="state.ks_dashboard_manager">
+                    <div class="ks_dashboard_top_settings dropdown d-md-block d-lg-none">
+                        <span class="ks_dashboard_ninja_toggle_menu  m-2"
+                              title="Customize Dashboard" data-bs-toggle="dropdown"
+                              aria-expanded="false"/>
+                        <ul class="oe_dashboard_links ks_dashboard_links dropdown-menu dropdown-menu-right" role="menu">
+                            <li class="ks_dashboard_setting_container ks_dashboard_add_layout" title="Add Item">
+                                <i class="fa fa-plus-circle"/>
+                                <span>Add Item</span>
+                            </li>
+                            <li class="ks_dashboard_setting_container ks_dashboard_edit_layout ks_hide"
+                                title="Edit Layout">
+                                <i class="fa fa-pencil"/>
+                                <span>Edit Layout</span>
+                            </li>
+                            <li class="ks_dashboard_setting_container print-dashboard-btn d-md-block d-lg-none ks_hide"
+                                title="Print">
+                                <i class="fa fa-print"/>
+                                <span>Print</span>
+                            </li>
+                        </ul>
+                    </div>
+                </t>
+                <div class="welcome_note">
+                    <h3>Welcome <span><t t-esc="state.ks_user_name"/></span> <img src="ks_dashboard_ninja/static/description/images/hand_wave.png" class="img-fluid" alt="" /></h3>
+                </div>
+            </div>
+
+            <!--            <t t-call="ks_dn_filter_container"/>-->
+            <div class="ks_new_button_div">
+                <t t-if="state.ks_dashboard_manager">
+                    <div class="ks_dashboard_top_settings dropdown d-none d-lg-block">
+                        <button id='ks_ai_item_dash' class="btn btn-primary mr-1"
+                                t-on-click="kscreateaiitem">
+                            <img src="/ks_dashboard_ninja/static/description/images/icons/generate-ai.svg" alt=""/>
+                            <span class="fa fa-lg"/>
+                            Generate with AI
+                            <span class="caret"/>
+                        </button>
+                        <button class="btn  btn-outline-secondary ks_add_item_type_button" t-on-click="onAddItemTypeClick">
+                            <span>
+                                Create new chart
+                            </span>
+                        </button>
+                    </div>
+                </t>
+                <div class="flex_column_datetimerow ks_dashboard_top_menu ks_select_none">
+                <!--  Date Filter Selection Options (Hide default for no content view)-->
+                    <div class="ks_dashboard_link ks_am_content_element ks_custom_date_filter ks_hide mr-4">
+                    <div class="ks_date_filter_selection_input">
+                        <div class="ks_date_selection_box">
+                            <div class="btn-group ">
+                                <button class="o_dropdown_toggler_btn btn btn-secondary dropdown-toggle ks_date_filter_dropdown"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                    <span class="fa fa-lg fa-calendar"/>
+                                    <span id="ks_date_filter_selection"/>
+                                    <span class="caret"/>
+                                </button>
+
+                                <ul id="ks_date_selector_container"
+                                    class="dropdown-menu ks_date_filters_menu_drop_down ks_dashboard_custom_srollbar ks_date_filters_menu dropdown-max-height"
+                                    role="menu" t-on-click="_ksOnDateFilterMenuSelect">
+                                    <li id="l_none">
+                                        <span class="df_selection_text">All Time</span>
+                                    </li>
+                                    <li class="divider"/>
+
+                                    <t t-foreach="state.date_selection_order" t-as="date_id" t-key="date_id">
+                                        <li t-att-id="date_id">
+                                            <span class="df_selection_text">
+                                                <t t-esc="state.date_selection_data[date_id]"/>
+                                            </span>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!--Date input fields are shown only when Date Filter : Custom-->
+                        <div class="ks_date_input_fields ks_hide">
+                            <DateTimeInput value="state.ksDateFilterStartDate" type="'datetime'" id="'ks_btn_middle_child'" placeholder="'Start Date...'"
+                                 onChange="(date) => this.loadDashboardData(date)"/>
+
+                            <DateTimeInput value="state.ksDateFilterEndDate" type="'datetime'" id="'ks_btn_last_child'" placeholder="'End Date...'"
+                                 onChange="(date) => this.loadDashboardData(date)"/>
+                        </div>
+                    </div>
+                        <div class="ks_date_apply_clear_print">
+                        <!--Apply and Clear buttons will only be shown when Date filter : Custom-->
+                        <button type='button' class='button btn btn-primary apply-dashboard-date-filter ks_hide' t-on-click="_onKsApplyDateFilter"
+                        >Apply
+                        </button>
+                        <button type='button' class='button btn btn-primary clear-dashboard-date-filter ks_hide'
+                        t-on-click="_onKsClearDateValues">Clear
+                        </button>
+                            <button type='button'
+                                    class='btn btn-primary d-none d-lg-block fa fa-print print-dashboard-btn m-1 ml-3 ks_hide'
+                                    title="Print"/>
+                    </div>
+                </div>
+
+                <t t-if="state.ks_dashboard_manager">
+
+                    <!-- Add and Edit buttons-->
+                    <div class="ks_dashboard_top_settings dropdown d-none d-lg-block">
+                                <input accept=".json " t-attf-id="file_#{_id}"
+                                       name="file" class="ks_input_import_item_button" type="file" style="display:none;"
+                                       t-on-change="ksImportItem"/>
+
+                    </div>
+                    <div class="ks_dashboard_top_menu ks_select_none filter_design">
+
+                            <!--  Date Filter Selection Options (Hide default for no content view)-->
+                            <div class="ks_dashboard_link ks_am_content_element ks_hide mr-4"
+                                 t-if="Object.keys(state.ks_dashboard_data.ks_dashboard_custom_domain_filter).length || Object.keys(state.ks_dashboard_data.ks_dashboard_pre_domain_filter).length"
+                            >
+                                <div class="ks_dn_filter_selection_input">
+                                    <div class="ks_dn_selection_box">
+                                        <div class="btn-group ">
+                                            <button class="o_dropdown_toggler_btn btn btn-secondary dropdown-toggle ks_date_filter_dropdown"
+                                                    data-bs-toggle="dropdown"
+                                                    aria-expanded="false">
+                                                <span class="fa fa-lg fa-filter"/>
+                                                <span class="ks_dn_filter_selection">Filter</span>
+                                                <span class="caret"/>
+                                            </button>
+                                            <div class="ks_dn_filter_dropdown_container dropdown-menu dropdown-max-height ks_date_filters_menu_drop_down ks_dashboard_custom_srollbar">
+                                                <div>
+                                                    <ul id="ks_dn_filter_pre_domain_selector_container"
+                                                        class="ks_dn_pre_filter_menu"
+                                                        role="menu">
+                                                        <t t-foreach="state.ks_dn_pre_defined_filters" t-as="pre_filter" t-key="pre_filter_index">
+                                                            <t t-if="pre_filter['type']==='filter'">
+                                                                <li t-att-class="pre_filter['active'] ? 'dn_dynamic_filter_selected dn_filter_click_event_selector': 'dn_filter_click_event_selector' "
+                                                                    t-att-data-ks-categ="pre_filter['categ']"
+                                                                    t-att-data-filter-id="pre_filter['id']" t-on-click="onKsDnDynamicFilterSelect">
+                                                                    <span class="df_selection_text">
+                                                                        <t t-esc="pre_filter['name']"/>
+                                                                        <span class="ks_dn_pre_model_text">
+                                                                            <t t-esc="'(' + pre_filter['model_name'] + ')'"/>
+                                                                        </span>
+                                                                    </span>
+
+                                                                </li>
+                                                            </t>
+                                                            <t t-else="">
+                                                                <hr/>
+                                                            </t>
+                                                        </t>
+                                                        <hr t-if="Object.keys(state.ks_dashboard_data.ks_dashboard_custom_domain_filter).length"/>
+                                                    </ul>
+
+                        <!-- This should only be shown on : Edit Mode Layout-->
+
+<!--                                                    <div class="o_generator_menu"-->
+<!--                                                         t-if="Object.keys(state.ks_dashboard_data.ks_dashboard_custom_domain_filter).length">-->
+<!--                                                        <span>Custom Filter</span>-->
+<!--                                                        <div id="ks_dn_custom_filters_container"-->
+<!--                                                             class="o_filter_condition dropdown-item-text">-->
+
+<!--                                                        </div>-->
+<!--                                                        <div class="o_add_filter_menu dropdown-item-text">-->
+<!--                                                            <button type="button"-->
+<!--                                                                    class="btn btn-primary o_apply_filter ks_dn_filter_apply">-->
+<!--                                                                Apply-->
+<!--                                                            </button>-->
+<!--                                                            <button type="button"-->
+<!--                                                                    class="btn btn-secondary ks_custom_filter_add_condition">-->
+<!--                                                                <i class="fa fa-plus-circle"/>-->
+<!--                                                                Add a condition-->
+<!--                                                            </button>-->
+<!--                                                        </div>-->
+<!--                                                    </div>-->
+                                                </div>
+                                                <t t-debug="pdb"/>
+                                                <div t-att-class="Object.keys(state.ks_dashboard_data.ks_dashboard_domain_data).length ? 'ks_dn_filter_applied_container': 'ks_dn_filter_applied_container ks_hide'">
+                                                    <t t-foreach="Object.keys(state.ks_dashboard_data.ks_dashboard_domain_data)" t-as="data_key" t-key="data_key_index">
+                                                        <t t-call="ks_dn_filter_section_container_template">
+                                                            <t t-set="ks_domain_data"
+                                                               t-value="state.ks_dashboard_data.ks_dashboard_domain_data[data_key]"/>
+                                                            <t t-set="ks_model" t-value="data_key"/>
+                                                        </t>
+                                                    </t>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                        <button class="btn btn btn-primary" id="ks_import_item" data-toggle="tooltip" t-on-click="ksImportItemJson"
+                                data-placement="top" title="Import-item">
+                            <img src="ks_dashboard_ninja/static/description/images/icons/import-btn.svg" alt=""/>
+                        </button>
+                        <button id="ks_dashboard_layout_edit" t-on-click="onKsEditLayoutClick"
+                                class="btn btn-primary ks_dashboard_edit_layout ks_edit_layout"
+                                data-toggle="tooltip" data-placement="top" title="Edit Layout">
+                            <img src="/ks_dashboard_ninja/static/description/images/icons/edit-btn.svg" alt=""/>
+                        </button>
+
+                    <!-- This should only be shown on : Edit Mode Layout-->
+                    <div class="ks_dashboard_edit_mode_settings ks_hide">
+                        <div class="oe_dashboard_links ">
+                            <!--                            <button t-if="ks_show_create_layout_option" type="button"-->
+                            <!--                                    class="button ks_dashboard_create_new_layout btn btn-primary o_form_button_save"-->
+                            <!--                                    title="Save Changes as a New Layout">-->
+                            <!--                                <span>Save as New Layout</span>-->
+                            <!--                            </button>-->
+                            <t t-if="state.ks_multi_layout">
+                                <button t-if="state.ks_show_create_layout_option" type="button"
+                                        class="button ks_dashboard_create_new_layout btn btn-primary o_form_button_save"
+                                        title="Save Changes as a New Layout" t-on-click="_onKsCreateLayoutClick" style="position:relative; right:8px;">
+                                    <span>Save as New Layout</span>
+                                </button>
+                            </t>
+
+                            <button type="button"
+                                    class="button ks_dashboard_save_layout btn btn-primary o_form_button_save"
+                                    title="Save Changes"
+                                    t-on-click="_onKsSaveLayoutClick" style="position:relative; left:-4px">
+                                <span>Save</span>
+                            </button>
+
+                            <button type="button"
+                                    class="button ks_dashboard_cancel_layout btn btn-secondary o_form_button_cancel"
+                                    title="Discard Changes"
+                                    t-on-click="_onKsCancelLayoutClick" style="margin-right:8px">
+                                <span>Discard</span>
+                            </button>
+                        </div>
+                    </div>
+
+                        <!-- This should only be shown on : Dn Layout Edit Mode Layout-->
+                        <div class="ks_dashboard_layout_edit_mode_settings ks_hide">
+                        <div class="oe_dashboard_links ">
+                            <button type="button"
+                                    class="button ks_dashboard_set_current_layout btn btn-primary o_form_button_save"
+                                    title="Save Changes" style="position:relative; right:5px;" t-on-click="_ksSetCurrentLayoutClick">
+                                <span>Set Current Layout</span>
+                            </button>
+                            <button type="button"
+                                    class="button ks_dashboard_cancel_current_layout btn btn-secondary o_form_button_cancel"
+                                    title="Discard Changes" t-on-click="_ksSetDiscardCurrentLayoutClick">
+                                <span>Discard</span>
+                            </button>
+                        </div>
+                    </div>
+                </t>
+
+            </div>
+            </div>
+        </div>
+        <t t-call="ks_dashboard_ninja.ks_main_body_container"/>
+    </t>
+
+
+    <t t-name="ks_dn_layout_container">
+        <!--        <div class="ks_am_element">-->
+        <!--            <button id="ks_dn_layout_button" class="o_dropdown_toggler_btn btn btn-secondary dropdown-toggle"-->
+        <!--                    data-toggle="dropdown" aria-expanded="false">-->
+        <!--                <span>-->
+        <!--                    <t t-esc="ks_child_boards[ks_selected_board_id][0]"/>-->
+        <!--                </span>-->
+        <!--                <span class="caret"></span>-->
+        <!--            </button>-->
+        <!--            <ul id="ks_dashboard_layout_dropdown_container"-->
+        <!--                class="dropdown-menu ks_dashboard_custom_srollbar dropdown-max-height"-->
+        <!--                role="menu">-->
+        <!--                <t t-foreach="_(ks_child_boards).keys()" t-as="layout_id">-->
+        <!--                    <li t-att-class="ks_selected_board_id === layout_id ? 'ks_dashboard_layout_event ks_layout_selected': 'ks_dashboard_layout_event'"-->
+        <!--                        t-att-data-ks_layout_id="layout_id">-->
+        <!--                        <span class="df_selection_text">-->
+        <!--                            <t t-esc="ks_child_boards[layout_id][0]"/>-->
+        <!--                        </span>-->
+        <!--                    </li>-->
+        <!--                </t>-->
+        <!--            </ul>-->
+        <!--        </div>-->
+        <t t-if="state.ks_multi_layout">
+            <div class="ks_am_element">
+                <button id="ks_dn_layout_button" class="o_dropdown_toggler_btn btn btn-secondary dropdown-toggle"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <span>
+                        <t t-esc="state.ks_child_boards[state.ks_selected_board_id][0]"/>
+                    </span>
+                    <span class="caret"></span>
+                </button>
+                <ul id="ks_dashboard_layout_dropdown_container"
+                    class="dropdown-menu ks_dashboard_custom_srollbar dropdown-max-height"
+                    role="menu">
+                    <t t-foreach="Object.keys(state.ks_child_boards)" t-as="layout_id" t-key="layout_id_index">
+                        <li t-att-class="state.ks_selected_board_id === layout_id ? 'ks_dashboard_layout_event ks_layout_selected': 'ks_dashboard_layout_event'"
+                            t-att-data-ks_layout_id="layout_id" t-on-click="_ksOnDnLayoutMenuSelect">
+                            <span class="df_selection_text">
+                                <t t-esc="state.ks_child_boards[layout_id][0]"/>
+                            </span>
+                        </li>
+                    </t>
+                </ul>
+            </div>
+        </t>
+        <t t-else="">
+            <span id="ks_dashboard_title_label" class="ks_am_element">
+                <t t-esc="state.ks_dash_name"/>
+            </span>
+        </t>
+    </t>
+    <!--    Dashboard Main Body Container -->
+    <t t-name="ks_dashboard_ninja.ks_main_body_container" owl="1">
+
+        <div class="ks_dashboard_main_content" t-ref="ks_main_body">
+            <t t-if="state.ks_dashboard_item_length != 0">
+                <div class="ks_dashboard_item_content grid-stack ks_dashboard_items_list m-3" gs-w="36"/>
+                <t t-call="ks_dashboard_item_template"/>
+            </t>
+        </div>
+        <t t-if="state.ks_dashboard_item_length == 0">
+            <t t-call="ksNoItemView"/>
+        </t>
+    </t>
+
+    <!--    Empty Dashboard View Layout-->
+    <t t-name="ksNoItemView">
+        <div class="o_view_nocontent">
+            <div class="o_nocontent_help">
+                <p class="o_view_nocontent_neutral_face">
+                    Your personal dashboard is empty
+                </p>
+                <p>
+                    To add dashboard item, use
+                    <a>
+                        <strong class="ks_add_dashboard_item_on_empty">Add button</strong>
+                    </a>
+                    on top right corner.
+                </p>
+            </div>
+        </div>
+    </t>
+
+    <!--Item Layouts : -->
+    <t t-name="ks_dashboard_item_template">
+        <t t-foreach="state.ks_dashboard_items" t-as="items" t-key="items.id">
+            <t t-if="items.ks_dashboard_item_type === 'ks_tile'">
+                <Ksdashboardtile item="items" dashboard_data="ks_dashboard_data" ksdatefilter = "state.ksDateFilterSelection" pre_defined_filter = "state.pre_defined_filter"/>
+            </t>
+            <t t-elif="items.ks_dashboard_item_type === 'ks_kpi'">
+                <Ksdashboardkpiview item="items" dashboard_data="ks_dashboard_data" ksdatefilter="state.ksDateFilterSelection" pre_defined_filter = "state.pre_defined_filter"/>
+            </t>
+            <t t-elif="items.ks_dashboard_item_type === 'ks_to_do'">
+                <Ksdashboardtodo item="items" dashboard_data="ks_dashboard_data"/>
+            </t>
+            <t t-else="">
+                <Ksdashboardgraph item="items" dashboard_data="ks_dashboard_data" ksdatefilter="state.ksDateFilterSelection" pre_defined_filter = "state.pre_defined_filter"/>
+            </t>
+        </t>
+    </t>
+
+
+
+    <t t-name="ksQuickEditButtonContainer">
+        <div class="ks_dashboard_quick_edit_action grid-stack-item" t-att-gs-x="grid.x"
+             t-att-gs-y="grid.y" t-att-gs-w="grid.w" t-att-gs-h="grid.h">
+            <button title="Quick Customize" data-bs-toggle="dropdown"
+                    class="ks_dashboard_item_action  btn dropdown-toggle btn-xs o-no-caret btn"
+                    type="button"
+                    aria-expanded="true">
+                <i class="fa fa-cog"/>
+            </button>
+            <div role="menu" class="dropdown-menu ks_qe_dropdown_menu ">
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ks_dn_layout_container_new">
+        <t t-if="ks_multi_layout">
+            <div class="ks_am_element">
+                <t t-debug="pdb"/>
+                <button id="ks_dn_layout_button" class="o_dropdown_toggler_btn btn btn-secondary dropdown-toggle"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <span>
+                        <t t-esc="ks_child_boards[ks_selected_board_id][0]"/>
+                    </span>
+                    <span class="caret"></span>
+                </button>
+                <ul id="ks_dashboard_layout_dropdown_container"
+                    class="dropdown-menu ks_dashboard_custom_srollbar dropdown-max-height"
+                    role="menu">
+                    <t t-foreach="Object.keys(ks_child_boards)" t-as="layout_id" t-key="layout_id_index">
+                        <li t-att-class="ks_selected_board_id === layout_id ? 'ks_dashboard_layout_event ks_layout_selected': 'ks_dashboard_layout_event'"
+                            t-att-data-ks_layout_id="layout_id">
+                            <span class="df_selection_text">
+                                <t t-esc="ks_child_boards[layout_id][0]"/>
+                            </span>
+                        </li>
+                    </t>
+                </ul>
+            </div>
+        </t>
+        <t t-else="">
+            <span id="ks_dashboard_title_label" class="ks_am_element">
+                <t t-esc="ks_dash_name"/>
+            </span>
+        </t>
+    </t>
+
+
+</templates>
