@@ -28,7 +28,13 @@ class DPTSaleServiceManagement(models.Model):
     def write(self, vals):
         res = super(DPTSaleServiceManagement, self).write(vals)
         self.action_confirm_quote()
+        self.action_check_status_sale_order()
         return res
+
+
+    def action_check_status_sale_order(self):
+        if self.sale_id.locked:
+            raise UserError(_(f'Đơn hàng {self.sale_id.name} đang khoá, vui lòng mở khoá trước khi update dịch vụ!!!.'))
 
     def action_confirm_quote(self):
 
