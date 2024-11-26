@@ -23,11 +23,11 @@ class StockPicking(models.Model):
     employee_cs = fields.Many2one('hr.employee', string='Employee CS', related='sale_purchase_id.employee_sale')
     shipping_name = fields.Char('Phiếu vận chuyển', compute='_compute_shipping_name', store=True)
 
-    @api.depends('main_incoming_shipping_ids','main_incoming_shipping_ids.name')
+    @api.depends('main_incoming_shipping_ids', 'main_incoming_shipping_ids.name')
     def _compute_shipping_name(self):
         for item in self:
             shipping_name = []
-            for shipping_id in item.main_incoming_shipping_ids:
+            for shipping_id in item.main_incoming_shipping_ids.filtered(lambda sh: sh.vehicle_country == 'chinese'):
                 if shipping_id.name:
                     shipping_name.append(shipping_id.name)
             item.shipping_name = ','.join(shipping_name) if shipping_name else None
