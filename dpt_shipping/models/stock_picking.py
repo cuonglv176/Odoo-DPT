@@ -23,7 +23,8 @@ class StockPicking(models.Model):
     employee_cs = fields.Many2one('hr.employee', string='Employee CS', related='sale_purchase_id.employee_sale')
     shipping_name = fields.Char('Phiếu vận chuyển', compute='_compute_shipping_name', store=True)
 
-    @api.depends('main_incoming_shipping_ids', 'main_incoming_shipping_ids.name')
+    @api.depends('main_incoming_shipping_ids', 'main_incoming_shipping_ids.name',
+                 'main_incoming_shipping_ids.vehicle_country')
     def _compute_shipping_name(self):
         for item in self:
             shipping_name = []
