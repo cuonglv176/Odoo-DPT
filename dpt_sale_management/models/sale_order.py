@@ -73,12 +73,18 @@ class SaleOrder(models.Model):
         if self.partner_id.user_id.id != self._uid:
             self.user_id = self._uid
 
-    @api.onchange('user_id')
+    @api.onchange('partner_id','user_id')
     def onchange_user_id(self):
         if not self.employee_sale:
-            self.employee_sale = self.user_id.employee_id
+            if self.partner_id.user_id:
+                self.employee_sale = self.partner_id.user_id.employee_id
+            else:
+                self.employee_sale = self.user_id.employee_id
         if not self.employee_cs:
-            self.employee_cs = self.user_id.employee_id
+            if self.partner_id.cs_user_id:
+                self.employee_cs = self.partner_id.cs_user_id.employee_id
+            else:
+                self.employee_sale = self.user_id.employee_id
 
     @api.onchange('weight', 'volume', 'order_line')
     def onchange_weight_volume(self):
