@@ -28,7 +28,7 @@ class ResPartner(models.Model):
     dpt_output_status = fields.Char('Output Status')
     dpt_order_status = fields.Char('Order status')
     dpt_date_of_delivery = fields.Char('Date of delivery')
-    company_type = fields.Selection(selection_add=[('household_business', 'Household Business')])
+    company_type = fields.Selection(selection_add=[('household_business', 'Household Business')], store=True)
     cs_user_id = fields.Many2one('res.users', string='Nhân viên CS')
     is_user = fields.Boolean(string='Là nhân viên', default=False, compute="_compute_check_employee", store=True)
     dpt_type_of_partner = fields.Selection([('employee', 'Employee'),
@@ -37,6 +37,11 @@ class ResPartner(models.Model):
                                             ('shipping_address', 'Shipping Address'),
                                             ('payment_address', 'Payment Address'),
                                             ('other', 'Other')], string='Type Partner')
+
+    @api.depends('is_company')
+    def _compute_company_type(self):
+        for partner in self:
+            partner.company_type = 'company' if partner.is_company else 'person'
 
     def _compute_check_employee(self):
         for rec in self:
