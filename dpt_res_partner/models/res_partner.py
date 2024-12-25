@@ -31,12 +31,28 @@ class ResPartner(models.Model):
     company_type = fields.Selection(selection_add=[('household_business', 'Household Business')])
     cs_user_id = fields.Many2one('res.users', string='Nhân viên CS')
     is_user = fields.Boolean(string='Là nhân viên', default=False, compute="_compute_check_employee", store=True)
+    is_household_business = fields.Boolean(string='Là hộ kinh doanh', default=False)
     dpt_type_of_partner = fields.Selection([('employee', 'Employee'),
                                             ('customer', 'Customer'),
                                             ('vendor', 'Vendor'),
                                             ('shipping_address', 'Shipping Address'),
                                             ('payment_address', 'Payment Address'),
                                             ('other', 'Other')], string='Type Partner')
+
+    @api.onchange('company_type')
+    def onchange_company_type(self):
+        self.is_company = (self.company_type == 'company')
+        self.is_household_business = (self.company_type == 'household_business')
+
+    @api.depends('is_company', 'is_household_business')
+    def _compute_company_type(self):
+        for partner in self:
+            if partner.is_company:
+                partner.company_type = 'company'
+            elif partner.is_household_business:
+                partner.company_type = 'household_business'
+            else:
+                partner.company_type = 'person'
 
     def _compute_check_employee(self):
         for rec in self:
