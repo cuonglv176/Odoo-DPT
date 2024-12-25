@@ -39,6 +39,11 @@ class ResPartner(models.Model):
                                             ('payment_address', 'Payment Address'),
                                             ('other', 'Other')], string='Type Partner')
 
+    def _write_company_type(self):
+        for partner in self:
+            partner.is_company = partner.company_type == 'company'
+            partner.is_household_business = partner.company_type == 'household_business'
+
     @api.onchange('company_type')
     def onchange_company_type(self):
         self.is_company = (self.company_type == 'company')
