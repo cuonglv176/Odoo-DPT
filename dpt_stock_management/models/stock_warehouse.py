@@ -10,9 +10,7 @@ class StockWarehouse(models.Model):
     is_main_incoming_warehouse = fields.Boolean('Is main incoming Warehouse')
 
     @api.constrains('is_main_incoming_warehouse')
-    def _check_country(self):
-        for record in self:
-            other_main_warehouse_ids = self.env['stock.warehouse'].sudo().search(
-                [('id', '!=', record._origin.id), ('is_main_incoming_warehouse', '=', True)])
-            if other_main_warehouse_ids:
-                raise ValidationError(_('Cannot configurate 2 or more warehouse is main incoming warehouse'))
+    def _check_main_warehouse(self):
+        other_main_warehouse_ids = self.env['stock.warehouse'].sudo().search([('is_main_incoming_warehouse', '=', True)])
+        if len(other_main_warehouse_ids) > 1:
+            raise ValidationError(_('Cannot configurate 2 or more warehouse is main incoming warehouse'))
