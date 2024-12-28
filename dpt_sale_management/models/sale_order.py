@@ -73,12 +73,18 @@ class SaleOrder(models.Model):
         if self.partner_id.user_id.id != self._uid:
             self.user_id = self._uid
 
-    @api.onchange('user_id')
+    @api.onchange('partner_id','user_id')
     def onchange_user_id(self):
         if not self.employee_sale:
-            self.employee_sale = self.user_id.employee_id
+            if self.partner_id.user_id:
+                self.employee_sale = self.partner_id.user_id.employee_id
+            else:
+                self.employee_sale = self.user_id.employee_id
         if not self.employee_cs:
-            self.employee_cs = self.user_id.employee_id
+            if self.partner_id.cs_user_id:
+                self.employee_cs = self.partner_id.cs_user_id.employee_id
+            else:
+                self.employee_sale = self.user_id.employee_id
 
     @api.onchange('weight', 'volume', 'order_line')
     def onchange_weight_volume(self):
@@ -102,6 +108,8 @@ class SaleOrder(models.Model):
         self.check_required_fields()
         if self.state != 'sale':
             self.onchange_calculation_tax()
+        if vals.get('state') == 'sale':
+            self.action_update_fields()
         return res
 
     def action_unlock(self):
@@ -617,7 +625,7 @@ class SaleOrderField(models.Model):
     def write(self, vals):
         res = super(SaleOrderField, self).write(vals)
         if 'value_char' in vals or 'value_integer' in vals or 'value_date' in vals:
-            self.sale_id.action_calculation()
+            # self.sale_id.action_calculation()
             self.check_required_fields()
         return res
 

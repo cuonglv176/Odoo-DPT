@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <!--Template Layouts-->
+
+    <t t-name="ks_db_list_field_required">
+        <div class="ks_field_required">
+            <p>Fields Required : Name, Model, Icon (Default or Custom Upload), Layout</p>
+        </div>
+    </t>
+
+    <t t-name="ks_db_list_preview">
+        <div class="ks_field_preview">
+            <p>Coming Soon in Future :)</p>
+        </div>
+    </t>
+
+</templates>

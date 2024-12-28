@@ -22,6 +22,7 @@ class StockPicking(models.Model):
     employee_sale = fields.Many2one('hr.employee', string='Employee Sale', related='sale_purchase_id.employee_sale')
     employee_cs = fields.Many2one('hr.employee', string='Employee CS', related='sale_purchase_id.employee_sale')
     shipping_name = fields.Char('Phiếu vận chuyển', compute='_compute_shipping_name', store=True)
+    active = fields.Boolean(string='Active', default=True)
 
     @api.depends('main_incoming_shipping_ids', 'main_incoming_shipping_ids.name',
                  'main_incoming_shipping_ids.vehicle_country')

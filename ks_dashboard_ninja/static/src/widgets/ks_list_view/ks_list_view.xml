@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ks_list_view">
+        <t t-if="props.record.data.ks_data_calculation_type == 'custom' and props.record.data.ks_model_id and props.record.data.ks_dashboard_item_type == 'ks_list_view'">
+            <t t-if="props.record.data.ks_list_view_type == 'ungrouped' ">
+                <t t-if="props.record.data.ks_list_view_fields.count != 0">
+                    <t t-set="value" t-value="value()"/>
+                    <t t-call="ks_dashboard_ninja.ks_list_view_container"/>
+                </t>
+                <t t-else="">
+                    <div>
+                        Select Fields to show in list view
+                    </div>
+                </t>
+            </t>
+            <t t-elif="props.record.data.ks_list_view_type == 'grouped'">
+                <t t-if="props.record.data.ks_list_view_group_fields.count != 0 and props.record.data.ks_chart_relation_groupby">
+                    <t t-if="props.record.data.ks_chart_groupby_type == 'relational_type' or  props.record.data.ks_chart_groupby_type == 'selection' or props.record.data.ks_chart_groupby_type == 'other' or (props.record.data.ks_chart_groupby_type == 'date_type' and props.record.data.ks_chart_date_groupby)">
+                        <t t-set="value" t-value="value()"/>
+                        <t t-call="ks_dashboard_ninja.ks_list_view_container"/>
+                    </t>
+                    <t t-else="">
+                        <div>
+                            Select Group by Date to show list data.
+                        </div>
+                    </t>
+                </t>
+                <t t-else="">
+                    <div>
+                        Select Fields and Group By to show in list view
+                    </div>
+                </t>
+            </t>
+        </t>
+        <t t-elif="props.record.data.ks_data_calculation_type == 'query'">
+            <t t-if="props.record.data.ks_query_result">
+                <t t-set="value" t-value="value()"/>
+                <t t-call="ks_dashboard_ninja.ks_list_view_container"/>
+            </t>
+            <t t-else="">
+                <div>
+                    Please run the appropriate Query
+                </div>
+            </t>
+        </t>
+        <t t-else="">
+            <div>
+                Select a model first
+            </div>
+        </t>
+    </t>
+
+    <t t-name="ks_dashboard_ninja.ks_list_view_container">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="card shadow col-md-9 p-0 m-0">
+                    <div class="p-3 py-3 d-flex flex-row align-items-center justify-content-between ">
+                        <h6 class="m-0 font-weight-bold h3 ks_chart_heading" t-att-title="ks_list_view_name">
+                            <t t-esc="ks_list_view_name"/>
+                        </h6>
+                    </div>
+                    <div class="card-body table-responsive ksMaxTableContent">
+                        <t t-if="state.list_view_data">
+                            <table id="ksListViewTable" class="table table-hover"
+                                   t-att-data-model="state.list_view_data['model']">
+                                <thead>
+                                    <tr>
+                                        <t t-foreach="state.list_view_data['label']" t-as="table_header" t-key="table_header_index">
+                                            <th>
+                                                <t t-esc="table_header"/>
+                                            </th>
+                                        </t>
+                                        <th/>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="state.list_view_data['data_rows']" t-as="table_row" t-key="table_row_index">
+                                        <tr class="ks_tr" t-att-data-record-id="table_row['id']">
+                                            <t t-set="ks_rec_count" t-value="0"/>
+                                            <t t-foreach="table_row['data']" t-as="row_data" t-key="row_data_index">
+
+                                                <t t-if="table_row['ks_column_type'][ks_rec_count]==='html'">
+                                                    <td>
+<!--                                                        <t t-out="row_data"/>-->
+                                                        <t t-raw="row_data"/>
+                                                    </td>
+                                                    <t t-set="ks_rec_count" t-value="ks_rec_count+1"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <td>
+                                                        <t t-esc="row_data"/>
+                                                    </td>
+                                                    <t t-set="ks_rec_count" t-value="ks_rec_count+1"/>
+                                                </t>
+                                            </t>
+                                            <td>
+                                                <t t-if="ks_show_records == true">
+                                                  <i id="ks_item_info" t-att-data-model="state.list_view_data['model']" t-att-data-record-id="table_row['id']" class="fa fa-pencil"/>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <tr t-if="count">
+                                        <td class="ks_font"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+                        <t t-else="">
+                            No Data Present
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

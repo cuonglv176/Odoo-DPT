@@ -1,0 +1,31 @@
+<odoo>
+    <data noupdate="1">
+
+        <record id="ir_rule_ks_dashboard_item_company_restrictions" model="ir.rule">
+            <field name="name">Dashboard Item Company Restriction: User Can only view their company and sub companies
+                items.
+            </field>
+            <field name="model_id" ref="model_ks_dashboard_ninja_item"/>
+            <field name="domain_force">
+                ['|',('ks_company_id','in', company_ids),('ks_company_id','=',False)]</field>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+        </record>
+
+        <record model="ir.module.category" id="ks_dashboard_ninja_security_groups">
+            <field name="name">Dashboard Ninja Rights</field>
+        </record>
+
+        <record model="res.groups" id="ks_dashboard_ninja_group_manager">
+            <field name="name">Show Full Dashboard Features</field>
+            <field name="category_id" ref="ks_dashboard_ninja.ks_dashboard_ninja_security_groups"/>
+        </record>
+
+        <record id="base.group_system" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('ks_dashboard_ninja.ks_dashboard_ninja_group_manager'))]"/>
+        </record>
+
+    </data>
+</odoo>

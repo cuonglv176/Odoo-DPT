@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="ks_dn_filter_container">
+        <div class="ks_dashboard_top_menu ks_select_none" style="padding:10px">
+
+            <!--  Date Filter Selection Options (Hide default for no content view)-->
+            <div class="ks_dashboard_link ks_am_content_element ks_hide mr-4"
+                 t-if="_(ks_dashboard_data.ks_dashboard_custom_domain_filter).keys().length || _(ks_dashboard_data.ks_dashboard_pre_domain_filter).keys().length"
+            >
+                <div class="ks_dn_filter_selection_input">
+                    <div class="ks_dn_selection_box">
+                        <div class="btn-group ">
+                            <button class="o_dropdown_toggler_btn btn btn-secondary dropdown-toggle ks_date_filter_dropdown"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                <span class="fa fa-lg fa-filter"/>
+                                <span class="ks_dn_filter_selection">Filter</span>
+                                <span class="caret"/>
+                            </button>
+                            <div class="ks_dn_filter_dropdown_container dropdown-menu dropdown-max-height ks_date_filters_menu_drop_down ks_dashboard_custom_srollbar">
+                                <div>
+                                    <ul id="ks_dn_filter_pre_domain_selector_container"
+                                        class="ks_dn_pre_filter_menu"
+                                        role="menu">
+                                        <t t-foreach="ks_dn_pre_defined_filters"
+                                           t-as="pre_filter">
+                                            <t t-if="pre_filter['type']==='filter'">
+                                                <li t-att-class="pre_filter['active'] ? 'dn_dynamic_filter_selected dn_filter_click_event_selector': 'dn_filter_click_event_selector' "
+                                                    t-att-data-ks-categ="pre_filter['categ']"
+                                                    t-att-data-filter-id="pre_filter['id']">
+                                                    <span class="df_selection_text">
+                                                        <t t-esc="pre_filter['name']"/>
+                                                        <span class="ks_dn_pre_model_text">
+                                                            <t t-esc="'(' + pre_filter['model_name'] + ')'"/>
+                                                        </span>
+                                                    </span>
+
+                                                </li>
+                                            </t>
+                                            <t t-else="">
+                                                <hr/>
+                                            </t>
+                                        </t>
+                                        <hr t-if="_(ks_dashboard_data.ks_dashboard_custom_domain_filter).keys().length"/>
+                                    </ul>
+
+                                    <div class="o_generator_menu"
+                                         t-if="_(ks_dashboard_data.ks_dashboard_custom_domain_filter).keys().length">
+                                        <span>Custom Filter</span>
+                                        <div id="ks_dn_custom_filters_container"
+                                             class="o_filter_condition dropdown-item-text">
+
+                                        </div>
+                                        <div class="o_add_filter_menu dropdown-item-text">
+                                            <button type="button"
+                                                    class="btn btn-primary o_apply_filter ks_dn_filter_apply">Apply
+                                            </button>
+                                            <button type="button"
+                                                    class="btn btn-secondary ks_custom_filter_add_condition">
+                                                <i class="fa fa-plus-circle"/>
+                                                Add a condition
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div t-att-class="_(ks_dashboard_data.ks_dashboard_domain_data).keys().length ? 'ks_dn_filter_applied_container': 'ks_dn_filter_applied_container ks_hide'">
+                                    <t t-foreach="_(ks_dashboard_data.ks_dashboard_domain_data).keys()" t-as="data_key">
+                                        <t t-call="ks_dn_filter_section_container_template">
+                                            <t t-set="ks_domain_data"
+                                               t-value="ks_dashboard_data.ks_dashboard_domain_data[data_key]"/>
+                                            <t t-set="ks_model" t-value="data_key"/>
+                                        </t>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ks_dn_filter_section_container_template">
+        <div t-att-data-ks-model-selector="ks_model" class="ks_dn_filter_section_container">
+            <span class="ks_dn_filter_section_container_label">
+                <t t-esc="ks_domain_data.model_name"/>
+            </span>
+            <span>
+                <div class="o_searchview">
+                    <div class="o_searchview_input_container">
+                        <t t-debug="pdb"/>
+                        <t t-foreach="ks_domain_data.ks_domain_index_data" t-as="domain_index_data" t-key="domain_index_data_index">
+                            <div class="o_searchview_facet" t-att-data-ks-model="ks_model"
+                                 t-att-data-ks-model-name="ks_domain_data.model_name"
+                                 t-att-data-ks-categ="domain_index_data.categ || '0'">
+                                <span class="o_searchview_facet_label fa fa-filter"/>
+                                <div class="o_facet_values">
+                                    <span class="o_facet_value">
+                                        <t t-esc="domain_index_data.label.join(' or ')"/>
+                                    </span>
+                                </div>
+                                <i role="img" aria-label="Remove" title="Remove"
+                                   class="fa fa-sm fa-remove o_facet_remove ks_dn_filter_remove_event" t-on-click="ksOnRemoveFilterFromSearchPanel"/>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </span>
+        </div>
+    </t>
+
+    <t t-name="ks_dn_custom_filter_input_container">
+        <div t-att-class="show_remove_option ? 'ks_dn_or_container ks_dn_custom_filter_input_container_section': 'ks_dn_custom_filter_input_container_section'">
+            <t t-if="show_remove_option">
+                <span class="o_or_filter">or</span>
+            </t>
+            <select class="o_input o_generator_menu_field ks_custom_filter_field_selector">
+                <t t-foreach="ks_dashboard_custom_domain_filter" t-as="custom_domain">
+                    <option t-att-value="custom_domain['id']">
+                        <t t-esc="custom_domain['name']"/>
+                        <span class="ks_dn_pre_model_text">
+                            <t t-esc="'(' + custom_domain['model_name'] + ')'"/>
+                        </span>
+                    </option>
+                </t>
+            </select>
+            <t t-if="show_remove_option">
+                <i role="image" aria-label="Delete" title="Delete"
+                   class="fa fa-trash-o o_generator_menu_delete ks_custom_filter_section_delete"/>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="ks_dn_custom_domain_input_operator">
+        <select class="o_input o_generator_menu_operator ks_operator_option_selector">
+            <t t-foreach="operators" t-as="operator">
+                <option t-att-value="operator['symbol']">
+                    <t t-esc="operator['description']"/>
+                </option>
+            </t>
+        </select>
+    </t>
+
+    <t t-name="ks_dn_custom_domain_input_text">
+        <span class="o_generator_menu_value">
+            <input type="text" value="" class="o_input"/>
+        </span>
+    </t>
+
+    <t t-name="ks_dn_custom_domain_input_date">
+        <span class="o_generator_menu_value"/>
+    </t>
+
+    <t t-name="ks_dn_custom_domain_input_selection">
+        <select class="o_input o_generator_menu_value">
+            <t t-foreach="selection_input" t-as="selection_data">
+                <option t-att-value="selection_data[0]">
+                    <t t-esc="selection_data[1]"/>
+                </option>
+            </t>
+        </select>
+    </t>
+</templates>

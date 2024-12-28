@@ -1,0 +1,36 @@
+/*rtl:begin:ignore*/
+/* Gridstack container custom css */
+.ks_o_graph_svg_container{
+    height:calc(100% - 25px);
+    width:100%;
+}
+
+.ksChartTitle{
+    font-weight: bold;
+    color: black;
+    display: block;
+    height:calc(100% - 87%);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.ks_o_graph_svg_container > svg.ks_svg_chart{
+    height: calc(100% - 13%);
+    width:100%;
+}
+
+
+/* Mobile view item no scroll fix */
+.grid-stack>.grid-stack-item>.ui-draggable-handle{
+    touch-action: unset;
+}
+
+
+.grid-stack > .grid-stack-item > .grid-stack-item-content {
+
+}
+
+
+/*rtl:end:ignore*/

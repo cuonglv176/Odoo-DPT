@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+         <record id="config_dn_url" model="ir.config_parameter">
+            <field name="key">ks_dashboard_ninja.url</field>
+            <field name="value">https://dn16ai.kappso.in</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="Kseditdialog">
+        <Dialog size="'md'" title="'Edit Task'">
+            <div>
+                <input type='text' class='ks_description' t-att-value="props.ks_description" placeholder='Task'>
+                </input>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="_ks_click">Select</button>
+                <button class="btn btn-secondary" t-on-click="this.props.close">Close</button>
+            </t>
+        </Dialog>
+    </t>
+
+    <t t-name="Ksaddtaskdialog">
+        <Dialog size="'md'" title="'New Task'">
+            <div>
+                <input type='text' class='ks_section' placeholder='Task'>
+                </input>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary ks_create_task" t-on-click="ks_task_click">Select</button>
+                <button class="btn btn-secondary" t-on-click="this.props.close">Close</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

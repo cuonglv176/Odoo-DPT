@@ -45,7 +45,7 @@ class ApprovalRequest(models.Model):
         res = super(ApprovalRequest, self).action_refuse(approver)
         # approver = self.approver_ids.filtered(lambda sp: sp.status == 'refused')
         if self.sequence_code == 'BAOGIA':
-            if self.status == 'refused':
+            if self.request_status == 'refused':
                 self.sale_id.price_status = 'refuse_approval'
                 for sale_service_id in self.sale_service_ids:
                     sale_service_id.new_price = sale_service_id.price

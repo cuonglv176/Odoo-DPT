@@ -1,0 +1,24 @@
+<templates xml:space="preserve">
+
+    <t t-name="ksQuickEditViewOption" >
+        <div>
+            <div class="ks_item_field_info">
+            </div>
+            <div class="ks_quick_edit_footer">
+                <button class="btn btn-primary ks_quick_edit_action"
+                        data-ks-item-action="saveItemInfo" type="button">Save
+                </button>
+                <button class="btn btn-secondary ks_quick_edit_action mx-2 ks_discard"
+                        data-ks-item-action="discardItemInfo"
+                        type="button">Discard
+                </button>
+                <button class="btn btn-primary ks_quick_edit_action"
+                        data-ks-item-action="fullItemInfo" type="button">Full Settings
+                </button>
+
+            </div>
+            <span class="ks_qe_footer_span"/>
+        </div>
+    </t>
+
+</templates>

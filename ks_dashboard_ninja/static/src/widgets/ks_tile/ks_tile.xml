@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ks_tile" owl="1">
+        <t t-if="value.ks_layout == 'layout1'" t-call="ks_tile_preview_layout1"/>
+        <t t-elif="value.ks_layout == 'layout2'" t-call="ks_tile_preview_layout2"/>
+        <t t-elif="value.ks_layout == 'layout3'" t-call="ks_tile_preview_layout3"/>
+        <t t-elif="value.ks_layout == 'layout4'" t-call="ks_tile_preview_layout4"/>
+        <t t-elif="value.ks_layout == 'layout5'" t-call="ks_tile_preview_layout5"/>
+        <t t-else="" t-call="ks_tile_preview_layout6"/>
+    </t>
+
+    <t t-name="ks_tile_preview_layout1" owl="1">
+        <div id="enterID" class="ks_dashboard_item  ks_db_item_preview ks_db_item_preview_color_picker"
+             t-att-style="'background-color:'+ value.ks_rgba_background_color + ';' ">
+            <div class="ks_dashboard_item_header ks_dashboard_item_header_hover">
+                <button type="button" title="Customize Item" class="ks_dashboard_item_preview_customize">
+                    <i class="fa fa-cog"/>
+                </button>
+                <button type="button" title="Remove Item" class="ks_dashboard_item_preview_delete">
+                    <i class="fa fa-times"/>
+                </button>
+            </div>
+            <div class="ks_dashboard_item_main_body">
+                <div class="ks_dashboard_icon ks_dashboard_icon_color_picker">
+                    <t t-if="props.record.data.ks_icon_select=='Custom'">
+                        <t t-if="value.img_src">
+                            <img t-att-src="value.img_src" class="ks_db_list_image"/>
+                        </t>
+                    </t>
+                    <t t-elif="props.record.data.ks_icon_select=='Default'">
+                        <span t-att-style="'color:'+ value.ks_rgba_icon_color + ';'"
+                              t-att-class="'fa fa-' + props.record.data.ks_default_icon + ' fa-5x'"/>
+                    </t>
+                </div>
+                <div class="ks_dashboard_item_info">
+                    <div class="ks_dashboard_item_name"  t-att-style="'color:'+ value.ks_rgba_font_color + ';' " t-att-title="value.name">
+                        <t t-esc="value.name"/>
+                    </div>
+                    <div class="ks_dashboard_item_domain_count" t-att-style="'color:'+ value.ks_rgba_font_color + ';' " t-att-title="props.count_tooltip">
+                        <t t-esc="value.count"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ks_db_item_preview_footer_note">
+            <strong>Note :</strong>
+            Changing Layout midway will set the default icon colour and font colour for selected layout.
+        </div>
+    </t>
+
+    <t t-name="ks_tile_preview_layout2" owl="1">
+        <div class="ks_dashboard_item_l2  ks_db_item_preview ks_db_item_preview_color_picker" t-att-style="'background-color:'+ value.ks_rgba_background_color + ';' ">
+            <div class="ks_dashboard_icon_l2  ks_dashboard_icon_color_picker ks_db_item_preview_l2" t-att-style="'background-color:'+ value.ks_rgba_dark_background_color_l2 + ';' ">
+                <t t-if="props.record.data.ks_icon_select=='Custom'">
+                    <t t-if="value.img_src">
+                        <img t-att-src="value.img_src" class="ks_db_list_image"/>
+                    </t>
+                </t>
+                <t t-elif="props.record.data.ks_icon_select=='Default'">
+                    <span t-att-style="'color:'+ value.ks_rgba_icon_color + ';'" t-att-class="'fa fa-' + props.record.data.ks_default_icon + ' fa-5x'"/>
+                </t>
+            </div>
+
+            <div class="ks_dashboard_item_main_body_l2">
+                <div class="ks_dashboard_item_domain_count_l2" t-att-title="count_tooltip"  t-att-style="'color:'+ value.ks_rgba_font_color + ';' ">
+                    <t t-esc="value.count"/>
+                </div>
+                <div class="ks_dashboard_item_name_l2" t-att-title="value.name"  t-att-style="'color:'+ value.ks_rgba_font_color + ';' ">
+                    <t t-esc="value.name"/>
+                </div>
+
+                <div class="ks_dashboard_item_header_l2 ks_dashboard_item_header_hover">
+                    <button type="button" title="Customize Item" class="ks_dashboard_item_preview_customize">
+                        <i class="fa fa-cog"/>
+                    </button>
+                    <button type="button" title="Remove Item" class="ks_dashboard_item_preview_delete">
+                        <i class="fa fa-times"/>
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+        <div class="ks_db_item_preview_footer_note">
+            <strong>Note :</strong>
+            Changing Layout midway will set the default icon colour and font colour for selected layout.
+        </div>
+    </t>
+
+    <t t-name="ks_tile_preview_layout3" owl="1">
+        <div id="enterID" class="ks_dashboard_item  ks_db_item_preview ks_db_item_preview_color_picker" t-att-style="'background-color:'+ value.ks_rgba_background_color + ';' ">
+            <div class="ks_dashboard_item_header ks_dashboard_item_header_hover">
+                <button type="button" title="Customize Item" class="ks_dashboard_item_preview_customize">
+                    <i class="fa fa-cog"/>
+                </button>
+                <button type="button" title="Remove Item" class="ks_dashboard_item_preview_delete">
+                    <i class="fa fa-times"/>
+                </button>
+            </div>
+            <div class="ks_dashboard_item_main_body">
+                <div class="ks_dashboard_icon_l3 ks_dashboard_icon_color_picker">
+                    <t t-if="props.record.data.ks_icon_select=='Custom'">
+                        <t t-if="value.img_src">
+                            <img t-att-src="value.img_src" class="ks_db_list_image"/>
+                        </t>
+                    </t>
+                    <t t-elif="props.record.data.ks_icon_select=='Default'">
+                        <span t-att-style="'color:'+ value.ks_rgba_icon_color + ';'"
+                              t-att-class="'fa fa-' + props.record.data.ks_default_icon + ' fa-5x'"/>
+                    </t>
+                </div>
+                <div class="ks_dashboard_item_info ks_dashboard_item_info_l3"  t-att-style="'color:'+ value.ks_rgba_font_color + ';' ">
+                    <div class="ks_dashboard_item_domain_count_l3" t-att-title="count_tooltip">
+                        <t t-esc="value.count"/>
+                    </div>
+                    <div class="ks_dashboard_item_name_l3" t-att-title="name">
+                        <t t-esc="value.name"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ks_db_item_preview_footer_note">
+            <strong>Note :</strong>
+            Changing Layout midway will set the default icon colour and font colour for selected layout.
+        </div>
+    </t>
+
+    <t t-name="ks_tile_preview_layout4" owl="1">
+        <div class="ks_dashboard_item_l4  ks_db_item_preview "  t-att-style="'border-color:'+ value.ks_rgba_background_color + ';' + 'border-width:1px;' + 'border:solid;' + 'color:' + value.ks_rgba_background_color +';'">
+            <div class="ks_dashboard_icon_l4 ks_db_item_preview_color_picker ks_dashboard_icon_color_picker" t-att-style="'background-color:'+ value.ks_rgba_background_color + ';' " >
+                <t t-if="props.record.data.ks_icon_select=='Custom'">
+                    <t t-if="value.img_src">
+                        <img t-att-src="value.img_src" class="ks_db_list_image"/>
+                    </t>
+                </t>
+                <t t-elif="props.record.data.ks_icon_select=='Default'">
+                    <span t-att-style="'color:'+ value.ks_rgba_icon_color + ';'" t-att-class="'fa fa-' + props.record.data.ks_default_icon + ' fa-5x'"/>
+                </t>
+            </div>
+
+            <div class="ks_dashboard_item_main_body_l2" t-att-style="'color:'+ value.ks_rgba_font_color + ';' " >
+                <div class="ks_dashboard_item_domain_count_l2" t-att-title="count_tooltip">
+                    <t t-esc="value.count"/>
+                </div>
+                <div class="ks_dashboard_item_name_l2" t-att-title="name">
+                    <t t-esc="value.name"/>
+                </div>
+
+                <div class="ks_dashboard_item_header_l2 ks_dashboard_item_header_hover">
+                    <button type="button" title="Customize Item" class="ks_dashboard_item_preview_customize">
+                        <i class="fa fa-cog"/>
+                    </button>
+                    <button type="button" title="Remove Item" class="ks_dashboard_item_preview_delete">
+                        <i class="fa fa-times"/>
+                    </button>
+
+                </div>
+            </div>
+        </div>
+        <div class="ks_db_item_preview_footer_note">
+            <strong>Note :</strong>
+            Changing Layout midway will set the default icon colour and font colour for selected layout.
+        </div>
+    </t>
+
+    <t t-name="ks_tile_preview_layout5" owl="1">
+        <div class="ks_dashboard_item_l5  ks_db_item_preview ks_db_item_preview_color_picker"  t-att-style="'background-color:'+ value.ks_rgba_background_color + ';' ">
+            <div class="ks_dashboard_icon_l5 ks_dashboard_icon_color_picker">
+                <t t-if="props.record.data.ks_icon_select=='Custom'">
+                    <t t-if="value.img_src">
+                        <img t-att-src="value.img_src" class="ks_db_list_image"/>
+                    </t>
+                </t>
+                <t t-elif="props.record.data.ks_icon_select=='Default'">
+                    <span  t-att-style="'color:'+ value.ks_rgba_icon_color + ';'" t-att-class="'fa fa-' + props.record.data.ks_default_icon + ' fa-5x'"/>
+                </t>
+            </div>
+            <div class="ks_dashboard_item_main_body_l5"  t-att-style="'color:'+ value.ks_rgba_font_color + ';'">
+                <div class="ks_dashboard_item_domain_count_l5" t-att-title="count_tooltip">
+                    <t t-esc="value.count"/>
+                </div>
+                <div class="ks_dashboard_item_name_l5" t-att-title="value.name">
+                    <t t-esc="value.name"/>
+                </div>
+            </div>
+            <div class="ks_dashboard_item_header_l2 ks_dashboard_item_header_hover">
+                <button type="button" title="Customize Item" class="ks_dashboard_item_preview_customize">
+                    <i class="fa fa-cog"/>
+                </button>
+                <button type="button" title="Remove Item" class="ks_dashboard_item_preview_delete">
+                    <i class="fa fa-times"/>
+                </button>
+            </div>
+        </div>
+        <div class="ks_db_item_preview_footer_note">
+            <strong>Note :</strong>
+            Changing Layout midway will set the default icon colour and font colour for selected layout.
+        </div>
+    </t>
+
+    <t t-name="ks_tile_preview_layout6" owl="1">
+        <div class="ks_dashboard_item_l2  ks_db_item_preview ks_db_item_preview_color_picker"  t-att-style="'background-color:'+ value.ks_rgba_background_color + ';'">
+            <div class="ks_dashboard_item_main_body_l2"  t-att-style="'color:'+ value.ks_rgba_font_color + ';'">
+                <div class="ks_dashboard_item_domain_count_l2" t-att-title="count_tooltip">
+                    <t t-esc="value.count"/>
+                </div>
+                <div class="ks_dashboard_item_name_l2" t-att-title="value.name">
+                    <t t-esc="value.name"/>
+                </div>
+            </div>
+
+            <div class="ks_dashboard_icon_l2 ks_dashboard_icon_color_picker">
+                <t t-if="props.record.data.ks_icon_select=='Custom'">
+                    <t t-if="value.img_src">
+                        <img t-att-src="value.img_src" class="ks_db_list_image"/>
+                    </t>
+                </t>
+                <t t-elif="props.record.data.ks_icon_select=='Default'">
+                    <span  t-att-style="'color:'+ value.ks_rgba_icon_color + ';'" t-att-class="'fa fa-' + props.record.data.ks_default_icon + ' fa-5x'"/>
+                </t>
+
+                <div class="ks_dashboard_item_header_l2 ks_dashboard_item_header_hover">
+                    <button type="button" title="Customize Item" class="ks_dashboard_item_preview_customize">
+                        <i class="fa fa-cog"/>
+                    </button>
+                    <button type="button" title="Remove Item" class="ks_dashboard_item_preview_delete">
+                        <i class="fa fa-times"/>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="ks_db_item_preview_footer_note">
+            <strong>Note :</strong>
+            Changing Layout midway will set the default icon colour and font colour for selected layout.
+        </div>
+    </t>
+</templates>

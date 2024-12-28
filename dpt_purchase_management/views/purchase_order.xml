@@ -321,10 +321,10 @@
             </field>
             <xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal']" position="after">
                 <field name="price_unit3" readonly="0"
-                       groups="purchase.group_purchase_user,account.group_account_user"/>
+                       groups="purchase.group_purchase_manager,account.group_account_user"/>
                 <field name="price_cost3" readonly="0"
-                       groups="purchase.group_purchase_user,account.group_account_user"/>
-                <field name="price_subtotal3" groups="purchase.group_purchase_user,account.group_account_user"/>
+                       groups="purchase.group_purchase_manager,account.group_account_user"/>
+                <field name="price_subtotal3" groups="purchase.group_purchase_manager,account.group_account_user"/>
             </xpath>
         </field>
     </record>

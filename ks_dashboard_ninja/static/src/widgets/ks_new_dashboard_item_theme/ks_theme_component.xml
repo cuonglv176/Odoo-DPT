@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="Ks_theme" owl="1">
+        <div class="ks_dashboard_theme_view_render">
+            <t t-foreach="props.colors" t-as="color" t-key="color">
+                <div class="ks_dashboard_theme_input_container" t-on-click="ks_dashboard_theme_input_container_click">
+                    <input t-att-class="'ks_dashboard_theme_input ks_color_' + color" type="checkbox" t-att-name="color +' Theme'"
+                      t-att-value= "color" t-att-checked="value == color"  />
+                    <span class="ks_checkmark"/>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

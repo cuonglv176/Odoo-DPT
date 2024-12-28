@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="Ksicondialog">
+        <Dialog size="'md'" title="'Select Icon'">
+            <div class="ks_modal_icon_input_div">
+                <div class="ks_search_modal_container" t-ref="ks_search">
+                    <input type="search" id="site-search" placeholder="Search fa-icon.."
+                        name="fa Icon Input" aria-label="Search through site content" class="ks_modal_icon_input"/>
+                    <button class="ks_fa_icon_search" t-on-click="ks_fa_icon_search">
+                        <i class="fa fa-search"/>
+                    </button>
+                </div>
+                <section
+                        style="margin-top: 12px;font-size: 14px;text-align: justify;color: black;background:transparent;">
+                    <strong>
+                        Note:
+                    </strong>
+                    Please use Font Awesome 4.7.0 icons only. E.g. 'fa-bell' or 'bell'.
+                    For more information visit
+                    <a href="https://fontawesome.com/v4.7.0/icons/" target="_blank">Font Awesome 4.7.0</a>
+                </section>
+            </div>
+            <div class="ks_icon_container_grid_view" t-ref="ks_modal">
+                <t t-foreach="props.ks_icon_set" t-as="fa_icon" t-key="fa_icon">
+                    <div class="ks_icon_container_list" id="icon1" t-on-click="ks_icon_container_list">
+                        <span t-att-id="'ks.'+fa_icon" t-att-class="'fa fa-' + fa_icon + ' fa-4x'"/>
+                    </div>
+                </t>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary d-none ks_icon_container_open_button"
+                        t-on-click="_ks_icon_container_open_button">Select</button>
+                <button class="btn btn-secondary" t-on-click="this.props.close">Close</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>
