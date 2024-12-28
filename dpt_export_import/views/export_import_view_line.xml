@@ -35,6 +35,10 @@
                                    colspan="2"/>
                             <field name="dpt_english_name"/>
                             <field name="dpt_description"/>
+                            <field name="manufacturer"/>
+                            <field name="brand"/>
+                            <field name="material"/>
+                            <field name="model"/>
                             <field name="dpt_sl1"/>
                             <field name="dpt_uom1_id"/>
                             <field name="declaration_type" widget="radio" options="{'horizontal': true}"/>
