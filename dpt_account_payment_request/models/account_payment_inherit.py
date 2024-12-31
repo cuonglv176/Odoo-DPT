@@ -115,8 +115,8 @@ class AccountPayment(models.Model):
     @api.onchange('service_sale_id')
     def onchange_service_sale_create_detail(self):
         if self.service_sale_id:
-            price = self.service_sale_id.price_cny * self.service_sale_id.sale_id.currency_id.rate if self.service_sale_id.price_cny != 0 else self.service_sale_id.price
-            qty = 1 if self.service_sale_id.qty == 0 else self.service_sale_id.qty
+            price = self.service_sale_id.price
+            qty = 1 if self.service_sale_id.compute_value == 0 else self.service_sale_id.compute_value
             self.detail_ids = [(0, 0, {
                 'service_id': self.service_sale_id.service_id.id,
                 'description': '',

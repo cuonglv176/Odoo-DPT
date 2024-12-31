@@ -33,24 +33,25 @@ class DPTSaleServiceManagement(models.Model):
             if sale_id:
                 parent = self.env['sale.order'].browse(sale_id)
                 message = f"Dịch vụ bị xoá: {record['service_id']}"
-                parent.message_post(body=message)
+                parent.message_post(body=message, message_type='notification')
         return res
 
     def write(self, vals):
         old_values = {rec.id: rec.read(vals.keys())[0] for rec in self}
         res = super(DPTSaleServiceManagement, self).write(vals)
+
         self.action_confirm_quote()
         self.action_check_status_sale_order()
         for rec in self:
             if rec.sale_id:
                 changes = []
                 for field, new_value in vals.items():
-                    old_value = old_values[rec.id][field]
+                    old_value = old_values[rec.id].get(field)
                     if old_value != new_value:
                         changes.append(f"{field}: {old_value} -> {new_value}")
                 if changes:
-                    message = f"Thông tin dịch vụ thay đổi: {rec.name}: " + ", ".join(changes)
-                    rec.sale_id.message_post(body=message)
+                    message = f"Thông tin dịch vụ thay đổi: {rec.service_id.name}: " + ", ".join(changes)
+                    rec.sale_id.message_post(body=message, message_type='notification')
         return res
 
     def action_check_status_sale_order(self):
@@ -66,7 +67,8 @@ class DPTSaleServiceManagement(models.Model):
         # for line in self.sale_id.sale_service_ids:
         #     if line.price < 1 or line.price_status == 'wait_approve':
         #         a = 1
-        if all(line.price_status in ('quoted', 'approved', 'approved_approval') for line in self.sale_id.sale_service_ids):
+        if all(line.price_status in ('quoted', 'approved', 'approved_approval') for line in
+               self.sale_id.sale_service_ids):
             a = 0
         if a == 0:
             self.sale_id.state = 'sent'
@@ -85,7 +87,7 @@ class DPTSaleServiceManagement(models.Model):
     #         raise UserError(_("Cannot lower price, only increase price."))
     #     return res
 
-    @api.depends('qty','price','compute_value')
+    @api.depends('qty', 'price', 'compute_value')
     def _compute_amount_total(self):
         for item in self:
             if item.pricelist_item_id.is_price and item.pricelist_item_id.compute_price == 'table':
@@ -95,14 +97,14 @@ class DPTSaleServiceManagement(models.Model):
             else:
                 item.amount_total = item.compute_value * item.price
 
-    @api.onchange('price', 'qty','compute_value')
+    @api.onchange('price', 'qty', 'compute_value')
     def onchange_amount_total(self):
         if self.price and self.qty:
             if self.pricelist_item_id.is_price and self.pricelist_item_id.compute_price == 'table':
                 self.amount_total = self.price * self.qty * self.compute_value
             elif not self.pricelist_item_id.is_price and self.pricelist_item_id.compute_price == 'table':
                 self.amount_total = self.price
-            else: 
+            else:
                 self.amount_total = self.compute_value * self.price
 
     @api.onchange('service_id')
