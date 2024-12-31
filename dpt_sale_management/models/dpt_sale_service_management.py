@@ -4,6 +4,7 @@ from odoo.exceptions import UserError
 
 class DPTSaleServiceManagement(models.Model):
     _name = 'dpt.sale.service.management'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'DPT Sale Service Management'
 
     sale_id = fields.Many2one('sale.order', ondelete='cascade')
