@@ -122,10 +122,10 @@ class DptExportImport(models.Model):
             'views': [[view_id, 'tree'], [view_form_id, 'form']],
         }
 
-    @api.depends('dpt_amount_tax_import', 'dpt_amount_tax')
+    @api.depends('dpt_amount_tax_import', 'dpt_amount_tax','dpt_amount_tax_other')
     def _compute_estimated_total_amount(self):
         for rec in self:
-            rec.estimated_total_amount = rec.dpt_amount_tax + rec.dpt_amount_tax_import
+            rec.estimated_total_amount = rec.dpt_amount_tax + rec.dpt_amount_tax_import + rec.dpt_amount_tax_other
 
     @api.depends('line_ids', 'line_ids.dpt_is_new')
     def _compute_total_count_line(self):
