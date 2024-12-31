@@ -49,7 +49,7 @@ class DPTSaleServiceManagement(models.Model):
                     if old_value != new_value:
                         changes.append(f"{field}: {old_value} -> {new_value}")
                 if changes:
-                    message = f"Thông tin dịch vụ thay đổi: {rec.name}: " + ", ".join(changes)
+                    message = f"Thông tin dịch vụ thay đổi: {rec.service_id.name}: " + ", ".join(changes)
                     rec.sale_id.message_post(body=message)
         return res
 
