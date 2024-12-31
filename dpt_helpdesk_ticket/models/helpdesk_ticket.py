@@ -13,7 +13,7 @@ class HelpdeskTicket(models.Model):
     purchase_id = fields.Many2one('purchase.order', string='Purchase Order')
     purchase_status = fields.Selection(related='purchase_id.state', string='Purchase Status')
     department_id = fields.Many2one('hr.department', string='Department')
-    lot_name = fields.Char(string='Mã Lô', readonly=True)
+    lot_name = fields.Char(string='Mã Lô', readonly=True, compute="_compute_lot_name")
     service_ids = fields.Many2many('dpt.service.management', compute='_compute_service_ids', store=True)
     pack_name = fields.Char(string='Mã pack', compute='_compute_pack_name', store=True)
     sale_id = fields.Many2one('sale.order', string='Đơn bán hàng')
@@ -213,10 +213,20 @@ class HelpdeskTicket(models.Model):
         res.name = self._generate_service_code()
         return res
 
-    @api.onchange('purchase_id')
-    def _onchange_purchase_id(self):
+    @api.depends('sale_id')
+    def _compute_lot_name(self):
         for rec in self:
-            rec.lot_name = rec.purchase_id.packing_lot_name
+            stock_picking_ids = self.env['stock.picking'].search([
+                '|',
+                '|',
+                ('sale_id', '=', rec.sale_id.id),
+                ('sale_purchase_id', '=', rec.sale_id.id),
+                ('origin', '=', rec.sale_id.name),
+            ])
+            lot_name = ''
+            for stock_picking_id in stock_picking_ids:
+                lot_name += stock_picking_id.name + ' '
+            rec.lot_name = lot_name
 
     def _generate_service_code(self):
         sequence = self.env['ir.sequence'].next_by_code('helpdesk.ticket') or '00'
