@@ -298,6 +298,10 @@ class DptExportImportLine(models.Model):
     is_readonly_item_description = fields.Boolean(string='Chỉ đọc item', default=False)
     item_description_vn = fields.Html(string='Tem XNK (VN)')
     item_description_en = fields.Html(string='Tem XNK (EN)')
+    manufacturer = fields.Text(string='Nhà sản xuất')
+    brand = fields.Text(string='Nhãn hiệu')
+    material = fields.Text(string='Chất liệu')
+    model = fields.Text(string='Model')
 
     picking_count = fields.Integer('Picking Count', compute="_compute_picking_count")
     is_history = fields.Boolean(string='History', default=False)

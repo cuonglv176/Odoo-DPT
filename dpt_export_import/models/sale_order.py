@@ -13,7 +13,8 @@ class SaleOrder(models.Model):
     declaration_line_count = fields.Integer(string='Declaration count line', compute="_compute_declaration_count")
     is_declaration = fields.Boolean(default=False, compute="_compute_is_declaration", store=True)
 
-    @api.depends('dpt_export_import_line_ids', 'dpt_export_import_line_ids.state','dpt_export_import_line_ids.export_import_id')
+    @api.depends('dpt_export_import_line_ids', 'dpt_export_import_line_ids.state',
+                 'dpt_export_import_line_ids.export_import_id')
     def _compute_is_declaration(self):
         for rec in self:
             is_declaration = True
@@ -28,7 +29,8 @@ class SaleOrder(models.Model):
 
     def _compute_declaration_count(self):
         for rec in self:
-            rec.declaration_count = len(rec.dpt_export_import_ids)
+            declaration_count = len(self.env['dpt.export.import'].search([('sale_ids', 'in', [self.id])]))
+            rec.declaration_count = declaration_count
             rec.declaration_line_count = len(rec.dpt_export_import_line_ids)
 
     def action_open_declaration(self):
@@ -39,7 +41,7 @@ class SaleOrder(models.Model):
             'res_model': 'dpt.export.import',
             'name': _('Declaration'),
             'view_mode': 'tree,form',
-            'domain': [('sale_id', '=', self.id)],
+            'domain': [('sale_ids', 'in', [self.id])],
             'views': [[view_id, 'tree'], [view_form_id, 'form']],
             'context': {
                 'default_sale_id': self.id,
