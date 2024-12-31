@@ -28,7 +28,7 @@ class SaleOrder(models.Model):
         readonly=True, copy=False, index=True,
         tracking=3,
         default='draft')
-    sale_service_ids = fields.One2many('dpt.sale.service.management', 'sale_id', string='Service')
+    sale_service_ids = fields.One2many('dpt.sale.service.management', 'sale_id', string='Service', tracking=True)
     fields_ids = fields.One2many('dpt.sale.order.fields', 'sale_id', string='Fields')
     service_total_untax_amount = fields.Float(compute='_compute_service_amount')
     service_tax_amount = fields.Float(compute='_compute_service_amount')
