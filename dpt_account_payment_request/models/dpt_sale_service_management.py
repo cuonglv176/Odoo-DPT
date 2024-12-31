@@ -75,7 +75,7 @@ class SaleServiceManagement(models.Model):
                 'default_service_sale_ids': [(6, 0, self.ids)],
                 'default_service_sale_id': self.id,
                 'default_qty': self.compute_value,
-                'default_price': self.price,
+                'default_price': self.price_cny * self.sale_id.currency_id.rate if self.price_cny != 0 else self.price,
                 'default_uom_id': self.uom_id.id,
                 'default_price_cny': self.price_cny,
                 'default_amount': self.amount_total,
