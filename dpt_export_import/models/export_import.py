@@ -104,7 +104,7 @@ class DptExportImport(models.Model):
 
     def write(self, vals):
         old_sale_ids = self.sale_ids
-        res = super(DptExportImportLine, self).write(vals)
+        res = super(DptExportImport, self).write(vals)
         if 'sale_ids' not in vals:
             new_sale_ids = self.sale_ids
             for old_sale_id in old_sale_ids:
