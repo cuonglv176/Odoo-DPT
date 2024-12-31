@@ -108,11 +108,10 @@ class DptExportImport(models.Model):
         if 'sale_ids' not in vals:
             new_sale_ids = self.sale_ids
             for old_sale_id in old_sale_ids:
-                if old_sale_id not in new_sale_ids:
+                if old_sale_id.id not in new_sale_ids.ids:
                     if old_sale_id.dpt_export_import_line_ids:
                         for dpt_export_import_line_id in old_sale_id.dpt_export_import_line_ids:
-                            if dpt_export_import_line_id.export_import_id:
-                                dpt_export_import_line_id.export_import_id = None
+                            dpt_export_import_line_id.export_import_id = None
         return res
 
     @api.onchange('sale_ids')
