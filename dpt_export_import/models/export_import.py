@@ -75,7 +75,7 @@ class DptExportImport(models.Model):
         ('cny', 'CNY')
     ], string='Declaration type', default='usd')
 
-    @api.depends('sale_ids','sale_ids.volume')
+    @api.depends('sale_ids', 'sale_ids.volume')
     def _compute_total_cubic_meters(self):
         for rec in self:
             total_cubic_meters = 0
@@ -102,6 +102,19 @@ class DptExportImport(models.Model):
         for line_id in self.line_ids:
             line_id.dpt_tax_ecus5 = self.dpt_tax_ecus5
 
+    def write(self, vals):
+        old_sale_ids = self.sale_ids
+        res = super(DptExportImportLine, self).write(vals)
+        if 'sale_ids' not in vals:
+            new_sale_ids = self.sale_ids
+            for old_sale_id in old_sale_ids:
+                if old_sale_id not in new_sale_ids:
+                    if old_sale_id.dpt_export_import_line_ids:
+                        for dpt_export_import_line_id in old_sale_id.dpt_export_import_line_ids:
+                            if dpt_export_import_line_id.export_import_id:
+                                dpt_export_import_line_id.export_import_id = None
+        return res
+
     @api.onchange('sale_ids')
     def onchange_add_declaration_line(self):
         for order_line_id in self.sale_ids:
@@ -122,7 +135,7 @@ class DptExportImport(models.Model):
             'views': [[view_id, 'tree'], [view_form_id, 'form']],
         }
 
-    @api.depends('dpt_amount_tax_import', 'dpt_amount_tax','dpt_amount_tax_other')
+    @api.depends('dpt_amount_tax_import', 'dpt_amount_tax', 'dpt_amount_tax_other')
     def _compute_estimated_total_amount(self):
         for rec in self:
             rec.estimated_total_amount = rec.dpt_amount_tax + rec.dpt_amount_tax_import + rec.dpt_amount_tax_other
@@ -252,7 +265,8 @@ class DptExportImportLine(models.Model):
     dpt_tax = fields.Float(string='VAT(%)', tracking=True)
     dpt_amount_tax = fields.Monetary(string='Amount Tax', currency_field='currency_id',
                                      compute="_compute_dpt_amount_tax")
-    dpt_exchange_rate = fields.Float(string='Exchange rate', tracking=True, currency_field='currency_id', digits=(12, 4))
+    dpt_exchange_rate = fields.Float(string='Exchange rate', tracking=True, currency_field='currency_id',
+                                     digits=(12, 4))
     hs_code_id = fields.Many2one('dpt.export.import.acfta', string='HS Code')
     dpt_code_hs = fields.Char(string='H')
     dpt_sl1 = fields.Float(string='SL1', tracking=True, digits=(12, 4))
@@ -262,7 +276,8 @@ class DptExportImportLine(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
     currency_usd_id = fields.Many2one('res.currency', string='Currency USD', default=1)
     currency_cny_id = fields.Many2one('res.currency', string='Currency CNY', default=6)
-    dpt_price_usd = fields.Float(string='Giá khai (USD)', tracking=True, currency_field='currency_usd_id', digits=(12, 4))
+    dpt_price_usd = fields.Float(string='Giá khai (USD)', tracking=True, currency_field='currency_usd_id',
+                                 digits=(12, 4))
     dpt_total_usd = fields.Monetary(string='Total (USD)', currency_field='currency_usd_id',
                                     compute="_compute_dpt_total_usd", digits=(12, 4))
     dpt_total_usd_vnd = fields.Monetary(string='Total USD (VND)', currency_field='currency_id',
@@ -270,7 +285,7 @@ class DptExportImportLine(models.Model):
     dpt_total_cny_vnd = fields.Monetary(string='Total CNY (VND)', currency_field='currency_id',
                                         compute="_compute_dpt_total_cny_vnd")
     dpt_price_cny_vnd = fields.Float(string='Price CNY (VND)', tracking=True, currency_field='currency_cny_id',
-                                        digits=(12, 4))
+                                     digits=(12, 4))
     dpt_tax_other = fields.Float(string='Tax Other (%)', tracking=True)
     dpt_amount_tax_other = fields.Monetary(string='Amount Tax Other', currency_field='currency_id',
                                            compute="_compute_dpt_amount_tax_other")
