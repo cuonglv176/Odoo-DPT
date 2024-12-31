@@ -33,7 +33,7 @@ class DPTSaleServiceManagement(models.Model):
             if sale_id:
                 parent = self.env['sale.order'].browse(sale_id)
                 message = f"Dịch vụ bị xoá: {record['service_id']}"
-                parent.message_post(body=message)
+                parent.message_post(body=message, message_type='comment')
         return res
 
     def write(self, vals):
@@ -50,7 +50,7 @@ class DPTSaleServiceManagement(models.Model):
                         changes.append(f"{field}: {old_value} -> {new_value}")
                 if changes:
                     message = f"Thông tin dịch vụ thay đổi: {rec.service_id.name}: " + ", ".join(changes)
-                    rec.sale_id.message_post(body=message)
+                    rec.sale_id.message_post(body=message, message_type='comment')
         return res
 
     def action_check_status_sale_order(self):
