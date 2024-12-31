@@ -2,8 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from ast import literal_eval
 from odoo import fields, models, _, api
-
-
+import logging
+_logger = logging.getLogger(__name__)
 class DptExportImportGate(models.Model):
     _name = "dpt.export.import.gate"
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -107,6 +107,7 @@ class DptExportImport(models.Model):
         res = super(DptExportImport, self).write(vals)
         new_sale_ids = self.sale_ids
         sale_ids = old_sale_ids - new_sale_ids
+        _logger.info("Removed Sale IDs: %s", sale_ids)
         for sale_id in sale_ids:
             for dpt_export_import_line_id in sale_id.dpt_export_import_line_ids:
                 dpt_export_import_line_id.export_import_id = None
