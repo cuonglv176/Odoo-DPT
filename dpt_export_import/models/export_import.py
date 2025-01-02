@@ -17,15 +17,15 @@ class DptExportImport(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Dpt Export Import'
 
-    name = fields.Char(string='Title')
-    code = fields.Char(string='Code')
-    invoice_code = fields.Char(string='Invoice Code')
+    name = fields.Char(string='Title', tracking=True)
+    code = fields.Char(string='Code', tracking=True)
+    invoice_code = fields.Char(string='Invoice Code', tracking=True)
     sale_id = fields.Many2one('sale.order', string='Sale Order')
-    sale_ids = fields.Many2many('sale.order', string='Select Sale Order')
+    sale_ids = fields.Many2many('sale.order', string='Select Sale Order', tracking=True)
     partner_importer_id = fields.Many2one('res.partner', string='Partner Importer')
     partner_exporter_id = fields.Many2one('res.partner', string='Partner Exporter')
     gate_id = fields.Many2one('dpt.export.import.gate', string='Gate Importer')
-    user_id = fields.Many2one('res.users', string='User Export/Import', default=lambda self: self.env.user)
+    user_id = fields.Many2one('res.users', string='User Export/Import', default=lambda self: self.env.user, tracking=True)
     date = fields.Date(required=True, default=lambda self: fields.Date.context_today(self))
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
     consultation_date = fields.Date(string='Consultation date')
@@ -43,12 +43,12 @@ class DptExportImport(models.Model):
         ('consulted', 'Tham vấn'),
         ('post_control', 'Kiểm tra sau thông quan'),
         ('cancelled', 'Huỷ')
-    ], string='State', default='draft')
+    ], string='State', default='draft', tracking=True)
     declaration_flow = fields.Selection([
         ('red', 'Red'),
         ('yellow', 'Yellow'),
         ('green', 'Green')
-    ], string='Declaration Flow', default='red')
+    ], string='Declaration Flow', default='red', tracking=True)
     dpt_n_w_kg = fields.Integer(string='Total N.W (KG)', compute="_compute_total_sum_line")
     dpt_g_w_kg = fields.Integer(string='Total G.W (KG)', compute="_compute_total_sum_line")
     total_cubic_meters = fields.Float(string='Total cubic meters', compute="_compute_total_cubic_meters")
@@ -65,15 +65,15 @@ class DptExportImport(models.Model):
                                              currency_field='currency_id')
     actual_total_amount = fields.Monetary(string='Actual total amount', currency_field='currency_id')
     payment_exchange_rate = fields.Float(string='Rate ECUSS', digits=(12, 4))
-    shipping_slip = fields.Char(string='Shipping Slip')
-    type_of_vehicle = fields.Char(string='Type of vehicle')
-    driver_name = fields.Char(string='Driver Name')
-    driver_phone_number = fields.Char(string='Driver Phone Number')
-    vehicle_license_plate = fields.Char(string='Vehicle License Plate')
+    shipping_slip = fields.Char(string='Shipping Slip', tracking=True)
+    type_of_vehicle = fields.Char(string='Type of vehicle', tracking=True)
+    driver_name = fields.Char(string='Driver Name', tracking=True)
+    driver_phone_number = fields.Char(string='Driver Phone Number', tracking=True)
+    vehicle_license_plate = fields.Char(string='Vehicle License Plate', tracking=True)
     declaration_type = fields.Selection([
         ('usd', 'USD'),
         ('cny', 'CNY')
-    ], string='Declaration type', default='usd')
+    ], string='Declaration type', default='usd', tracking=True)
 
     @api.depends('sale_ids', 'sale_ids.volume')
     def _compute_total_cubic_meters(self):
@@ -233,9 +233,9 @@ class DptExportImportLine(models.Model):
     sequence = fields.Integer(default=1)
     export_import_id = fields.Many2one('dpt.export.import', string='Export import')
     lot_code = fields.Char(string='Lot code')
-    sale_id = fields.Many2one('sale.order', string='Sale order')
+    sale_id = fields.Many2one('sale.order', string='Sale order', tracking=True)
     stock_picking_ids = fields.Many2many('stock.picking', string='Lot code',
-                                         domain="[('id', 'in', available_picking_ids)]")
+                                         domain="[('id', 'in', available_picking_ids)]", tracking=True)
     available_picking_ids = fields.Many2many('stock.picking', string='Lot code',
                                              compute="_compute_domain_picking_package")
     sale_user_id = fields.Many2one('res.users', string='User Sale', compute="compute_sale_user")
@@ -243,7 +243,7 @@ class DptExportImportLine(models.Model):
     sale_line_id = fields.Many2one('sale.order.line', string='Sale order line', domain=[('order_id', '=', 'sale_id')])
     product_tmpl_id = fields.Many2one('product.template', string='Product Template',
                                       related='product_id.product_tmpl_id')
-    product_id = fields.Many2one('product.product', string='Product')
+    product_id = fields.Many2one('product.product', string='Product', tracking=True)
     package_ids = fields.Many2many('purchase.order.line.package', string='Package',
                                    domain="[('id', 'in', available_package_ids)]")
     available_package_ids = fields.Many2many('purchase.order.line.package', string='Package',
@@ -265,7 +265,7 @@ class DptExportImportLine(models.Model):
                                      compute="_compute_dpt_amount_tax")
     dpt_exchange_rate = fields.Float(string='Exchange rate', tracking=True, currency_field='currency_id',
                                      digits=(12, 4))
-    hs_code_id = fields.Many2one('dpt.export.import.acfta', string='HS Code')
+    hs_code_id = fields.Many2one('dpt.export.import.acfta', string='HS Code', tracking=True)
     dpt_code_hs = fields.Char(string='H')
     dpt_sl1 = fields.Float(string='SL1', tracking=True, digits=(12, 4))
     dpt_price_unit = fields.Monetary(string='Đơn giá xuất hoá đơn', tracking=True, currency_field='currency_id')
@@ -301,23 +301,23 @@ class DptExportImportLine(models.Model):
         ('consulted', 'Tham vấn'),
         ('post_control', 'Kiểm tra sau thông quan'),
         ('cancelled', 'Huỷ')
-    ], string='State', default='draft')
+    ], string='State', default='draft', tracking=True)
     declaration_type = fields.Selection([
         ('usd', 'USD'),
         ('cny', 'CNY'),
         ('krw', 'KRW'),
-    ], string='Declaration type', default='usd')
+    ], string='Declaration type', default='usd', tracking=True)
     product_history_id = fields.Many2one('dpt.export.import.line', string='Description Selection')
     is_readonly_item_description = fields.Boolean(string='Chỉ đọc item', default=False)
     item_description_vn = fields.Html(string='Tem XNK (VN)')
     item_description_en = fields.Html(string='Tem XNK (EN)')
-    manufacturer = fields.Text(string='Nhà sản xuất')
-    brand = fields.Text(string='Nhãn hiệu')
-    material = fields.Text(string='Chất liệu')
-    model = fields.Text(string='Model')
+    manufacturer = fields.Text(string='Nhà sản xuất', tracking=True)
+    brand = fields.Text(string='Nhãn hiệu', tracking=True)
+    material = fields.Text(string='Chất liệu', tracking=True)
+    model = fields.Text(string='Model', tracking=True)
 
     picking_count = fields.Integer('Picking Count', compute="_compute_picking_count")
-    is_history = fields.Boolean(string='History', default=False)
+    is_history = fields.Boolean(string='History', default=False, tracking=True)
 
     def _compute_picking_count(self):
         for item in self:
