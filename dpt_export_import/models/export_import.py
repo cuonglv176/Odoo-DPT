@@ -319,6 +319,15 @@ class DptExportImportLine(models.Model):
     picking_count = fields.Integer('Picking Count', compute="_compute_picking_count")
     is_history = fields.Boolean(string='History', default=False, tracking=True)
 
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=10):
+        args = args or []
+        domain = []
+        if name:
+            domain = ['|', '|', ('product_id', operator, name), ('name', operator, name), ('sale_id', operator, name)]
+        import_line = self.search(domain + args, limit=limit)
+        return import_line.name_get()
+
     def _compute_picking_count(self):
         for item in self:
             picking_ids = self.env['stock.picking'].sudo().search(
