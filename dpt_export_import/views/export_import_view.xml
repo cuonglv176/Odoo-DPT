@@ -9,6 +9,7 @@
                 <header>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,draft_declaration,declared,released,consulted,post_control,cancelled"/>
+                    <field name="active" invisible="1"/>
                     <button string="Tờ Khai Nháp" type="object" name="action_draft_declaration" class="btn-primary"
                             invisible="state == 'draft_declaration'"/>
                     <button string="Declared" type="object" name="action_declared" class="btn-primary"
@@ -161,6 +162,7 @@
                 <field name="user_id"/>
                 <field name="date"/>
                 <field name="state"/>
+                <field name="active" invisible="1"/>
             </tree>
         </field>
     </record>

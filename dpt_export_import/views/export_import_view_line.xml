@@ -9,6 +9,7 @@
                 <header>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,draft_declaration,wait_confirm,eligible,declared,released,consulted,post_control,cancelled"/>
+                    <field name="active" invisible="1"/>
                     <button string="Gửi yêu cầu" type="object" name="action_wait_confirm" class="btn-primary"
                             invisible="state != 'draft'"/>
                     <button string="Eligible" type="object" name="action_update_eligible" class="btn-primary"
@@ -131,6 +132,7 @@
                 <field name="dpt_total_cny_vnd"/>
                 <field name="dpt_is_new" widget="boolean_toggle"/>
                 <field name="currency_id" invisible="1"/>
+                <field name="active" invisible="1"/>
                 <button string="Unlink" type="object" name="action_unlink" class="btn-primary"
                         groups="sales_team.group_sale_salesman_all_leads"/>
             </tree>

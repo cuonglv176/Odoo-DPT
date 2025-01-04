@@ -16,6 +16,7 @@
         'views/order_package_view.xml',
         'views/purchase_order.xml',
         'views/sale_order.xml',
+        'views/uom_category.xml',
         'views/uom_uom.xml',
     ],
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="uom_category_tree_view_inherit" model="ir.ui.view">
+        <field name="name">uom_category_tree_view_inherit</field>
+        <field name="model">uom.category</field>
+        <field name="inherit_id" ref="uom.product_uom_categ_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="active" invisible="1"/>
+            </field>
+        </field>
+    </record>
+
+
+    <record id="uom_category_form_view_inherit" model="ir.ui.view">
+        <field name="name">uom_category_form_view_inherit</field>
+        <field name="model">uom.category</field>
+        <field name="inherit_id" ref="uom.product_uom_categ_form_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="active" invisible="1"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

@@ -14,6 +14,7 @@
                         invisible="state not in ('draft','sent') or is_quotation == False"/>
                 <field name="is_quotation" invisible="1"/>
                 <field name="show_action_calculation" invisible="1"/>
+                <field name="active" invisible="1"/>
                 <button string="Export Quotation" name="export_excel_quotation" type="object"/>
             </button>
             <button name="action_quotation_send" position="attributes">
@@ -147,6 +148,7 @@
                        decoration-info="state in ('draft', 'wait_price')"
                        decoration-primary="state == 'sent'"
                        widget="badge" optional="show"/>
+                <field name="active" invisible="1"/>
             </field>
         </field>
     </record>

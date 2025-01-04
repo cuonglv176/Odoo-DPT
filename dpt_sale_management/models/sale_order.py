@@ -46,6 +46,7 @@ class SaleOrder(models.Model):
     employee_cs = fields.Many2one('hr.employee', string='Employee CS')
     times_of_quotation = fields.Integer(default=0, string='Số lần báo giá')
     is_quotation = fields.Boolean(default=False, compute='compute_show_is_quotation')
+    active = fields.Boolean('Active', default=True)
 
     @api.depends('sale_service_ids', 'sale_service_ids.service_id', 'sale_service_ids.service_id.pricelist_item_ids')
     def compute_show_is_quotation(self):
