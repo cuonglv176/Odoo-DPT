@@ -23,12 +23,20 @@ class StockPicking(models.Model):
     def _sanity_check(self, separate_pickings=True):
         pass
 
-    @api.constrains('sale_purchase_id', 'package_ids', 'total_volume', 'total_weight')
+    @api.constrains('sale_purchase_id', 'package_ids', 'package_ids.total_weight', 'package_ids.total_volume',
+                    'total_volume', 'total_weight')
     def constrains_picking(self):
         for item in self:
             if not item.sale_purchase_id:
                 continue
             item.sale_purchase_id.recompute_weight_volume()
+
+    def write(self, vals):
+        old_sale_purchase_id = self.sale_purchase_id
+        res = super().write(vals)
+        if 'sale_purchase_id' in vals:
+            old_sale_purchase_id.recompute_weight_volume()
+        return res
 
     @api.onchange('outgoing_sale_ids')
     def onchange_get_detail(self):
