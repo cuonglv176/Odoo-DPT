@@ -20,6 +20,7 @@
                     <field name="cn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
                            invisible="vehicle_country != 'chinese'"/>
                     <field name="num_not_confirm_picking" invisible="1"/>
+                    <field name="active" invisible="1"/>
                 </header>
                 <sheet>
                     <group>
@@ -96,6 +97,7 @@
         <field name="arch" type="xml">
             <tree string="Shipping slip">
                 <field name="name"/>
+                <field name="active" invisible="1"/>
             </tree>
         </field>
     </record>

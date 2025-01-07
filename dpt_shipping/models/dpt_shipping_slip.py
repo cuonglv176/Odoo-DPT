@@ -9,6 +9,7 @@ class DPTShippingSlip(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char('Name')
+    active = fields.Boolean('Active', default=True)
     transfer_code = fields.Char('Transfer Code')
     transfer_code_chinese = fields.Char('Transfer Code in Chinese')
     main_in_picking_ids = fields.Many2many('stock.picking', 'stock_picking_main_incoming_shipping_rel',

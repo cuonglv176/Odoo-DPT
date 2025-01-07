@@ -74,6 +74,7 @@ class DptExportImport(models.Model):
         ('usd', 'USD'),
         ('cny', 'CNY')
     ], string='Declaration type', default='usd', tracking=True)
+    active = fields.Boolean('Active', default=True)
 
     @api.depends('sale_ids', 'sale_ids.volume')
     def _compute_total_cubic_meters(self):
@@ -318,7 +319,8 @@ class DptExportImportLine(models.Model):
 
     picking_count = fields.Integer('Picking Count', compute="_compute_picking_count")
     is_history = fields.Boolean(string='History', default=False, tracking=True)
-
+    active = fields.Boolean('Active', default=True)
+    
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=10):
         args = args or []

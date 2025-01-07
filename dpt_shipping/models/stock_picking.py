@@ -23,6 +23,26 @@ class StockPicking(models.Model):
     employee_cs = fields.Many2one('hr.employee', string='Employee CS', related='sale_purchase_id.employee_sale')
     shipping_name = fields.Char('Phiếu vận chuyển', compute='_compute_shipping_name', store=True)
     active = fields.Boolean(string='Active', default=True)
+    is_return_related = fields.Boolean('Is Return', compute="_compute_is_return_related",
+                                       search="_search_is_return_related")
+
+    @api.depends('return_id')
+    def _compute_is_return_related(self):
+        for item in self:
+            if item.return_id:
+                item.is_return_related = True
+            else:
+                return_picking_count = self.env['stock.picking'].sudo().search_count([('return_id', '=', item.id)])
+                item.is_return_related = True if return_picking_count else False
+
+    def _search_is_return_related(self, operator, value):
+        have_return_picking_ids = self.env['stock.picking'].sudo().search([('return_id', '!=', False)])
+        all_picking_ids = have_return_picking_ids | have_return_picking_ids.mapped('return_id')
+        # case False
+        if (operator == '!=' and value) or (operator == '=' and not value):
+            return [('id', 'not in', all_picking_ids.ids)]
+        else:
+            return [('id', 'in', all_picking_ids.ids)]
 
     @api.depends('main_incoming_shipping_ids', 'main_incoming_shipping_ids.name',
                  'main_incoming_shipping_ids.vehicle_country')
