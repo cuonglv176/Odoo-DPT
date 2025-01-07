@@ -4,6 +4,7 @@ from odoo.exceptions import UserError
 
 class DPTSaleServiceManagement(models.Model):
     _name = 'dpt.sale.service.management'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'DPT Sale Service Management'
 
     sale_id = fields.Many2one('sale.order', ondelete='cascade')
@@ -25,34 +26,30 @@ class DPTSaleServiceManagement(models.Model):
     compute_value = fields.Float('Compute Value', default=1)
     note = fields.Text(string='Note')
 
-    def unlink(self):
-        records_to_delete = self.read(['service_id', 'qty', 'description'])
-        res = super(DPTSaleServiceManagement, self).unlink()
-        for record in records_to_delete:
-            sale_id = record['sale_id'][0] if record['sale_id'] else None
-            if sale_id:
-                parent = self.env['sale.order'].browse(sale_id)
-                message = f"Dịch vụ bị xoá: {record['service_id']}"
-                parent.message_post(body=message, message_type='notification')
-        return res
-
-    def write(self, vals):
-        old_values = {rec.id: rec.read(vals.keys())[0] for rec in self}
-        res = super(DPTSaleServiceManagement, self).write(vals)
-
-        self.action_confirm_quote()
-        self.action_check_status_sale_order()
-        for rec in self:
-            if rec.sale_id:
-                changes = []
-                for field, new_value in vals.items():
-                    old_value = old_values[rec.id].get(field)
-                    if old_value != new_value:
-                        changes.append(f"{field}: {old_value} -> {new_value}")
-                if changes:
-                    message = f"Thông tin dịch vụ thay đổi: {rec.service_id.name}: " + ", ".join(changes)
-                    rec.sale_id.message_post(body=message, message_type='notification')
-        return res
+    # def unlink(self):
+    #     res = super(DPTSaleServiceManagement, self).unlink()
+    #     for record in self:
+    #         if record.sale_id:
+    #             message = f"Dịch vụ bị xoá: {record.service_id}"
+    #             record.sale_id.message_post(body=message, message_type='comment')
+    #     return res
+    #
+    # def write(self, vals):
+    #     old_values = {rec.id: rec.read(vals.keys())[0] for rec in self}
+    #     res = super(DPTSaleServiceManagement, self).write(vals)
+    #     self.action_confirm_quote()
+    #     self.action_check_status_sale_order()
+    #     for rec in self:
+    #         if rec.sale_id:
+    #             changes = []
+    #             for field, new_value in vals.items():
+    #                 old_value = old_values[rec.id].get(field)
+    #                 if old_value != new_value:
+    #                     changes.append(f"{field}: {old_value} -> {new_value}")
+    #             if changes:
+    #                 message = f"Thông tin dịch vụ thay đổi: {rec.service_id.name}: " + ", ".join(changes)
+    #                 rec.sale_id.message_post(body=message, message_type='comment')
+    #     return res
 
     def action_check_status_sale_order(self):
         if self.sale_id.locked:
