@@ -6,6 +6,21 @@ import math
 import base64
 from odoo.exceptions import ValidationError, UserError
 import io as stringIOModule
+from odoo.addons.stock.models.stock_picking import Picking
+
+
+def action_confirm(self):
+    self._check_company()
+    self.mapped('package_level_ids').filtered(lambda pl: pl.state == 'draft' and not pl.move_ids)._generate_moves()
+    # call `_action_confirm` on every draft move
+    self.move_ids.filtered(lambda move: move.state == 'draft')._action_confirm(merge=False)
+
+    # run scheduler for moves forecasted to not have enough in stock
+    self.move_ids.filtered(lambda move: move.state not in ('draft', 'cancel', 'done'))._trigger_scheduler()
+    return True
+
+
+Picking.action_confirm = action_confirm
 
 
 class StockPicking(models.Model):
@@ -197,7 +212,8 @@ class StockPicking(models.Model):
                         'quantity': move_id.product_uom_qty,
                         'product_uom_id': move_id.product_uom.id,
                         'lot_id': self.env['stock.lot'].search([('product_id', '=', move_id.product_id.id),
-                                                                ('name', '=', move_id.from_picking_id.picking_lot_name)],
+                                                                (
+                                                                'name', '=', move_id.from_picking_id.picking_lot_name)],
                                                                limit=1).id
                     })
                 if move_line_vals:
@@ -293,9 +309,11 @@ class StockPicking(models.Model):
                     'height': package_id.height,
                     'size': package_id.size,
                     'weight': package_id.weight,
-                    'total_weight': math.ceil(round(package_id.weight * package_id.quantity, 2)) * (package_id.quantity - package_id.created_picking_qty) / package_id.quantity,
+                    'total_weight': math.ceil(round(package_id.weight * package_id.quantity, 2)) * (
+                                package_id.quantity - package_id.created_picking_qty) / package_id.quantity,
                     'volume': package_id.volume,
-                    'total_volume': (math.ceil(round(package_id.volume * package_id.quantity * 100, 4)) / 100) * (package_id.quantity - package_id.created_picking_qty) / package_id.quantity,
+                    'total_volume': (math.ceil(round(package_id.volume * package_id.quantity * 100, 4)) / 100) * (
+                                package_id.quantity - package_id.created_picking_qty) / package_id.quantity,
                     'uom_id': package_id.uom_id.id,
                     'detail_ids': [(0, 0, {
                         'product_id': detail_id.product_id.id,
