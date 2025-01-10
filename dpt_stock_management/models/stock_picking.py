@@ -7,6 +7,9 @@ import base64
 from odoo.exceptions import ValidationError, UserError
 import io as stringIOModule
 from odoo.addons.stock.models.stock_picking import Picking
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 def action_confirm(self):
@@ -444,6 +447,9 @@ class StockPicking(models.Model):
         return res
 
     def check_required_fields(self):
+        _logger.info('picking fields_ids: %s' % self.fields_ids)
+        if not self.fields_ids:
+            return
         for r in self.fields_ids:
             if r.env.context.get('onchange_sale_service_ids', False):
                 continue
