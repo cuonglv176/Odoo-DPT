@@ -425,14 +425,15 @@ class StockPicking(models.Model):
     @api.constrains('sale_purchase_id', 'sale_service_ids', 'fields_ids')
     def constrains_update_sale_service(self):
         for item in self:
-            for sale_service_id in item.sale_service_ids:
-                sale_service_id.write({
-                    'sale_id': item.sale_purchase_id.id
-                })
-            for fields_id in item.fields_ids:
-                fields_id.write({
-                    'sale_id': item.sale_purchase_id.id
-                })
+            if item.sale_purchase_id:
+                for sale_service_id in item.sale_service_ids:
+                    sale_service_id.write({
+                        'sale_id': item.sale_purchase_id.id
+                    })
+                for fields_id in item.fields_ids:
+                    fields_id.write({
+                        'sale_id': item.sale_purchase_id.id
+                    })
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
@@ -447,9 +448,6 @@ class StockPicking(models.Model):
         return res
 
     def check_required_fields(self):
-        _logger.info('picking fields_ids: %s' % self.fields_ids)
-        if not self.fields_ids:
-            return
         for r in self.fields_ids:
             if r.env.context.get('onchange_sale_service_ids', False):
                 continue
