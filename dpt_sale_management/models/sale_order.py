@@ -130,13 +130,13 @@ class SaleOrder(models.Model):
             if r.env.context.get('onchange_sale_service_ids', False):
                 continue
             if r.fields_id.type == 'required' and r.fields_type == 'integer' and r.value_integer <= 0:
-                raise ValidationError(_("Please fill required fields!!!"))
+                raise ValidationError(_("Please fill required fields: %s!!!") % r.fields_id.display_name)
             if r.fields_id.type == 'required' and r.fields_type == 'char' and not r.value_char:
-                raise ValidationError(_("Please fill required fields!!!"))
+                raise ValidationError(_("Please fill required fields: %s!!!") % r.fields_id.display_name)
             if r.fields_id.type == 'required' and r.fields_type == 'date' and not r.value_date:
-                raise ValidationError(_("Please fill required fields!!!"))
+                raise ValidationError(_("Please fill required fields: %s!!!") % r.fields_id.display_name)
             if r.fields_id.type == 'required' and r.fields_type == 'selection' and not r.selection_value_id:
-                raise ValidationError(_("Please fill required fields!!!"))
+                raise ValidationError(_("Please fill required fields: %s!!!") % r.fields_id.display_name)
             # if r.fields_id.type == 'options' or (
             #         r.fields_id.type == 'required' and (
             #         r.value_char or r.value_integer > 0 or r.value_date or r.selection_value_id)):
@@ -615,13 +615,13 @@ class SaleOrderField(models.Model):
             if r.env.context.get('onchange_sale_service_ids', False):
                 continue
             if r.fields_id.type == 'required' and r.value_integer <= 0 and r.fields_type == 'integer':
-                raise ValidationError(_("Please fill required fields!!!"))
+                raise ValidationError(_("Please fill required fields: %s!!!") % r.fields_id.display_name)
             if r.fields_id.type == 'required' and r.value_char == '' and r.fields_type == 'char':
-                raise ValidationError(_("Please fill required fields!!!"))
+                raise ValidationError(_("Please fill required fields: %s!!!") % r.fields_id.display_name)
             if r.fields_id.type == 'required' and not r.value_date and r.fields_type == 'date':
-                raise ValidationError(_("Please fill required fields!!!"))
+                raise ValidationError(_("Please fill required fields: %s!!!") % r.fields_id.display_name)
             if r.fields_id.type == 'required' and not r.selection_value_id and r.fields_type == 'selection':
-                raise ValidationError(_("Please fill required fields!!!"))
+                raise ValidationError(_("Please fill required fields: %s!!!") % r.fields_id.display_name)
 
     def write(self, vals):
         res = super(SaleOrderField, self).write(vals)

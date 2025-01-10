@@ -271,8 +271,8 @@ msgstr "Vui lòng duyệt giá mới!"
 #. odoo-python
 #: code:addons/dpt_sale_management/models/sale_order.py:0
 #, python-format
-msgid "Please fill required fields!!!"
-msgstr "Vui lòng điền các trường bắt buộc!!!"
+msgid "Please fill required fields: %s!!!"
+msgstr "Vui lòng điền các trường bắt buộc: %s!!!"
 
 #. module: dpt_sale_management
 #. odoo-python
