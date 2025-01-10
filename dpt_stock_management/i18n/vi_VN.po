@@ -229,8 +229,8 @@ msgstr "Phiếu xuất"
 #. odoo-python
 #: code:addons/dpt_stock_management/models/stock_picking.py:0
 #, python-format
-msgid "Please fill required fields!!!"
-msgstr "Vui lòng điền các trường bắt buộc!!!"
+msgid "Please fill required fields: %s!!!"
+msgstr "Vui lòng điền các trường bắt buộc: %s!!!"
 
 #. module: dpt_stock_management
 #: model_terms:ir.ui.view,arch_db:dpt_stock_management.view_picking_form_stock_inherit
