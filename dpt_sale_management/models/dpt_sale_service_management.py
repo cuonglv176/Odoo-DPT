@@ -13,6 +13,7 @@ class DPTSaleServiceManagement(models.Model):
     qty = fields.Float(string='QTY', default=1)
     uom_ids = fields.Many2many(related='service_id.uom_ids')
     uom_id = fields.Many2one('uom.uom', string='Service detail', domain="[('id', 'in', uom_ids)]")
+    old_price = fields.Monetary(currency_field='currency_id', string='Old Price')
     price = fields.Monetary(currency_field='currency_id', string='Price')
     price_cny = fields.Monetary(currency_field='currency_cny_id', string='Price CNY')
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
@@ -25,6 +26,13 @@ class DPTSaleServiceManagement(models.Model):
     compute_uom_id = fields.Many2one('uom.uom', 'Compute Unit')
     compute_value = fields.Float('Compute Value', default=1)
     note = fields.Text(string='Note')
+
+    @api.onchange('price')
+    def onchange_check_price(self):
+        if self.price < self.old_price:
+            if self.user_has_groups('sales_team.group_sale_salesman'):
+                raise UserError(_(f'Bạn chỉ được sủa đơn giá tăng lên không được giảm đi!!!.'))
+            self.old_price = self.price
 
     # def unlink(self):
     #     res = super(DPTSaleServiceManagement, self).unlink()
