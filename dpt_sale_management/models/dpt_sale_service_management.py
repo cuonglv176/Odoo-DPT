@@ -37,7 +37,7 @@ class DPTSaleServiceManagement(models.Model):
     def unlink(self):
         for record in self:
             if record.sale_id:
-                message = f"Dịch vụ bị xoá: {record.service_id}"
+                message = f"Dịch vụ bị xoá: {record.service_id.name}"
                 record.sale_id.message_post(body=message, message_type='comment')
         res = super(DPTSaleServiceManagement, self).unlink()
         return res
@@ -48,7 +48,7 @@ class DPTSaleServiceManagement(models.Model):
         self.action_confirm_quote()
         self.action_check_status_sale_order()
         for rec in self:
-            if rec.sale_id:
+            if rec.sale_id and rec.sale_id.exists():
                 changes = []
                 for field, new_value in vals.items():
                     old_value = old_values[rec.id].get(field)
