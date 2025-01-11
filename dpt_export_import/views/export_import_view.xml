@@ -8,20 +8,47 @@
             <form string="Export import Form">
                 <header>
                     <field name="state" widget="statusbar"
-                           statusbar_visible="draft,draft_declaration,declared,released,consulted,post_control,cancelled"/>
+                           statusbar_visible="draft,draft_declaration,wait_confirm,confirm,declared,edit,released,back_for_stock,edit_ama,cancelled"/>
                     <field name="active" invisible="1"/>
-                    <button string="Tờ Khai Nháp" type="object" name="action_draft_declaration" class="btn-primary"
-                            invisible="state == 'draft_declaration'"/>
-                    <button string="Declared" type="object" name="action_declared" class="btn-primary"
-                            invisible="state == 'declared'"/>
-                    <button string="Released" type="object" name="action_released" class="btn-primary"
-                            invisible="state == 'released'"/>
-                    <button string="Consulted" type="object" name="action_consulted" class="btn-primary"
-                            invisible="state == 'consulted'"/>
-                    <button string="Post control" type="object" name="action_post_control" class="btn-primary"
-                            invisible="state == 'post_control'"/>
-                    <button string="Cancelled" type="object" name="action_cancelled" class="btn-primary"
-                            invisible="state == 'cancelled'"/>
+                    <button string="Tờ khai nháp hải quan" type="object" name="action_draft_declaration"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button string="Gửi duyệt" type="object" name="action_sent_to_confirm" class="btn-primary"
+                            invisible="state != 'draft_declaration'"/>
+
+                    <button string="Duyệt" type="object" name="action_confirm" class="btn-primary"
+                            invisible="state != 'wait_confirm'"/>
+                    <button string="Từ chối" type="object" name="action_cancelled" class="btn-primary"
+                            invisible="state == 'wait_confirm'"/>
+
+                    <button string="Chính Thức" type="object" name="action_declared" class="btn-primary"
+                            invisible="state != 'confirm'"/>
+
+                    <button string="Giải phóng" type="object" name="action_released" class="btn-primary"
+                            invisible="state != 'declared'"/>
+
+                    <button string="Sửa" type="object" name="action_edit" class="btn-primary"
+                            invisible="state != 'declared'"/>
+
+                    <button string="Mang hàng về bảo quản" type="object" name="action_back_for_stock"
+                            class="btn-primary"
+                            invisible="state != 'declared'"/>
+
+                    <button string="Thông Quan" type="object" name="action_cleared" class="btn-primary"
+                            invisible="state not in ('declared','edit_ama')"/>
+
+                    <button string="Sửa AMA" type="object" name="action_edit_ama" class="btn-primary"
+                            invisible="state != 'cleared'"/>
+
+
+                    <!--                    <button string="Released" type="object" name="action_released" class="btn-primary"-->
+                    <!--                            invisible="state == 'released'"/>-->
+                    <!--                    <button string="Consulted" type="object" name="action_consulted" class="btn-primary"-->
+                    <!--                            invisible="state == 'consulted'"/>-->
+                    <!--                    <button string="Post control" type="object" name="action_post_control" class="btn-primary"-->
+                    <!--                            invisible="state == 'post_control'"/>-->
+
+                    <button string="Quay về nháp" type="object" name="action_back_to_draft" class="btn-primary"
+                            invisible="state not in ('cancelled','confirm')"/>
                 </header>
                 <sheet>
                     <div name="button_box" class="oe_button_box">
