@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Ban giám đốc-->
+    <!--Giám đốc kinh doanh -->
+    <!--Trưởng phòng MKT-->
+    <!--Trưởng nhóm MKT-->
+    <!--Nhân viên MKT-->
+    <!--Trưởng nhóm kinh doanh-->
+    <!--Nhân viên kinh doanh-->
+    <!--Trưởng nhóm CSKH-->
+    <!--Nhân viên CSKH-->
+    <!--Nhân viên RESALE-->
+    <!--Nhân viên thu ngân-->
+    <!--Kế toán-->
+    <data noupdate="1">
+        <!--#Nhóm quyền dpt-->
+        <record model="ir.module.category" id="module_category_dpt">
+            <field name="name">Phân quyền DPT</field>
+            <field name="sequence">1</field>
+            <field name="visible" eval="0"/>
+        </record>
+        <!--#Ban giám đốc-->
+        <record id="group_dpt_director" model="res.groups">
+            <field name="name">Ban giám đốc</field>
+            <field name="category_id" ref="module_category_dpt"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+        <!--#Giám đốc kinh doanh-->
+        <record id="group_dpt_director_sale" model="res.groups">
+            <field name="name">Giám đốc kinh doanh</field>
+            <field name="category_id" ref="module_category_dpt"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+        <!--#Trưởng phòng MKT-->
+        <record id="group_dpt_department_mkt" model="res.groups">
+            <field name="name">Trưởng phòng MKT</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+         <!--#Trưởng phòng MKT-->
+        <record id="group_dpt_department_sale" model="res.groups">
+            <field name="name">Trưởng phòng Bán hàng</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+        <!--#Trưởng nhóm MKT-->
+        <record id="group_dpt_team_mkt" model="res.groups">
+            <field name="name">Trưởng nhóm MKT</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+        <!--# Nhân viên MKT-->
+        <record id="group_dpt_employee_mkt" model="res.groups">
+            <field name="name">Nhân viên MKT</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+
+        <!--#Trưởng nhóm kinh doanh-->
+        <record id="group_dpt_employee_team_sale" model="res.groups">
+            <field name="name">Trưởng nhóm kinh doanh</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+
+        <!--#Nhân viên kinh doanh-->
+        <record id="group_dpt_employee_sale" model="res.groups">
+            <field name="name">Nhân viên kinh doanh</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+
+        <!--#Trưởng nhóm CSKH-->
+        <record id="group_dpt_team_cskh" model="res.groups">
+            <field name="name">Trưởng nhóm CSKH</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+
+        <!--#Nhân viên CSKH-->
+        <record id="group_dpt_employee_cskh" model="res.groups">
+            <field name="name">Nhân viên CSKH</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+
+        <!--#Nhân viên RESALE-->
+        <record id="group_dpt_team_resale" model="res.groups">
+            <field name="name">Nhân viên RESALE</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+
+        <!--#Kế toán-->
+        <record id="group_dpt_accountant" model="res.groups">
+            <field name="name">Kế toán</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+
+
+        <!--#Trợ lý TGĐ-->
+        <record id="group_dpt_tro_ly_tgd" model="res.groups">
+            <field name="name">Trợ lý TGĐ</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+
+        <!--#Trưởng nhóm Digital-->
+        <record id="group_dpt_truong_nhom_digital" model="res.groups">
+            <field name="name">Trưởng nhóm Digital</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+
+        <!--#Nhân viên Digital MKT-->
+        <record id="group_dpt_nhan_vien_digital" model="res.groups">
+            <field name="name">Nhân viên Digital MKT</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+
+        <!--#Trưởng nhóm Media-->
+        <record id="group_dpt_truong_nhom_media" model="res.groups">
+            <field name="name">Trưởng nhóm Media</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+
+        <!--#Nhân Viên Media-->
+        <record id="group_dpt_nhan_vien_media" model="res.groups">
+            <field name="name">Nhân viên Video Editor</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+
+        <!--#Nhân viên Content Creator-->
+        <record id="group_dpt_nhan_vien_content" model="res.groups">
+            <field name="name">Nhân viên Content Creator</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+
+        <!--#Nhân viên Diễn viên KOL/KOC-->
+        <record id="group_dpt_nhan_vien_kol_koc" model="res.groups">
+            <field name="name">Nhân viên Diễn viên KOL/KOC</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+
+
+        <!--#Trưởng nhóm SEO/PR-->
+        <record id="group_dpt_truong_nhom_seo" model="res.groups">
+            <field name="name">Trưởng nhóm SEO/PR</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+
+        <!--#Nhân viên SEO-->
+        <record id="group_dpt_nhan_vien_seo" model="res.groups">
+            <field name="name">Nhân viên SEO</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+
+        <!--#Trưởng phòng Phát triển Sản phẩm-->
+        <record id="group_dpt_nhan_vien_pt_san_pham" model="res.groups">
+            <field name="name">Trưởng phòng Phát triển Sản phẩm</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+
+        <!--#Nhân viên Kho vận-->
+        <record id="group_dpt_nhan_vien_kho_van" model="res.groups">
+            <field name="name">Nhân viên Kho vận</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+
+        <!--#Trưởng phòng Nhân sự-->
+        <record id="group_dpt_truong_phong_nhan_su" model="res.groups">
+            <field name="name">Trưởng phòng Nhân sự</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+
+
+        <!--#Nhân viên HCNS tổng hợp-->
+        <record id="group_dpt_nhan_vien_nhan_su" model="res.groups">
+            <field name="name">Nhân viên HCNS tổng hợp</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+
+
+        <!--#Kế toán trưởng-->
+        <record id="group_dpt_ke_toan_truong" model="res.groups">
+            <field name="name">Kế toán trưởng</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+
+
+        <!--#Kế toán tổng hợp-->
+        <record id="group_dpt_ke_toan_tong_hop" model="res.groups">
+            <field name="name">Kế toán tổng hợp</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+
+
+        <!--#Kế toán hàng hóa-->
+        <record id="group_dpt_ke_toan_hang_hoa" model="res.groups">
+            <field name="name">Kế toán hàng hóa</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+
+
+         <!--#Nhân viên chứng từ-->
+        <record id="group_dpt_document_officer" model="res.groups">
+            <field name="name">Nhân viên chứng từ</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+
+
+        <!--#Truơng phòng cứng từ-->
+        <record id="group_dpt_head_of_document" model="res.groups">
+            <field name="name">Trưởng phòng chứng từ</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+
+
+    </data>
+</odoo>
