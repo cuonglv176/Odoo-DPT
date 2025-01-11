@@ -28,6 +28,8 @@ class SaleOrder(models.Model):
         return res
 
     def action_confirm(self):
+        if not self.line_ids:
+            raise ValidationError(_('Phải có thông tin chi tiết đơn hàng!'))
         res = super(SaleOrder, self).action_confirm()
         for order_id in self:
             if order_id.approval_ids.filtered(lambda approval: approval.request_status in ('pending', 'new')):
