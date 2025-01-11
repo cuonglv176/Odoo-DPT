@@ -3,7 +3,11 @@
 from ast import literal_eval
 from odoo import fields, models, _, api
 import logging
+from odoo.exceptions import AccessError, UserError, ValidationError
+
 _logger = logging.getLogger(__name__)
+
+
 class DptExportImportGate(models.Model):
     _name = "dpt.export.import.gate"
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -25,7 +29,8 @@ class DptExportImport(models.Model):
     partner_importer_id = fields.Many2one('res.partner', string='Partner Importer')
     partner_exporter_id = fields.Many2one('res.partner', string='Partner Exporter')
     gate_id = fields.Many2one('dpt.export.import.gate', string='Gate Importer')
-    user_id = fields.Many2one('res.users', string='User Export/Import', default=lambda self: self.env.user, tracking=True)
+    user_id = fields.Many2one('res.users', string='User Export/Import', default=lambda self: self.env.user,
+                              tracking=True)
     date = fields.Date(required=True, default=lambda self: fields.Date.context_today(self))
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
     consultation_date = fields.Date(string='Consultation date')
@@ -124,46 +129,62 @@ class DptExportImport(models.Model):
         self.state = 'draft'
 
     def action_sent_to_confirm(self):
+        self.action_check_lot_name()
         self.state = 'wait_confirm'
         # for line_id in self.line_ids:
         #     line_id.state = 'draft_declaration'
 
     def action_confirm(self):
+        self.action_check_lot_name()
         self.state = 'confirm'
 
     def action_declared(self):
+        self.action_check_lot_name()
         self.state = 'declared'
         # for line_id in self.line_ids:
         #     line_id.state = 'declared'
 
     def action_edit(self):
+        self.action_check_lot_name()
         self.state = 'edit'
 
     def action_released(self):
+        self.action_check_lot_name()
         self.state = 'released'
         # for line_id in self.line_ids:
         #     line_id.state = 'released'
 
     def action_back_for_stock(self):
+        self.action_check_lot_name()
         self.state = 'back_for_stock'
 
     def action_cleared(self):
+        self.action_check_lot_name()
         self.state = 'cleared'
         # for line_id in self.line_ids:
         #     line_id.state = 'consulted'
 
     # def action_post_control(self):
     #     self.state = 'post_control'
-        # for line_id in self.line_ids:
-        #     line_id.state = 'post_control'
+    # for line_id in self.line_ids:
+    #     line_id.state = 'post_control'
 
     def action_edit_ama(self):
+        self.action_check_lot_name()
         self.state = 'edit_ama'
 
     def action_cancelled(self):
         self.state = 'cancelled'
         # for line_id in self.line_ids:
         #     line_id.state = 'cancelled'
+
+    def action_check_lot_name(self):
+        picking_lot_name_ids = self.env['stock.picking'].search(
+            ['|', ('sale_purchase_id', 'in', self.ids), ('sale_id', 'in', self.ids),
+             ('state', '!=', 'cancel'), ('picking_lot_name', '=', False)])
+        if picking_lot_name_ids:
+            picking_lot_name = ','.join(picking_lot_name_ids.mapped('name'))
+            raise UserError(f"Vận chuyển : {picking_lot_name} chưa được cập nhật mã lô, vui lòng kiểm tra lại!!!")
 
     @api.depends('sale_ids', 'sale_ids.volume')
     def _compute_total_cubic_meters(self):
@@ -266,7 +287,6 @@ class DptExportImport(models.Model):
             else:
                 rec.total_package = ''
 
-
     def action_select_import_line(self):
         view_form_id = self.env.ref('dpt_export_import.dpt_export_import_select_line_form').id
         return {
@@ -283,4 +303,3 @@ class DptExportImport(models.Model):
         if self.select_line_ids:
             for select_line_id in self.select_line_ids:
                 select_line_id.export_import_id = self.id
-
