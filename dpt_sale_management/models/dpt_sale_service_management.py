@@ -56,7 +56,10 @@ class DPTSaleServiceManagement(models.Model):
                         changes.append(f"{field}: {old_value} -> {new_value}")
                 if changes:
                     message = f"Thông tin dịch vụ thay đổi: {rec.service_id.name}: " + ", ".join(changes)
-                    rec.sale_id.message_post(body=message, message_type='comment')
+                    try:
+                        rec.sale_id.message_post(body=message, message_type='comment')
+                    except:
+                        continue
         return res
 
     def action_check_status_sale_order(self):
