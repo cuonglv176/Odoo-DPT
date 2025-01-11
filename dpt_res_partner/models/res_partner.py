@@ -52,20 +52,20 @@ class ResPartner(models.Model):
                 record.is_company = False
                 record.is_household_business = False
 
-    @api.onchange('company_type')
-    def onchange_company_type(self):
-        self.is_company = (self.company_type == 'company')
-        self.is_household_business = (self.company_type == 'household_business')
+    # @api.onchange('company_type')
+    # def onchange_company_type(self):
+    #     self.is_company = (self.company_type == 'company')
+    #     self.is_household_business = (self.company_type == 'household_business')
 
-    @api.depends('is_company')
-    def _compute_company_type(self):
-        for partner in self:
-            if partner.is_company:
-                partner.company_type = 'company'
-            elif partner.is_household_business:
-                partner.company_type = 'household_business'
-            else:
-                partner.company_type = 'person'
+    # @api.depends('is_company')
+    # def _compute_company_type(self):
+    #     for partner in self:
+    #         if partner.is_company:
+    #             partner.company_type = 'company'
+    #         elif partner.is_household_business:
+    #             partner.company_type = 'household_business'
+    #         else:
+    #             partner.company_type = 'person'
 
     def _compute_check_employee(self):
         for rec in self:
