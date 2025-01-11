@@ -13,7 +13,7 @@
                     <button string="Gửi yêu cầu" type="object" name="action_wait_confirm" class="btn-primary"
                             invisible="state != 'draft'"/>
                     <button string="Eligible" type="object" name="action_update_eligible" class="btn-primary"
-                            invisible="state != 'wait_confirm'" groups="sales_team.group_sale_salesman_all_leads"/>
+                            invisible="state != 'wait_confirm'" groups="dpt_security.group_dpt_document_officer,dpt_security.group_dpt_head_of_document"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -92,7 +92,7 @@
         <field name="arch" type="xml">
             <tree string="Export Import Line List">
                 <button string="Eligible" type="object" name="action_update_eligible" class="btn-primary"
-                        invisible="state != 'draft'" groups="sales_team.group_sale_salesman_all_leads"/>
+                        invisible="state != 'draft'" groups="dpt_security.group_dpt_document_officer,dpt_security.group_dpt_head_of_document"/>
                 <field name="state" widget="badge"
                        decoration-info="state in ('draft','wait_confirm')"
                        decoration-success="state in ('eligible','declared','released','consulted','post_control')"/>
