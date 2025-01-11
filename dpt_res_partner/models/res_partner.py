@@ -52,6 +52,10 @@ class ResPartner(models.Model):
                 record.is_company = False
                 record.is_household_business = False
 
+    @api.onchange('company_type')
+    def onchange_company_type(self):
+        pass
+
     # @api.onchange('company_type')
     # def onchange_company_type(self):
     #     self.is_company = (self.company_type == 'company')
