@@ -35,11 +35,11 @@ class DPTSaleServiceManagement(models.Model):
             self.old_price = self.price
 
     def unlink(self):
-        res = super(DPTSaleServiceManagement, self).unlink()
         for record in self:
             if record.sale_id:
                 message = f"Dịch vụ bị xoá: {record.service_id}"
                 record.sale_id.message_post(body=message, message_type='comment')
+        res = super(DPTSaleServiceManagement, self).unlink()
         return res
 
     def write(self, vals):
