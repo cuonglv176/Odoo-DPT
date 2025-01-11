@@ -30,8 +30,7 @@ class ResPartner(models.Model):
     dpt_date_of_delivery = fields.Char('Date of delivery')
     company_type = fields.Selection(string='Company Type',
                                     selection=[('person', 'Individual'), ('company', 'Company'),
-                                               ('household_business', 'Household Business')],
-                                    compute='_compute_company_type', inverse='_write_company_type', store=True)
+                                               ('household_business', 'Household Business')], inverse='_write_company_type', store=True)
     cs_user_id = fields.Many2one('res.users', string='Nhân viên CS')
     is_user = fields.Boolean(string='Là nhân viên', default=False, compute="_compute_check_employee", store=True)
     is_household_business = fields.Boolean(string='Là hộ kinh doanh', default=False)
@@ -51,6 +50,7 @@ class ResPartner(models.Model):
                 record.is_household_business = True
             else:
                 record.is_company = False
+                record.is_household_business = False
 
     @api.onchange('company_type')
     def onchange_company_type(self):
