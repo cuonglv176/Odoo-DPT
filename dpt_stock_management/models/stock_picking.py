@@ -12,6 +12,27 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
+def year_to_letter(year):
+    # Using 2024 as the base year (A)
+    base_year = 2024
+    offset = year - base_year
+
+    # Convert to uppercase letter (A=0, B=1, etc.)
+    if 0 <= offset <= 25:  # Ensure we stay within A-Z range
+        return chr(65 + offset)  # 65 is ASCII for 'A'
+    else:
+        return "Out of range"
+
+
+def month_to_letter(month):
+    # Ensure month is between 1-12
+    if 1 <= month <= 12:
+        # Convert to uppercase letter (A=1, B=2, etc.)
+        return chr(64 + month)  # 64 is ASCII for '@', so 1 -> A, 2 -> B, etc.
+    else:
+        return "Invalid month"
+
+
 def action_confirm(self):
     self._check_company()
     self.mapped('package_level_ids').filtered(lambda pl: pl.state == 'draft' and not pl.move_ids)._generate_moves()
@@ -233,20 +254,27 @@ class StockPicking(models.Model):
                     order_line.dpt_export_import_line_ids.package_ids = order_line.dpt_export_import_line_ids.package_ids | package_ids
         return super().action_confirm()
 
+    @api.constrains('package_ids', 'package_ids.quantity', 'is_main_incoming')
+    def constrains_picking_name(self):
+        for item in self:
+            if item.is_main_incoming:
+                today = fields.Date.today()
+                all_package = sum(item.package_ids.filtered(lambda p: p.quantity).mapped('quantity'))
+                prefix = f'{year_to_letter(int(today.strftime("%Y")))}{month_to_letter(int(today.strftime("%m")))}'
+                nearest_picking_id = self.env['stock.picking'].sudo().search(
+                    [('picking_lot_name', 'ilike', prefix + "%"), ('id', '!=', item.id),
+                     ('location_dest_id.warehouse_id', '=', item.location_dest_id.warehouse_id.id),
+                     ('picking_type_id.code', '=', item.picking_type_code)], order='id desc').filtered(
+                    lambda sp: '.' not in sp.picking_lot_name)
+                if nearest_picking_id:
+                    number = int(nearest_picking_id[:1].picking_lot_name[8:])
+                    item.picking_lot_name = prefix + str(number + 1).zfill(3) + f"-{all_package}"
+                else:
+                    item.picking_lot_name = prefix + '001' + f"-{all_package}"
+
     def action_update_picking_name(self):
         # getname if it is incoming picking in Chinese stock
-        if self.is_main_incoming:
-            prefix = f'KT{datetime.now().strftime("%y%m%d")}'
-            nearest_picking_id = self.env['stock.picking'].sudo().search(
-                [('picking_lot_name', 'ilike', prefix + "%"), ('id', '!=', self.id),
-                 ('location_dest_id.warehouse_id', '=', self.location_dest_id.warehouse_id.id),
-                 ('picking_type_id.code', '=', self.picking_type_code)], order='id desc').filtered(
-                lambda sp: '.' not in sp.picking_lot_name)
-            if nearest_picking_id:
-                number = int(nearest_picking_id[:1].picking_lot_name[8:])
-                self.picking_lot_name = prefix + str(number + 1).zfill(3)
-            else:
-                self.picking_lot_name = prefix + '001'
+        self.constrains_picking_name()
         if self.picking_type_code == 'outgoing' or self.x_transfer_type == 'outgoing_transfer':
             if not self.picking_in_id:
                 return self
