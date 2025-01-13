@@ -30,8 +30,7 @@ class ResPartner(models.Model):
     dpt_date_of_delivery = fields.Char('Date of delivery')
     company_type = fields.Selection(string='Company Type',
                                     selection=[('person', 'Individual'), ('company', 'Company'),
-                                               ('household_business', 'Household Business')],
-                                    compute='_compute_company_type', inverse='_write_company_type')
+                                               ('household_business', 'Household Business')], inverse='_write_company_type', store=True)
     cs_user_id = fields.Many2one('res.users', string='Nhân viên CS')
     is_user = fields.Boolean(string='Là nhân viên', default=False, compute="_compute_check_employee", store=True)
     is_household_business = fields.Boolean(string='Là hộ kinh doanh', default=False)
@@ -43,24 +42,34 @@ class ResPartner(models.Model):
                                             ('other', 'Other')], string='Type Partner')
 
     def _write_company_type(self):
-        for partner in self:
-            partner.is_company = partner.company_type == 'company'
-            partner.is_household_business = partner.company_type == 'household_business'
+        for record in self:
+            if record.company_type == 'company':
+                record.is_company = True
+            elif record.company_type == 'household_business':
+                record.is_company = False
+                record.is_household_business = True
+            else:
+                record.is_company = False
+                record.is_household_business = False
 
     @api.onchange('company_type')
     def onchange_company_type(self):
-        self.is_company = (self.company_type == 'company')
-        self.is_household_business = (self.company_type == 'household_business')
+        pass
 
-    @api.depends('is_company', 'is_household_business')
-    def _compute_company_type(self):
-        for partner in self:
-            if partner.is_company:
-                partner.company_type = 'company'
-            elif partner.is_household_business:
-                partner.company_type = 'household_business'
-            else:
-                partner.company_type = 'person'
+    # @api.onchange('company_type')
+    # def onchange_company_type(self):
+    #     self.is_company = (self.company_type == 'company')
+    #     self.is_household_business = (self.company_type == 'household_business')
+
+    # @api.depends('is_company')
+    # def _compute_company_type(self):
+    #     for partner in self:
+    #         if partner.is_company:
+    #             partner.company_type = 'company'
+    #         elif partner.is_household_business:
+    #             partner.company_type = 'household_business'
+    #         else:
+    #             partner.company_type = 'person'
 
     def _compute_check_employee(self):
         for rec in self:

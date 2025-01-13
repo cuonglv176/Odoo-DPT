@@ -34,30 +34,33 @@ class DPTSaleServiceManagement(models.Model):
                 raise UserError(_(f'Bạn chỉ được sủa đơn giá tăng lên không được giảm đi!!!.'))
             self.old_price = self.price
 
-    # def unlink(self):
-    #     res = super(DPTSaleServiceManagement, self).unlink()
-    #     for record in self:
-    #         if record.sale_id:
-    #             message = f"Dịch vụ bị xoá: {record.service_id}"
-    #             record.sale_id.message_post(body=message, message_type='comment')
-    #     return res
-    #
-    # def write(self, vals):
-    #     old_values = {rec.id: rec.read(vals.keys())[0] for rec in self}
-    #     res = super(DPTSaleServiceManagement, self).write(vals)
-    #     self.action_confirm_quote()
-    #     self.action_check_status_sale_order()
-    #     for rec in self:
-    #         if rec.sale_id:
-    #             changes = []
-    #             for field, new_value in vals.items():
-    #                 old_value = old_values[rec.id].get(field)
-    #                 if old_value != new_value:
-    #                     changes.append(f"{field}: {old_value} -> {new_value}")
-    #             if changes:
-    #                 message = f"Thông tin dịch vụ thay đổi: {rec.service_id.name}: " + ", ".join(changes)
-    #                 rec.sale_id.message_post(body=message, message_type='comment')
-    #     return res
+    def unlink(self):
+        for record in self:
+            if record.sale_id:
+                message = f"Dịch vụ bị xoá: {record.service_id.name}"
+                record.sale_id.message_post(body=message, message_type='comment')
+        res = super(DPTSaleServiceManagement, self).unlink()
+        return res
+
+    def write(self, vals):
+        old_values = {rec.id: rec.read(vals.keys())[0] for rec in self}
+        res = super(DPTSaleServiceManagement, self).write(vals)
+        self.action_confirm_quote()
+        self.action_check_status_sale_order()
+        for rec in self:
+            if rec.sale_id and rec.sale_id.exists():
+                changes = []
+                for field, new_value in vals.items():
+                    old_value = old_values[rec.id].get(field)
+                    if old_value != new_value:
+                        changes.append(f"{field}: {old_value} -> {new_value}")
+                if changes:
+                    message = f"Thông tin dịch vụ thay đổi: {rec.service_id.name}: " + ", ".join(changes)
+                    try:
+                        rec.sale_id.message_post(body=message, message_type='comment')
+                    except:
+                        continue
+        return res
 
     def action_check_status_sale_order(self):
         if self.sale_id.locked:

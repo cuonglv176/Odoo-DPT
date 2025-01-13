@@ -11,7 +11,6 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-
 def year_to_letter(year):
     # Using 2024 as the base year (A)
     base_year = 2024

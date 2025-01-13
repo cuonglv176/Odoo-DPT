@@ -74,7 +74,7 @@ class SaleOrder(models.Model):
         if self.partner_id.user_id.id != self._uid:
             self.user_id = self._uid
 
-    @api.onchange('partner_id','user_id')
+    @api.onchange('partner_id', 'user_id')
     def onchange_user_id(self):
         # if not self.employee_sale:
         if self.partner_id.user_id:
@@ -152,35 +152,48 @@ class SaleOrder(models.Model):
         list_onchange = [item.fields_id.id for item in self.fields_ids]
         list_sale_service_id = []
         for sale_service_id in self.sale_service_ids:
-            if sale_service_id.service_id.id in list_sale_service_id:
-                continue
+            # if sale_service_id.service_id.id in list_sale_service_id:
+            #     continue
             for required_fields_id in sale_service_id.service_id.required_fields_ids:
-                if required_fields_id.id in list_exist:
-                    for field_data in self.env['sale.order'].browse(self.id.origin).fields_ids:
-                        if field_data.fields_id.id == required_fields_id.id:
-                            val.append({
-                                'sequence': 1 if field_data.type == 'required' else 0,
-                                'fields_id': required_fields_id.id,
-                                'sale_id': self.id,
-                                'value_char': field_data.value_char,
-                                'value_integer': field_data.value_integer,
-                                'value_date': field_data.value_date,
-                                'selection_value_id': field_data.selection_value_id.id,
+                # if required_fields_id.id in list_exist:
+                #     for field_data in self.env['sale.order'].browse(self.id.origin).fields_ids:
+                #         if field_data.fields_id.id == required_fields_id.id:
+                #             val.append({
+                #                 'sequence': 1 if field_data.type == 'required' else 0,
+                #                 'fields_id': required_fields_id.id,
+                #                 'sale_id': self.id,
+                #                 'value_char': field_data.value_char,
+                #                 'value_integer': field_data.value_integer,
+                #                 'value_date': field_data.value_date,
+                #                 'selection_value_id': field_data.selection_value_id.id,
+                #
+                #             })
+                # elif required_fields_id.id in list_onchange:
+                #     for field_data in self.fields_ids:
+                #         if field_data.fields_id.id == required_fields_id.id:
+                #             val.append({
+                #                 'sequence': 1 if field_data.type == 'required' else 0,
+                #                 'fields_id': required_fields_id.id,
+                #                 'sale_id': self.id,
+                #                 'value_char': field_data.value_char,
+                #                 'value_integer': field_data.value_integer,
+                #                 'value_date': field_data.value_date,
+                #                 'selection_value_id': field_data.selection_value_id.id,
+                #
+                #             })
+                for field_data in self.fields_ids:
+                    if field_data.fields_id.id == required_fields_id.id:
+                        val.append({
+                            'sequence': 1 if field_data.type == 'required' else 0,
+                            'fields_id': required_fields_id.id,
+                            'sale_id': self.id,
+                            'uom_service_id': sale_service_id.uom_id.id,
+                            'value_char': field_data.value_char,
+                            'value_integer': field_data.value_integer,
+                            'value_date': field_data.value_date,
+                            'selection_value_id': field_data.selection_value_id.id,
 
-                            })
-                elif required_fields_id.id in list_onchange:
-                    for field_data in self.fields_ids:
-                        if field_data.fields_id.id == required_fields_id.id:
-                            val.append({
-                                'sequence': 1 if field_data.type == 'required' else 0,
-                                'fields_id': required_fields_id.id,
-                                'sale_id': self.id,
-                                'value_char': field_data.value_char,
-                                'value_integer': field_data.value_integer,
-                                'value_date': field_data.value_date,
-                                'selection_value_id': field_data.selection_value_id.id,
-
-                            })
+                        })
                 if val:
                     result = [item for item in val if item['fields_id'] == required_fields_id.id]
                     if not result:
@@ -581,6 +594,7 @@ class SaleOrderField(models.Model):
     sequence = fields.Integer(default=_default_sequence, compute='_compute_sequence', store=True)
     sale_id = fields.Many2one('sale.order', string='Sale Order')
     service_id = fields.Many2one(related='fields_id.service_id')
+    uom_service_id = fields.Many2one('uom.uom', string='Chi tiết dịch vụ')
     fields_id = fields.Many2one('dpt.service.management.required.fields', string='Fields')
     value_char = fields.Char(string='Value Char')
     value_integer = fields.Float(string='Value Integer')
