@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_import_history,access_import_history,model_dpt_import_history,,1,1,1,1
+access_import_line,access_import_line,model_dpt_import_line,,1,1,1,1
+access_import_wizard,access_import_wizard,model_dpt_import_wizard,,1,1,1,1
+access_import_port,access_import_port,model_dpt_import_port,,1,1,1,1
+access_import_brand,access_import_brand,model_dpt_import_brand,,1,1,1,1
