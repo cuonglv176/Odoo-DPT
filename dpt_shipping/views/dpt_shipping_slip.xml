@@ -8,7 +8,7 @@
             <form string="Shipping slip">
                 <header>
                     <button name="action_create_shipping_slip_receive" string="Create Shipping Receive"
-                            type="object" class="btn-primary" invisible="send_shipping_id"/>
+                            type="object" class="btn-primary" invisible="send_shipping_id or not non_finish_transfer"/>
                     <button name="action_create_stock_transfer" string="Create Transfer Picking"
                             type="object" class="btn-primary"
                             invisible="send_shipping_id or out_picking_ids"/>
@@ -21,6 +21,7 @@
                            invisible="vehicle_country != 'chinese'"/>
                     <field name="num_not_confirm_picking" invisible="1"/>
                     <field name="active" invisible="1"/>
+                    <field name="non_finish_transfer" invisible="1"/>
                 </header>
                 <sheet>
                     <group>
@@ -55,12 +56,13 @@
                         <page name="main_in_picking" string="Main IN Picking">
                             <field name="main_in_picking_ids" context="{
                                      'form_view_ref': 'stock.view_picking_form',
-                                     'tree_view_ref': 'stock.vpicktree'}" readonly="1" force_save="1"/>
+                                     'tree_view_ref': 'stock.vpicktree'}"
+                                   readonly="1" force_save="1"/>
                         </page>
                         <page name="out_picking" string="Out Picking" invisible="send_shipping_id">
                             <field name="out_picking_ids" context="{
                                      'form_view_ref': 'stock.view_picking_form',
-                                     'tree_view_ref': 'stock.vpicktree'}" readonly="1" force_save="1"/>
+                                     'tree_view_ref': 'dpt_shipping.dpt_stock_picking_shipping_tree_view'}" readonly="1" force_save="1"/>
                         </page>
                         <page name="in_picking" string="In Picking" invisible="not send_shipping_id">
                             <field name="in_picking_ids" context="{

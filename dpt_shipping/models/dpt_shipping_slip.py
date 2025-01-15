@@ -38,6 +38,11 @@ class DPTShippingSlip(models.Model):
     total_num_packing = fields.Char('Total Num Packing', compute="_compute_information")
     num_not_confirm_picking = fields.Integer("Number of Not Confirm Picking", compute="_compute_information")
     estimate_arrival_warehouse_vn = fields.Date('Estimate Arrival Warehouse VN')
+    non_finish_transfer = fields.Boolean('Non-Finish Transfer', compute="compute_non_finish_transfer")
+
+    def compute_non_finish_transfer(self):
+        for item in self:
+            item.non_finish_transfer = any([picking_id.total_left_quantity != 0 for picking_id in item.out_picking_ids])
 
     @api.constrains('estimate_arrival_warehouse_vn')
     def _constrains_get_arrival_warehouse_date(self):
@@ -161,13 +166,15 @@ class DPTShippingSlip(models.Model):
         action = self.env.ref('dpt_shipping.dpt_shipping_split_wizard_action').sudo().read()[0]
         location_dest_id = self.env['stock.location'].sudo().search(
             [('usage', '=', 'internal'), ('id', 'not in', self.out_picking_ids.mapped('location_id').ids)], limit=1)
+        picking_ids = self.out_picking_ids.filtered(
+                lambda p: p.state == 'done' and p.total_transfer_quantity)
         action['context'] = {
             'default_shipping_id': self.id,
             'default_location_dest_id': location_dest_id.id,
-            'default_picking_ids': self.out_picking_ids.filtered(lambda p: p.state == 'done').ids,
-            'default_sale_ids': self.sale_ids.ids,
-            'default_available_sale_ids': self.sale_ids.ids,
-            'default_available_picking_ids': self.out_picking_ids.filtered(lambda p: p.state == 'done').ids,
+            'default_picking_ids': picking_ids.ids,
+            'default_sale_ids': picking_ids.mapped('sale_purchase_id').ids,
+            'default_available_sale_ids':  picking_ids.mapped('sale_purchase_id').ids,
+            'default_available_picking_ids': picking_ids.ids,
         }
         return action
 

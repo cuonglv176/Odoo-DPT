@@ -32,6 +32,8 @@ class StockPicking(models.Model):
             item.sale_purchase_id.recompute_weight_volume()
 
     def write(self, vals):
+        if 'sale_purchase_id' not in vals:
+            return super().write(vals)
         old_sale_purchase_id = self.sale_purchase_id
         res = super().write(vals)
         count_picking = self.env['stock.picking'].sudo().search_count(

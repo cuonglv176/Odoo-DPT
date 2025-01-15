@@ -10,3 +10,4 @@ from . import fleet_vehicle
 from . import mail_message
 from . import export_import
 from . import helpdesk_ticket
+from . import purchase_order_line_package
