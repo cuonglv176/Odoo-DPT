@@ -55,7 +55,8 @@
                         <page name="main_in_picking" string="Main IN Picking">
                             <field name="main_in_picking_ids" context="{
                                      'form_view_ref': 'stock.view_picking_form',
-                                     'tree_view_ref': 'stock.vpicktree'}" readonly="1" force_save="1"/>
+                                     'tree_view_ref': 'dpt_shipping.dpt_stock_picking_shipping_tree_view'}"
+                                   readonly="1" force_save="1"/>
                         </page>
                         <page name="out_picking" string="Out Picking" invisible="send_shipping_id">
                             <field name="out_picking_ids" context="{

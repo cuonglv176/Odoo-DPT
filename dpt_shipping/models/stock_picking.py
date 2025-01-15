@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 
 
 class StockPicking(models.Model):
@@ -25,6 +25,13 @@ class StockPicking(models.Model):
     active = fields.Boolean(string='Active', default=True)
     is_return_related = fields.Boolean('Is Return', compute="_compute_is_return_related",
                                        search="_search_is_return_related")
+
+    total_left_quantity = fields.Float(compute='_compute_total_left_quantity')
+
+    def _compute_total_left_quantity(self):
+        for item in self:
+            item.total_left_quantity = sum(item.package_ids.mapped('transfer_quantity')) - sum(
+                item.package_ids.mapped('transferred_quantity'))
 
     @api.depends('return_id')
     def _compute_is_return_related(self):
@@ -156,3 +163,14 @@ class StockPicking(models.Model):
         py_ctx['delete'] = 0
         action['context'] = py_ctx
         return action
+
+    def action_update_transfer_quantity(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'stock.picking',
+            'name': _('Confirm Transfer Quantity'),
+            'view_mode': 'form',
+            'target': 'new',
+            'res_id': self.id,
+            'views': [[self.env.ref('dpt_shipping.dpt_stock_picking_shipping_form_view').id, 'form']],
+        }
