@@ -183,7 +183,7 @@ class StockPicking(models.Model):
 
     @api.constrains('package_ids')
     def constrains_package(self):
-        if self.is_main_incoming:
+        if self.is_main_incoming and self.state != 'done':
             # remove package move
             package_move_ids = self.move_ids_without_package - self.move_ids_product
             package_move_ids.unlink()
@@ -266,7 +266,7 @@ class StockPicking(models.Model):
                      ('picking_type_id.code', '=', item.picking_type_code)], order='id desc').filtered(
                     lambda sp: '.' not in sp.picking_lot_name)
                 if nearest_picking_id:
-                    number = int(nearest_picking_id[:1].picking_lot_name[8:])
+                    number = int(nearest_picking_id[:1].picking_lot_name[2:5])
                     item.picking_lot_name = prefix + str(number + 1).zfill(3) + f"-{all_package}"
                 else:
                     item.picking_lot_name = prefix + '001' + f"-{all_package}"
