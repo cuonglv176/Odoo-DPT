@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Search View -->
+        <record id="view_backup_server_search" model="ir.ui.view">
+            <field name="name">backup.server.search</field>
+            <field name="model">backup.server</field>
+            <field name="arch" type="xml">
+                <search string="Backup Records">
+                    <field name="name"/>
+                    <field name="backup_type"/>
+                    <field name="destination_path"/>
+                    <field name="state"/>
+                    <separator/>
+                    <filter string="Active" name="filter_active"
+                            domain="[('active', '=', True)]"/>
+                    <filter string="Inactive" name="filter_inactive"
+                            domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <group string="Group By">
+                        <filter name="groupby_backup_type" string="Backup Type" context="{'group_by': 'backup_type'}"/>
+                        <filter name="groupby_state" string="State" context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Tree View -->
+        <record id="view_backup_server_tree" model="ir.ui.view">
+            <field name="name">backup.server.tree</field>
+            <field name="model">backup.server</field>
+            <field name="arch" type="xml">
+                <tree delete="false">
+                    <field name="name"/>
+                    <field name="backup_type" optional="show"/>
+                    <field name="destination_path" optional="show"/>
+                    <field name="state" optional="show"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_backup_server_form" model="ir.ui.view">
+            <field name="name">backup.server.form</field>
+            <field name="model">backup.server</field>
+            <field name="arch" type="xml">
+                <form string="Backup Record" delete="false" import="false" export="false">
+                    <header>
+                        <button name="test_connection" type="object" class="btn-primary" context="{'confirm': True}"
+                                string="Test Connection &amp; Confirm"
+                                invisible="state!='draft' or backup_type=='local'"/>
+                        <button name="confirm" type="object" class="btn-primary"
+                                string="Confirm" invisible="state!='draft' or backup_type!='local'"/>
+                        <button name="revert_state" type="object" class="btn-secondary"
+                                string="Edit" invisible="state!='confirmed'"
+                                groups="eqp_backup.group_eqp_backup_admin"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" placeholder="e.g. ABCDE" readonly="state!='draft'"/>
+                            </h1>
+                        </div>
+                        <group>
+
+                            <group>
+                                <field name="backup_type" readonly="state!='draft'" required="True"/>
+                                <field name="destination_path" placeholder="e.g. /path/to/your/backups/folder/"
+                                       readonly="state!='draft'" required="backup_type in ('local', 'sftp')"
+                                       invisible="backup_type=='drive'"/>
+                            </group>
+
+                            <group>
+                                <!-- SFTP Fields -->
+                                <field name="server_address" placeholder="e.g. 127.0.0.1" readonly="state!='draft'"
+                                       required="backup_type=='sftp'" invisible="backup_type!='sftp'"/>
+                                <field name="server_port" placeholder="e.g. 22" readonly="state!='draft'"
+                                       required="backup_type=='sftp'" invisible="backup_type!='sftp'"/>
+                                <field name="server_user" placeholder="e.g. Odoo_User" readonly="state!='draft'"
+                                       required="backup_type=='sftp'" invisible="backup_type!='sftp'"/>
+                                <field name="server_password" placeholder="e.g. Str0ngp4ss$!" password="True"
+                                       readonly="state!='draft'" required="backup_type=='sftp'"
+                                       invisible="backup_type!='sftp'"/>
+                                <!-- Google Drive Field-->
+                                <field name="parent_folder" required="backup_type=='drive'" readonly="state!='draft'"
+                                       invisible="backup_type!='drive'"/>
+                                <!-- Google Drive Fields-->
+                                <field name="drive_credentials_type" required="backup_type=='drive'"
+                                       readonly="state!='draft'" invisible="backup_type!='drive'"/>
+                                <field name="drive_credentials_file" readonly="state!='draft'" widget="binary"
+                                       filename="drive_credentials_file_name"
+                                       required="backup_type=='drive' and drive_credentials_type=='file'"
+                                       invisible="backup_type!='drive' or drive_credentials_type!='file' or state!='draft'"/>
+                                <field name="drive_credentials_file_name" invisible="True"/>
+                                <field name="drive_credentials_input" widget="code" readonly="state!='draft'"
+                                       required="backup_type=='drive' and drive_credentials_type=='text'"
+                                       invisible="backup_type!='drive' or drive_credentials_type!='text' or state!='draft'"/>
+                                <!-- Dropbox Fields-->
+                                <field name="dropbox_app_key" readonly="state!='draft'" password="True"
+                                       required="backup_type=='dropbox'" invisible="backup_type!='dropbox'"/>
+                                <field name="dropbox_app_secret" readonly="state!='draft'" password="True"
+                                       required="backup_type=='dropbox'" invisible="backup_type!='dropbox'"/>
+                                <field name="dropbox_app_token" class="password-limited" password="True"
+                                       invisible="backup_type!='dropbox'"/>
+                                <div colspan="2" invisible="not active or not backup_type">
+                                    <button name="generate_dropbox_token" type="object" class="btn-link oe_inline"
+                                            string="Generate Token" icon="fa-id-card-o"
+                                            invisible="backup_type!='dropbox' or not dropbox_app_key or not dropbox_app_secret or dropbox_app_token"/>
+                                    <button name="generate_dropbox_token" type="object" class="btn-link oe_inline"
+                                            string="Refresh Token" icon="fa-refresh"
+                                            invisible="backup_type!='dropbox' or not dropbox_app_key or not dropbox_app_secret or not dropbox_app_token"/>
+                                </div>
+
+                                <div class="oe_edit_only alert alert-info" role="alert" colspan="2"
+                                     invisible="state=='draft'">
+                                    <p>
+                                        <i class='fa fa-info-circle' style='color: blue;'/>
+                                        To apply any modifications, please transition the record to the 'Draft' state.
+                                    </p>
+                                </div>
+                                <field name="credentials_ok" invisible="1"/>
+                                <div colspan="2" invisible="not active or not backup_type or not credentials_ok">
+                                    <h6>Testing Area</h6>
+                                    <button name="test_connection" type="object" class="btn-link oe_inline"
+                                            string="Test Connection" icon="fa-cloud" invisible="backup_type=='local'"/>
+                                    <button name="send_test_file" type="object" class="btn-link oe_inline"
+                                            string="Test File Transfer" icon="fa-cloud-upload"/>
+                                </div>
+                            </group>
+                        </group>
+
+                        <notebook colspan="4">
+                            <field name="active" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <page string="description" name="backup_server_description">
+                                <group>
+                                    <field name="description" readonly="state!='draft'"/>
+                                </group>
+                            </page>
+                            <page string="Records" name="backup_server_records">
+                                <group>
+                                    <field name="record_ids" nolabel="1" colspan="2" options="{'no_create': True}">
+                                        <tree>
+                                            <field name="name"/>
+                                            <field name="db_name"/>
+                                            <field name="user_id"/>
+                                            <field name="state"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="o_attachment_preview"/>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_backup_server" model="ir.actions.act_window">
+            <field name="name">Backup Servers</field>
+            <field name="res_model">backup.server</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_backup_server_tree"/>
+            <field name="search_view_id" ref="view_backup_server_search"/>
+        </record>
+
+        <!-- Menu Items -->
+
+        <!-- Servers Menu -->
+        <menuitem id="menu_backup_server" name="Servers" parent="menu_eqp_backup_root"
+                  action="action_backup_server" groups="eqp_backup.group_eqp_backup_admin"/>
+
+    </data>
+</odoo>

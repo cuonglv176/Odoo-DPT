@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Search View -->
+        <record id="view_backup_record_search" model="ir.ui.view">
+            <field name="name">backup.record.search</field>
+            <field name="model">backup.record</field>
+            <field name="arch" type="xml">
+                <search string="Backup Records">
+                    <field name="name"/>
+                    <field name="server_id"/>
+                    <field name="user_id"/>
+                    <field name="frequency"/>
+                    <field name="db_name"/>
+                    <field name="state"/>
+                    <separator/>
+                    <filter string="My Backups" name="my_backups"
+                            domain="[('user_id', '=', uid)]"/>
+                    <separator/>
+                    <filter string="Active" name="filter_active"
+                            domain="[('active', '=', True)]"/>
+                    <filter string="Inactive" name="filter_inactive"
+                            domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <group string="Group By">
+                        <filter name="groupby_user" string="Responsible" context="{'group_by': 'user_id'}"/>
+                        <filter name="groupby_server" string="Server" context="{'group_by': 'server_id'}"/>
+                        <filter name="groupby_frequency" string="Frequency" context="{'group_by': 'frequency'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Tree View -->
+        <record id="view_backup_record_tree" model="ir.ui.view">
+            <field name="name">backup.record.tree</field>
+            <field name="model">backup.record</field>
+            <field name="arch" type="xml">
+                <tree delete="false">
+                    <field name="name"/>
+                    <field name="server_id"/>
+                    <field name="db_name" optional="show"/>
+                    <field name="frequency" optional="show"/>
+                    <field name="user_id" optional="show"/>
+                    <field name="state" optional="show"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_backup_record_form" model="ir.ui.view">
+            <field name="name">backup.record.form</field>
+            <field name="model">backup.record</field>
+            <field name="arch" type="xml">
+                <form string="Backup Record" delete="false" import="false" export="false">
+                    <header>
+                        <button name="validate_db" type="object" class="btn-primary"
+                                string="Confirm" invisible="state!='draft'" context="{'confirm': True}"/>
+                        <button name="manual_execution" type="object" class="btn-warning"
+                                string="Run BackUpManually" invisible="state!='confirmed'"/>
+
+                        <button name="revert_state" type="object" class="btn-secondary"
+                                string="Edit" invisible="state!='confirmed'"
+                                groups="eqp_backup.group_eqp_backup_admin"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" placeholder="e.g. ABCDE" readonly="state!='draft'"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="server_id" domain="[('state', '=', 'confirmed')]" readonly="state!='draft'"
+                                       options="{'no_create': True, 'no_create_edit': True}"/>
+                                <field name="frequency" readonly="state!='draft'"/>
+                                <label for="backup_lifespan_qty" class="oe_inline"/>
+                                <div>
+                                    <field name="backup_lifespan_qty" readonly="state!='draft'" class="oe_inline"/>
+                                    Backup(s)
+                                </div>
+
+                                <div colspan="2">
+                                    <h6>Email Notifications:</h6>
+                                    <field name="success_mail_policy" invisible="True"/>
+                                    <label for="success_mail_send" string="When Succeeded" class="oe_inline"
+                                           invisible="not success_mail_policy"/>
+                                    <field name="success_mail_send" class="oe_inline" widget="boolean_toggle"
+                                           invisible="not success_mail_policy" readonly="state!='draft'"/>
+                                    <field name="failure_mail_policy" invisible="True"/>
+                                    <label for="failure_mail_send" string="When Failed" class="oe_inline"
+                                           invisible="not failure_mail_policy"/>
+                                    <field name="failure_mail_send" class="oe_inline" widget="boolean_toggle"
+                                           invisible="not failure_mail_policy" readonly="state!='draft'"/>
+                                </div>
+                            </group>
+                            <group>
+                                <field name="db_name" placeholder="e.g. my_database" readonly="state!='draft'"/>
+                                <div colspan="2" invisible="state!='draft'">
+                                    <button name="show_databases" type="object" class="btn-link oe_inline"
+                                            string="Update Data Bases List" icon="fa-refresh"/>
+                                    <field name="db_names" readonly="1" nolabel="1" class="oe_inline" widget="text"/>
+                                </div>
+                                <div colspan="2" invisible="state!='draft'">
+                                    <button name="validate_db" type="object" class="btn-link oe_inline"
+                                            string="Validate Database" icon="fa-key" colspan="2"/>
+                                </div>
+
+                                <field name="user_id" readonly="state!='draft'"
+                                       options="{'no_open': True, 'no_create': True, 'no_create_edit': True}"/>
+                            </group>
+                        </group>
+
+                        <notebook colspan="4">
+                            <field name="active" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <page string="description" name="backup_record_description">
+                                <group>
+                                    <field name="description" readonly="state!='draft'"/>
+                                </group>
+                            </page>
+                            <page string="Scheduled Action" name="backup_scheduled_action" invisible="not cron_id">
+                                <group>
+                                    <field name="cron_id" options="{'no_create': True, 'no_create_edit': True}"/>
+                                </group>
+                            </page>
+                            <page string="Execution Details" name="backup_execution_details"
+                                  invisible="not last_execution_result">
+                                <group>
+                                    <field name="last_execution_result"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="o_attachment_preview"/>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Actions -->
+        <!-- Backup Record Action -->
+        <record id="action_backup_record" model="ir.actions.act_window">
+            <field name="name">Backup Records</field>
+            <field name="res_model">backup.record</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_backup_record_tree"/>
+            <field name="search_view_id" ref="view_backup_record_search"/>
+        </record>
+        <!-- Configuration Action -->
+        <record id="action_eqp_backup_configuration" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module' : 'eqp_backup', 'bin_size': False}</field>
+        </record>
+
+        <!-- Menu Items -->
+
+        <!-- Root Module Menu -->
+        <menuitem
+                name="DB Backups"
+                id="menu_eqp_backup_root"
+                web_icon="eqp_backup,static/description/icon.png"
+                groups="eqp_backup.group_eqp_backup_user"
+                sequence="300"/>
+
+        <!-- Records Menu -->
+        <menuitem id="menu_backup_record" name="Records" parent="menu_eqp_backup_root"
+                  action="action_backup_record" groups="eqp_backup.group_eqp_backup_user"/>
+
+        <!-- Configuration Menu -->
+        <menuitem id="menu_backup_configuration" name="Configuration"
+                  parent="menu_eqp_backup_root" sequence="900" action="action_eqp_backup_configuration"
+                  groups="base.group_system"/>
+
+    </data>
+</odoo>

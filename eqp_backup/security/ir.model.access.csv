@@ -1,0 +1,6 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+access_backup_record_user,backup.record.user,model_backup_record,eqp_backup.group_eqp_backup_user,1,1,1,0
+access_backup_server_user,backup.server.user,model_backup_server,eqp_backup.group_eqp_backup_user,1,0,0,0
+access_backup_server_admin,backup.server.admin,model_backup_server,eqp_backup.group_eqp_backup_admin,1,1,1,0
+access_backup_ir_cron_admin,backup.ir_cron.admin,base.model_ir_cron,eqp_backup.group_eqp_backup_admin,1,1,1,0
+access_backup_dropbox_token_assignment_wizard,backup.dropbox.token.assignment.wizard,model_backup_dropbox_token_assignment_wizard,eqp_backup.group_eqp_backup_admin,1,1,1,1

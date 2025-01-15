@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.eqp.backup</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="75"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+               <app data-string="eqpBackup" string="DB Backups" name="eqp_backup"
+                     groups="eqp_backup.group_eqp_backup_user">
+                    <block title="DB Automatic Backups" name="eqp_backup_container">
+                        <setting help="Enable Local Backups." id="eqp_backup_local">
+                            <field name="eqp_backup_enable_local"/>
+                        </setting>
+                        <setting help="Enable SFTP Server Backups." id="eqp_backup_sftp">
+                            <field name="eqp_backup_enable_sftp"/>
+                        </setting>
+                        <setting help="Enable Google Drive Backups." id="eqp_backup_drive">
+                            <field name="eqp_backup_enable_drive"/>
+                        </setting>
+                        <setting help="Enable Dropbox Backups." id="eqp_backup_dropbox">
+                            <field name="eqp_backup_enable_dropbox"/>
+                        </setting>
+
+                        <setting id="eqp_backup_enable_success_notification"
+                                 help="Activate Success Email Notification">
+                            <field name="eqp_backup_enable_success_email"/>
+                            <div class="row mt-2" invisible="not eqp_backup_enable_success_email">
+                                <label for="eqp_backup_success_email_address"/>
+                                <field name="eqp_backup_success_email_address" widget="email"/>
+                                <div class="text-muted">By default, the system sends notifications to the
+                                    responsible user of the backup record.
+                                    However, here you can add additional email addresses for notification if needed.
+                                </div>
+                            </div>
+                        </setting>
+                        <setting id="eqp_backup_enable_failure_notification"
+                                 help="Activate Failure Email Notification">
+                            <field name="eqp_backup_enable_failure_email"/>
+                            <div class="row mt-2" invisible="not eqp_backup_enable_failure_email">
+                                <label for="eqp_backup_failure_email_address"/>
+                                <field name="eqp_backup_failure_email_address" widget="email"/>
+                                <div class="text-muted">By default, the system sends notifications to the
+                                    responsible user of the backup record.
+                                    However, here you can add additional email addresses for notification if needed.
+                                </div>
+                            </div>
+                        </setting>
+
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

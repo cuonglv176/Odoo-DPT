@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="backup_dropbox_token_assignment_wizard_view_form" model="ir.ui.view">
+        <field name="name">backup.dropbox.token.assignment.wizard.form</field>
+        <field name="model">backup.dropbox.token.assignment.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Dropbox Token Assignment">
+                <group>
+                    <field name="dropbox_auth_url" widget="url" readonly="True"/>
+                    <div class="oe_edit_only alert alert-info" role="alert" colspan="2">
+                        <p>
+                            <i class='fa fa-info-circle' style='color: blue;'/>
+                            Please use the URL provided above to complete the authorization steps. Once you reach the
+                            Access
+                            Code Generation step, copy the code and paste it into the Access Code field below this
+                            message.
+                            After entering the Access Code, please press the 'Set New Token' button to generate the
+                            token.
+                        </p>
+                    </div>
+                    <field name="dropbox_access_code" required="True"/>
+                </group>
+                <footer>
+                    <button name="set_new_token" string="Set New Token" type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>
