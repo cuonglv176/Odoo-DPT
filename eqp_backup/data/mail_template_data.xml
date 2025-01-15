@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <!-- Success email template-->
+        <record id="email_template_data_automatic_backup_success" model="mail.template">
+            <field name="name">Backup Process: Success</field>
+            <field name="model_id" ref="eqp_backup.model_backup_record"/>
+            <field name="subject">The {{ object.name }} BackUp Process was successful</field>
+            <field name="email_to">{{ object.user_id.email_formatted or ''}}, {{
+                object.company_id.eqp_backup_success_email_address or ''}}
+            </field>
+            <field name="partner_to">{{ object.user_id.partner_id.id }}</field>
+            <field name="description">Default template for notifying the success of running an automatic backup process.
+            </field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" width="590"
+                       style="background-color: white; border-collapse: collapse; margin-left: 20px;">
+                    <tr>
+                        <td valign="top" style="padding: 0px 10px;">
+                            <div>
+                                <h2 style="text-align: center">Good News!</h2>
+                                <div style="color:grey;">The Automatic Backup process
+                                    <strong>
+                                        <t t-out="object.name or ''">BU Record 123</t>
+                                    </strong>
+                                    with the following parameters:
+                                    <br/>
+                                    <ul>
+                                        <li>
+                                            <strong>ID:</strong>
+                                            <t t-out="object.id  or ''">0</t>
+                                        </li>
+                                        <li>
+                                            <strong>Database:</strong>
+                                            <t t-out="object.db_name or ''">Database Name</t>
+                                        </li>
+                                        <li>
+                                            <strong>Frequency:</strong>
+                                            <t t-out="dict(object.fields_get(allfields=['frequency'])['frequency']['selection'])[object.frequency] or ''">
+                                                Weekly
+                                            </t>
+                                        </li>
+                                        <li>
+                                            <strong>Backup Type:</strong>
+                                            <t t-out="object.server_id.backup_type or ''">Local</t>
+                                        </li>
+                                    </ul>
+                                    Was executed successfully...
+                                    <br/>
+                                    <br/>
+                                </div>
+                            </div>
+                            <div style="font-size: 13px; margin: 0px; padding: 0px;">
+                                This is an automatic notification to inform you about the result in the Automatic
+                                Backup process.
+                                <br/>
+                                <br/>
+                                <t t-if="object.user_id">
+                                    <strong t-out="object.user_id.name or ''">Mitchell Admin</strong>, you are receiving
+                                    this notification because you registered as the responsible to this
+                                    <strong>
+                                        <t t-out="object.name or ''">BU Record 123</t>
+                                    </strong>
+                                    Backup Record.
+                                    <br/>
+                                    <br/>
+                                </t>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">{{ object.user_id.partner_id.lang or '' }}</field>
+        </record>
+
+        <!-- Error email template-->
+        <record id="email_template_data_automatic_backup_failed" model="mail.template">
+            <field name="name">Backup Process: Failed</field>
+            <field name="model_id" ref="eqp_backup.model_backup_record"/>
+            <field name="subject">The {{ object.name }} BackUp Process Failed</field>
+            <field name="email_to">{{ object.user_id.email_formatted or '' }}, {{
+                object.company_id.eqp_backup_failure_email_address or '' }}
+            </field>
+            <field name="partner_to">{{ object.user_id.partner_id.id }}</field>
+            <field name="description">Default template for notifying the failure executing an Automatic Backup Process.
+            </field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" width="590"
+                       style="background-color: white; border-collapse: collapse; margin-left: 20px;">
+                    <tr>
+                        <td valign="top" style="padding: 0px 10px;">
+                            <div>
+                                <h2 style="text-align: center">Attention!</h2>
+                                <div style="color:grey;">The Automatic
+                                    Backup process
+                                    <strong>
+                                        <t t-out="object.name or ''">BU Record 123</t>
+                                    </strong>
+                                    with the following parameters:
+                                    <br/>
+                                    <ul>
+                                        <li>
+                                            <strong>ID:</strong>
+                                            <t t-out="object.id  or ''">0</t>
+                                        </li>
+                                        <li>
+                                            <strong>Database:</strong>
+                                            <t t-out="object.db_name or ''">Database Name</t>
+                                        </li>
+                                        <li>
+                                            <strong>Frequency:</strong>
+                                            <t t-out="dict(object.fields_get(allfields=['frequency'])['frequency']['selection'])[object.frequency] or ''">
+                                                Weekly
+                                            </t>
+                                        </li>
+                                        <li>
+                                            <strong>Backup Type:</strong>
+                                            <t t-out="object.server_id.backup_type or ''">Local</t>
+                                        </li>
+                                    </ul>
+                                    has encountered a failure.
+                                    <br/>
+                                    <br/>
+                                    <strong>Error Details:</strong>
+                                    <br/>
+                                    <t t-out="object.last_execution_result or ''"/>
+                                    <br/>
+                                    <br/>
+                                </div>
+                            </div>
+                            <div style="font-size: 13px; margin: 0px; padding: 0px;">
+                                This is an automatic notification to inform you about the failure in the Automatic
+                                Backup process.
+                                <br/>
+                                <br/>
+                                <t t-if="object.user_id">
+                                    <strong t-out="object.user_id.name or ''">Mitchell Admin</strong>, you are receiving
+                                    this notification because you registered as the responsible to this
+                                    <strong>
+                                        <t t-out="object.name or ''">BU Record 123</t>
+                                    </strong>
+                                    Backup Record.
+                                    <br/>
+                                    <br/>
+                                </t>
+                                <hr width="97%"
+                                    style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;"/>
+                                <h3 style="color:#9A6C8E;">
+                                    <strong>Recommended Actions:</strong>
+                                </h3>
+                                <p>
+                                    <strong>Error Details:</strong>
+                                    <br/>
+                                    Please check the system log for more information about the encountered error.
+                                </p>
+                                <p>
+                                    <strong>Confirmation Status:</strong>
+                                    <br/>
+                                    Ensure that both the Backup Record and the associated server are in a confirmed
+                                    status.
+                                </p>
+                                <p>
+                                    <strong>Testing Tools:</strong>
+                                    <br/>
+                                    If the documents are in a confirmed status, use the testing tools on each of the
+                                    documents.
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">{{ object.user_id.partner_id.lang or '' }}</field>
+        </record>
+
+    </data>
+</odoo>

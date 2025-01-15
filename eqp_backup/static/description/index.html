@@ -1,0 +1,200 @@
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h2 class="oe_slogan">EQP Solutions - Automatic Backups</h2>
+        <h3 class="oe_slogan mb-0">Automated Assurance: Backups that Travel to Your Terms.</h3>
+        <br>
+        <img src="logo.gif" style="width: 450px; border-radius: 20px;" class="mx-auto center-block"
+             alt="EQP Solutions Logo">
+        <br>
+        <h4 class="oe_slogan mt-0" style="font-size: 23px">
+            EQP Solutions - <a href="https://www.eqpsolutions.com">www.eqpsolutions.com</a>
+        </h4>
+        <div class="mb-4" style="text-align: center;">
+            <span
+                    class="btn btn-sm mb-2"
+                    style="font-size:14px; font-weight:500; background-color:#714b67; color:#fff; cursor:default;">
+                <i class="fa fa-check mr-1"></i> Oddo On Premise
+            </span>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="text-justify" style="max-width: 84%; margin: 16px 8%;">
+            <h3 class="oe_slogan">Overview</h3>
+            <p style="font-size:16px;">
+                The EQP Automatic Backup module for Odoo makes it incredibly easy to backup your database and filestore.
+                <br>
+                This module allows users to schedule routine backups effortlessly, choosing from various destinations
+                and detailed email notifications for specific backup events.
+                <br><br>
+                This module empowers you to establish a diverse array of servers, offering flexibility in creating
+                distinct
+                instances with varying credentials, providers, routes, and other parameters.
+                Additionally, it supports the creation of multiple records, enabling you to set up various schedules,
+                notification preferences, and other customized configurations.
+            </p>
+            <h3 class="oe_slogan">Key Features:</h3>
+            <ol style="font-size:16px;">
+                <li style="margin-bottom: 10px;"><strong>Automated Backups:</strong> Streamline data protection with automated scheduling for
+                    database and filestore backups, ensuring critical information is safeguarded effortlessly.
+                </li>
+
+                <li style="margin-bottom: 10px;"><strong>Multiple Destinations:</strong> Choose from diverse backup destinations, including local
+                    servers, SFTP, Google Drive, and Dropbox, offering users the flexibility to tailor their backup
+                    strategy.
+                </li>
+
+                <li style="margin-bottom: 10px;">
+                    <strong>Enhanced Security:</strong>
+                    This module prioritizes the security of your Odoo instance.
+                    It ensures that the master password is not exposed in the database, safeguarding your sensitive
+                    information.
+                </li>
+                <li style="margin-bottom: 10px;">
+                    <strong>Seamless Operation:</strong>
+                    The backup process is unaffected even if the `db_list` configuration parameter is deactivated.
+                    This feature empowering you to maintain the integrity of your databases, allowing seamless backup
+                    executions without
+                    compromising security.
+                </li>
+
+                <li style="margin-bottom: 10px;"><strong>Configurable Email Notifications:</strong> Stay informed about backup processes with
+                    detailed email notifications. Users can configure alerts for both successful and failed backup
+                    events independently.
+                </li>
+
+                <li style="margin-bottom: 10px;"><strong>Storage Optimization:</strong> Efficiently manage disk space by defining the quantity of
+                    retained backups, enabling the module to automatically maintain the specified number of the most
+                    recent backups.
+                </li>
+
+                <li style="margin-bottom: 10px;"><strong>Flexible API Key Management:</strong> Enhance customization by allowing users to upload
+                    API keys either through a file upload or direct entry, providing a flexible authentication method.
+                </li>
+
+                <li style="margin-bottom: 10px;"><strong>User-Friendly Interface:</strong> Navigate the backup process seamlessly with an intuitive
+                    and user-friendly interface, making data protection accessible to users of all expertise levels.
+                </li>
+
+                <li style="margin-bottom: 10px;"><strong>Customizable Backup Strategy:</strong> Tailor the backup strategy to individual needs,
+                    ensuring a personalized approach to data protection and management within the Odoo environment.
+                </li>
+            </ol>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="text-justify" style="max-width: 84%; margin: 16px 8%;">
+            <h3 class="oe_slogan">Configuration</h3>
+            <p style="font-size:16px;">The configuration process is very intuitive:<br>(After the installation process)
+                Go to the Configuration section and scroll down until find the “DB Backups” section.
+                There, please configure your policies:</p>
+
+            <ol style="font-size:16px; line-height: 1.5;">
+                <li style="margin-bottom: 10px;"><strong>Activate Local Functionality:</strong> Enable local backups for efficient data protection
+                    and storage on the local server.
+                </li>
+
+                <li style="margin-bottom: 10px;"><strong>Activate SFTP Functionality:</strong> Enable SFTP server backups, allowing for secure and
+                    remote storage of backup data.
+                </li>
+
+                <li style="margin-bottom: 10px;"><strong>Activate Google Drive Functionality:</strong> Enable Google Drive backups for seamless
+                    cloud-based storage and accessibility.
+                </li>
+
+                <li style="margin-bottom: 10px;"><strong>Activate Dropbox Functionality:</strong> Enable Dropbox backups, providing an additional
+                    cloud-based backup destination for enhanced flexibility.
+                </li>
+
+                <li style="margin-bottom: 10px;">
+                    <strong>Activate Success Email Notification:</strong> Enable email notifications for successful
+                    backup processes.
+                    Additional email addresses can be specified for success notifications, allowing
+                    customization beyond the responsible user.
+                    <ul>
+                        <li><strong>Additional Email Addresses for Success Notifications:</strong>
+                            (Default notification goes to the responsible user, and additional emails can be added here
+                            if needed).
+                        </li>
+                    </ul>
+                </li>
+
+                <li style="margin-bottom: 10px;">
+                    <strong>Activate Failure Email Notification:</strong> Enable email notifications for failed backup
+                    processes.
+                    Additional email addresses can be specified for failure notifications, allowing
+                    customization beyond the responsible user.
+                    <ul>
+                        <li><strong>Additional Email Addresses for Failure Notifications:</strong>
+                            (Default notification goes to the responsible user, and additional emails can be added here
+                            if needed).
+                        </li>
+                    </ul>
+                </li>
+                <li style="margin-bottom: 10px;">
+                    <strong>Database Management Master Password:</strong>
+                    To ensure the secure execution of automatic backups, authenticate by entering your Master Password.
+                    This crucial step validates the password, authenticates your credentials, and securely stores the
+                    hashed password for future use.
+                </li>
+            </ol>
+            <br/>
+            <div class="oe_demo oe_screenshot"
+                 style="max-width: 84%; margin: 16px 8%">
+                <img src="settings.png" alt="demo image">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div style="max-width: 84%; margin: 16px 8%;">
+            <h3 class="oe_slogan">Official Documentation</h3>
+            <p class="text-justify" style="font-size:16px;">Unlock the full potential of this module by exploring our
+                official documentation. Visit the official documentation page at the following link
+                (<a  href="https://eqpsolutions.com/blog/odoo-modules-1/automatic-backups-7">https://eqpsolutions.com/blog/odoo-modules-1/automatic-backups-7</a>) for
+                comprehensive insights and guidance, ensuring you harness the maximum advantage of our features.
+            </p>
+            <br>
+            <div style="text-align: center;">
+                <a class="btn btn-primary btn-lg m-1 mt-2"
+                   href="https://eqpsolutions.com/blog/odoo-modules-1/automatic-backups-7"
+                   style="font-size: 1.1rem; position: relative; overflow: hidden; background-color:#14382e; color:#fff;">
+                    <i class="fa fa-file-text mr-1"></i> Official Documentation
+                </a>
+                <br>
+                <a  href="https://eqpsolutions.com/blog/odoo-modules-1/automatic-backups-7">https://eqpsolutions.com/blog/odoo-modules-1/automatic-backups-7</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div style="max-width: 84%; margin: 16px 8%;">
+            <h3 class="oe_slogan"><i class="fa fa-comments mr8"></i> Want More? </h3>
+            <p class="text-justify">
+                If you have additional questions or need further assistance, feel free to reach out to us.
+            </p>
+        </div>
+        <div style="text-align: center;">
+            <a class="btn btn-primary btn-lg m-1 mt-2"
+               href="mailto:info@eqpsolutions.com?subject=Inquiry%20about%20EQP%20eqp_backup"
+               style="font-size: 1.2rem; position: relative; overflow: hidden; background-color:#263237; color:#fff;">
+                <i class="fa fa-envelope mr-1"></i> Write Us
+            </a>
+            <a class="btn btn-primary btn-lg m-1 mt-2"
+               href="https://www.eqpsolutions.com/contactus"
+               style="font-size: 1.2rem; position: relative; overflow: hidden; background-color:#263237; color:#fff;">
+                <i class="fa fa-comments mr-1"></i> Contact Us
+            </a>
+        </div>
+    </div>
+</section>
+
