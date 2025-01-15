@@ -28,7 +28,7 @@ class SaleOrder(models.Model):
         return res
 
     def action_confirm(self):
-        if not self.line_ids:
+        if not self.order_line:
             raise ValidationError(_('Phải có thông tin chi tiết đơn hàng!'))
         res = super(SaleOrder, self).action_confirm()
         for order_id in self:
