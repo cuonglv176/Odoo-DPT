@@ -283,7 +283,9 @@ class DPTSaleChangePriceServiceLine(models.Model):
     qty = fields.Float(string='QTY')
     uom_id = fields.Many2one('uom.uom')
     price = fields.Monetary(currency_field='currency_id', string='Price')
-    currency_id = fields.Many2one('res.currency', string='Currency')
+    price_cny = fields.Monetary(currency_field='currency_cny_id', string='Price CNY')
+    currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
+    currency_cny_id = fields.Many2one('res.currency', string='Currency CNY', default=6)
     amount_total = fields.Float(string="Amount Total")
     status = fields.Char(string='Status')
     department_id = fields.Many2one('hr.department', related='parent_id.department_id')
@@ -302,6 +304,10 @@ class DPTSaleChangePriceServiceLine(models.Model):
         if 'price' in vals:
             sale_service_vals.update({
                 'price': vals.get('price')
+            })
+        if 'price_cny' in vals:
+            sale_service_vals.update({
+                'price_cny': vals.get('price_cny')
             })
         self.sale_service_id.write(sale_service_vals)
         return rec
