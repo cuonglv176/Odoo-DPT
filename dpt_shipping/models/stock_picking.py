@@ -26,12 +26,14 @@ class StockPicking(models.Model):
     is_return_related = fields.Boolean('Is Return', compute="_compute_is_return_related",
                                        search="_search_is_return_related")
 
-    total_left_quantity = fields.Float(compute='_compute_total_left_quantity')
+    total_left_quantity = fields.Float(compute='_compute_total_quantity')
+    total_transfer_quantity = fields.Float(compute='_compute_total_quantity')
 
-    def _compute_total_left_quantity(self):
+    def _compute_total_quantity(self):
         for item in self:
-            item.total_left_quantity = sum(item.package_ids.mapped('transfer_quantity')) - sum(
+            item.total_left_quantity = sum(item.package_ids.mapped('quantity')) - sum(
                 item.package_ids.mapped('transferred_quantity'))
+            item.total_transfer_quantity = sum(item.package_ids.mapped('transfer_quantity'))
 
     @api.depends('return_id')
     def _compute_is_return_related(self):

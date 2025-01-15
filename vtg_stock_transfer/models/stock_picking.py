@@ -69,24 +69,25 @@ class StockPicking(models.Model):
                     'code': package_id.code,
                     'date': package_id.date,
                     'uom_id': package_id.uom_id.id,
-                    'quantity': package_id.quantity,
+                    'quantity': package_id.transfer_quantity,
+                    'transfer_quantity': package_id.transfer_quantity,
                     'length': package_id.length,
                     'width': package_id.width,
                     'height': package_id.height,
                     'size': package_id.size,
-                    'total_weight': math.ceil(round(package_id.weight * package_id.quantity, 2)) * (package_id.quantity - package_id.created_picking_qty) / package_id.quantity,
+                    'total_weight': math.ceil(round(package_id.weight * package_id.transfer_quantity, 2)) * (package_id.transfer_quantity - package_id.created_picking_qty) / package_id.transfer_quantity,
                     'weight': package_id.weight,
                     'volume': package_id.volume,
-                    'total_volume': (math.ceil(round(package_id.volume * package_id.quantity * 100, 4)) / 100) * (package_id.quantity - package_id.created_picking_qty) / package_id.quantity,
+                    'total_volume': (math.ceil(round(package_id.volume * package_id.transfer_quantity * 100, 4)) / 100) * (package_id.transfer_quantity - package_id.created_picking_qty) / package_id.transfer_quantity,
                     'note': package_id.note,
                     'image': package_id.image,
                     'detail_ids': [(0, 0, {
                         'product_id': detail_id.product_id.id,
                         'uom_id': detail_id.uom_id.id,
-                        'quantity': detail_id.quantity
+                        'quantity': detail_id.transfer_quantity
                     }) for detail_id in package_id.detail_ids] if package_id.detail_ids else None,
                     # 'lot_ids': package_id.lot_ids.ids if package_id.lot_ids else None
-                }) for package_id in picking.package_ids],
+                }) for package_id in picking.package_ids if package_id.transfer_quantity],
                 # 'move_ids_without_package': [(0, 0, {
                 #     'location_id': transit_location_id.id,
                 #     'location_dest_id': location_dest_id.id,
@@ -120,5 +121,9 @@ class StockPicking(models.Model):
                 })
                 if move_line_vals:
                     self.env['stock.move.line'].create(move_line_vals)
+
+            # update transferred quantity
+            for package_id in picking.package_ids:
+                package_id.transferred_quantity = package_id.transferred_quantity + package_id.transfer_quantity
             # in_transfer_picking_id._onchange_get_location()
             # in_transfer_picking_id.action_confirm()
