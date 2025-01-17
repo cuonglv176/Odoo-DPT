@@ -19,6 +19,8 @@ class DPTShippingSlip(models.Model):
                                        'picking_id', string='Out Picking', domain=[('state', '!=', 'cancel')])
     export_import_ids = fields.Many2many('dpt.export.import', 'export_import_shipping_rel', 'shipping_slip_id',
                                          'export_import_id', string='Export Import', store=True)
+    export_import_name = fields.Char('Export Import Name', compute='_compute_information',
+                                     search="_search_export_import_name")
     in_picking_ids = fields.Many2many('stock.picking', 'stock_picking_in_shipping_rel', 'shipping_slip_id',
                                       'picking_id', string='In Picking', domain=[('state', '!=', 'cancel')])
     sale_ids = fields.Many2many('sale.order', string='Sale Order', compute="_compute_information")
@@ -71,6 +73,8 @@ class DPTShippingSlip(models.Model):
                 item.out_picking_ids.filtered(lambda p: p.state != 'done')) if not item.send_shipping_id else len(
                 item.in_picking_ids.filtered(lambda p: p.state != 'done'))
 
+            item.export_import_name = ','.join(item.export_import_ids.mapped('display_name'))
+
             # calculate total num packing
             total_num_packing_value = {}
             for package_id in package_ids:
@@ -83,6 +87,9 @@ class DPTShippingSlip(models.Model):
                     total_num_packing_value[f'{package_id.uom_id.packing_code}'] = package_id.quantity
             item.total_num_packing = '.'.join([f"{quantity}{packing_code}" for packing_code, quantity in
                                                total_num_packing_value.items()]) if total_num_packing_value else None
+
+    def _search_export_import_name(self, operator, value):
+        return [('export_import_ids.display_name', operator, value)]
 
     @api.constrains('export_import_ids')
     @api.onchange('export_import_ids')
@@ -167,13 +174,13 @@ class DPTShippingSlip(models.Model):
         location_dest_id = self.env['stock.location'].sudo().search(
             [('usage', '=', 'internal'), ('id', 'not in', self.out_picking_ids.mapped('location_id').ids)], limit=1)
         picking_ids = self.out_picking_ids.filtered(
-                lambda p: p.state == 'done' and p.total_transfer_quantity)
+            lambda p: p.state == 'done' and p.total_transfer_quantity)
         action['context'] = {
             'default_shipping_id': self.id,
             'default_location_dest_id': location_dest_id.id,
             'default_picking_ids': picking_ids.ids,
             'default_sale_ids': picking_ids.mapped('sale_purchase_id').ids,
-            'default_available_sale_ids':  picking_ids.mapped('sale_purchase_id').ids,
+            'default_available_sale_ids': picking_ids.mapped('sale_purchase_id').ids,
             'default_available_picking_ids': picking_ids.ids,
         }
         return action

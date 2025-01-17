@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-22 02:48+0000\n"
-"PO-Revision-Date: 2024-08-22 02:48+0000\n"
+"POT-Creation-Date: 2025-01-17 03:31+0000\n"
+"PO-Revision-Date: 2025-01-17 03:31+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,7 +22,10 @@ msgid "Action Needed"
 msgstr ""
 
 #. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__active
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage__active
+#: model:ir.model.fields,field_description:dpt_shipping.field_stock_picking__active
+#: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_slip_search_views
 msgid "Active"
 msgstr "Hiệu lực"
 
@@ -49,6 +52,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage_log__activity_type_icon
 msgid "Activity Type Icon"
 msgstr ""
+
+#. module: dpt_shipping
+#: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_slip_search_views
+msgid "Archive"
+msgstr "Đã lưu trữ"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__message_attachment_count
@@ -91,6 +99,13 @@ msgstr "Trung Quốc"
 #: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_slip_form_view
 msgid "Confirm Picking"
 msgstr "Xác nhận Phiếu kho"
+
+#. module: dpt_shipping
+#. odoo-python
+#: code:addons/dpt_shipping/models/stock_picking.py:0
+#, python-format
+msgid "Confirm Transfer Quantity"
+msgstr "Xác nhận số lượng chuyển"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__vehicle_country
@@ -156,6 +171,11 @@ msgid "Description"
 msgstr "Mô tả"
 
 #. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_split_wizard__location_dest_id
+msgid "Destination Location"
+msgstr ""
+
+#. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_get_picking_so_wizard__display_name
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_picking_confirm_wizard__display_name
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__display_name
@@ -191,6 +211,16 @@ msgid "Driver address of the vehicle"
 msgstr ""
 
 #. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_stock_picking__employee_cs
+msgid "Employee CS"
+msgstr ""
+
+#. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_stock_picking__employee_sale
+msgid "Employee Sale"
+msgstr ""
+
+#. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__estimate_arrival_warehouse_vn
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_split_wizard__estimate_arrival_warehouse_vn
 #: model:ir.model.fields,field_description:dpt_shipping.field_stock_picking__estimate_arrival_warehouse_vn
@@ -200,6 +230,11 @@ msgstr "Ngày dự kiến về kho VN"
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__export_import_ids
 msgid "Export Import"
+msgstr "Tờ khai"
+
+#. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__export_import_name
+msgid "Export Import Name"
 msgstr "Tờ khai"
 
 #. module: dpt_shipping
@@ -246,6 +281,11 @@ msgstr "Hoàn thành Khai báo"
 #: model:ir.model.fields,field_description:dpt_shipping.field_stock_picking__have_stock_label
 msgid "Have Stock Labels"
 msgstr "Đã có tem"
+
+#. module: dpt_shipping
+#: model:ir.model,name:dpt_shipping.model_helpdesk_ticket
+msgid "Helpdesk Ticket"
+msgstr "Phiếu hỗ trợ"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_get_picking_so_wizard__id
@@ -300,6 +340,11 @@ msgid "In Picking"
 msgstr "Phiếu nhập"
 
 #. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_stock_picking__in_shipping_ids
+msgid "In Shipping"
+msgstr ""
+
+#. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_hr_department__is_chinese_stock_department
 msgid "Is Chinese Stock Department"
 msgstr "Là phòng kho TQ"
@@ -324,6 +369,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage__is_ready_stage
 msgid "Is Ready Stage"
 msgstr "Là trạng thái Sẵn sàng"
+
+#. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_stock_picking__is_return_related
+msgid "Is Return"
+msgstr ""
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_get_picking_so_wizard__write_uid
@@ -374,6 +424,11 @@ msgstr "Phiếu nhập TQ"
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__main_in_picking_ids
 msgid "Main In Picking"
 msgstr "Phiếu nhập TQ"
+
+#. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_stock_picking__main_incoming_shipping_ids
+msgid "Main Incoming Shipping"
+msgstr ""
 
 #. module: dpt_shipping
 #: model:ir.model,name:dpt_shipping.model_mail_message
@@ -434,6 +489,11 @@ msgid "Next Stage"
 msgstr "Trạng thái sau"
 
 #. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__non_finish_transfer
+msgid "Non-Finish Transfer"
+msgstr ""
+
+#. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__note
 msgid "Note"
 msgstr "Ghi chú"
@@ -479,17 +539,32 @@ msgid "Out Picking"
 msgstr "Phiếu xuất"
 
 #. module: dpt_shipping
-#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_get_picking_so_wizard__picking_ids
+#: model:ir.model.fields,field_description:dpt_shipping.field_stock_picking__out_shipping_ids
+msgid "Out Shipping"
+msgstr ""
+
+#. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_stock_picking__shipping_name
+msgid "Phiếu vận chuyển"
+msgstr ""
+
+#. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_picking_confirm_wizard__picking_ids
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_split_wizard__picking_ids
 msgid "Picking"
 msgstr "Phiếu nhập"
 
 #. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_get_picking_so_wizard__picking_ids
 #: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_picking_confirm_wizard_form_view
 #: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_split_wizard_form_view
 msgid "Pickings"
-msgstr "Phiếu kho"
+msgstr "Phiếu nhập"
+
+#. module: dpt_shipping
+#: model:ir.model,name:dpt_shipping.model_purchase_order_line_package
+msgid "Purchase Package"
+msgstr "Kiện hàng"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__rating_ids
@@ -532,6 +607,11 @@ msgid "Sequence"
 msgstr ""
 
 #. module: dpt_shipping
+#: model:ir.ui.menu,name:dpt_shipping.shipment_root_menu
+msgid "Shipment"
+msgstr "Điều vận"
+
+#. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__send_shipping_id
 msgid "Shipping Sent"
 msgstr "Phiếu gửi"
@@ -549,9 +629,22 @@ msgstr "Phiếu vận chuyển"
 #: model:ir.ui.menu,name:dpt_shipping.dpt_shipping_slip_menu
 #: model:ir.ui.menu,name:dpt_shipping.dpt_shipping_slip_sale_order_menu
 #: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_slip_form_view
+#: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_slip_search_views
 #: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_shipping_slip_tree_views
 msgid "Shipping slip"
 msgstr "Phiếu vận chuyển"
+
+#. module: dpt_shipping
+#: model:ir.actions.act_window,name:dpt_shipping.dpt_shipping_slip_chinese_action
+#: model:ir.ui.menu,name:dpt_shipping.dpt_shipping_slip_chinese_menu
+msgid "Shipping slip Chinese"
+msgstr "Phiếu vận chuyển container TQ"
+
+#. module: dpt_shipping
+#: model:ir.actions.act_window,name:dpt_shipping.dpt_shipping_slip_vietnamese_action
+#: model:ir.ui.menu,name:dpt_shipping.dpt_shipping_slip_vietnamese_menu
+msgid "Shipping slip Vietnamese"
+msgstr "Phiếu vận chuyển container VN"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,help:dpt_shipping.field_dpt_shipping_slip__activity_state
@@ -564,9 +657,19 @@ msgid ""
 msgstr ""
 
 #. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_stock_picking__total_left_quantity
+msgid "Total Left Quantity"
+msgstr ""
+
+#. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__total_num_packing
 msgid "Total Num Packing"
 msgstr "Tổng số kiện"
+
+#. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_stock_picking__total_transfer_quantity
+msgid "Total Transfer Quantity"
+msgstr ""
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__total_volume
@@ -594,6 +697,16 @@ msgid "Transfer Code in Chinese"
 msgstr "Mã vận chuyển TQ (đối tác)"
 
 #. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_purchase_order_line_package__transfer_quantity
+msgid "Transfer Quantity"
+msgstr ""
+
+#. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_purchase_order_line_package__transferred_quantity
+msgid "Transferred Quantity"
+msgstr ""
+
+#. module: dpt_shipping
 #: model:ir.model.fields,help:dpt_shipping.field_dpt_shipping_slip__activity_exception_decoration
 #: model:ir.model.fields,help:dpt_shipping.field_dpt_vehicle_stage_log__activity_exception_decoration
 msgid "Type of the exception activity on record."
@@ -618,6 +731,11 @@ msgstr "Cập nhật phiếu nhập"
 #: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_get_picking_so_wizard_form_view
 msgid "Update SO"
 msgstr "Cập nhật"
+
+#. module: dpt_shipping
+#: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_stock_picking_shipping_tree_view
+msgid "Update Transfer Quantity"
+msgstr "Cập nhật số lượng chuyển"
 
 #. module: dpt_shipping
 #: model:ir.actions.act_window,name:dpt_shipping.action_valid_cutlist_stock_picking

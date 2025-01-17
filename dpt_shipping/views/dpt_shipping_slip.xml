@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 
+    <record id="dpt_shipping_slip_search_views" model="ir.ui.view">
+        <field name="name">dpt_shipping_slip_search_views</field>
+        <field name="model">dpt.shipping.slip</field>
+        <field name="arch" type="xml">
+            <search string="Shipping slip">
+                <field name="name"/>
+                <field name="export_import_name"/>
+                <field name="vn_vehicle_stage_id"/>
+                <field name="cn_vehicle_stage_id"/>
+                <separator/>
+                <filter string="Archive" domain="[('active','!=',True)]" name="archive"/>
+                <filter string="Active" domain="[('active','=',True)]" name="active"/>
+            </search>
+        </field>
+    </record>
+
     <record id="dpt_shipping_slip_form_view" model="ir.ui.view">
         <field name="name">dpt_shipping_slip_form_view</field>
         <field name="model">dpt.shipping.slip</field>
@@ -62,7 +78,8 @@
                         <page name="out_picking" string="Out Picking" invisible="send_shipping_id">
                             <field name="out_picking_ids" context="{
                                      'form_view_ref': 'stock.view_picking_form',
-                                     'tree_view_ref': 'dpt_shipping.dpt_stock_picking_shipping_tree_view'}" readonly="1" force_save="1"/>
+                                     'tree_view_ref': 'dpt_shipping.dpt_stock_picking_shipping_tree_view'}" readonly="1"
+                                   force_save="1"/>
                         </page>
                         <page name="in_picking" string="In Picking" invisible="not send_shipping_id">
                             <field name="in_picking_ids" context="{
@@ -99,7 +116,11 @@
         <field name="arch" type="xml">
             <tree string="Shipping slip">
                 <field name="name"/>
+                <field name="export_import_name"/>
+                <field name="vn_vehicle_stage_id"/>
+                <field name="cn_vehicle_stage_id"/>
                 <field name="active" invisible="1"/>
+                <field name="vehicle_country" invisible="1"/>
             </tree>
         </field>
     </record>

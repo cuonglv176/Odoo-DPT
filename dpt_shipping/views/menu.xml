@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="dpt_shipping_slip_chinese_action" model="ir.actions.act_window">
+        <field name="name">Shipping slip Chinese</field>
+        <field name="res_model">dpt.shipping.slip</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('vehicle_country','=', 'chinese')]</field>
+    </record>
+
+    <record id="dpt_shipping_slip_vietnamese_action" model="ir.actions.act_window">
+        <field name="name">Shipping slip Vietnamese</field>
+        <field name="res_model">dpt.shipping.slip</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('vehicle_country','=', 'vietnamese')]</field>
+    </record>
+
+    <menuitem id="shipment_root_menu" name="Shipment"
+              web_icon="dpt_shipping,static/description/icon.png">
+        <menuitem id="dpt_shipping_slip_chinese_menu" name="Shipping slip Chinese" sequence="10"
+                  action="dpt_shipping_slip_chinese_action"/>
+        <menuitem id="dpt_shipping_slip_vietnamese_menu" name="Shipping slip Vietnamese" sequence="20"
+                  action="dpt_shipping_slip_vietnamese_action"/>
+    </menuitem>
+
+</odoo>
