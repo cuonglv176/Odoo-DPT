@@ -39,6 +39,30 @@ def _create_invoices(self, grouped=False, final=False, date=None):
     invoice_vals_list = []
     invoice_item_sequence = 0  # Incremental sequencing to keep the lines order on the invoice.
     for order in self:
+        import_ids = self.env['dpt.export.import'].search(
+            [('sale_ids', 'in', order.ids), ('state', 'not in', ('declared', 'cancelled'))])
+        if import_ids:
+            import_name = ','.join(import_ids.mapped('name'))
+            raise UserError(f"Tờ khai: {import_name} chưa được thông quan, vui lòng kiểm tra lại!!!")
+        if not import_ids:
+            raise UserError(f"Không có tờ khai: vui lòng kiểm tra lại!!!")
+
+        picking_ids = self.env['stock.picking'].search(
+            ['|', ('sale_purchase_id', '=', self.id), ('sale_id', '=', order.id),
+             ('state', 'not in', ('confirmed', 'cancel'))])
+        if picking_ids:
+            picking_name = ','.join(picking_ids.mapped('name'))
+            raise UserError(f"Vận chuyển : {picking_name} chưa được hoàn thành, vui lòng kiểm tra lại!!!")
+
+        picking_lot_name_ids = self.env['stock.picking'].search(
+            ['|', ('sale_purchase_id', '=', order.id), ('sale_id', '=', order.id),
+             ('state', '!=', 'cancel'), ('picking_lot_name', '=', False)])
+        if picking_lot_name_ids:
+            picking_lot_name = ','.join(picking_lot_name_ids.mapped('name'))
+            raise UserError(f"Vận chuyển : {picking_lot_name} chưa được cập nhật mã lô, vui lòng kiểm tra lại!!!")
+        if not picking_lot_name_ids:
+            raise UserError(f"Không có Vận chuyển: vui lòng kiểm tra lại!!!")
+
         order = order.with_company(order.company_id).with_context(lang=order.partner_invoice_id.lang)
 
         invoice_vals = order._prepare_invoice()
@@ -260,30 +284,6 @@ class SaleOrderInherit(models.Model):
     #     action = self.invoice_ids.action_register_payment()
     #     return action
     def create_invoice(self):
-        import_ids = self.env['dpt.export.import'].search(
-            [('sale_ids', 'in', self.ids), ('state', 'not in', ('declared', 'cancelled'))])
-        if import_ids:
-            import_name = ','.join(import_ids.mapped('name'))
-            raise UserError(f"Tờ khai: {import_name} chưa được thông quan, vui lòng kiểm tra lại!!!")
-        if not import_ids:
-            raise UserError(f"Không có tờ khai: vui lòng kiểm tra lại!!!")
-
-        picking_ids = self.env['stock.picking'].search(
-            ['|', ('sale_purchase_id', '=', self.id), ('sale_id', '=', self.id),
-             ('state', 'not in', ('confirmed', 'cancel'))])
-        if picking_ids:
-            picking_name = ','.join(picking_ids.mapped('name'))
-            raise UserError(f"Vận chuyển : {picking_name} chưa được hoàn thành, vui lòng kiểm tra lại!!!")
-
-        picking_lot_name_ids = self.env['stock.picking'].search(
-            ['|', ('sale_purchase_id', '=', self.id), ('sale_id', '=', self.id),
-             ('state', '!=', 'cancel'), ('picking_lot_name', '=', False)])
-        if picking_lot_name_ids:
-            picking_lot_name = ','.join(picking_lot_name_ids.mapped('name'))
-            raise UserError(f"Vận chuyển : {picking_lot_name} chưa được cập nhật mã lô, vui lòng kiểm tra lại!!!")
-        if not picking_lot_name_ids:
-            raise UserError(f"Không có Vận chuyển: vui lòng kiểm tra lại!!!")
-
         res = super(SaleOrder, self).create_invoice()
         deposit = 0
         for deposit_id in self.deposit_ids:
