@@ -265,6 +265,8 @@ class SaleOrderInherit(models.Model):
         if import_ids:
             import_name = ','.join(import_ids.mapped('name'))
             raise UserError(f"Tờ khai: {import_name} chưa được thông quan, vui lòng kiểm tra lại!!!")
+        if not import_ids:
+            raise UserError(f"Không có tờ khai: vui lòng kiểm tra lại!!!")
 
         picking_ids = self.env['stock.picking'].search(
             ['|', ('sale_purchase_id', '=', self.id), ('sale_id', '=', self.id),
@@ -275,10 +277,12 @@ class SaleOrderInherit(models.Model):
 
         picking_lot_name_ids = self.env['stock.picking'].search(
             ['|', ('sale_purchase_id', '=', self.id), ('sale_id', '=', self.id),
-             ('state', '=', 'confirmed'), ('picking_lot_name', '=', False)])
+             ('state', '!=', 'cancel'), ('picking_lot_name', '=', False)])
         if picking_lot_name_ids:
             picking_lot_name = ','.join(picking_lot_name_ids.mapped('name'))
             raise UserError(f"Vận chuyển : {picking_lot_name} chưa được cập nhật mã lô, vui lòng kiểm tra lại!!!")
+        if not picking_lot_name_ids:
+            raise UserError(f"Không có Vận chuyển: vui lòng kiểm tra lại!!!")
 
         res = super(SaleOrder, self).create_invoice()
         deposit = 0
