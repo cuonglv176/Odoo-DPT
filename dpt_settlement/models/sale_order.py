@@ -44,7 +44,9 @@ def _create_invoices(self, grouped=False, final=False, date=None):
         if import_ids:
             import_name = ','.join(import_ids.mapped('name'))
             raise UserError(f"Tờ khai: {import_name} chưa được thông quan, vui lòng kiểm tra lại!!!")
-        if not import_ids:
+        import_not_ids = self.env['dpt.export.import'].search(
+            [('sale_ids', 'in', order.ids)])
+        if not import_not_ids:
             raise UserError(f"Không có tờ khai: vui lòng kiểm tra lại!!!")
 
         picking_ids = self.env['stock.picking'].search(
@@ -60,7 +62,9 @@ def _create_invoices(self, grouped=False, final=False, date=None):
         if picking_lot_name_ids:
             picking_lot_name = ','.join(picking_lot_name_ids.mapped('name'))
             raise UserError(f"Vận chuyển : {picking_lot_name} chưa được cập nhật mã lô, vui lòng kiểm tra lại!!!")
-        if not picking_lot_name_ids:
+        picking_not_ids = self.env['stock.picking'].search(
+            ['|', ('sale_purchase_id', '=', self.id), ('sale_id', '=', order.id)])
+        if not picking_not_ids:
             raise UserError(f"Không có Vận chuyển: vui lòng kiểm tra lại!!!")
 
         order = order.with_company(order.company_id).with_context(lang=order.partner_invoice_id.lang)
