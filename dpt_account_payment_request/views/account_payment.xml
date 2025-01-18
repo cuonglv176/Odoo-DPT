@@ -269,6 +269,7 @@
                                     <field name="currency_cny_id" optional="hide"/>
                                     <field name="product_id"/>
                                     <field name="uom_id"/>
+                                    <field name="uom_ids" column_invisible="1"/>
                                     <field name="qty" force_save="1"/>
                                     <field name="price" readonly="0" force_save="1" context="{'check_price': True}"/>
                                     <field name="price_cny" readonly="0" force_save="1"/>
