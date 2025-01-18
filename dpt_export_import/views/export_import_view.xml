@@ -18,10 +18,10 @@
                     <button string="Duyệt" type="object" name="action_confirm" class="btn-primary"
                             invisible="state != 'wait_confirm'"/>
                     <button string="Từ chối" type="object" name="action_cancelled" class="btn-primary"
-                            invisible="state == 'wait_confirm'"/>
+                            invisible="state != 'wait_confirm'"/>
 
                     <button string="Chính Thức" type="object" name="action_declared" class="btn-primary"
-                            invisible="state != 'confirm'"/>
+                            invisible="state not in ('confirm','edit')"/>
 
                     <button string="Giải phóng" type="object" name="action_released" class="btn-primary"
                             invisible="state != 'declared'"/>
@@ -48,7 +48,7 @@
                     <!--                            invisible="state == 'post_control'"/>-->
 
                     <button string="Quay về nháp" type="object" name="action_back_to_draft" class="btn-primary"
-                            invisible="state not in ('cancelled','confirm')"/>
+                            invisible="state != 'cancelled'"/>
                 </header>
                 <sheet>
                     <div name="button_box" class="oe_button_box">

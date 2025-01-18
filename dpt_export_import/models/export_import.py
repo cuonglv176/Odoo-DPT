@@ -40,7 +40,7 @@ class DptExportImport(models.Model):
     dpt_tax_ecus5 = fields.Char(string='VAT ECUS5', tracking=True)
     description = fields.Text(string='Description')
     state = fields.Selection([
-        ('draft', 'Nháp'),
+        ('draft', 'Nháp nội bộ'),
         ('draft_declaration', 'Nháp hải quan'),
         ('wait_confirm', 'Chờ duyệt nội bộ'),
         ('confirm', 'Đồng ý duyệt nội bộ'),
