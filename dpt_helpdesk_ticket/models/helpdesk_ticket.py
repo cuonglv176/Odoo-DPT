@@ -3,7 +3,6 @@ from odoo.osv.expression import AND, OR
 
 
 class HelpdeskTicket(models.Model):
-
     _inherit = 'helpdesk.ticket'
 
     name = fields.Char(default='PDV')
@@ -22,46 +21,16 @@ class HelpdeskTicket(models.Model):
     fields_ids = fields.One2many('dpt.sale.order.fields', 'ticket_id', string='Fields', related='sale_id.fields_ids')
 
     @api.model
-    def _search(
-            self,
-            domain,
-            offset=0,
-            limit=None,
-            order=None,
-            count=False,
-            access_rights_uid=None,
-    ):
-        """
-        Override _search method to filter out ABS registration
-        """
-        domain = self.process_domain(domain)
-        res = super(HelpdeskTicket, self)._search(
-            domain,
-            offset=offset,
-            limit=limit,
-            order=order,
-            count=count,
-            access_rights_uid=access_rights_uid,
-        )
-        return res
-
-
-    def process_domain(self, domain):
-        """
-        Process domain to filter out ABS registration
-        """
-        # Skip process domain if system user or skip_process_domain context is set
-        if not (self.env.is_system() or self.env.context.get("skip_process_domain")) or self.env.context.get(
-                "force_process_domain"):
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
+        if not (self.env.is_system()):
             if self.user_has_groups('sales_team.group_sale_salesman'):
                 view_scope_domain = [
                     "|",
                     ("sale_id.employee_sale", "=", self.env.user.employee_id.id),
                     ("sale_id.employee_cs", "=", self.env.user.employee_id.id)
                 ]
-
-            domain = AND([domain, view_scope_domain])
-        return domain
+                domain = AND([domain, view_scope_domain])
+        return self._search(domain, limit=limit, order=order)
 
     def action_view_sale_order(self):
         if not self.sale_id:
@@ -164,7 +133,6 @@ class HelpdeskTicket(models.Model):
             'views': [[view_id, 'kanban'], [view_tree_id, 'tree'], [view_form_id, 'form']],
         }
 
-
     def action_view_contract(self):
         if not self.purchase_id:
             return {
@@ -200,7 +168,6 @@ class HelpdeskTicket(models.Model):
             'view_id': self.env.ref('dpt_contract_management.view_service_form').id,
         }
 
-
     @api.onchange('sale_id')
     def _onchange_sale_id(self):
         if not self.sale_id:
@@ -218,8 +185,7 @@ class HelpdeskTicket(models.Model):
                 'amount_total': line.amount_total,
                 'department_id': line.department_id.id,
             })
-        for line in sale_id.sale_service_ids]
-
+            for line in sale_id.sale_service_ids]
 
     @api.depends(
         'purchase_id',
@@ -237,7 +203,6 @@ class HelpdeskTicket(models.Model):
                 rec.pack_name = False
                 continue
             rec.pack_name = ','.join(picking_id.mapped('packing_lot_name'))
-
 
     @api.depends(
         'service_lines_ids',
@@ -354,6 +319,3 @@ class DPTSaleChangePriceServiceLine(models.Model):
             })
         self.sale_service_id.write(sale_service_vals)
         return rec
-
-
-
