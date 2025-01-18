@@ -1,4 +1,5 @@
 from odoo import models, fields, api, _
+from odoo.osv.expression import AND, OR
 
 
 class HelpdeskTicket(models.Model):
@@ -19,6 +20,48 @@ class HelpdeskTicket(models.Model):
     sale_id = fields.Many2one('sale.order', string='Đơn bán hàng')
     user_sale_id = fields.Many2one('res.users', string='Nhân viên kinh doanh', related='sale_id.user_id', store=True)
     fields_ids = fields.One2many('dpt.sale.order.fields', 'ticket_id', string='Fields', related='sale_id.fields_ids')
+
+    @api.model
+    def _search(
+            self,
+            domain,
+            offset=0,
+            limit=None,
+            order=None,
+            count=False,
+            access_rights_uid=None,
+    ):
+        """
+        Override _search method to filter out ABS registration
+        """
+        domain = self.process_domain(domain)
+        res = super(HelpdeskTicket, self)._search(
+            domain,
+            offset=offset,
+            limit=limit,
+            order=order,
+            count=count,
+            access_rights_uid=access_rights_uid,
+        )
+        return res
+
+
+    def process_domain(self, domain):
+        """
+        Process domain to filter out ABS registration
+        """
+        # Skip process domain if system user or skip_process_domain context is set
+        if not (self.env.is_system() or self.env.context.get("skip_process_domain")) or self.env.context.get(
+                "force_process_domain"):
+            if self.user_has_groups('sales_team.group_sale_salesman'):
+                view_scope_domain = [
+                    "|",
+                    ("sale_id.employee_sale", "=", self.env.user.employee_id.id),
+                    ("sale_id.employee_cs", "=", self.env.user.employee_id.id)
+                ]
+
+            domain = AND([domain, view_scope_domain])
+        return domain
 
     def action_view_sale_order(self):
         if not self.sale_id:
