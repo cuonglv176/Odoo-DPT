@@ -157,12 +157,13 @@ class SaleOrder(models.Model):
             for required_fields_id in sale_service_id.service_id.required_fields_ids:
                 if required_fields_id.id in list_exist:
                     for field_data in self.env['sale.order'].browse(self.id.origin).fields_ids:
-                        if field_data.fields_id.id == required_fields_id.id:
+                        if field_data.fields_id.id == required_fields_id.id and field_data.uom_service_id == sale_service_id.uom_id.id:
                             val.append({
                                 'sequence': 1 if field_data.type == 'required' else 0,
                                 'fields_id': required_fields_id.id,
                                 'sale_id': self.id,
                                 'value_char': field_data.value_char,
+                                'uom_service_id': sale_service_id.uom_id.id,
                                 'value_integer': field_data.value_integer,
                                 'value_date': field_data.value_date,
                                 'selection_value_id': field_data.selection_value_id.id,
@@ -170,11 +171,12 @@ class SaleOrder(models.Model):
                             })
                 elif required_fields_id.id in list_onchange:
                     for field_data in self.fields_ids:
-                        if field_data.fields_id.id == required_fields_id.id:
+                        if field_data.fields_id.id == required_fields_id.id and field_data.uom_service_id == sale_service_id.uom_id.id:
                             val.append({
                                 'sequence': 1 if field_data.type == 'required' else 0,
                                 'fields_id': required_fields_id.id,
                                 'sale_id': self.id,
+                                'uom_service_id': sale_service_id.uom_id.id,
                                 'value_char': field_data.value_char,
                                 'value_integer': field_data.value_integer,
                                 'value_date': field_data.value_date,
