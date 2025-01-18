@@ -152,8 +152,8 @@ class SaleOrder(models.Model):
         list_onchange = [item.fields_id.id for item in self.fields_ids]
         list_sale_service_id = []
         for sale_service_id in self.sale_service_ids:
-            if sale_service_id.service_id.id in list_sale_service_id:
-                continue
+            # if sale_service_id.service_id.id in list_sale_service_id:
+            #     continue
             for required_fields_id in sale_service_id.service_id.required_fields_ids:
                 if required_fields_id.id in list_exist:
                     for field_data in self.env['sale.order'].browse(self.id.origin).fields_ids:
