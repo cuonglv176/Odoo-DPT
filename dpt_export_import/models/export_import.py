@@ -186,6 +186,11 @@ class DptExportImport(models.Model):
             picking_lot_name = ','.join(picking_lot_name_ids.mapped('name'))
             raise UserError(f"Vận chuyển : {picking_lot_name} chưa được cập nhật mã lô, vui lòng kiểm tra lại!!!")
 
+        not_picking_lot_name_ids = self.env['stock.picking'].search(
+            ['|', ('sale_purchase_id', 'in', self.ids), ('sale_id', 'in', self.ids)])
+        if not not_picking_lot_name_ids:
+            raise UserError(f"Không có phiếu vận chuyển, vui lòng kiểm tra lại!!!")
+
     @api.depends('sale_ids', 'sale_ids.volume')
     def _compute_total_cubic_meters(self):
         for rec in self:
