@@ -249,7 +249,7 @@
                                     <field name="currency_id" column_invisible="1" force_save="1"/>
                                     <field name="currency_cny_id" optional="hide"/>
                                     <field name="service_id"/>
-                                    <field name="uom_ids" column_invisible="1" />
+                                    <field name="uom_ids" column_invisible="1"/>
                                     <field name="uom_id"/>
                                     <field name="qty" force_save="1"/>
                                     <field name="compute_uom_id" force_save="1"/>
