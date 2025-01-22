@@ -45,7 +45,7 @@ class DptExportImportLine(models.Model):
     dpt_amount_tax = fields.Monetary(string='Amount Tax', currency_field='currency_id',
                                      compute="_compute_dpt_amount_tax")
     dpt_exchange_rate = fields.Float(string='Exchange rate', tracking=True, currency_field='currency_id',
-                                     digits=(12, 4), related='currency_id.rate', store=True)
+                                     digits=(12, 4), compute="compute_dpt_exchange_rate", store=True)
     hs_code_id = fields.Many2one('dpt.export.import.acfta', string='HS Code', tracking=True)
     dpt_code_hs = fields.Char(string='H')
     dpt_sl1 = fields.Float(string='SL1', tracking=True, digits=(12, 4))
@@ -55,6 +55,7 @@ class DptExportImportLine(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
     currency_usd_id = fields.Many2one('res.currency', string='Currency USD', default=1)
     currency_cny_id = fields.Many2one('res.currency', string='Currency CNY', default=6)
+    currency_krw_id = fields.Many2one('res.currency', string='Currency KRW', default=32)
     dpt_price_usd = fields.Float(string='Giá khai (USD)', tracking=True, currency_field='currency_usd_id',
                                  digits=(12, 4))
     dpt_total_usd = fields.Monetary(string='Total (USD)', currency_field='currency_usd_id',
@@ -101,7 +102,21 @@ class DptExportImportLine(models.Model):
     picking_count = fields.Integer('Picking Count', compute="_compute_picking_count")
     is_history = fields.Boolean(string='History', default=False, tracking=True)
     active = fields.Boolean('Active', default=True)
-    
+
+
+    @api.depends('declaration_type')
+    def compute_dpt_exchange_rate(self):
+        for rec in self:
+            if rec.declaration_type == 'usd':
+                rec.dpt_exchange_rate = rec.currency_usd_id.rate
+            elif rec.declaration_type == 'cny':
+                rec.dpt_exchange_rate = rec.currency_cny_id.rate
+            elif rec.declaration_type == 'krw':
+                rec.dpt_exchange_rate = rec.currency_krw_id.rate
+            else:
+                rec.dpt_exchange_rate = 0
+
+
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=10):
         args = args or []
