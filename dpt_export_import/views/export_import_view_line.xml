@@ -69,6 +69,7 @@
                             <field name="currency_id" invisible="1"/>
                             <field name="currency_usd_id" invisible="1"/>
                             <field name="currency_cny_id" invisible="1"/>
+                            <field name="currency_krw_id" invisible="1"/>
                             <field name="available_package_ids" invisible="1"/>
                             <field name="package_ids" widget="many2many_tags"/>
                             <field name="dpt_n_w_kg"/>
