@@ -15,7 +15,6 @@
     'data': [
         'security/ir.model.access.csv',
         'security/security_rules.xml',
-        'views/currency_dashboard_view.xml',
         'views/currency_rate_view.xml',
         'views/currency_menu.xml',
     ],
