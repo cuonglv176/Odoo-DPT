@@ -45,7 +45,7 @@ class DptExportImportLine(models.Model):
     dpt_amount_tax = fields.Monetary(string='Amount Tax', currency_field='currency_id',
                                      compute="_compute_dpt_amount_tax")
     dpt_exchange_rate = fields.Float(string='Exchange rate', tracking=True, currency_field='currency_id',
-                                     digits=(12, 4))
+                                     digits=(12, 4), related='currency_id.rate', store=True)
     hs_code_id = fields.Many2one('dpt.export.import.acfta', string='HS Code', tracking=True)
     dpt_code_hs = fields.Char(string='H')
     dpt_sl1 = fields.Float(string='SL1', tracking=True, digits=(12, 4))
