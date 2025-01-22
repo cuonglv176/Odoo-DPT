@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_currency_dashboard_form" model="ir.ui.view">
+        <field name="name">currency.dashboard.form</field>
+        <field name="model">currency.dashboard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_currencies" type="object"
+                                class="oe_stat_button" icon="fa-money">
+                            <field name="total_currencies" widget="statinfo" string="Total Currencies"/>
+                        </button>
+                        <button name="action_view_active_currencies" type="object"
+                                class="oe_stat_button" icon="fa-check">
+                            <field name="active_currencies" widget="statinfo" string="Active Currencies"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="last_update"/>
+                        </group>
+                        <group>
+                            <field name="rate_changes_today"/>
+                            <field name="significant_changes"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Recent Changes">
+                            <field name="recent_changes" readonly="1">
+                                <tree>
+                                    <field name="currency_id"/>
+                                    <field name="rate"/>
+                                    <field name="create_date"/>
+                                    <field name="create_uid"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_currency_dashboard" model="ir.actions.act_window">
+        <field name="name">Currency Dashboard</field>
+        <field name="res_model">currency.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="target">main</field>
+    </record>
+</odoo>
