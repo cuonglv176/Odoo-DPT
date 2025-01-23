@@ -171,11 +171,11 @@ class DptExportImportLine(models.Model):
             item.available_package_ids = picking_ids.package_ids
 
     def action_confirmed(self):
-        self.action_check_lot_name()
+        # self.action_check_lot_name()
         self.state = 'confirmed'
 
     def action_wait_confirm(self):
-        self.action_check_lot_name()
+        # self.action_check_lot_name()
         self.state = 'wait_confirm'
 
     @api.onchange('product_history_id')
@@ -367,7 +367,7 @@ class DptExportImportLine(models.Model):
         self.product_id.dpt_sl2 = self.dpt_sl2
 
     def action_update_eligible(self):
-        self.action_check_lot_name()
+        # self.action_check_lot_name()
         self.state = 'eligible'
 
     @api.onchange('sale_line_id')
