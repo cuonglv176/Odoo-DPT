@@ -12,8 +12,10 @@
                     <field name="active" invisible="1"/>
                     <button string="Gửi yêu cầu" type="object" name="action_wait_confirm" class="btn-primary"
                             invisible="state != 'draft'"/>
+                    <button string="Gửi phản hồi" type="object" name="action_confirmed" class="btn-primary"
+                            invisible="state != 'wait_confirm'"/>
                     <button string="Eligible" type="object" name="action_update_eligible" class="btn-primary"
-                            invisible="state != 'wait_confirm'" groups="dpt_security.group_dpt_document_officer,dpt_security.group_dpt_head_of_document"/>
+                            invisible="state != 'confirmed'" groups="dpt_security.group_dpt_document_officer,dpt_security.group_dpt_head_of_document"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">

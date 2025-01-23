@@ -76,7 +76,8 @@ class DptExportImportLine(models.Model):
     state = fields.Selection([
         ('draft', 'Nháp'),
         # ('draft_declaration', 'Tờ khai nháp'),
-        ('wait_confirm', 'Chờ xác nhận'),
+        ('wait_confirm', 'Chờ chứng từ phản hồi'),
+        ('confirmed', 'Chứng từ phản hồi'),
         ('eligible', 'Đủ điều kiện khai báo'),
         # ('declared', 'Tờ khai thông quan'),
         # ('released', 'Giải phóng'),
@@ -163,6 +164,9 @@ class DptExportImportLine(models.Model):
                 [('sale_purchase_id', '=', item.sale_id.id), ('is_main_incoming', '=', True)])
             item.available_picking_ids = picking_ids
             item.available_package_ids = picking_ids.package_ids
+
+    def action_confirmed(self):
+        self.state = 'confirmed'
 
     def action_wait_confirm(self):
         self.state = 'wait_confirm'
