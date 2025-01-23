@@ -3,6 +3,8 @@
 from ast import literal_eval
 from odoo import fields, models, _, api
 import logging
+from odoo.exceptions import AccessError, UserError, ValidationError
+
 _logger = logging.getLogger(__name__)
 
 class DptExportImportLine(models.Model):
@@ -104,6 +106,9 @@ class DptExportImportLine(models.Model):
     is_history = fields.Boolean(string='History', default=False, tracking=True)
     active = fields.Boolean('Active', default=True)
 
+    def action_check_lot_name(self):
+        if not self.stock_picking_ids:
+            raise UserError(f"Chưa được cập nhật mã lô, vui lòng kiểm tra lại!!!")
 
     @api.depends('declaration_type')
     def compute_dpt_exchange_rate(self):
@@ -166,9 +171,11 @@ class DptExportImportLine(models.Model):
             item.available_package_ids = picking_ids.package_ids
 
     def action_confirmed(self):
+        self.action_check_lot_name()
         self.state = 'confirmed'
 
     def action_wait_confirm(self):
+        self.action_check_lot_name()
         self.state = 'wait_confirm'
 
     @api.onchange('product_history_id')
@@ -360,6 +367,7 @@ class DptExportImportLine(models.Model):
         self.product_id.dpt_sl2 = self.dpt_sl2
 
     def action_update_eligible(self):
+        self.action_check_lot_name()
         self.state = 'eligible'
 
     @api.onchange('sale_line_id')
