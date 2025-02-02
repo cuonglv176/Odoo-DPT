@@ -50,14 +50,13 @@ def _create_invoices(self, grouped=False, final=False, date=None):
             raise UserError(f"Không có tờ khai: vui lòng kiểm tra lại!!!")
 
         picking_ids = self.env['stock.picking'].search(
-            ['|', ('sale_purchase_id', '=', self.id), ('sale_id', '=', order.id),
-             ('state', 'not in', ('confirmed', 'cancel'))])
+            [('sale_purchase_id', '=', self.id),]('state', 'not in', ('confirmed', 'cancel'))])
         if picking_ids:
             picking_name = ','.join(picking_ids.mapped('name'))
             raise UserError(f"Vận chuyển : {picking_name} chưa được hoàn thành, vui lòng kiểm tra lại!!!")
 
         picking_lot_name_ids = self.env['stock.picking'].search(
-            ['|', ('sale_purchase_id', '=', order.id), ('sale_id', '=', order.id),
+            [('sale_purchase_id', '=', order.id),
              ('state', '!=', 'cancel'), ('picking_lot_name', '=', False)])
         if picking_lot_name_ids:
             picking_lot_name = ','.join(picking_lot_name_ids.mapped('name'))
