@@ -34,7 +34,7 @@
                             invisible="state != 'declared'"/>
 
                     <button string="Thông Quan" type="object" name="action_cleared" class="btn-primary"
-                            invisible="state not in ('declared','edit_ama')"/>
+                            invisible="state not in ('declared','edit_ama','released','back_for_stock')"/>
 
                     <button string="Sửa AMA" type="object" name="action_edit_ama" class="btn-primary"
                             invisible="state != 'cleared'"/>
