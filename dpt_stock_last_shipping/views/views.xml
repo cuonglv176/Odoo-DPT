@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="dpt_stock_last_shipping.list">
+      <field name="name">dpt_stock_last_shipping list</field>
+      <field name="model">dpt_stock_last_shipping.dpt_stock_last_shipping</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="dpt_stock_last_shipping.action_window">
+      <field name="name">dpt_stock_last_shipping window</field>
+      <field name="res_model">dpt_stock_last_shipping.dpt_stock_last_shipping</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="dpt_stock_last_shipping.action_server">
+      <field name="name">dpt_stock_last_shipping server</field>
+      <field name="model_id" ref="model_dpt_stock_last_shipping_dpt_stock_last_shipping"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="dpt_stock_last_shipping" id="dpt_stock_last_shipping.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="dpt_stock_last_shipping.menu_1" parent="dpt_stock_last_shipping.menu_root"/>
+    <menuitem name="Menu 2" id="dpt_stock_last_shipping.menu_2" parent="dpt_stock_last_shipping.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="dpt_stock_last_shipping.menu_1_list" parent="dpt_stock_last_shipping.menu_1"
+              action="dpt_stock_last_shipping.action_window"/>
+    <menuitem name="Server to list" id="dpt_stock_last_shipping" parent="dpt_stock_last_shipping.menu_2"
+              action="dpt_stock_last_shipping.action_server"/>
+-->
+  </data>
+</odoo>
