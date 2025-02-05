@@ -738,11 +738,6 @@ msgid "Update Transfer Quantity"
 msgstr "Cập nhật số lượng chuyển"
 
 #. module: dpt_shipping
-#: model:ir.actions.act_window,name:dpt_shipping.action_valid_cutlist_stock_picking
-msgid "Valid Cutlist"
-msgstr "Cutlist"
-
-#. module: dpt_shipping
 #: model:ir.model,name:dpt_shipping.model_fleet_vehicle
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__vehicle_id
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage_log__vehicle_id
