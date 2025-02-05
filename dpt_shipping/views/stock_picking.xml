@@ -68,7 +68,7 @@
     </record>
 
     <record id="action_valid_cutlist_stock_picking" model="ir.actions.act_window">
-        <field name="name">Valid Cutlist</field>
+        <field name="name">Bảng chốt xếp xe</field>
         <field name="res_model">stock.picking</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="stock.view_picking_internal_search"/>
@@ -80,11 +80,11 @@
             ]"/>
     </record>
 
-    <menuitem id="valid_cutlist_stock_picking_menu" name="Valid Cutlist"
+    <menuitem id="valid_cutlist_stock_picking_menu" name="Bảng chốt xếp xe"
               parent="dpt_export_import.dpt_export_import_menu"
               action="action_valid_cutlist_stock_picking" sequence="12"/>
 
-    <menuitem id="valid_cutlist_stock_picking_in_stock_menu" name="Valid Cutlist" parent="stock.menu_stock_root"
+    <menuitem id="valid_cutlist_stock_picking_in_stock_menu" name="Bảng chốt xếp xe" parent="stock.menu_stock_root"
               action="action_valid_cutlist_stock_picking" sequence="12"/>
 
 </odoo>
