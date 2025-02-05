@@ -26,8 +26,8 @@ class DPTShippingSlip(models.Model):
     sale_ids = fields.Many2many('sale.order', string='Sale Order', compute="_compute_information")
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle')
     vehicle_country = fields.Selection(related='vehicle_id.country')
-    vn_vehicle_stage_id = fields.Many2one('dpt.vehicle.stage', 'Vehicle Stage', domain=[('country', '=', 'vietnamese')])
-    cn_vehicle_stage_id = fields.Many2one('dpt.vehicle.stage', 'Vehicle Stage', domain=[('country', '=', 'chinese')])
+    vn_vehicle_stage_id = fields.Many2one('dpt.vehicle.stage', 'Vietnamese Vehicle Stage', domain=[('country', '=', 'vietnamese')])
+    cn_vehicle_stage_id = fields.Many2one('dpt.vehicle.stage', 'Chinese Vehicle Stage', domain=[('country', '=', 'chinese')])
     vehicle_stage_log_ids = fields.One2many('dpt.vehicle.stage.log', 'shipping_slip_id', 'Vehicle Stage Log')
     send_shipping_id = fields.Many2one('dpt.shipping.slip', 'Shipping Sent')
     vehicle_driver_id = fields.Many2one(related="vehicle_id.driver_id")
@@ -73,7 +73,7 @@ class DPTShippingSlip(models.Model):
                 item.out_picking_ids.filtered(lambda p: p.state != 'done')) if not item.send_shipping_id else len(
                 item.in_picking_ids.filtered(lambda p: p.state != 'done'))
 
-            item.export_import_name = ','.join(item.export_import_ids.mapped('display_name'))
+            item.export_import_name = ','.join(item.export_import_ids.filtered(lambda ei: ei.display_name).mapped('display_name'))
 
             # calculate total num packing
             total_num_packing_value = {}
