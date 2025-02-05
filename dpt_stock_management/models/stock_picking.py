@@ -259,14 +259,14 @@ class StockPicking(models.Model):
             if item.is_main_incoming:
                 today = fields.Date.today()
                 all_package = sum(item.package_ids.filtered(lambda p: p.quantity).mapped('quantity'))
-                prefix = f'{year_to_letter(int(today.strftime("%Y")))}{month_to_letter(int(today.strftime("%m")))}'
+                prefix = f'{year_to_letter(int(today.strftime("%Y")))}{month_to_letter(int(today.strftime("%m")))}{str(today.day).zfill(2)}'
                 nearest_picking_id = self.env['stock.picking'].sudo().search(
                     [('picking_lot_name', 'ilike', prefix + "%"), ('id', '!=', item.id),
                      ('location_dest_id.warehouse_id', '=', item.location_dest_id.warehouse_id.id),
                      ('picking_type_id.code', '=', item.picking_type_code)], order='id desc').filtered(
                     lambda sp: '.' not in sp.picking_lot_name)
                 if nearest_picking_id:
-                    number = int(nearest_picking_id[:1].picking_lot_name[2:5])
+                    number = int(nearest_picking_id[:1].picking_lot_name[4:7])
                     item.picking_lot_name = prefix + str(number + 1).zfill(3) + f"-{all_package}"
                 else:
                     item.picking_lot_name = prefix + '001' + f"-{all_package}"
