@@ -20,7 +20,6 @@
         "views/import_wizard_views.xml",
         "views/port_brand_views.xml",
         "views/menu_views.xml",
-
     ],
     "installable": True,
     "application": True,

@@ -74,7 +74,7 @@ class SaleOrder(models.Model):
         if self.partner_id.user_id.id != self._uid:
             self.user_id = self._uid
 
-    @api.onchange('partner_id', 'user_id')
+    @api.onchange('partner_id','user_id')
     def onchange_user_id(self):
         # if not self.employee_sale:
         if self.partner_id.user_id:
@@ -583,7 +583,6 @@ class SaleOrderField(models.Model):
     sequence = fields.Integer(default=_default_sequence, compute='_compute_sequence', store=True)
     sale_id = fields.Many2one('sale.order', string='Sale Order')
     service_id = fields.Many2one(related='fields_id.service_id')
-    uom_service_id = fields.Many2one('uom.uom', string='Chi tiết dịch vụ')
     fields_id = fields.Many2one('dpt.service.management.required.fields', string='Fields')
     value_char = fields.Char(string='Value Char')
     value_integer = fields.Float(string='Value Integer')

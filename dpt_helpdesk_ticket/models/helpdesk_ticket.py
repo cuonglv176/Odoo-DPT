@@ -224,16 +224,17 @@ class HelpdeskTicket(models.Model):
     @api.depends('sale_id')
     def _compute_lot_name(self):
         for rec in self:
-            stock_picking_ids = self.env['stock.picking'].search([
-                '|',
-                '|',
-                ('sale_id', '=', rec.sale_id.id),
-                ('sale_purchase_id', '=', rec.sale_id.id),
-                ('origin', '=', rec.sale_id.name),
-            ])
             lot_name = ''
-            for stock_picking_id in stock_picking_ids:
-                lot_name += stock_picking_id.name + ' '
+            if rec.sale_id:
+                stock_picking_ids = self.env['stock.picking'].search([
+                    '|',
+                    '|',
+                    ('sale_id', '=', rec.sale_id.id),
+                    ('sale_purchase_id', '=', rec.sale_id.id),
+                    ('origin', '=', rec.sale_id.name),
+                ])
+                for stock_picking_id in stock_picking_ids:
+                    lot_name += stock_picking_id.name + ' '
             rec.lot_name = lot_name
 
     def _generate_service_code(self):

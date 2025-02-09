@@ -270,10 +270,38 @@ class StockPicking(models.Model):
                     item.picking_lot_name = prefix + str(number + 1).zfill(3) + f"-{all_package}"
                 else:
                     item.picking_lot_name = prefix + '001' + f"-{all_package}"
+    # @api.constrains('package_ids', 'package_ids.quantity', 'is_main_incoming')
+    # def constrains_picking_name(self):
+    #     for item in self:
+    #         if item.is_main_incoming:
+    #             today = fields.Date.today()
+    #             all_package = sum(item.package_ids.filtered(lambda p: p.quantity).mapped('quantity'))
+    #             prefix = f'{year_to_letter(int(today.strftime("%Y")))}{month_to_letter(int(today.strftime("%m")))}'
+    #             nearest_picking_id = self.env['stock.picking'].sudo().search(
+    #                 [('picking_lot_name', 'ilike', prefix + "%"), ('id', '!=', item.id),
+    #                  ('location_dest_id.warehouse_id', '=', item.location_dest_id.warehouse_id.id),
+    #                  ('picking_type_id.code', '=', item.picking_type_code)], order='id desc').filtered(
+    #                 lambda sp: '.' not in sp.picking_lot_name)
+    #             if nearest_picking_id:
+    #                 number = int(nearest_picking_id[:1].picking_lot_name[8:])
+    #                 item.picking_lot_name = prefix + str(number + 1).zfill(3) + f"-{all_package}"
+    #             else:
+    #                 item.picking_lot_name = prefix + '001' + f"-{all_package}"
 
     def action_update_picking_name(self):
         # getname if it is incoming picking in Chinese stock
-        self.constrains_picking_name()
+        if self.is_main_incoming:
+            prefix = f'KT{datetime.now().strftime("%y%m%d")}'
+            nearest_picking_id = self.env['stock.picking'].sudo().search(
+                [('picking_lot_name', 'ilike', prefix + "%"), ('id', '!=', self.id),
+                 ('location_dest_id.warehouse_id', '=', self.location_dest_id.warehouse_id.id),
+                 ('picking_type_id.code', '=', self.picking_type_code)], order='id desc').filtered(
+                lambda sp: '.' not in sp.picking_lot_name)
+            if nearest_picking_id:
+                number = int(nearest_picking_id[:1].picking_lot_name[8:])
+                self.picking_lot_name = prefix + str(number + 1).zfill(3)
+            else:
+                self.picking_lot_name = prefix + '001'
         if self.picking_type_code == 'outgoing' or self.x_transfer_type == 'outgoing_transfer':
             if not self.picking_in_id:
                 return self
