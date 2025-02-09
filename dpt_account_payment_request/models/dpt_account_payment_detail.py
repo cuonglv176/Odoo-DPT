@@ -13,7 +13,11 @@ class DPTAccountPaymentDetail(models.Model):
     payment_product_id = fields.Many2one('account.payment', string='Payment Product')
     description = fields.Html(string='Description')
     qty = fields.Float(string='QTY', default=1)
-    uom_id = fields.Many2one('uom.uom', string='Uom')
+    uom_ids = fields.Many2many(related='service_id.uom_ids')
+    uom_id = fields.Many2one('uom.uom', string='Chi tiết dịch vụ', domain="[('id', 'in', uom_ids)]")
+    compute_uom_id = fields.Many2one('uom.uom', 'Đơn vị tính')
+    department_id = fields.Many2one(related='service_id.department_id')
+
     price = fields.Monetary(currency_field='currency_id', string='Price')
     price_cny = fields.Monetary(currency_field='currency_cny_id', string='Price CNY')
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)

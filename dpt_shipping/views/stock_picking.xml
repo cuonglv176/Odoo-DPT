@@ -19,6 +19,41 @@
         </field>
     </record>
 
+    <record id="dpt_stock_picking_shipping_tree_view" model="ir.ui.view">
+        <field name="name">dpt_stock_picking_shipping_tree_view</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <field name="total_left_quantity" column_invisible="1"/>
+                <button name="action_update_transfer_quantity" string="Update Transfer Quantity"
+                        invisible="total_left_quantity == 0" type="object"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="dpt_stock_picking_shipping_form_view" model="ir.ui.view">
+        <field name="name">dpt_stock_picking_shipping_form_view</field>
+        <field name="model">stock.picking</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="package_ids">
+                    <tree editable="bottom" create="0" delete="0">
+                        <field name="picking_id" readonly="1"/>
+                        <field name="quantity" readonly="1"/>
+                        <field name="transferred_quantity" readonly="1"/>
+                        <field name="transfer_quantity"/>
+                        <field name="uom_id" readonly="1"/>
+                        <field name="total_weight" widget="integer" readonly="1"/>
+                        <field name="total_volume" digits="[12,2]" readonly="1"/>
+                        <field name="note" readonly="1"/>
+                    </tree>
+                </field>
+            </form>
+        </field>
+    </record>
 
     <record id="view_picking_form_shipping_slip_stock_inherit" model="ir.ui.view">
         <field name="name">view_picking_form_shipping_slip_stock_inherit</field>
@@ -26,28 +61,30 @@
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='date_deadline']" position="before">
-                <field name="estimate_arrival_warehouse_vn" invisible="x_transfer_type != 'incoming_transfer'" readonly="1"/>
+                <field name="estimate_arrival_warehouse_vn" invisible="x_transfer_type != 'incoming_transfer'"
+                       readonly="1"/>
             </xpath>
         </field>
     </record>
 
     <record id="action_valid_cutlist_stock_picking" model="ir.actions.act_window">
-        <field name="name">Valid Cutlist</field>
+        <field name="name">Bảng chốt xếp xe</field>
         <field name="res_model">stock.picking</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="stock.view_picking_internal_search"/>
         <field name="context">{'edit_valid_cutlist': True}</field>
-        <field name="domain">[('state', '=', 'done'), ('is_main_incoming','=',True), ('is_return_related','!=', True)]</field>
+        <field name="domain">[('state', '=', 'done'), ('is_main_incoming','=',True), ('is_return_related','!=', True)]
+        </field>
         <field name="view_ids" eval="[(5, 0, 0),
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('dpt_shipping.dpt_stock_picking_cutlist_tree_view')})
             ]"/>
     </record>
 
-    <menuitem id="valid_cutlist_stock_picking_menu" name="Valid Cutlist"
+    <menuitem id="valid_cutlist_stock_picking_menu" name="Bảng chốt xếp xe"
               parent="dpt_export_import.dpt_export_import_menu"
               action="action_valid_cutlist_stock_picking" sequence="12"/>
 
-    <menuitem id="valid_cutlist_stock_picking_in_stock_menu" name="Valid Cutlist" parent="stock.menu_stock_root"
+    <menuitem id="valid_cutlist_stock_picking_in_stock_menu" name="Bảng chốt xếp xe" parent="stock.menu_stock_root"
               action="action_valid_cutlist_stock_picking" sequence="12"/>
 
 </odoo>

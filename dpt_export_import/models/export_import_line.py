@@ -3,6 +3,8 @@
 from ast import literal_eval
 from odoo import fields, models, _, api
 import logging
+from odoo.exceptions import AccessError, UserError, ValidationError
+
 _logger = logging.getLogger(__name__)
 
 class DptExportImportLine(models.Model):
@@ -45,7 +47,7 @@ class DptExportImportLine(models.Model):
     dpt_amount_tax = fields.Monetary(string='Amount Tax', currency_field='currency_id',
                                      compute="_compute_dpt_amount_tax")
     dpt_exchange_rate = fields.Float(string='Exchange rate', tracking=True, currency_field='currency_id',
-                                     digits=(12, 4))
+                                     digits=(12, 4), compute="compute_dpt_exchange_rate", store=True)
     hs_code_id = fields.Many2one('dpt.export.import.acfta', string='HS Code', tracking=True)
     dpt_code_hs = fields.Char(string='H')
     dpt_sl1 = fields.Float(string='SL1', tracking=True, digits=(12, 4))
@@ -55,6 +57,7 @@ class DptExportImportLine(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
     currency_usd_id = fields.Many2one('res.currency', string='Currency USD', default=1)
     currency_cny_id = fields.Many2one('res.currency', string='Currency CNY', default=6)
+    currency_krw_id = fields.Many2one('res.currency', string='Currency KRW', default=32)
     dpt_price_usd = fields.Float(string='Giá khai (USD)', tracking=True, currency_field='currency_usd_id',
                                  digits=(12, 4))
     dpt_total_usd = fields.Monetary(string='Total (USD)', currency_field='currency_usd_id',
@@ -75,7 +78,8 @@ class DptExportImportLine(models.Model):
     state = fields.Selection([
         ('draft', 'Nháp'),
         # ('draft_declaration', 'Tờ khai nháp'),
-        ('wait_confirm', 'Chờ xác nhận'),
+        ('wait_confirm', 'Chờ chứng từ phản hồi'),
+        ('confirmed', 'Chứng từ phản hồi'),
         ('eligible', 'Đủ điều kiện khai báo'),
         # ('declared', 'Tờ khai thông quan'),
         # ('released', 'Giải phóng'),
@@ -101,7 +105,24 @@ class DptExportImportLine(models.Model):
     picking_count = fields.Integer('Picking Count', compute="_compute_picking_count")
     is_history = fields.Boolean(string='History', default=False, tracking=True)
     active = fields.Boolean('Active', default=True)
-    
+
+    def action_check_lot_name(self):
+        if not self.stock_picking_ids:
+            raise UserError(f"Chưa được cập nhật mã lô, vui lòng kiểm tra lại!!!")
+
+    @api.depends('declaration_type')
+    def compute_dpt_exchange_rate(self):
+        for rec in self:
+            if rec.declaration_type == 'usd':
+                rec.dpt_exchange_rate = rec.currency_usd_id.rate_ids[:1].inverse_company_rate
+            elif rec.declaration_type == 'cny':
+                rec.dpt_exchange_rate = rec.currency_cny_id.rate_ids[:1].inverse_company_rate
+            elif rec.declaration_type == 'krw':
+                rec.dpt_exchange_rate = rec.currency_krw_id.rate_ids[:1].inverse_company_rate
+            else:
+                rec.dpt_exchange_rate = 0
+
+
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=10):
         args = args or []
@@ -149,7 +170,12 @@ class DptExportImportLine(models.Model):
             item.available_picking_ids = picking_ids
             item.available_package_ids = picking_ids.package_ids
 
+    def action_confirmed(self):
+        # self.action_check_lot_name()
+        self.state = 'confirmed'
+
     def action_wait_confirm(self):
+        # self.action_check_lot_name()
         self.state = 'wait_confirm'
 
     @api.onchange('product_history_id')
@@ -341,6 +367,7 @@ class DptExportImportLine(models.Model):
         self.product_id.dpt_sl2 = self.dpt_sl2
 
     def action_update_eligible(self):
+        # self.action_check_lot_name()
         self.state = 'eligible'
 
     @api.onchange('sale_line_id')

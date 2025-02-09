@@ -16,11 +16,10 @@
     "depends": ["base", "contacts"],
     "data": [
         "security/ir.model.access.csv",
-        "security/security.xml",
         "views/import_history_views.xml",
         "views/import_wizard_views.xml",
-        "views/menu_views.xml",
         "views/port_brand_views.xml",
+        "views/menu_views.xml",
     ],
     "installable": True,
     "application": True,

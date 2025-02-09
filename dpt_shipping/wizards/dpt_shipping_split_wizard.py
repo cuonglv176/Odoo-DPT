@@ -22,7 +22,8 @@ class DPTShippingSplitWizard(models.TransientModel):
 
     def create_shipping_receive(self):
         for picking_id in self.picking_ids:
-            picking_id.create_in_transfer_picking(self.location_dest_id)
+            if picking_id.total_left_quantity:
+                picking_id.create_in_transfer_picking(self.location_dest_id)
         in_picking_ids = self.picking_ids.mapped('x_in_transfer_picking_id')
         if self.estimate_arrival_warehouse_vn:
             in_picking_ids.write({

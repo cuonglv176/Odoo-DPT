@@ -1,8 +1,8 @@
 from odoo import models, fields, api, _
+from odoo.osv.expression import AND, OR
 
 
 class HelpdeskTicket(models.Model):
-
     _inherit = 'helpdesk.ticket'
 
     name = fields.Char(default='PDV')
@@ -19,6 +19,18 @@ class HelpdeskTicket(models.Model):
     sale_id = fields.Many2one('sale.order', string='Đơn bán hàng')
     user_sale_id = fields.Many2one('res.users', string='Nhân viên kinh doanh', related='sale_id.user_id', store=True)
     fields_ids = fields.One2many('dpt.sale.order.fields', 'ticket_id', string='Fields', related='sale_id.fields_ids')
+
+    @api.model
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
+        if not (self.env.is_system()):
+            if self.user_has_groups('sales_team.group_sale_salesman'):
+                view_scope_domain = [
+                    "|",
+                    ("sale_id.employee_sale", "=", self.env.user.employee_id.id),
+                    ("sale_id.employee_cs", "=", self.env.user.employee_id.id)
+                ]
+                domain = AND([domain, view_scope_domain])
+        return self._search(domain, limit=limit, order=order)
 
     def action_view_sale_order(self):
         if not self.sale_id:
@@ -121,7 +133,6 @@ class HelpdeskTicket(models.Model):
             'views': [[view_id, 'kanban'], [view_tree_id, 'tree'], [view_form_id, 'form']],
         }
 
-
     def action_view_contract(self):
         if not self.purchase_id:
             return {
@@ -157,7 +168,6 @@ class HelpdeskTicket(models.Model):
             'view_id': self.env.ref('dpt_contract_management.view_service_form').id,
         }
 
-
     @api.onchange('sale_id')
     def _onchange_sale_id(self):
         if not self.sale_id:
@@ -175,8 +185,7 @@ class HelpdeskTicket(models.Model):
                 'amount_total': line.amount_total,
                 'department_id': line.department_id.id,
             })
-        for line in sale_id.sale_service_ids]
-
+            for line in sale_id.sale_service_ids]
 
     @api.depends(
         'purchase_id',
@@ -194,7 +203,6 @@ class HelpdeskTicket(models.Model):
                 rec.pack_name = False
                 continue
             rec.pack_name = ','.join(picking_id.mapped('packing_lot_name'))
-
 
     @api.depends(
         'service_lines_ids',
@@ -284,7 +292,9 @@ class DPTSaleChangePriceServiceLine(models.Model):
     qty = fields.Float(string='QTY')
     uom_id = fields.Many2one('uom.uom')
     price = fields.Monetary(currency_field='currency_id', string='Price')
-    currency_id = fields.Many2one('res.currency', string='Currency')
+    price_cny = fields.Monetary(currency_field='currency_cny_id', string='Price CNY')
+    currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
+    currency_cny_id = fields.Many2one('res.currency', string='Currency CNY', default=6)
     amount_total = fields.Float(string="Amount Total")
     status = fields.Char(string='Status')
     department_id = fields.Many2one('hr.department', related='parent_id.department_id')
@@ -304,8 +314,9 @@ class DPTSaleChangePriceServiceLine(models.Model):
             sale_service_vals.update({
                 'price': vals.get('price')
             })
+        if 'price_cny' in vals:
+            sale_service_vals.update({
+                'price_cny': vals.get('price_cny')
+            })
         self.sale_service_id.write(sale_service_vals)
         return rec
-
-
-

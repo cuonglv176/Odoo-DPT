@@ -12,8 +12,10 @@
                     <field name="active" invisible="1"/>
                     <button string="Gửi yêu cầu" type="object" name="action_wait_confirm" class="btn-primary"
                             invisible="state != 'draft'"/>
-                    <button string="Eligible" type="object" name="action_update_eligible" class="btn-primary"
+                    <button string="Gửi phản hồi" type="object" name="action_confirmed" class="btn-primary"
                             invisible="state != 'wait_confirm'" groups="dpt_security.group_dpt_document_officer,dpt_security.group_dpt_head_of_document"/>
+                    <button string="Khách xác nhận" type="object" name="action_update_eligible" class="btn-primary"
+                            invisible="state != 'confirmed'" groups="dpt_security.group_dpt_employee_sale,dpt_security.group_dpt_employee_cskh"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -32,7 +34,7 @@
                             <field name="stock_picking_ids" widget="many2many_tags"/>
                             <field name="partner_id"/>
                             <field name="product_id"/>
-                            <field name="product_history_id" domain="[('product_id','=', product_id), ('id', '!=', id)]"
+                            <field name="product_history_id"
                                    colspan="2"/>
                             <field name="dpt_english_name"/>
                             <field name="dpt_description"/>
@@ -69,6 +71,7 @@
                             <field name="currency_id" invisible="1"/>
                             <field name="currency_usd_id" invisible="1"/>
                             <field name="currency_cny_id" invisible="1"/>
+                            <field name="currency_krw_id" invisible="1"/>
                             <field name="available_package_ids" invisible="1"/>
                             <field name="package_ids" widget="many2many_tags"/>
                             <field name="dpt_n_w_kg"/>

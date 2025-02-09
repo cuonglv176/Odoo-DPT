@@ -183,7 +183,7 @@ class StockPicking(models.Model):
 
     @api.constrains('package_ids')
     def constrains_package(self):
-        if self.is_main_incoming:
+        if self.is_main_incoming and self.state != 'done':
             # remove package move
             package_move_ids = self.move_ids_without_package - self.move_ids_product
             package_move_ids.unlink()
@@ -253,6 +253,23 @@ class StockPicking(models.Model):
                     order_line.dpt_export_import_line_ids.package_ids = order_line.dpt_export_import_line_ids.package_ids | package_ids
         return super().action_confirm()
 
+    @api.constrains('package_ids', 'package_ids.quantity', 'is_main_incoming')
+    def constrains_picking_name(self):
+        for item in self:
+            if item.is_main_incoming:
+                today = fields.Date.today()
+                all_package = sum(item.package_ids.filtered(lambda p: p.quantity).mapped('quantity'))
+                prefix = f'{year_to_letter(int(today.strftime("%Y")))}{month_to_letter(int(today.strftime("%m")))}{str(today.day).zfill(2)}'
+                nearest_picking_id = self.env['stock.picking'].sudo().search(
+                    [('picking_lot_name', 'ilike', prefix + "%"), ('id', '!=', item.id),
+                     ('location_dest_id.warehouse_id', '=', item.location_dest_id.warehouse_id.id),
+                     ('picking_type_id.code', '=', item.picking_type_code)], order='id desc').filtered(
+                    lambda sp: '.' not in sp.picking_lot_name)
+                if nearest_picking_id:
+                    number = int(nearest_picking_id[:1].picking_lot_name[4:7])
+                    item.picking_lot_name = prefix + str(number + 1).zfill(3) + f"-{all_package}"
+                else:
+                    item.picking_lot_name = prefix + '001' + f"-{all_package}"
     # @api.constrains('package_ids', 'package_ids.quantity', 'is_main_incoming')
     # def constrains_picking_name(self):
     #     for item in self:

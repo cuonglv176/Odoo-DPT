@@ -91,7 +91,8 @@ class SaleOrderLine(models.Model):
         ('released', 'Giải phóng'),
         ('consulted', 'Tham vấn'),
         ('post_control', 'Kiểm tra sau thông quan'),
-        ('cancelled', 'Huỷ')
+        ('cancelled', 'Huỷ'),
+        ('confirmed', 'Chứng từ phản hồi'),
     ], string='State', default='draft', compute='compute_state_export_import_line')
 
     def update_item_description(self):

@@ -1,8 +1,8 @@
 <odoo>
     <menuitem id="menu_root" name="Trade Atlas" sequence="1"/>
     <menuitem id="menu_import" name="Import" parent="menu_root" sequence="2"/>
-    <menuitem id="menu_import_wizard" name="Import Data" parent="menu_import" action="action_import_wizard" sequence="1"/>
-    <menuitem id="menu_import_history" name="Import History" parent="menu_import" action="action_import_history" sequence="2"/>
+    <menuitem id="menu_import_wizard" name="Import Data" parent="menu_import" action="action_import_wizard" sequence="100"/>
+    <menuitem id="menu_import_history" name="Import History" parent="menu_import" action="action_import_history" sequence="99"/>
     <menuitem id="menu_configuration" name="Configuration" parent="menu_root" sequence="3"/>
     <menuitem id="menu_ports" name="Ports" parent="menu_configuration" action="action_import_port" sequence="1"/>
     <menuitem id="menu_brands" name="Brands" parent="menu_configuration" action="action_import_brand" sequence="2"/>

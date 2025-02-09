@@ -8,6 +8,7 @@
         <field name="arch" type="xml">
             <field name="code" position="after">
                 <field name="is_main_incoming_warehouse" widget="boolean_toggle"/>
+                <field name="is_main_outgoing_warehouse" widget="boolean_toggle"/>
             </field>
         </field>
     </record>
@@ -21,6 +22,7 @@
         <field name="arch" type="xml">
             <field name="lot_stock_id" position="after">
                 <field name="is_main_incoming_warehouse" widget="boolean_toggle"/>
+                <field name="is_main_outgoing_warehouse" widget="boolean_toggle"/>
             </field>
         </field>
     </record>
