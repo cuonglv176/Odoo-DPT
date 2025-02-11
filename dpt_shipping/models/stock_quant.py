@@ -5,6 +5,8 @@ from odoo import _, api, fields, models, SUPERUSER_ID
 class StockQuant(models.Model):
     _inherit = 'stock.quant'
 
+    ticket_id = fields.Many2one('helpdesk.ticket', 'Ticket')
+
     def action_stock_quant_separate(self):
         context = {
             'default_quant_ids': self.ids,
@@ -26,3 +28,6 @@ class StockQuant(models.Model):
             'type': 'ir.actions.act_window',
             'context': context,
         }
+
+    def action_stock_quant_export(self):
+        pass
