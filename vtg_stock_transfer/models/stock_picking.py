@@ -86,16 +86,7 @@ class StockPicking(models.Model):
                         'uom_id': detail_id.uom_id.id,
                         'quantity': detail_id.transfer_quantity
                     }) for detail_id in package_id.detail_ids] if package_id.detail_ids else None,
-                    # 'lot_ids': package_id.lot_ids.ids if package_id.lot_ids else None
                 }) for package_id in picking.package_ids if package_id.transfer_quantity],
-                # 'move_ids_without_package': [(0, 0, {
-                #     'location_id': transit_location_id.id,
-                #     'location_dest_id': location_dest_id.id,
-                #     'name': (move_line_id.product_id.display_name or '')[:2000],
-                #     'product_id': move_line_id.product_id.id,
-                #     'product_uom_qty': move_line_id.product_uom_qty,
-                #     'product_uom': move_line_id.product_uom.id,
-                # }) for move_line_id in picking.move_ids_without_package],
             })
             in_transfer_picking_id.move_ids_without_package.write({
                 'location_id': transit_location_id.id,
@@ -119,8 +110,8 @@ class StockPicking(models.Model):
                     'quantity': move_id.product_uom_qty,
                     'product_uom_id': move_id.product_uom.id,
                 })
-                if move_line_vals:
-                    self.env['stock.move.line'].create(move_line_vals)
+            if move_line_vals:
+                self.env['stock.move.line'].create(move_line_vals)
 
             # update transferred quantity
             for package_id in picking.package_ids:
