@@ -123,11 +123,11 @@ class DptExportImportLine(models.Model):
     def _compute_dpt_price_unit(self):
         for rec in self:
             if rec.declaration_type == 'usd':
-                rec.dpt_exchange_rate = rec.currency_usd_id.rate_ids[:1].inverse_company_rate * rec.dpt_price_usd
+                rec.dpt_price_unit = rec.currency_usd_id.rate_ids[:1].inverse_company_rate * rec.dpt_price_usd
             elif rec.declaration_type == 'cny':
-                rec.dpt_exchange_rate = rec.currency_cny_id.rate_ids[:1].inverse_company_rate * rec.dpt_price_cny_vnd
+                rec.dpt_price_unit = rec.currency_cny_id.rate_ids[:1].inverse_company_rate * rec.dpt_price_cny_vnd
             elif rec.declaration_type == 'krw':
-                rec.dpt_exchange_rate = rec.currency_krw_id.rate_ids[:1].inverse_company_rate * rec.dpt_price_krw_vnd
+                rec.dpt_price_unit = rec.currency_krw_id.rate_ids[:1].inverse_company_rate * rec.dpt_price_krw_vnd
             else:
                 rec.dpt_price_unit = 0
 
