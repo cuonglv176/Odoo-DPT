@@ -19,7 +19,7 @@ class SaleOrder(models.Model):
         for rec in self:
             is_declaration = True
             for dpt_export_import_line_id in rec.dpt_export_import_line_ids:
-                if dpt_export_import_line_id.state == 'draft':
+                if dpt_export_import_line_id.state != 'eligible':
                     is_declaration = False
                 if dpt_export_import_line_id.export_import_id:
                     is_declaration = False
