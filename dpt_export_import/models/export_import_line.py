@@ -7,6 +7,7 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
+
 class DptExportImportLine(models.Model):
     _name = "dpt.export.import.line"
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -51,7 +52,8 @@ class DptExportImportLine(models.Model):
     hs_code_id = fields.Many2one('dpt.export.import.acfta', string='HS Code', tracking=True)
     dpt_code_hs = fields.Char(string='H')
     dpt_sl1 = fields.Float(string='SL1', tracking=True, digits=(12, 4))
-    dpt_price_unit = fields.Monetary(string='Đơn giá xuất hoá đơn', tracking=True, currency_field='currency_id')
+    dpt_price_unit = fields.Monetary(string='Đơn giá xuất hoá đơn', tracking=True, currency_field='currency_id',
+                                     store=True, compute="_compute_dpt_price_unit")
     dpt_uom1_id = fields.Many2one('uom.uom', string='ĐVT 1', tracking=True)
     dpt_sl2 = fields.Float(string='SL2', tracking=True, digits=(12, 4))
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
@@ -67,6 +69,11 @@ class DptExportImportLine(models.Model):
     dpt_total_cny_vnd = fields.Monetary(string='Total CNY (VND)', currency_field='currency_id',
                                         compute="_compute_dpt_total_cny_vnd")
     dpt_price_cny_vnd = fields.Float(string='Price CNY (VND)', tracking=True, currency_field='currency_cny_id',
+                                     digits=(12, 4))
+
+    dpt_total_krw_vnd = fields.Monetary(string='Tổng KRW (VND)', currency_field='currency_krw_id',
+                                        compute="_compute_dpt_total_krw_vnd")
+    dpt_price_krw_vnd = fields.Float(string='Giá KRW (VND)', tracking=True, currency_field='currency_krw_id',
                                      digits=(12, 4))
     dpt_tax_other = fields.Float(string='Tax Other (%)', tracking=True)
     dpt_amount_tax_other = fields.Monetary(string='Amount Tax Other', currency_field='currency_id',
@@ -106,6 +113,24 @@ class DptExportImportLine(models.Model):
     is_history = fields.Boolean(string='History', default=False, tracking=True)
     active = fields.Boolean('Active', default=True)
 
+    @api.depends('dpt_price_krw_vnd', 'dpt_sl1', 'declaration_type')
+    def _compute_dpt_total_krw_vnd(self):
+        for rec in self:
+            rec.dpt_total_krw_vnd = rec.dpt_price_krw_vnd * rec.currency_krw_id.rate_ids[
+                                                            :1].inverse_company_rate * rec.dpt_sl1
+
+    @api.depends('declaration_type', 'dpt_price_usd', 'dpt_price_cny_vnd', 'dpt_price_krw_vnd')
+    def _compute_dpt_price_unit(self):
+        for rec in self:
+            if rec.declaration_type == 'usd':
+                rec.dpt_exchange_rate = rec.currency_usd_id.rate_ids[:1].inverse_company_rate * rec.dpt_price_usd
+            elif rec.declaration_type == 'cny':
+                rec.dpt_exchange_rate = rec.currency_cny_id.rate_ids[:1].inverse_company_rate * rec.dpt_price_cny_vnd
+            elif rec.declaration_type == 'krw':
+                rec.dpt_exchange_rate = rec.currency_krw_id.rate_ids[:1].inverse_company_rate * rec.dpt_price_krw_vnd
+            else:
+                rec.dpt_price_unit = 0
+
     def action_check_lot_name(self):
         if not self.stock_picking_ids:
             raise UserError(f"Chưa được cập nhật mã lô, vui lòng kiểm tra lại!!!")
@@ -114,14 +139,19 @@ class DptExportImportLine(models.Model):
     def compute_dpt_exchange_rate(self):
         for rec in self:
             if rec.declaration_type == 'usd':
-                rec.dpt_exchange_rate = rec.currency_usd_id.rate_ids[:1].inverse_company_rate
+                currency_usd_id = self.env['res.currency'].search(
+                    [('category', '=', 'import_export'), ('category_code', '=', 'USD')], limit=1)
+                rec.dpt_exchange_rate = currency_usd_id.rate_ids[:1].inverse_company_rate
             elif rec.declaration_type == 'cny':
-                rec.dpt_exchange_rate = rec.currency_cny_id.rate_ids[:1].inverse_company_rate
+                currency_cny_id = self.env['res.currency'].search(
+                    [('category', '=', 'import_export'), ('category_code', '=', 'CNY')], limit=1)
+                rec.dpt_exchange_rate = currency_cny_id.rate_ids[:1].inverse_company_rate
             elif rec.declaration_type == 'krw':
-                rec.dpt_exchange_rate = rec.currency_krw_id.rate_ids[:1].inverse_company_rate
+                currency_krw_id = self.env['res.currency'].search(
+                    [('category', '=', 'import_export'), ('category_code', '=', 'KRW')], limit=1)
+                rec.dpt_exchange_rate = currency_krw_id.rate_ids[:1].inverse_company_rate
             else:
                 rec.dpt_exchange_rate = 0
-
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=10):

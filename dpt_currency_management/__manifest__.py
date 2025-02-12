@@ -17,6 +17,7 @@
         'security/security_rules.xml',
         'views/currency_rate_view.xml',
         'views/currency_menu.xml',
+        'views/currency_view.xml',
     ],
     'installable': True,
     'application': True,

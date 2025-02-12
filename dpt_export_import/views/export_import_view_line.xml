@@ -52,6 +52,8 @@
                             <field name="dpt_total_usd_vnd" invisible="declaration_type != 'usd'"/>
                             <field name="dpt_price_cny_vnd" invisible="declaration_type != 'cny'"/>
                             <field name="dpt_total_cny_vnd" invisible="declaration_type != 'cny'"/>
+                            <field name="dpt_price_krw_vnd" invisible="declaration_type != 'krw'"/>
+                            <field name="dpt_total_krw_vnd" invisible="declaration_type != 'krw'"/>
                             <field name="dpt_price_kd"/>
                         </group>
                         <group>
