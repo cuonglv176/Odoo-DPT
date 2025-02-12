@@ -135,6 +135,24 @@ class DptExportImportLine(models.Model):
         if not self.stock_picking_ids:
             raise UserError(f"Chưa được cập nhật mã lô, vui lòng kiểm tra lại!!!")
 
+    @api.onchange('declaration_type')
+    def onchange_dpt_exchange_rate(self):
+        for rec in self:
+            if rec.declaration_type == 'usd':
+                currency_usd_id = self.env['res.currency'].search(
+                    [('category', '=', 'import_export'), ('category_code', '=', 'USD')], limit=1)
+                rec.dpt_exchange_rate = currency_usd_id.rate_ids[:1].inverse_company_rate
+            elif rec.declaration_type == 'cny':
+                currency_cny_id = self.env['res.currency'].search(
+                    [('category', '=', 'import_export'), ('category_code', '=', 'CNY')], limit=1)
+                rec.dpt_exchange_rate = currency_cny_id.rate_ids[:1].inverse_company_rate
+            elif rec.declaration_type == 'krw':
+                currency_krw_id = self.env['res.currency'].search(
+                    [('category', '=', 'import_export'), ('category_code', '=', 'KRW')], limit=1)
+                rec.dpt_exchange_rate = currency_krw_id.rate_ids[:1].inverse_company_rate
+            else:
+                rec.dpt_exchange_rate = 0
+
     @api.depends('declaration_type')
     def compute_dpt_exchange_rate(self):
         for rec in self:
