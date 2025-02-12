@@ -49,23 +49,29 @@ def _create_invoices(self, grouped=False, final=False, date=None):
         if not import_not_ids:
             raise UserError(f"Không có tờ khai: vui lòng kiểm tra lại!!!")
 
-        picking_ids = self.env['stock.picking'].search(
-            ['|', ('sale_purchase_id', '=', self.id), ('sale_id', '=', order.id),
-             ('state', 'not in', ('confirmed','done', 'cancel'))])
-        if picking_ids:
-            picking_name = ','.join(picking_ids.mapped('name'))
-            raise UserError(f"Vận chuyển : {picking_name} chưa được hoàn thành, vui lòng kiểm tra lại!!!")
+        vehicle_stage_ids = self.env['dpt.vehicle.stage'].search([('is_finish_stage', '=', True)])
+        shipping_ids = self.env['dpt.shipping.slip'].search(
+            [('stage_id', 'in', vehicle_stage_ids.ids), ('sale_ids', 'in', order.ids)])
+        if not shipping_ids:
+            raise UserError(f"Vận chuyển chưa được hoàn thành, vui lòng kiểm tra lại!!!")
 
-        picking_lot_name_ids = self.env['stock.picking'].search(
-            ['|', ('sale_purchase_id', '=', order.id), ('sale_id', '=', order.id),
-             ('state', '!=', 'cancel'), ('picking_lot_name', '=', False)])
-        if picking_lot_name_ids:
-            picking_lot_name = ','.join(picking_lot_name_ids.mapped('name'))
-            raise UserError(f"Vận chuyển : {picking_lot_name} chưa được cập nhật mã lô, vui lòng kiểm tra lại!!!")
-        picking_not_ids = self.env['stock.picking'].search(
-            ['|', ('sale_purchase_id', '=', self.id), ('sale_id', '=', order.id)])
-        if not picking_not_ids:
-            raise UserError(f"Không có Vận chuyển: vui lòng kiểm tra lại!!!")
+        # picking_ids = self.env['stock.picking'].search(
+        #     ['|', ('sale_purchase_id', '=', self.id), ('sale_id', '=', order.id),
+        #      ('state', 'not in', ('confirmed','done', 'cancel'))])
+        # if picking_ids:
+        #     picking_name = ','.join(picking_ids.mapped('name'))
+        #     raise UserError(f"Vận chuyển : {picking_name} chưa được hoàn thành, vui lòng kiểm tra lại!!!")
+        #
+        # picking_lot_name_ids = self.env['stock.picking'].search(
+        #     ['|', ('sale_purchase_id', '=', order.id), ('sale_id', '=', order.id),
+        #      ('state', '!=', 'cancel'), ('picking_lot_name', '=', False)])
+        # if picking_lot_name_ids:
+        #     picking_lot_name = ','.join(picking_lot_name_ids.mapped('name'))
+        #     raise UserError(f"Vận chuyển : {picking_lot_name} chưa được cập nhật mã lô, vui lòng kiểm tra lại!!!")
+        # picking_not_ids = self.env['stock.picking'].search(
+        #     ['|', ('sale_purchase_id', '=', self.id), ('sale_id', '=', order.id)])
+        # if not picking_not_ids:
+        #     raise UserError(f"Không có Vận chuyển: vui lòng kiểm tra lại!!!")
 
         order = order.with_company(order.company_id).with_context(lang=order.partner_invoice_id.lang)
 

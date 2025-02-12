@@ -17,4 +17,5 @@ class DPTVehicleStage(models.Model):
     active = fields.Boolean('Active', default=True)
     is_draft_stage = fields.Boolean('Is Draft Stage')
     is_ready_stage = fields.Boolean('Is Ready Stage')
+    is_finish_stage = fields.Boolean('Là trạng thái hoàn thành')
 
