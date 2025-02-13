@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 
-    <record id="view_stock_quant_separate_form_view_inherit" model="ir.ui.view">
-        <field name="name">view_stock_quant_separate_form_view_inherit</field>
-        <field name="model">stock.quant.separate</field>
+    <record id="view_stock_quant_export_form_view_inherit" model="ir.ui.view">
+        <field name="name">view_stock_quant_export_form_view_inherit</field>
+        <field name="model">stock.quant.export</field>
         <field name="arch" type="xml">
             <form string="Quantity Separate">
                 <field name="quant_ids" invisible="1"/>

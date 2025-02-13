@@ -30,4 +30,12 @@ class StockQuant(models.Model):
         }
 
     def action_stock_quant_export(self):
-        pass
+        return {
+            'res_model': 'stock.quant.export',
+            'views': [[False, 'form']],
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+            'context': {
+                'default_quant_ids': self.ids
+            },
+        }
