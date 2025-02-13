@@ -10,12 +10,8 @@
             <field name="location_id" position="attributes">
                 <attributes name="column_invisible">1</attributes>
             </field>
-            <field name="lot_id" position="before">
-                <field name="ticket_id"/>
-            </field>
             <xpath expr="//header" position="inside">
-                <button name="action_stock_quant_separate" string="Tách" type="object"/>
-                <button name="action_stock_quant_export" string="Xuất kho" type="object"/>
+                <button name="action_stock_quant_separate" string="Separate" type="object"/>
             </xpath>
         </field>
     </record>

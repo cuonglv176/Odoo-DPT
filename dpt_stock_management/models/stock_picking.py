@@ -133,7 +133,7 @@ class StockPicking(models.Model):
 
     def _compute_main_outgoing(self):
         for item in self:
-            item.is_main_outgoing = item.picking_type_code == 'outgoing' and item.location_id.warehouse_id.is_main_outgoing_warehouse
+            item.is_main_outgoing = item.picking_type_code == 'outgoing' and item.location_id.warehouse_id.is_main_incoming_warehouse
 
     @api.onchange('picking_type_code', 'location_id')
     def _onchange_main_outgoing(self):
@@ -183,7 +183,7 @@ class StockPicking(models.Model):
 
     @api.constrains('package_ids')
     def constrains_package(self):
-        if (self.is_main_incoming or self.is_main_outgoing) and self.state != 'done':
+        if self.is_main_incoming and self.state != 'done':
             # remove package move
             package_move_ids = self.move_ids_without_package - self.move_ids_product
             package_move_ids.unlink()

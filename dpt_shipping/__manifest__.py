@@ -26,6 +26,5 @@
         'wizards/dpt_shipping_split_wizard.xml',
         'wizards/dpt_picking_confirm_wizard.xml',
         'wizards/stock_quant_separate.xml',
-        'wizards/stock_quant_export.xml',
     ],
 }
