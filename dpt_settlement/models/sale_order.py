@@ -51,7 +51,7 @@ def _create_invoices(self, grouped=False, final=False, date=None):
 
         vehicle_stage_ids = self.env['dpt.vehicle.stage'].search([('is_finish_stage', '=', True)])
         shipping_ids = self.env['dpt.shipping.slip'].search(
-            [('stage_id', 'in', vehicle_stage_ids.ids), ('sale_ids', 'in', order.ids)])
+            [('vn_vehicle_stage_id', 'in', vehicle_stage_ids.ids), ('sale_ids', 'in', order.ids)])
         if not shipping_ids:
             raise UserError(f"Vận chuyển chưa được hoàn thành, vui lòng kiểm tra lại!!!")
 
