@@ -119,17 +119,24 @@ class DptExportImportLine(models.Model):
             rec.dpt_total_krw_vnd = rec.dpt_price_krw_vnd * rec.currency_krw_id.rate_ids[
                                                             :1].inverse_company_rate * rec.dpt_sl1
 
-    @api.depends('declaration_type', 'dpt_price_usd', 'dpt_price_cny_vnd', 'dpt_price_krw_vnd')
+    @api.depends('declaration_type', 'dpt_price_usd', 'dpt_price_cny_vnd', 'dpt_price_krw_vnd', 'dpt_tax_other',
+                 'dpt_tax_import')
     def _compute_dpt_price_unit(self):
         for rec in self:
+            dpt_price = 0
+            inverse_company_rate = 0
             if rec.declaration_type == 'usd':
-                rec.dpt_price_unit = rec.currency_usd_id.rate_ids[:1].inverse_company_rate * rec.dpt_price_usd
+                dpt_price = rec.dpt_price_usd
+                inverse_company_rate = rec.currency_usd_id.rate_ids[:1].inverse_company_rate
             elif rec.declaration_type == 'cny':
-                rec.dpt_price_unit = rec.currency_cny_id.rate_ids[:1].inverse_company_rate * rec.dpt_price_cny_vnd
+                dpt_price = rec.dpt_price_cny_vnd
+                inverse_company_rate = rec.currency_cny_id.rate_ids[:1].inverse_company_rate
             elif rec.declaration_type == 'krw':
-                rec.dpt_price_unit = rec.currency_krw_id.rate_ids[:1].inverse_company_rate * rec.dpt_price_krw_vnd
+                dpt_price = rec.dpt_price_krw_vnd
+                inverse_company_rate = rec.currency_krw_id.rate_ids[:1].inverse_company_rate
             else:
                 rec.dpt_price_unit = 0
+            rec.dpt_price_unit = (dpt_price * 0, 1 + rec.dpt_tax_import + rec.dpt_tax_other) * inverse_company_rate
 
     def action_check_lot_name(self):
         if not self.stock_picking_ids:
