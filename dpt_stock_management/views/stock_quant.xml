@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="stock_quant_inherit_form_view" model="ir.ui.view">
+        <field name="name">stock.quant.inherit.form.view</field>
+        <field name="model">stock.quant</field>
+        <field name="inherit_id" ref="stock.view_stock_quant_tree_editable"/>
+        <field name="arch" type="xml">
+            <field name="lot_id" position="before">
+                <field name="weight"/>
+                <field name="volume"/>
+                <field name="total_weight"/>
+                <field name="total_volume"/>
+            </field>
+        </field>
+    </record>
+
+    <menuitem id="dpt_stock_quant_menu" name="Tồn kho" sequence="1" parent="stock.menu_stock_root"
+              action="stock.dashboard_open_quants"/>
+
+</odoo>
