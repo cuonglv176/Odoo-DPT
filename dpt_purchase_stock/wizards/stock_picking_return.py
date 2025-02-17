@@ -14,9 +14,9 @@ class ReturnPicking(models.TransientModel):
                 [('product_id', '=', package_id.uom_id.product_id.id), ('name', '=', self.picking_id.picking_lot_name)])
             if not lot_id:
                 continue
+            current_move_id = package_id.move_ids.filtered(lambda move: move.picking_id == self.picking_id)
             return_line_id = self.product_return_moves.filtered(
-                lambda rl: rl.product_id.id == package_id.uom_id.product_id.id and rl.move_id == package_id.move_ids[
-                    0].id)
+                lambda rl: rl.product_id.id == package_id.uom_id.product_id.id and rl.move_id.ids == current_move_id.ids)
             if not return_line_id:
                 continue
             else:
