@@ -136,7 +136,7 @@ class DptExportImportLine(models.Model):
                 inverse_company_rate = rec.currency_krw_id.rate_ids[:1].inverse_company_rate
             else:
                 rec.dpt_price_unit = 0
-            rec.dpt_price_unit = (dpt_price * 0, 1 + rec.dpt_tax_import + rec.dpt_tax_other) * inverse_company_rate
+            rec.dpt_price_unit = (dpt_price * 0.1) * (1 + rec.dpt_tax_import + rec.dpt_tax_other) * inverse_company_rate
 
     def action_check_lot_name(self):
         if not self.stock_picking_ids:
