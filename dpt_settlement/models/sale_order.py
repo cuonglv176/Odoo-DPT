@@ -40,7 +40,8 @@ def _create_invoices(self, grouped=False, final=False, date=None):
     invoice_item_sequence = 0  # Incremental sequencing to keep the lines order on the invoice.
     for order in self:
         import_ids = self.env['dpt.export.import'].search(
-            [('sale_ids', 'in', order.ids), ('state', 'not in', ('cleared', 'cancelled'))])
+            [('sale_ids', 'in', order.ids),
+             ('state', 'not in', ('cleared', 'back_for_stock', 'released', 'cancelled'))])
         if import_ids:
             import_name = ','.join(import_ids.mapped('name'))
             raise UserError(f"Tờ khai: {import_name} chưa được thông quan, vui lòng kiểm tra lại!!!")
