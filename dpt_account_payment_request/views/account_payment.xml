@@ -182,19 +182,21 @@
                                    options="{'no_quick_create': True}"
                                    invisible="partner_type != 'supplier' or is_internal_transfer"
                                    readonly="state != 'draft'"/>
-                            <label for="amount"/>
+                            <label for="amount_request"/>
                             <div name="amount_div" class="o_row">
-                                <field name="amount_request"/>
                                 <field name="amount_request"/>
                                 <field name="currency_id"
                                        options="{'no_create': True, 'no_open': True}"/>
+                            </div>
+                            <field name="last_rate_currency"/>
+                            <label for="amount" string="Tổng tiền VNĐ"/>
+                            <div name="amount_div" class="o_row">
                                 <field name="amount"
                                        readonly="state != 'draft'"/>
-
                             </div>
                             <field name="amount_in_text"/>
                             <field name="service_sale_id" invisible="1"/>
-                            <field name="last_rate_currency"/>
+
                             <field name="refund_date"/>
                             <field name="date"
                                    readonly="state != 'draft'"/>
