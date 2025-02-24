@@ -124,7 +124,7 @@ class DptExportImportLine(models.Model):
     def _compute_dpt_price_unit(self):
         for rec in self:
             dpt_price = 0
-            inverse_company_rate = 0
+            inverse_company_rate = 1
             if rec.declaration_type == 'usd':
                 dpt_price = rec.dpt_price_usd
                 inverse_company_rate = rec.currency_usd_id.rate_ids[:1].inverse_company_rate
@@ -136,7 +136,8 @@ class DptExportImportLine(models.Model):
                 inverse_company_rate = rec.currency_krw_id.rate_ids[:1].inverse_company_rate
             else:
                 rec.dpt_price_unit = 0
-            rec.dpt_price_unit = (dpt_price * 0.1) * (1 + rec.dpt_tax_import + rec.dpt_tax_other) * inverse_company_rate
+            rec.dpt_price_unit = (dpt_price * 0.1) * (
+                        1 + rec.dpt_tax_import + rec.dpt_tax_other) * 1 / inverse_company_rate
 
     def action_check_lot_name(self):
         if not self.stock_picking_ids:
@@ -145,36 +146,42 @@ class DptExportImportLine(models.Model):
     @api.onchange('declaration_type')
     def onchange_dpt_exchange_rate(self):
         for rec in self:
+            company_rate = 0
             if rec.declaration_type == 'usd':
                 currency_usd_id = self.env['res.currency'].search(
                     [('category', '=', 'import_export'), ('category_code', '=', 'USD')], limit=1)
-                rec.dpt_exchange_rate = 1 / currency_usd_id.rate_ids[:1].company_rate
+                company_rate = currency_usd_id.rate_ids[:1].company_rate
             elif rec.declaration_type == 'cny':
                 currency_cny_id = self.env['res.currency'].search(
                     [('category', '=', 'import_export'), ('category_code', '=', 'CNY')], limit=1)
-                rec.dpt_exchange_rate = 1 / currency_cny_id.rate_ids[:1].company_rate
+                company_rate = currency_cny_id.rate_ids[:1].company_rate
             elif rec.declaration_type == 'krw':
                 currency_krw_id = self.env['res.currency'].search(
                     [('category', '=', 'import_export'), ('category_code', '=', 'KRW')], limit=1)
-                rec.dpt_exchange_rate = 1 / currency_krw_id.rate_ids[:1].company_rate
+                company_rate = currency_krw_id.rate_ids[:1].company_rate
+            if company_rate != 0:
+                rec.dpt_exchange_rate = 1 / company_rate
             else:
                 rec.dpt_exchange_rate = 0
 
     @api.depends('declaration_type')
     def compute_dpt_exchange_rate(self):
         for rec in self:
+            company_rate = 0
             if rec.declaration_type == 'usd':
                 currency_usd_id = self.env['res.currency'].search(
                     [('category', '=', 'import_export'), ('category_code', '=', 'USD')], limit=1)
-                rec.dpt_exchange_rate = currency_usd_id.rate_ids[:1].inverse_company_rate
+                company_rate = currency_usd_id.rate_ids[:1].company_rate
             elif rec.declaration_type == 'cny':
                 currency_cny_id = self.env['res.currency'].search(
                     [('category', '=', 'import_export'), ('category_code', '=', 'CNY')], limit=1)
-                rec.dpt_exchange_rate = currency_cny_id.rate_ids[:1].inverse_company_rate
+                company_rate = currency_cny_id.rate_ids[:1].company_rate
             elif rec.declaration_type == 'krw':
                 currency_krw_id = self.env['res.currency'].search(
                     [('category', '=', 'import_export'), ('category_code', '=', 'KRW')], limit=1)
-                rec.dpt_exchange_rate = currency_krw_id.rate_ids[:1].inverse_company_rate
+                company_rate = currency_krw_id.rate_ids[:1].company_rate
+            if company_rate != 0:
+                rec.dpt_exchange_rate = 1 / company_rate
             else:
                 rec.dpt_exchange_rate = 0
 

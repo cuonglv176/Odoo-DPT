@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record model="ir.rule" id="account_payment_dpt_user_rule">
+            <field name="name">Account payment DPT rule</field>
+            <field name="model_id" ref="model_account_payment"/>
+            <field name="domain_force">[('user_view_ids', 'in', [user.id])]</field>
+        </record>
+
+        <record model="ir.rule" id="account_payment_dpt_account_rule">
+            <field name="name">Account payment DPT Kế toán</field>
+            <field name="model_id" ref="model_account_payment"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('account.group_account_invoice'))]"/>
+        </record>
+    </data>
+</odoo>

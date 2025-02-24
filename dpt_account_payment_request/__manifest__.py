@@ -16,6 +16,7 @@
     },
     'data': [
         'security/ir.model.access.csv',
+        'security/account_security.xml',
         'data/account_sequence.xml',
         'views/account_payment.xml',
         'views/account_payment_request_type.xml',

@@ -106,6 +106,23 @@ class AccountPayment(models.Model):
     acc_holder_name = fields.Char(related="partner_bank_id.acc_holder_name")
     bank_id = fields.Many2one(related="partner_bank_id.bank_id")
     amount_in_text = fields.Char('Amount in Text', compute="_compute_amount_in_text")
+    refund_date = fields.Date(string='Ngày hoàn ứng')
+    amount = fields.Monetary(currency_field='company_currency_id')
+    amount_request = fields.Monetary(string='Số tiền ngoại tệ', currency_field='currency_id')
+    user_view_ids = fields.Many2many('res.users', compute="get_list_users_view", store=True)
+
+    @api.depends('user_id', 'approval_id', 'approval_id.approver_ids')
+    def get_list_users_view(self):
+        for rec in self:
+            user_view_ids = []
+            user_view_ids.append(rec.user_id.id)
+            for approver_id in rec.approval_id.approver_ids:
+                user_view_ids.append(approver_id.user_id.id)
+            rec.user_view_ids = [(6, 0, user_view_ids)]
+
+    @api.onchange('last_rate_currency', 'amount_request')
+    def onchange_update_amount(self):
+        self.amount = self.amount_request * self.last_rate_currency
 
     @api.depends('amount')
     def _compute_amount_in_text(self):
