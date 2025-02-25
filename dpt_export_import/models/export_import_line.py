@@ -47,8 +47,8 @@ class DptExportImportLine(models.Model):
     dpt_tax = fields.Float(string='VAT(%)', tracking=True)
     dpt_amount_tax = fields.Monetary(string='Amount Tax', currency_field='currency_id',
                                      compute="_compute_dpt_amount_tax")
-    dpt_exchange_rate = fields.Float(string='Exchange rate', tracking=True, currency_field='currency_id',
-                                     digits=(12, 4), compute="compute_dpt_exchange_rate", store=True)
+    dpt_exchange_rate = fields.Float(string='Tỉ giá XNK', tracking=True, currency_field='currency_id',
+                                     digits=(12, 4), compute="compute_dpt_exchange_rate")
     hs_code_id = fields.Many2one('dpt.export.import.acfta', string='HS Code', tracking=True)
     dpt_code_hs = fields.Char(string='H')
     dpt_sl1 = fields.Float(string='SL1', tracking=True, digits=(12, 4))
@@ -119,9 +119,35 @@ class DptExportImportLine(models.Model):
             rec.dpt_total_krw_vnd = rec.dpt_price_krw_vnd * rec.currency_krw_id.rate_ids[
                                                             :1].inverse_company_rate * rec.dpt_sl1
 
-    @api.depends('declaration_type', 'dpt_price_usd', 'dpt_price_cny_vnd', 'dpt_price_krw_vnd', 'dpt_tax_other',
+    @api.onchange('declaration_type', 'dpt_price_unit', 'dpt_tax_other', 'dpt_tax_import')
+    def onchange_dpt_price(self):
+        for rec in self:
+            inverse_company_rate = 1
+            if rec.declaration_type == 'usd':
+                inverse_company_rate = rec.currency_usd_id.rate_ids[:1].inverse_company_rate
+            elif rec.declaration_type == 'cny':
+                inverse_company_rate = rec.currency_cny_id.rate_ids[:1].inverse_company_rate
+            elif rec.declaration_type == 'krw':
+                inverse_company_rate = rec.currency_krw_id.rate_ids[:1].inverse_company_rate
+            else:
+                continue  # Nếu không thuộc các loại tiền trên, bỏ qua
+
+            divisor = 0.1 * (1 + rec.dpt_tax_import + rec.dpt_tax_other)
+            if divisor > 0:
+                dpt_price = (rec.dpt_price_unit * inverse_company_rate) / divisor
+            else:
+                dpt_price = 0  # Tránh chia cho 0
+
+            if rec.declaration_type == 'usd':
+                rec.dpt_price_usd = dpt_price
+            elif rec.declaration_type == 'cny':
+                rec.dpt_price_cny_vnd = dpt_price
+            elif rec.declaration_type == 'krw':
+                rec.dpt_price_krw_vnd = dpt_price
+
+    @api.onchange('declaration_type', 'dpt_price_usd', 'dpt_price_cny_vnd', 'dpt_price_krw_vnd', 'dpt_tax_other',
                  'dpt_tax_import')
-    def _compute_dpt_price_unit(self):
+    def onchange_dpt_price_unit(self):
         for rec in self:
             dpt_price = 0
             inverse_company_rate = 1
