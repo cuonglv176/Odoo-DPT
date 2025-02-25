@@ -144,9 +144,9 @@ class DptExportImportLine(models.Model):
             elif rec.declaration_type == 'krw':
                 rec.dpt_price_krw_vnd = dpt_price
 
-    @api.onchange('declaration_type', 'dpt_price_usd', 'dpt_price_cny_vnd', 'dpt_price_krw_vnd', 'dpt_tax_other',
-                 'dpt_tax_import')
-    def onchange_dpt_price_unit(self):
+    # @api.onchange('declaration_type', 'dpt_price_usd', 'dpt_price_cny_vnd', 'dpt_price_krw_vnd', 'dpt_tax_other',
+    #              'dpt_tax_import')
+    def compute_dpt_price_unit(self):
         for rec in self:
             dpt_price = 0
             inverse_company_rate = 1
@@ -162,7 +162,7 @@ class DptExportImportLine(models.Model):
             else:
                 rec.dpt_price_unit = 0
             rec.dpt_price_unit = (dpt_price * 0.1) * (
-                        1 + rec.dpt_tax_import + rec.dpt_tax_other) * 1 / inverse_company_rate
+                    1 + rec.dpt_tax_import + rec.dpt_tax_other) * 1 / inverse_company_rate
 
     def action_check_lot_name(self):
         if not self.stock_picking_ids:
@@ -369,6 +369,8 @@ class DptExportImportLine(models.Model):
     def write(self, vals):
         res = super(DptExportImportLine, self).write(vals)
         for rec in self:
+            if 'declaration_type' in vals or 'dpt_price_usd' in vals or 'dpt_price_cny_vnd' in vals or 'dpt_price_krw_vnd' in vals or 'dpt_tax_other' in vals or 'dpt_tax_import':
+                rec.compute_dpt_price_unit()
             if 'stock_picking_ids' in vals and rec.stock_picking_ids:
                 rec.stock_picking_ids._compute_valid_cutlist()
             val_update_sale_line = {}

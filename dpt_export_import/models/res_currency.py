@@ -21,7 +21,7 @@ class ResCurrency(models.Model):
                     line_xnk_id.compute_dpt_exchange_rate()
             if currency_rate.category == 'basic':
                 line_xhd_ids = self.env['dpt.export.import.line'].search(
-                    [('export_import_id', '=', False), ('export_import_id.state', '!=', 'cleared')])
+                    ['|', ('export_import_id', '=', False), ('export_import_id.state', '!=', 'cleared')])
                 for line_xhd_id in line_xhd_ids:
-                    line_xhd_id.onchange_dpt_price_unit()
+                    line_xhd_id.compute_dpt_price_unit()
         return res
