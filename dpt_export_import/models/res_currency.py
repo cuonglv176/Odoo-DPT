@@ -11,13 +11,9 @@ _logger = logging.getLogger(__name__)
 class ResCurrency(models.Model):
     _inherit = 'res.currency'
 
-    @api.onchange('company_rate')
-    def _inverse_company_rate(self):
-        last_rate = self.env['res.currency.rate']._get_last_rates_for_companies(
-            self.company_id | self.env.company.root_id)
+    def write(self, vals):
+        res = super(ResCurrency, self).write(vals)
         for currency_rate in self:
-            company = currency_rate.company_id or self.env.company.root_id
-            currency_rate.rate = currency_rate.company_rate * last_rate[company]
             if currency_rate.category == 'import_export':
                 line_xnk_ids = self.env['dpt.export.import.line'].search(
                     [('state', 'not in', ('eligible', 'cancelled'))])
@@ -28,3 +24,4 @@ class ResCurrency(models.Model):
                     [('export_import_id', '=', False), ('export_import_id.state', '!=', 'cleared')])
                 for line_xhd_id in line_xhd_ids:
                     line_xhd_id.onchange_dpt_price_unit()
+        return res
