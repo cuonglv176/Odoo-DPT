@@ -160,7 +160,7 @@ class DptExportImportLine(models.Model):
                 dpt_price = rec.dpt_price_krw_vnd
                 inverse_company_rate = rec.currency_krw_id.rate_ids[:1].inverse_company_rate
             else:
-                rec.dpt_price_unit = 0
+                rec.dpt_price_unit = 1
             rec.dpt_price_unit = (dpt_price * 0.1) * (
                     1 + rec.dpt_tax_import + rec.dpt_tax_other) * 1 / inverse_company_rate
 
