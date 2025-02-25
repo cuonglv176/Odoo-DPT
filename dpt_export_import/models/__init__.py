@@ -4,4 +4,5 @@ from . import export_import
 from . import export_import_line
 from . import sale_order
 from . import export_import_acfta
+from . import res_currency
 
