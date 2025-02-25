@@ -52,7 +52,8 @@ class DptExportImportLine(models.Model):
     hs_code_id = fields.Many2one('dpt.export.import.acfta', string='HS Code', tracking=True)
     dpt_code_hs = fields.Char(string='H')
     dpt_sl1 = fields.Float(string='SL1', tracking=True, digits=(12, 4))
-    dpt_price_unit = fields.Monetary(string='Đơn giá xuất hoá đơn', tracking=True, currency_field='currency_id')
+    dpt_price_unit = fields.Monetary(string='Đơn giá xuất hoá đơn', tracking=True, currency_field='currency_id',
+                                     compute="compute_dpt_price_unit", store=True)
     dpt_uom1_id = fields.Many2one('uom.uom', string='ĐVT 1', tracking=True)
     dpt_sl2 = fields.Float(string='SL2', tracking=True, digits=(12, 4))
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
@@ -144,8 +145,8 @@ class DptExportImportLine(models.Model):
             elif rec.declaration_type == 'krw':
                 rec.dpt_price_krw_vnd = dpt_price
 
-    # @api.onchange('declaration_type', 'dpt_price_usd', 'dpt_price_cny_vnd', 'dpt_price_krw_vnd', 'dpt_tax_other',
-    #              'dpt_tax_import')
+    @api.depends('declaration_type', 'dpt_price_usd', 'dpt_price_cny_vnd', 'dpt_price_krw_vnd', 'dpt_tax_other',
+                 'dpt_tax_import')
     def compute_dpt_price_unit(self):
         for rec in self:
             dpt_price = 0
@@ -159,10 +160,9 @@ class DptExportImportLine(models.Model):
             elif rec.declaration_type == 'krw':
                 dpt_price = rec.dpt_price_krw_vnd
                 inverse_company_rate = rec.currency_krw_id.rate_ids[:1].inverse_company_rate
-            else:
-                rec.dpt_price_unit = 1
-            rec.dpt_price_unit = (dpt_price * 0.1) * (
-                    1 + rec.dpt_tax_import + rec.dpt_tax_other) * 1 / inverse_company_rate
+            new_value = (dpt_price * 0.1) * (1 + rec.dpt_tax_import + rec.dpt_tax_other) / inverse_company_rate
+            if rec.dpt_price_unit != new_value:
+                rec.dpt_price_unit = new_value
 
     def action_check_lot_name(self):
         if not self.stock_picking_ids:
@@ -369,8 +369,6 @@ class DptExportImportLine(models.Model):
     def write(self, vals):
         res = super(DptExportImportLine, self).write(vals)
         for rec in self:
-            if 'declaration_type' in vals or 'dpt_price_usd' in vals or 'dpt_price_cny_vnd' in vals or 'dpt_price_krw_vnd' in vals or 'dpt_tax_other' in vals or 'dpt_tax_import':
-                rec.compute_dpt_price_unit()
             if 'stock_picking_ids' in vals and rec.stock_picking_ids:
                 rec.stock_picking_ids._compute_valid_cutlist()
             val_update_sale_line = {}
