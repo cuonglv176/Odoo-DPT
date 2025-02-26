@@ -122,22 +122,21 @@ class DptExportImportLine(models.Model):
     def onchange_dpt_price(self):
         for rec in self:
             company_rate = 1
+
             if rec.declaration_type == 'usd':
-                company_rate = rec.currency_usd_id.rate_ids[:1].company_rate
+                company_rate = rec.currency_usd_id.rate_ids[:1].company_rate or 1
             elif rec.declaration_type == 'cny':
-                company_rate = rec.currency_cny_id.rate_ids[:1].company_rate
+                company_rate = rec.currency_cny_id.rate_ids[:1].company_rate or 1
             elif rec.declaration_type == 'krw':
-                company_rate = rec.currency_krw_id.rate_ids[:1].company_rate
+                company_rate = rec.currency_krw_id.rate_ids[:1].company_rate or 1
             else:
-                continue
-
-            divisor = 0.1 * (1 + rec.dpt_tax_import + rec.dpt_tax_other)
-            if divisor > 0:
-                company_rate = (1 / company_rate)
-                dpt_price = (rec.dpt_price_unit * company_rate) / divisor
-            else:
-                dpt_price = 0
-
+                continue  # Nếu không có declaration_type hợp lệ, bỏ qua
+            # Đảm bảo company_rate không bị 0
+            company_rate = 1 / company_rate if company_rate else 1
+            # Tính giá trị chia
+            divisor = 0.1 * (1 + (rec.dpt_tax_import or 0) + (rec.dpt_tax_other or 0))
+            dpt_price = (rec.dpt_price_unit * company_rate) / divisor if divisor else 0
+            # Gán giá trị vào đúng trường
             if rec.declaration_type == 'usd':
                 rec.dpt_price_usd = dpt_price
             elif rec.declaration_type == 'cny':
@@ -160,9 +159,8 @@ class DptExportImportLine(models.Model):
             elif rec.declaration_type == 'krw':
                 dpt_price = rec.dpt_price_krw_vnd
                 company_rate = rec.currency_krw_id.rate_ids[:1].company_rate
-            new_value = (dpt_price * 0.1) * (1 + rec.dpt_tax_import + rec.dpt_tax_other) / (1 / company_rate)
-            if rec.dpt_price_unit != new_value:
-                rec.dpt_price_unit = new_value
+            rec.dpt_price_unit = (dpt_price * 0.1) * (1 + rec.dpt_tax_import + rec.dpt_tax_other) * (1 / company_rate)
+
 
     def action_check_lot_name(self):
         if not self.stock_picking_ids:
