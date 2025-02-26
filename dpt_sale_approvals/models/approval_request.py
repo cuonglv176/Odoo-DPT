@@ -53,3 +53,16 @@ class ApprovalRequest(models.Model):
                 for order_line_id in self.order_line_ids:
                     order_line_id.new_price_unit = sale_service_id.price_unit
         return res
+
+
+class ApprovalApprover(models.Model):
+    _inherit = 'approval.approver'
+
+    @api.model
+    def create(self, vals):
+        if 'user_id' in vals:
+            if self.env['res.users'].browse(vals.get('user_id')).login == 'nhatbd@kytoc.vn':
+                vals.update({
+                    'sequence': 90
+                })
+        return super(ApprovalApprover, self).create(vals)
