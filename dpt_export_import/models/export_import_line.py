@@ -186,21 +186,21 @@ class DptExportImportLine(models.Model):
         for rec in self:
             company_rate = 1
 
-            if rec.declaration_type == 'usd':
-                company_rate = rec.currency_usd_id.rate_ids[:1].company_rate or 1
-            elif rec.declaration_type == 'cny':
-                company_rate = rec.currency_cny_id.rate_ids[:1].company_rate or 1
-            elif rec.declaration_type == 'krw':
-                company_rate = rec.currency_krw_id.rate_ids[:1].company_rate or 1
-
-            dpt_price = ((rec.dpt_price_unit * (1 / company_rate)) - rec.dpt_tax_import - rec.dpt_tax_other) / 0.1
-
-            if rec.declaration_type == 'usd':
-                rec.dpt_price_usd = dpt_price
-            elif rec.declaration_type == 'cny':
-                rec.dpt_price_cny_vnd = dpt_price
-            elif rec.declaration_type == 'krw':
-                rec.dpt_price_krw_vnd = dpt_price
+            # if rec.declaration_type == 'usd':
+            #     company_rate = rec.currency_usd_id.rate_ids[:1].company_rate or 1
+            # elif rec.declaration_type == 'cny':
+            #     company_rate = rec.currency_cny_id.rate_ids[:1].company_rate or 1
+            # elif rec.declaration_type == 'krw':
+            #     company_rate = rec.currency_krw_id.rate_ids[:1].company_rate or 1
+            #
+            # dpt_price = ((rec.dpt_price_unit * (1 / company_rate)) - rec.dpt_tax_import - rec.dpt_tax_other) / 0.1
+            #
+            # if rec.declaration_type == 'usd':
+            #     rec.dpt_price_usd = dpt_price
+            # elif rec.declaration_type == 'cny':
+            #     rec.dpt_price_cny_vnd = dpt_price
+            # elif rec.declaration_type == 'krw':
+            #     rec.dpt_price_krw_vnd = dpt_price
 
     def action_check_lot_name(self):
         if not self.stock_picking_ids:
