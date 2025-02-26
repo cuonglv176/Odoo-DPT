@@ -133,6 +133,7 @@ class DptExportImportLine(models.Model):
 
             divisor = 0.1 * (1 + rec.dpt_tax_import + rec.dpt_tax_other)
             if divisor > 0:
+                company_rate = (1 / company_rate)
                 dpt_price = (rec.dpt_price_unit * company_rate) / divisor
             else:
                 dpt_price = 0
@@ -145,7 +146,7 @@ class DptExportImportLine(models.Model):
                 rec.dpt_price_krw_vnd = dpt_price
 
     @api.onchange('declaration_type', 'dpt_price_usd', 'dpt_price_cny_vnd', 'dpt_price_krw_vnd', 'dpt_tax_other',
-                 'dpt_tax_import')
+                  'dpt_tax_import')
     def onchange_dpt_price_unit(self):
         for rec in self:
             dpt_price = 0
@@ -159,7 +160,7 @@ class DptExportImportLine(models.Model):
             elif rec.declaration_type == 'krw':
                 dpt_price = rec.dpt_price_krw_vnd
                 company_rate = rec.currency_krw_id.rate_ids[:1].company_rate
-            new_value = (dpt_price * 0.1) * (1 + rec.dpt_tax_import + rec.dpt_tax_other) / company_rate
+            new_value = (dpt_price * 0.1) * (1 + rec.dpt_tax_import + rec.dpt_tax_other) / (1 / company_rate)
             if rec.dpt_price_unit != new_value:
                 rec.dpt_price_unit = new_value
 
