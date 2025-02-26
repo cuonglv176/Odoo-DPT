@@ -118,48 +118,48 @@ class DptExportImportLine(models.Model):
             rec.dpt_total_krw_vnd = rec.dpt_price_krw_vnd * rec.currency_krw_id.rate_ids[
                                                             :1].inverse_company_rate * rec.dpt_sl1
 
-    # @api.onchange('declaration_type', 'dpt_price_unit', 'dpt_tax_other', 'dpt_tax_import')
-    # def onchange_dpt_price(self):
-    #     for rec in self:
-    #         inverse_company_rate = 1
-    #         if rec.declaration_type == 'usd':
-    #             inverse_company_rate = rec.currency_usd_id.rate_ids[:1].inverse_company_rate
-    #         elif rec.declaration_type == 'cny':
-    #             inverse_company_rate = rec.currency_cny_id.rate_ids[:1].inverse_company_rate
-    #         elif rec.declaration_type == 'krw':
-    #             inverse_company_rate = rec.currency_krw_id.rate_ids[:1].inverse_company_rate
-    #         else:
-    #             continue
-    #
-    #         divisor = 0.1 * (1 + rec.dpt_tax_import + rec.dpt_tax_other)
-    #         if divisor > 0:
-    #             dpt_price = (rec.dpt_price_unit * inverse_company_rate) / divisor
-    #         else:
-    #             dpt_price = 0
-    #
-    #         if rec.declaration_type == 'usd':
-    #             rec.dpt_price_usd = dpt_price
-    #         elif rec.declaration_type == 'cny':
-    #             rec.dpt_price_cny_vnd = dpt_price
-    #         elif rec.declaration_type == 'krw':
-    #             rec.dpt_price_krw_vnd = dpt_price
+    @api.onchange('declaration_type', 'dpt_price_unit', 'dpt_tax_other', 'dpt_tax_import')
+    def onchange_dpt_price(self):
+        for rec in self:
+            company_rate = 1
+            if rec.declaration_type == 'usd':
+                company_rate = rec.currency_usd_id.rate_ids[:1].company_rate
+            elif rec.declaration_type == 'cny':
+                company_rate = rec.currency_cny_id.rate_ids[:1].company_rate
+            elif rec.declaration_type == 'krw':
+                company_rate = rec.currency_krw_id.rate_ids[:1].company_rate
+            else:
+                continue
+
+            divisor = 0.1 * (1 + rec.dpt_tax_import + rec.dpt_tax_other)
+            if divisor > 0:
+                dpt_price = (rec.dpt_price_unit * company_rate) / divisor
+            else:
+                dpt_price = 0
+
+            if rec.declaration_type == 'usd':
+                rec.dpt_price_usd = dpt_price
+            elif rec.declaration_type == 'cny':
+                rec.dpt_price_cny_vnd = dpt_price
+            elif rec.declaration_type == 'krw':
+                rec.dpt_price_krw_vnd = dpt_price
 
     @api.onchange('declaration_type', 'dpt_price_usd', 'dpt_price_cny_vnd', 'dpt_price_krw_vnd', 'dpt_tax_other',
                  'dpt_tax_import')
     def onchange_dpt_price_unit(self):
         for rec in self:
             dpt_price = 0
-            inverse_company_rate = 1
+            company_rate = 1
             if rec.declaration_type == 'usd':
                 dpt_price = rec.dpt_price_usd
-                inverse_company_rate = rec.currency_usd_id.rate_ids[:1].inverse_company_rate
+                company_rate = rec.currency_usd_id.rate_ids[:1].company_rate
             elif rec.declaration_type == 'cny':
                 dpt_price = rec.dpt_price_cny_vnd
-                inverse_company_rate = rec.currency_cny_id.rate_ids[:1].inverse_company_rate
+                company_rate = rec.currency_cny_id.rate_ids[:1].company_rate
             elif rec.declaration_type == 'krw':
                 dpt_price = rec.dpt_price_krw_vnd
-                inverse_company_rate = rec.currency_krw_id.rate_ids[:1].inverse_company_rate
-            new_value = (dpt_price * 0.1) * (1 + rec.dpt_tax_import + rec.dpt_tax_other) / inverse_company_rate
+                company_rate = rec.currency_krw_id.rate_ids[:1].company_rate
+            new_value = (dpt_price * 0.1) * (1 + rec.dpt_tax_import + rec.dpt_tax_other) / company_rate
             if rec.dpt_price_unit != new_value:
                 rec.dpt_price_unit = new_value
 
