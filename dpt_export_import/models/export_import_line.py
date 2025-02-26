@@ -168,7 +168,6 @@ class DptExportImportLine(models.Model):
         for rec in self:
             dpt_price = 0
             company_rate = 1
-
             if rec.declaration_type == 'usd':
                 dpt_price = rec.dpt_price_usd
                 company_rate = rec.currency_usd_id.rate_ids[:1].company_rate
@@ -179,28 +178,28 @@ class DptExportImportLine(models.Model):
                 dpt_price = rec.dpt_price_krw_vnd
                 company_rate = rec.currency_krw_id.rate_ids[:1].company_rate
             rec.dpt_price_unit = ((dpt_price * 0.1) + rec.dpt_tax_import + rec.dpt_tax_other) * (
-                        1 / (company_rate or 1))
+                    1 / (company_rate or 1))
 
     def _inverse_dpt_price_unit(self):
         for rec in self:
             dpt_price = ((rec.dpt_price_unit / rec.dpt_exchange_rate) - rec.dpt_tax_import - rec.dpt_tax_other) / 0.1
             if rec.declaration_type == 'usd':
                 query = f"""
-                        UPDATE {self._table}
+                        UPDATE dpt_export_import_line
                         SET dpt_price_usd = %s
                         WHERE id = %s
                     """
                 self.env.cr.execute(query, (dpt_price, rec.id))
             elif rec.declaration_type == 'cny':
                 query = f"""
-                                        UPDATE {self._table}
+                                        UPDATE dpt_export_import_line
                                         SET dpt_price_cny_vnd = %s
                                         WHERE id = %s
                                     """
                 self.env.cr.execute(query, (dpt_price, rec.id))
             elif rec.declaration_type == 'krw':
                 query = f"""
-                                        UPDATE {self._table}
+                                        UPDATE dpt_export_import_line
                                         SET dpt_price_krw_vnd = %s
                                         WHERE id = %s
                                     """
@@ -410,6 +409,7 @@ class DptExportImportLine(models.Model):
 
     def write(self, vals):
         res = super(DptExportImportLine, self).write(vals)
+
         for rec in self:
             if 'stock_picking_ids' in vals and rec.stock_picking_ids:
                 rec.stock_picking_ids._compute_valid_cutlist()
@@ -427,6 +427,8 @@ class DptExportImportLine(models.Model):
 
             })
             rec.sale_line_id.write(val_update_sale_line)
+            if 'dpt_price_unit' in vals and 'dpt_price_usd' not in vals and 'dpt_price_krw_vnd' not in vals and 'dpt_price_cny_vnd' not in vals:
+                self._inverse_dpt_price_unit()
             if rec.sale_line_id.id:
                 if 'dpt_uom1_id' in vals or 'dpt_sl1' in vals or 'dpt_price_unit' in vals:
                     update_query = """
