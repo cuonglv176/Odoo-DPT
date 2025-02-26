@@ -15,7 +15,7 @@ class StockPicking(models.Model):
     @api.depends('purchase_id', 'purchase_id.sale_id')
     def _compute_sale(self):
         for item in self:
-            item.sale_id = item.purchase_id.sale_id
+            item.sale_purchase_id = item.purchase_id.sale_id
 
     def _inverse_sale(self):
         pass
