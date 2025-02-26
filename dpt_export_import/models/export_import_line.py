@@ -193,8 +193,7 @@ class DptExportImportLine(models.Model):
             elif rec.declaration_type == 'krw':
                 company_rate = rec.currency_krw_id.rate_ids[:1].company_rate or 1
 
-            divisor = 0.1 * (1 + (rec.dpt_tax_import or 0) + (rec.dpt_tax_other or 0))
-            dpt_price = (rec.dpt_price_unit * (1 / company_rate)) / divisor if divisor else 0
+            dpt_price = ((rec.dpt_price_unit * (1 / company_rate)) - rec.dpt_tax_import - rec.dpt_tax_other) / 0.1
 
             if rec.declaration_type == 'usd':
                 rec.dpt_price_usd = dpt_price
