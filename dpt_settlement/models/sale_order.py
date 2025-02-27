@@ -43,9 +43,9 @@ def _create_invoices(self, grouped=False, final=False, date=None):
             import_ids = self.env['dpt.export.import'].search(
                 [('sale_ids', 'in', order.ids),
                  ('state', 'not in', ('cleared', 'back_for_stock', 'released', 'cancelled'))])
-            if import_ids:
-                import_name = ','.join(import_ids.mapped('name'))
-                raise UserError(f"Tờ khai: {import_name} chưa được thông quan, vui lòng kiểm tra lại!!!")
+            # if import_ids:
+            #     import_name = ','.join(import_ids.mapped('name'))
+            #     raise UserError(f"Tờ khai: {import_name} chưa được thông quan, vui lòng kiểm tra lại!!!")
             import_not_ids = self.env['dpt.export.import'].search(
                 [('sale_ids', 'in', order.ids)])
             # if not import_not_ids:
