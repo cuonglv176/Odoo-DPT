@@ -209,10 +209,10 @@ class AccountPayment(models.Model):
 
             })
         approval_id = self.env['approval.request'].create(create_values)
-        list_approver = self._compute_approver_list()
+        list_approver = self._compute_approver_list(approval_id)
         # if list_approver:
-        if list_approver:
-            approval_id.write({'approver_ids': [(0, 0, approver[2]) for approver in list_approver]})
+        # if list_approver:
+        #     approval_id.write({'approver_ids': [(0, 0, approver[2]) for approver in list_approver]})
         approval_id.action_confirm()
         self.approval_id = approval_id
         view_id = self.env.ref('approvals.approval_request_view_form').id
@@ -225,10 +225,11 @@ class AccountPayment(models.Model):
             'views': [[view_id, 'form']],
         }
 
-    def _compute_approver_list(self):
+    def _compute_approver_list(self, approval_id):
         list_approver = []
         list_exist = []
         for rec in self:
+            sequence = 50
             for r in rec.type_id.rule_ids:
                 if r.user_id.id in list_exist:
                     continue
@@ -243,13 +244,16 @@ class AccountPayment(models.Model):
                     required = False
                 if not required:
                     continue
-                list_approver.append((0, 0, {
-                    'sequence': r.sequence,
+                sequence += 1
+                approval_id = self.env['approval.approver'].create({
+                    'sequence': sequence,
                     'user_id': r.user_id.id,
+                    'request_id': approval_id.id,
                     'required': required
-                }))
+                })
+                list_approver.append(())
                 list_exist.append(r.user_id.id)
-        return list_approver
+        # return list_approver
 
     @api.onchange('user_id')
     def onchange_user_get_department(self):
