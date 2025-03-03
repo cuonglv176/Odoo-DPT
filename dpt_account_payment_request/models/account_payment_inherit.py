@@ -210,9 +210,9 @@ class AccountPayment(models.Model):
             })
         approval_id = self.env['approval.request'].create(create_values)
         list_approver = self._compute_approver_list()
+        # if list_approver:
         if list_approver:
-            approval_id.approver_ids = None
-            approval_id.approver_ids = list_approver
+            approval_id.write({'approver_ids': [(0, 0, approver[2]) for approver in list_approver]})
         approval_id.action_confirm()
         self.approval_id = approval_id
         view_id = self.env.ref('approvals.approval_request_view_form').id
