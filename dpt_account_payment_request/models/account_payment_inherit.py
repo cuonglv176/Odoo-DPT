@@ -224,26 +224,26 @@ class AccountPayment(models.Model):
         list_approver = []
         list_exist = []
         for rec in self:
-            sequence = 50
-            for r in rec.type_id.rule_ids:
+            sequence = 1
+            sorted_rules = rec.type_id.rule_ids.sorted(key=lambda r: r.sequence)
+            for r in sorted_rules:
                 if r.user_id.id in list_exist:
                     continue
                 diff_value = rec.amount
-                if r.type_compare == 'equal' and diff_value == 0:
+                required = False
+                if r.type_compare == 'equal' and diff_value == r.value_compare:
                     required = True
                 elif r.type_compare == 'higher' and diff_value > 0 and diff_value >= r.value_compare:
                     required = True
                 elif r.type_compare == 'lower' and diff_value < 0 and abs(diff_value) >= r.value_compare:
                     required = True
-                else:
-                    required = False
-                sequence += 1
                 list_approver.append((0, 0, {
-                    'sequence': r.sequence,
+                    'sequence': sequence,
                     'user_id': r.user_id.id,
                     'required': required
                 }))
                 list_exist.append(r.user_id.id)
+                sequence += 1
         return list_approver
 
     @api.onchange('user_id')
