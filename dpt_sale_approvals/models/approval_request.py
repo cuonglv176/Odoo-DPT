@@ -58,6 +58,14 @@ class ApprovalRequest(models.Model):
 class ApprovalApprover(models.Model):
     _inherit = 'approval.approver'
 
+    def write(self, vals):
+        if 'user_id' in vals:
+            if self.env['res.users'].browse(vals.get('user_id')).login == 'nhatbd@kytoc.vn':
+                vals.update({
+                    'sequence': 90
+                })
+        return super(ApprovalApprover, self).write(vals)
+
     @api.model
     def create(self, vals):
         if 'user_id' in vals:
