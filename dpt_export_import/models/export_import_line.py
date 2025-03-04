@@ -116,8 +116,7 @@ class DptExportImportLine(models.Model):
     @api.depends('dpt_price_krw_vnd', 'dpt_sl1', 'declaration_type')
     def _compute_dpt_total_krw_vnd(self):
         for rec in self:
-            rec.dpt_total_krw_vnd = rec.dpt_price_krw_vnd * rec.currency_krw_id.rate_ids[
-                                                            :1].inverse_company_rate * rec.dpt_sl1
+            rec.dpt_total_krw_vnd = rec.dpt_price_krw_vnd * rec.currency_krw_id.rate_ids[:1].company_rate * rec.dpt_sl1
 
     # @api.onchange('declaration_type', 'dpt_price_unit', 'dpt_tax_other', 'dpt_tax_import')
     # def onchange_dpt_price(self):
@@ -177,8 +176,7 @@ class DptExportImportLine(models.Model):
             elif rec.declaration_type == 'krw':
                 dpt_price = rec.dpt_price_krw_vnd
                 company_rate = rec.currency_krw_id.rate_ids[:1].company_rate
-            rec.dpt_price_unit = ((dpt_price * 0.1) + rec.dpt_tax_import + rec.dpt_tax_other) * (
-                    1 / (company_rate or 1))
+            rec.dpt_price_unit = ((dpt_price * 0.1) + rec.dpt_tax_import + rec.dpt_tax_other) * (company_rate or 1)
 
     def _inverse_dpt_price_unit(self):
         for rec in self:
@@ -226,7 +224,7 @@ class DptExportImportLine(models.Model):
                     [('category', '=', 'import_export'), ('category_code', '=', 'KRW')], limit=1)
                 company_rate = currency_krw_id.rate_ids[:1].company_rate
             if company_rate != 0:
-                rec.dpt_exchange_rate = 1 / company_rate
+                rec.dpt_exchange_rate = company_rate
             else:
                 rec.dpt_exchange_rate = 0
 
@@ -247,7 +245,7 @@ class DptExportImportLine(models.Model):
                     [('category', '=', 'import_export'), ('category_code', '=', 'KRW')], limit=1)
                 company_rate = currency_krw_id.rate_ids[:1].company_rate
             if company_rate != 0:
-                rec.dpt_exchange_rate = 1 / company_rate
+                rec.dpt_exchange_rate = company_rate
             else:
                 rec.dpt_exchange_rate = 0
 
