@@ -43,21 +43,21 @@ def _create_invoices(self, grouped=False, final=False, date=None):
             import_ids = self.env['dpt.export.import'].search(
                 [('sale_ids', 'in', order.ids),
                  ('state', 'not in', ('cleared', 'back_for_stock', 'released', 'cancelled'))])
-            # if import_ids:
-            #     import_name = ','.join(import_ids.mapped('name'))
-            #     raise UserError(f"Tờ khai: {import_name} chưa được thông quan, vui lòng kiểm tra lại!!!")
+            if import_ids:
+                import_name = ','.join(import_ids.mapped('name'))
+                raise UserError(f"Tờ khai: {import_name} chưa được thông quan, vui lòng kiểm tra lại!!!")
             import_not_ids = self.env['dpt.export.import'].search(
                 [('sale_ids', 'in', order.ids)])
-            # if not import_not_ids:
-            #     raise UserError(f"Không có tờ khai: vui lòng kiểm tra lại!!!")
+            if not import_not_ids:
+                raise UserError(f"Không có tờ khai: vui lòng kiểm tra lại!!!")
 
             vehicle_stage_ids = self.env['dpt.vehicle.stage'].search([('is_finish_stage', '=', True)])
             shipping_ids = self.env['dpt.shipping.slip'].search(
                 [('vn_vehicle_stage_id', 'in', vehicle_stage_ids.ids), ('export_import_ids.sale_ids', 'in', order.ids)])
             shipping_tq_ids = self.env['dpt.shipping.slip'].search(
                 [('cn_vehicle_stage_id', 'in', vehicle_stage_ids.ids), ('export_import_ids.sale_ids', 'in', order.ids)])
-            # if not shipping_ids and not shipping_tq_ids:
-            #     raise UserError(f"Vận chuyển chưa được hoàn thành, vui lòng kiểm tra lại!!!")
+            if not shipping_ids and not shipping_tq_ids:
+                raise UserError(f"Vận chuyển chưa được hoàn thành, vui lòng kiểm tra lại!!!")
 
         # picking_ids = self.env['stock.picking'].search(
         #     ['|', ('sale_purchase_id', '=', self.id), ('sale_id', '=', order.id),
