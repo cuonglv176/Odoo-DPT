@@ -210,10 +210,10 @@ class AccountPayment(models.Model):
             })
         approval_id = self.env['approval.request'].create(create_values)
         approval_id.action_confirm()
-        list_approver = self._compute_approver_list(approval_id)
+        list_approver = self._compute_approver_list()
         # if list_approver:
-        # if list_approver:
-        #     approval_id.write({'approver_ids': [(0, 0, approver[2]) for approver in list_approver]})
+        if list_approver:
+            approval_id.write({'approver_ids': [(0, 0, approver) for approver in list_approver]})
         self.approval_id = approval_id
         view_id = self.env.ref('approvals.approval_request_view_form').id
         return {
@@ -225,7 +225,7 @@ class AccountPayment(models.Model):
             'views': [[view_id, 'form']],
         }
 
-    def _compute_approver_list(self, approval_id):
+    def _compute_approver_list(self):
         list_approver = []
         list_exist = []
         for rec in self:
@@ -245,15 +245,13 @@ class AccountPayment(models.Model):
                 if not required:
                     continue
                 sequence += 1
-                self.env['approval.approver'].create({
+                list_approver.append({
                     'sequence': sequence,
                     'user_id': r.user_id.id,
-                    'request_id': approval_id.id,
                     'required': required
                 })
-                list_approver.append(())
                 list_exist.append(r.user_id.id)
-        # return list_approver
+        return list_approver
 
     @api.onchange('user_id')
     def onchange_user_get_department(self):
