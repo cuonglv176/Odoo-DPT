@@ -204,16 +204,12 @@ class AccountPayment(models.Model):
             'payment_id': self.id,
             'date': datetime.now(),
         }
-        if self.sale_id:
-            create_values.update({
-
-            })
         approval_id = self.env['approval.request'].create(create_values)
-        approval_id.action_confirm()
         list_approver = self._compute_approver_list()
         # if list_approver:
         if list_approver:
             approval_id.write({'approver_ids': [(0, 0, approver) for approver in list_approver]})
+        approval_id.action_confirm()
         self.approval_id = approval_id
         view_id = self.env.ref('approvals.approval_request_view_form').id
         return {
@@ -242,8 +238,6 @@ class AccountPayment(models.Model):
                     required = True
                 else:
                     required = False
-                if not required:
-                    continue
                 sequence += 1
                 list_approver.append({
                     'sequence': sequence,
