@@ -205,6 +205,7 @@ class AccountPayment(models.Model):
             'date': datetime.now(),
         }
         approval_id = self.env['approval.request'].create(create_values)
+        approval_id._compute_approver_ids()
         list_approver = self._compute_approver_list()
         if list_approver:
             approval_id.approver_ids = list_approver
