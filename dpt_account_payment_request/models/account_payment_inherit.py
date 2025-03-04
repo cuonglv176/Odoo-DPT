@@ -225,7 +225,7 @@ class AccountPayment(models.Model):
         list_approver = []
         list_exist = []
         for rec in self:
-            sequence = 50
+            sequence = 10
             sorted_rules = rec.type_id.rule_ids.sorted(key=lambda r: r.sequence)
             for r in sorted_rules:
                 if r.user_id.id in list_exist:
