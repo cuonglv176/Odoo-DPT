@@ -11,6 +11,7 @@
                 <field name="is_default" widget="boolean_toggle"/>
                 <field name="is_draft_stage" widget="boolean_toggle"/>
                 <field name="is_ready_stage" widget="boolean_toggle"/>
+                <field name="is_finish_stage" widget="boolean_toggle"/>
                 <field name="active" widget="boolean_toggle"/>
                 <field name="country"/>
             </tree>
