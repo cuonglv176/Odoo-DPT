@@ -147,7 +147,7 @@
                                     <field name="dpt_sl2"/>
                                     <field name="dpt_tax_ecus5"/>
                                     <field name="dpt_tax"/>
-                                    <field name="dpt_exchange_rate"/>
+                                    <field name="dpt_exchange_rate" force_save="1"/>
                                     <field name="dpt_total_usd_vnd"/>
                                     <field name="dpt_total_cny_vnd"/>
                                     <field name="dpt_is_new" widget="boolean_toggle"/>
