@@ -193,7 +193,7 @@ class DptExportImportLine(models.Model):
             self.dpt_tax_ecus5 = self.product_history_id.dpt_tax_ecus5
             self.dpt_tax = self.product_history_id.dpt_tax
             self.dpt_amount_tax = self.product_history_id.dpt_amount_tax
-            self.dpt_exchange_rate = self.product_history_id.dpt_exchange_rate
+            # self.dpt_exchange_rate = self.product_history_id.dpt_exchange_rate
             self.hs_code_id = self.product_history_id.hs_code_id
             self.dpt_sl1 = self.product_history_id.dpt_sl1
             self.dpt_uom1_id = self.product_history_id.dpt_uom1_id
@@ -337,7 +337,7 @@ class DptExportImportLine(models.Model):
             self.dpt_tax_ecus5 = self.sale_line_id.product_id.dpt_tax_ecus5
             self.dpt_tax = self.sale_line_id.vat_tax_rate
             self.dpt_amount_tax = self.sale_line_id.dpt_amount_tax
-            self.dpt_exchange_rate = self.sale_line_id.payment_exchange_rate
+            # self.dpt_exchange_rate = self.sale_line_id.payment_exchange_rate
             self.dpt_uom1_id = self.sale_line_id.product_uom
             self.dpt_sl1 = self.sale_line_id.product_uom_qty
             self.dpt_sl2 = self.sale_line_id.dpt_sl2
@@ -360,7 +360,7 @@ class DptExportImportLine(models.Model):
         self.product_id.dpt_tax_import = self.dpt_tax_import
         self.product_id.dpt_tax_ecus5 = self.dpt_tax_ecus5
         self.product_id.dpt_tax = self.dpt_tax
-        self.product_id.dpt_exchange_rate = self.dpt_exchange_rate
+        # self.product_id.dpt_exchange_rate = self.dpt_exchange_rate
         self.product_id.hs_code_id = self.hs_code_id
         self.product_id.dpt_uom1_id = self.dpt_uom1_id
         self.product_id.dpt_sl1 = self.dpt_sl1
@@ -393,7 +393,7 @@ class DptExportImportLine(models.Model):
                 self.dpt_tax_import = self.product_id.dpt_tax_import
                 self.dpt_tax_ecus5 = self.product_id.dpt_tax_ecus5
                 self.dpt_tax = self.product_id.dpt_tax
-                self.dpt_exchange_rate = self.product_id.dpt_exchange_rate
+                # self.dpt_exchange_rate = self.product_id.dpt_exchange_rate
                 self.dpt_uom1_id = self.product_id.dpt_uom1_id
                 self.dpt_sl1 = self.product_id.dpt_sl1
                 self.dpt_sl2 = self.product_id.dpt_sl2
