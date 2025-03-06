@@ -269,7 +269,8 @@
             <xpath expr="//header" position="inside">
                 <field name="finish_create_picking" invisible="1"/>
                 <button name="action_create_transfer_picking" string="Create transfer picking" type="object"
-                        invisible="picking_type_code != 'incoming' or finish_create_picking or state != 'done'" data-hotkey="o"/>
+                        invisible="picking_type_code != 'incoming' or finish_create_picking or state != 'done'"
+                        data-hotkey="o"/>
             </xpath>
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                 <field name="num_picking_out" invisible="True"/>
@@ -351,5 +352,22 @@
             </field>
         </field>
     </record>
+
+    <record id="incoming_stock_picking_in_sales_action" model="ir.actions.act_window">
+        <field name="name">Phiếu nhập kho</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">tree,kanban,form,calendar,activity</field>
+        <field name="domain">[('is_main_incoming','=',True)]</field>
+        <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0],
+            'restricted_picking_type_code': 'incoming', 'search_default_reception': 1}
+        </field>
+        <field name="search_view_id" ref="view_picking_internal_search"/>
+        <field name="help" type="html">
+        </field>
+    </record>
+
+    <menuitem id="incoming_stock_picking_in_sales_menu" name="Phiếu nhập kho" parent="sale.sale_menu_root"
+              action="incoming_stock_picking_in_sales_action"
+              sequence="25"/>
 
 </odoo>
