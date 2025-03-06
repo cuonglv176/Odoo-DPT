@@ -60,17 +60,27 @@ class ApprovalApprover(models.Model):
 
     def write(self, vals):
         if 'user_id' in vals:
-            if self.env['res.users'].browse(vals.get('user_id')).login == 'nhatbd@kytoc.vn':
+            user = self.env['res.users'].browse(vals.get('user_id'))
+            if user.has_group('dpt_security.group_dpt_director'):
                 vals.update({
                     'sequence': 90
+                })
+            if user.has_group('dpt_security.group_dpt_ke_toan_truong'):
+                vals.update({
+                    'sequence': 80
                 })
         return super(ApprovalApprover, self).write(vals)
 
     @api.model
     def create(self, vals):
         if 'user_id' in vals:
-            if self.env['res.users'].browse(vals.get('user_id')).login == 'nhatbd@kytoc.vn':
+            user = self.env['res.users'].browse(vals.get('user_id'))
+            if user.has_group('dpt_security.group_dpt_director'):
                 vals.update({
                     'sequence': 90
+                })
+            if user.has_group('dpt_security.group_dpt_ke_toan_truong'):
+                vals.update({
+                    'sequence': 80
                 })
         return super(ApprovalApprover, self).create(vals)
