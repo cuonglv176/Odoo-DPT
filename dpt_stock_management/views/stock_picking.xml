@@ -359,9 +359,9 @@
         <field name="view_mode">tree,form</field>
         <field name="domain">[('is_main_incoming','=',True)]</field>
         <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0],
-            'restricted_picking_type_code': 'incoming', 'search_default_reception': 1}
+            'restricted_picking_type_code': 'incoming', 'search_default_reception': 1, 'create': 0, 'delete': 0}
         </field>
-        <field name="search_view_id" ref="view_picking_internal_search"/>
+        <field name="search_view_id" ref="stock.view_picking_internal_search"/>
     </record>
 
     <menuitem id="incoming_stock_picking_in_sales_menu" name="Phiếu nhập kho" parent="sale.sale_menu_root"
