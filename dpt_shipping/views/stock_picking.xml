@@ -87,4 +87,7 @@
     <menuitem id="valid_cutlist_stock_picking_in_stock_menu" name="Bảng chốt xếp xe" parent="stock.menu_stock_root"
               action="action_valid_cutlist_stock_picking" sequence="12"/>
 
+    <menuitem id="valid_cutlist_stock_picking_in_sale_menu" name="Bảng chốt xếp xe" parent="sale.sale_menu_root"
+              action="action_valid_cutlist_stock_picking" sequence="12"/>
+
 </odoo>
