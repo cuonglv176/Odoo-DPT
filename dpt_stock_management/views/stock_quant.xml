@@ -1,21 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 
-    <record id="stock_quant_inherit_form_view" model="ir.ui.view">
-        <field name="name">stock.quant.inherit.form.view</field>
+    <record id="stock_quant_inherit_tree_view" model="ir.ui.view">
+        <field name="name">stock.quant.inherit.tree.view</field>
         <field name="model">stock.quant</field>
-        <field name="inherit_id" ref="stock.view_stock_quant_tree_editable"/>
         <field name="arch" type="xml">
-            <field name="lot_id" position="before">
-                <field name="weight"/>
-                <field name="volume"/>
-                <field name="total_weight"/>
-                <field name="total_volume"/>
-            </field>
+            <tree limit="10000">
+                <field name="location_id"/>
+                <field name="sale_id"/>
+                <field name="lot_id" string="Mã lô"/>
+                <field name="product_id"/>
+                <field name="partner_id" string="Khách hàng"/>
+                <field name="employee_cs" string="CS"/>
+                <field name="total_weight" sum="Tổng cân nặng (kg)"/>
+                <field name="total_volume" sum="Tổng số khối (m3)"/>
+            </tree>
         </field>
     </record>
 
-    <menuitem id="dpt_stock_quant_menu" name="Tồn kho" sequence="1" parent="stock.menu_stock_root"
-              action="stock.dashboard_open_quants"/>
+    <record model="ir.actions.act_window" id="dpt_stock_quant">
+        <field name="name">Tồn kho theo lô</field>
+        <field name="context">{'search_default_internal_loc': 1, 'search_default_productgroup':1, 'search_default_locationgroup':1, 'inventory_mode':True}</field>
+        <field name="res_model">stock.quant</field>
+        <field name="view_id" ref="stock_quant_inherit_tree_view"/>
+    </record>
+
+    <menuitem id="dpt_stock_quant_menu" name="Tồn kho theo lô" sequence="1" parent="stock.menu_stock_root"
+              action="dpt_stock_quant"/>
 
 </odoo>
