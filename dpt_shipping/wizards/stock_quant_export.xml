@@ -9,7 +9,8 @@
                 <field name="quant_ids" invisible="1"/>
                 <sheet>
                     <group>
-                        <field name="ticket_id" options="{'no_create': True, 'no_open': True}" required="1"/>
+                        <field name="ticket_ids" widget="many2many_tags" context="{'show_in_quant': True}"
+                               options="{'no_create': True, 'no_open': True}" required="1"/>
                     </group>
                 </sheet>
                 <footer>

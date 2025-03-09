@@ -18,3 +18,13 @@ class HelpdeskTicket(models.Model):
                  ('is_main_incoming', '=', True)])
             picking_ids._compute_valid_cutlist()
         return res
+
+    def _compute_display_name(self):
+        for rec in self:
+            name = f"{rec.partner_id.name if rec.partner_id else ''}-{rec.sale_id.name if rec.sale_id else ''}"
+            picking_id = self.env['stock.picking'].sudo().search(
+                [('sale_purchase_id', '=', rec.sale_id.id), ('state', '=', 'done'),
+                 ('is_main_incoming', '=', True)], order="id desc", limit=1)
+            if picking_id:
+                name += f"-{picking_id.picking_lot_name if picking_id else ''}-{picking_id.packing_lot_name if picking_id else ''}"
+            rec.display_name = name

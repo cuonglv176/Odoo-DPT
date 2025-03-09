@@ -17,6 +17,14 @@
         <field name="domain">[('vehicle_country','=', 'vietnamese')]</field>
     </record>
 
+    <record id="dpt_shipping_slip_last_vietnamese_action" model="ir.actions.act_window">
+        <field name="name">Phiếu vận chuyển chặng cuối VN</field>
+        <field name="res_model">dpt.shipping.slip</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('vehicle_country','=', 'vietnamese'),('last_shipping_slip','=', True)]</field>
+    </record>
+
     <record id="dpt_stock_quant_vietnamese_action" model="ir.actions.act_window">
         <field name="name">Stock Quant Vietnamese</field>
         <field name="res_model">stock.quant</field>
@@ -35,7 +43,9 @@
                   action="dpt_shipping_slip_chinese_action"/>
         <menuitem id="dpt_shipping_slip_vietnamese_menu" name="Shipping slip Vietnamese" sequence="20"
                   action="dpt_shipping_slip_vietnamese_action"/>
-        <menuitem id="dpt_stock_quant_vietnamese_menu" name="Vietnamese Stock" sequence="30"
+        <menuitem id="dpt_shipping_slip_last_vietnam_menu" name="Phiếu vận chuyển chặng cuối VN" sequence="30"
+                  action="dpt_shipping_slip_last_vietnamese_action"/>
+        <menuitem id="dpt_stock_quant_vietnamese_menu" name="Tồn kho VN theo nhóm kiện" sequence="40"
                   action="dpt_stock_quant_vietnamese_action"/>
     </menuitem>
 

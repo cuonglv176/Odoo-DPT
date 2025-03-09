@@ -5,7 +5,7 @@ from odoo import _, api, fields, models, SUPERUSER_ID
 class StockQuant(models.Model):
     _inherit = 'stock.quant'
 
-    ticket_id = fields.Many2one('helpdesk.ticket', 'Ticket')
+    ticket_ids = fields.Many2many('helpdesk.ticket', string='Ticket')
 
     def action_stock_quant_separate(self):
         context = {

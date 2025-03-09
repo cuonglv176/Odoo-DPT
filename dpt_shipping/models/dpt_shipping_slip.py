@@ -24,6 +24,7 @@ class DPTShippingSlip(models.Model):
     in_picking_ids = fields.Many2many('stock.picking', 'stock_picking_in_shipping_rel', 'shipping_slip_id',
                                       'picking_id', string='In Picking', domain=[('state', '!=', 'cancel')])
     sale_ids = fields.Many2many('sale.order', string='Sale Order', compute="_compute_information")
+    ticket_ids = fields.Many2many('helpdesk.ticket', string="Tickets")
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle')
     vehicle_country = fields.Selection(related='vehicle_id.country')
     vn_vehicle_stage_id = fields.Many2one('dpt.vehicle.stage', 'Vietnamese Vehicle Stage', domain=[('country', '=', 'vietnamese')])
@@ -41,6 +42,7 @@ class DPTShippingSlip(models.Model):
     num_not_confirm_picking = fields.Integer("Number of Not Confirm Picking", compute="_compute_information")
     estimate_arrival_warehouse_vn = fields.Date('Estimate Arrival Warehouse VN')
     non_finish_transfer = fields.Boolean('Non-Finish Transfer', compute="compute_non_finish_transfer")
+    last_shipping_slip = fields.Boolean("Last Shipping Slip")
 
     def compute_non_finish_transfer(self):
         for item in self:

@@ -8,11 +8,11 @@ class StockQuantExport(models.TransientModel):
     _name = 'stock.quant.export'
 
     quant_ids = fields.Many2many('stock.quant', string="Stock Quant")
-    ticket_id = fields.Many2one('helpdesk.ticket', 'Ticket')
+    ticket_ids = fields.Many2many('helpdesk.ticket', string='Ticket')
 
     def action_export(self):
         self.quant_ids.write({
-            'ticket_id': self.ticket_id.id
+            'ticket_ids': self.ticket_ids.ids
         })
         # group quant based on partner
         quant_combine = {}
@@ -55,7 +55,8 @@ class StockQuantExport(models.TransientModel):
                 })
         export_picking_ids = export_picking_ids.create(export_picking_vals)
         shipping_id = self.env['dpt.shipping.slip'].create({
-            'out_picking_ids': export_picking_ids.ids
+            'out_picking_ids': export_picking_ids.ids,
+            'ticket_ids': self.ticket_ids.ids
         })
 
         return {
