@@ -2,6 +2,7 @@ from odoo import models, fields, api, _
 from datetime import datetime
 from odoo.exceptions import ValidationError
 from odoo import api, Command, fields, models, _
+from odoo.exceptions import UserError, ValidationError
 
 class ApprovalRequest(models.Model):
     _inherit = 'approval.request'
@@ -126,19 +127,35 @@ class ApprovalRequest(models.Model):
                     order_line_id.new_price_unit = sale_service_id.price_unit
         return res
 
-    def write(self, vals):
-        res = super().write(vals)
-        if 'approver_ids' in vals:
-            to_resequence = self.filtered_domain([('approver_sequence', '=', True), ('request_status', '=', 'pending')])
-            for approval in to_resequence:
-                if not approval.approver_ids.filtered(lambda a: a.status == 'pending'):
-                    approver = approval.approver_ids.filtered(lambda a: a.status == 'waiting')
-                    if approver:
-                        if approver[0].user_id.has_group('dpt_security.group_dpt_director'):
-                            approver[0].status = 'waiting'
-                        if approver[0].user_id.has_group('dpt_security.group_dpt_ke_toan_truong'):
-                            approver[0].status = 'waiting'
-        return res
+
+    def action_confirm(self):
+        # make sure that the manager is present in the list if he is required
+        self.ensure_one()
+        if self.category_id.manager_approval == 'required':
+            employee = self.env['hr.employee'].search([('user_id', '=', self.request_owner_id.id)], limit=1)
+            if not employee.parent_id:
+                raise UserError(_('This request needs to be approved by your manager. There is no manager linked to your employee profile.'))
+            if not employee.parent_id.user_id:
+                raise UserError(_('This request needs to be approved by your manager. There is no user linked to your manager.'))
+            if not self.approver_ids.filtered(lambda a: a.user_id.id == employee.parent_id.user_id.id):
+                raise UserError(_('This request needs to be approved by your manager. Your manager is not in the approvers list.'))
+        if len(self.approver_ids) < self.approval_minimum:
+            raise UserError(_("You have to add at least %s approvers to confirm your request.", self.approval_minimum))
+        if self.requirer_document == 'required' and not self.attachment_number:
+            raise UserError(_("You have to attach at lease one document."))
+
+        approvers = self.approver_ids
+        if self.approver_sequence:
+            approvers = approvers.filtered(lambda a: a.status in ['new', 'pending', 'waiting']).sorted(lambda a: a.sequence)
+
+            approvers[1:].sudo().write({'status': 'waiting'})
+            approvers = approvers[0] if approvers and approvers[0].status != 'pending' else self.env['approval.approver']
+        else:
+            approvers = approvers.filtered(lambda a: a.status == 'new').sorted(lambda a: a.sequence)
+
+        approvers._create_activity()
+        approvers.sudo().write({'status': 'pending'})
+        self.sudo().write({'date_confirmed': fields.Datetime.now()})
 
 
 class ApprovalApprover(models.Model):
