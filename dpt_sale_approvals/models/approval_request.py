@@ -118,6 +118,7 @@ class ApprovalRequest(models.Model):
 
 class ApprovalApprover(models.Model):
     _inherit = 'approval.approver'
+    _order = 'sequence'
 
     def write(self, vals):
         if 'user_id' in vals:
