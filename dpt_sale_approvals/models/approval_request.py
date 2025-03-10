@@ -35,16 +35,27 @@ class ApprovalRequest(models.Model):
                 if employee.parent_id.user_id:
                     manager_user_id = employee.parent_id.user_id.id
                     manager_required = request.category_id.manager_approval == 'required'
+                    sequence = 9
                     # We set the manager sequence to be lower than all others (9) so they are the first to approve.
+                    user = self.env['res.users'].browse(employee.parent_id.user_id.id)
+                    if user.has_group('dpt_security.group_dpt_director'):
+                        sequence = 90
+                    if user.has_group('dpt_security.group_dpt_ke_toan_truong'):
+                        sequence = 80
                     self._create_or_update_approver(manager_user_id, users_to_approver, approver_id_vals,
-                                                    manager_required, 9)
+                                                    manager_required, sequence)
                     if manager_user_id in users_to_category_approver.keys():
                         users_to_category_approver.pop(manager_user_id)
 
             for user_id in users_to_category_approver:
+                user = self.env['res.users'].browse(user_id)
+                sequence = users_to_category_approver[user_id].sequence
+                if user.has_group('dpt_security.group_dpt_director'):
+                    sequence = 90
+                if user.has_group('dpt_security.group_dpt_ke_toan_truong'):
+                    sequence = 80
                 self._create_or_update_approver(user_id, users_to_approver, approver_id_vals,
-                                                users_to_category_approver[user_id].required,
-                                                users_to_category_approver[user_id].sequence)
+                                                users_to_category_approver[user_id].required,sequence)
 
             for current_approver in users_to_approver.values():
                 # Reset sequence and required for the remaining approvers that are no (longer) part of the category approvers or managers.
