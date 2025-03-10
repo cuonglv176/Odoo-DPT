@@ -126,6 +126,19 @@ class ApprovalRequest(models.Model):
                     order_line_id.new_price_unit = sale_service_id.price_unit
         return res
 
+    def write(self, vals):
+        res = super().write(vals)
+        if 'approver_ids' in vals:
+            to_resequence = self.filtered_domain([('approver_sequence', '=', True), ('request_status', '=', 'pending')])
+            for approval in to_resequence:
+                if not approval.approver_ids.filtered(lambda a: a.status == 'pending'):
+                    approver = approval.approver_ids.filtered(lambda a: a.status == 'waiting')
+                    if approver:
+                        approver = approver.sorted(lambda a: a.sequence)
+                        approver[0].status = 'pending'
+                        approver[0]._create_activity()
+        return res
+
 
 class ApprovalApprover(models.Model):
     _inherit = 'approval.approver'
