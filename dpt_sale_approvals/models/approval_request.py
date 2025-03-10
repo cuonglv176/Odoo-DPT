@@ -59,9 +59,15 @@ class ApprovalRequest(models.Model):
                 user = self.env['res.users'].browse(user_id)
                 sequence = users_to_category_approver[user_id].sequence
                 if user.has_group('dpt_security.group_dpt_director'):
-                    sequence = 90
+                    if request.payment_id.type_id.is_ke_toan_truong:
+                        sequence = 80
+                    else:
+                        sequence = 90
                 if user.has_group('dpt_security.group_dpt_ke_toan_truong'):
-                    sequence = 80
+                    if request.payment_id.type_id.is_ke_toan_truong:
+                        sequence = 90
+                    else:
+                        sequence = 80
                 self._create_or_update_approver(user_id, users_to_approver, approver_id_vals,
                                                 users_to_category_approver[user_id].required, sequence)
 
