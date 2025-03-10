@@ -149,7 +149,7 @@ class SaleOrder(models.Model):
     def onchange_sale_service_ids(self):
         val = []
         sequence = 0
-        list_exist = self.env['sale.order'].browse(self.id.origin).fields_ids.fields_id.ids
+        list_exist = self.env['sale.order'].browse(self.origin).fields_ids.fields_id.ids
         list_onchange = [item.fields_id.id for item in self.fields_ids]
         list_sale_service_id = []
         for sale_service_id in self.sale_service_ids:
