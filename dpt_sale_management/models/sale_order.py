@@ -150,7 +150,7 @@ class SaleOrder(models.Model):
         val = []
         sequence = 0
         list_exist = self.env['sale.order'].browse(self.origin).fields_ids
-        list_onchange = [item.fields_id.id for item in self.fields_ids]
+        list_onchange = self.fields_ids
         list_sale_service_id = []
         service_id = []
         fields_id = []
@@ -172,9 +172,8 @@ class SaleOrder(models.Model):
                                 'value_integer': field_data.value_integer,
                                 'value_date': field_data.value_date,
                                 'selection_value_id': field_data.selection_value_id.id,
-
                             })
-                elif required_fields_id.id in list_onchange:
+                elif required_fields_id.id in list_onchange and sale_service_id.id in list_onchange.sale_service_id.ids:
                     for field_data in self.fields_ids:
                         if field_data.fields_id.id == required_fields_id.id:
                             val.append({
