@@ -145,153 +145,165 @@ class SaleOrder(models.Model):
             # else:
             #     raise ValidationError(_("Please fill required fields!!!"))
 
-    @api.onchange('sale_service_ids')
-    def onchange_sale_service_ids(self):
-        val = []
-        sequence = 0
-        list_exist = self.env['sale.order'].browse(self.origin).fields_ids
-        list_onchange = self.fields_ids
-        list_sale_service_id = []
-        service_id = []
-        fields_id = []
-        for sale_service_id in self.sale_service_ids:
-            # if sale_service_id.service_id.id in list_sale_service_id:
-            #     continue
-            for required_fields_id in sale_service_id.service_id.required_fields_ids:
-                if sale_service_id.id in list_sale_service_id and required_fields_id.id in fields_id:
-                    continue
-                if required_fields_id.id in list_exist.fields_id.ids and sale_service_id.id in list_exist.sale_service_id.ids:
-                    for field_data in list_exist:
-                        if field_data.fields_id.id == required_fields_id.id:
-                            val.append({
-                                'sequence': 1 if field_data.type == 'required' else 0,
-                                'fields_id': required_fields_id.id,
-                                'sale_id': self.id,
-                                'value_char': field_data.value_char,
-                                'sale_service_id': sale_service_id.id,
-                                'value_integer': field_data.value_integer,
-                                'value_date': field_data.value_date,
-                                'selection_value_id': field_data.selection_value_id.id,
-                            })
-                elif required_fields_id.id in list_onchange.fields_id.ids:
-                    for field_data in self.fields_ids:
-                        if field_data.fields_id.id == required_fields_id.id:
-                            val.append({
-                                'sequence': 1 if field_data.type == 'required' else 0,
-                                'fields_id': required_fields_id.id,
-                                'sale_id': self.id,
-                                'sale_service_id': sale_service_id.id,
-                                'value_char': field_data.value_char,
-                                'value_integer': field_data.value_integer,
-                                'value_date': field_data.value_date,
-                                'selection_value_id': field_data.selection_value_id.id,
-
-                            })
-                if val:
-                    result = [item for item in val if item['fields_id'] == required_fields_id.id]
-                    if not result:
-                        x = {
-                            'sequence': 1 if required_fields_id.type == 'required' else 0,
-                            'fields_id': required_fields_id.id,
-                        }
-                        default_value = required_fields_id.get_default_value(so=self)
-                        if default_value:
-                            x.update(default_value)
-                        val.append(x)
-                else:
-                    x = {
-                        'sequence': 1 if required_fields_id.type == 'required' else 0,
-                        'fields_id': required_fields_id.id,
-                    }
-                    default_value = required_fields_id.get_default_value(so=self)
-                    if default_value:
-                        x.update(default_value)
-                    val.append(x)
-                list_sale_service_id.append(sale_service_id.id)
-                service_id.append(sale_service_id.service_id.id)
-                fields_id.append(required_fields_id.id)
-        if val:
-            val = sorted(val, key=lambda x: x["sequence"], reverse=True)
-            self.fields_ids = None
-            self.fields_ids = [(0, 0, item) for item in val]
-        if not self.sale_service_ids:
-            self.fields_ids = [(5, 0, 0)]
-        self.onchange_get_data_required_fields()
-
     # @api.onchange('sale_service_ids')
     # def onchange_sale_service_ids(self):
-    #     fields_dict = {}
-    #     # Lấy danh sách các trường đã có từ sale.order theo origin
-    #     sale_order = self.env['sale.order'].browse(self.origin)
-    #     list_exist = sale_order.fields_ids.fields_id.ids
-    #     list_onchange = [item.fields_id.id for item in self.fields_ids]
-    #
-    #     # Duyệt qua từng sale_service và các trường yêu cầu của nó
-    #     for sale_service in self.sale_service_ids:
-    #         for req_field in sale_service.service_id.required_fields_ids:
-    #             # Nếu trường đã được xử lý, bỏ qua để tránh trùng lặp
-    #             if req_field.id in fields_dict:
+    #     val = []
+    #     sequence = 0
+    #     list_exist = self.env['sale.order'].browse(self.origin).fields_ids
+    #     list_onchange = self.fields_ids
+    #     list_sale_service_id = []
+    #     service_id = []
+    #     fields_id = []
+    #     for sale_service_id in self.sale_service_ids:
+    #         # if sale_service_id.service_id.id in list_sale_service_id:
+    #         #     continue
+    #         for required_fields_id in sale_service_id.service_id.required_fields_ids:
+    #             if sale_service_id.id in list_sale_service_id and required_fields_id.id in fields_id:
     #                 continue
-    #
-    #             rec = None
-    #             # Ưu tiên lấy dữ liệu từ sale order nếu có
-    #             if req_field.id in list_exist:
-    #                 for field_data in sale_order.fields_ids:
-    #                     if field_data.fields_id.id == req_field.id:
-    #                         rec = {
+    #             if required_fields_id.id in list_exist.fields_id.ids and sale_service_id.id in list_exist.sale_service_id.ids:
+    #                 for field_data in list_exist:
+    #                     if field_data.fields_id.id == required_fields_id.id:
+    #                         val.append({
     #                             'sequence': 1 if field_data.type == 'required' else 0,
-    #                             'fields_id': req_field.id,
+    #                             'fields_id': required_fields_id.id,
     #                             'sale_id': self.id,
     #                             'value_char': field_data.value_char,
+    #                             'sale_service_id': sale_service_id.id,
     #                             'value_integer': field_data.value_integer,
     #                             'value_date': field_data.value_date,
     #                             'selection_value_id': field_data.selection_value_id.id,
-    #                             'sale_service_id': sale_service.id,
-    #                         }
-    #                         break
-    #             # Nếu không có ở sale order, thử từ các trường hiện tại của record (onchange)
-    #             elif req_field.id in list_onchange:
+    #                         })
+    #             elif required_fields_id.id in list_onchange.fields_id.ids:
     #                 for field_data in self.fields_ids:
-    #                     if field_data.fields_id.id == req_field.id:
-    #                         rec = {
+    #                     if field_data.fields_id.id == required_fields_id.id:
+    #                         val.append({
     #                             'sequence': 1 if field_data.type == 'required' else 0,
-    #                             'fields_id': req_field.id,
+    #                             'fields_id': required_fields_id.id,
     #                             'sale_id': self.id,
+    #                             'sale_service_id': sale_service_id.id,
     #                             'value_char': field_data.value_char,
     #                             'value_integer': field_data.value_integer,
     #                             'value_date': field_data.value_date,
     #                             'selection_value_id': field_data.selection_value_id.id,
-    #                             'sale_service_id': sale_service.id,
-    #                         }
-    #                         break
     #
-    #             # Nếu không có dữ liệu từ 2 nguồn trên, tạo default value
-    #             if not rec:
-    #                 rec = {
-    #                     'sequence': 1 if req_field.type == 'required' else 0,
-    #                     'fields_id': req_field.id,
-    #                     'sale_id': self.id,
-    #                     'sale_service_id': sale_service.id,
+    #                         })
+    #             if val:
+    #                 result = [item for item in val if item['fields_id'] == required_fields_id.id]
+    #                 if not result:
+    #                     x = {
+    #                         'sequence': 1 if required_fields_id.type == 'required' else 0,
+    #                         'fields_id': required_fields_id.id,
+    #                     }
+    #                     default_value = required_fields_id.get_default_value(so=self)
+    #                     if default_value:
+    #                         x.update(default_value)
+    #                     val.append(x)
+    #             else:
+    #                 x = {
+    #                     'sequence': 1 if required_fields_id.type == 'required' else 0,
+    #                     'fields_id': required_fields_id.id,
     #                 }
-    #                 default_value = req_field.get_default_value(so=self)
+    #                 default_value = required_fields_id.get_default_value(so=self)
     #                 if default_value:
-    #                     rec.update(default_value)
-    #
-    #             # Lưu lại vào dictionary để đảm bảo không trùng lặp
-    #             fields_dict[req_field.id] = rec
-    #
-    #     # Nếu có dữ liệu, sắp xếp theo sequence và cập nhật fields_ids
-    #     if fields_dict:
-    #         sorted_vals = sorted(fields_dict.values(), key=lambda x: x["sequence"], reverse=True)
-    #         self.fields_ids = [(5, 0, 0)]  # xóa dữ liệu cũ
-    #         self.fields_ids = [(0, 0, item) for item in sorted_vals]
-    #     else:
-    #         # Nếu không có sale_service_ids, xóa toàn bộ fields_ids
-    #         if not self.sale_service_ids:
-    #             self.fields_ids = [(5, 0, 0)]
-    #
-    #     # Gọi hàm onchange_get_data_required_fields nếu cần cập nhật thêm dữ liệu
+    #                     x.update(default_value)
+    #                 val.append(x)
+    #             list_sale_service_id.append(sale_service_id.id)
+    #             service_id.append(sale_service_id.service_id.id)
+    #             fields_id.append(required_fields_id.id)
+    #     if val:
+    #         val = sorted(val, key=lambda x: x["sequence"], reverse=True)
+    #         self.fields_ids = None
+    #         self.fields_ids = [(0, 0, item) for item in val]
+    #     if not self.sale_service_ids:
+    #         self.fields_ids = [(5, 0, 0)]
     #     self.onchange_get_data_required_fields()
+
+    @api.onchange('sale_service_ids')
+    def onchange_sale_service_ids(self):
+        fields_dict = {}
+        sale_order = self.env['sale.order'].browse(self.origin)
+        list_exist = sale_order.fields_ids.fields_id.ids
+        list_onchange = [item.fields_id.id for item in self.fields_ids]
+
+        # Duyệt qua từng sale_service và xử lý nếu sale_service và service_id của nó tồn tại
+        for sale_service in self.sale_service_ids:
+            if not sale_service or not sale_service.service_id:
+                continue  # Bỏ qua nếu sale_service không hợp lệ
+
+            for req_field in sale_service.service_id.required_fields_ids:
+                # Nếu req_field không tồn tại, bỏ qua
+                if not req_field:
+                    continue
+
+                # Nếu trường đã được xử lý rồi thì bỏ qua (tránh trùng lặp)
+                if (req_field.id, sale_service.id) in fields_dict:
+                    continue
+
+                rec = None
+                # Kiểm tra nếu trường đã tồn tại với cùng sale_service_id
+                existing_field = self.fields_ids.filtered(
+                    lambda f: f.fields_id.id == req_field.id and f.sale_service_id.id == sale_service.id
+                )
+                if existing_field:
+                    continue  # Nếu đã tồn tại, bỏ qua
+
+                # Ưu tiên lấy dữ liệu từ sale order nếu trường tồn tại trong đó
+                if req_field.id in list_exist:
+                    for field_data in sale_order.fields_ids:
+                        if field_data.fields_id.id == req_field.id:
+                            rec = {
+                                'sequence': 1 if field_data.type == 'required' else 0,
+                                'fields_id': req_field.id,
+                                'sale_id': self.id,
+                                'value_char': field_data.value_char,
+                                'value_integer': field_data.value_integer,
+                                'value_date': field_data.value_date,
+                                'selection_value_id': field_data.selection_value_id.id,
+                                'sale_service_id': sale_service.id,
+                            }
+                            break
+                # Nếu không có trong sale order, kiểm tra từ dữ liệu của record hiện tại (onchange)
+                elif req_field.id in list_onchange:
+                    for field_data in self.fields_ids:
+                        if field_data.fields_id.id == req_field.id:
+                            rec = {
+                                'sequence': 1 if field_data.type == 'required' else 0,
+                                'fields_id': req_field.id,
+                                'sale_id': self.id,
+                                'value_char': field_data.value_char,
+                                'value_integer': field_data.value_integer,
+                                'value_date': field_data.value_date,
+                                'selection_value_id': field_data.selection_value_id.id,
+                                'sale_service_id': sale_service.id,
+                            }
+                            break
+
+                # Nếu không có dữ liệu từ hai nguồn trên, tạo giá trị mặc định
+                if not rec:
+                    rec = {
+                        'sequence': 1 if req_field.type == 'required' else 0,
+                        'fields_id': req_field.id,
+                        'sale_id': self.id,
+                        'sale_service_id': sale_service.id,
+                    }
+                    default_value = req_field.get_default_value(so=self)
+                    if default_value:
+                        rec.update(default_value)
+
+                # Lưu vào dictionary với key là (req_field.id, sale_service.id) để tránh trùng lặp
+                fields_dict[(req_field.id, sale_service.id)] = rec
+
+        if fields_dict:
+            sorted_vals = sorted(fields_dict.values(), key=lambda x: x["sequence"], reverse=True)
+            self.fields_ids = [(5, 0, 0)]  # Xóa dữ liệu cũ
+            self.fields_ids = [(0, 0, item) for item in sorted_vals]
+        else:
+            # Nếu không còn sale_service nào thì xóa hết fields_ids
+            if not self.sale_service_ids:
+                self.fields_ids = [(5, 0, 0)]
+
+        # Gọi hàm cập nhật thêm nếu cần
+        self.onchange_get_data_required_fields()
 
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
