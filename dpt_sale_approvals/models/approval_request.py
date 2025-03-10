@@ -134,9 +134,10 @@ class ApprovalRequest(models.Model):
                 if not approval.approver_ids.filtered(lambda a: a.status == 'pending'):
                     approver = approval.approver_ids.filtered(lambda a: a.status == 'waiting')
                     if approver:
-                        approver = approver.sorted(lambda a: a.sequence)
-                        approver[0].status = 'pending'
-                        approver[0]._create_activity()
+                        if approver[0].user_id.has_group('dpt_security.group_dpt_director'):
+                            approver[0].status = 'waiting'
+                        if approver[0].user_id.has_group('dpt_security.group_dpt_ke_toan_truong'):
+                            approver[0].status = 'waiting'
         return res
 
 
