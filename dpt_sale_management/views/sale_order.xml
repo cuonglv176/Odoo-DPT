@@ -47,7 +47,7 @@
                 <page name="sale_service" string="Service">
                     <field name="sale_service_ids" readonly="state == 'cancel' or locked">
                         <tree editable="bottom">
-                            <!--                            <field name="sale_id" invisible="1"/>-->
+                            <field name="id" string="ID"/>
                             <field name="sequence" widget="handle"/>
                             <field name="currency_id" column_invisible="1" force_save="1"/>
                             <field name="currency_cny_id" optional="hide"/>
@@ -84,6 +84,7 @@
                         <tree editable="bottom" default_order="sequence desc" decoration-danger="type=='required'">
                             <field name="using_calculation_price" column_invisible="1"/>
                             <field name="sequence" widget="handle"/>
+                            <field name="sale_service_id_key" string="ID Dịch vụ"/>
                             <field name="service_id"/>
                             <field name="fields_id"/>
                             <field name="type" column_invisible="1"/>

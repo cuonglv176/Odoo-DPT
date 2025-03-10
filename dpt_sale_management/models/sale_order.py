@@ -176,7 +176,7 @@ class SaleOrder(models.Model):
                                 'sequence': 1 if field_data.type == 'required' else 0,
                                 'fields_id': required_fields_id.id,
                                 'sale_id': self.id,
-                                # 'uom_service_id': sale_service_id.uom_id.id,
+                                'sale_service_id': sale_service_id.id,
                                 'value_char': field_data.value_char,
                                 'value_integer': field_data.value_integer,
                                 'value_date': field_data.value_date,
@@ -600,6 +600,8 @@ class SaleOrderField(models.Model):
     ], string='Fields type', default='char', related='fields_id.fields_type')
     using_calculation_price = fields.Boolean(related='fields_id.using_calculation_price')
     uom_id = fields.Many2one(related="fields_id.uom_id")
+    sale_service_id = fields.Many2one('dpt.sale.service.management')
+    sale_service_id_key = fields.Integer(related='sale_service_id.id')
 
     @api.onchange('sale_id')
     def onchange_get_data_required_fields(self):
