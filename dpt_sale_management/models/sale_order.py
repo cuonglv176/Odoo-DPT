@@ -225,32 +225,31 @@ class SaleOrder(models.Model):
         list_exist = sale_order.fields_ids.fields_id.ids
         list_onchange = [item.fields_id.id for item in self.fields_ids]
 
-        # Duyệt qua từng sale_service và xử lý nếu sale_service và service_id của nó tồn tại
         for sale_service in self.sale_service_ids:
             if not sale_service or not sale_service.service_id:
-                continue  # Bỏ qua nếu sale_service không hợp lệ
+                continue
 
             for req_field in sale_service.service_id.required_fields_ids:
-                # Nếu req_field không tồn tại, bỏ qua
                 if not req_field:
                     continue
 
-                # Nếu trường đã được xử lý rồi thì bỏ qua (tránh trùng lặp)
+                # Kiểm tra theo cặp (req_field.id, sale_service.id) đã có chưa
                 if (req_field.id, sale_service.id) in fields_dict:
                     continue
 
-                rec = None
-                # Kiểm tra nếu trường đã tồn tại với cùng sale_service_id
+                # Kiểm tra xem đã có record tương ứng trong self.fields_ids chưa
                 existing_field = self.fields_ids.filtered(
                     lambda f: f.fields_id.id == req_field.id and f.sale_service_id.id == sale_service.id
                 )
                 if existing_field:
-                    continue  # Nếu đã tồn tại, bỏ qua
+                    continue
 
+                rec = None
                 # Ưu tiên lấy dữ liệu từ sale order nếu trường tồn tại trong đó
                 if req_field.id in list_exist:
                     for field_data in sale_order.fields_ids:
-                        if field_data.fields_id.id == req_field.id:
+                        if (field_data.fields_id.id == req_field.id and
+                                field_data.sale_service_id.id == sale_service.id):
                             rec = {
                                 'sequence': 1 if field_data.type == 'required' else 0,
                                 'fields_id': req_field.id,
@@ -265,7 +264,8 @@ class SaleOrder(models.Model):
                 # Nếu không có trong sale order, kiểm tra từ dữ liệu của record hiện tại (onchange)
                 elif req_field.id in list_onchange:
                     for field_data in self.fields_ids:
-                        if field_data.fields_id.id == req_field.id:
+                        if (field_data.fields_id.id == req_field.id and
+                                field_data.sale_service_id.id == sale_service.id):
                             rec = {
                                 'sequence': 1 if field_data.type == 'required' else 0,
                                 'fields_id': req_field.id,
@@ -290,19 +290,16 @@ class SaleOrder(models.Model):
                     if default_value:
                         rec.update(default_value)
 
-                # Lưu vào dictionary với key là (req_field.id, sale_service.id) để tránh trùng lặp
                 fields_dict[(req_field.id, sale_service.id)] = rec
 
         if fields_dict:
             sorted_vals = sorted(fields_dict.values(), key=lambda x: x["sequence"], reverse=True)
-            self.fields_ids = [(5, 0, 0)]  # Xóa dữ liệu cũ
+            self.fields_ids = [(5, 0, 0)]
             self.fields_ids = [(0, 0, item) for item in sorted_vals]
         else:
-            # Nếu không còn sale_service nào thì xóa hết fields_ids
             if not self.sale_service_ids:
                 self.fields_ids = [(5, 0, 0)]
 
-        # Gọi hàm cập nhật thêm nếu cần
         self.onchange_get_data_required_fields()
 
     def action_confirm(self):
