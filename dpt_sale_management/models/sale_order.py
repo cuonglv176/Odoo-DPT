@@ -215,8 +215,12 @@ class SaleOrder(models.Model):
 
     @api.onchange('sale_service_ids')
     def onchange_sale_service_ids(self):
+        if not self.sale_service_ids:
+            self.fields_ids = [(5, 0, 0)]  # Xóa sạch nếu không có sale_service_ids
+            return
+
         val = []
-        existing_fields = set()  # Tạo set để kiểm tra duplicate
+        existing_fields = set()
         list_exist = set(self.env['sale.order'].search([('name', '=', self.origin)]).mapped('fields_ids.fields_id.id'))
         list_onchange = {item.fields_id.id for item in self.fields_ids}
         list_sale_service_id = set()
@@ -224,7 +228,7 @@ class SaleOrder(models.Model):
         for sale_service_id in self.sale_service_ids:
             for required_fields_id in sale_service_id.service_id.required_fields_ids:
                 if required_fields_id.id in existing_fields:
-                    continue  # Bỏ qua nếu đã tồn tại
+                    continue
 
                 field_data = None
                 if required_fields_id.id in list_exist:
@@ -237,7 +241,6 @@ class SaleOrder(models.Model):
                         (f for f in self.fields_ids if f.fields_id.id == required_fields_id.id), None
                     )
 
-                # Nếu tìm thấy field_data, sử dụng dữ liệu từ đó
                 if field_data:
                     val.append({
                         'sequence': 1 if field_data.type == 'required' else 0,
@@ -250,7 +253,6 @@ class SaleOrder(models.Model):
                         'selection_value_id': field_data.selection_value_id.id,
                     })
                 else:
-                    # Nếu không có dữ liệu có sẵn, tạo giá trị mặc định
                     x = {
                         'sequence': 1 if required_fields_id.type == 'required' else 0,
                         'fields_id': required_fields_id.id,
@@ -261,19 +263,21 @@ class SaleOrder(models.Model):
                         x.update(default_value)
                     val.append(x)
 
-                # Đánh dấu fields_id đã được thêm
                 existing_fields.add(required_fields_id.id)
-
             list_sale_service_id.add(sale_service_id.service_id.id)
 
-        # Sắp xếp theo sequence
+        # Lọc các bản ghi cũ không còn liên kết với sale_service_id
+        old_fields = {f.fields_id.id for f in self.fields_ids}
+        new_fields = {v['fields_id'] for v in val}
+
+        fields_to_remove = old_fields - new_fields
+        if fields_to_remove:
+            self.fields_ids = [(3, field_id) for field_id in fields_to_remove]
+
+        # Sắp xếp và cập nhật dữ liệu mới
         if val:
             val = sorted(val, key=lambda x: x["sequence"], reverse=True)
             self.fields_ids = [(0, 0, item) for item in val]
-
-        # Nếu không có sale_service_ids, xóa hết dữ liệu fields_ids
-        if not self.sale_service_ids:
-            self.fields_ids = [(5, 0, 0)]
 
         self.onchange_get_data_required_fields()
 
