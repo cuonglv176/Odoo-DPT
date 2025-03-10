@@ -215,10 +215,6 @@ class SaleOrder(models.Model):
 
     @api.onchange('sale_service_ids')
     def onchange_sale_service_ids(self):
-        if not self.sale_service_ids:
-            self.fields_ids = [(5, 0, 0)]  # Xóa sạch nếu không có sale_service_ids
-            return
-
         val = []
         existing_fields = set()
         list_exist = set(self.env['sale.order'].search([('name', '=', self.origin)]).mapped('fields_ids.fields_id.id'))
