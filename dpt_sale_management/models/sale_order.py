@@ -163,7 +163,7 @@ class SaleOrder(models.Model):
                                 'fields_id': required_fields_id.id,
                                 'sale_id': self.id,
                                 'value_char': field_data.value_char,
-                                # 'uom_service_id': sale_service_id.uom_id.id,
+                                'sale_service_id': sale_service_id.id,
                                 'value_integer': field_data.value_integer,
                                 'value_date': field_data.value_date,
                                 'selection_value_id': field_data.selection_value_id.id,
