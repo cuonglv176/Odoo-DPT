@@ -28,7 +28,8 @@ class SaleOrder(models.Model):
         readonly=True, copy=False, index=True,
         tracking=3,
         default='draft')
-    sale_service_ids = fields.One2many('dpt.sale.service.management', 'sale_id', string='Service', tracking=True)
+    sale_service_ids = fields.One2many('dpt.sale.service.management', 'sale_id', string='Service', tracking=True,
+                                       inverse='onchange_sale_service_ids')
     fields_ids = fields.One2many('dpt.sale.order.fields', 'sale_id', string='Fields')
     service_total_untax_amount = fields.Float(compute='_compute_service_amount')
     service_tax_amount = fields.Float(compute='_compute_service_amount')
@@ -74,7 +75,7 @@ class SaleOrder(models.Model):
         if self.partner_id.user_id.id != self._uid:
             self.user_id = self._uid
 
-    @api.onchange('partner_id','user_id')
+    @api.onchange('partner_id', 'user_id')
     def onchange_user_id(self):
         # if not self.employee_sale:
         if self.partner_id.user_id:
