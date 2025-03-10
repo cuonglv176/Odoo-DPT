@@ -158,10 +158,10 @@ class SaleOrder(models.Model):
             # if sale_service_id.service_id.id in list_sale_service_id:
             #     continue
             for required_fields_id in sale_service_id.service_id.required_fields_ids:
-                if sale_service_id.service_id.id in service_id and sale_service_id.id in list_sale_service_id and required_fields_id.id in fields_id:
+                if sale_service_id.id in list_sale_service_id and required_fields_id.id in fields_id:
                     continue
                 if required_fields_id.id in list_exist.fields_id.ids and sale_service_id.id in list_exist.sale_service_id.ids:
-                    for field_data in self.env['sale.order'].browse(self.origin).fields_ids:
+                    for field_data in list_exist:
                         if field_data.fields_id.id == required_fields_id.id:
                             val.append({
                                 'sequence': 1 if field_data.type == 'required' else 0,
@@ -173,7 +173,7 @@ class SaleOrder(models.Model):
                                 'value_date': field_data.value_date,
                                 'selection_value_id': field_data.selection_value_id.id,
                             })
-                elif required_fields_id.id in list_onchange and sale_service_id.id in list_onchange.sale_service_id.ids:
+                elif required_fields_id.id in list_onchange.fields_id.ids:
                     for field_data in self.fields_ids:
                         if field_data.fields_id.id == required_fields_id.id:
                             val.append({
