@@ -4,6 +4,7 @@ from odoo.exceptions import ValidationError
 from odoo import api, Command, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 
+
 class ApprovalRequest(models.Model):
     _inherit = 'approval.request'
 
@@ -31,7 +32,7 @@ class ApprovalRequest(models.Model):
 
             approver_id_vals = []
 
-            if request.category_id.manager_approval:
+            if request.category_id.manager_approval and not request.payment_id.type_id.is_bypass:
                 employee = self.env['hr.employee'].search([('user_id', '=', request.request_owner_id.id)], limit=1)
                 if employee.parent_id.user_id:
                     manager_user_id = employee.parent_id.user_id.id
@@ -40,9 +41,15 @@ class ApprovalRequest(models.Model):
                     # We set the manager sequence to be lower than all others (9) so they are the first to approve.
                     user = self.env['res.users'].browse(employee.parent_id.user_id.id)
                     if user.has_group('dpt_security.group_dpt_director'):
-                        sequence = 90
+                        if request.payment_id.type_id.is_ke_toan_truong:
+                            sequence = 80
+                        else:
+                            sequence = 90
                     if user.has_group('dpt_security.group_dpt_ke_toan_truong'):
-                        sequence = 80
+                        if request.payment_id.type_id.is_ke_toan_truong:
+                            sequence = 90
+                        else:
+                            sequence = 80
                     self._create_or_update_approver(manager_user_id, users_to_approver, approver_id_vals,
                                                     manager_required, sequence)
                     if manager_user_id in users_to_category_approver.keys():
@@ -56,7 +63,7 @@ class ApprovalRequest(models.Model):
                 if user.has_group('dpt_security.group_dpt_ke_toan_truong'):
                     sequence = 80
                 self._create_or_update_approver(user_id, users_to_approver, approver_id_vals,
-                                                users_to_category_approver[user_id].required,sequence)
+                                                users_to_category_approver[user_id].required, sequence)
 
             for current_approver in users_to_approver.values():
                 # Reset sequence and required for the remaining approvers that are no (longer) part of the category approvers or managers.
@@ -127,18 +134,20 @@ class ApprovalRequest(models.Model):
                     order_line_id.new_price_unit = sale_service_id.price_unit
         return res
 
-
     def action_confirm(self):
         # make sure that the manager is present in the list if he is required
         self.ensure_one()
         if self.category_id.manager_approval == 'required':
             employee = self.env['hr.employee'].search([('user_id', '=', self.request_owner_id.id)], limit=1)
             if not employee.parent_id:
-                raise UserError(_('This request needs to be approved by your manager. There is no manager linked to your employee profile.'))
+                raise UserError(
+                    _('This request needs to be approved by your manager. There is no manager linked to your employee profile.'))
             if not employee.parent_id.user_id:
-                raise UserError(_('This request needs to be approved by your manager. There is no user linked to your manager.'))
+                raise UserError(
+                    _('This request needs to be approved by your manager. There is no user linked to your manager.'))
             if not self.approver_ids.filtered(lambda a: a.user_id.id == employee.parent_id.user_id.id):
-                raise UserError(_('This request needs to be approved by your manager. Your manager is not in the approvers list.'))
+                raise UserError(
+                    _('This request needs to be approved by your manager. Your manager is not in the approvers list.'))
         if len(self.approver_ids) < self.approval_minimum:
             raise UserError(_("You have to add at least %s approvers to confirm your request.", self.approval_minimum))
         if self.requirer_document == 'required' and not self.attachment_number:
@@ -146,10 +155,12 @@ class ApprovalRequest(models.Model):
 
         approvers = self.approver_ids
         if self.approver_sequence:
-            approvers = approvers.filtered(lambda a: a.status in ['new', 'pending', 'waiting']).sorted(lambda a: a.sequence)
+            approvers = approvers.filtered(lambda a: a.status in ['new', 'pending', 'waiting']).sorted(
+                lambda a: a.sequence)
 
             approvers[1:].sudo().write({'status': 'waiting'})
-            approvers = approvers[0] if approvers and approvers[0].status != 'pending' else self.env['approval.approver']
+            approvers = approvers[0] if approvers and approvers[0].status != 'pending' else self.env[
+                'approval.approver']
         else:
             approvers = approvers.filtered(lambda a: a.status == 'new').sorted(lambda a: a.sequence)
 
@@ -166,12 +177,20 @@ class ApprovalApprover(models.Model):
         if 'user_id' in vals:
             user = self.env['res.users'].browse(vals.get('user_id'))
             if user.has_group('dpt_security.group_dpt_director'):
+                if self.request_id.payment_id.type_id.is_ke_toan_truong:
+                    sequence = 90
+                else:
+                    sequence = 80
                 vals.update({
-                    'sequence': 90
+                    'sequence': sequence
                 })
             if user.has_group('dpt_security.group_dpt_ke_toan_truong'):
+                if self.request_id.payment_id.type_id.is_ke_toan_truong:
+                    sequence = 80
+                else:
+                    sequence = 90
                 vals.update({
-                    'sequence': 80
+                    'sequence': sequence
                 })
         return super(ApprovalApprover, self).write(vals)
 
@@ -180,11 +199,19 @@ class ApprovalApprover(models.Model):
         if 'user_id' in vals:
             user = self.env['res.users'].browse(vals.get('user_id'))
             if user.has_group('dpt_security.group_dpt_director'):
+                if self.request_id.payment_id.type_id.is_ke_toan_truong:
+                    sequence = 90
+                else:
+                    sequence = 80
                 vals.update({
-                    'sequence': 90
+                    'sequence': sequence
                 })
             if user.has_group('dpt_security.group_dpt_ke_toan_truong'):
+                if self.request_id.payment_id.type_id.is_ke_toan_truong:
+                    sequence = 80
+                else:
+                    sequence = 90
                 vals.update({
-                    'sequence': 80
+                    'sequence': sequence
                 })
         return super(ApprovalApprover, self).create(vals)
