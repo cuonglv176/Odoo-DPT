@@ -55,8 +55,8 @@ class SaleOrder(models.Model):
             record.count_ticket = self.env['helpdesk.ticket'].search_count([('sale_id', '=', record.id)])
 
     def action_confirm(self):
-        res = super(SaleOrder, self).action_confirm()
         self.action_create_ticket()
+        res = super(SaleOrder, self).action_confirm()
         return res
 
     def action_create_ticket(self):
