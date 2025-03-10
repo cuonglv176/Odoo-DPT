@@ -66,7 +66,7 @@ class SaleOrder(models.Model):
         #         list_department.append(r.department_id.id)
         # for department in list_department:
         for service in self.sale_service_ids:
-            if service.ticket_id:
+            if not service.ticket_id:
                 service_ids = []
                 if service.service_id.is_tth_service and service.service_id.is_create_ticket:
                     vals = {
