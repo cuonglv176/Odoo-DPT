@@ -14,6 +14,7 @@
                 <field name="available_payment_method_line_ids" invisible="1"/>
                 <field name="date"/>
                 <field name="name"/>
+                <field name="is_payment_in_day" widget="boolean_toggle"/>
                 <field name="journal_id"/>
                 <field name="payment_user_type" widget="radio"/>
                 <field name="payment_user" widget="radio"/>
@@ -172,10 +173,10 @@
                                    readonly="state != 'draft'"/>
                             <field name="sale_id" string="Sale Order"/>
                             <field name="purchase_id"/>
-                            <field name="payment_user_type" widget="radio"/>
-                            <field name="payment_user" widget="radio"/>
+                            <field name="payment_user_type" widget="radio" required="1"/>
+                            <field name="payment_user" widget="radio" required="1"/>
                             <field name="partner_id" context="{'default_is_company': True}" string="Customer"
-                                   options="{'no_quick_create': True}"
+                                   options="{'no_quick_create': True}" required="1"
                                    invisible="partner_type != 'customer' or is_internal_transfer"
                                    readonly="state != 'draft'"/>
                             <field name="partner_id" context="{'default_is_company': True}" string="Vendor"
@@ -200,13 +201,14 @@
                             <field name="refund_date"/>
                             <field name="date"
                                    readonly="state != 'draft'"/>
-                            <field name="ref" string="Memo"/>
+                            <field name="ref" string="Memo" required="1"/>
+                            <field name="is_payment_in_day" widget="boolean_toggle"/>
                         </group>
                         <group name="group2">
-                            <field name="type_id"/>
+                            <field name="type_id" required="1"/>
                             <field name="department_id"/>
                             <field name="user_id"/>
-                            <field name="journal_id"
+                            <field name="journal_id" required="1"
                                    domain="[('id', 'in', available_journal_ids)]"
                                    readonly="state != 'draft'"/>
                             <field name="payment_method_line_id" options="{'no_create': True, 'no_open': True}"

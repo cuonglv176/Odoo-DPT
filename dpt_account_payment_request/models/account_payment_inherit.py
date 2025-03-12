@@ -112,6 +112,7 @@ class AccountPayment(models.Model):
     amount = fields.Monetary(currency_field='company_currency_id')
     amount_request = fields.Monetary(string='Số tiền ngoại tệ', currency_field='currency_id')
     user_view_ids = fields.Many2many('res.users', compute="get_list_users_view", store=True)
+    is_payment_in_day = fields.Boolean(string='Thanh toán trong ngày')
 
     @api.depends('user_id', 'approval_id', 'approval_id.approver_ids')
     def get_list_users_view(self):
