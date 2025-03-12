@@ -4,6 +4,7 @@ from odoo import models, fields, api, _
 class DPTSaleServiceManagement(models.Model):
     _inherit = 'dpt.sale.service.management'
 
+    ticket_id = fields.Many2one('helpdesk.ticket')
 
     def write(self, vals):
         if 'service_id' in vals:

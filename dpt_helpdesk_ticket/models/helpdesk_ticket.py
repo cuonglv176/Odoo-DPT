@@ -23,7 +23,9 @@ class HelpdeskTicket(models.Model):
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
         if not (self.env.is_system()):
-            if self.user_has_groups('sales_team.group_sale_salesman'):
+            if self.user_has_groups('sales_team.group_sale_salesman') and not self.user_has_groups(
+                    'sales_team.group_sale_salesman_all_leads') and not self.user_has_groups(
+                    'sales_team.group_sale_manager'):
                 view_scope_domain = [
                     "|",
                     ("sale_id.employee_sale", "=", self.env.user.employee_id.id),
