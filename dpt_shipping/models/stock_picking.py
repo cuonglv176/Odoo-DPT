@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import json
 from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
+import math
 
 
 class StockPicking(models.Model):
@@ -176,3 +178,85 @@ class StockPicking(models.Model):
             'res_id': self.id,
             'views': [[self.env.ref('dpt_shipping.dpt_stock_picking_shipping_form_view').id, 'form']],
         }
+
+    # re-define
+    def create_in_transfer_picking(self, transit_location_id=None, location_dest_id=None):
+        # logic transfer - create incoming picking
+        if not transit_location_id:
+            transit_location_id = self.env['stock.location'].sudo().search(
+                [('usage', '=', 'internal'), ('warehouse_id.is_vn_transit_warehouse', '=', True)], limit=1)
+        if not transit_location_id:
+            raise ValidationError("Vui lòng kiểm tra lại kho chuyển phía Việt Nam")
+        if not location_dest_id:
+            raise ValidationError(_('Missing another Internal Location. Please check other Internal location'))
+        for picking in self:
+            new_picking_type_id = self.env['stock.picking.type'].sudo().search(
+                [('warehouse_id', '=', location_dest_id.warehouse_id.id), ('code', '=', 'internal')], limit=1)
+            if not new_picking_type_id:
+                raise ValidationError(
+                    f'Vui lòng tạo loại điều chuyển cho kho {location_dest_id.warehouse_id.name}')
+            in_transfer_picking_id = picking.copy({
+                'location_id': transit_location_id.id,
+                'location_dest_id': location_dest_id.id,
+                'x_transfer_type': 'incoming_transfer',
+                'origin': picking.name,
+                'picking_type_id': new_picking_type_id.id,
+                'picking_lot_name': picking.picking_lot_name,
+                'package_ids': [(0, 0, {
+                    'code': package_id.code,
+                    'date': package_id.date,
+                    'uom_id': package_id.uom_id.id,
+                    'quantity': package_id.transfer_quantity,
+                    'transfer_quantity': package_id.transfer_quantity,
+                    'length': package_id.length,
+                    'width': package_id.width,
+                    'height': package_id.height,
+                    'size': package_id.size,
+                    'total_weight': math.ceil(round(package_id.weight * package_id.transfer_quantity, 2)) * (
+                            package_id.transfer_quantity - package_id.created_picking_qty) / package_id.transfer_quantity,
+                    'weight': package_id.weight,
+                    'volume': package_id.volume,
+                    'total_volume': (math.ceil(
+                        round(package_id.volume * package_id.transfer_quantity * 100, 4)) / 100) * (
+                                            package_id.transfer_quantity - package_id.created_picking_qty) / package_id.transfer_quantity,
+                    'note': package_id.note,
+                    'image': package_id.image,
+                    'detail_ids': [(0, 0, {
+                        'product_id': detail_id.product_id.id,
+                        'uom_id': detail_id.uom_id.id,
+                        'quantity': detail_id.transfer_quantity
+                    }) for detail_id in package_id.detail_ids] if package_id.detail_ids else None,
+                }) for package_id in picking.package_ids if package_id.transfer_quantity],
+            })
+            in_transfer_picking_id.move_ids_without_package.write({
+                'location_id': transit_location_id.id,
+                'location_dest_id': location_dest_id.id,
+            })
+            picking.x_in_transfer_picking_id = in_transfer_picking_id.id
+            in_transfer_picking_id.action_update_picking_name()
+            move_line_vals = []
+            in_transfer_picking_id.move_line_ids.unlink()
+            for move_id in in_transfer_picking_id.move_ids_without_package.filtered(lambda m: not m.move_line_ids):
+                lot_id = self.env['stock.lot'].search(
+                    [('product_id', '=', move_id.product_id.id), ('name', '=', picking.picking_in_id.picking_lot_name)],
+                    limit=1)
+                move_line_vals.append({
+                    'picking_id': in_transfer_picking_id.id,
+                    'move_id': move_id.id,
+                    'lot_id': lot_id.id,
+                    'location_id': move_id.location_id.id,
+                    'location_dest_id': location_dest_id.id,
+                    'product_id': move_id.product_id.id,
+                    'quantity': move_id.product_uom_qty,
+                    'product_uom_id': move_id.product_uom.id,
+                })
+            if move_line_vals:
+                self.env['stock.move.line'].create(move_line_vals)
+
+            # update transferred quantity
+            for package_id in picking.package_ids:
+                package_id.transferred_quantity = package_id.transferred_quantity + package_id.transfer_quantity
+
+            if self.env.context.get('confirm_immediately'):
+                in_transfer_picking_id.action_confirm()
+                in_transfer_picking_id.button_validate()

@@ -23,6 +23,11 @@ class DPTShippingSplitWizard(models.TransientModel):
     def create_shipping_receive(self):
         for picking_id in self.picking_ids:
             if picking_id.total_left_quantity:
+                transit_location_id = self.env['stock.location'].sudo().search(
+                    [('usage', '=', 'internal'), ('warehouse_id.is_tq_transit_warehouse', '=', True)], limit=1)
+                transit_location_dest_id = self.env['stock.location'].sudo().search(
+                    [('usage', '=', 'internal'), ('warehouse_id.is_vn_transit_warehouse', '=', True)], limit=1)
+                picking_id.with_context(confirm_immediately=True).create_in_transfer_picking(transit_location_id, transit_location_dest_id)
                 picking_id.create_in_transfer_picking(self.location_dest_id)
         in_picking_ids = self.picking_ids.mapped('x_in_transfer_picking_id')
         if self.estimate_arrival_warehouse_vn:

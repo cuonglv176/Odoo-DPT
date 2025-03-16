@@ -174,7 +174,7 @@ class DPTShippingSlip(models.Model):
     def action_create_shipping_slip_receive(self):
         action = self.env.ref('dpt_shipping.dpt_shipping_split_wizard_action').sudo().read()[0]
         location_dest_id = self.env['stock.location'].sudo().search(
-            [('usage', '=', 'internal'), ('id', 'not in', self.out_picking_ids.mapped('location_id').ids)], limit=1)
+            [('usage', '=', 'internal'), ('warehouse_id.is_main_outgoing_warehouse', '=', True)], limit=1)
         picking_ids = self.out_picking_ids.filtered(
             lambda p: p.state == 'done' and p.total_transfer_quantity)
         action['context'] = {
@@ -188,12 +188,17 @@ class DPTShippingSlip(models.Model):
         return action
 
     def action_create_stock_transfer(self):
+        ctq_location = self.env['stock.location'].sudo().search(
+            [('warehouse_id.is_tq_transit_warehouse', '=', True), ('usage', '=', 'internal')], limit=1)
+        if not ctq_location:
+            raise ValidationError("Vui lòng kiểm tra lại kho chuyển phía Trung Quốc")
         for item in self:
             for main_incoming_picking_id in item.main_in_picking_ids:
                 action = main_incoming_picking_id.action_create_transfer_picking()
                 ctx = action['context']
                 ctx.update({
-                    'get_data_from_incoming': True
+                    'get_data_from_incoming': True,
+                    'default_location_dest_id': ctq_location.id,
                 })
                 transfer_picking_id = self.env['stock.picking'].with_context(ctx).create({
                     'sale_purchase_id': main_incoming_picking_id.sale_purchase_id.id,
