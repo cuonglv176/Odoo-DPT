@@ -189,8 +189,6 @@ class StockPicking(models.Model):
             transit_location_id = self.env['stock.location'].sudo().search(
                 [('usage', '=', 'internal'), ('warehouse_id.is_vn_transit_warehouse', '=', True)], limit=1)
 
-        _logger.info(
-            f"transit_location_id: {transit_location_id}, transit_location_dest_id: {location_dest_id}")
         if not transit_location_id:
             raise ValidationError("Vui lòng kiểm tra lại kho chuyển phía Việt Nam")
         if not location_dest_id:
