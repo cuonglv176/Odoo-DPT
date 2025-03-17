@@ -7,6 +7,12 @@ class SaleOrder(models.Model):
     count_ticket = fields.Integer(compute='_compute_count_ticket')
     ticket_ids = fields.One2many('helpdesk.ticket', 'sale_id', 'Tickets')
 
+    @api.model
+    def create(self, vals):
+        res = super(SaleOrder, self).create(vals)
+        self.action_create_ticket_first()
+        return res
+
     def write(self, vals):
         rec = super(SaleOrder, self).write(vals)
         if 'sale_service_ids' not in vals:
