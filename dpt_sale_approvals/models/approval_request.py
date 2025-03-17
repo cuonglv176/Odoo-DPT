@@ -16,6 +16,7 @@ class ApprovalRequest(models.Model):
     sequence_code = fields.Char(string="Code", related='category_id.sequence_code')
     active = fields.Boolean('Active', default=True)
     payment_id = fields.Many2one('account.payment', string='ĐNTT')
+    is_payment_in_day = fields.Boolean(string='Thanh toán trong ngày',related='payment_id.is_payment_in_day')
     approver_ids = fields.One2many('approval.approver', 'request_id', string="Approvers", check_company=True,
                                    compute='_compute_approver_ids', store=True, readonly=False)
 
