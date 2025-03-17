@@ -7,6 +7,7 @@
             <field name="inherit_id" ref="dpt_service_management.view_service_form"/>
             <field name="arch" type="xml">
                 <field name="department_id" position="after">
+                    <field name="is_create_ticket_first"/>
                     <field name="helpdesk_team_id"/>
                 </field>
                 <field name="active" position="before">
