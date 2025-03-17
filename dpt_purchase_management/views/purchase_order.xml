@@ -25,6 +25,7 @@
                 <field name="amount_untaxed"/>
             </field>
             <field name="name" position="after">
+                <field name="sale_id"/>
                 <field name="purchase_type"/>
             </field>
         </field>
