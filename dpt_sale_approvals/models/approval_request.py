@@ -132,7 +132,7 @@ class ApprovalRequest(models.Model):
         # approver = self.approver_ids.filtered(lambda sp: sp.status == 'refused')
         if self.sequence_code == 'BAOGIA':
             if self.request_status == 'refused':
-                self.sale_id.price_status = 'refuse_approval'
+                self.sale_id.price_status = 'no_price'
                 for sale_service_id in self.sale_service_ids:
                     sale_service_id.new_price = sale_service_id.price
                     sale_service_id.price_status = 'refuse_quoted'
