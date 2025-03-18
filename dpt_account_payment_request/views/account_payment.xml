@@ -14,7 +14,7 @@
                 <field name="available_payment_method_line_ids" invisible="1"/>
                 <field name="date"/>
                 <field name="name"/>
-                <field name="is_payment_in_day" widget="boolean_toggle"/>
+                <field name="payment_due"/>
                 <field name="journal_id"/>
                 <field name="payment_user_type" widget="radio"/>
                 <field name="payment_user" widget="radio"/>
@@ -202,7 +202,7 @@
                             <field name="date"
                                    readonly="state != 'draft'"/>
                             <field name="ref" string="Memo" required="1"/>
-                            <field name="is_payment_in_day" widget="boolean_toggle"/>
+                            <field name="payment_due"/>
                         </group>
                         <group name="group2">
                             <field name="type_id" required="1"/>
