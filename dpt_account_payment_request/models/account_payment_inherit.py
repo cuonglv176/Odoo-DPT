@@ -130,10 +130,29 @@ class AccountPayment(models.Model):
         ('open', 'Open'),
         ('locked', 'Locked'),
     ], default='open')
+    dpt_user_name = fields.Char(string='User Khách')
+    dpt_type_of_partner = fields.Selection([('employee', 'Nhân viên'),
+                                            ('customer', 'Khách hàng'),
+                                            ('vendor', 'Nhà cung cấp'),
+                                            ('shipping_address', 'Địa chỉ giao hàng'),
+                                            ('payment_address', 'Địa chỉ thanh toán'),
+                                            ('other', 'Khác')], string='Loại liên hệ')
+
+    @api.onchange('partner_id')
+    def onchange_dpt_type_of_partner(self):
+        if self.partner_id:
+            self.dpt_type_of_partner = self.partner_id.dpt_type_of_partner
+
+    @api.onchange('sale_id')
+    def onchange_user_partner(self):
+        if self.sale_id:
+            self.dpt_user_name = self.sale_id.partner_id.dpt_user_name
 
     def un_lock(self):
         if self.env.user.id != self.create_uid:
             raise UserError(f"Chỉ người tạo mới có quyền mở khóa, vui lòng liên hệ {self.create_uid.name}")
+        if self.request_status == 'approved':
+            raise UserError(f"Đơn đã được duyệt không được sửa")
         self.lock_status = 'open'
 
     def locked(self):
