@@ -5,7 +5,8 @@
         <field name="name">account.payment.tree</field>
         <field name="model">account.payment</field>
         <field name="arch" type="xml">
-            <tree edit="false" sample="1" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" default_order="payment_due">
+            <tree edit="false" sample="1" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'"
+                  default_order="payment_due">
                 <header>
                     <button name="action_post" type="object" string="Confirm"/>
                 </header>
@@ -43,6 +44,10 @@
                     <button name="action_post" string="Confirm" type="object" class="oe_highlight"
                             invisible="state != 'draft' or request_status != 'approved'" data-hotkey="q"
                             groups="dpt_security.group_dpt_ke_quy"/>
+                    <button name="un_lock" string="Mở khóa" type="object" class="oe_highlight"
+                            invisible="lock_status != 'locked'" data-hotkey="q"/>
+                    <button name="locked" string="Khóa" type="object" class="oe_highlight"
+                            invisible="lock_status != 'open'" data-hotkey="q"/>
                     <button name="action_draft" string="Reset To Draft" type="object" class="btn btn-secondary"
                             invisible="not show_reset_to_draft_button"
                             groups="account.group_account_invoice" data-hotkey="w"/>
@@ -69,6 +74,7 @@
                 <sheet>
                     <!-- Invisible fields -->
                     <field name="id" invisible="1"/>
+                    <field name="lock_status" invisible="1"/>
                     <field name="is_move_sent" invisible="1"/>
                     <field name="need_cancel_request" invisible="1"/>
                     <field name="show_reset_to_draft_button" invisible="1"/>
@@ -87,7 +93,6 @@
                     <field name="company_id" invisible="1"/>
                     <field name="paired_internal_transfer_payment_id" invisible="1"/>
                     <field name="available_journal_ids" invisible="1"/>
-                    <field name="currency_id" invisible="1"/>
 
                     <div class="oe_button_box" name="button_box">
                         <!-- Invoice stat button -->
@@ -151,7 +156,11 @@
                         </h1>
                     </div>
 
-                    <group name="main_group">
+                    <div class="o_ribbon" invisible="lock_status != 'locked'">
+                        <span class="o_ribbon_text">Đang khóa</span>
+                    </div>
+
+                    <group name="main_group" readonly="lock_status == 'locked'">
                         <group name="group1">
                             <label for="is_internal_transfer"/>
                             <div>
@@ -164,6 +173,7 @@
                             <field name="code"/>
                             <field name="approval_id" readonly="1"/>
                             <field name="user_view_ids" invisible="1"/>
+                            <field name="current_user_id" invisible="1"/>
                             <field name="request_status" widget="badge"
                                    decoration-success="request_status == 'approved'"
                                    decoration-info="request_status == 'new'"
@@ -207,6 +217,7 @@
                         </group>
                         <group name="group2">
                             <field name="type_id" required="1"/>
+                            <field name="journal_type" invisible="1"/>
                             <field name="department_id"/>
                             <field name="user_id"/>
                             <field name="journal_id" required="1"
@@ -219,19 +230,19 @@
                             <field name="partner_bank_id" string="Customer Bank Account"
                                    context="{'default_partner_id': partner_id, 'display_account_trust': True}"
                                    invisible="not show_partner_bank_account or partner_type != 'customer' or is_internal_transfer or payment_type == 'inbound'"
-                                   required="require_partner_bank_account and not is_internal_transfer"/>
+                                   required="journal_type == 'bank'"/>
 
                             <field name="partner_bank_id" string="Vendor Bank Account"
                                    context="{'default_partner_id': partner_id, 'display_account_trust': True}"
                                    invisible="not show_partner_bank_account or partner_type != 'supplier' or is_internal_transfer or payment_type == 'inbound'"
-                                   required="require_partner_bank_account and not is_internal_transfer"/>
+                                   required="journal_type == 'bank'"/>
 
                             <!-- This field should always be readonly but using readonly="1" overrides the other partner_bank_id
                             fields readonly condition in the framework, preventing the modification of these fields -->
                             <field name="partner_bank_id" string="Company Bank Account"
                                    context="{'default_partner_id': partner_id, 'display_account_trust': True}"
                                    invisible="not show_partner_bank_account or is_internal_transfer or payment_type == 'outbound'"
-                                   required="require_partner_bank_account and not is_internal_transfer"/>
+                                   required="journal_type == 'bank'"/>
                             <field name="acc_number"/>
                             <field name="acc_holder_name"/>
                             <field name="destination_journal_id"
@@ -249,7 +260,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page name="dpt_account_payment_service_detail" string="Dịch Vụ">
+                        <page name="dpt_account_payment_service_detail" string="Dịch Vụ" readonly="lock_status == 'locked'">
                             <field name="detail_ids">
                                 <tree editable="bottom">
                                     <field name="sequence" widget="handle"/>
@@ -268,7 +279,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page name="dpt_account_payment_product_detail" string="Sản Phẩm">
+                        <page name="dpt_account_payment_product_detail" string="Sản Phẩm" readonly="lock_status == 'locked'">
                             <field name="detail_product_ids">
                                 <tree editable="bottom">
                                     <field name="sequence" widget="handle"/>

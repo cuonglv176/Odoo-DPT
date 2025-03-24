@@ -2,6 +2,7 @@ from odoo import models, fields, api, _
 from odoo.osv.expression import AND, OR
 from datetime import datetime
 from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError
 
 
 def number_to_vietnamese(n):
@@ -113,6 +114,30 @@ class AccountPayment(models.Model):
     amount_request = fields.Monetary(string='Số tiền ngoại tệ', currency_field='currency_id')
     user_view_ids = fields.Many2many('res.users', compute="get_list_users_view", store=True)
     payment_due = fields.Datetime(string='Thời hạn thanh toán')
+    journal_type = fields.Selection([
+        ('sale', 'Sales'),
+        ('purchase', 'Purchase'),
+        ('cash', 'Cash'),
+        ('bank', 'Bank'),
+        ('general', 'Miscellaneous'),
+    ], required=True,
+        inverse='_inverse_type',
+        help="Select 'Sale' for customer invoices journals.\n" \
+             "Select 'Purchase' for vendor bills journals.\n" \
+             "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n" \
+             "Select 'General' for miscellaneous operations journals.", related="journal_id.type")
+    lock_status = fields.Selection([
+        ('open', 'Open'),
+        ('locked', 'Locked'),
+    ], default='open')
+
+    def un_lock(self):
+        if self.env.user.id != self.create_uid:
+            raise UserError(f"Chỉ người tạo mới có quyền mở khóa, vui lòng liên hệ {self.create_uid.name}")
+        self.lock_status = 'open'
+
+    def locked(self):
+        self.lock_status = 'locked'
 
     @api.depends('user_id', 'approval_id', 'approval_id.approver_ids')
     def get_list_users_view(self):
@@ -262,4 +287,6 @@ class AccountPayment(models.Model):
     def create(self, vals):
         if vals.get('code', 'NEW') == 'NEW':
             vals['code'] = self._generate_account_code()
-        return super(AccountPayment, self).create(vals)
+        res = super(AccountPayment, self).create(vals)
+        self.locked()
+        return res
