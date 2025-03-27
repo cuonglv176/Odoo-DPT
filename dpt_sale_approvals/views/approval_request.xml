@@ -8,7 +8,7 @@
         <field name="inherit_id" ref="approvals.approval_request_view_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//tree" position="attributes">
-                <attribute name="default_order">create_date desc</attribute>
+                <attribute name="default_order">payment_due desc</attribute>
             </xpath>
             <field name="name" position="after">
                 <field name="payment_due"/>
