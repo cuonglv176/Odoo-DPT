@@ -241,6 +241,7 @@ class AccountPayment(models.Model):
             self.detail_ids = detail_ids_records
 
     def send_payment_request_request(self):
+        self.locked()
         category_id = self.env['approval.category'].search([('sequence_code', '=', 'DNTT')])
         if not category_id:
             raise ValidationError(_("Please config category approval change price (DNTT)"))
