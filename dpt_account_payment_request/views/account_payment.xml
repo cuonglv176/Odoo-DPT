@@ -42,7 +42,7 @@
                             class="oe_highlight"
                             invisible="approval_id != False" data-hotkey="r"/>
                     <button name="action_post" string="Confirm" type="object" class="oe_highlight"
-                            invisible="state != 'draft' or request_status != 'approved'" data-hotkey="q"
+                            invisible="state != 'draft' and request_status != 'approved'" data-hotkey="q"
                             groups="dpt_security.group_dpt_ke_quy"/>
 <!--                    <button name="un_lock" string="Mở khóa" type="object" class="oe_highlight"-->
 <!--                            invisible="lock_status != 'locked'" data-hotkey="q"/>-->
