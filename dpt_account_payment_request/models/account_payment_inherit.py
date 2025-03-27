@@ -141,7 +141,7 @@ class AccountPayment(models.Model):
     def _compute_look_status(self):
         for rec in self:
             lock_status = 'open'
-            if self.env.user !=  rec.create_uid:
+            if self.env.user != rec.create_uid or rec.request_status == 'approved':
                 lock_status = 'locked'
             rec.lock_status = lock_status
 
