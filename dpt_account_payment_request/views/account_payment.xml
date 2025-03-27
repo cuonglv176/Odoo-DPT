@@ -217,7 +217,7 @@
                             <field name="payment_due" readonly="lock_status == 'locked'"/>
                         </group>
                         <group name="group2">
-                            <field name="type_id" required="1"/>
+                            <field name="type_id" required="1" readonly="lock_status == 'locked'"/>
                             <field name="journal_type" invisible="1"/>
                             <field name="department_id" readonly="lock_status == 'locked'"/>
                             <field name="user_id" readonly="lock_status == 'locked'"/>
