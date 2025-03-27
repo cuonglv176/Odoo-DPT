@@ -129,7 +129,7 @@ class AccountPayment(models.Model):
     lock_status = fields.Selection([
         ('open', 'Open'),
         ('locked', 'Locked'),
-    ], default='open')
+    ], default='open', compute="_compute_look_status")
     dpt_user_name = fields.Char(string='User Khách')
     dpt_type_of_partner = fields.Selection([('employee', 'Nhân viên'),
                                             ('customer', 'Khách hàng'),
@@ -137,6 +137,14 @@ class AccountPayment(models.Model):
                                             ('shipping_address', 'Địa chỉ giao hàng'),
                                             ('payment_address', 'Địa chỉ thanh toán'),
                                             ('other', 'Khác')], string='Loại liên hệ')
+
+    def _compute_look_status(self):
+        for rec in self:
+            lock_status = 'open'
+            if self.env.user !=  rec.create_uid:
+                lock_status = 'locked'
+            rec.lock_status = lock_status
+
 
     @api.onchange('partner_id')
     def onchange_dpt_type_of_partner(self):
@@ -241,7 +249,6 @@ class AccountPayment(models.Model):
             self.detail_ids = detail_ids_records
 
     def send_payment_request_request(self):
-        self.locked()
         category_id = self.env['approval.category'].search([('sequence_code', '=', 'DNTT')])
         if not category_id:
             raise ValidationError(_("Please config category approval change price (DNTT)"))
@@ -308,5 +315,4 @@ class AccountPayment(models.Model):
         if vals.get('code', 'NEW') == 'NEW':
             vals['code'] = self._generate_account_code()
         res = super(AccountPayment, self).create(vals)
-        self.locked()
         return res

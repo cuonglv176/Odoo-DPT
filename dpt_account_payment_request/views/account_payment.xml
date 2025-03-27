@@ -44,10 +44,10 @@
                     <button name="action_post" string="Confirm" type="object" class="oe_highlight"
                             invisible="state != 'draft' or request_status != 'approved'" data-hotkey="q"
                             groups="dpt_security.group_dpt_ke_quy"/>
-                    <button name="un_lock" string="Mở khóa" type="object" class="oe_highlight"
-                            invisible="lock_status != 'locked'" data-hotkey="q"/>
-                    <button name="locked" string="Khóa" type="object" class="oe_highlight"
-                            invisible="lock_status != 'open'" data-hotkey="q"/>
+<!--                    <button name="un_lock" string="Mở khóa" type="object" class="oe_highlight"-->
+<!--                            invisible="lock_status != 'locked'" data-hotkey="q"/>-->
+<!--                    <button name="locked" string="Khóa" type="object" class="oe_highlight"-->
+<!--                            invisible="lock_status != 'open'" data-hotkey="q"/>-->
                     <button name="action_draft" string="Reset To Draft" type="object" class="btn btn-secondary"
                             invisible="not show_reset_to_draft_button"
                             groups="account.group_account_invoice" data-hotkey="w"/>
