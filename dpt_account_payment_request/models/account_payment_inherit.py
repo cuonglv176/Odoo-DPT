@@ -141,10 +141,9 @@ class AccountPayment(models.Model):
     def _compute_look_status(self):
         for rec in self:
             lock_status = 'open'
-            if self.env.user != rec.create_uid or rec.request_status == 'approved':
+            if self.env.user != rec.create_uid or rec.request_status == 'approved' or self.env.user.id in rec.user_view_ids.ids:
                 lock_status = 'locked'
             rec.lock_status = lock_status
-
 
     @api.onchange('partner_id')
     def onchange_dpt_type_of_partner(self):
