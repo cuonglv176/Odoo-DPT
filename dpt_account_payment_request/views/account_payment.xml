@@ -182,7 +182,7 @@
                             <field name="payment_type" widget="radio" options="{'horizontal': True}"
                                    readonly="state != 'draft' or lock_status == 'locked'" />
                             <field name="sale_id" string="Sale Order" readonly="lock_status == 'locked'"/>
-                            <field name="dpt_user_name" readonly="lock_status == 'locked'"/>
+                            <field name="dpt_user_partner_id" readonly="lock_status == 'locked'"/>
                             <field name="purchase_id" readonly="lock_status == 'locked'"/>
                             <field name="payment_user_type" widget="radio" required="1" readonly="lock_status == 'locked'"/>
                             <field name="payment_user" widget="radio" required="1" readonly="lock_status == 'locked'"/>

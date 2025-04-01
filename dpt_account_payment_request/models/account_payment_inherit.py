@@ -130,7 +130,8 @@ class AccountPayment(models.Model):
         ('open', 'Open'),
         ('locked', 'Locked'),
     ], default='open', compute="_compute_look_status")
-    dpt_user_name = fields.Char(string='User Khách')
+    dpt_user_partner_id = fields.Many2one('res.partner', string='User Khách', domain=[('dpt_user_name', '!=', False)])
+    # dpt_user_name = fields.Char(string='User Khách')
     dpt_type_of_partner = fields.Selection([('employee', 'Nhân viên'),
                                             ('customer', 'Khách hàng'),
                                             ('vendor', 'Nhà cung cấp'),
@@ -152,8 +153,8 @@ class AccountPayment(models.Model):
 
     @api.onchange('sale_id')
     def onchange_user_partner(self):
-        if self.sale_id:
-            self.dpt_user_name = self.sale_id.partner_id.dpt_user_name
+        if self.sale_id and self.sale_id.partner_id.dpt_user_name:
+            self.dpt_user_partner_id = self.sale_id.partner_id
 
     def un_lock(self):
         if self.env.user.id != self.create_uid:
