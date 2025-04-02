@@ -43,6 +43,7 @@ class DPTShippingSlip(models.Model):
     estimate_arrival_warehouse_vn = fields.Date('Estimate Arrival Warehouse VN')
     non_finish_transfer = fields.Boolean('Non-Finish Transfer', compute="compute_non_finish_transfer")
     last_shipping_slip = fields.Boolean("Last Shipping Slip")
+    is_cn_finish_stage = fields.Boolean(related="vn_vehicle_stage_id.is_finish_stage")
 
     def compute_non_finish_transfer(self):
         for item in self:
@@ -238,3 +239,7 @@ class DPTShippingSlip(models.Model):
             'default_available_picking_ids': picking_ids.ids,
         }
         return action
+
+    def action_lock_so(self):
+        for sale_id in self.sale_ids:
+            sale_id.action_lock()
