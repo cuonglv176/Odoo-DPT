@@ -45,8 +45,9 @@
                   action="dpt_shipping_slip_vietnamese_action"/>
         <menuitem id="dpt_shipping_slip_last_vietnam_menu" name="Phiếu vận chuyển chặng cuối VN" sequence="30"
                   action="dpt_shipping_slip_last_vietnamese_action"/>
-        <menuitem id="dpt_stock_quant_vietnamese_menu" name="Tồn kho VN theo nhóm kiện" sequence="40"
-                  action="dpt_stock_quant_vietnamese_action"/>
     </menuitem>
+
+    <menuitem id="dpt_stock_quant_vietnamese_menu" name="Tồn kho VN theo nhóm kiện" sequence="2"
+              action="dpt_stock_quant_vietnamese_action" parent="stock.menu_stock_root"/>
 
 </odoo>
