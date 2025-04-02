@@ -13,7 +13,7 @@ class StockQuant(models.Model):
     sale_id = fields.Many2one('sale.order', 'Đơn hàng', compute="_compute_sale_information")
     employee_cs = fields.Many2one('hr.employee', string='Employee CS', compute="_compute_sale_information")
     partner_id = fields.Many2one('res.partner', string='Khách hàng', compute="_compute_sale_information")
-    packing_lot_name = fields.Char('Mã Pack', compute="_compute_sale_information")
+    packing_lot_name = fields.Char('Nhóm kiện', compute="_compute_sale_information")
 
     def _compute_sale_information(self):
         for item in self:

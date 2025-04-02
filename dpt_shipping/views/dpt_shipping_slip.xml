@@ -62,12 +62,12 @@
                     <label for="note"/>
                     <field name="note" nolable="1"/>
                     <notebook>
-                        <page name="import_export" string="Import Export">
+                        <page name="import_export" string="Import Export" invisible="last_shipping_slip">
                             <field name="export_import_ids" context="{
                                      'form_view_ref': 'dpt_export_import.view_dpt_export_import_form',
                                      'tree_view_ref': 'dpt_export_import.view_dpt_export_import_tree'}"/>
                         </page>
-                        <page name="helpdesk_ticket" string="Tickets">
+                        <page name="helpdesk_ticket" string="Tickets" invisible="not last_shipping_slip">
                             <field name="ticket_ids"/>
                         </page>
                         <page name="sale_order" string="Order">

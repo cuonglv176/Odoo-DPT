@@ -27,4 +27,4 @@ class HelpdeskTicket(models.Model):
                  ('is_main_incoming', '=', True)], order="id desc", limit=1)
             if picking_id:
                 name += f"-{picking_id.picking_lot_name if picking_id else ''}-{picking_id.packing_lot_name if picking_id else ''}"
-            rec.display_name = name
+            rec.display_name = name + f"-{rec.name}"
