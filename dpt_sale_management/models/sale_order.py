@@ -78,6 +78,7 @@ class SaleOrder(models.Model):
     @api.onchange('partner_id', 'user_id')
     def onchange_user_id(self):
         # if not self.employee_sale:
+        self = self.sudo()
         if self.partner_id.user_id:
             self.employee_sale = self.partner_id.user_id.employee_id
         else:
