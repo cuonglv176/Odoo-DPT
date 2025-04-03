@@ -87,7 +87,7 @@ class SaleOrder(models.Model):
         if self.partner_id.cs_user_id:
             self.employee_cs = self.partner_id.cs_user_id.employee_id
         else:
-            self.employee_sale = self.user_id.employee_id
+            self.employee_cs = self.user_id.employee_id
 
     @api.onchange('weight', 'volume', 'order_line')
     def onchange_weight_volume(self):
