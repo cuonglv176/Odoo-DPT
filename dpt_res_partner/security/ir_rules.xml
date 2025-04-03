@@ -13,7 +13,7 @@
     <record id="dpt_res_partner_salesman_all_leads_rule" model="ir.rule">
         <field name="name">DPT salesman all leads res partner</field>
         <field ref="model_res_partner" name="model_id"/>
-        <field name="domain_force">['|','|','|',('user_id.employee_id.department_id','=',
+        <field name="domain_force">['|','|','|','|',('id','=',1223),('user_id.employee_id.department_id','=',
             user.employee_id.department_id.id),('cs_user_id.employee_id.department_id','=',
             user.employee_id.department_id.id),('id','=', user.partner_id.id),('is_user','=', True)]
         </field>
