@@ -1,6 +1,60 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <odoo>
+
+    <record id="view_dpt_export_import_line_tree_search" model="ir.ui.view">
+        <field name="name">dpt.export.import.tree</field>
+        <field name="model">dpt.export.import.line</field>
+        <field name="arch" type="xml">
+            <tree string="Export Import Line List">
+                <button string="Eligible" type="object" name="action_update_eligible" class="btn-primary"
+                        invisible="state != 'draft'"
+                        groups="dpt_security.group_dpt_document_officer,dpt_security.group_dpt_head_of_document"/>
+                <field name="state" widget="badge"
+                       decoration-info="state in ('draft','wait_confirm')"
+                       decoration-success="state in ('eligible')"/>
+                <field name="lot_code" invisible="1"/>
+                <field name="available_picking_ids" invisible="1"/>
+                <field name="stock_picking_ids" widget="many2many_tags"/>
+                <field name="partner_id"/>
+                <field name="product_id"/>
+                <field name="dpt_english_name"/>
+                <field name="dpt_description"/>
+                <field name="dpt_sl1"/>
+                <field name="dpt_uom1_id"/>
+                <field name="dpt_price_kd"/>
+                <field name="dpt_price_usd"/>
+                <field name="dpt_total_usd"/>
+                <field name="dpt_price_cny_vnd"/>
+                <field name="dpt_n_w_kg"/>
+                <field name="dpt_g_w_kg"/>
+                <field name="available_package_ids" invisible="1"/>
+                <field name="package_ids" widget="many2many_tags"/>
+                <field name="hs_code_id"/>
+                <field name="dpt_tax_import" widget="percentage"/>
+                <field name="dpt_amount_tax_import"/>
+                <field name="dpt_uom2_ecus_id"/>
+                <field name="dpt_uom2_id"/>
+                <field name="dpt_sl2"/>
+                <field name="dpt_tax_ecus5"/>
+                <field name="dpt_tax" widget="percentage"/>
+                <field name="dpt_amount_tax"/>
+                <field name="dpt_tax_other" widget="percentage"/>
+                <field name="dpt_amount_tax_other"/>
+                <field name="dpt_exchange_rate"/>
+                <field name="dpt_total_vat"/>
+                <field name="dpt_total_usd_vnd"/>
+                <field name="dpt_total_cny_vnd"/>
+                <field name="dpt_is_new" widget="boolean_toggle"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="active" invisible="1"/>
+                <button string="Unlink" type="object" name="action_unlink" class="btn-primary"
+                        groups="sales_team.group_sale_salesman_all_leads"/>
+            </tree>
+        </field>
+    </record>
+
+
     <record id="view_dpt_export_import_line_form" model="ir.ui.view">
         <field name="name">dpt.export.import.line.form</field>
         <field name="model">dpt.export.import.line</field>
@@ -13,9 +67,11 @@
                     <button string="Gửi yêu cầu" type="object" name="action_wait_confirm" class="btn-primary"
                             invisible="state != 'draft'"/>
                     <button string="Gửi phản hồi" type="object" name="action_confirmed" class="btn-primary"
-                            invisible="state != 'wait_confirm'" groups="dpt_security.group_dpt_document_officer,dpt_security.group_dpt_head_of_document"/>
+                            invisible="state != 'wait_confirm'"
+                            groups="dpt_security.group_dpt_document_officer,dpt_security.group_dpt_head_of_document"/>
                     <button string="Khách xác nhận" type="object" name="action_update_eligible" class="btn-primary"
-                            invisible="state != 'confirmed'" groups="dpt_security.group_dpt_employee_sale,dpt_security.group_dpt_employee_cskh"/>
+                            invisible="state != 'confirmed'"
+                            groups="dpt_security.group_dpt_employee_sale,dpt_security.group_dpt_employee_cskh"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -34,7 +90,8 @@
                             <field name="stock_picking_ids" widget="many2many_tags"/>
                             <field name="partner_id"/>
                             <field name="product_id"/>
-                            <field name="product_history_id"
+                            <field name="product_history_id" domain="[('product_id','=', product_id), ('id', '!=', id)]"
+                                   context="{'tree_view_ref': 'dpt_export_import.view_dpt_export_import_line_tree_search'}"
                                    colspan="2"/>
                             <field name="dpt_english_name"/>
                             <field name="dpt_description"/>
@@ -95,7 +152,8 @@
         <field name="arch" type="xml">
             <tree string="Export Import Line List">
                 <button string="Eligible" type="object" name="action_update_eligible" class="btn-primary"
-                        invisible="state != 'draft'" groups="dpt_security.group_dpt_document_officer,dpt_security.group_dpt_head_of_document"/>
+                        invisible="state != 'draft'"
+                        groups="dpt_security.group_dpt_document_officer,dpt_security.group_dpt_head_of_document"/>
                 <field name="state" widget="badge"
                        decoration-info="state in ('draft','wait_confirm')"
                        decoration-success="state in ('eligible')"/>
