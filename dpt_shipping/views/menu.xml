@@ -23,7 +23,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('vehicle_country','=', 'vietnamese'),('last_shipping_slip','=', True)]</field>
-        <field name="domain">{'default_last_shipping_slip': True}</field>
+        <field name="context">{'default_last_shipping_slip': True}</field>
     </record>
 
     <record id="dpt_stock_quant_vietnamese_action" model="ir.actions.act_window">
