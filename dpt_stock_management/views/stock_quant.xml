@@ -9,6 +9,7 @@
                 <field name="location_id"/>
                 <field name="sale_id"/>
                 <field name="lot_id" string="Mã lô"/>
+                <field name="package_name"/>
                 <field name="packing_lot_name"/>
                 <field name="product_id" invisible="1"/>
                 <field name="partner_id"/>
