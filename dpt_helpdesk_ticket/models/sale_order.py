@@ -7,6 +7,12 @@ class SaleOrder(models.Model):
     count_ticket = fields.Integer(compute='_compute_count_ticket')
     ticket_ids = fields.One2many('helpdesk.ticket', 'sale_id', 'Tickets')
 
+    @api.model
+    def create(self, vals):
+        res = super(SaleOrder, self).create(vals)
+        self.action_create_ticket_first()
+        return res
+
     def write(self, vals):
         rec = super(SaleOrder, self).write(vals)
         if 'sale_service_ids' not in vals:
@@ -37,6 +43,7 @@ class SaleOrder(models.Model):
                     'parent_id': ticket_id.id
                     # 'status': r.price_status,
                 })
+        self.action_create_ticket_first()
         return rec
 
     def get_tickets(self):
@@ -58,6 +65,56 @@ class SaleOrder(models.Model):
         self.action_create_ticket()
         res = super(SaleOrder, self).action_confirm()
         return res
+
+    def action_create_ticket_first(self):
+        for service in self.sale_service_ids:
+            if service.service_id.is_create_ticket_first:
+                if not service.ticket_id:
+                    service_ids = []
+                    if service.service_id.is_tth_service and service.service_id.is_create_ticket:
+                        vals = {
+                            'purchase_type': 'buy_cny',
+                            'department_id': service.department_id.id,
+                            'partner_id': self.partner_id.id,
+                            'sale_id': self.id,
+                        }
+                        res = self.env['purchase.order'].create(vals)
+                        continue
+                    # if department == service.department_id.id:
+                    if service.service_id.is_create_ticket:
+                        service_ids.append((0, 0, {
+                            'service_id': service.service_id.id,
+                            'sale_service_id': service.id,
+                            'description': service.description,
+                            'qty': service.compute_value,
+                            'uom_id': service.uom_id.id,
+                            'price': service.price,
+                            'currency_id': service.currency_id.id,
+                            'amount_total': service.amount_total,
+                            # 'status': r.price_status,
+                        }))
+                    stage_done_id = self.env['helpdesk.stage'].search(
+                        [('is_done_stage', '=', True), ('team_ids', 'in', [service.service_id.helpdesk_team_id.id])])
+                    if service.service_id.auo_complete and service.service_id.is_create_ticket:
+                        ticket_id = self.env['helpdesk.ticket'].create({
+                            'sale_id': self.id,
+                            'partner_id': self.partner_id.id,
+                            'service_lines_ids': service_ids,
+                            'department_id': service.department_id.id,
+                            'team_id': service.service_id.helpdesk_team_id.id,
+                            'stage_id': stage_done_id.id,
+                        })
+                        service.ticket_id = ticket_id
+                    else:
+                        if service.service_id.is_create_ticket:
+                            ticket_id = self.env['helpdesk.ticket'].create({
+                                'sale_id': self.id,
+                                'partner_id': self.partner_id.id,
+                                'service_lines_ids': service_ids,
+                                'department_id': service.department_id.id,
+                                'team_id': service.service_id.helpdesk_team_id.id,
+                            })
+                            service.ticket_id = ticket_id
 
     def action_create_ticket(self):
         list_department = []
