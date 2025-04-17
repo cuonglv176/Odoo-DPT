@@ -469,9 +469,14 @@ class SaleOrder(models.Model):
                         if not service_price_id.is_accumulated:
                             detail_price_ids = service_price_id.pricelist_table_detail_ids.filtered(lambda
                                                                                                         ptd: ptd.uom_id.id == compute_field_id.uom_id.id and compute_field_id.value_integer >= ptd.min_value and compute_field_id.value_integer <= ptd.max_value)
+
+                            _logger.info("DEtail Service Price IDS %s", detail_price_ids)
                             for detail_price_id in detail_price_ids:
                                 price = compute_field_id.value_integer * detail_price_id.amount if service_price_id.is_price else detail_price_id.amount
                                 price = max(service_price_id.currency_id.rate * price, service_price_id.min_amount)
+
+                                _logger.info("price %s", price)
+                                _logger.info("max_price %s", max_price)
                                 if price > max_price:
                                     max_price = price
                                     price_list_item_id = service_price_id
