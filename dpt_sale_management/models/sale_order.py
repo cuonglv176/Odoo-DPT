@@ -5,6 +5,7 @@ import xlrd, xlwt
 import xlsxwriter
 import base64
 import io as stringIOModule
+import logging
 from odoo.modules.module import get_module_resource
 
 COLUMN = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q']
@@ -16,6 +17,7 @@ SALE_ORDER_STATE = [
     ('sale', "Sales Order"),
     ('cancel', "Cancelled"),
 ]
+_logger = logging.getLogger(__name__)
 
 
 class SaleOrder(models.Model):
@@ -425,6 +427,7 @@ class SaleOrder(models.Model):
             if current_uom_id:
                 service_price_ids = service_price_ids.filtered(lambda sp: sp.uom_id.id == current_uom_id.id and (
                         sp.partner_id and sp.partner_id.id == self.partner_id.id or not sp.partner_id))
+            _logger.info("Service Price IDS %s", service_price_ids)
             if not service_price_ids:
                 continue
             max_price = 0
