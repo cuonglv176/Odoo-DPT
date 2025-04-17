@@ -6,7 +6,8 @@
         <field name="res_model">dpt.shipping.slip</field>
         <field name="type">ir.actions.act_window</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain">[('vehicle_country','=', 'chinese')]</field>
+        <field name="domain">[('delivery_slip_type','=','container_tq')]</field>
+        <field name="context">{'default_delivery_slip_type': 'container_tq}</field>
     </record>
 
     <record id="dpt_shipping_slip_vietnamese_action" model="ir.actions.act_window">
@@ -14,7 +15,7 @@
         <field name="res_model">dpt.shipping.slip</field>
         <field name="type">ir.actions.act_window</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain">[('vehicle_country','=', 'vietnamese')]</field>
+        <field name="domain">[('delivery_slip_type','=','container_vn')]</field>
     </record>
 
     <record id="dpt_shipping_slip_last_vietnamese_action" model="ir.actions.act_window">
@@ -22,7 +23,7 @@
         <field name="res_model">dpt.shipping.slip</field>
         <field name="type">ir.actions.act_window</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain">[('vehicle_country','=', 'vietnamese'),('last_shipping_slip','=', True)]</field>
+        <field name="domain">[('vehicle_country','=', 'vietnamese'),('last_shipping_slip','=', True),('delivery_slip_type','=','last_delivery_vn')]</field>
         <field name="context">{'default_last_shipping_slip': True}</field>
     </record>
 

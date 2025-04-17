@@ -44,6 +44,11 @@ class DPTShippingSlip(models.Model):
     non_finish_transfer = fields.Boolean('Non-Finish Transfer', compute="compute_non_finish_transfer")
     last_shipping_slip = fields.Boolean("Last Shipping Slip")
     is_cn_finish_stage = fields.Boolean(related="vn_vehicle_stage_id.is_finish_stage")
+    delivery_slip_type = fields.Selection([
+        ('container_tq', 'Container TQ'),
+        ('container_vn', 'Container VN'),
+        ('last_delivery_vn', 'Last Delivery VN'),
+    ], "Delivery Slip Type")
 
     def compute_non_finish_transfer(self):
         for item in self:
@@ -175,9 +180,12 @@ class DPTShippingSlip(models.Model):
     def action_create_shipping_slip_receive(self):
         action = self.env.ref('dpt_shipping.dpt_shipping_split_wizard_action').sudo().read()[0]
         location_dest_id = self.env['stock.location'].sudo().search(
-            [('usage', '=', 'internal'), ('warehouse_id.is_main_outgoing_warehouse', '=', True)], limit=1)
+            [('usage', '=', 'internal'), ('warehouse_id.is_vn_transit_warehouse', '=', True)], limit=1)
         picking_ids = self.out_picking_ids.filtered(
             lambda p: p.state == 'done' and p.total_transfer_quantity)
+        picking_ids.write({
+            'delivery_dest_location_id': location_dest_id.id
+        })
         action['context'] = {
             'default_shipping_id': self.id,
             'default_location_dest_id': location_dest_id.id,
@@ -206,9 +214,12 @@ class DPTShippingSlip(models.Model):
                 })
                 transfer_picking_id.action_update_old_package_information()
                 transfer_picking_id._compute_total_volume_weight()
+
                 # update move line
                 move_line_vals = []
-                for move_id in transfer_picking_id.move_ids_without_package.filtered(lambda m: not m.move_line_ids):
+                for move_id in transfer_picking_id.move_ids_without_package:
+                    move_id.move_line_ids.unlink()
+                    move_id.location_dest_id = ctq_location
                     lot_id = self.env['stock.lot'].search(
                         [('product_id', '=', move_id.product_id.id),
                          ('name', '=', main_incoming_picking_id.picking_lot_name)],
@@ -218,7 +229,7 @@ class DPTShippingSlip(models.Model):
                         'move_id': move_id.id,
                         'lot_id': lot_id.id,
                         'location_id': move_id.location_id.id,
-                        'location_dest_id': move_id.location_dest_id.id,
+                        'location_dest_id': ctq_location.id,
                         'product_id': move_id.product_id.id,
                         'quantity': move_id.product_uom_qty,
                         'product_uom_id': move_id.product_uom.id,

@@ -47,6 +47,7 @@
                     <group>
                         <group>
                             <field name="name" required="1"/>
+                            <field name="delivery_slip_type" invisible="1"/>
                             <field name="send_shipping_id" options="{'no_create': True}" readonly="1" force_save="1"/>
                             <field name="estimate_arrival_warehouse_vn" invisible="not send_shipping_id"/>
                             <field name="transfer_code" invisible="1"/>
@@ -76,7 +77,14 @@
                         <page name="sale_order" string="Order">
                             <field name="sale_ids" readonly="1" force_save="1"/>
                         </page>
-                        <page name="main_in_picking" string="Main IN Picking">
+                        <page name="main_in_picking" string="Main IN Picking" invisible="delivery_slip_type != 'container_tq'">
+                            <field name="main_in_picking_ids" context="{
+                                     'form_view_ref': 'stock.view_picking_form',
+                                     'tree_view_ref': 'dpt_shipping.dpt_stock_picking_in_shipping_tree_view'}"
+                                   readonly="1" force_save="1"/>
+                        </page>
+                        <page name="main_in_picking_container_vn" string="Phiếu chuyển"
+                              invisible="delivery_slip_type != 'container_vn'">
                             <field name="main_in_picking_ids" context="{
                                      'form_view_ref': 'stock.view_picking_form',
                                      'tree_view_ref': 'dpt_shipping.dpt_stock_picking_in_shipping_tree_view'}"

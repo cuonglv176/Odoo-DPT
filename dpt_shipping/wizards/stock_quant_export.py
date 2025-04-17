@@ -56,7 +56,8 @@ class StockQuantExport(models.TransientModel):
         export_picking_ids = export_picking_ids.create(export_picking_vals)
         shipping_id = self.env['dpt.shipping.slip'].create({
             'out_picking_ids': export_picking_ids.ids,
-            'ticket_ids': self.ticket_ids.ids
+            'ticket_ids': self.ticket_ids.ids,
+            'delivery_slip_type': 'last_delivery_vn',
         })
 
         return {
