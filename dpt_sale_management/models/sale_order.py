@@ -461,10 +461,10 @@ class SaleOrder(models.Model):
                         max_price = price
                         price_list_item_id = service_price_id
                 elif service_price_id.compute_price == 'table':
-                    # compute_field_ids = self.fields_ids.filtered(
-                    #     lambda f: f.using_calculation_price and f.service_id.id == sale_service_id.service_id.id)
                     compute_field_ids = self.fields_ids.filtered(
-                        lambda f: f.using_calculation_price and f.sale_service_id.id == sale_service_id.id)
+                        lambda f: f.using_calculation_price and f.service_id.id == sale_service_id.service_id.id)
+                    # compute_field_ids = self.fields_ids.filtered(
+                    #     lambda f: f.using_calculation_price and f.sale_service_id.id == sale_service_id.id)
                     _logger.info("compute_field_ids %s", compute_field_ids)
                     for compute_field_id in compute_field_ids:
                         if not service_price_id.is_accumulated:
