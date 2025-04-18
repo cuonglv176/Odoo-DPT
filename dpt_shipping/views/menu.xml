@@ -7,7 +7,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('delivery_slip_type','=','container_tq')]</field>
-        <field name="context">{'default_delivery_slip_type': 'container_tq}</field>
+        <field name="context">{'default_delivery_slip_type': 'container_tq'}</field>
     </record>
 
     <record id="dpt_shipping_slip_vietnamese_action" model="ir.actions.act_window">
