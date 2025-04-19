@@ -118,7 +118,7 @@ class StockPicking(models.Model):
         res = super().create(vals)
         if not ('finish_stock_services' in vals or 'have_stock_label' in vals or 'have_export_import' in vals):
             res._compute_valid_cutlist()
-        if res.x_transfer_type == 'outgoing_transfer' and res.picking_in_id:
+        if res.x_transfer_type == 'outgoing_transfer' and res.picking_in_id and not self.env.context.get('no_update_shipping', False):
             shipping_slip_ids = self.env['dpt.shipping.slip'].sudo().search(
                 [('main_in_picking_ids', 'in', res.picking_in_id.ids)])
             if shipping_slip_ids:
@@ -182,7 +182,7 @@ class StockPicking(models.Model):
             if not new_picking_type_id:
                 raise ValidationError(
                     f'Vui lòng tạo loại điều chuyển cho kho {transit_location_id.warehouse_id.name}')
-            in_transfer_picking_id = picking.copy({
+            in_transfer_picking_id = picking.with_context({"no_update_shipping": True}).copy({
                 'location_id': transit_location_id.id,
                 'location_dest_id': location_dest_id.id,
                 'x_transfer_type': 'incoming_transfer',
