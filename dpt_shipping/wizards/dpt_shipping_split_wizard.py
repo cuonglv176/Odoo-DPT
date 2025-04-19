@@ -49,7 +49,8 @@ class DPTShippingSplitWizard(models.TransientModel):
         shipping_slip_receive_id = self.env['dpt.shipping.slip'].create({
             'send_shipping_id': self.shipping_id.id,
             'sale_ids': to_vn_picking_ids.mapped('sale_purchase_id').ids,
-            'in_picking_ids': to_container_vn_picking_ids.ids,
+            'main_in_picking_ids': to_container_vn_picking_ids.ids,
+            'in_picking_ids': to_vn_picking_ids.ids,
             'export_import_ids': export_import_ids.ids,
             'estimate_arrival_warehouse_vn': self.estimate_arrival_warehouse_vn,
             'delivery_slip_type': 'container_vn',
