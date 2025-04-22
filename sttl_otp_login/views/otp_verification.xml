@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="otp_verification_view_form" model="ir.ui.view">
+            <field name="name">otp_verification_view_form</field>
+            <field name="model">otp.verification</field>
+            <field name="arch" type="xml">
+                <form string="otp_verification_form">
+                    <sheet>
+                        <group>
+                            <field name="otp"/>
+                            <field name="state"/>
+                            <field name="email"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="otp_verification_view_tree" model="ir.ui.view">
+            <field name="name">otp_verification_view_tree</field>
+            <field name="model">otp.verification</field>
+            <field name="arch" type="xml">
+                <tree string="_tree">
+                    <field name="otp"/>
+                    <field name="state"/>
+                    <field name="email"/>
+                </tree>
+            </field>
+        </record>
+        <record id="otp_verification_action" model="ir.actions.act_window">
+            <field name="name">OTP Verification</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">otp.verification</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem
+            id="otp_verify_menu"
+            name="OTP VERIFICATION"
+            parent="base.menu_users"
+            action="otp_verification_action"
+            groups="otp_verification_access"
+            sequence="0"/>
+    </data>
+</odoo>

@@ -1,0 +1,65 @@
+<odoo>
+
+    <template id="custom_login_otp_checkbox_template" inherit_id="web.login">
+        <xpath expr="//input[@name='password']" position="after">
+            <div class="o_login_otp_container">
+                <div style="margin-top:10px; display:flex;">
+                    <a t-attf-href="?otp_login=true" class="btn btn-link" role="button">
+                        Login with OTP
+                    </a>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//form[@class='oe_login_form']" position="attributes">
+            <attribute name="t-if">not otp_login</attribute>
+        </xpath>
+    </template>
+
+    <template id="custom_login_template" inherit_id="web.login">
+        <xpath expr="//form[@class='oe_login_form']" position="after">
+            <form t-if="otp_login and not otp" id="form_otp_login" class="oe_login_form" role="form" t-attf-action="/web/otp/login" method="post">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <div class="form-group field-login">
+                    <label t-attf-style="margin-bottom:10px" for="login">Email</label>
+                    <input type="text" placeholder="Email" name="login" t-att-value="login" id="login" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" required="required" autofocus="autofocus" autocapitalize="off"/>
+                </div>
+                <p t-if="login_error" class="alert alert-danger" role="alert">
+                    The Email entered is incorrect.
+                </p>
+                <div t-attf-class="clearfix oe_login_buttons text-center mb-1 {{'pt-2' if form_small else 'pt-3'}}">
+                    <button style="width:100%" type="submit" class="btn btn-primary btn-block">Send OTP</button>
+                </div>
+                <div style="margin-top:10px; display:flex;">
+                    <a t-attf-href="/web/login" class="btn btn-link" role="button">
+                        Login with Password
+                    </a>
+                </div>
+            </form>
+            <form t-if="otp and otp_no" id="form_otp" class="oe_login_form" role="form" t-attf-action="/web/otp/verify" method="post">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <div class="form-group">
+                    <label t-attf-style="margin-bottom:10px" for="otp">OTP</label>
+                    <input type="text" placeholder="OTP" name="otp" id="otp" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" required="required"/>
+                    <input t-att-value="login" id="login" type="hidden" name="login"/>
+<!--                    <t t-esc="otp_no"/>-->
+                </div>
+                <div t-attf-class="clearfix oe_login_buttons text-center mb-1 {{'pt-2' if form_small else 'pt-3'}}">
+                    <button style="width:100%" type="submit" class="btn btn-primary btn-block">Verify OTP</button>
+                </div>
+            </form>
+            <form t-if="otp and not otp_no" id="form_resend_otp" class="oe_login_form" role="form" t-attf-action="/web/otp/login" method="post">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <label t-attf-style="margin-bottom:10px" for="otp">OTP</label>
+                <input type="text" placeholder="OTP" name="otp" id="otp" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" />
+                <input t-att-value="login" id="login" type="hidden" name="login"/>
+                <p class="alert alert-danger" role="alert">
+                    The OTP entered is incorrect. Please use the below button to resend the OTP.
+                </p>
+                <div t-attf-class="clearfix oe_login_buttons text-center mb-1 {{'pt-2' if form_small else 'pt-3'}}">
+                    <button style="width:100%" type="submit" class="btn btn-primary btn-block">Resend OTP</button>
+                </div>
+            </form>
+        </xpath>
+    </template>
+
+</odoo>
