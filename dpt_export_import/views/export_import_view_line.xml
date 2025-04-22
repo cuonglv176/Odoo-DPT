@@ -48,6 +48,8 @@
                 <field name="dpt_is_new" widget="boolean_toggle"/>
                 <field name="currency_id" invisible="1"/>
                 <field name="active" invisible="1"/>
+                <!-- dunghq: Thêm trường risk_reason để hiển thị lý do rủi ro -->
+                <field name="risk_reason" optional="show"/>
                 <button string="Unlink" type="object" name="action_unlink" class="btn-primary"
                         groups="sales_team.group_sale_salesman_all_leads"/>
             </tree>
@@ -74,6 +76,10 @@
                             groups="dpt_security.group_dpt_employee_sale,dpt_security.group_dpt_employee_cskh"/>
                 </header>
                 <sheet>
+                    <!-- dunghq: Thêm cảnh báo khi có lý do rủi ro -->
+                    <div class="alert alert-danger" role="alert" invisible="risk_reason == False">
+                        <field name="risk_reason" readonly="1"/>
+                    </div>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_main_incoming_picking" type="object" class="oe_stat_button"
                                 icon="fa-pencil-square-o">
@@ -96,13 +102,18 @@
                             <field name="dpt_english_name"/>
                             <field name="dpt_description"/>
                             <field name="manufacturer"/>
-                            <field name="brand"/>
-                            <field name="material"/>
-                            <field name="model"/>
+                             <!-- dunghq Thay thế các trường ẩn bằng các trường hiển thị -->
+                            <field name="brand" invisible="1"/>
+                            <field name="model" invisible="1"/>
+                            <field name="brand_id"/>
+                            <field name="model_id"/>
+                            <!-- dunghq -->
                             <field name="dpt_sl1"/>
                             <field name="dpt_uom1_id"/>
                             <field name="declaration_type" widget="radio" options="{'horizontal': true}"/>
                             <field name="dpt_exchange_rate"/>
+                            <!-- dunghq: Thêm trường selection Giá HQ -->
+                            <field name="customs_price_type" widget="radio" options="{'horizontal': true}"/>
                             <field name="dpt_price_usd" invisible="declaration_type != 'usd'"/>
                             <field name="dpt_price_unit"/>
                             <field name="dpt_total_usd" invisible="declaration_type != 'usd'"/>
@@ -135,7 +146,8 @@
                             <field name="package_ids" widget="many2many_tags"/>
                             <field name="dpt_n_w_kg"/>
                             <field name="dpt_g_w_kg"/>
-
+                             <!-- dunghq: Thêm trường risk_reason vào form view với widget selection -->
+                            <field name="risk_reason" widget="selection"/>
                         </group>
                     </group>
                 </sheet>
@@ -152,7 +164,8 @@
         <field name="name">dpt.export.import.tree</field>
         <field name="model">dpt.export.import.line</field>
         <field name="arch" type="xml">
-            <tree string="Export Import Line List">
+            <!-- dunghq: Thêm decoration-danger để hiển thị dòng có rủi ro màu đỏ -->
+            <tree decoration-danger="risk_reason != False">
                 <button string="Eligible" type="object" name="action_update_eligible" class="btn-primary"
                         invisible="state != 'draft'"
                         groups="dpt_security.group_dpt_document_officer,dpt_security.group_dpt_head_of_document"/>
@@ -190,9 +203,12 @@
                 <field name="dpt_tax_other" widget="percentage"/>
                 <field name="dpt_amount_tax_other"/>
                 <field name="dpt_exchange_rate"/>
+                <!-- dunghq: Thêm trường customs_price_type vào tree view -->
+                <field name="customs_price_type"/>
                 <field name="dpt_total_vat"/>
                 <field name="dpt_total_usd_vnd"/>
                 <field name="dpt_total_cny_vnd"/>
+                <field name="risk_reason"/>
                 <field name="dpt_is_new" widget="boolean_toggle"/>
                 <field name="currency_id" invisible="1"/>
                 <field name="active" invisible="1"/>
