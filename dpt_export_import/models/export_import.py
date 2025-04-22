@@ -8,6 +8,28 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 _logger = logging.getLogger(__name__)
 
 
+# dunghq
+
+class DptProductBrand(models.Model):
+    _name = "dpt.product.brand"
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _description = 'Dpt Product Brand'
+
+    name = fields.Char(string='Name')
+
+
+class DptProductModel(models.Model):
+    _name = "dpt.product.model"
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _description = 'Dpt Product Model'
+
+    name = fields.Char(string='Name')
+    brand_id = fields.Many2one('dpt.product.brand', string='Brand')
+
+
+# dunghq
+
+
 class DptExportImportGate(models.Model):
     _name = "dpt.export.import.gate"
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -29,6 +51,10 @@ class DptExportImport(models.Model):
     partner_importer_id = fields.Many2one('res.partner', string='Partner Importer')
     partner_exporter_id = fields.Many2one('res.partner', string='Partner Exporter')
     gate_id = fields.Many2one('dpt.export.import.gate', string='Gate Importer')
+    # dunghq
+    brand_id = fields.Many2one('dpt.product.brand', string='Brand')
+    model_id = fields.Many2one('dpt.product.model', string='Model')
+    # dunghq
     user_id = fields.Many2one('res.users', string='User Export/Import', default=lambda self: self.env.user,
                               tracking=True)
     date = fields.Date(required=True, default=lambda self: fields.Date.context_today(self))
