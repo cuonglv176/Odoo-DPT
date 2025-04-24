@@ -44,11 +44,16 @@ class DPTShippingSlip(models.Model):
     non_finish_transfer = fields.Boolean('Non-Finish Transfer', compute="compute_non_finish_transfer")
     last_shipping_slip = fields.Boolean("Last Shipping Slip")
     is_cn_finish_stage = fields.Boolean(related="vn_vehicle_stage_id.is_finish_stage")
+    all_so_locked = fields.Boolean("All SO Locked", compute="_compute_all_so_locked")
     delivery_slip_type = fields.Selection([
         ('container_tq', 'Container TQ'),
         ('container_vn', 'Container VN'),
         ('last_delivery_vn', 'Last Delivery VN'),
     ], "Delivery Slip Type")
+
+    def _compute_all_so_locked(self):
+        for item in self:
+            item.all_so_locked = all([so_id.locked for so_id in item.sale_ids])
 
     def compute_non_finish_transfer(self):
         for item in self:
@@ -252,5 +257,7 @@ class DPTShippingSlip(models.Model):
         return action
 
     def action_lock_so(self):
-        for sale_id in self.sale_ids:
+        for sale_id in self.sale_ids.filtered(lambda so: not so.locked):
             sale_id.action_lock()
+            sale_id.message_post(body="Đơn hàng bị khóa từ phiếu vận chuyển %s" % self.name,
+                                 message_type='comment', subtype_xmlid='mail.mt_note')

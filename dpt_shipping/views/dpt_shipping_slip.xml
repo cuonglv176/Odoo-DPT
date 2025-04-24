@@ -24,14 +24,14 @@
             <form string="Shipping slip">
                 <header>
                     <button name="action_create_shipping_slip_receive" string="Create Shipping Receive"
-                            type="object" class="btn-primary" invisible="send_shipping_id or not non_finish_transfer"/>
+                            type="object" class="btn-primary" invisible="send_shipping_id or not non_finish_transfer or delivery_slip_type == 'last_delivery_vn'"/>
                     <button name="action_create_stock_transfer" string="Create Transfer Picking"
                             type="object" class="btn-primary"
                             invisible="send_shipping_id or out_picking_ids"/>
                     <button name="action_confirm_picking" string="Confirm Picking"
                             type="object" class="btn-primary" invisible="not num_not_confirm_picking"/>
                     <button name="action_lock_so" string="Khóa SO"
-                            type="object" class="btn-primary" invisible="not is_cn_finish_stage"/>
+                            type="object" class="btn-primary" invisible="not is_cn_finish_stage or all_so_locked"/>
                     <field name="vehicle_country" invisible="1"/>
                     <field name="vn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
                            invisible="vehicle_country != 'vietnamese'"/>
@@ -42,6 +42,7 @@
                     <field name="non_finish_transfer" invisible="1"/>
                     <field name="last_shipping_slip" invisible="1"/>
                     <field name="is_cn_finish_stage" invisible="1"/>
+                    <field name="all_so_locked" invisible="1"/>
                 </header>
                 <sheet>
                     <group>

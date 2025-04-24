@@ -39,6 +39,7 @@ class StockQuantExport(models.TransientModel):
                     'location_id': quant_ids[0].location_id.id,
                     'location_dest_id': partner_id.property_stock_customer.id,
                     'picking_type_id': picking_type_id.id,
+                    'picking_lot_name': quant_id.lot_id.name,
                     'package_ids': [(0, 0, {
                         'uom_id': uom_id.id,
                         'quantity': quant_id.quantity,
@@ -53,12 +54,18 @@ class StockQuantExport(models.TransientModel):
                         # 'total_volume': (math.ceil(round(package_id.volume * package_id.transfer_quantity * 100, 4)) / 100) * (package_id.transfer_quantity - package_id.created_picking_qty) / package_id.transfer_quantity,
                     })]
                 })
-        export_picking_ids = export_picking_ids.create(export_picking_vals)
-        shipping_id = self.env['dpt.shipping.slip'].create({
-            'out_picking_ids': export_picking_ids.ids,
-            'ticket_ids': self.ticket_ids.ids,
-            'delivery_slip_type': 'last_delivery_vn',
-        })
+                export_picking_id = self.env['stock.picking'].create(export_picking_vals)
+                export_picking_id.move_line_ids.write({
+                    'lot_id': quant_id.lot_id.id,
+                })
+                export_picking_ids |= export_picking_id
+        if export_picking_ids:
+            shipping_id = self.env['dpt.shipping.slip'].create({
+                'out_picking_ids': export_picking_ids.ids,
+                'ticket_ids': self.ticket_ids.ids,
+                'last_shipping_slip': True,
+                'delivery_slip_type': 'last_delivery_vn',
+            })
 
         return {
             'res_model': 'dpt.shipping.slip',
