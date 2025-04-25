@@ -23,7 +23,7 @@
         <field name="res_model">dpt.shipping.slip</field>
         <field name="type">ir.actions.act_window</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain">[('vehicle_country','=', 'vietnamese'),('last_shipping_slip','=', True),('delivery_slip_type','=','last_delivery_vn')]</field>
+        <field name="domain">[('last_shipping_slip','=', True),('delivery_slip_type','=','last_delivery_vn')]</field>
         <field name="context">{'default_last_shipping_slip': True}</field>
     </record>
 
