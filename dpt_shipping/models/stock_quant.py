@@ -6,6 +6,21 @@ class StockQuant(models.Model):
     _inherit = 'stock.quant'
 
     ticket_ids = fields.Many2many('helpdesk.ticket', string='Ticket')
+    shipping_slip_name = fields.Char('Phiếu vận chuyển', compute="_compute_shipping_slip_name")
+
+    def _compute_shipping_slip_name(self):
+        for item in self:
+            picking_id = self.env['stock.picking'].sudo().search(
+                [('picking_lot_name', '=', item.lot_id.name), ('location_dest_id', '=', item.location_id.id)], limit=1)
+            shipping_slip_name = ""
+            if picking_id:
+                shipping_slip_id = self.env['dpt.shipping.slip'].sudo().search(
+                    ["|", "|", ("main_in_picking_ids", 'in', [picking_id.id]),
+                     ("out_picking_ids", 'in', [picking_id.id]), ("in_picking_ids", 'in', [picking_id.id])],
+                    order="id desc", limit=1)
+                if shipping_slip_id:
+                    shipping_slip_name = shipping_slip_id.name
+            item.shipping_slip_name = shipping_slip_name
 
     def action_stock_quant_separate(self):
         context = {
