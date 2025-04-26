@@ -19,7 +19,7 @@ class StockQuant(models.Model):
 
     def _compute_inventory_duration(self):
         for item in self:
-            duration = (fields.Date.today() - item.create_date).days
+            duration = (fields.Date.today() - item.create_date.date()).days
             item.inventory_duration = duration
 
     def _compute_sale_information(self):
