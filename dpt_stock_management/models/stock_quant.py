@@ -15,6 +15,12 @@ class StockQuant(models.Model):
     partner_id = fields.Many2one('res.partner', string='Khách hàng', compute="_compute_sale_information")
     packing_lot_name = fields.Char('Nhóm kiện', compute="_compute_sale_information")
     package_name = fields.Char('Mã Pack', compute="_compute_sale_information")
+    inventory_duration = fields.Integer(compute="_compute_inventory_duration", string="Ngày lưu kho")
+
+    def _compute_inventory_duration(self):
+        for item in self:
+            duration = (fields.Date.today() - item.create_date).days
+            item.inventory_duration = duration
 
     def _compute_sale_information(self):
         for item in self:
