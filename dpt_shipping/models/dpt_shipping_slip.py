@@ -54,7 +54,6 @@ class DPTShippingSlip(models.Model):
     def _compute_all_so_locked(self):
         for item in self:
             item.all_so_locked = all([so_id.locked for so_id in item.sale_ids])
->>>>>>> 8f2c90cf57943dee3e1244279c6e868d5cf1a0c2
 
     def compute_non_finish_transfer(self):
         for item in self:
