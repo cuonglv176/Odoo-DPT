@@ -43,7 +43,7 @@ class DPTShippingSlip(models.Model):
     estimate_arrival_warehouse_vn = fields.Date('Estimate Arrival Warehouse VN')
     non_finish_transfer = fields.Boolean('Non-Finish Transfer', compute="compute_non_finish_transfer")
     last_shipping_slip = fields.Boolean("Last Shipping Slip")
-    is_cn_finish_stage = fields.Boolean(related="vn_vehicle_stage_id.is_finish_stage")
+    is_cn_finish_stage = fields.Boolean(related="cn_vehicle_stage_id.is_finish_stage")
 
     def compute_non_finish_transfer(self):
         for item in self:
