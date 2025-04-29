@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.module.category" id="otp_verification">
+         <field name="name">OTP Table</field>
+         <field name="description">User access levels for OTP module</field>
+         <field name="sequence">10</field>
+    </record>
+    <record id="otp_verification_access" model="res.groups">
+        <field name="name">Admin</field>
+        <field name="category_id" ref="otp_verification"/>
+    </record>
+</odoo>

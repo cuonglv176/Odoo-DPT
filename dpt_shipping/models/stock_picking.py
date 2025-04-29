@@ -34,6 +34,8 @@ class StockPicking(models.Model):
     total_left_quantity = fields.Float(compute='_compute_total_quantity')
     total_transfer_quantity = fields.Float(compute='_compute_total_quantity')
 
+    delivery_dest_location_id = fields.Many2one('stock.location', string='Kho nhận')
+
     def _compute_total_quantity(self):
         for item in self:
             item.total_left_quantity = sum(item.package_ids.mapped('quantity')) - sum(
@@ -116,7 +118,7 @@ class StockPicking(models.Model):
         res = super().create(vals)
         if not ('finish_stock_services' in vals or 'have_stock_label' in vals or 'have_export_import' in vals):
             res._compute_valid_cutlist()
-        if res.x_transfer_type == 'outgoing_transfer' and res.picking_in_id:
+        if res.x_transfer_type == 'outgoing_transfer' and res.picking_in_id and not self.env.context.get('no_update_shipping', False):
             shipping_slip_ids = self.env['dpt.shipping.slip'].sudo().search(
                 [('main_in_picking_ids', 'in', res.picking_in_id.ids)])
             if shipping_slip_ids:
@@ -155,22 +157,6 @@ class StockPicking(models.Model):
                 elif shipping_slip_id.vehicle_country == 'vietnamese':
                     shipping_slip_id.vn_vehicle_stage_id = ready_stage_id
 
-    def action_create_shipping_slip(self):
-        default_vehicle_stage_id = self.env['dpt.vehicle.stage'].sudo().search([('is_default', '=', True)], limit=1)
-        sale_ids = self.mapped('sale_purchase_id')
-        shipping_slip_id = self.env['dpt.shipping.slip'].create({
-            'sale_ids': sale_ids.ids,
-            'picking_ids': self.ids,
-            'vehicle_stage_id': default_vehicle_stage_id.id if default_vehicle_stage_id else None,
-        })
-        action = self.env.ref('dpt_shipping.dpt_shipping_slip_action').sudo().read()[0]
-        action['domain'] = [('id', '=', shipping_slip_id.id)]
-        py_ctx = json.loads(action.get('context', {}))
-        py_ctx['create'] = 0
-        py_ctx['delete'] = 0
-        action['context'] = py_ctx
-        return action
-
     def action_update_transfer_quantity(self):
         return {
             'type': 'ir.actions.act_window',
@@ -186,20 +172,17 @@ class StockPicking(models.Model):
     def create_in_transfer_picking(self, transit_location_id=None, location_dest_id=None):
         # logic transfer - create incoming picking
         if not transit_location_id:
-            transit_location_id = self.env['stock.location'].sudo().search(
-                [('usage', '=', 'internal'), ('warehouse_id.is_vn_transit_warehouse', '=', True)], limit=1)
-
-        if not transit_location_id:
             raise ValidationError("Vui lòng kiểm tra lại kho chuyển phía Việt Nam")
         if not location_dest_id:
             raise ValidationError(_('Missing another Internal Location. Please check other Internal location'))
+        in_transfer_picking_ids = self.env['stock.picking']
         for picking in self:
             new_picking_type_id = self.env['stock.picking.type'].sudo().search(
-                [('warehouse_id', '=', location_dest_id.warehouse_id.id), ('code', '=', 'internal')], limit=1)
+                [('warehouse_id', '=', transit_location_id.warehouse_id.id), ('code', '=', 'internal')], limit=1)
             if not new_picking_type_id:
                 raise ValidationError(
-                    f'Vui lòng tạo loại điều chuyển cho kho {location_dest_id.warehouse_id.name}')
-            in_transfer_picking_id = picking.copy({
+                    f'Vui lòng tạo loại điều chuyển cho kho {transit_location_id.warehouse_id.name}')
+            in_transfer_picking_id = picking.with_context({"no_update_shipping": True}).copy({
                 'location_id': transit_location_id.id,
                 'location_dest_id': location_dest_id.id,
                 'x_transfer_type': 'incoming_transfer',
@@ -236,7 +219,6 @@ class StockPicking(models.Model):
                 'location_id': transit_location_id.id,
                 'location_dest_id': location_dest_id.id,
             })
-            picking.x_in_transfer_picking_id = in_transfer_picking_id.id
             in_transfer_picking_id.action_update_picking_name()
             move_line_vals = []
             in_transfer_picking_id.move_line_ids.unlink()
@@ -264,3 +246,5 @@ class StockPicking(models.Model):
             if self.env.context.get('confirm_immediately'):
                 in_transfer_picking_id.action_confirm()
                 in_transfer_picking_id.button_validate()
+            in_transfer_picking_ids = in_transfer_picking_ids | in_transfer_picking_id
+        return in_transfer_picking_ids

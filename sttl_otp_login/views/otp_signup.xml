@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template inherit_id="auth_signup.signup" id="custom_otp_signup">
+            <xpath expr="//form[@class='oe_signup_form']" position="replace">
+                <form class="oe_signup_form" role="form" t-attf-action="/web/signup/otp" method="post" t-if="not otp and not otp_no and not message">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <t t-call="auth_signup.fields">
+                        <t t-set="only_passwords" t-value="bool(token and not invalid_token)"/>
+                    </t>
+                    <p class="alert alert-danger" t-if="error" role="alert">
+                        <t t-esc="error"/>
+                    </p>
+                    <input type="hidden" name="redirect" t-att-value="redirect"/>
+                    <input type="hidden" name="token" t-att-value="token"/>
+                    <div class="text-center oe_login_buttons pt-3">
+                        <button style="width:100%" type="submit" class="btn btn-primary btn-block">Send OTP</button>
+                        <a t-attf-href="/web/login?{{ keep_query() }}" class="btn btn-link btn-sm" role="button">Already have an account?</a>
+                        <div class="o_login_auth"/>
+                    </div>
+                </form>
+                <form t-if="otp and otp_no" id="form_otp" class="oe_login_form" role="form" t-attf-action="/web/signup/otp/verify" method="post">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <div class="form-group">
+                        <label t-attf-style="margin-bottom:10px" for="otp">OTP</label>
+                        <input type="text" placeholder="OTP" name="otp" id="otp" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" required="required"/>
+                        <input t-att-value="login" id="login" type="hidden" name="login"/>
+                        <input t-att-value="name" id="name" type="hidden" name="name"/>
+                        <input t-att-value="password" id="password" type="hidden" name="password"/>
+                        <input t-att-value="confirm_password" id="confirm_password" type="hidden" name="confirm_password"/>
+<!--                        <t t-esc="otp_no"/>-->
+                    </div>
+                    <div t-attf-class="clearfix oe_login_buttons text-center mb-1 {{'pt-2' if form_small else 'pt-3'}}">
+                        <button style="width:100%" type="submit" class="btn btn-primary btn-block">Sign Up</button>
+                    </div>
+                </form>
+                <form t-if="otp and not otp_no" id="form_resend_otp" class="oe_login_form" role="form" t-attf-action="/web/signup/otp" method="post">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <label t-attf-style="margin-bottom:10px" for="otp">OTP</label>
+                    <input type="text" placeholder="OTP" name="otp" id="otp" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" />
+                    <input t-att-value="login" id="login" type="hidden" name="login"/>
+                    <input t-att-value="name" id="name" type="hidden" name="name"/>
+                    <input t-att-value="password" id="password" type="hidden" name="password"/>
+                    <input t-att-value="confirm_password" id="confirm_password" type="hidden" name="confirm_password"/>
+                    <p class="alert alert-danger" role="alert">
+                        The OTP entered is incorrect. Please use the below button to resend the OTP.
+                    </p>
+                    <div t-attf-class="clearfix oe_login_buttons text-center mb-1 {{'pt-2' if form_small else 'pt-3'}}">
+                        <button style="width:100%" type="submit" class="btn btn-primary btn-block">Resend OTP</button>
+                    </div>
+                </form>
+            </xpath>
+        </template>
+    </data>
+</odoo>

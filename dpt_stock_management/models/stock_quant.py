@@ -8,13 +8,19 @@ class StockQuant(models.Model):
 
     weight = fields.Float('Weight (kg)', related="lot_id.weight")
     volume = fields.Float('Volume (m3)', related="lot_id.volume")
-    total_weight = fields.Float('Total Weight (kg)', related="lot_id.total_weight")
-    total_volume = fields.Float('Total Volume (m3)', related="lot_id.total_volume")
+    total_weight = fields.Float('Total Weight (kg)', related="lot_id.total_weight", store=True)
+    total_volume = fields.Float('Total Volume (m3)', related="lot_id.total_volume", store=True)
     sale_id = fields.Many2one('sale.order', 'Đơn hàng', compute="_compute_sale_information")
     employee_cs = fields.Many2one('hr.employee', string='Employee CS', compute="_compute_sale_information")
     partner_id = fields.Many2one('res.partner', string='Khách hàng', compute="_compute_sale_information")
     packing_lot_name = fields.Char('Nhóm kiện', compute="_compute_sale_information")
     package_name = fields.Char('Mã Pack', compute="_compute_sale_information")
+    inventory_duration = fields.Integer(compute="_compute_inventory_duration", string="Ngày lưu kho")
+
+    def _compute_inventory_duration(self):
+        for item in self:
+            duration = (fields.Date.today() - item.create_date.date()).days
+            item.inventory_duration = duration
 
     def _compute_sale_information(self):
         for item in self:

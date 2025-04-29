@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_otp_verification,sttl_custom_reports_so.access_otp_verification,model_otp_verification,,1,1,1,1

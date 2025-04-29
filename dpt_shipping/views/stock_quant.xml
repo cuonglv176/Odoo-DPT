@@ -20,4 +20,15 @@
         </field>
     </record>
 
+    <record id="stock_quant_inherit_tree_view_shipping" model="ir.ui.view">
+        <field name="name">stock_quant_inherit_tree_view_shipping</field>
+        <field name="model">stock.quant</field>
+        <field name="inherit_id" ref="dpt_stock_management.stock_quant_inherit_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="location_id" position="before">
+                <field name="shipping_slip_name"/>
+            </field>
+        </field>
+    </record>
+
 </odoo>

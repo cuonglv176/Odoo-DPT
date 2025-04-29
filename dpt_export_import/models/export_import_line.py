@@ -60,6 +60,12 @@ class DptExportImportLine(models.Model):
     currency_usd_id = fields.Many2one('res.currency', string='Currency USD', default=1)
     currency_cny_id = fields.Many2one('res.currency', string='Currency CNY', default=6)
     currency_krw_id = fields.Many2one('res.currency', string='Currency KRW', default=32)
+    customs_price_type = fields.Selection([
+        ('optimal', 'Tối ưu'),
+        ('actual', 'Thực tế'),
+        ('requested', 'Theo yêu cầu')
+    ], string='Giá HQ', default='optimal', tracking=True,
+        help="Loại giá khai báo hải quan: Tối ưu - giá tối ưu cho khai báo, Thực tế - giá thực tế, Theo yêu cầu - giá theo yêu cầu của khách hàng")
     dpt_price_usd = fields.Float(string='Giá khai (USD)', tracking=True, currency_field='currency_usd_id',
                                  digits=(12, 4))
     dpt_total_usd = fields.Monetary(string='Total (USD)', currency_field='currency_usd_id',
@@ -105,9 +111,18 @@ class DptExportImportLine(models.Model):
     item_description_vn = fields.Html(string='Tem XNK (VN)')
     item_description_en = fields.Html(string='Tem XNK (EN)')
     manufacturer = fields.Text(string='Nhà sản xuất', tracking=True)
-    brand = fields.Text(string='Nhãn hiệu', tracking=True)
+    # dunghq
+    brand = fields.Text(string='Nhãn hiệu(Cũ)', tracking=True)
     material = fields.Text(string='Chất liệu', tracking=True)
-    model = fields.Text(string='Model', tracking=True)
+    risk_reason = fields.Selection([
+        ('different_price', 'Giá khai khác'),
+        ('same_model_different_price', 'Cùng model/nhãn hiệu khác giá'),
+        ('no_invoice', 'Khách hàng có đơn hàng không lấy hóa đơn'),
+    ], string='Lý do rủi ro', compute='_compute_risk_reason', store=True)
+    brand_id = fields.Many2one('dpt.product.brand', string='Brand')
+    model_id = fields.Many2one('dpt.product.model', string='Model')
+    # dunghq
+    model = fields.Text(string='Model(Cũ)', tracking=True)
 
     picking_count = fields.Integer('Picking Count', compute="_compute_picking_count")
     is_history = fields.Boolean(string='History', default=False, tracking=True)
@@ -526,3 +541,67 @@ class DptExportImportLine(models.Model):
                 self.dpt_uom1_id = self.product_id.dpt_uom1_id
                 self.dpt_sl1 = self.product_id.dpt_sl1
                 self.dpt_sl2 = self.product_id.dpt_sl2
+
+    # dunghq
+    @api.depends('product_id', 'dpt_description', 'declaration_type',
+                 'brand_id', 'model_id', 'partner_id')
+    def _compute_risk_reason(self):
+        for record in self:
+            reason = False
+
+            # Kiểm tra các điều kiện cơ bản
+            if not (record.product_id and record.dpt_description and record.id):
+                record.risk_reason = reason
+                continue
+
+            # Xác định trường giá cần so sánh dựa trên declaration_type
+            price_value = record.dpt_price_usd if record.declaration_type == 'usd' else record.dpt_price_cny_vnd
+
+            # 1. Kiểm tra "Sản phẩm cũ, dòng tờ khai cũ có giá mới"
+            other_lines = self.env['dpt.export.import.line'].search([
+                ('product_id', '=', record.product_id.id),
+                ('dpt_description', '=', record.dpt_description),
+                ('id', '!=', record.id),
+                ('declaration_type', '=', record.declaration_type),
+                ('state', '=', 'eligible'),
+            ])
+
+            for line in other_lines:
+                other_price = line.dpt_price_usd if record.declaration_type == 'usd' else line.dpt_price_cny_vnd
+                if price_value != other_price:
+                    reason = 'different_price'
+                    break
+
+            # 2. Kiểm tra "Hàng cùng model và nhãn hiệu khác giá khai"
+            if not reason and record.brand_id and record.model_id:
+                other_lines = self.env['dpt.export.import.line'].search([
+                    ('brand_id', '=', record.brand_id.id),
+                    ('model_id', '=', record.model_id.id),
+                    ('id', '!=', record.id),
+                    ('declaration_type', '=', record.declaration_type),
+                    ('state', '=', 'eligible'),
+                ])
+
+                for line in other_lines:
+                    other_price = line.dpt_price_usd if record.declaration_type == 'usd' else line.dpt_price_cny_vnd
+                    if price_value != other_price:
+                        reason = 'same_model_different_price'
+                        break
+
+            # 3. Kiểm tra "Khách hàng có đơn hàng không lấy hóa đơn"
+            if not reason and record.partner_id:
+                # Tìm stage "Không lấy hoá đơn" trong helpdesk
+                stage_no_invoice = self.env['helpdesk.stage'].search([('name', '=', 'Không lấy hoá đơn')], limit=1)
+
+                if stage_no_invoice:
+                    # Tìm ticket có khách hàng này và ở stage "Không lấy hoá đơn"
+                    risky_tickets = self.env['helpdesk.ticket'].search([
+                        ('partner_id', '=', record.partner_id.id),
+                        ('stage_id', '=', stage_no_invoice.id)
+                    ], limit=1)
+
+                    if risky_tickets:
+                        reason = 'no_invoice'
+
+            record.risk_reason = reason
+    # dunghq

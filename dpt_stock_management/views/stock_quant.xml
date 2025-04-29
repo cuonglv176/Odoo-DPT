@@ -15,6 +15,7 @@
                 <field name="partner_id"/>
                 <field name="employee_cs" string="CS"/>
                 <field name="quantity"/>
+                <field name="inventory_duration"/>
                 <field name="total_weight" sum="Tổng cân nặng (kg)"/>
                 <field name="total_volume" sum="Tổng số khối (m3)"/>
             </tree>
