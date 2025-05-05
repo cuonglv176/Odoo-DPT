@@ -20,6 +20,7 @@ class DptExportImport(models.Model):
     _name = "dpt.export.import"
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Dpt Export Import'
+    _order = 'create_date desc'
 
     name = fields.Char(string='Title', tracking=True)
     code = fields.Char(string='Code', tracking=True)
