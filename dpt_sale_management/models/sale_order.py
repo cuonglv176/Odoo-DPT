@@ -298,7 +298,7 @@ class SaleOrder(models.Model):
 
         if fields_dict:
             sorted_vals = sorted(fields_dict.values(), key=lambda x: x["sequence"], reverse=True)
-            self.fields_ids = [(5, 0, 0)]  # Xóa dữ liệu cũ
+            # self.fields_ids = [(5, 0, 0)]  # Xóa dữ liệu cũ
             self.fields_ids = [(0, 0, item) for item in sorted_vals]
         else:
             # Nếu không còn sale_service nào thì xóa hết fields_ids
