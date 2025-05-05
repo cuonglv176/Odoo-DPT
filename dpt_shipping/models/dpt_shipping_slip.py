@@ -51,6 +51,17 @@ class DPTShippingSlip(models.Model):
         ('container_vn', 'Container VN'),
         ('last_delivery_vn', 'Last Delivery VN'),
     ], "Delivery Slip Type")
+    product_ids = fields.Many2many('product.product', 'Sản phẩm', compute="_compute_product")
+
+    @api.depends('sale_ids', 'ticket_ids')
+    def _compute_product(self):
+        for item in self:
+            product_ids = self.env['product.product']
+            if item.sale_ids:
+                product_ids |= item.sale_ids.mapped('order_line.product_id')
+            if item.ticket_ids:
+                product_ids |= item.ticket_ids.mapped('sale_id.order_line.product_id')
+            item.product_ids = product_ids
 
     def _compute_all_so_locked(self):
         for item in self:
