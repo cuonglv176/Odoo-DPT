@@ -9,6 +9,7 @@ class StockQuantExport(models.TransientModel):
 
     quant_ids = fields.Many2many('stock.quant', string="Stock Quant")
     ticket_ids = fields.Many2many('helpdesk.ticket', string='Ticket')
+    shipping_id = fields.Many2one('dpt.shipping.slip', string="Phiếu vận chuyển")
 
     def action_export(self):
         self.quant_ids.write({
@@ -60,19 +61,23 @@ class StockQuantExport(models.TransientModel):
                 })
                 export_picking_ids |= export_picking_id
         if export_picking_ids:
-            shipping_id = self.env['dpt.shipping.slip'].create({
-                'out_picking_ids': export_picking_ids.ids,
-                'ticket_ids': self.ticket_ids.ids,
-                'last_shipping_slip': True,
-                'delivery_slip_type': 'last_delivery_vn',
-            })
-
-        return {
-            'res_model': 'dpt.shipping.slip',
-            'name': "Phiếu vận chuyển",
-            'views': [[False, 'form']],
-            'view_mode': 'form',
-            'target': 'self',
-            'type': 'ir.actions.act_window',
-            'res_id': shipping_id.id
-        }
+            if not self.shipping_id:
+                shipping_id = self.env['dpt.shipping.slip'].create({
+                    'out_picking_ids': export_picking_ids.ids,
+                    'ticket_ids': self.ticket_ids.ids,
+                    'last_shipping_slip': True,
+                    'delivery_slip_type': 'last_delivery_vn',
+                })
+            else:
+                shipping_id = self.shipping_id
+                shipping_id.out_picking_ids = (shipping_id.out_picking_ids | export_picking_ids).ids
+                shipping_id.ticket_ids = (shipping_id.ticket_ids | self.ticket_ids).ids
+            return {
+                'res_model': 'dpt.shipping.slip',
+                'name': "Phiếu vận chuyển",
+                'views': [[False, 'form']],
+                'view_mode': 'form',
+                'target': 'self',
+                'type': 'ir.actions.act_window',
+                'res_id': shipping_id.id
+            }

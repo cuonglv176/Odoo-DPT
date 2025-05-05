@@ -44,6 +44,7 @@ class DPTShippingSlip(models.Model):
     non_finish_transfer = fields.Boolean('Non-Finish Transfer', compute="compute_non_finish_transfer")
     last_shipping_slip = fields.Boolean("Last Shipping Slip")
     is_cn_finish_stage = fields.Boolean(related="cn_vehicle_stage_id.is_finish_stage")
+    is_vn_finish_stage = fields.Boolean(related="vn_vehicle_stage_id.is_finish_stage")
     all_so_locked = fields.Boolean("All SO Locked", compute="_compute_all_so_locked")
     delivery_slip_type = fields.Selection([
         ('container_tq', 'Container TQ'),
