@@ -146,7 +146,7 @@ class AccountPayment(models.Model):
             if self.env.user != rec.create_uid or rec.request_status == 'approved':
                 lock_status = 'locked'
             accountant_groups = ["dpt_security.group_dpt_accountant","dpt_security.group_dpt_accountant","dpt_security.group_dpt_ke_toan_truong","dpt_security.group_dpt_ke_toan_tong_hop","dpt_security.group_dpt_ke_toan_hang_hoa"]
-            if any([self.env.user.has_groups(item) for item in accountant_groups]):
+            if any([self.env.user.has_group(item) for item in accountant_groups]):
                 lock_status = 'open'
             rec.lock_status = lock_status
 
