@@ -56,6 +56,7 @@ class AccountPaymentType(models.Model):
     is_bypass = fields.Boolean(string='Bỏ qua người quản lý', default=False)
     is_ke_toan_truong = fields.Boolean(string='Kế toán trưởng duyệt cuối', default=False)
     rule_ids = fields.One2many('dpt.account.payment.type.rule', 'type_id', string='Rules')
+    default_partner_id = fields.Many2one('res.partner', "Default Partner")
 
 
 class AccountPaymentTypeRule(models.Model):
@@ -275,6 +276,11 @@ class AccountPayment(models.Model):
             'res_id': approval_id.id,
             'views': [[view_id, 'form']],
         }
+
+    @api.onchange('type_id')
+    def onchange_type_id(self):
+        if self.type_id:
+            self.partner_id = self.type_id.default_partner_id
 
     def _compute_approver_list(self):
         list_approver = []

@@ -20,6 +20,7 @@
                 <sheet>
                     <group>
                         <field name="name"/>
+                        <field name="default_partner_id"/>
                         <field name="is_bypass" widget="boolean_toggle"/>
                         <field name="is_ke_toan_truong" widget="boolean_toggle"/>
                     </group>
