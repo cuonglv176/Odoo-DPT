@@ -2,6 +2,7 @@ from odoo import models, fields, api, _
 from odoo.osv.expression import AND, OR
 from datetime import datetime
 from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError
 
 
 def number_to_vietnamese(n):
@@ -52,6 +53,8 @@ class AccountPaymentType(models.Model):
     _name = 'dpt.account.payment.type'
 
     name = fields.Char(string='Name')
+    is_bypass = fields.Boolean(string='Bỏ qua người quản lý', default=False)
+    is_ke_toan_truong = fields.Boolean(string='Kế toán trưởng duyệt cuối', default=False)
     rule_ids = fields.One2many('dpt.account.payment.type.rule', 'type_id', string='Rules')
     default_partner_id = fields.Many2one('res.partner', "Default Partner")
 
@@ -107,6 +110,75 @@ class AccountPayment(models.Model):
     acc_holder_name = fields.Char(related="partner_bank_id.acc_holder_name")
     bank_id = fields.Many2one(related="partner_bank_id.bank_id")
     amount_in_text = fields.Char('Amount in Text', compute="_compute_amount_in_text")
+    refund_date = fields.Date(string='Ngày hoàn ứng')
+    amount = fields.Monetary(currency_field='company_currency_id')
+    amount_request = fields.Monetary(string='Số tiền ngoại tệ', currency_field='currency_id')
+    user_view_ids = fields.Many2many('res.users', compute="get_list_users_view", store=True)
+    payment_due = fields.Datetime(string='Thời hạn thanh toán')
+    journal_type = fields.Selection([
+        ('sale', 'Sales'),
+        ('purchase', 'Purchase'),
+        ('cash', 'Cash'),
+        ('bank', 'Bank'),
+        ('general', 'Miscellaneous'),
+    ], required=True,
+        inverse='_inverse_type',
+        help="Select 'Sale' for customer invoices journals.\n" \
+             "Select 'Purchase' for vendor bills journals.\n" \
+             "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n" \
+             "Select 'General' for miscellaneous operations journals.", related="journal_id.type")
+    lock_status = fields.Selection([
+        ('open', 'Open'),
+        ('locked', 'Locked'),
+    ], default='open', compute="_compute_look_status")
+    dpt_user_partner_id = fields.Many2one('res.partner', string='User Khách', domain=[('dpt_user_name', '!=', False)])
+    # dpt_user_name = fields.Char(string='User Khách')
+    dpt_type_of_partner = fields.Selection([('employee', 'Nhân viên'),
+                                            ('customer', 'Khách hàng'),
+                                            ('vendor', 'Nhà cung cấp'),
+                                            ('shipping_address', 'Địa chỉ giao hàng'),
+                                            ('payment_address', 'Địa chỉ thanh toán'),
+                                            ('other', 'Khác')], string='Loại liên hệ')
+
+    def _compute_look_status(self):
+        for rec in self:
+            lock_status = 'open'
+            if self.env.user != rec.create_uid or rec.request_status == 'approved':
+                lock_status = 'locked'
+            rec.lock_status = lock_status
+
+    @api.onchange('partner_id')
+    def onchange_dpt_type_of_partner(self):
+        if self.partner_id:
+            self.dpt_type_of_partner = self.partner_id.dpt_type_of_partner
+
+    @api.onchange('sale_id')
+    def onchange_user_partner(self):
+        if self.sale_id and self.sale_id.partner_id.dpt_user_name:
+            self.dpt_user_partner_id = self.sale_id.partner_id
+
+    def un_lock(self):
+        if self.env.user.id != self.create_uid:
+            raise UserError(f"Chỉ người tạo mới có quyền mở khóa, vui lòng liên hệ {self.create_uid.name}")
+        if self.request_status == 'approved':
+            raise UserError(f"Đơn đã được duyệt không được sửa")
+        self.lock_status = 'open'
+
+    def locked(self):
+        self.lock_status = 'locked'
+
+    @api.depends('user_id', 'approval_id', 'approval_id.approver_ids')
+    def get_list_users_view(self):
+        for rec in self:
+            user_view_ids = []
+            user_view_ids.append(rec.user_id.id)
+            for approver_id in rec.approval_id.approver_ids:
+                user_view_ids.append(approver_id.user_id.id)
+            rec.user_view_ids = [(6, 0, user_view_ids)]
+
+    @api.onchange('last_rate_currency', 'amount_request')
+    def onchange_update_amount(self):
+        self.amount = self.amount_request * self.last_rate_currency
 
     @api.depends('amount')
     def _compute_amount_in_text(self):
@@ -188,14 +260,10 @@ class AccountPayment(models.Model):
             'payment_id': self.id,
             'date': datetime.now(),
         }
-        if self.sale_id:
-            create_values.update({
-
-            })
         approval_id = self.env['approval.request'].create(create_values)
+        approval_id._compute_approver_ids()
         list_approver = self._compute_approver_list()
         if list_approver:
-            approval_id.approver_ids = None
             approval_id.approver_ids = list_approver
         approval_id.action_confirm()
         self.approval_id = approval_id
@@ -218,26 +286,26 @@ class AccountPayment(models.Model):
         list_approver = []
         list_exist = []
         for rec in self:
-            for r in rec.type_id.rule_ids:
+            sequence = 10
+            sorted_rules = rec.type_id.rule_ids.sorted(key=lambda r: r.sequence)
+            for r in sorted_rules:
                 if r.user_id.id in list_exist:
                     continue
                 diff_value = rec.amount
-                if r.type_compare == 'equal' and diff_value == 0:
+                required = False
+                if r.type_compare == 'equal' and diff_value == r.value_compare:
                     required = True
                 elif r.type_compare == 'higher' and diff_value > 0 and diff_value >= r.value_compare:
                     required = True
                 elif r.type_compare == 'lower' and diff_value < 0 and abs(diff_value) >= r.value_compare:
                     required = True
-                else:
-                    required = False
-                if not required:
-                    continue
                 list_approver.append((0, 0, {
-                    'sequence': r.sequence,
+                    'sequence': sequence,
                     'user_id': r.user_id.id,
                     'required': required
                 }))
                 list_exist.append(r.user_id.id)
+                sequence += 1
         return list_approver
 
     @api.onchange('user_id')
@@ -252,4 +320,5 @@ class AccountPayment(models.Model):
     def create(self, vals):
         if vals.get('code', 'NEW') == 'NEW':
             vals['code'] = self._generate_account_code()
-        return super(AccountPayment, self).create(vals)
+        res = super(AccountPayment, self).create(vals)
+        return res

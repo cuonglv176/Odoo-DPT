@@ -190,6 +190,13 @@
             <field name="category_id" ref="module_category_dpt"/>
         </record>
 
+         <!--#Kế toán Quỹ-->
+        <record id="group_dpt_ke_quy" model="res.groups">
+            <field name="name">Kế toán Quỹ</field>
+            <field name="category_id" ref="module_category_dpt"/>
+        </record>
+
+
 
          <!--#Nhân viên chứng từ-->
         <record id="group_dpt_document_officer" model="res.groups">
@@ -203,6 +210,7 @@
             <field name="name">Trưởng phòng chứng từ</field>
             <field name="category_id" ref="module_category_dpt"/>
         </record>
+
 
 
     </data>

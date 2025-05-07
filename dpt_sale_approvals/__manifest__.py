@@ -8,6 +8,7 @@
     'maintainer': 'Your Name',
     'website': 'http://dpt.com',
     'depends': ['sale', 'sale_management', 'dpt_service_management', 'uom', 'dpt_service_pricelist',
+                'dpt_account_payment_request',
                 'dpt_sale_management', 'approvals'],
     'data': [
         'security/ir.model.access.csv',

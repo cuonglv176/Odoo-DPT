@@ -5,15 +5,17 @@
         <field name="name">account.payment.tree</field>
         <field name="model">account.payment</field>
         <field name="arch" type="xml">
-            <tree edit="false" sample="1" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
+            <tree edit="false" sample="1" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'"
+                  default_order="payment_due">
                 <header>
                     <button name="action_post" type="object" string="Confirm"/>
                 </header>
-                <field name="company_currency_id" invisible="1"/>
-                <field name="suitable_journal_ids" invisible="1"/>
-                <field name="available_payment_method_line_ids" invisible="1"/>
+                <field name="company_currency_id" column_invisible="1"/>
+                <field name="suitable_journal_ids" column_invisible="1"/>
+                <field name="available_payment_method_line_ids" column_invisible="1"/>
                 <field name="date"/>
                 <field name="name"/>
+                <field name="payment_due"/>
                 <field name="journal_id"/>
                 <field name="payment_user_type" widget="radio"/>
                 <field name="payment_user" widget="radio"/>
@@ -40,7 +42,12 @@
                             class="oe_highlight"
                             invisible="approval_id != False" data-hotkey="r"/>
                     <button name="action_post" string="Confirm" type="object" class="oe_highlight"
-                            invisible="state != 'draft' and request_status != 'approved'" data-hotkey="q"/>
+                            invisible="state != 'draft' or request_status != 'approved'" data-hotkey="q"
+                            groups="dpt_security.group_dpt_ke_quy"/>
+<!--                    <button name="un_lock" string="Mở khóa" type="object" class="oe_highlight"-->
+<!--                            invisible="lock_status != 'locked'" data-hotkey="q"/>-->
+<!--                    <button name="locked" string="Khóa" type="object" class="oe_highlight"-->
+<!--                            invisible="lock_status != 'open'" data-hotkey="q"/>-->
                     <button name="action_draft" string="Reset To Draft" type="object" class="btn btn-secondary"
                             invisible="not show_reset_to_draft_button"
                             groups="account.group_account_invoice" data-hotkey="w"/>
@@ -67,6 +74,7 @@
                 <sheet>
                     <!-- Invisible fields -->
                     <field name="id" invisible="1"/>
+                    <field name="lock_status" invisible="1"/>
                     <field name="is_move_sent" invisible="1"/>
                     <field name="need_cancel_request" invisible="1"/>
                     <field name="show_reset_to_draft_button" invisible="1"/>
@@ -85,7 +93,6 @@
                     <field name="company_id" invisible="1"/>
                     <field name="paired_internal_transfer_payment_id" invisible="1"/>
                     <field name="available_journal_ids" invisible="1"/>
-                    <field name="currency_id" invisible="1"/>
 
                     <div class="oe_button_box" name="button_box">
                         <!-- Invoice stat button -->
@@ -149,7 +156,11 @@
                         </h1>
                     </div>
 
-                    <group name="main_group">
+                    <div class="o_ribbon" invisible="lock_status != 'locked'">
+                        <span class="o_ribbon_text">Đang khóa</span>
+                    </div>
+
+                    <group name="main_group" readonly="lock_status == 'locked'">
                         <group name="group1">
                             <label for="is_internal_transfer"/>
                             <div>
@@ -159,93 +170,101 @@
                                     A second payment will be created in the destination journal.
                                 </span>
                             </div>
-                            <field name="code"/>
+                            <field name="code" readonly="lock_status == 'locked'"/>
                             <field name="approval_id" readonly="1"/>
-                            <field name="request_status" widget="badge"
+                            <field name="user_view_ids" invisible="1"/>
+                            <field name="request_status" widget="badge" readonly="lock_status == 'locked'"
                                    decoration-success="request_status == 'approved'"
                                    decoration-info="request_status == 'new'"
                                    decoration-warning="request_status == 'pending'"
                                    decoration-danger="request_status == 'refused'"
                                    decoration-muted="request_status == 'cancel'"/>
                             <field name="payment_type" widget="radio" options="{'horizontal': True}"
-                                   readonly="state != 'draft'"/>
-                            <field name="sale_id" string="Sale Order"/>
-                            <field name="purchase_id"/>
-                            <field name="payment_user_type" widget="radio"/>
-                            <field name="payment_user" widget="radio"/>
+                                   readonly="state != 'draft' or lock_status == 'locked'" />
+                            <field name="sale_id" string="Sale Order" readonly="lock_status == 'locked'"/>
+                            <field name="dpt_user_partner_id" readonly="lock_status == 'locked'"/>
+                            <field name="purchase_id" readonly="lock_status == 'locked'"/>
+                            <field name="payment_user_type" widget="radio" required="1" readonly="lock_status == 'locked'"/>
+                            <field name="payment_user" widget="radio" required="1" readonly="lock_status == 'locked'"/>
                             <field name="partner_id" context="{'default_is_company': True}" string="Customer"
-                                   options="{'no_quick_create': True}"
+                                   options="{'no_quick_create': True}" required="1"
                                    invisible="partner_type != 'customer' or is_internal_transfer"
-                                   readonly="state != 'draft'"/>
+                                   readonly="state != 'draft' or lock_status == 'locked'"/>
                             <field name="partner_id" context="{'default_is_company': True}" string="Vendor"
                                    options="{'no_quick_create': True}"
                                    invisible="partner_type != 'supplier' or is_internal_transfer"
-                                   readonly="state != 'draft'"/>
-                            <label for="amount"/>
+                                   readonly="state != 'draft' or lock_status == 'locked'"/>
+                            <field name="dpt_type_of_partner" readonly="lock_status == 'locked'"/>
+                            <label for="amount_request" readonly="lock_status == 'locked'"/>
+                            <div name="amount_div" class="o_row">
+                                <field name="amount_request" readonly="lock_status == 'locked'"/>
+                                <field name="currency_id" readonly="lock_status == 'locked'"
+                                       options="{'no_create': True, 'no_open': True}"/>
+                            </div>
+                            <field name="last_rate_currency" readonly="lock_status == 'locked'"/>
+                            <label for="amount" string="Tổng tiền VNĐ" readonly="lock_status == 'locked'"/>
                             <div name="amount_div" class="o_row">
                                 <field name="amount"
-                                       readonly="state != 'draft'"/>
-                                <field name="currency_id"
-                                       options="{'no_create': True, 'no_open': True}"
-                                       required="1"
-                                       readonly="state != 'draft'"
-                                       groups="base.group_multi_currency"/>
+                                       readonly="state != 'draft' or lock_status == 'locked'"/>
                             </div>
-                            <field name="amount_in_text"
+                            <field name="amount_in_text"  readonly="lock_status == 'locked'"
                                    groups="dpt_security.group_dpt_director,dpt_security.group_dpt_accountant,dpt_security.group_dpt_accountant,dpt_security.group_dpt_ke_toan_truong,dpt_security.group_dpt_ke_toan_tong_hop,dpt_security.group_dpt_ke_toan_hang_hoa"/>
                             <field name="service_sale_id" invisible="1"/>
                             <field name="last_rate_currency"
                                    groups="dpt_security.group_dpt_director,dpt_security.group_dpt_accountant,dpt_security.group_dpt_accountant,dpt_security.group_dpt_ke_toan_truong,dpt_security.group_dpt_ke_toan_tong_hop,dpt_security.group_dpt_ke_toan_hang_hoa"/>
+                            <field name="refund_date" readonly="lock_status == 'locked'"/>
                             <field name="date"
-                                   readonly="state != 'draft'"/>
-                            <field name="ref" string="Memo"/>
+                                   readonly="state != 'draft' or lock_status == 'locked'"/>
+                            <field name="ref" string="Memo" required="1" readonly="lock_status == 'locked'"/>
+                            <field name="payment_due" readonly="lock_status == 'locked'"/>
                         </group>
                         <group name="group2">
-                            <field name="type_id"/>
-                            <field name="department_id"/>
-                            <field name="user_id"/>
-                            <field name="journal_id"
+                            <field name="type_id" required="1" readonly="lock_status == 'locked'"/>
+                            <field name="journal_type" invisible="1"/>
+                            <field name="department_id" readonly="lock_status == 'locked'"/>
+                            <field name="user_id" readonly="lock_status == 'locked'"/>
+                            <field name="journal_id" required="1"
                                    domain="[('id', 'in', available_journal_ids)]"
-                                   readonly="state != 'draft'"/>
+                                   readonly="state != 'draft' or lock_status == 'locked'"/>
                             <field name="payment_method_line_id" options="{'no_create': True, 'no_open': True}"
                                    required="1"
-                                   readonly="state != 'draft'"/>
+                                   readonly="state != 'draft' or lock_status == 'locked'"/>
 
-                            <field name="partner_bank_id" string="Customer Bank Account"
+                            <field name="partner_bank_id" string="Customer Bank Account" readonly="lock_status == 'locked'"
                                    context="{'default_partner_id': partner_id, 'display_account_trust': True}"
                                    invisible="not show_partner_bank_account or partner_type != 'customer' or is_internal_transfer or payment_type == 'inbound'"
-                                   required="require_partner_bank_account and not is_internal_transfer"/>
+                                   required="journal_type == 'bank'"/>
 
-                            <field name="partner_bank_id" string="Vendor Bank Account"
+                            <field name="partner_bank_id" string="Vendor Bank Account" readonly="lock_status == 'locked'"
                                    context="{'default_partner_id': partner_id, 'display_account_trust': True}"
                                    invisible="not show_partner_bank_account or partner_type != 'supplier' or is_internal_transfer or payment_type == 'inbound'"
-                                   required="require_partner_bank_account and not is_internal_transfer"/>
+                                   required="journal_type == 'bank'"/>
 
                             <!-- This field should always be readonly but using readonly="1" overrides the other partner_bank_id
                             fields readonly condition in the framework, preventing the modification of these fields -->
-                            <field name="partner_bank_id" string="Company Bank Account"
+                            <field name="partner_bank_id" string="Company Bank Account" readonly="lock_status == 'locked'"
                                    context="{'default_partner_id': partner_id, 'display_account_trust': True}"
                                    invisible="not show_partner_bank_account or is_internal_transfer or payment_type == 'outbound'"
-                                   required="require_partner_bank_account and not is_internal_transfer"/>
-                            <field name="acc_number"/>
-                            <field name="acc_holder_name"/>
+                                   required="journal_type == 'bank'"/>
+                            <field name="acc_number" readonly="lock_status == 'locked'"/>
+                            <field name="acc_holder_name" readonly="lock_status == 'locked'"/>
                             <field name="destination_journal_id"
                                    placeholder="e.g. Cash"
                                    context="{'default_partner_id': partner_id}"
                                    invisible="not is_internal_transfer"
-                                   readonly="state != 'draft'"
+                                   readonly="state != 'draft' or lock_status == 'locked'"
                                    required="is_internal_transfer and state == 'draft'"/>
                         </group>
                         <group>
                             <field name="qr_code" invisible="1"/>
                             <div invisible="not qr_code" colspan="2" class="text-center">
-                                <field name="qr_code" widget="html"/>
+                                <field name="qr_code" widget="html" readonly="lock_status == 'locked'"/>
                             </div>
                         </group>
                     </group>
                     <notebook>
-                        <page name="dpt_account_payment_service_detail" string="Dịch Vụ">
-                            <field name="detail_ids">
+                        <page name="dpt_account_payment_service_detail" string="Dịch Vụ" >
+                            <field name="detail_ids" readonly="lock_status == 'locked'">
                                 <tree editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="currency_id" column_invisible="1" force_save="1"/>
@@ -264,7 +283,7 @@
                             </field>
                         </page>
                         <page name="dpt_account_payment_product_detail" string="Sản Phẩm">
-                            <field name="detail_product_ids">
+                            <field name="detail_product_ids" readonly="lock_status == 'locked'">
                                 <tree editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="currency_id" column_invisible="1" force_save="1"/>

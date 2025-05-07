@@ -40,9 +40,9 @@ class DPTSaleServiceManagement(models.Model):
                     new_price = vals.get('price')
                     # if old_price > new_price and not (
                     #         self._fields.get('purchase_id', False) and not item.purchase_id.last_rate_currency):
-                    if self.user_has_groups('dpt_security.group_dpt_employee_sale'):
-                        if old_price > new_price:
-                            raise ValidationError(_(f"Giá mới {new_price} không được nhỏ hơn giá cũ {old_price}!!"))
+                    # if self.user_has_groups('dpt_security.group_dpt_employee_sale'):
+                    #     if old_price > new_price:
+                    #         raise ValidationError(_(f"Giá mới {new_price} không được nhỏ hơn giá cũ {old_price}!!"))
         return super(DPTSaleServiceManagement, self).write(vals)
 
     @api.depends('approval_id')

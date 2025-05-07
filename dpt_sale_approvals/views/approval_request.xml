@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 
+    <record id="approval_request_view_tree_inherit" model="ir.ui.view">
+        <field name="name">approval.request.view.tree</field>
+        <field name="model">approval.request</field>
+        <field name="priority">10</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="default_order">payment_due</attribute>
+            </xpath>
+            <field name="name" position="after">
+                <field name="payment_due"/>
+            </field>
+        </field>
+    </record>
+
 
     <record id="approval_request_view_form_inherit_form" model="ir.ui.view">
         <field name="name">approval.request.inherit</field>
@@ -10,7 +25,9 @@
             <field name="date_confirmed" position="after">
                 <field name="sequence_code" invisible="1"/>
                 <field name="sale_id" invisible="sequence_code != 'BAOGIA'" readonly="1"/>
-                <field name="payment_id" invisible="sequence_code != 'DNTT'" readonly="1"/>
+                <field name="payment_id" invisible="sequence_code != 'DNTT'" readonly="1"
+                       context="{'form_view_ref':'dpt_account_payment_request.dpt_view_account_payment_request_form'}"/>
+                <field name="payment_due" invisible="sequence_code != 'DNTT'" readonly="1"/>
             </field>
             <page name="approvers" position="before">
                 <page name="sale_service" string="Service" invisible="sequence_code != 'BAOGIA'">
