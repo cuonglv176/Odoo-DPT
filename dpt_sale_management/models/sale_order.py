@@ -246,7 +246,16 @@ class SaleOrder(models.Model):
                     lambda f: f.fields_id.id == req_field.id and f.sale_service_id.id == sale_service.id
                 )
                 if existing_field:
-                    continue  # Nếu đã tồn tại, bỏ qua
+                    rec = {
+                        'sequence': 1 if existing_field.type == 'required' else 0,
+                        'fields_id': req_field.id,
+                        'sale_id': self.id,
+                        'value_char': existing_field.value_char,
+                        'value_integer': existing_field.value_integer,
+                        'value_date': existing_field.value_date,
+                        'selection_value_id': existing_field.selection_value_id.id,
+                        'sale_service_id': sale_service.id,
+                    }
 
                 # Ưu tiên lấy dữ liệu từ sale order nếu trường tồn tại trong đó
                 if req_field.id in list_exist:

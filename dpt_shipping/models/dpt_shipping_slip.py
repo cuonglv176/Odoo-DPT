@@ -43,13 +43,25 @@ class DPTShippingSlip(models.Model):
     estimate_arrival_warehouse_vn = fields.Date('Estimate Arrival Warehouse VN')
     non_finish_transfer = fields.Boolean('Non-Finish Transfer', compute="compute_non_finish_transfer")
     last_shipping_slip = fields.Boolean("Last Shipping Slip")
-    is_cn_finish_stage = fields.Boolean(related="vn_vehicle_stage_id.is_finish_stage")
+    is_cn_finish_stage = fields.Boolean(related="cn_vehicle_stage_id.is_finish_stage")
+    is_vn_finish_stage = fields.Boolean(related="vn_vehicle_stage_id.is_finish_stage")
     all_so_locked = fields.Boolean("All SO Locked", compute="_compute_all_so_locked")
     delivery_slip_type = fields.Selection([
         ('container_tq', 'Container TQ'),
         ('container_vn', 'Container VN'),
         ('last_delivery_vn', 'Last Delivery VN'),
     ], "Delivery Slip Type")
+    product_ids = fields.Many2many('product.product', 'Sản phẩm', compute="_compute_product")
+
+    @api.depends('sale_ids', 'ticket_ids')
+    def _compute_product(self):
+        for item in self:
+            product_ids = self.env['product.product']
+            if item.sale_ids:
+                product_ids |= item.sale_ids.mapped('order_line.product_id')
+            if item.ticket_ids:
+                product_ids |= item.ticket_ids.mapped('sale_id.order_line.product_id')
+            item.product_ids = product_ids
 
     def _compute_all_so_locked(self):
         for item in self:

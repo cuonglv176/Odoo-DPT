@@ -78,6 +78,9 @@
                         <page name="sale_order" string="Order">
                             <field name="sale_ids" readonly="1" force_save="1"/>
                         </page>
+                        <page name="product" string="Sản phẩm">
+                            <field name="product_ids" readonly="1" force_save="1"/>
+                        </page>
                         <page name="main_in_picking" string="Main IN Picking" invisible="delivery_slip_type != 'container_tq'">
                             <field name="main_in_picking_ids" context="{
                                      'form_view_ref': 'stock.view_picking_form',
@@ -135,6 +138,7 @@
                 <field name="export_import_name"/>
                 <field name="vn_vehicle_stage_id"/>
                 <field name="cn_vehicle_stage_id"/>
+                <field name="product_ids" widget="many2many_tags"/>
                 <field name="active" invisible="1"/>
                 <field name="vehicle_country" invisible="1"/>
             </tree>

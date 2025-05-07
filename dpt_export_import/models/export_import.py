@@ -42,6 +42,7 @@ class DptExportImport(models.Model):
     _name = "dpt.export.import"
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Dpt Export Import'
+    _order = 'create_date desc'
 
     name = fields.Char(string='Title', tracking=True)
     code = fields.Char(string='Code', tracking=True)
@@ -260,6 +261,9 @@ class DptExportImport(models.Model):
         for sale_id in sale_ids:
             for dpt_export_import_line_id in sale_id.dpt_export_import_line_ids:
                 dpt_export_import_line_id.export_import_id = None
+        if 'payment_exchange_rate' in vals:
+            for line_id in self.line_ids:
+                line_id.dpt_exchange_rate = self.payment_exchange_rate
         return res
 
     @api.onchange('sale_ids')

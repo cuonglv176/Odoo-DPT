@@ -9,6 +9,8 @@
                 <field name="quant_ids" invisible="1"/>
                 <sheet>
                     <group>
+                        <field name="shipping_id" options="{'no_create': True, 'no_open': True}"
+                               domain="[('last_shipping_slip','=', True),('delivery_slip_type','=','last_delivery_vn'), ('is_vn_finish_stage','!=', True)]"/>
                         <field name="ticket_ids" widget="many2many_tags" context="{'show_in_quant': True}"
                                options="{'no_create': True, 'no_open': True}" required="1"/>
                     </group>
