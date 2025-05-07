@@ -143,6 +143,7 @@ class AccountPayment(models.Model):
 
     hide_in_cn_payment = fields.Boolean('Ẩn với thanh toán phí nội địa TQ', compute="compute_hide_in_cn_payment")
 
+    @api.depends('type_id', 'type_id.is_cn_payment')
     def compute_hide_in_cn_payment(self):
         for item in self:
             if not item.type_id.is_cn_payment:
