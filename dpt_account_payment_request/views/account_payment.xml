@@ -201,17 +201,17 @@
                                 <field name="currency_id" readonly="lock_status == 'locked'"
                                        options="{'no_create': True, 'no_open': True}"/>
                             </div>
-                            <field name="last_rate_currency" readonly="lock_status == 'locked'"/>
-                            <label for="amount" string="Tổng tiền VNĐ" readonly="lock_status == 'locked'"/>
-                            <div name="amount_div" class="o_row">
-                                <field name="amount"
-                                       readonly="state != 'draft' or lock_status == 'locked'"/>
+                            <field name="last_rate_currency" readonly="lock_status == 'locked'"
+                                   groups="dpt_security.group_dpt_director,dpt_security.group_dpt_accountant,dpt_security.group_dpt_accountant,dpt_security.group_dpt_ke_toan_truong,dpt_security.group_dpt_ke_toan_tong_hop,dpt_security.group_dpt_ke_toan_hang_hoa"/>
+                            <label for="amount" string="Tổng tiền VNĐ" readonly="lock_status == 'locked'"
+                                   groups="dpt_security.group_dpt_director,dpt_security.group_dpt_accountant,dpt_security.group_dpt_accountant,dpt_security.group_dpt_ke_toan_truong,dpt_security.group_dpt_ke_toan_tong_hop,dpt_security.group_dpt_ke_toan_hang_hoa"/>
+                            <div name="amount_div" class="o_row"
+                                 groups="dpt_security.group_dpt_director,dpt_security.group_dpt_accountant,dpt_security.group_dpt_accountant,dpt_security.group_dpt_ke_toan_truong,dpt_security.group_dpt_ke_toan_tong_hop,dpt_security.group_dpt_ke_toan_hang_hoa">
+                                <field name="amount" readonly="state != 'draft' or lock_status == 'locked'"/>
                             </div>
-                            <field name="amount_in_text"  readonly="lock_status == 'locked'"
+                            <field name="amount_in_text" readonly="lock_status == 'locked'"
                                    groups="dpt_security.group_dpt_director,dpt_security.group_dpt_accountant,dpt_security.group_dpt_accountant,dpt_security.group_dpt_ke_toan_truong,dpt_security.group_dpt_ke_toan_tong_hop,dpt_security.group_dpt_ke_toan_hang_hoa"/>
                             <field name="service_sale_id" invisible="1"/>
-                            <field name="last_rate_currency"
-                                   groups="dpt_security.group_dpt_director,dpt_security.group_dpt_accountant,dpt_security.group_dpt_accountant,dpt_security.group_dpt_ke_toan_truong,dpt_security.group_dpt_ke_toan_tong_hop,dpt_security.group_dpt_ke_toan_hang_hoa"/>
                             <field name="refund_date" readonly="lock_status == 'locked'"/>
                             <field name="date"
                                    readonly="state != 'draft' or lock_status == 'locked'"/>
