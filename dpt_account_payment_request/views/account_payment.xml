@@ -191,9 +191,11 @@
                                        readonly="state != 'draft'"
                                        groups="base.group_multi_currency"/>
                             </div>
-                            <field name="amount_in_text"/>
+                            <field name="amount_in_text"
+                                   groups="dpt_security.group_dpt_director,dpt_security.group_dpt_accountant,dpt_security.group_dpt_accountant,dpt_security.group_dpt_ke_toan_truong,dpt_security.group_dpt_ke_toan_tong_hop,dpt_security.group_dpt_ke_toan_hang_hoa"/>
                             <field name="service_sale_id" invisible="1"/>
-                            <field name="last_rate_currency"/>
+                            <field name="last_rate_currency"
+                                   groups="dpt_security.group_dpt_director,dpt_security.group_dpt_accountant,dpt_security.group_dpt_accountant,dpt_security.group_dpt_ke_toan_truong,dpt_security.group_dpt_ke_toan_tong_hop,dpt_security.group_dpt_ke_toan_hang_hoa"/>
                             <field name="date"
                                    readonly="state != 'draft'"/>
                             <field name="ref" string="Memo"/>
@@ -298,7 +300,6 @@
         <field name="context">{
             'default_payment_type': 'outbound',
             'default_partner_type': 'supplier',
-            'search_default_outbound_filter': 1,
             'default_move_journal_types': ('bank', 'cash'),
             }
         </field>
