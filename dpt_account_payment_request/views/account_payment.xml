@@ -16,6 +16,7 @@
                 <field name="date"/>
                 <field name="name"/>
                 <field name="payment_due"/>
+                <field name="type_id"/>
                 <field name="journal_id"/>
                 <field name="payment_user_type" widget="radio"/>
                 <field name="payment_user" widget="radio"/>
