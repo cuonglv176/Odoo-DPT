@@ -57,6 +57,7 @@ class AccountPaymentType(models.Model):
     is_ke_toan_truong = fields.Boolean(string='Kế toán trưởng duyệt cuối', default=False)
     rule_ids = fields.One2many('dpt.account.payment.type.rule', 'type_id', string='Rules')
     default_partner_id = fields.Many2one('res.partner', "Default Partner")
+    is_cn_payment = fields.Boolean('Là thanh toán phí nội địa TQ')
 
 
 class AccountPaymentTypeRule(models.Model):
@@ -139,6 +140,21 @@ class AccountPayment(models.Model):
                                             ('shipping_address', 'Địa chỉ giao hàng'),
                                             ('payment_address', 'Địa chỉ thanh toán'),
                                             ('other', 'Khác')], string='Loại liên hệ')
+
+    hide_in_cn_payment = fields.Boolean('Ẩn với thanh toán phí nội địa TQ', compute="compute_hide_in_cn_payment")
+
+    def compute_hide_in_cn_payment(self):
+        for item in self:
+            if not item.type_id.is_cn_payment:
+                item.hide_in_cn_payment = False
+            else:
+                show_groups = ["dpt_security.group_dpt_accountant", "dpt_security.group_dpt_accountant",
+                               "dpt_security.group_dpt_ke_toan_truong", "dpt_security.group_dpt_ke_toan_tong_hop",
+                               "dpt_security.group_dpt_ke_toan_hang_hoa", "dpt_security.group_dpt_director"]
+                if any([self.env.user.has_group(group) for group in show_groups]):
+                    item.hide_in_cn_payment = False
+                else:
+                    item.hide_in_cn_payment = True
 
     def _compute_look_status(self):
         for rec in self:
