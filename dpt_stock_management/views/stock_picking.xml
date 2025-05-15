@@ -19,6 +19,10 @@
             <button name="action_open_label_type" position="after">
                 <button name="export_wrong_import_data" string="Print Sub Label" type="object"/>
             </button>
+            <field name="state" position="before">
+                <button name="action_export_picking_report" string="Xuất Excel"
+                        invisible="picking_type_code != 'outgoing'" type="object"/>
+            </field>
             <xpath expr="//field[@name='state'][1]" position="replace">
                 <field name="state" widget="statusbar" statusbar_visible="assigned,done,cancel"/>
             </xpath>
@@ -366,14 +370,5 @@
 
     <menuitem id="incoming_stock_picking_in_sales_menu" name="Phiếu nhập kho" parent="sale.sale_menu_root"
               action="incoming_stock_picking_in_sales_action" sequence="25"/>
-
-    <record id="export_outgoing_picking_action_server" model="ir.actions.server">
-        <field name="name">Phiếu xuất kho</field>
-        <field name="model_id" ref="stock.model_stock_picking"/>
-        <field name="binding_model_id" ref="stock.model_stock_picking"/>
-        <field name="binding_view_types">form</field>
-        <field name="state">code</field>
-        <field name="code">action = records.action_export_picking_report('outgoing')</field>
-    </record>
 
 </odoo>
