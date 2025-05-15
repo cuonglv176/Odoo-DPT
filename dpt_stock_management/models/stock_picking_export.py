@@ -64,7 +64,7 @@ class StockPicking(models.Model):
         ws['A1'].alignment = Alignment(horizontal='center')
 
         logo = Image(
-            '/Users/ungtu/Documents/Odoo/Freelancer/DPT_SOFT/Source/Odoo-DPT/dpt_stock_management/static/description/logo.png')
+            '/opt/odoo/odoo/Odoo-DPT-Test/dpt_stock_management/static/description/logo.png')
         ws.add_image(logo, 'B1')
 
         # Add bill number
