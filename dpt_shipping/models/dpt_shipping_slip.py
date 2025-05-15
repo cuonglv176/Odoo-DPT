@@ -431,7 +431,7 @@ class DPTShippingSlip(models.Model):
                           data.get("Mã lô", ''), data.get("Nhóm kiện", ''), data.get("Kích thước", ''),
                           data.get("Trọng lượng(kg)", ''), data.get("Thể tích(m3)", ''), data.get("Thể tích(m3)", '')]
             for col, value in enumerate(row10_data, 1):
-                cell = ws.cell(row=index + 10, column=col)
+                cell = ws.cell(row=index + 9, column=col)
                 cell.value = value
                 cell.border = thin_border
                 cell.alignment = Alignment(horizontal='center', vertical='center')
