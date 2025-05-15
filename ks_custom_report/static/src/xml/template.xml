@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="ks_model_relations.KsQueryBuilder"  owl="1">
+        <ModelFieldSelector fieldName="props.value ||'id'" resModel="props.record.data.ks_model_name" readonly="props.readonly"  isDebugMode="false"
+        update="(name) => this.onFieldChange(name)"/>
+    </t>
+</templates>

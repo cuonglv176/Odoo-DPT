@@ -1,0 +1,12 @@
+<odoo>
+    <data noupdate="1">
+        <record model="res.groups" id="group_ks_cr_manager">
+            <field name="name">ReportMate Manager</field>
+        </record>
+
+        <record id="base.group_system" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('ks_custom_report.group_ks_cr_manager'))]"/>
+        </record>
+
+    </data>
+</odoo>

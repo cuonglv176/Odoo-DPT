@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ks_cr_ks_cr_group_manager,ks_custom_report.ks_report,model_ks_custom_report_ks_report,ks_custom_report.group_ks_cr_manager,1,1,1,1
+access_ks_cr_ks_column_group_manager,ks_custom_report.ks_column,model_ks_custom_report_ks_column,ks_custom_report.group_ks_cr_manager,1,1,1,1
+
+access_ks_custom_query_report_column,ks_custom_query_report_column,model_ks_custom_query_report_column,ks_custom_report.group_ks_cr_manager,1,1,1,1
+access_ks_custom_ir_model,ir.model,base.model_ir_model,ks_custom_report.group_ks_cr_manager,1,1,1,1
+access_ks_custom_ir_model_fields,ir.model.fields,base.model_ir_model_fields,ks_custom_report.group_ks_cr_manager,1,1,1,1
+access_ks_custom_ir_ui_view,ir.ui.view,base.model_ir_ui_view,ks_custom_report.group_ks_cr_manager,1,1,1,1
+
+read_ir_category_report_manager,read_ir_category_report_manager,base.model_ir_module_category,ks_custom_report.group_ks_cr_manager,1,0,0,0
