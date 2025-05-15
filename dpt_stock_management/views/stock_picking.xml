@@ -19,6 +19,10 @@
             <button name="action_open_label_type" position="after">
                 <button name="export_wrong_import_data" string="Print Sub Label" type="object"/>
             </button>
+            <field name="state" position="before">
+                <button name="action_export_picking_report" string="Xuất Excel"
+                        invisible="picking_type_code != 'outgoing'" type="object"/>
+            </field>
             <xpath expr="//field[@name='state'][1]" position="replace">
                 <field name="state" widget="statusbar" statusbar_visible="assigned,done,cancel"/>
             </xpath>
