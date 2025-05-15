@@ -32,6 +32,8 @@
                             type="object" class="btn-primary" invisible="not num_not_confirm_picking"/>
                     <button name="action_lock_so" string="Khóa SO"
                             type="object" class="btn-primary" invisible="not is_cn_finish_stage or all_so_locked"/>
+                    <button name="action_export_picking_report" string="Xuất Excel"
+                            type="object" class="btn-primary" invisible="delivery_slip_type != 'container_vn'"/>
                     <field name="vehicle_country" invisible="1"/>
                     <field name="vn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
                            invisible="vehicle_country != 'vietnamese'"/>

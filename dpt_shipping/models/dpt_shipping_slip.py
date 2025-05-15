@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
+import base64
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
+import openpyxl
+from openpyxl.styles import Alignment, Border, Side, Font
+from openpyxl.drawing.image import Image
+import io
 
 
 class DPTShippingSlip(models.Model):
@@ -27,8 +32,10 @@ class DPTShippingSlip(models.Model):
     ticket_ids = fields.Many2many('helpdesk.ticket', string="Tickets")
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle')
     vehicle_country = fields.Selection(related='vehicle_id.country')
-    vn_vehicle_stage_id = fields.Many2one('dpt.vehicle.stage', 'Vietnamese Vehicle Stage', domain=[('country', '=', 'vietnamese')])
-    cn_vehicle_stage_id = fields.Many2one('dpt.vehicle.stage', 'Chinese Vehicle Stage', domain=[('country', '=', 'chinese')])
+    vn_vehicle_stage_id = fields.Many2one('dpt.vehicle.stage', 'Vietnamese Vehicle Stage',
+                                          domain=[('country', '=', 'vietnamese')])
+    cn_vehicle_stage_id = fields.Many2one('dpt.vehicle.stage', 'Chinese Vehicle Stage',
+                                          domain=[('country', '=', 'chinese')])
     vehicle_stage_log_ids = fields.One2many('dpt.vehicle.stage.log', 'shipping_slip_id', 'Vehicle Stage Log')
     send_shipping_id = fields.Many2one('dpt.shipping.slip', 'Shipping Sent')
     vehicle_driver_id = fields.Many2one(related="vehicle_id.driver_id")
@@ -98,7 +105,8 @@ class DPTShippingSlip(models.Model):
                 item.out_picking_ids.filtered(lambda p: p.state != 'done')) if not item.send_shipping_id else len(
                 item.in_picking_ids.filtered(lambda p: p.state != 'done'))
 
-            item.export_import_name = ','.join(item.export_import_ids.filtered(lambda ei: ei.display_name).mapped('display_name'))
+            item.export_import_name = ','.join(
+                item.export_import_ids.filtered(lambda ei: ei.display_name).mapped('display_name'))
 
             # calculate total num packing
             total_num_packing_value = {}
@@ -273,3 +281,184 @@ class DPTShippingSlip(models.Model):
             sale_id.action_lock()
             sale_id.message_post(body="Đơn hàng bị khóa từ phiếu vận chuyển %s" % self.name,
                                  message_type='comment', subtype_xmlid='mail.mt_note')
+
+    def action_export_picking_report(self):
+        file = self.export_incoming_report_file()
+        file_name = "Danh sách phiếu nhập kho.xlsx"
+        if file_name and file:
+            attachment_id = self.env['ir.attachment'].search([('name', 'ilike', file_name)])
+            if attachment_id:
+                attachment_id.unlink()
+            attachment_id = self.env['ir.attachment'].sudo().create({
+                'name': file_name,
+                'type': 'binary',
+                'datas': base64.b64encode(file),
+                'mimetype': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            })
+            return {
+                'type': 'ir.actions.act_url',
+                'url': f'/web/content/{attachment_id.id}?download=true',
+                'target': 'self',
+            }
+
+    def export_incoming_report_file(self):
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "Phiếu Nhập Kho"
+
+        # Set column widths
+        ws.column_dimensions['A'].width = 8
+        ws.column_dimensions['B'].width = 18
+        ws.column_dimensions['C'].width = 18
+        ws.column_dimensions['D'].width = 25
+        ws.column_dimensions['E'].width = 15
+        ws.column_dimensions['F'].width = 15
+        ws.column_dimensions['G'].width = 12
+        ws.column_dimensions['H'].width = 12
+        ws.column_dimensions['I'].width = 18
+
+        # Set row heights
+        ws.row_dimensions[1].height = 30  # Header row height
+        ws.row_dimensions[2].height = 25  # Ngày nhập row
+        ws.row_dimensions[3].height = 25  # Mã phiếu row
+        ws.row_dimensions[4].height = 20  # Họ và tên người giao row
+        ws.row_dimensions[5].height = 20  # Xuất tại kho row
+        ws.row_dimensions[6].height = 20  # Nhập tại kho row
+        ws.row_dimensions[7].height = 20  # Người nhận row
+        ws.row_dimensions[8].height = 30  # Table header row
+
+        # Set heights for table rows
+        for row_num in range(9, 28):  # Table data rows
+            ws.row_dimensions[row_num].height = 20
+
+        # Define styles
+        thin_border = Border(left=Side(style='thin'),
+                             right=Side(style='thin'),
+                             top=Side(style='thin'),
+                             bottom=Side(style='thin'))
+
+        dotted_border = Border(bottom=Side(style='dotted'))
+
+        # Header
+        # Add title
+        ws.merge_cells('A1:I1')
+        ws['A1'] = "PHIẾU NHẬP KHO"
+        ws['A1'].font = Font(size=14, bold=True)
+        ws['A1'].alignment = Alignment(horizontal='center')
+
+        logo = Image(
+            '/Users/ungtu/Documents/Odoo/Freelancer/DPT_SOFT/Source/Odoo-DPT/dpt_stock_management/static/description/logo.png')
+        ws.add_image(logo, 'B1')
+
+        # Add mã id info on right top corner
+        ws.merge_cells('J1:K1')
+        ws['J1'] = "Mã id : 01 - VT"
+        ws['J1'].font = Font(size=8)
+        ws['J1'].alignment = Alignment(horizontal='center')
+        ws['J1'].font = Font(bold=True)
+
+        # Add QD info
+        ws.merge_cells('J2:K3')
+        ws['J2'] = "(Ban hành theo QĐ số: 48/2006/QĐ-BTC ngày 14/09/2006 của Bộ trưởng BTC)"
+        ws['J2'].font = Font(size=8)
+        ws['J2'].alignment = Alignment(horizontal='center', vertical='top', wrap_text=True)
+
+        # Add date and form number
+        ws['E2'] = "Ngày nhập:"
+        ws['E2'].alignment = Alignment(horizontal='right')
+        ws['F2'] = self.create_date.strftime("%d/%m/%Y")
+        ws['F2'].alignment = Alignment(horizontal='right')
+        ws['F2'].font = Font(bold=True)
+
+        ws['E3'] = "Mã phiếu:"
+        ws['E3'].alignment = Alignment(horizontal='right')
+        ws['F3'] = self.name
+        ws['F3'].alignment = Alignment(horizontal='right')
+        ws['F3'].font = Font(bold=True)
+
+        ws['E4'] = "Tên lái xe:"
+        ws['E4'].alignment = Alignment(horizontal='right')
+        ws['F4'] = self.vehicle_driver_id.name or ""
+        ws['F4'].alignment = Alignment(horizontal='right')
+        ws['F4'].font = Font(bold=True)
+
+        ws['H4'] = "Biển số xe:"
+        ws['H4'].alignment = Alignment(horizontal='left')
+        ws['I4'] = self.vehicle_license_plate or ""
+        ws['I4'].alignment = Alignment(horizontal='right')
+        ws['I4'].font = Font(bold=True)
+
+        # Add main information
+        ws['B4'] = "Họ và tên người giao:"
+        ws['B4'].alignment = Alignment(vertical='center')
+
+        ws['B5'] = "Xuất tại kho:"
+        ws['B5'].alignment = Alignment(vertical='center')
+        ws['D5'] = self.out_picking_ids[0].location_id.warehouse_id.name or "" if self.out_picking_ids else ""
+        ws['D5'].alignment = Alignment(horizontal='right')
+        ws['D5'].border = dotted_border
+
+        ws['B6'] = "Nhập tại kho :"
+        ws['B6'].alignment = Alignment(vertical='center')
+        ws['D6'] = ""
+        ws['D6'].border = dotted_border
+
+        ws['B7'] = "Người nhận:"
+        ws['B7'].alignment = Alignment(vertical='center')
+
+        # Add dotted underlines for text fields
+        for row in range(4, 8):
+            for col in range(ord('C'), ord('H')):
+                if not ((row == 5 and col >= ord('D')) or (row == 6 and col >= ord('D'))):
+                    cell = ws[f'{chr(col)}{row}']
+                    cell.border = dotted_border
+
+        # Table
+        table_header = ["Số TT", "Khách hàng", "Mã đơn hàng", "Tên sản phẩm", "Mã lô", "Nhóm kiện", "Kích thước",
+                        "Trọng lượng(kg)", "Thể tích(m3)", "Ghi chú"]
+        for col, header in enumerate(table_header, 1):
+            cell = ws.cell(row=9, column=col)
+            cell.value = header
+            cell.font = Font(bold=True)
+            cell.alignment = Alignment(horizontal='center', vertical='center', wrap_text=True)
+            cell.border = thin_border
+
+        datas = self.get_incoming_data()
+
+        index = 1
+        for data in datas:
+            row10_data = [index, data.get("Khách hàng", ''), data.get("Mã đơn hàng", ''), data.get("Tên sản phẩm", ''),
+                          data.get("Mã lô", ''), data.get("Nhóm kiện", ''), data.get("Kích thước", ''),
+                          data.get("Trọng lượng(kg)", ''), data.get("Thể tích(m3)", ''), data.get("Thể tích(m3)", '')]
+            for col, value in enumerate(row10_data, 1):
+                cell = ws.cell(row=index + 10, column=col)
+                cell.value = value
+                cell.border = thin_border
+                cell.alignment = Alignment(horizontal='center', vertical='center')
+            index += 1
+
+        # Instead of saving to file, save to BytesIO object
+        excel_bytes = io.BytesIO()
+        wb.save(excel_bytes)
+        excel_bytes.seek(0)  # Move to the beginning of the BytesIO object
+
+        # Return the bytes
+        return excel_bytes.getvalue()
+
+    def get_incoming_data(self):
+        data = []
+        if not self:
+            return data
+        for package_id in self.out_picking_ids.mapped('package_ids'):
+            data.append({
+                "Khách hàng": package_id.picking_id.sale_purchase_id.partner_id.name or "",
+                "Mã đơn hàng": package_id.picking_id.sale_purchase_id.name or "",
+                "Tên sản phẩm": ",".join(package_id.detail_ids.mapped('product_id.display_name')),
+                "Mã lô": package_id.picking_id.picking_lot_name or "",
+                "Nhóm kiện": f"{package_id.quantity}{package_id.uom_id.packing_code}",
+                "Kích thước": f"{package_id.length}x{package_id.width}x{package_id.height}",
+                "Trọng lượng(kg)": package_id.total_weight,
+                "Thể tích(m3)": package_id.total_volume,
+                "Ghi chú": "",
+            })
+        return data
