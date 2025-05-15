@@ -394,7 +394,7 @@ class DPTShippingSlip(models.Model):
 
         ws['B5'] = "Xuất tại kho:"
         ws['B5'].alignment = Alignment(vertical='center')
-        ws['D5'] = self.out_picking_ids[0].location_id.warehouse_id.name or "" if self.out_picking_ids else ""
+        ws['D5'] = self.in_picking_ids[0].location_id.warehouse_id.name or "" if self.in_picking_ids else ""
         ws['D5'].alignment = Alignment(horizontal='right')
         ws['D5'].border = dotted_border
 
@@ -449,7 +449,7 @@ class DPTShippingSlip(models.Model):
         data = []
         if not self:
             return data
-        for package_id in self.out_picking_ids.mapped('package_ids'):
+        for package_id in self.in_picking_ids.mapped('package_ids'):
             data.append({
                 "Khách hàng": package_id.picking_id.sale_purchase_id.partner_id.name or "",
                 "Mã đơn hàng": package_id.picking_id.sale_purchase_id.name or "",
