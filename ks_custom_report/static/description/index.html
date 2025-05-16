@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <title>Odoo</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+    <link href=https://apps.odoocdn.com/web/content/7247337-184ae0e/1/web.assets_frontend.css" rel="stylesheet">
+
+</head>
+<!-- odoo description page css -->
+
+<body>
+<!-- Header -->
+<main class="container">
+    <header class="py-2">
+        <div class="row align-items-center">
+            <div class="col-12 col-md-4">
+                    <span class="btn pr-2">
+                        <img alt="ksolves-logo" src="images/ksolves-logo.png" style="height:50px">
+                    </span>
+            </div>
+            <div class="col-6 col-md">
+                <div class="text-md-right">
+                    <a class="btn btn-sm py-2 px-md-3" href="https://apps.odoo.com/apps/modules/browse?search=ksolves"
+                       style="font-size: 14px; background-color: #203038;color:#fff;"
+                       target="_blank"><i
+                            class="fa fa-list-alt mr-1"></i>
+                        <span class="d-none d-sm-inline">Ksolves</span> All Apps
+                    </a>
+                </div>
+            </div>
+            <div class="col-6 col-md-5 text-md-right">
+                <span class="btn btn-sm py-2 px-md-3 mr-1"
+                      style="font-size: 13px;font-size: 14px; font-weight: 500;background-color: #203038;color:#fff;"><i
+                        class="fa fa-check mr-1"></i> Community</span>
+                <span class="btn btn-sm py-2 px-md-3 mr-1"
+                      style="font-size: 13px;font-size: 14px; font-weight: 500;background-color: #203038;color:#fff;"><i
+                        class="fa fa-check mr-1"></i> Enterprise</span>
+                <span class="btn btn-sm py-2 px-md-3"
+                      style="font-size: 13px;font-size: 14px; font-weight: 500;background-color: #203038;color:#fff;"><i
+                        class="fa fa-check mr-1"></i> Odoo.sh</span>
+            </div>
+        </div>
+        <hr/>
+    </header>
+
+    <div class="container py-5 oe_styling_v8" id="loempia_tabs"
+         style="color: #0b3b52;font-family: 'Open sans','sans-serif';">
+        <div class="row mb-5">
+            <div class="col-12 col-md-12 text-center text-md-left">
+                <center><h1 style="color: #203038;"><span style="color: #232a61;"></span><u>ReportMate</u></h1></center>
+            </div>
+        </div>
+        <div class="row align-items-center mb-4" style="margin-top:-25px">
+
+            <div class="col-12 col-md-12">
+            <span class="pr-md-5 mb-4" style="font-weight:400; font-size: 20px;color: #3c3c3c;">ReportMate extracts all the needed information for all the fields of any Odoo Model and displays complex data in a single view. Customers can create powerful, richly formatted, dynamic reports in the Tree, List, Graph, and Pivot format. This app allows to display the data in a flat data structure meaning, no more multiple clicks to arrive at your needed results.
+Increase your business productivity and save your developer's time by using ReportMate.</span>
+
+                <div class="col-12 col-md">
+                    <img alt="" class="img-fluid" src="./img/laptop.jpg"/>
+                </div>
+
+                <!--Problem and solution -->
+                <div style="font-size: 14px;line-height: 20px; font-weight: 400;">
+                    <div class="row no-gutters mb-4">
+                        <div class="col-sm-6 pr-sec p-2 bg-white border border-right-0">
+                            <i class="fa fa-circle"
+                               style="position: absolute; color: #e32235; top:-8px; left: -5px;"></i>
+                            <h5 class="text-uppercase mt-0" style="font-size: 16px;">PROBLEM:</h5>
+                            <p style="font-size: 16px;"> In Odoo, there is no option available for users to create
+                                custom
+                                reports on their own from the view.
+
+                            </p>
+                        </div>
+                        <div class="col-sm-6 p-2 border border-left-0" style="background: #f1f0f0;">
+                            <i class="fa fa-circle text-success" style="position: absolute; top:-8px; left:-5px;"></i>
+                            <h5 class="text-uppercase mt-0" style="font-size: 16px;">SOLUTION:</h5>
+                            <p style="color: #212829;font-size: 16px;">The app ReportMate allows users to display all
+                                their
+                                records in a flat data structure. The company can now easily group several data sets to
+                                be
+                                displayed.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md">
+                    <img alt="" class="img-fluid" src="./img/laptop.jpg"/>
+                </div>
+
+
+                <center><h4 class="font-weight-bold mb-3" style="font-size: 28px"><span
+                        style="color:#E13B34;"><u>Hot</u></span><u> Features</u></h4></center>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <i class="fa fa-free-code-camp" style="font-size:18px;color:#E13B34;"></i><span
+                            class="font-weight-bold ml-2" style="font-size:18px">Create Custom View</span>
+                        <div style="font-weight:400; color:black; padding-left: 31px">Create Custom View/Report based on
+                            Selected Model
+                            and by Selecting Fields/Relations on their own
+                        </div>
+                    </li>
+                    <li class="mb-2">
+                        <i class="fa fa-free-code-camp" style="font-size:18px;color:#E13B34;"></i><span
+                            class="font-weight-bold ml-2" style="font-size:18px">Different Views</span>
+                        <div style="font-weight:400; color:black; padding-left: 31px">Reports can be displayed in Pivot
+                            and Graph View
+                        </div>
+                    </li>
+                    <li class="mb-2">
+                        <i class="fa fa-free-code-camp" style="font-size:18px;color:#E13B34;"></i><span
+                            class="font-weight-bold ml-2" style="font-size:18px">Report Security</span>
+                        <div style="font-weight:400; color:black; padding-left: 31px">Created Reports can only be viewed
+                            by Groups that
+                            have access to view created reports/views
+                        </div>
+                    </li>
+                    <li class="mb-2">
+                        <i class="fa fa-free-code-camp" style="font-size:18px;color:#E13B34;"></i><span
+                            class="font-weight-bold ml-2" style="font-size:18px">Customisable Filter/Group Filter</span>
+                        <div style="font-weight:400; color:black; padding-left: 31px">Users can customize which fields
+                            to show in Search
+                            Filter/Group Filter
+                        </div>
+                    </li>
+                    <li class="mb-2">
+                        <i class="fa fa-free-code-camp" style="font-size:18px;color:#E13B34;"></i><span
+                            class="font-weight-bold ml-2" style="font-size:18px">Custom Query</span>
+                        <div style="font-weight:400; color:black; padding-left: 31px">User Can Write Query and Create
+                            Custom View/Report based on
+                            Custom Query
+                        </div>
+                    </li>
+                    <li class="mb-2">
+                        <i class="fa fa-free-code-camp" style="font-size:18px;color:#E13B34;"></i><span
+                            class="font-weight-bold ml-2" style="font-size:18px">Alter Values</span>
+                        <div style="font-weight:400; color:black; padding-left: 31px">User Can Alter values of fields.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-12 col-md">
+                <img alt="" class="img-fluid" src="./img/laptop.jpg"/>
+            </div>
+        </div>
+        <div class="col-12 col-md">
+            <img alt="" class="img-fluid" src="./img/laptop.jpg"/>
+        </div>
+
+
+        <div class="row mb-4 justify-content-center my-4 mb-md-5">
+            <div class="col-12 col-md-5 text-center mb-4 mb-md-0">
+            <span class="btn py-3 px-5"
+                  style="font-size: 20px; font-weight: 600;background-color: #203038;color:#fff;">DEMO AVAILABLE</span>
+            </div>
+            <div class="col-12 col-md-5 text-center text-md-right">
+            <span class="btn py-3 px-5"
+                  style="font-size: 20px; font-weight: 600;background-color: #203038;color:#fff;">FREE 90 DAYS SUPPORT</span>
+            </div>
+        </div>
+
+        <!-- tab view start -->
+        <div>
+            <div class="justify-content-center d-flex">
+                <!-- Nav pills -->
+                <ul class="nav o_tab_nav"
+                    style="border: 1px solid #203038;  border-radius: 6px 6px;overflow:hidden;background-color:transparent">
+                    <li class="nav-item" style="border-radius: 6px 0 0 6px;">
+                        <a class="nav-link active px-md-4 list-group-item-beta-dark list-group-item-action"
+                           data-toggle="pill" href="#Features"
+                           style="border-radius: 6px 0 0 6px; border-right: 1px solid#203038;opacity: 1;padding:16px;">Features</a>
+                    </li>
+                    <li class="nav-item" style="border-radius: 6px 0 0 6px;">
+                        <a class="nav-link px-md-4 list-group-item-beta-dark list-group-item-action"
+                           data-toggle="pill" href="#Setup"
+                           style="border-radius: 6px 0 0 6px; border-right: 1px solid#203038;opacity: 1;padding:16px;">Set
+                            Up</a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link px-md-4 list-group-item-beta-dark list-group-item-action" data-toggle="pill"
+                       href="#Release"
+                       style="border-radius: 0px; border-right: 1px solid #203038;opacity: 1;padding:16px;">RELEASES</a>
+                </li>
+                    <li class="nav-item" style="border-radius: 6px 0 0 6px;">
+                        <a class="nav-link px-md-4 list-group-item-beta-dark list-group-item-action" data-toggle="pill"
+                           href="#why"
+                           style="border-radius: 6px 0 0 6px; border-right: 1px solid#203038;opacity: 1;padding:16px;">Why
+                            Us?</a>
+                    </li>
+
+<!--                    <li class="nav-item">-->
+<!--                        <a class="nav-link px-md-4 list-group-item-beta-dark list-group-item-action" data-toggle="pill"-->
+<!--                           href="#Release"-->
+<!--                           style="border-radius: 0px; border-right: 1px solid #203038;opacity: 1;padding:16px;">Releases</a>-->
+<!--                        &lt;!&ndash;                    </li>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                              <li class="nav-item">&ndash;&gt;-->
+<!--                        &lt;!&ndash;                                <a class="nav-link px-md-4" data-toggle="pill" href="#UserGuide"  style="border-radius: 0px; border-right: 1px solid #203038;opacity: 1;padding:16px;">User Guide</a>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                              </li>&ndash;&gt;-->
+<!--                   -->
+<!--                    </li>-->
+                    <li class="nav-item">
+                        <a class="nav-link px-md-4 list-group-item-beta-dark list-group-item-action" data-toggle="pill"
+                           href="#FAQ" style="border-radius: 0px;opacity: 1;padding:16px;">FAQ's</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Tab panes -->
+            <div class="tab-content py-5">
+                <div class="tab-pane active" id="Features">
+                    <div class="text-center pb-3 pt-4">
+                        <h2 style="font-weight: 600; font-size: 2.5rem;">Features</h2>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-md-4">
+                            <ul class="nav o_tab_nav"
+                                style="text-transform: capitalize; font-size: 18px; border-radius: 6px 6px;background-color: transparent">
+                                <li class="nav-item w-100 mb-3">
+                                    <a class="nav-link d-flex align-items-center px-3 py-2 list-group-item-beta-dark list-group-item-action active"
+                                       data-toggle="pill" href="#Advance1"
+                                       style="border-radius:30px; border: 1px solid #203038;opacity:1;letter-spacing: inherit;text-transform: capitalize;transition: 0.3s ease-in-out;"><i
+                                            class="fa fa-list-alt mr-2" style="font-size: 20px;"></i>Tree/List View</a>
+                                </li>
+                                <li class="nav-item w-100 mb-3">
+                                    <a class="nav-link d-flex align-items-center px-3 py-2 list-group-item-beta-dark list-group-item-action"
+                                       data-toggle="pill" href="#Advance2"
+                                       style="border-radius:30px; border: 1px solid #203038;opacity:1;letter-spacing: inherit;text-transform: capitalize;transition: 0.3s ease-in-out;"><i
+                                            class="fa fa-table mr-2" style="font-size: 20px;"></i>Pivot View</a>
+                                </li>
+                                <li class="nav-item w-100 mb-3">
+                                    <a class="nav-link d-flex align-items-center px-3 py-2 list-group-item-beta-dark list-group-item-action"
+                                       data-toggle="pill" href="#Advance3"
+                                       style="border-radius:30px; border: 1px solid #203038;opacity:1;letter-spacing: inherit;text-transform: capitalize;transition: 0.3s ease-in-out;"><i
+                                            class="fa fa-bar-chart mr-2" style="font-size: 20px;"></i>Graph View</a>
+                            </ul>
+                        </div>
+                        <div class="col-12 col-md-8 pt-4 pt-md-0">
+                            <div class="tab-content h-100">
+                                <div class="tab-pane active" id="Advance1">
+                                    <h4><u>Tree/List View</u></h4>
+                                    <div class="pb-4" style="font-weight:400; font-size: 18px;">Sale Report Tree/List
+                                        View
+                                    </div>
+                                    <div class="pb-1">
+                                        <img alt="" class="img-fluid" src="images/app_screen/sale_report_tree.png">
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="Advance2">
+                                    <h4><u>Pivot View</u></h4>
+                                    <div class="pb-4" style="font-weight:400; font-size: 18px;">Sale Report Pivot
+                                        View.
+                                    </div>
+                                    <div class="pb-1">
+                                        <img alt="" class="img-fluid" src="images/app_screen/Sales_report_pivot.png">
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="Advance3">
+                                    <h4><u>Graph View</u></h4>
+                                    <div class="pb-4" style="font-weight:400; font-size: 18px;">Sale Report Graph View
+                                    </div>
+                                    <div class="pb-1">
+                                        <img alt="" class="img-fluid" src="images/app_screen/sales_report_graph.png">
+                                    </div>
+                                </div>
+                                <!--                            <div class="tab-pane" id="Advance4">-->
+                                <!--                                <h4>Advanced Search Option</h4>-->
+                                <!--                                <div class="pb-4" style="font-size: 18px;"> This option provides an advanced search-->
+                                <!--                                    option for menu items.-->
+                                <!--                                </div>-->
+                                <!--                                <div class="pb-1">-->
+                                <!--                                    <images src="./images/screensort/advance-search-option.jpg" alt="" class="images-fluid">-->
+                                <!--                                </div>-->
+                                <!--                            </div>-->
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="Setup">
+                    <div class="row">
+                        <div class="col-12 col-md-4">
+                            <ul class="nav o_tab_nav"
+                                style="text-transform: capitalize; font-size: 18px; border-radius: 6px 6px;background-color: transparent">
+                                <li class="nav-item w-100 mb-3">
+                                    <a class="nav-link d-flex align-items-center px-3 py-2 list-group-item-beta-dark list-group-item-action active"
+                                       data-toggle="pill" href="#setup1"
+                                       style="border-radius:30px; border: 1px solid #203038;opacity:1;letter-spacing: inherit;text-transform: capitalize;transition: 0.3s ease-in-out;"><i
+                                            class="fa fa-list-alt mr-2" style="font-size: 20px;"></i>Field Chain</a>
+                                </li>
+                                <li class="nav-item w-100 mb-3">
+                                    <a class="nav-link d-flex align-items-center px-3 py-2 list-group-item-beta-dark list-group-item-action"
+                                       data-toggle="pill" href="#setup2"
+                                       style="border-radius:30px; border: 1px solid #203038;opacity:1;letter-spacing: inherit;text-transform: capitalize;transition: 0.3s ease-in-out;"><i
+                                            class="fa fa-table mr-2 fas fa-database" style="font-size: 20px;"></i>Custom Query</a>
+                                </li>
+                                <li class="nav-item w-100 mb-3">
+                                    <a class="nav-link d-flex align-items-center px-3 py-2 list-group-item-beta-dark list-group-item-action"
+                                       data-toggle="pill" href="#report_mate_manager_role"
+                                       style="border-radius:30px; border: 1px solid #203038;opacity:1;letter-spacing: inherit;text-transform: capitalize;transition: 0.3s ease-in-out;"><i
+                                            class="fa fa-fw mr-2 fa-users" style="font-size: 20px;"></i>ReportMate Manager Role</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-12 col-md-8 pt-4 pt-md-0">
+                            <div class="tab-content h-100">
+                                <div class="tab-pane active" id="setup1">
+                                    <h4><u>Create/Configure Reports :</u></h4>
+                                    <div class="pb-4" style="font-weight:400; font-size: 18px;"> You can create Reports
+                                        from the ReportMate
+                                        menu as shown below:
+                                    </div>
+                                    <div class="pb-1">
+                                        <img alt="" class="img-fluid" src="images/app_screen/create_1.png">
+                                    </div>
+                                    <div class="pb-1">
+                                        <img alt="" class="img-fluid" src="images/app_screen/create_2.png">
+                                    </div>
+                                    <div>
+                                    <!--                                    <h4><u>Create/Configure Reports :</u></h4>-->
+                                    <li class="d-flex align-items-baseline mb-2 p-2">
+                                        <span>
+                                            <img src="images/forward-arrow01.svg" alt="arrow"
+                                                 style="width:15px;margin-right:10px">
+                                            While creating the Report, the user needs to select "Query Type = Field Chain" and the model on which they wish to create their report.
+
+                                        </span>
+                                    </li>
+
+                                    <div class="pb-1">
+                                        <img alt="" class="img-fluid" src="images/app_screen/create_3.png">
+                                    </div>
+                                </div>
+                                <div>
+                                     <li class="d-flex align-items-baseline mb-2 p-2">
+                                        <span>
+                                            <img src="images/forward-arrow01.svg" alt="arrow"
+                                                 style="width:15px;margin-right:10px">
+                                            After selecting the model, the user will be able to see the list view at the bottom where they can add the Report Field line one by one. While creating the <b>Report Field</b> line, users can:
+                                        </span>
+                                    </li>
+                                    <li class="d-flex align-items-baseline mb-2 p-2">
+                                            <span style="margin-left: 40px;">
+                                                <img src="images/forward-arrow01.svg" alt="arrow"
+                                        style="width:15px;margin-right:10px">
+                                        Set the name of the field (display name)
+                                        </span>
+                                    </li>
+                                    <li class="d-flex align-items-baseline mb-2 p-2">
+                                            <span style="margin-left: 40px;">
+                                                <img src="images/forward-arrow01.svg" alt="arrow"
+                                        style="width:15px;margin-right:10px">
+                                        Select the field / field chain of the selected Model. Users can also set up the field chain as deep and long as they need to
+                                        </span>
+                                    </li>
+                                    <li class="d-flex align-items-baseline mb-2 p-2">
+                                            <span style="margin-left: 40px;">
+                                                <img src="images/forward-arrow01.svg" alt="arrow"
+                                        style="width:15px;margin-right:10px">
+                                        Set the field to be shown in Search and Group Filters
+                                        <img src="images/app_screen/wizard.png" alt="arrow"
+                                             style="max-width:100%;"
+                                             class="mt-3"/>
+                                        </span>
+                                    </li>
+                                    <li class="d-flex align-items-baseline mb-2 p-2">
+                                            <span style="margin-left: 40px;">
+                                                <img src="images/forward-arrow01.svg" alt="arrow"
+                                        style="width:15px;margin-right:10px">
+                                        User Can Alter Values Of field(Integer,float,Monetary, date, datetime Type)
+                                        <img src="images/app_screen/alter_values_1.png" alt="arrow"
+                                             style="max-width:100%;"
+                                             class="mt-3"/>
+                                        <img src="images/app_screen/alter_values_2.png" alt="arrow"
+                                             style="max-width:100%;"
+                                             class="mt-3"/>
+                                        <img src="images/app_screen/date_alter_values.png" alt="arrow"
+                                             style="max-width:100%;"
+                                             class="mt-3"/>
+                                        </span>
+                                    </li>
+                                </div>
+                                <div>
+                                    <li class="d-flex align-items-baseline mb-2 p-2">
+                                        <span>
+                                            <img src="images/forward-arrow01.svg" alt="arrow"
+                                                 style="width:15px;margin-right:10px">
+                                            After adding all Report Field Lines, users can fill in other Report related information. While creating the <b>Report</b> user can :
+                                        </span>
+                                    </li>
+
+
+                                    <li class="d-flex align-items-baseline mb-2 p-2">
+                                            <span style="margin-left: 40px;">
+                                                <img src="images/forward-arrow01.svg" alt="arrow"
+                                                     style="width:15px;margin-right:10px">
+                                                Set the Menu Name (Report Menu Name) and select under which menu it will be shown
+                                            </span>
+                                    </li>
+                                    <li class="d-flex align-items-baseline mb-2 p-2">
+                                            <span style="margin-left: 40px;">
+                                                <img src="images/forward-arrow01.svg" alt="arrow"
+                                                     style="width:15px;margin-right:10px">
+                                                Set Menu Priority to decide the position ordering of Menu
+                                            </span>
+                                    </li>
+                                    <li class="d-flex align-items-baseline mb-2 p-2">
+                                            <span style="margin-left: 40px;">
+                                                <img src="images/forward-arrow01.svg" alt="arrow"
+                                                     style="width:15px;margin-right:10px">
+                                                Set Menu as active or inactive by ticking the checkbox to enable/disable menu at any time
+                                            </span>
+                                    </li>
+                                    <li class="d-flex align-items-baseline mb-2 p-2">
+                                            <span style="margin-left: 40px;">
+                                                <img src="images/forward-arrow01.svg" alt="arrow"
+                                                     style="width:15px;margin-right:10px">
+                                                Set Groups on Report through Group Access to control who will be allowed to view the created Report
+                                            </span>
+                                    </li>
+                                    <li class="d-flex align-items-baseline mb-2 p-2">
+                                            <span style="margin-left: 40px;">
+                                                <img src="images/forward-arrow01.svg" alt="arrow"
+                                                     style="width:15px;margin-right:10px">
+                                                Set Pivot and Graph options to enable Pivot and Graph views for Reports
+                                            <img src="images/app_screen/create_report.png" alt="arrow"
+                                                 style="max-width:100%;"
+                                                 class="mt-3"/>
+                                            </span>
+                                    </li>
+                                    <li class="d-flex align-items-baseline mb-2 p-2">
+                                        <span>
+                                            <img src="images/forward-arrow01.svg" alt="arrow"
+                                                 style="width:15px;margin-right:10px">
+                                            After saving the report Users will have to refresh their browser to see the Menu for the report.
+                                        </span>
+                                    </li>
+                                </ul>
+                                </div>
+                                <div>
+                                    <h4><u>Sale Report View Example :</u></h4>
+                                        <ul class="list-unstyled pl-0  bg-white" style="font-size:15px;">
+                                    <li class="d-flex align-items-baseline mb-2 p-2">
+                                        <span class="w-100">
+                                            <img src="images/forward-arrow01.svg" alt="arrow"
+                                                 style="width:15px;margin-right:10px">
+                                            Sale Report Tree/List View
+                                            <img src="images/app_screen/tree_view_sr.png" alt="arrow"
+                                                 style="max-width:100%;"
+                                                 class="my-3 w-100">
+                                        </span>
+                                    </li>
+                                    <li class="d-flex align-items-baseline mb-2 p-2">
+                                        <span class="w-100">
+                                            <img src="images/forward-arrow01.svg" alt="arrow"
+                                                 style="width:15px;margin-right:10px">
+                                            Sale Report Pivot View
+                                            <img src="images/app_screen/pivot_view_sr.png" alt="arrow"
+                                                 style="max-width:100%;"
+                                                 class="my-3 w-100">
+                                        </span>
+                                    </li>
+                                    <li class="d-flex align-items-baseline mb-2 p-2">
+                                        <span class="w-100">
+                                            <img src="images/forward-arrow01.svg" alt="arrow"
+                                                 style="width:15px;margin-right:10px">
+                                            Sale Report Graph View
+                                            <img src="images/app_screen/graph_view_sr.png" alt="arrow"
+                                                 style="max-width:100%;"
+                                                 class="my-3 w-100">
+                                        </span>
+                                    </li>
+                                </ul>
+                                </div>
+<!--                                </div>-->
+                                </div>
+                                <div class="tab-pane" id="setup2">
+                                    <div>
+                                        <h4><u>Create/Configure Reports :</u></h4>
+
+                                    <li class="d-flex align-items-baseline mb-2 p-2">
+                                            <span style="margin-left: 40px;">
+                                                <img src="images/forward-arrow01.svg" alt="arrow"
+                                                     style="width:15px;margin-right:10px">
+                                                Set the Menu Name (Report Menu Name) and select under which menu it will be shown
+                                            </span>
+                                    </li>
+                                    <li class="d-flex align-items-baseline mb-2 p-2">
+                                            <span style="margin-left: 40px;">
+                                                <img src="images/forward-arrow01.svg" alt="arrow"
+                                                     style="width:15px;margin-right:10px">
+                                                Select "Query Type = Custom Query" and Wtite Your Query in Custom Query Text field
+                                            </span>
+                                    </li>
+                                    <li class="d-flex align-items-baseline mb-2 p-2">
+                                            <span style="margin-left: 40px;">
+                                                <img src="images/forward-arrow01.svg" alt="arrow"
+                                                     style="width:15px;margin-right:10px">
+                                                Set Menu Priority to decide the position ordering of Menu
+                                            </span>
+                                    </li>
+                                    <li class="d-flex align-items-baseline mb-2 p-2">
+                                            <span style="margin-left: 40px;">
+                                                <img src="images/forward-arrow01.svg" alt="arrow"
+                                                     style="width:15px;margin-right:10px">
+                                                Set Menu as active or inactive by ticking the checkbox to enable/disable menu at any time
+                                            </span>
+                                    </li>
+                                    <li class="d-flex align-items-baseline mb-2 p-2">
+                                            <span style="margin-left: 40px;">
+                                                <img src="images/forward-arrow01.svg" alt="arrow"
+                                                     style="width:15px;margin-right:10px">
+                                                Set Groups on Report through Group Access to control who will be allowed to view the created Report
+                                            </span>
+                                    </li>
+                                    <li class="d-flex align-items-baseline mb-2 p-2">
+                                        <span style="margin-left: 40px;">
+                                            <img src="images/forward-arrow01.svg" alt="arrow"
+                                                 style="width:15px;margin-right:10px">
+                                            After executing the Query, the user will be able to see the all the columns in list view at the bottom :
+                                        </span>
+                                    </li>
+                                    <li class="d-flex align-items-baseline mb-2 p-2">
+                                            <span style="margin-left: 40px;">
+                                                <img src="images/forward-arrow01.svg" alt="arrow"
+                                        style="width:15px;margin-right:10px">
+                                        Set the name of the field (display name)
+                                        </span>
+                                    </li>
+
+                                    <li class="d-flex align-items-baseline mb-2 p-2">
+                                            <span style="margin-left: 40px;">
+                                                <img src="images/forward-arrow01.svg" alt="arrow"
+                                        style="width:15px;margin-right:10px">
+                                        Set the field to be shown in Search and Group Filters
+<!--                                        <img src="images/app_screen/wizard.png" alt="arrow"-->
+<!--                                             style="max-width:100%;"-->
+<!--                                             class="mt-3"/>-->
+                                        </span>
+                                    </li>
+
+                                    <li class="d-flex align-items-baseline mb-2 p-2">
+                                            <span style="margin-left: 40px;">
+                                                <img src="images/forward-arrow01.svg" alt="arrow"
+                                                     style="width:15px;margin-right:10px">
+                                                Set Pivot and Graph options to enable Pivot and Graph views for Reports
+                                            <img src="images/app_screen/custom_query.png" alt="arrow"
+                                                 style="max-width:100%;"
+                                                 class="mt-3"/>
+                                            </span>
+                                    </li>
+                                    <li class="d-flex align-items-baseline mb-2 p-2">
+                                        <span>
+                                            <img src="images/forward-arrow01.svg" alt="arrow"
+                                                 style="width:15px;margin-right:10px">
+                                            After saving the report Users will have to refresh their browser to see the Menu for the report.
+                                        </span>
+                                    </li>
+                                </ul>
+                                </div>
+                                </div>
+                                <div class="tab-pane" id="report_mate_manager_role">
+                                       <ul class="list-unstyled pl-0  bg-white" style="font-size:15px;">
+                                    <li class="d-flex align-items-baseline mb-2 p-2">
+                                        <span>
+                                            <img src="images/forward-arrow01.svg" alt="arrow"
+                                                 style="width:15px;margin-right:10px">
+                                            Since ReportMate create reports using database queries, it can bypass all model securities to show the report data. Therefore there is security group for ReportMate.
+                                        </span>
+                                    </li>
+
+                                    <li class="d-flex align-items-baseline mb-2 p-2">
+                                        <span>
+                                            <img src="images/forward-arrow01.svg" alt="arrow"
+                                                 style="width:15px;margin-right:10px">
+                                            ReportMate Manager role control who can Read/Create/Edit/Delete the ReportMate Records (Reports).
+                                        </span>
+                                    </li>
+
+
+                                    <li class="d-flex align-items-baseline mb-2 p-2">
+                                        <span>
+                                            <img src="images/forward-arrow01.svg" alt="arrow"
+                                                 style="width:15px;margin-right:10px">
+                                            Admin is by default assigned as ReportMate Manager. They can give this role to other users by going into the User form page and setting up ReportMate Manager as True.
+                                            <img src="images/app_screen/report_mate_manager.png" alt="arrow"
+                                                 style="max-width:100%;"
+                                                 class="mt-3">
+                                        </span>
+                                    </li>
+                                </ul>
+                                </div>
+                            </div>
+                    </div>
+                    </div>
+                </div>
+                <div class="tab-pane " id="why" style="font-weight: 400;">
+                    <div class="text-center pb-3 pt-4">
+                        <h2 style="font-weight: 600; font-size: 2.5rem;">Why Us?</h2>
+                    </div>
+                    <center><img src="images/forward-arrow.svg"/>&nbsp;One of the first Odoo apps to display your
+                        complex data in a single view
+                    </center>
+                </div>
+                <div class="tab-pane fade" id="Release" style="margin-top:-10px;">
+                    <section class="card mb-5" style="border: none;">
+                        <div class="card-body pb-5">
+                            <div class="text-center pb-5 pt-4">
+                                <h2 style="font-weight: 600; font-size: 2.5rem;">Our Releases</h2>
+                            </div>
+                            <div class="col-sm-8 col-xl-6 mx-auto">
+                                <span style="background-color: #203038;width:4px;height:100%;top: 0;left: 55px;"></span>
+                                <div class="pb-3">
+                                    <div class=""
+                                         style="background-color: #203038;top: 50%;min-width: 65px; left: 0;box-sizing: border-box;padding: 10px;text-align: center; color: #fff;border-top-left-radius: 5px;border-bottom-left-radius: 5px;">
+                                        <span style="font-size: 20px; font-weight: 700;display: block;">10th November, 2023 </span>
+<!--                                        <span style="display: block;font-size: 0.8em;text-transform: uppercase;">March, 2023 </span>-->
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <h4 style="font-family:'Inter', sans-serif; font-size:16px; color:#514F4F; margin:0; line-height:26px">
+                                            Latest Release
+                                            1.0.2
+                                        </h4>
+                                        <span style="font-size:14px; color:#7A7979; display:block; margin-bottom:20px">
+
+                                        </span>
+                                    </div>
+                        <div class="col-md-8">
+                            <div style="padding:0 0 40px">
+                                <div style="margin:0 0 10px">
+                                    <div style="display:inline-block; padding:0px 8px; color:#514F4F; background-color:#FFD8D8; border-radius:20px">
+                                        Improvement
+                                    </div>
+                                </div>
+                                <ul class="pl-3" style="color:#7A7979; font-family:'Inter', sans-serif">
+                                    <li><span style="color:#7A7979;">Working of union and union all in custom query.</span>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                        </div>
+                        </div>
+                            <div class="col-sm-8 col-xl-6 mx-auto">
+                                <span style="background-color: #203038;width:4px;height:100%;top: 0;left: 55px;"></span>
+                                <div class="pb-3">
+                                    <div class=""
+                                         style="background-color: #203038;top: 50%;min-width: 65px; left: 0;box-sizing: border-box;padding: 10px;text-align: center; color: #fff;border-top-left-radius: 5px;border-bottom-left-radius: 5px;">
+                                        <span style="font-size: 20px; font-weight: 700;display: block;">26th October, 2023 </span>
+<!--                                        <span style="display: block;font-size: 0.8em;text-transform: uppercase;">March, 2023 </span>-->
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <h4 style="font-family:'Inter', sans-serif; font-size:16px; color:#514F4F; margin:0; line-height:26px">
+                                            Release
+                                            1.0.1
+                                        </h4>
+                                        <span style="font-size:14px; color:#7A7979; display:block; margin-bottom:20px">
+
+                                        </span>
+                                    </div>
+                        <div class="col-md-8">
+                            <div style="padding:0 0 40px">
+                                <div style="margin:0 0 10px">
+                                    <div style="display:inline-block; padding:0px 8px; color:#514F4F; background-color:#FFD8D8; border-radius:20px">
+                                        Improvement
+                                    </div>
+                                </div>
+                                <ul class="pl-3" style="color:#7A7979; font-family:'Inter', sans-serif">
+                                    <li><span style="color:#7A7979;">Improved the field rendering to handle both text and JSON data types more effectively.</span>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                        </div>
+                        </div>
+
+
+                        <div class="card-body pb-5">
+                            <div class="col-sm-8 col-xl-6 mx-auto">
+                                <span style="background-color: #203038;width:4px;height:100%;top: 0;left: 55px;"></span>
+                                <div class="pb-3">
+                                    <div class=""
+                                         style="background-color: #203038;top: 50%;min-width: 65px; left: 0;box-sizing: border-box;padding: 10px;text-align: center; color: #fff;border-top-left-radius: 5px;border-bottom-left-radius: 5px;">
+                                        <span style="font-size: 20px; font-weight: 700;display: block;">24th May, 2023 </span>
+<!--                                        <span style="display: block;font-size: 0.8em;text-transform: uppercase;">March, 2023 </span>-->
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <h4 style="font-family:'Inter', sans-serif; font-size:16px; color:#514F4F; margin:0; line-height:26px">
+                                             Release
+                                            1.0.0
+                                        </h4>
+                                        <span style="font-size:14px; color:#7A7979; display:block; margin-bottom:20px">
+
+                                        </span>
+                                    </div>
+                        <div class="col-md-8">
+                            <div style="padding:0 0 40px">
+                                <div style="margin:0 0 10px">
+                                    <div style="display:inline-block; padding:0px 8px; color:#514F4F; background-color:#FFD8D8; border-radius:20px">
+                                        New version
+                                    </div>
+                                </div>
+                                <ul class="pl-3" style="color:#7A7979; font-family:'Inter', sans-serif">
+                                    <li><span style="color:#7A7979;">  Latest version 16 release of Report Mate .</span>
+                                    </li>
+
+                                </ul>
+                            </div>
+                            <div style="padding:0px 0 10px; border-bottom:1px solid #E3E3E3"></div>
+                           </div>
+                        </div>
+                        </div>
+                        </div>
+                     </section>
+
+                </div>
+                <!--                <div class="tab-pane fade" id="UserGuide">-->
+                <!--                    User Guide-->
+                <!--                </div>-->
+                <div class="tab-pane fade" id="FAQ">
+                    <div class="card-body p-0">
+                        <div class="text-center pb-5">
+                            <h2 style="color: #0b3b52; font-weight: 600; font-size: 2.5rem;">Frequently Asked
+                                Question</h2>
+                        </div>
+                        <div class="s_faq mx-2 mx-md-5 mb-5">
+                            <div id="accordion">
+                                <div class="card shadow mb-4" style="border: none; border-left: 10px solid #203038;">
+                                    <div class="card-header py-4 pl-4 pr-5 bg-white position-relative d-flex justify-content-between"
+                                         style="border: none;">
+                                        <div class="pr-5" style="font-size: 1.6rem; font-weight: 600; color: #0b3b52;">
+                                            Need
+                                            some customization in this app, whom to contact?
+                                        </div>
+                                        <a class="card-link" data-toggle="collapse" href="#faqOne" style="
+                                      width: 48px;
+                                      height: 40px;
+                                      line-height: 11px;
+                                      background-color: rgba(8, 101, 99, 0.1);
+                                      border-radius: 2px;
+                                      padding: 0;
+                                      font-size: 24px;"></a>
+                                    </div>
+                                    <div class="collapse" data-parent="#accordion" id="faqOne">
+                                        <div class="card-body pt-0 pl-4">
+                                            <div style="font-size: 1.4rem; color: #0b3b52;">
+                                                Please drop email at sales@ksolves.com or raise a ticket through Odoo
+                                                store
+                                                itself.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card shadow mb-4" style="border: none; border-left: 10px solid #203038;">
+                                    <div class="card-header py-4 pl-4 pr-5 bg-white position-relative d-flex justify-content-between"
+                                         style="border: none;">
+                                        <div class="pr-5" style="font-size: 1.6rem; font-weight: 600; color: #0b3b52;">
+                                            Do
+                                            you provide any free support?
+                                        </div>
+                                        <a class="card-link collapsed" data-toggle="collapse" href="#faqTwo" style="
+                                      width: 48px;
+                                      height: 40px;
+                                      line-height: 11px;
+                                      background-color: rgba(8, 101, 99, 0.1);
+                                      border-radius: 2px;
+                                      padding: 0;
+                                      font-size: 24px;"></a>
+                                    </div>
+                                    <div class="collapse" data-parent="#accordion" id="faqTwo">
+                                        <div class="card-body pt-0 pl-4">
+                                            <div style="font-size: 1.4rem; color: #0b3b52;">
+                                                Yes, we do provide free support for 90 days for any queries or any
+                                                bug/issue
+                                                fixing.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card shadow mb-4" style="border: none; border-left: 10px solid #203038;">
+                                    <div class="card-header py-4 pl-4 pr-5 bg-white position-relative d-flex justify-content-between"
+                                         style="border: none;">
+                                        <div class="pr-5" style="font-size: 1.6rem; font-weight: 600; color: #0b3b52;">
+                                            What is ReportMate?
+                                        </div>
+                                        <a class="card-link collapsed" data-toggle="collapse" href="#faqThree" style="
+                                      width: 48px;
+                                      height: 40px;
+                                      line-height: 11px;
+                                      background-color: rgba(8, 101, 99, 0.1);
+                                      border-radius: 2px;
+                                      padding: 0;
+                                      font-size: 24px;"></a>
+                                    </div>
+                                    <div class="collapse" data-parent="#accordion" id="faqThree">
+                                        <div class="card-body pt-0 pl-4">
+                                            <div style="font-size: 1.4rem; color: #0b3b52;">
+                                                ReportMate extracts all the needed information for all the fields of any
+                                                Odoo Model and displays complex data in a single view.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card shadow mb-4" style="border: none; border-left: 10px solid #203038;">
+                                    <div class="card-header py-4 pl-4 pr-5 bg-white position-relative d-flex justify-content-between"
+                                         style="border: none;">
+                                        <div class="pr-5" style="font-size: 1.6rem; font-weight: 600; color: #0b3b52;">
+                                            For which module Reportmate is useful?
+                                        </div>
+                                        <a class="card-link collapsed" data-toggle="collapse" href="#faqFour" style="
+                                      width: 48px;
+                                      height: 40px;
+                                      line-height: 11px;
+                                      background-color: rgba(8, 101, 99, 0.1);
+                                      border-radius: 2px;
+                                      padding: 0;
+                                      font-size: 24px;"></a>
+                                    </div>
+                                    <div class="collapse" data-parent="#accordion" id="faqFour">
+                                        <div class="card-body pt-0 pl-4">
+                                            <div style="font-size: 1.4rem; color: #0b3b52;">
+                                                Reportmate is useful for all the Odoo module where reports are required.
+                                                For example, Inventory Management, Sales and Team Reporting etc.
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card shadow mb-4" style="border: none; border-left: 10px solid #203038;">
+                                    <div class="card-header py-4 pl-4 pr-5 bg-white position-relative d-flex justify-content-between"
+                                         style="border: none;">
+                                        <div class="pr-5" style="font-size: 1.6rem; font-weight: 600; color: #0b3b52;">
+                                            What are the different views that are available in Reportmate?
+
+                                        </div>
+                                        <a class="card-link collapsed" data-toggle="collapse" href="#faqFive" style="
+                                      width: 48px;
+                                      height: 40px;
+                                      line-height: 11px;
+                                      background-color: rgba(8, 101, 99, 0.1);
+                                      border-radius: 2px;
+                                      padding: 0;
+                                      font-size: 24px;"></a>
+                                    </div>
+                                    <div class="collapse" data-parent="#accordion" id="faqFive">
+                                        <div class="card-body pt-0 pl-4">
+                                            <div style="font-size: 1.4rem; color: #0b3b52;">
+                                                Pivot and Graph view
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card shadow mb-4" style="border: none; border-left: 10px solid #203038;">
+                                    <div class="card-header py-4 pl-4 pr-5 bg-white position-relative d-flex justify-content-between"
+                                         style="border: none;">
+                                        <div class="pr-5" style="font-size: 1.6rem; font-weight: 600; color: #0b3b52;">
+                                            Is this app compatible with Odoo Enterprise?
+                                        </div>
+                                        <a class="card-link collapsed" data-toggle="collapse" href="#faqSix" style="
+                                      width: 48px;
+                                      height: 40px;
+                                      line-height: 11px;
+                                      background-color: rgba(8, 101, 99, 0.1);
+                                      border-radius: 2px;
+                                      padding: 0;
+                                      font-size: 24px;"></a>
+                                    </div>
+                                    <div class="collapse" data-parent="#accordion" id="faqSix">
+                                        <div class="card-body pt-0 pl-4">
+                                            <div style="font-size: 1.4rem; color: #0b3b52;">
+                                                Yes, our app works with Odoo Enterprise as well as Community.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- tab view / end -->
+        </div>
+
+
+        <section class="card shadow-sm mb-5">
+            <div class="text-center text-white  py-5"
+                 style="background-color: #0b3b52;">
+                <div class="mb-4" style="font-size: 2rem;">FREE 90 DAYS SUPPORT</div>
+                <div class="px-md-4 px-md-5 mx-md-5">
+                    <p>Ksolves will provide FREE 90 days support for any doubt, queries, and bug fixing (excluding data
+                        recovery) or any type of issues related to this module. This is applicable from the date of
+                        purchase.</p>
+                </div>
+            </div>
+        </section>
+        <section class="mb-5">
+            <div class="text-center p-2 d-flex justify-content-center align-items-center col-lg-9"
+                 style="background-color: #0b3b52;
+            box-shadow: 1px 2px 11px rgba(0, 0, 0, 0), 1px 11px 12px rgba(0, 0, 0, 0.22);margin: auto;">
+                <h3 class="font-weight-bold mb-0 mr-3 text-light">Note: </h3>
+                <h5 class="mb-0 text-light" style="margin-top: 2px;">
+                    Extensively Tested on Odoo Vanilla with Ubuntu OS
+                </h5>
+            </div>
+        </section>
+        <section class="card shadow-sm mb-5">
+            <div class="card-body">
+                <h2 class="w-100 text-center mb-3" style="font-weight: 400;">Ksolves Suggested Apps</h2>
+                <div class="text-center w-100 mb-1">
+                    <img alt="ksolves" src="images/line.png">
+                </div>
+                <div class="carousel slide pb-5 col-12 col-lg-8 mx-auto" data-ride="carousel" id="demo">
+                    <!-- Indicators -->
+                    <ul class="carousel-indicators">
+                        <li class="active" data-slide-to="0" data-target="#demo"
+                            style="background-color: #9d7092;"></li>
+                        <li data-slide-to="1" data-target="#demo" style="background-color: #9d7092;"></li>
+                    </ul>
+                    <!-- The slideshow -->
+                    <div class="carousel-inner pt-4 pt-lg-5 ">
+                        <div class="carousel-item px-4 active">
+                            <div class="row pb-sm-4 no-lg-gutters">
+                                <div class="col-6 col-sm-3 text-center">
+                                    <a class="d-block"
+                                       href="https://apps.odoo.com/apps/modules/14.0/ks_dashboard_ninja/"
+                                       style="text-decoration: none;" target="_blank">
+                                        <img alt="dashboard-ninja" src="images/app-logo/dashboard-ninja.png">
+                                        <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                            <h5 class="card-text m-0" style="font-size: 16px; font-weight: 600">
+                                                Dashboard
+                                                <br> Ninja</h5>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-6 col-sm-3 text-center">
+                                    <a href="https://apps.odoo.com/apps/modules/14.0/ks_list_view_manager/"
+                                       style="text-decoration: none;"
+                                       target="_blank">
+                                        <img alt="list-view-manager" src="images/app-logo/list-view-manager.png">
+                                        <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                            <h5 class="card-text m-0" style="font-size: 16px; font-weight: 600">List
+                                                View
+                                                <br> Manager</h5>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-6 col-sm-3 text-center">
+                                    <a class="d-block"
+                                       href="https://apps.odoo.com/apps/modules/13.0/ks_sticky_pivot_view/"
+                                       style="text-decoration: none;" target="_blank">
+                                        <img alt="sticky-pivot-view" src="images/app-logo/sticky-pivot-view.png">
+                                        <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                            <h5 class="card-text m-0" style="font-size: 16px; font-weight: 600">Sticky
+                                                <br>Pivot
+                                                View</h5>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-6 col-sm-3 text-center">
+                                    <a href="https://apps.odoo.com/apps/modules/14.0/ks_woocommerce/"
+                                       style="text-decoration: none;" target="_blank">
+                                        <img alt="list-view-manager"
+                                             src="images/app-logo/odoo_woocommerce_connector.png">
+                                        <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                            <h5 class="card-text m-0" style="font-size: 16px; font-weight: 600">Odoo
+                                                WooCommerce
+                                                <br>Connector</h5>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row pt-3 pb-4 no-gutters">
+                                <div class="col-6 col-sm-3 text-center">
+                                    <a href="https://apps.odoo.com/apps/modules/13.0/ks_theme_base/"
+                                       style="text-decoration: none;"
+                                       target="_blank">
+                                        <img alt="ksolves-theme-base" src="images/app-logo/ksolves-theme-base.png">
+                                        <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                            <h5 class="card-text m-0" style="font-size: 16px; font-weight: 600">Ksolves
+                                                <br>Theme
+                                                Base</h5>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-6 col-sm-3 text-center">
+                                    <a class="d-block"
+                                       href="https://apps.odoo.com/apps/modules/14.0/ks_pos_order_notes/"
+                                       style="text-decoration: none;" target="_blank">
+                                        <img alt="pos-per-item" src="images/app-logo/pos-per-item.png">
+                                        <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                            <h5 class="card-text m-0" style="font-size: 16px; font-weight: 600">POS Per
+                                                Item
+                                                <br>& Order Note</h5>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-6 col-sm-3 text-center">
+                                    <a href="https://apps.odoo.com/apps/modules/14.0/ks_pos_dashboard_ninja/"
+                                       style="text-decoration: none;" target="_blank">
+                                        <img alt="pos_dashboard_ninja" src="images/app-logo/pos_dashboard_ninja.png">
+                                        <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                            <h5 class="card-text m-0" style="font-size: 16px; font-weight: 600">POS <br>Dashboard
+                                                Ninja</h5>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-6 col-sm-3 text-center">
+                                    <a class="d-block"
+                                       href="https://apps.odoo.com/apps/modules/13.0/web_listview_sticky_header/"
+                                       style="text-decoration: none;" target="_blank">
+                                        <img alt="listview_sticky_header"
+                                             src="images/app-logo/listview_sticky_header.png">
+                                        <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                            <h5 class="card-text m-0" style="font-size: 16px; font-weight: 600">List
+                                                View
+                                                <br>Sticky Header</h5>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item px-4">
+                            <div class="row pb-sm-4 no-gutters">
+                                <div class="col-6 col-sm-3 text-center">
+                                    <a href="https://apps.odoo.com/apps/modules/14.0/ks_sales_subscription/"
+                                       style="text-decoration: none;" target="_blank">
+                                        <img alt="POS Low Stock Alert" src="images/app-logo/sales_subscription.png">
+                                        <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                            <h5 class="card-text m-0" style="font-size: 16px; font-weight: 600">Sales
+                                                <br>Subscription
+                                            </h5>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-6 col-sm-3 text-center">
+                                    <a class="d-block"
+                                       href="https://apps.odoo.com/apps/modules/13.0/universal_discount/"
+                                       style="text-decoration: none;" target="_blank">
+                                        <img alt="Universal Discount" src="images/app-logo/universal_discount.png">
+                                        <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                            <h5 class="card-text m-0" style="font-size: 16px; font-weight: 600">
+                                                Universal
+                                                <br>Discount</h5>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-6 col-sm-3 text-center">
+                                    <a href="https://apps.odoo.com/apps/modules/13.0/ks_chat_edit_and_delete/"
+                                       style="text-decoration: none;" target="_blank">
+                                        <img alt="chat_edit_and_delete" src="images/app-logo/chat_edit_and_delete.png">
+                                        <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                            <h5 class="card-text m-0" style="font-size: 16px; font-weight: 600">Odoo
+                                                Chat
+                                                <br>Edit/Delete</h5>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-6 col-sm-3 text-center">
+                                    <a class="d-block"
+                                       href="https://apps.odoo.com/apps/modules/13.0/ks_office365_contacts/"
+                                       style="text-decoration: none;" target="_blank">
+                                        <img alt="percent_field" src="images/app-logo/365_office_contacts.png">
+                                        <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                            <h5 class="card-text m-0" style="font-size: 16px; font-weight: 600">
+                                                Office 365 <br>Contacts
+                                            </h5>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row pt-3 pb-4 no-gutters">
+                                <div class="col-6 col-sm-3 text-center">
+                                    <a href="https://apps.odoo.com/apps/modules/13.0/universal_tax/"
+                                       style="text-decoration: none;"
+                                       target="_blank">
+                                        <img alt="universal_tax" src="images/app-logo/universal_tax.png">
+                                        <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                            <h5 class="card-text m-0" style="font-size: 16px; font-weight: 600">
+                                                Universal
+                                                <br>Tax</h5>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-6 col-sm-3 text-center">
+                                    <a class="d-block" href="https://apps.odoo.com/apps/modules/13.0/ks_toggle_switch/"
+                                       style="text-decoration: none;" target="_blank">
+                                        <img alt="toggle_switch" src="images/app-logo/toggle_switch.png">
+                                        <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                            <h5 class="card-text m-0" style="font-size: 16px; font-weight: 600">Toggle
+                                                <br>Switch
+                                            </h5>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-6 col-sm-3 text-center">
+                                    <a href="https://apps.odoo.com/apps/modules/13.0/odoo_paytm_gateway/"
+                                       style="text-decoration: none;"
+                                       target="_blank">
+                                        <img alt="odoo_paytm_gateway" src="images/app-logo/odoo_paytm_gateway.png">
+                                        <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                            <h5 class="card-text m-0" style="font-size: 16px; font-weight: 600">Odoo
+                                                Paytm
+                                                <br>Gateway</h5>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-6 col-sm-3 text-center">
+                                    <a class="d-block"
+                                       href="https://apps.odoo.com/apps/modules/13.0/ks_low_stock_alert/"
+                                       style="text-decoration: none;" target="_blank">
+                                        <img alt="low_stock_alert" src="images/app-logo/low_stock_alert.png">
+                                        <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                            <h5 class="card-text m-0" style="font-size: 16px; font-weight: 600">Low
+                                                Stock
+                                                <br>Alert</h5>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Left and right controls -->
+                    <a class="carousel-control-prev" data-slide="prev" href="#demo" style="left: -5%; width: 60px;">
+                        <i class="fa fa-angle-left" style="font-size: 5vw;color: #333;"></i>
+                    </a>
+                    <a class="carousel-control-next" data-slide="next" href="#demo" style="right: -5%; width: 60px;">
+                        <i class="fa fa-angle-right" style="font-size: 5vw;color: #333;"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <div class="row pb-sm-5 px-1 pb-4">
+            <h2 class="w-100 text-center my-3" style="font-weight: 400;">Ksolves Odoo Services</h2>
+            <div class="text-center w-100 mb-4">
+                <img alt="ksolves" src="images/line.png">
+            </div>
+            <div class="col-12 col-sm-6 col-md-4" style="margin-bottom: 20px;">
+                <div class="card text-center bg-info" style="min-height: 90px;">
+                    <div class="pt-4">
+                        <img alt="support" src="images/support.png">
+                    </div>
+                    <div class="px-3 pt-3 pb-2">
+                        <h5 class="card-title text-white" style="font-size: 19px; font-weight: 400;">Odoo
+                            Implementation</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-md-4" style="margin-bottom: 20px;">
+                <div class="card text-center" style="min-height: 90px; background-color: #2ebeb4">
+                    <div class="pt-4">
+                        <img alt="apps" src="images/apps.png">
+                    </div>
+                    <div class="px-3 pt-3 pb-2">
+                        <h5 class="card-title text-white" style="font-size: 19px; font-weight: 400;">Odoo Community
+                            Apps</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-md-4" style="margin-bottom: 20px;">
+                <div class="card text-center"
+                     style="min-height: 90px;background-color: #00a393; background-color: #98b1c4; ">
+                    <div class="pt-4">
+                        <img alt="support2" src="images/support2.png">
+                    </div>
+                    <div class="px-3 pt-3 pb-2">
+                        <h5 class="card-title text-white" style="font-size: 19px; font-weight: 400;">Odoo Support &amp;
+                            Maintenance</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-md-4" style="margin-bottom: 20px;">
+                <div class="card text-center" style="min-height: 90px; background-color: #2f4e6f;">
+                    <div class="pt-4">
+                        <img alt="custom" src="images/custom.png">
+                    </div>
+                    <div class="px-3 pt-3 pb-2">
+                        <h5 class="card-title text-white" style="font-size: 19px; font-weight: 400;">Odoo
+                            Customization</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-md-4" style="margin-bottom: 20px;">
+                <div class="card text-center" style="min-height: 90px; background-color: #f89c24;">
+                    <div class="pt-4">
+                        <img alt="integrated" src="images/integrated.png">
+                    </div>
+                    <div class="px-3 pt-3 pb-2">
+                        <h5 class="card-title text-white" style="font-size: 19px; font-weight: 400;">Odoo Integration
+                            Services</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-md-4" style="margin-bottom: 20px;">
+                <div class="card text-center bg-primary" style="min-height: 90px;">
+                    <div class="pt-4">
+                        <img alt="develop" src="images/develop.png">
+                    </div>
+                    <div class="px-3 pt-3 pb-2">
+                        <h5 class="card-title text-white" style="font-size: 19px; font-weight: 400;">Odoo Developer
+                            Outsourcing</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row no-gutters mx-0 justify-content-sm-between justify-content-center"
+             style="border-top: 1px solid black;">
+            <div class="mb-sm-0 mb-3 d-flex align-items-center">
+                <img src="images/letter.svg" style="width: 35px;height: 35px;margin-right: 20px">
+                <span style="font-size: 18px;">sales@ksolves.com</span>
+            </div>
+            <div class="d-flex align-items-center">
+                <span style="font-size: 18px;">+91 120-4299799‬</span>
+                <img src="images/smartphone.svg" style="width: 35px;height: 35px;margin-left: 20px;">
+            </div>
+        </div>
+    </div>
+</main>
+
+<link href="https://apps.odoocdn.com/web/content/7247337-184ae0e/1/web.assets_frontend.css" rel="stylesheet">
+<link href="style.css" rel="stylesheet" type="text/css">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
+
