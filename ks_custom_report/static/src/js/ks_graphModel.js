@@ -1,15 +1,14 @@
 /** @odoo-module */
 
-import { Model } from "@web/views/model";
-import { sortBy } from "@web/core/utils/arrays";
 import { GraphModel } from "@web/views/graph/graph_model";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
-import session from 'web.session';
+import { browser } from "@web/core/browser/browser";
+import { sortBy } from "@web/core/utils/arrays";
+import { SEP } from "@web/views/graph/graph_model";
 
 const { useEffect, onMounted } = owl;
-import { SEP } from "@web/views/graph/graph_model";
 
 patch(GraphModel.prototype, {
     /**
@@ -22,8 +21,9 @@ patch(GraphModel.prototype, {
     },
 
     async getKsmodelDomain(domain) {
-            var context = session.user_context;
-            var result = await this.rpc(
+        const context = browser.localStorage.getItem('user_context') ?
+            JSON.parse(browser.localStorage.getItem('user_context')) : {};
+        const result = await this.rpc(
                 '/ks_custom_report/get_model_name',
                 {
                     model: this.metaData.resModel,
@@ -31,6 +31,7 @@ patch(GraphModel.prototype, {
                     domain: domain,
                 }
         );
+
         if (result) {
                  this.env.services.action.doAction(result);
             }
