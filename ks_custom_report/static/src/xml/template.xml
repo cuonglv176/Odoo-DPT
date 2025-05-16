@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-name="ks_model_relations.KsQueryBuilder" owl="1">
-        <ModelFieldSelector
-            fieldName="state.fieldName"
-            resModel="props.record.data.ks_model_name"
-            readonly="props.readonly"
+        <div class="ks_query_builder">
+            <ModelFieldSelector
+                t-if="state.resModel"
+                fieldName="state.fieldName"
+                resModel="state.resModel"
+                readonly="props.readonly"
             isDebugMode="false"
             update="(name) => this.onFieldChange(name)"
         />
+            <div t-else="" class="text-muted">
+                Please select a model first
+            </div>
+        </div>
     </t>
 </templates>
