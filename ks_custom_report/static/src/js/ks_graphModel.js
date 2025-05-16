@@ -8,24 +8,20 @@ import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import session from 'web.session';
 
-const { useEffect,onMounted} = owl;
+const { useEffect, onMounted } = owl;
 import { SEP } from "@web/views/graph/graph_model";
 
-patch(GraphModel.prototype,'KsGraphModel', {
+patch(GraphModel.prototype, {
     /**
      * @override
      */
     setup(params) {
+        this._super.apply(this, arguments);
         this.rpc = useService("rpc");
         this.action = useService("action");
+    },
 
-        this._super(params);
-
-
-},
-
-
-        async getKsmodelDomain(domain){
+    async getKsmodelDomain(domain) {
             var context = session.user_context;
             var result = await this.rpc(
                 '/ks_custom_report/get_model_name',
@@ -34,11 +30,9 @@ patch(GraphModel.prototype,'KsGraphModel', {
                     local_context: context,
                     domain: domain,
                 }
-            )
-            if(result){
+        );
+        if (result) {
                  this.env.services.action.doAction(result);
             }
         },
-
-
 });

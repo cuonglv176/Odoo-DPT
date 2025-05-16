@@ -4,7 +4,7 @@ import { patch } from "@web/core/utils/patch";
 
 const { } = owl;
 
-patch(GraphRenderer.prototype, "KsGraphRender", {
+patch(GraphRenderer.prototype, {
     async ksDoAction(domain) {
         await this.props.model.getKsmodelDomain(domain);
     },
