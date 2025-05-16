@@ -1,27 +1,18 @@
 /** @odoo-module **/
 import { registry } from "@web/core/registry";
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
-import { ModelFieldSelectorPopover } from "@web/core/model_field_selector/model_field_selector_popover";
+const { Component, useState } = owl;
 
-
-const { Component } = owl;
-
-export class KsQueryBuilder extends Component{
+export class KsQueryBuilder extends Component {
     setup() {
-    var self= this;
+        this.state = useState({
+            fieldName: this.props.value || 'id'
+        });
     }
-     async onFieldChange(fieldName){
-    const changes = fieldName ;
-    this.props.update(changes)
-        }
-};
-Object.assign(KsQueryBuilder, {
-    template: "ks_model_relations.KsQueryBuilder",
-    components: {
-        ModelFieldSelector,
-    },
-});
-
-
+    async onFieldChange(fieldName) {
+        this.props.update(fieldName);
+    }
+}
+KsQueryBuilder.template = "ks_model_relations.KsQueryBuilder";
+KsQueryBuilder.components = { ModelFieldSelector };
 registry.category("fields").add('ks_model_relations', KsQueryBuilder);
-
