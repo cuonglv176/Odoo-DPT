@@ -98,8 +98,7 @@
                                     <field name="name"/>
                                     <field name="ks_cr_model_id" invisible="1"/>
                                     <field name="ks_model_name" invisible="1"/>
-                                    <field name="ks_model_field_chan" widget="ks_model_relations"
-                                           options="{'model': 'ks_model_name'}"/>
+                                    <field name="ks_model_field_chan"/>
                                     <field name="ks_incl_search_filter"/>
                                     <field name="ks_incl_group_filter"/>
                                     <field name="ks_incl_default_group_filter"/>
