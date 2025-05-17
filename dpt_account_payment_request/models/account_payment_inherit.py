@@ -312,7 +312,7 @@ class AccountPayment(models.Model):
                 if r.user_id.id in list_exist:
                     continue
                 diff_value = rec.amount
-                required = False
+                required = True
                 if r.type_compare == 'equal' and diff_value == r.value_compare:
                     required = True
                 elif r.type_compare == 'higher' and diff_value > 0 and diff_value >= r.value_compare:

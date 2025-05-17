@@ -84,8 +84,10 @@ class ApprovalRequest(models.Model):
             user = self.env['res.users'].browse(user_id)
             if user.has_group('dpt_security.group_dpt_director'):
                 sequence = 90
+                required = True
             if user.has_group('dpt_security.group_dpt_ke_toan_truong'):
                 sequence = 80
+                required = True
             approver_id_vals.append(Command.create({
                 'user_id': user_id,
                 'status': 'new',
