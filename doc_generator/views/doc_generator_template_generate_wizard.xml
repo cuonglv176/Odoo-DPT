@@ -1,0 +1,22 @@
+<odoo>
+    <data>
+        <record id="doc_generator_template_generate_wizard_view_form" model="ir.ui.view">
+            <field name="name">doc.generator.template.generate.wizard.form</field>
+            <field name="model">doc.generator.template.generate.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Generate Template">
+                    <group>
+                        <field name="template_id" invisible="1"/>
+                        <field name="model_id" invisible="1"/>
+                        <field name="resource_ref" options="{'model_field': 'model_id', 'no_create': True}"/>
+                        <field name="file_format" widget="radio" options="{'horizontal': True}"/>
+                    </group>
+                    <footer>
+                        <button name="generate_document" string="Generate" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

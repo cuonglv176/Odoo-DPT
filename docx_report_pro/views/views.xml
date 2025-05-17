@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <record id="act_report_xml_view_docx_report_pro" model="ir.ui.view">
+            <field name="name">ir.actions.report.docx.pro</field>
+            <field name="model">ir.actions.report</field>
+            <field name="priority" eval="80"/>
+            <field name="inherit_id" ref="base.act_report_xml_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='paperformat_id']" position="after">
+                    <field name="template_docx" invisible="report_type not in ['docx']"/>
+                    <field name="out_report_type" invisible="report_type not in ['docx']"/>
+                    <field name="python_function_prepare"/>
+                    <field name="python_function_name" invisible="not python_function_prepare"/>
+
+                    <field name="path_source" invisible="report_type not in ['docx'] or out_report_type == 'docx'"/>
+                    <field name="path_convert_folder"
+                           invisible="report_type not in ['docx'] or out_report_type == 'docx'"/>
+                    <field name="path_libreoffice"
+                           invisible="report_type not in ['docx'] or out_report_type == 'docx'"/>
+                    <separator string="Help" colspan="4" invisible="out_report_type == 'docx'"/>
+                    <div name="configuration_details" colspan="8" invisible="out_report_type == 'docx'">
+                        If alfter install libreoffice you still get error with docx-pdf/odt formats
+                        <p>Change rights and give all users access + writing to /home directory</p>
+                        <p>Change rights and give all users access + writing to the directory you want the documents to be saved in: /tmp/backups</p>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+  </data>
+</odoo>
