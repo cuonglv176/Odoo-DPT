@@ -1,0 +1,47 @@
+In docx, if want number with decimal separator
+
+"{:,}".format(float(12312.123123))
+result
+'12,312.123123'
+ 
+OR
+{:,}".format(float(12312.123123)).replace(',','COMMA').replace('.',',').replace('COMMA','.')
+'12.312,123123'
+
+
+#####WORK WITH IMAGES#########
+We can work with pictures in 2 ways.
+
+1. Replacing existing images in docx is convenient when we need to replace
+signatures or logos dynamically with those used in odoo. It is also convenient
+because we do the formatting of the picture manually in MS word or another editor,
+change the position, size, etc. and the picture will replace the current one while
+preserving all the properties.
+To do this, you need to create a list of images and the module
+will automatically replace all images according to the position
+in the document and the order in the list.
+
+# EXAMPLE OF USE
+# 1.jpg, 2.jpg, 3.jpg, 4.jpg, 5.jpg, 6.jpg, 7.jpg. 1,2.jpg = печать. 3,4,5,6,7.jpg = подпись. Печать и подпись берутся динамически из полей.
+'images': [self.mt_contractid.company_id.stamp, self.mt_contractid.company_id.stamp, self.mt_contractid.company_id.chief_id.facsimile, self.mt_contractid.company_id.chief_id.facsimile, self.mt_contractid.company_id.chief_id.facsimile, self.mt_contractid.company_id.chief_id.facsimile, self.mt_contractid.company_id.chief_id.facsimile] if self.mt_contractid.stamp else [False, False, False, False, False, False, False]
+
+2. The way is to simply inamically output images from the template language,
+for example, a table of order items with pictures in a cycle. 
+To do this, we can use any element in dict that ends with __insert and 
+the system will automatically understand that the first 3 elements refer
+to the picture itself, the picture, width and height, as well as the
+last 4 element of this record containing other fields used in the table,
+for example, name, price, etc.
+
+# EXAMPLE OF USE
+# all item with end __insert and type list will prepare as images like dict image width height and record
+many images
+'images__insert':[{"img":r.component_image, "w":100, "h":100, 'record': r.read()[0]} for r in self.item_line_ids]
+{%p for it in images__insert %}
+Image: {{it.img }} {{it.record.name }}
+{%p endfor %}
+
+
+only 1 image
+'image__insert':[{"img":r.component_image, "w":100, "h":100, 'record': r.read()[0]}],
+and isert like {{images__insert[0]['img']}} and any data {{images__insert[0]['record']['name']}}

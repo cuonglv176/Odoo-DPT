@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="action_print_doc_generator_template" model="ir.actions.report">
+            <field name="name">Sample Document</field>
+            <field name="model">doc.generator.template</field>
+            <field name="report_type">docx</field>
+            <field name="report_name">doc_generator.doc_generator_template</field>
+            <field name="print_report_name">'%s (%s)' % (object.name, time.strftime('%Y%m%d%H%M%S'))</field>
+        </record>
+
+        <record id="action_print_doc_generator_template_pdf" model="ir.actions.report">
+            <field name="name">Sample Document</field>
+            <field name="model">doc.generator.template</field>
+            <field name="report_type">docx</field>
+            <field name="out_report_type">pdf</field>
+            <field name="report_name">doc_generator.doc_generator_template_pdf</field>
+            <field name="print_report_name">'%s (%s)' % (object.name, time.strftime('%Y%m%d%H%M%S'))</field>
+        </record>
+    </data>
+</odoo>
