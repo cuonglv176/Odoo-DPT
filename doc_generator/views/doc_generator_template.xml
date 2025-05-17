@@ -1,0 +1,346 @@
+<odoo>
+    <data>
+        <record id="doc_generator_template_view_form" model="ir.ui.view">
+            <field name="name">doc.generator.template.view.form</field>
+            <field name="model">doc.generator.template</field>
+            <field name="arch" type="xml">
+                <form string="Doc Generator Template">
+                    <header invisible="not has_write_access">
+                        <button name="button_submit" type="object" string="Submit Template" class="oe_highlight"/>
+                        <button name="action_check_value" string="Check Value" type="object" class="oe_highlight"/>
+                        <button name="button_generate_document" string="Generate" type="object" class="oe_highlight"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button type="object" class="oe_stat_button" icon="fa-file-text-o"
+                                    name="action_view_document">
+                                <div class="o_form_field o_stat_info">
+                                    <span class="o_stat_value">
+                                        <field name="document_ids_count"/>
+                                    </span>
+                                    <span class="o_stat_text">Documents</span>
+                                </div>
+                            </button>
+                        </div>
+                        <group>
+                            <field name="name"/>
+                            <field name="description"/>
+                            <field name="template_docx" widget="binary" filename="template_docx_name"/>
+                            <field name="template_docx_name" invisible="1"/>
+                            <field name="model_id" readonly="model_id" force_save="1"
+                                   options="{'no_create': True, 'no_open': True}"/>
+                            <field name="res_model" invisible="1"/>
+                            <field name="res_id" invisible="1"/>
+                            <field name="resource_ref" options="{'model_field': 'model_id', 'no_create': True}"
+                                   invisible="not model_id"
+                                   groups="base.group_system,doc_generator.group_doc_generator_manager"/>
+                            <field name="has_write_access" invisible="1"/>
+                        </group>
+                        <notebook>
+                            <page name="version" string="Versioning">
+                                <field name="version_ids" readonly="1">
+                                    <tree>
+                                        <field name="version_number"/>
+                                        <field name="submit_number" string="Revision Number"/>
+                                        <field name="name"/>
+                                        <field name="description"/>
+                                    </tree>
+                                    <form>
+                                        <group>
+                                            <field name="version_number"/>
+                                            <field name="submit_number" string="Revision Number"/>
+                                            <field name="name"/>
+                                            <field name="description"/>
+                                            <field name="attachment_ids" widget="many2many_binary"/>
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="Mapping Datas" name="lines" autofocus="autofocus"
+                                  invisible="not has_write_access"
+                                  groups="base.group_system,doc_generator.group_doc_generator_manager">
+                                <div class="oe_inline contract_description_notification">
+                                    <span>
+                                        Please copy the full text string (include symbol “{{ }}”) in Dynamic Content
+                                        and paste to the according fields of your template document.
+                                    </span>
+                                </div>
+                                <field name="line_ids">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="model_id" column_invisible="1"/>
+                                        <field name="relation_ref" column_invisible="1"/>
+                                        <field name="resource_ref" column_invisible="1"/>
+                                        <field name="state" column_invisible="1"/>
+                                        <field name="field_id" domain="[('model_id', '=', model_id)]"/>
+                                        <field name="scope"/>
+                                        <field name="name"/>
+                                        <field name="key" readonly="1" force_save="1"/>
+                                        <field name="description"/>
+                                        <field name="default_value"/>
+                                        <field name="value"/>
+                                        <button name="action_open_form_view" string="Table View Config" type="object"
+                                                class="oe_highlight" column_invisible="state != 'table'"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Mapping Datas" name="readonly_lines" invisible="not has_write_access">
+                                <div class="oe_inline contract_description_notification">
+                                    <span>
+                                        Please copy the full text string (include symbol “{{ }}”) in Dynamic Content
+                                        and paste to the according fields of your template document.
+                                    </span>
+                                </div>
+                                <field name="readonly_line_ids">
+                                    <tree editable="bottom" create="0" delete="0">
+                                        <field name="sequence" column_invisible="1"/>
+                                        <field name="state" column_invisible="1"/>
+                                        <field name="scope" readonly="1"/>
+                                        <field name="name" readonly="1"/>
+                                        <field name="key" readonly="1"/>
+                                        <field name="description" readonly="1"/>
+                                        <field name="default_value" readonly="1"/>
+                                        <field name="value" readonly="1"/>
+                                        <button name="action_open_form_view" string="Table View Config" type="object"
+                                                class="oe_highlight" column_invisible="state != 'table'"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page name="markup" string="Docusign Markup">
+                                <field name="markup_ids">
+                                    <tree>
+                                        <field name="key"/>
+                                        <field name="description"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="doc_generator_template_readonly_view_form" model="ir.ui.view">
+            <field name="name">doc.generator.template.readonly.view.form</field>
+            <field name="model">doc.generator.template</field>
+            <field name="priority" eval="101"/>
+            <field name="arch" type="xml">
+                <form string="Sample Template" create="0" edit="0" delete="0">
+                    <header>
+                        <button name="button_generate_document" string="Generate" type="object"
+                                class="oe_highlight"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="description"/>
+                            <field name="model_id" options="{'no_create': True, 'no_open': True}"/>
+                        </group>
+                        <notebook>
+                            <page string="Mapping Datas" name="readonly_lines">
+                                <div class="oe_inline contract_description_notification">
+                                    <span>
+                                        Please copy the full text string (include symbol “{{ }}”) in Dynamic Content
+                                        and paste to the according fields of your template document.
+                                    </span>
+                                </div>
+                                <field name="readonly_line_ids">
+                                    <tree editable="bottom" create="0" delete="0">
+                                        <field name="sequence" column_invisible="1"/>
+                                        <field name="state" column_invisible="1"/>
+                                        <field name="scope" readonly="1"/>
+                                        <field name="name" readonly="1"/>
+                                        <field name="key" readonly="1"/>
+                                        <field name="description" readonly="1"/>
+                                        <field name="default_value" readonly="1"/>
+                                        <field name="value" readonly="1"/>
+                                        <button name="action_open_readonly_form_view" string="Table View Config"
+                                                type="object" class="oe_highlight" column_invisible="state != 'table'"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="doc_generator_template_view_tree" model="ir.ui.view">
+            <field name="name">doc.generator.template.view.tree</field>
+            <field name="model">doc.generator.template</field>
+            <field name="arch" type="xml">
+                <tree string="Doc Generator Template">
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="model_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="doc_generator_template_readonly_view_tree" model="ir.ui.view">
+            <field name="name">doc.generator.template.readonly.view.tree</field>
+            <field name="model">doc.generator.template</field>
+            <field name="priority" eval="100"/>
+            <field name="arch" type="xml">
+                <tree string="Sample Template" create="0" edit="0" delete="0">
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="model_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="doc_generator_template_line_view_form" model="ir.ui.view">
+            <field name="name">doc.generator.template.line.view.form</field>
+            <field name="model">doc.generator.template.line</field>
+            <field name="priority" eval="100"/>
+            <field name="arch" type="xml">
+                <form string="Doc Generator Template Line">
+                    <header>
+                        <button name="action_check_value" string="Check Value" type="object" class="oe_highlight"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="id" invisible="1"/>
+                            <field name="state" invisible="1"/>
+                            <field name="res_model" invisible="1"/>
+                            <field name="relation_model" invisible="1"/>
+                            <field name="has_write_access" invisible="1"/>
+                            <field name="field_id" readonly="1" invisible="not has_write_access"/>
+                            <field name="name" readonly="not has_write_access"/>
+                            <field name="key" readonly="1" force_save="1"/>
+                            <field name="description" readonly="not has_write_access"/>
+                            <field name="relation_ref" widget="reference" string="Sample Line" readonly="1"/>
+                        </group>
+                        <notebook>
+                            <page string="Mapping Datas" name="lines" invisible="not has_write_access">
+                                <div class="oe_inline contract_description_notification">
+                                    <span>
+                                        Please copy the full text string (include symbol “{{ }}”) in Table Dynamic
+                                        Content and paste to the according fields of your template document.
+                                    </span>
+                                </div>
+                                <field name="child_ids"
+                                       context="{'default_res_model': relation_model, 'default_parent_id': id}">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="parent_id" column_invisible="1"/>
+                                        <field name="res_model" column_invisible="1"/>
+                                        <field name="field_id" domain="[('model', '=', res_model)]"/>
+                                        <field name="scope"/>
+                                        <field name="name"/>
+                                        <field name="key" readonly="1" force_save="1" string="Table Dynamic Content"/>
+                                        <field name="description"/>
+                                        <field name="default_value"/>
+                                        <field name="value"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Mapping Datas" name="readonly_lines" invisible="not has_write_access">
+                                <div class="oe_inline contract_description_notification">
+                                    <span>
+                                        Please copy the full text string (include symbol “{{ }}”) in Table Dynamic
+                                        Content and paste to the according fields of your template document.
+                                    </span>
+                                </div>
+                                <field name="readonly_child_ids"
+                                       context="{'default_res_model': relation_model, 'default_parent_id': id}">
+                                    <tree editable="bottom" create="0" delete="0">
+                                        <field name="sequence" column_invisible="1"/>
+                                        <field name="scope" readonly="1"/>
+                                        <field name="name" readonly="1"/>
+                                        <field name="key" readonly="1" string="Table Dynamic Content"/>
+                                        <field name="description" readonly="1"/>
+                                        <field name="default_value" readonly="1"/>
+                                        <field name="value" readonly="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="doc_generator_template_line_readonly_view_form" model="ir.ui.view">
+            <field name="name">doc.generator.template.line.readonly.view.form</field>
+            <field name="model">doc.generator.template.line</field>
+            <field name="priority" eval="101"/>
+            <field name="arch" type="xml">
+                <form string="Sample Template Line" create="0" delete="0">
+                    <sheet>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="key" readonly="1"/>
+                            <field name="description" readonly="1"/>
+                        </group>
+                        <notebook>
+                            <page string="Mapping Datas" name="readonly_lines">
+                                <div class="oe_inline contract_description_notification">
+                                    <span>
+                                        Please copy the full text string (include symbol “{{ }}”) in Table Dynamic
+                                        Content and paste to the according fields of your template document.
+                                    </span>
+                                </div>
+                                <field name="readonly_child_ids">
+                                    <tree editable="bottom" create="0" delete="0">
+                                        <field name="sequence" column_invisible="1"/>
+                                        <field name="scope" readonly="1"/>
+                                        <field name="name" readonly="1"/>
+                                        <field name="key" readonly="1" string="Table Dynamic Content"/>
+                                        <field name="description" readonly="1"/>
+                                        <field name="default_value" readonly="1"/>
+                                        <field name="value" readonly="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_doc_generator_sample_template" model="ir.actions.act_window">
+            <field name="name">Sample Template</field>
+            <field name="res_model">doc.generator.template</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('user_id', '=', False)]</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('doc_generator_template_readonly_view_tree')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('doc_generator_template_readonly_view_form')}),
+            ]"/>
+        </record>
+
+        <record id="action_doc_generator_config_sample_template" model="ir.actions.act_window">
+            <field name="name">Config Sample Template</field>
+            <field name="res_model">doc.generator.template</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('user_id', '=', False)]</field>
+        </record>
+
+        <record id="action_doc_generator_my_template" model="ir.actions.act_window">
+            <field name="name">My Template</field>
+            <field name="res_model">doc.generator.template</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('user_id', '=', uid)]</field>
+        </record>
+
+        <menuitem id="menu_doc_generator" name="Doc Generator" sequence="68">
+            <menuitem id="menu_doc_generator_sample_template" name="Sample Template" sequence="2"
+                      action="action_doc_generator_sample_template"/>
+            <menuitem id="menu_doc_generator_config" name="Configuration" sequence="4"
+                      groups="doc_generator.group_doc_generator_manager,base.group_system">
+                <menuitem id="menu_doc_generator_config_sample_template" name="Config Sample Template" sequence="1"
+                          action="action_doc_generator_config_sample_template"/>
+                <menuitem id="menu_doc_generator_config_markup" name="Config Markup" sequence="2"
+                          action="action_doc_generator_markup"/>
+            </menuitem>
+        </menuitem>
+    </data>
+</odoo>

@@ -1,0 +1,31 @@
+<odoo>
+    <data>
+        <record id="doc_generator_template_submit_wizard_view_form" model="ir.ui.view">
+            <field name="name">doc.generator.template.submit.wizard.form</field>
+            <field name="model">doc.generator.template.submit.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Submit Template">
+                    <group>
+                        <field name="template_id" invisible="1"/>
+                        <label for="major_version_number" string="Version"/>
+                        <div class="d-flex">
+                            <div style="width:40px;">
+                                <field name="major_version_number" nolabel="1" options="{'type': 'number', 'step': 1}"/>
+                            </div>
+                            <span>.</span>
+                            <div style="width:40px;">
+                                <field name="minor_version_number" nolabel="1" options="{'type': 'number', 'step': 1}"/>
+                            </div>
+                        </div>
+                        <field name="submit_number" readonly="1" force_save="1"/>
+                        <field name="description"/>
+                    </group>
+                    <footer>
+                        <button name="submit_template" string="Submit" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

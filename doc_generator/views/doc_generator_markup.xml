@@ -1,0 +1,41 @@
+<odoo>
+    <data>
+        <record id="doc_generator_markup_form_view" model="ir.ui.view">
+            <field name="name">doc.generator.markup.form</field>
+            <field name="model">doc.generator.markup</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="key"/>
+                            <field name="description"/>
+                            <field name="text"/>
+                            <field name="style"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="doc_generator_markup_tree_view" model="ir.ui.view">
+            <field name="name">doc.generator.markup.tree</field>
+            <field name="model">doc.generator.markup</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="name"/>
+                    <field name="key"/>
+                    <field name="description"/>
+                    <field name="text"/>
+                    <field name="style"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_doc_generator_markup" model="ir.actions.act_window">
+            <field name="name">Markup</field>
+            <field name="res_model">doc.generator.markup</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>
