@@ -190,7 +190,8 @@ class ApprovalApprover(models.Model):
                 else:
                     sequence = 80
                 vals.update({
-                    'sequence': sequence
+                    'sequence': sequence,
+                    'required': True
                 })
             if user.has_group('dpt_security.group_dpt_ke_toan_truong'):
                 if self.request_id.payment_id.type_id.is_ke_toan_truong:
@@ -198,7 +199,8 @@ class ApprovalApprover(models.Model):
                 else:
                     sequence = 90
                 vals.update({
-                    'sequence': sequence
+                    'sequence': sequence,
+                    'required': True
                 })
         return super(ApprovalApprover, self).write(vals)
 
@@ -212,7 +214,8 @@ class ApprovalApprover(models.Model):
                 else:
                     sequence = 80
                 vals.update({
-                    'sequence': sequence
+                    'sequence': sequence,
+                    'required': True
                 })
             if user.has_group('dpt_security.group_dpt_ke_toan_truong'):
                 if self.request_id.payment_id.type_id.is_ke_toan_truong:
@@ -220,6 +223,7 @@ class ApprovalApprover(models.Model):
                 else:
                     sequence = 90
                 vals.update({
-                    'sequence': sequence
+                    'sequence': sequence,
+                    'required': True
                 })
         return super(ApprovalApprover, self).create(vals)
