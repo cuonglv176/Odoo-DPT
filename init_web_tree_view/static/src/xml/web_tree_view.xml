@@ -3,12 +3,15 @@
 
 <t t-name="init_web_tree_view.TreeView" owl="1">
     <Layout className="'o_init_tree_view'" display="props.display">
-        <t t-component="props.Renderer" t-props="rendererProps" />
+        <TreeRenderer
+            fields="props.fields"
+            children_field="props.archInfo.fieldParent"
+            model="props.resModel"
+            arch="props.arch"
+            context="props.context || {}"
+            action="props.action"
+        />
     </Layout>
-</t>
-
-<t t-name="init_web_tree_view.TreeController" owl="1">
-    <div class="o_tree_controller" />
 </t>
 
 <t t-name="init_web_tree_view.TreeRenderer" owl="1">
@@ -28,6 +31,10 @@
             </tbody>
         </table>
     </div>
+</t>
+
+<t t-name="init_web_tree_view.TreeController" owl="1">
+    <div class="o_tree_controller" />
 </t>
 
 </templates>
