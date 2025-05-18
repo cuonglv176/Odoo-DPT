@@ -106,8 +106,7 @@
                   decoration-danger="state == 'expired'"
                   decoration-success="state == 'active'"
                   decoration-warning="state == 'pending'"
-                  decoration-info="state == 'suspended'"
-                  decoration-muted="state == 'rejected'">
+                  decoration-info="state == 'suspended'">
                 <field name="code"/>
                 <field name="name"/>
                 <field name="date_start"/>
