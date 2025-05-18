@@ -37,6 +37,8 @@ class DPTService(models.Model):
     _description = 'DPT Service Management'
     _order = 'create_date DESC'
 
+    parent_id = fields.Many2one('dpt.service.management', string='Parent', index=True, tracking=True)
+    child_ids = fields.One2many('dpt.service.management', 'parent_id', string='Childs')
     code = fields.Char(string='Service Code', default='NEW', copy=False, index=True, tracking=True)
     name = fields.Char(string='Service Name', required=True, tracking=True)
     service_type_id = fields.Many2one('dpt.service.management.type', string='Service Type', index=True, tracking=True)

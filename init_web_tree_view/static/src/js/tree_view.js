@@ -1,59 +1,68 @@
-odoo.define('init_web_tree_view.TreeView', function (require) {
-  "use strict";
+/** @odoo-module **/
 
-  var core = require('web.core');
-  var AbstractView = require('web.AbstractView');
-  var BasicView = require('web.BasicView');
+import { registry } from "@web/core/registry";
+import { _t } from "@web/core/l10n/translation";
+import { standardViewProps } from "@web/views/standard_view_props";
+import { useService } from "@web/core/utils/hooks";
+import { Component, onWillStart } from "@odoo/owl";
+import { TreeModel } from "./tree_model";
+import { TreeRenderer } from "./tree_renderer";
+import { TreeController } from "./tree_controller";
+import { Layout } from "@web/search/layout";
 
-  var TreeModel = require('init_web_tree_view.TreeModel');
-  var TreeRenderer = require('init_web_tree_view.TreeRenderer');
-  var TreeController = require('init_web_tree_view.TreeController');
+export class InitTreeView extends Component {
+    setup() {
+        this.orm = useService("orm");
+        this.actionService = useService("action");
+        this.init_tree = false;
 
-  var view_registry = require('web.view_registry');
+        const { arch, fields, resModel } = this.props;
+        const attrs = arch.attrs || {};
 
-  var _lt = core._lt;
+        this.model = new TreeModel(this.env, {
+            resModel: resModel,
+            fields: fields,
+            archInfo: this.props.archInfo,
+            domain: this.props.domain || [],
+            context: this.props.context || {},
+        });
 
-  var InitTreeView = AbstractView.extend({
-    display_name: _lt('INIT Tree View'),
-    icon: 'fa-align-left',
-    searchable: false,
-    withSearchBar: false,
-    withControlPanel: true,
-    withSearchPanel: false,
-    viewType: 'init_tree',
-    searchMenuTypes: [],
+        this.controller = new TreeController(this.env, {
+            model: this.model,
+            resModel: resModel,
+            actionId: this.props.actionId,
+            context: this.props.context || {},
+            domain: this.props.domain || [],
+        });
 
-    config: _.extend({}, BasicView.prototype.config, {
-      Model: TreeModel,
-      Renderer: TreeRenderer,
-      Controller: TreeController,
-    }),
+        this.renderer = new TreeRenderer(this.env, {
+            fields: fields,
+            children_field: this.props.archInfo.fieldParent,
+            model: resModel,
+            arch: arch,
+            context: this.props.context || {},
+            action: this.props.action,
+        });
 
-    /**
-     * @override
-     * @param {Object} viewInfo
-     * @param {Object} params
-     */
-    init: function (viewInfo, params) {
-      this._super.apply(this, arguments);
-      var self = this;
-      this.init_tree = false;
-      var attrs = this.arch.attrs;
-      this.fields = viewInfo.fields;
-      this.modelName = this.controllerParams.modelName;
-      this.action = params.action;
+        onWillStart(async () => {
+            await this.model.load();
+        });
+    }
+}
 
-      this.rendererParams.fields = this.fields;
-      this.rendererParams.children_field = viewInfo.field_parent;
-      this.rendererParams.model = this.modelName;
-      this.rendererParams.arch = this.arch;
-      this.rendererParams.context = params.context;
-      this.rendererParams.action = params.action;
-    },
+InitTreeView.template = "init_web_tree_view.TreeView";
+InitTreeView.components = { Layout };
+InitTreeView.props = {
+    ...standardViewProps,
+};
 
-  });
+InitTreeView.type = "init_tree";
+InitTreeView.display_name = _t("INIT Tree View");
+InitTreeView.icon = "fa-align-left";
+InitTreeView.searchable = false;
+InitTreeView.withSearchBar = false;
+InitTreeView.withControlPanel = true;
+InitTreeView.withSearchPanel = false;
+InitTreeView.multiRecord = true;
 
-  view_registry.add('init_tree', InitTreeView);
-  return InitTreeView;
-
-});
+registry.category("views").add("init_tree", InitTreeView);

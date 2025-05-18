@@ -107,10 +107,27 @@
         </field>
     </record>
 
+     <record id="service_hierarchy_view" model="ir.ui.view">
+        <field name="name">dpt.service.management.view</field>
+        <field name="model">dpt.service.management</field>
+        <field name="field_parent">child_ids</field>
+        <field name="arch" type="xml">
+            <init_tree string="Service">
+               <field name="code"/>
+                <field name="name"/>
+                <field name="service_type_id"/>
+                <field name="department_id"/>
+                <field name="cost_account_id"/>
+                <field name="revenue_account_id"/>
+                <field name="steps_count"/>
+            </init_tree>
+        </field>
+    </record>
+
     <record id="action_service_management" model="ir.actions.act_window">
         <field name="name">Services</field>
         <field name="res_model">dpt.service.management</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,init_tree,form</field>
     </record>
 
 

@@ -1,21 +1,21 @@
-odoo.define('init_web_tree_view.TreeController', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var AbstractController = require('web.AbstractController');
-var core = require('web.core');
-var _t = core._t;
-var QWeb = core.qweb;
+import { Component } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
-var TreeController = AbstractController.extend({
-    custom_events: {
-    },
-    init: function (parent, model, renderer, params) {
-        this._super.apply(this, arguments);
-        this.domain = params.domain || [];
-        this.context = params.context;
-    },
-});
+export class TreeController extends Component {
+    setup() {
+        this.actionService = useService("action");
+        this.domain = this.props.domain || [];
+        this.context = this.props.context || {};
+    }
+}
 
-return TreeController;
-
-});
+TreeController.template = "init_web_tree_view.TreeController";
+TreeController.props = {
+    model: Object,
+    resModel: String,
+    actionId: { type: Number, optional: true },
+    context: { type: Object, optional: true },
+    domain: { type: Array, optional: true },
+};

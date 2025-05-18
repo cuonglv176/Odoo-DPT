@@ -1,42 +1,44 @@
-odoo.define('init_web_tree_view.TreeModel', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var AbstractModel = require('web.AbstractModel');
+import { reactive } from "@odoo/owl";
 
-var TreeModel = AbstractModel.extend({
-     init: function () {
-            this._super.apply(this, arguments);
-        },
-    load: function (params) {
-        this.modelName = params.modelName;
-        this.fieldNames = params.fieldNames;
-        this.res_id = params.res_id;
-        this.data = {
-            domain: params.domain,
-            context: params.context,
-        };
-        return this._fetch_data_for_tree();
-    },
-    _fetch_data_for_tree: function () {
-        var domain = [['parent_id', '=', false]];
-        domain.push(...this.data.domain);
-        var self = this;
-            return self._rpc({
-                model: self.modelName,
-                method: 'search_read',
-                context: self.data.context,
-                fields: [],
-                domain: domain,
-            })
-            .then(function (records) {
-                self.data.data = records;
-            });
-    },
-    reload: function () {
-        return this._fetch_data_for_tree();
-    },
+export class TreeModel {
+    constructor(env, params) {
+        this.env = env;
+        this.orm = env.services.orm;
+        this.resModel = params.resModel;
+        this.fieldNames = params.fieldNames || [];
+        this.resId = params.resId;
+        this.data = reactive({
+            domain: params.domain || [],
+            context: params.context || {},
+            data: [],
+        });
+    }
 
-});
+    async load() {
+        return this._fetchDataForTree();
+    }
 
-return TreeModel;
-});
+    async _fetchDataForTree() {
+        const domain = [['parent_id', '=', false], ...this.data.domain];
+
+        try {
+            const records = await this.orm.searchRead(
+                this.resModel,
+                domain,
+                [],
+                { context: this.data.context }
+            );
+            this.data.data = records;
+            return this.data;
+        } catch (error) {
+            console.error("Error fetching tree data:", error);
+            return { data: [] };
+        }
+    }
+
+    async reload() {
+        return this._fetchDataForTree();
+    }
+}
