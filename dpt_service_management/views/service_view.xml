@@ -110,9 +110,8 @@
      <record id="service_hierarchy_view" model="ir.ui.view">
         <field name="name">dpt.service.management.view</field>
         <field name="model">dpt.service.management</field>
-        <field name="fieldParent">child_ids</field>
         <field name="arch" type="xml">
-            <init_tree string="Service">
+            <init_tree string="Service" fieldParent="child_ids">
                <field name="code"/>
                 <field name="name"/>
                 <field name="service_type_id"/>
