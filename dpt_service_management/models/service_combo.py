@@ -89,7 +89,7 @@ class DPTServiceCombo(models.Model):
             raise UserError(_('Đã tồn tại yêu cầu phê duyệt cho gói combo này.'))
 
         # Tìm loại phê duyệt "Duyệt combo dịch vụ"
-        approval_type = self.env['approval.category'].search([('code', '=', 'service_combo_approval')], limit=1)
+        approval_type = self.env['approval.category'].search([('sequence_code', '=', 'SCM')], limit=1)
         if not approval_type:
             raise UserError(_('Chưa cấu hình loại phê duyệt "Duyệt combo dịch vụ".'))
 

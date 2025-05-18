@@ -4,7 +4,6 @@
         <!-- Tạo loại phê duyệt mới cho Combo dịch vụ -->
         <record id="approval_category_service_combo" model="approval.category">
             <field name="name">Duyệt combo dịch vụ</field>
-            <field name="code">service_combo_approval</field>
             <field name="sequence_code">SCM</field>
             <field name="description">Phê duyệt gói combo dịch vụ</field>
             <field name="approval_type">multiple</field>
