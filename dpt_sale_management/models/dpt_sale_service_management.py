@@ -26,6 +26,18 @@ class DPTSaleServiceManagement(models.Model):
     compute_uom_id = fields.Many2one('uom.uom', 'Compute Unit')
     compute_value = fields.Float('Compute Value', default=1)
     note = fields.Text(string='Note')
+    combo_id = fields.Many2one('dpt.service.combo', string='Nguồn combo')
+    is_template = fields.Boolean('Is Template', default=False,
+                                 help='Đánh dấu dịch vụ này là template trong combo')
+    price_status = fields.Selection([
+        ('no_price', 'No Price'),
+        ('wait_price', 'Wait Price'),
+        ('quoted', 'Quoted'),
+        ('wait_approve', 'Wait Approve'),
+        ('approved', 'Approved'),
+        ('approved_approval', 'Approved Approval'),
+        ('calculated', 'Calculated')
+    ], string='Price Status', default='no_price', tracking=True)
 
     @api.onchange('price')
     def onchange_check_price(self):
@@ -63,12 +75,11 @@ class DPTSaleServiceManagement(models.Model):
         return res
 
     def action_check_status_sale_order(self):
-        if self.sale_id.locked:
+        if self.sale_id and self.sale_id.locked:
             raise UserError(_(f'Đơn hàng {self.sale_id.name} đang khoá, vui lòng mở khoá trước khi update dịch vụ!!!.'))
 
     def action_confirm_quote(self):
-
-        if self.sale_id.state in ('sent', 'sale'):
+        if not self.sale_id or self.sale_id.state in ('sent', 'sale'):
             return
         a = 1
         # a = 0
@@ -130,4 +141,18 @@ class DPTSaleServiceManagement(models.Model):
             'price_in_pricelist': 0,
             'compute_value': 1,
             'compute_uom_id': None,
+        })
+
+    def copy_to_sale_order(self, sale_order_id):
+        """
+        Sao chép dịch vụ template vào sale order
+        """
+        if not self.is_template:
+            return False
+
+        return self.copy({
+            'sale_id': sale_order_id,
+            'is_template': False,
+            'combo_id': self.combo_id.id,
+            'price_status': 'calculated',
         })

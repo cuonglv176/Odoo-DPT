@@ -17,7 +17,6 @@ SALE_ORDER_STATE = [
     ('cancel', "Cancelled"),
 ]
 
-
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
@@ -28,6 +27,8 @@ class SaleOrder(models.Model):
         readonly=True, copy=False, index=True,
         tracking=3,
         default='draft')
+    service_combo_ids = fields.Many2many('dpt.service.combo', string='Combo dịch vụ',
+                                         tracking=True)
     sale_service_ids = fields.One2many('dpt.sale.service.management', 'sale_id', string='Service', tracking=True,
                                        inverse='onchange_sale_service_ids')
     fields_ids = fields.One2many('dpt.sale.order.fields', 'sale_id', string='Fields')
@@ -48,6 +49,47 @@ class SaleOrder(models.Model):
     times_of_quotation = fields.Integer(default=0, string='Số lần báo giá')
     is_quotation = fields.Boolean(default=False, compute='compute_show_is_quotation')
     active = fields.Boolean('Active', default=True)
+
+    @api.onchange('service_combo_ids')
+    def onchange_service_combo_ids(self):
+        """Khi chọn combo dịch vụ, tự động thêm các dịch vụ vào sale_service_ids"""
+        if not self.service_combo_ids:
+            return
+
+        # Lưu lại các dịch vụ không thuộc combo nào
+        existing_services = self.sale_service_ids.filtered(lambda s: not s.combo_id)
+
+        # Xóa tất cả dịch vụ có nguồn gốc từ combo
+        self.sale_service_ids = [(5, 0, 0)]
+
+        # Thêm lại các dịch vụ không thuộc combo
+        new_services = []
+        for service in existing_services:
+            new_services.append((0, 0, {
+                'service_id': service.service_id.id,
+                'price': service.price,
+                'uom_id': service.uom_id.id,
+                'qty': service.qty,
+                'price_status': service.price_status,
+                'department_id': service.department_id.id,
+            }))
+
+        # Thêm các dịch vụ từ combo
+        combo_services = []
+        for combo in self.service_combo_ids:
+            for service_template in combo.service_template_ids:
+                combo_services.append((0, 0, {
+                    'service_id': service_template.service_id.id,
+                    'price': service_template.price,
+                    'uom_id': service_template.uom_id.id,
+                    'qty': service_template.qty,
+                    'combo_id': combo.id,
+                    'price_status': 'calculated',
+                    'department_id': service_template.department_id.id,
+                }))
+
+        # Gán tất cả dịch vụ vào sale_service_ids
+        self.sale_service_ids = new_services + combo_services
 
     @api.depends('sale_service_ids', 'sale_service_ids.service_id', 'sale_service_ids.service_id.pricelist_item_ids')
     def compute_show_is_quotation(self):
@@ -145,79 +187,6 @@ class SaleOrder(models.Model):
             #     continue
             # else:
             #     raise ValidationError(_("Please fill required fields!!!"))
-
-    # @api.onchange('sale_service_ids')
-    # def onchange_sale_service_ids(self):
-    #     val = []
-    #     sequence = 0
-    #     list_exist = self.env['sale.order'].browse(self.origin).fields_ids
-    #     list_onchange = self.fields_ids
-    #     list_sale_service_id = []
-    #     service_id = []
-    #     fields_id = []
-    #     for sale_service_id in self.sale_service_ids:
-    #         # if sale_service_id.service_id.id in list_sale_service_id:
-    #         #     continue
-    #         for required_fields_id in sale_service_id.service_id.required_fields_ids:
-    #             if sale_service_id.id in list_sale_service_id and required_fields_id.id in fields_id:
-    #                 continue
-    #             if required_fields_id.id in list_exist.fields_id.ids and sale_service_id.id in list_exist.sale_service_id.ids:
-    #                 for field_data in list_exist:
-    #                     if field_data.fields_id.id == required_fields_id.id:
-    #                         val.append({
-    #                             'sequence': 1 if field_data.type == 'required' else 0,
-    #                             'fields_id': required_fields_id.id,
-    #                             'sale_id': self.id,
-    #                             'value_char': field_data.value_char,
-    #                             'sale_service_id': sale_service_id.id,
-    #                             'value_integer': field_data.value_integer,
-    #                             'value_date': field_data.value_date,
-    #                             'selection_value_id': field_data.selection_value_id.id,
-    #                         })
-    #             elif required_fields_id.id in list_onchange.fields_id.ids:
-    #                 for field_data in self.fields_ids:
-    #                     if field_data.fields_id.id == required_fields_id.id:
-    #                         val.append({
-    #                             'sequence': 1 if field_data.type == 'required' else 0,
-    #                             'fields_id': required_fields_id.id,
-    #                             'sale_id': self.id,
-    #                             'sale_service_id': sale_service_id.id,
-    #                             'value_char': field_data.value_char,
-    #                             'value_integer': field_data.value_integer,
-    #                             'value_date': field_data.value_date,
-    #                             'selection_value_id': field_data.selection_value_id.id,
-    #
-    #                         })
-    #             if val:
-    #                 result = [item for item in val if item['fields_id'] == required_fields_id.id]
-    #                 if not result:
-    #                     x = {
-    #                         'sequence': 1 if required_fields_id.type == 'required' else 0,
-    #                         'fields_id': required_fields_id.id,
-    #                     }
-    #                     default_value = required_fields_id.get_default_value(so=self)
-    #                     if default_value:
-    #                         x.update(default_value)
-    #                     val.append(x)
-    #             else:
-    #                 x = {
-    #                     'sequence': 1 if required_fields_id.type == 'required' else 0,
-    #                     'fields_id': required_fields_id.id,
-    #                 }
-    #                 default_value = required_fields_id.get_default_value(so=self)
-    #                 if default_value:
-    #                     x.update(default_value)
-    #                 val.append(x)
-    #             list_sale_service_id.append(sale_service_id.id)
-    #             service_id.append(sale_service_id.service_id.id)
-    #             fields_id.append(required_fields_id.id)
-    #     if val:
-    #         val = sorted(val, key=lambda x: x["sequence"], reverse=True)
-    #         self.fields_ids = None
-    #         self.fields_ids = [(0, 0, item) for item in val]
-    #     if not self.sale_service_ids:
-    #         self.fields_ids = [(5, 0, 0)]
-    #     self.onchange_get_data_required_fields()
 
     @api.onchange('sale_service_ids')
     def onchange_sale_service_ids(self):
@@ -675,80 +644,3 @@ class SaleOrder(models.Model):
             'url': '/web/content/' + str(file_xls.id) + '?download=true',
             'target': 'new',
         }
-
-
-class SaleOrderField(models.Model):
-    _name = 'dpt.sale.order.fields'
-
-    def _default_sequence(self):
-        if self.type == 'required':
-            return 1
-        return 0
-
-    sequence = fields.Integer(default=_default_sequence, compute='_compute_sequence', store=True)
-    sale_id = fields.Many2one('sale.order', string='Sale Order')
-    service_id = fields.Many2one(related='fields_id.service_id')
-    fields_id = fields.Many2one('dpt.service.management.required.fields', string='Fields')
-    value_char = fields.Char(string='Value Char')
-    value_integer = fields.Float(string='Value Integer')
-    value_date = fields.Date(string='Value Date')
-    selection_value_id = fields.Many2one('dpt.sale.order.fields.selection', string='Selection Value')
-    type = fields.Selection(selection=[
-        ("required", "Required"),
-        ("options", "Options")
-    ], string='Type Fields', default='options', related='fields_id.type')
-    fields_type = fields.Selection([
-        ('char', 'Char'),
-        ('integer', 'Integer'),
-        ('date', 'Date'),
-        ('selection', 'Selection'),
-    ], string='Fields type', default='char', related='fields_id.fields_type')
-    using_calculation_price = fields.Boolean(related='fields_id.using_calculation_price')
-    uom_id = fields.Many2one(related="fields_id.uom_id")
-    sale_service_id = fields.Many2one('dpt.sale.service.management')
-    sale_service_id_key = fields.Integer(related='sale_service_id.id')
-
-    @api.onchange('sale_id')
-    def onchange_get_data_required_fields(self):
-        if self.sale_id.partner_id.service_field_ids:
-            if self.fields_id.is_template:
-                for partner_service_field_id in self.sale_id.partner_id.service_field_ids:
-                    if self.fields_id.code == partner_service_field_id.code:
-                        self.value_char = partner_service_field_id.value_char
-                        self.value_integer = partner_service_field_id.value_integer
-                        self.value_date = partner_service_field_id.value_date
-                        self.selection_value_id = partner_service_field_id.selection_value_id.id
-
-    def check_required_fields(self):
-        for r in self:
-            if r.env.context.get('onchange_sale_service_ids', False):
-                continue
-            if r.fields_id.type == 'required' and r.value_integer <= 0 and r.fields_type == 'integer':
-                raise ValidationError(_("Please fill required fields: %s!!!") % r.fields_id.display_name)
-            if r.fields_id.type == 'required' and r.value_char == '' and r.fields_type == 'char':
-                raise ValidationError(_("Please fill required fields: %s!!!") % r.fields_id.display_name)
-            if r.fields_id.type == 'required' and not r.value_date and r.fields_type == 'date':
-                raise ValidationError(_("Please fill required fields: %s!!!") % r.fields_id.display_name)
-            if r.fields_id.type == 'required' and not r.selection_value_id and r.fields_type == 'selection':
-                raise ValidationError(_("Please fill required fields: %s!!!") % r.fields_id.display_name)
-
-    def write(self, vals):
-        res = super(SaleOrderField, self).write(vals)
-        if 'value_char' in vals or 'value_integer' in vals or 'value_date' in vals:
-            # self.sale_id.action_calculation()
-            self.check_required_fields()
-        return res
-
-    @api.model
-    def create(self, vals_list):
-        res = super(SaleOrderField, self).create(vals_list)
-        res.check_required_fields()
-        return res
-
-    @api.depends('fields_id', 'fields_id.type')
-    def _compute_sequence(self):
-        for r in self:
-            if r.type == 'required':
-                r.sequence = 1
-            else:
-                r.sequence = 0
