@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_service_combo_form" model="ir.ui.view">
+        <field name="name">dpt.service.combo.form</field>
+        <field name="model">dpt.service.combo</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_activate" string="Kích hoạt" type="object" class="btn-primary" 
+                            attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                    <button name="action_draft" string="Chuyển về nháp" type="object" 
+                            attrs="{'invisible': [('state', 'in', ['draft', 'expired'])]}"/>
+                    <button name="action_cancel" string="Hủy" type="object" 
+                            attrs="{'invisible': [('state', 'in', ['cancelled', 'expired'])]}"/>
+                    <button name="action_create_new_version" string="Tạo phiên bản mới" type="object" 
+                            class="btn-secondary" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,active,expired,cancelled"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Tên gói combo"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="version"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                        </group>
+                        <group>
+                            <field name="price" widget="monetary"/>
+                            <field name="currency_id" options="{'no_create': True}"/>
+                            <field name="total_services"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Mô tả" name="description">
+                            <field name="description" placeholder="Mô tả chi tiết về gói combo dịch vụ..."/>
+                        </page>
+                        <page string="Dịch vụ trong gói" name="services">
+                            <field name="service_line_ids" widget="one2many">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="service_id" domain="[('child_ids', '=', False)]"/>
+                                    <field name="description"/>
+                                    <field name="quantity"/>
+                                    <field name="uom_id"/>
+                                    <field name="price_unit"/>
+                                    <field name="discount"/>
+                                    <field name="price_subtotal" sum="Tổng"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_service_combo_tree" model="ir.ui.view">
+        <field name="name">dpt.service.combo.tree</field>
+        <field name="model">dpt.service.combo</field>
+        <field name="arch" type="xml">
+            <tree decoration-muted="state == 'cancelled'" decoration-danger="state == 'expired'" decoration-success="state == 'active'">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="version"/>
+                <field name="price" sum="Tổng"/>
+                <field name="currency_id"/>
+                <field name="total_services"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_service_combo_search" model="ir.ui.view">
+        <field name="name">dpt.service.combo.search</field>
+        <field name="model">dpt.service.combo</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <filter string="Đang hoạt động" name="active" domain="[('state', '=', 'active')]"/>
+                <filter string="Nháp" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Hết hạn" name="expired" domain="[('state', '=', 'expired')]"/>
+                <filter string="Đã hủy" name="cancelled" domain="[('state', '=', 'cancelled')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Trạng thái" name="groupby_state" context="{'group_by': 'state'}"/>
+                    <filter string="Phiên bản" name="groupby_version" context="{'group_by': 'version'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_service_combo" model="ir.actions.act_window">
+        <field name="name">Gói combo dịch vụ</field>
+        <field name="res_model">dpt.service.combo</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo gói combo dịch vụ đầu tiên!
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_service_combo" 
+              name="Gói combo dịch vụ" 
+              parent="sale.menu_sales_config" 
+              action="action_service_combo" 
+              sequence="16"/>
+</odoo>

@@ -12,6 +12,7 @@
         'security/ir.model.access.csv',
         'data/service_sequence.xml',
         'views/service_view.xml',
+        'views/service_combo_view.xml',
         'views/product.xml',
     ],
     'installable': True,
