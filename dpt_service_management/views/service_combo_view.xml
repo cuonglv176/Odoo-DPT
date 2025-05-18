@@ -33,6 +33,7 @@
                             <field name="price" widget="monetary"/>
                             <field name="currency_id" options="{'no_create': True}"/>
                             <field name="total_services"/>
+                            <field name="total_price" widget="monetary"/>
                             <field name="active" widget="boolean_toggle"/>
                         </group>
                     </group>
@@ -41,16 +42,15 @@
                             <field name="description" placeholder="Mô tả chi tiết về gói combo dịch vụ..."/>
                         </page>
                         <page string="Dịch vụ trong gói" name="services">
-                            <field name="service_line_ids" widget="one2many">
-                                <tree editable="bottom">
-                                    <field name="sequence" widget="handle"/>
-                                    <field name="service_id" domain="[('child_ids', '=', False)]"/>
-                                    <field name="description"/>
-                                    <field name="quantity"/>
+                            <field name="service_ids" domain="[('child_ids', '=', False)]">
+                                <tree>
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                    <field name="service_type_id"/>
+                                    <field name="department_id"/>
+                                    <field name="price" sum="Tổng"/>
+                                    <field name="currency_id"/>
                                     <field name="uom_id"/>
-                                    <field name="price_unit"/>
-                                    <field name="discount"/>
-                                    <field name="price_subtotal" sum="Tổng"/>
                                 </tree>
                             </field>
                         </page>
@@ -76,6 +76,7 @@
                 <field name="date_end"/>
                 <field name="version"/>
                 <field name="price" sum="Tổng"/>
+                <field name="total_price" sum="Tổng giá trị"/>
                 <field name="currency_id"/>
                 <field name="total_services"/>
                 <field name="state"/>
