@@ -61,6 +61,8 @@ class DPTService(models.Model):
     auo_complete = fields.Boolean('Auto Complete', default=False)
     product_id = fields.Many2one('product.product', string='Product')
     # image = fields.Image("Image", required=True, tracking=True)
+    visible_to_sale_cs = fields.Boolean('Hiển thị với CS, Sale', default=True,
+                                       help='Khi tắt, dịch vụ này chỉ hiển thị cho vận hành và kế toán')
 
     _sql_constraints = [
         ('code_name_index', 'CREATE INDEX code_name_index ON dpt_service_management (code, name)',

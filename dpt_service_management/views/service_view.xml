@@ -15,6 +15,7 @@
                         <group>
                             <field name="code"/>
                             <field name="parent_id" string="Dịch vụ tầng trên"/>
+                            <field name="visible_to_sale_cs" widget="boolean_toggle"/>
                             <field name="service_type_id"/>
                             <field name="cost_account_id"/>
                             <field name="revenue_account_id"/>
@@ -145,7 +146,6 @@
 
     <menuitem id="service_management_root_menu" name="Dịch Vụ"
               web_icon="dpt_service_management,static/description/icon.png"/>
-
 
 
     <menuitem id="submenu_service_management" name="Services" parent="service_management_root_menu"

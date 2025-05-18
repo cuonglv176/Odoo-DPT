@@ -11,6 +11,7 @@
     'data': [
         'security/ir.model.access.csv',
         'data/service_sequence.xml',
+        'security/security.xml',
         'data/approval_category_data.xml',  # Thêm dữ liệu cấu hình approval
         'views/service_view.xml',
         'views/service_combo_view.xml',
