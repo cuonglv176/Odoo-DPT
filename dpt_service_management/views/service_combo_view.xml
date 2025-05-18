@@ -6,17 +6,40 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="action_activate" string="Kích hoạt" type="object" class="btn-primary" 
-                            invisible="state != 'draft'"/>
+                    <!-- Các nút theo luồng mới -->
+                    <button name="action_submit_approval" string="Gửi phê duyệt" type="object" class="btn-primary"
+                            invisible="state != 'draft'" />
+                    <button name="action_activate" string="Phê duyệt" type="object" class="btn-primary"
+                            invisible="state != 'pending' or not approver_ids or env.user.id not in approver_ids"
+                            groups="base.group_system" />
+                    <button name="action_reject" string="Từ chối" type="object" class="btn-danger"
+                            invisible="state != 'pending' or not approver_ids or env.user.id not in approver_ids"
+                            groups="base.group_system" />
+                    <button name="action_suspend" string="Tạm dừng" type="object"
+                            invisible="state != 'active'" />
+                    <button name="action_resume" string="Kích hoạt lại" type="object" class="btn-primary"
+                            invisible="state != 'suspended'" />
                     <button name="action_draft" string="Chuyển về nháp" type="object"
-                            invisible="state in ['draft', 'expired']"/>
+                            invisible="state not in ['rejected', 'cancelled']" />
                     <button name="action_cancel" string="Hủy" type="object"
-                            invisible="state in ['cancelled', 'expired']"/>
+                            invisible="state in ['cancelled', 'expired', 'draft']" />
                     <button name="action_create_new_version" string="Tạo phiên bản mới" type="object"
-                            class="btn-secondary" invisible="state == 'draft'"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,active,expired,cancelled"/>
+                            class="btn-secondary" invisible="state == 'draft'" />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,pending,active,suspended,expired,cancelled" />
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_approval" type="object" class="oe_stat_button" icon="fa-thumbs-up"
+                                invisible="not approval_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Phê duyệt</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="alert alert-warning" role="alert"
+                         attrs="{'invisible': [('rejection_reason', '=', False)]}">
+                        <field name="rejection_reason" readonly="1"/>
+                    </div>
                     <div class="oe_title">
                         <h1>
                             <field name="name" placeholder="Tên gói combo"/>
@@ -28,6 +51,8 @@
                             <field name="version"/>
                             <field name="date_start"/>
                             <field name="date_end"/>
+                            <field name="approver_ids" widget="many2many_tags" readonly="1"
+                                   attrs="{'invisible': [('state', '!=', 'pending')]}"/>
                         </group>
                         <group>
                             <field name="price" widget="monetary"/>
@@ -35,6 +60,7 @@
                             <field name="total_services"/>
                             <field name="total_price" widget="monetary"/>
                             <field name="active" widget="boolean_toggle"/>
+                            <field name="approval_id" invisible="1"/>
                         </group>
                     </group>
                     <notebook>
@@ -54,6 +80,13 @@
                                 </tree>
                             </field>
                         </page>
+                        <page string="Thông tin phê duyệt" name="approval_info"
+                              attrs="{'invisible': [('approval_date', '=', False)]}">
+                            <group>
+                                <field name="approval_date"/>
+                                <field name="approved_by"/>
+                            </group>
+                        </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
@@ -69,7 +102,12 @@
         <field name="name">dpt.service.combo.tree</field>
         <field name="model">dpt.service.combo</field>
         <field name="arch" type="xml">
-            <tree decoration-muted="state == 'cancelled'" decoration-danger="state == 'expired'" decoration-success="state == 'active'">
+            <tree decoration-muted="state == 'cancelled'"
+                  decoration-danger="state == 'expired'"
+                  decoration-success="state == 'active'"
+                  decoration-warning="state == 'pending'"
+                  decoration-info="state == 'suspended'"
+                  decoration-muted="state == 'rejected'">
                 <field name="code"/>
                 <field name="name"/>
                 <field name="date_start"/>
@@ -93,6 +131,9 @@
                 <field name="code"/>
                 <filter string="Đang hoạt động" name="active" domain="[('state', '=', 'active')]"/>
                 <filter string="Nháp" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Chờ phê duyệt" name="pending" domain="[('state', '=', 'pending')]"/>
+                <filter string="Bị từ chối" name="rejected" domain="[('state', '=', 'rejected')]"/>
+                <filter string="Tạm dừng" name="suspended" domain="[('state', '=', 'suspended')]"/>
                 <filter string="Hết hạn" name="expired" domain="[('state', '=', 'expired')]"/>
                 <filter string="Đã hủy" name="cancelled" domain="[('state', '=', 'cancelled')]"/>
                 <group expand="0" string="Group By">
