@@ -1,25 +1,23 @@
 from odoo import models, fields, api, _
-from datetime import datetime
 from odoo.exceptions import ValidationError
-import xlrd, xlwt
-import xlsxwriter
-import base64
-import io as stringIOModule
-from odoo.modules.module import get_module_resource
 
 
 class ServiceCombo(models.Model):
-    _name = 'dpt.service.combo'
+    _name = 'dpt.sale.order.service.combo'
     _description = 'Combo dịch vụ'
 
     name = fields.Char('Tên combo', required=True)
     code = fields.Char('Mã combo', required=True)
-    service_template_ids = fields.One2many('dpt.sale.service.management', 'combo_id',
-                                           string='Dịch vụ', domain=[('is_template', '=', True)])
     active = fields.Boolean('Hoạt động', default=True)
     description = fields.Text('Mô tả')
     partner_id = fields.Many2one('res.partner', string='Khách hàng',
                                  help='Nếu được chọn, combo này chỉ áp dụng cho khách hàng cụ thể')
+    service_ids = fields.Many2many('dpt.service.management', string='Dịch vụ trong combo')
+
+    # Thông tin giá và tính toán
+    price = fields.Float('Giá combo', help='Để trống sẽ tính tổng từ các dịch vụ')
+    discount_percent = fields.Float('Giảm giá (%)', default=0.0)
+    total_price = fields.Float('Tổng giá sau KM', compute='_compute_total_price')
 
     @api.constrains('code')
     def _check_code_unique(self):
@@ -27,17 +25,44 @@ class ServiceCombo(models.Model):
             if self.search_count([('code', '=', record.code), ('id', '!=', record.id)]) > 0:
                 raise ValidationError(_("Mã combo phải là duy nhất!"))
 
-    def create_service_template(self, service_id, uom_id, price, qty=1.0):
+    @api.depends('price', 'discount_percent', 'service_ids')
+    def _compute_total_price(self):
+        for combo in self:
+            if combo.price:
+                combo.total_price = combo.price * (1 - combo.discount_percent / 100)
+            else:
+                services = combo.get_combo_services()
+                total_price = sum(service['price'] for service in services)
+                combo.total_price = total_price * (1 - combo.discount_percent / 100)
+
+    def get_combo_services(self):
         """
-        Tạo template dịch vụ cho combo
+        Trả về danh sách các dịch vụ trong combo với giá và thông tin
         """
-        service = self.env['dpt.service.management'].browse(service_id)
-        return self.env['dpt.sale.service.management'].create({
-            'service_id': service_id,
-            'combo_id': self.id,
-            'uom_id': uom_id,
-            'price': price,
-            'qty': qty,
-            'is_template': True,
-            'department_id': service.department_id.id,
-        })
+        services = []
+        for service in self.service_ids:
+            # Lấy giá mặc định từ bảng giá của khách hàng hoặc bảng giá chung
+            price = 0
+            pricelist_item = self.env['product.pricelist.item'].search([
+                ('service_id', '=', service.id),
+                ('partner_id', '=', self.partner_id.id)
+            ], limit=1) if self.partner_id else False
+
+            if not pricelist_item:
+                pricelist_item = self.env['product.pricelist.item'].search([
+                    ('service_id', '=', service.id),
+                    ('partner_id', '=', False)
+                ], limit=1)
+
+            if pricelist_item:
+                price = pricelist_item.fixed_price
+
+            services.append({
+                'service_id': service.id,
+                'price': price,
+                'uom_id': service.uom_id.id,
+                'qty': 1.0,
+                'department_id': service.department_id.id,
+            })
+
+        return services

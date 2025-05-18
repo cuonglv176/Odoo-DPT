@@ -26,7 +26,7 @@ class DPTSaleServiceManagement(models.Model):
     compute_uom_id = fields.Many2one('uom.uom', 'Compute Unit')
     compute_value = fields.Float('Compute Value', default=1)
     note = fields.Text(string='Note')
-    combo_id = fields.Many2one('dpt.service.combo', string='Nguồn combo')
+    combo_id = fields.Many2one('dpt.sale.order.service.combo', string='Combo')
     is_template = fields.Boolean('Is Template', default=False,
                                  help='Đánh dấu dịch vụ này là template trong combo')
     price_status = fields.Selection([

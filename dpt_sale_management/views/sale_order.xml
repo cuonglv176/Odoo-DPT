@@ -23,12 +23,12 @@
             <button name="action_preview_sale_order" position="attributes">
                 <attribute name="invisible">1</attribute>
             </button>
-<!--            <button name="action_unlock" position="attributes">-->
-<!--                <attribute name="invisible">0</attribute>-->
-<!--            </button>-->
-<!--            <button name="action_lock" position="attributes">-->
-<!--                <attribute name="invisible">0</attribute>-->
-<!--            </button>-->
+            <!--            <button name="action_unlock" position="attributes">-->
+            <!--                <attribute name="invisible">0</attribute>-->
+            <!--            </button>-->
+            <!--            <button name="action_lock" position="attributes">-->
+            <!--                <attribute name="invisible">0</attribute>-->
+            <!--            </button>-->
             <page name="optional_products" position="attributes">
                 <attribute name="invisible">1</attribute>
             </page>
@@ -39,11 +39,26 @@
                 <field name="employee_cs"/>
                 <field name="times_of_quotation" readonly="1"/>
             </field>
-            <xpath expr="//page[@name='order_lines']/field[@name='order_line']/tree/field[@name='product_template_id']" position="before">
+            <xpath expr="//page[@name='order_lines']/field[@name='order_line']/tree/field[@name='product_template_id']"
+                   position="before">
                 <field name="legal_xhd"/>
             </xpath>
             <!--            <button name="action_cancel" position="replace"/>-->
             <page name="order_lines" position="before">
+                <page name="service_combo" string="Combo dịch vụ">
+                    <field name="service_combo_ids" readonly="state == 'cancel' or locked">
+                        <tree>
+                            <field name="code"/>
+                            <field name="name"/>
+                            <field name="price" sum="Tổng giá"/>
+                            <field name="discount_percent"/>
+                            <field name="total_price" sum="Tổng giá sau KM"/>
+                            <field name="partner_id"/>
+                            <field name="description"/>
+                            <field name="active"/>
+                        </tree>
+                    </field>
+                </page>
                 <page name="sale_service" string="Service">
                     <field name="sale_service_ids" readonly="state == 'cancel' or locked">
                         <tree editable="bottom">
@@ -52,6 +67,7 @@
                             <field name="currency_id" column_invisible="1" force_save="1"/>
                             <field name="currency_cny_id" optional="hide"/>
                             <field name="service_id" domain="[('child_ids', '=', False)]"/>
+                            <field name="combo_id"/> <!-- Thêm trường combo_id -->
                             <field name="uom_id" invisible="1"/>
                             <!--                            <field name="description"/>-->
                             <field name="compute_value" readonly="1" force_save="1"/>
@@ -133,10 +149,10 @@
                     </span>
                 </div>
             </field>
-<!--            <notebook position="after">-->
-<!--                <label for="note" string="Note"/>-->
-<!--                <field name="note"/>-->
-<!--            </notebook>-->
+            <!--            <notebook position="after">-->
+            <!--                <label for="note" string="Note"/>-->
+            <!--                <field name="note"/>-->
+            <!--            </notebook>-->
         </field>
     </record>
 

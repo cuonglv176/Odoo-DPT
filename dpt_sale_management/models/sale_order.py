@@ -27,7 +27,7 @@ class SaleOrder(models.Model):
         readonly=True, copy=False, index=True,
         tracking=3,
         default='draft')
-    service_combo_ids = fields.Many2many('dpt.service.combo', string='Combo dịch vụ',
+    service_combo_ids = fields.Many2many('dpt.sale.order.service.combo', string='Combo dịch vụ',
                                          tracking=True)
     sale_service_ids = fields.One2many('dpt.sale.service.management', 'sale_id', string='Service', tracking=True,
                                        inverse='onchange_sale_service_ids')
@@ -77,17 +77,17 @@ class SaleOrder(models.Model):
         # Thêm các dịch vụ từ combo
         combo_services = []
         for combo in self.service_combo_ids:
-            for service_template in combo.service_template_ids:
+            services = combo.get_combo_services()
+            for service_data in services:
                 combo_services.append((0, 0, {
-                    'service_id': service_template.service_id.id,
-                    'price': service_template.price,
-                    'uom_id': service_template.uom_id.id,
-                    'qty': service_template.qty,
+                    'service_id': service_data['service_id'],
+                    'price': service_data['price'],
+                    'uom_id': service_data['uom_id'],
+                    'qty': service_data['qty'],
                     'combo_id': combo.id,
                     'price_status': 'calculated',
-                    'department_id': service_template.department_id.id,
+                    'department_id': service_data['department_id'],
                 }))
-
         # Gán tất cả dịch vụ vào sale_service_ids
         self.sale_service_ids = new_services + combo_services
 
