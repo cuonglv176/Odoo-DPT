@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'DPT Service Management',
-    'version': '17.0.1',
+    'version': '17.0.1.0.0',
     'summary': 'Manage Services Information',
     'category': 'Services',
     'author': 'CuongLV',
