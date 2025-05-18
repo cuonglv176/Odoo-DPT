@@ -143,8 +143,12 @@
         <field name="view_mode">tree,init_tree,form</field>
     </record>
 
+    <menuitem id="service_management_root_menu" name="Dịch Vụ"
+              web_icon="dpt_service_management,static/description/icon.png"/>
 
-    <menuitem id="submenu_service_management" name="Services" parent="sale.menu_sales_config"
+
+
+    <menuitem id="submenu_service_management" name="Services" parent="service_management_root_menu"
               action="action_service_management"
               groups="sales_team.group_sale_salesman_all_leads"
               sequence="15"/>

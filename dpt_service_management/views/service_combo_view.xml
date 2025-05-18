@@ -7,13 +7,13 @@
             <form>
                 <header>
                     <button name="action_activate" string="Kích hoạt" type="object" class="btn-primary" 
-                            attrs="{'invisible': [('state', '!=', 'draft')]}"/>
-                    <button name="action_draft" string="Chuyển về nháp" type="object" 
-                            attrs="{'invisible': [('state', 'in', ['draft', 'expired'])]}"/>
-                    <button name="action_cancel" string="Hủy" type="object" 
-                            attrs="{'invisible': [('state', 'in', ['cancelled', 'expired'])]}"/>
-                    <button name="action_create_new_version" string="Tạo phiên bản mới" type="object" 
-                            class="btn-secondary" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                            invisible="state != 'draft'"/>
+                    <button name="action_draft" string="Chuyển về nháp" type="object"
+                            invisible="state in ['draft', 'expired']"/>
+                    <button name="action_cancel" string="Hủy" type="object"
+                            invisible="state in ['cancelled', 'expired']"/>
+                    <button name="action_create_new_version" string="Tạo phiên bản mới" type="object"
+                            class="btn-secondary" invisible="state == 'draft'"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,active,expired,cancelled"/>
                 </header>
                 <sheet>
@@ -115,9 +115,9 @@
         </field>
     </record>
 
-    <menuitem id="menu_service_combo" 
-              name="Gói combo dịch vụ" 
-              parent="sale.menu_sales_config" 
+    <menuitem id="menu_service_combo"
+              name="Gói combo dịch vụ"
+              parent="service_management_root_menu"
               action="action_service_combo" 
               sequence="16"/>
 </odoo>
