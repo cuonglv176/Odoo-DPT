@@ -13,7 +13,7 @@ class ServiceCombo(models.Model):
     partner_id = fields.Many2one('res.partner', string='Khách hàng',
                                  help='Nếu được chọn, combo này chỉ áp dụng cho khách hàng cụ thể')
     service_ids = fields.Many2many('dpt.service.management', string='Dịch vụ trong combo')
-
+    sale_id = fields.Many2one('sale.order',string='Order')
     # Thông tin giá và tính toán
     price = fields.Float('Giá combo', help='Để trống sẽ tính tổng từ các dịch vụ')
     discount_percent = fields.Float('Giảm giá (%)', default=0.0)
