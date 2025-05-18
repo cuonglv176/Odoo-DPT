@@ -1,0 +1,62 @@
+.o_treeview_table {
+    width: 100%;
+    background-color: white;
+    border-collapse: collapse;
+    thead {
+//         color: @odoo-main-text-color;
+        > tr {
+            border-top: 1px solid #d6d6d6;
+            border-bottom: 1px solid #d6d6d6;
+        }
+        background-color: #F9F9F9;
+        > tr > th {
+            padding: 10px;
+            border-left: 1px solid #dfdfdf;
+        }
+    }
+
+    tbody {
+        > tr {
+            border-bottom: 1px solid #d6d6d6;
+            &:hover {
+                background-color: #e7e7e7;
+            }
+            > td {
+                cursor: pointer;
+                height: 30px;
+                padding: 0 4px;
+                border-left: 1px solid #dfdfdf;
+                &.oe_number {
+                    text-align: right;
+                }
+                > span {
+                    font-weight: normal;
+                    white-space: nowrap;
+                    display: block;
+                }
+            }
+        }
+        .treeview-tr, .treeview-td {
+            &.o_treeview_first > span {
+                margin-left: 16px;
+            }
+        }
+        .treeview-tr.o_treeview_first {
+            position: relative;
+            &:before {
+                position: absolute;
+                top: 8px;
+                color: grey;
+                @include o-caret-right(6px);
+
+            }
+        }
+        .o_open .treeview-tr.o_treeview_first {
+            &:before {
+                top: 10px;
+                color: grey;
+                @include o-caret-down(6px);
+            }
+        }
+    }
+}

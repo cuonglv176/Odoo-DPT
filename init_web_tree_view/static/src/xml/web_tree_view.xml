@@ -1,0 +1,50 @@
+<template>
+
+<t t-name="init_web_tree_view.TreeView">
+    <select t-if="toolbar" style="width: 30%"/>
+    <table class="o_treeview_table">
+        <thead>
+            <tr>
+                <th t-foreach="fields_view" t-as="field"
+                    class="treeview-header">
+                    <t t-esc="field_value.attrs.string || fields[field.attrs.name].string" />
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</t>
+<tr t-name="TreeView.rows"
+        t-foreach="records" t-as="record"
+        t-att-id="'treerow_' + record.id"
+        t-att-data-id="record.id" t-att-data-level="level + 1"
+        t-att-data-row-parent-id="row_parent_id">
+    <t t-set="children" t-value="record[children_field]"/>
+    <t t-set="class" t-value="children and children.length ? 'treeview-tr' : 'treeview-td'"/>
+    <t t-set="rank" t-value="'o_treeview_first'"/>
+    <t t-set="style" t-value="'background-position: ' + 19*(level) + 'px; padding-left: ' + (4 + 19*(level)) + 'px;'"/>
+
+    <td t-foreach="fields_view" t-as="field"
+        t-att-data-id="record.id"
+        t-att-style="color_for(record) + style "
+        t-attf-class="#{class} #{rank} #{(fields[field.attrs.name].type === 'float') or (fields[field.attrs.name].type === 'integer') or (fields[field.attrs.name].type === 'monetary')? 'oe_number' : ''}">
+
+        <span>
+            <t t-if="fields[field.attrs.name].type === 'boolean'">
+                <t t-if="record[field.attrs.name] == true">
+                    <input type="checkbox" checked="checked" disabled="disable"/>
+                </t>
+            </t>
+            <t t-else="">
+                <t t-esc="format[fields[field.attrs.name].type](record[field.attrs.name], fields[field.attrs.name])" />
+            </t>
+        </span>
+
+        <t t-set="class" t-value="'treeview-td'"/>
+        <t t-set="rank" t-value="''"/>
+        <t t-set="style" t-value="''"/>
+    </td>
+</tr>
+
+</template>
