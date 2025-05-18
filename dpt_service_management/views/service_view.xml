@@ -5,7 +5,7 @@
         <field name="name">service.form</field>
         <field name="model">dpt.service.management</field>
         <field name="arch" type="xml">
-            <form string="Service Form">
+            <form>
                 <sheet>
                     <label for="name"/>
                     <h1>
@@ -42,7 +42,7 @@
                         </page>
                         <page string="Dịch vụ tầng dưới" name="child">
                             <field name="child_ids" nolabel="1">
-                                <tree string="Service List">
+                                <tree>
                                     <field name="code"/>
                                     <field name="name"/>
                                     <field name="service_type_id"/>
@@ -71,7 +71,7 @@
                                     <field name="code" required="is_template == True"/>
                                     <field name="is_template" widget="boolean_toggle"/>
                                     <field name="fields_id" domain="[('relation','=','sale.order')]"
-                                           column_invisible="1"/>
+                                           columnInvisible="1"/>
                                     <field name="name" required="1"/>
                                     <field name="field" required="1"/>
                                     <field name="fields_type" required="1"/>
@@ -109,7 +109,7 @@
         <field name="name">service.tree</field>
         <field name="model">dpt.service.management</field>
         <field name="arch" type="xml">
-            <tree string="Service List">
+            <tree>
                 <field name="code"/>
                 <field name="name"/>
                 <field name="service_type_id"/>
@@ -125,7 +125,7 @@
         <field name="name">dpt.service.management.view</field>
         <field name="model">dpt.service.management</field>
         <field name="arch" type="xml">
-            <init_tree string="Service" fieldParent="child_ids">
+            <init_tree childField="child_ids">
                 <field name="code"/>
                 <field name="name"/>
                 <field name="service_type_id"/>

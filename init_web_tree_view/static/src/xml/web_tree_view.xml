@@ -3,38 +3,66 @@
 
 <t t-name="init_web_tree_view.TreeView" owl="1">
     <Layout className="'o_init_tree_view'" display="props.display">
-        <TreeRenderer
-            fields="props.fields"
-            children_field="props.archInfo.fieldParent"
-            model="props.resModel"
-            arch="props.arch"
-            context="props.context || {}"
-            action="props.action"
-        />
+        <div class="o_content">
+            <t t-if="state.loading">
+                <div class="o_view_loading">
+                    <i class="fa fa-spinner fa-spin" role="img" aria-label="Loading" title="Loading"/>
+                </div>
+            </t>
+            <t t-else="">
+                <TreeRenderer
+                    records="state.records"
+                    fields="props.fields"
+                    childField="props.arch.attrs.childField"
+                    model="props.resModel"
+                    arch="props.arch"
+                    context="props.context || {}"
+                    onLoadChildren="(recordId) => this.loadChildren(recordId)"
+                />
+            </t>
+        </div>
     </Layout>
 </t>
 
 <t t-name="init_web_tree_view.TreeRenderer" owl="1">
-    <div class="o_tree_renderer" t-ref="root">
-        <select t-if="props.arch.attrs and props.arch.attrs.toolbar" style="width: 30%"/>
-        <table class="o_treeview_table">
+    <div class="o_tree_view">
+        <table class="o_list_table table table-sm table-hover table-striped">
             <thead>
                 <tr>
-                    <th t-foreach="props.arch.children" t-as="field" t-key="field.attrs.name"
-                        class="treeview-header">
-                        <t t-esc="field.attrs.string || props.fields[field.attrs.name].string" />
+                    <th t-foreach="props.arch.children" t-as="field" t-key="field.attrs.name">
+                        <t t-esc="field.attrs.string || props.fields[field.attrs.name].string"/>
                     </th>
                 </tr>
             </thead>
             <tbody>
-                <!-- Rows will be dynamically inserted here -->
+                <t t-foreach="props.records" t-as="record" t-key="record.id">
+                    <tr class="o_data_row" t-on-click="() => this.onRowClick(record)">
+                        <t t-foreach="props.arch.children" t-as="field" t-key="field_index">
+                            <td t-att-class="{'o_tree_node': field_index === 0}">
+                                <t t-if="field_index === 0">
+                                    <span t-attf-style="padding-left: {{getLevel(record) * 20}}px">
+                                        <t t-if="hasChildren(record)">
+                                            <i t-attf-class="fa {{isExpanded(record.id) ? 'fa-caret-down' : 'fa-caret-right'}} o_tree_toggle"
+                                               role="img" aria-label="Toggle" title="Toggle"/>
+                                        </t>
+                                        <t t-else="">
+                                            <span class="o_tree_leaf_spacer"/>
+                                        </t>
+                                        <span class="o_tree_node_content">
+                                            <t t-esc="record[field.attrs.name]"/>
+                                        </span>
+                                    </span>
+                                </t>
+                                <t t-else="">
+                                    <t t-esc="record[field.attrs.name]"/>
+                                </t>
+                            </td>
+                        </t>
+                    </tr>
+                </t>
             </tbody>
         </table>
     </div>
-</t>
-
-<t t-name="init_web_tree_view.TreeController" owl="1">
-    <div class="o_tree_controller" />
 </t>
 
 </templates>
