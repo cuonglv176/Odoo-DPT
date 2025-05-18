@@ -8,15 +8,7 @@
             <field name="description">Phê duyệt gói combo dịch vụ</field>
             <field name="approval_type">multiple</field>
             <field name="sequence">10</field>
-            <field name="is_manager_approver">True</field>
             <field name="automated_sequence" eval="True"/>
-            <field name="has_location" eval="False"/>
-            <field name="has_date" eval="True"/>
-            <field name="has_quantity" eval="False"/>
-            <field name="has_amount" eval="True"/>
-            <field name="has_reference" eval="True"/>
-            <field name="has_partner" eval="False"/>
-            <field name="require_payment" eval="False"/>
         </record>
     </data>
 </odoo>
