@@ -61,7 +61,7 @@ class DPTServiceCombo(models.Model):
         """Lấy danh sách người phê duyệt dựa vào cấu hình phê duyệt"""
         for record in self:
             # Lấy người phê duyệt từ cấu hình approval type 'service_combo_approval'
-            approval_type = self.env['approval.category'].search([('code', '=', 'service_combo_approval')], limit=1)
+            approval_type = self.env['approval.category'].search([('sequence_code', '=', 'SCM')], limit=1)
             approvers = []
             if approval_type:
                 for approver in approval_type.user_ids:
@@ -77,6 +77,20 @@ class DPTServiceCombo(models.Model):
     def _generate_combo_code(self):
         sequence = self.env['ir.sequence'].next_by_code('dpt.service.combo') or '001'
         return f'COMBO/{sequence}'
+
+    def action_view_approval(self):
+        """Xem chi tiết yêu cầu phê duyệt"""
+        self.ensure_one()
+        if not self.approval_id:
+            return {}
+
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'approval.request',
+            'res_id': self.approval_id.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
 
     def action_submit_approval(self):
         """Gửi yêu cầu phê duyệt"""
