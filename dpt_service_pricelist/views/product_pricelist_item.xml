@@ -83,12 +83,9 @@
             <field name="name">Bảng giá dịch vụ</field>
             <field name="res_model">product.pricelist.item</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="product_pricelist_item_view_tree_service_pricelist"/>
             <field name="domain">[('service_id', '!=', False)]</field>
             <field name="context">{'default_compute_price': 'fixed'}</field>
-            <field name="views">
-                <field name="tree" eval="[(6, 0, [ref('product_pricelist_item_view_tree_service_pricelist')])]"/>
-                <field name="form" eval="[(6, 0, [ref('product_pricelist_item_view_form_service_pricelist')])]"/>
-            </field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Tạo bảng giá dịch vụ đầu tiên!
