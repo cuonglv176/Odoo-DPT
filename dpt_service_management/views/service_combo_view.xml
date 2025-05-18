@@ -10,10 +10,10 @@
                     <button name="action_submit_approval" string="Gửi phê duyệt" type="object" class="btn-primary"
                             invisible="state != 'draft'" />
                     <button name="action_activate" string="Phê duyệt" type="object" class="btn-primary"
-                            invisible="state != 'pending' or not approver_ids or env.user.id not in approver_ids"
+                            invisible="state != 'pending' or not approver_ids"
                             groups="base.group_system" />
                     <button name="action_reject" string="Từ chối" type="object" class="btn-danger"
-                            invisible="state != 'pending' or not approver_ids or env.user.id not in approver_ids"
+                            invisible="state != 'pending' or not approver_ids"
                             groups="base.group_system" />
                     <button name="action_suspend" string="Tạm dừng" type="object"
                             invisible="state != 'active'" />
