@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="init_web_tree_view.InitTree">
+        <div t-att-class="className" t-ref="root">
+            <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="display">
+                <t t-set-slot="control-panel-create-button">
+                    <t t-if="!model.root.editedRecord and activeActions.create and props.showButtons">
+                        <button type="button" class="btn btn-primary o_list_button_add" data-hotkey="c" t-on-click="onClickCreate" data-bounce-button="">
+                            New
+                        </button>
+                    </t>
+                </t>
+
+                <t t-set-slot="layout-buttons">
+                    <t t-call="{{ props.buttonTemplate }}"/>
+                </t>
+                <t t-set-slot="control-panel-always-buttons">
+                    <t t-foreach="archInfo.headerButtons" t-as="button" t-key="button.id" t-if="!evalViewModifier(button.invisible)">
+                        <MultiRecordViewButton
+                            t-if="button.display === 'always'"
+                            list="model.root"
+                            className="button.className"
+                            clickParams="button.clickParams"
+                            defaultRank="'btn-secondary'"
+                            domain="props.domain"
+                            icon="button.icon"
+                            string="button.string"
+                            title="button.title"
+                        />
+                    </t>
+                </t>
+
+                <!--t t-set-slot="layout-actions">
+                    <SearchBar t-if="searchBarToggler.state.showSearchBar" autofocus="firstLoad"/>
+                </t-->
+                <!--t t-set-slot="control-panel-navigation-additional">
+                    <t t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
+                </t-->
+
+                <t t-set-slot="control-panel-additional-actions">
+                    <CogMenu t-if="!nbSelected"/>
+                </t>
+                <t t-set-slot="control-panel-selection-actions">
+                    <div t-if="nbSelected" class="d-flex gap-1">
+                        <t t-call="web.ListView.Selection"/>
+                        <t t-foreach="archInfo.headerButtons" t-as="button" t-key="button.id" t-if="!evalViewModifier(button.invisible)">
+                            <MultiRecordViewButton
+                                t-if="button.display !== 'always'"
+                                list="model.root"
+                                className="button.className"
+                                clickParams="button.clickParams"
+                                defaultRank="'btn-secondary'"
+                                domain="props.domain"
+                                icon="button.icon"
+                                string="button.string"
+                                title="button.title"
+                            />
+                        </t>
+                        <t t-if="props.info.actionMenus">
+                            <ActionMenus
+                                getActiveIds="() => model.root.selection.map((r) => r.resId)"
+                                context="props.context"
+                                domain="props.domain"
+                                items="actionMenuItems"
+                                isDomainSelected="model.root.isDomainSelected"
+                                resModel="model.root.resModel"
+                                onActionExecuted="() => model.load()"/>
+                        </t>
+                    </div>
+                </t>
+                <t t-component="props.Renderer"
+                    list="model.root"
+                    activeActions="activeActions"
+                    archInfo="archInfo"
+                    allowSelectors="props.allowSelectors"
+                    editable="editable"
+                    onOpenFormView="onOpenFormView"
+                    openRecord.bind="openRecord"
+                    noContentHelp="props.info.noContentHelp"
+                    onAdd.bind="createRecord"
+                    onOptionalFieldsChanged.bind="onOptionalFieldsChanged"
+                    evalViewModifier.bind="evalViewModifier"
+                />
+            </Layout>
+        </div>
+    </t>
+
+</templates>

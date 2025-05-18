@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="init_web_tree_view.InitTreeRenderer">
+        <div class="o_list_renderer o_renderer table-responsive" tabindex="-1" t-ref="root">
+            <table
+                class="o_treeview_table"
+                t-attf-class="o_list_table table-sm table-hover position-relative mb-0"
+                t-ref="table">
+                <thead>
+                    <tr>
+                        <th class="o_list_record_selector o_list_controller align-middle pe-1 cursor-pointer"
+                            tabindex="-1"
+                            t-on-keydown="(ev) => this.onCellKeydown(ev)"
+                            t-on-click.stop="toggleSelection">
+                        </th>
+                        <t t-foreach="state.columns" t-as="column" t-key="column.id">
+                            <th t-if="column.type === 'field'"
+                                t-att-data-name="column.name"
+                                t-att-class="getColumnClass(column) + ' opacity-trigger-hover'"
+                                t-on-pointerup="onColumnTitleMouseUp"
+                                t-on-click="() => this.onClickSortColumn(column)"
+                                t-on-keydown="(ev) => this.onCellKeydown(ev)"
+                                t-att-data-tooltip-template="isDebugMode ? 'web.FieldTooltip' : false"
+                                t-att-data-tooltip-info="isDebugMode ? makeTooltip(column) : false"
+                                data-tooltip-delay="1000"
+                                tabindex="-1">
+                                <t t-if="column.hasLabel and column.widget !== 'handle'">
+                                <t t-set="isNumeric" t-value="isNumericColumn(column)"/>
+                                    <div t-att-class="{'d-flex': true, 'flex-row-reverse': shouldReverseHeader(column)}">
+                                        <span class="d-block min-w-0 text-truncate flex-grow-1" t-att-class="isNumeric ? 'o_list_number_th' : ''"
+                                              t-esc="column.label"/>
+                                        <i t-att-class="getSortableIconClass(column)"/>
+                                    </div>
+                                    <span
+                                          class="o_resize position-absolute top-0 end-0 bottom-0 ps-1 bg-black-25 opacity-0 opacity-50-hover z-index-1"
+                                          t-on-pointerdown.stop.prevent="onStartResize"/>
+                                </t>
+                            </th>
+                        </t>
+                        <th t-if="props.onOpenFormView" t-on-keydown="(ev) => this.onCellKeydown(ev)" class="o_list_open_form_view"/>
+                    </tr>
+                </thead>
+                <tbody class="ui-sortable">
+                    <t t-call="{{ constructor.rowsTemplate }}">
+                        <t t-set="list" t-value="props.list"/>
+                    </t>
+                </tbody>
+                <tfoot t-on-click="() => props.list.leaveEditMode()" class="o_list_footer cursor-default" t-att-class="{o_sample_data_disabled: props.list.model.useSampleModel}">
+                    <tr>
+                        <td t-if="hasSelectors"/>
+                        <t t-foreach="state.columns" t-as="column" t-key="column.id">
+                            <t t-set="aggregate" t-value="aggregates[column.name]"/>
+                            <td t-if="aggregate" class="o_list_number" >
+                                <span t-esc="aggregate.value" t-att-data-tooltip="aggregate.help"/>
+                            </td>
+                            <td t-else=""/>
+                        </t>
+                        <td t-if="props.onOpenFormView"/>
+                        <td t-if="displayOptionalFields or activeActions.onDelete" />
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </t>
+
+    <t t-name="init_web_tree_view.InitTreeRenderer.Rows">
+        <t t-foreach="list.records" t-as="record" t-key="record.id">
+            <t t-call="{{ constructor.recordRowTemplate }}"/>
+        </t>
+        <t t-if="!props.list.isGrouped">
+            <tr t-foreach="getEmptyRowIds" t-as="emptyRowId" t-key="emptyRowId">
+                <td t-att-colspan="nbCols">&#8203;</td>
+            </tr>
+        </t>
+    </t>
+
+    <t t-name="init_web_tree_view.InitTreeRenderer.RecordRow">
+        <t t-set="rowClass" t-value="childFieldCount(record) > 0 ? 'treeview-tr' : 'treeview-td'"/>
+        <t t-set="style" t-value="'background-position: ' + 19*(record.level) + 'px; padding-left: ' + (4 + 19*(record.level)) + 'px;'"/>
+
+        <!-- ? should set rank -->
+        <t t-set="rank" t-value="'o_treeview_first'"/>
+
+        <tr class="o_data_row"
+            t-att-class="getRowClass(record)"
+            t-att-data-id="record.id"
+            t-att-data-row-parent-id="record.parentId"
+            t-att-data-level="record.level"
+            t-on-click.capture="(ev) => this.onClickCapture(record, ev)"
+            t-on-mouseover.capture="(ev) => this.ignoreEventInSelectionMode(ev)"
+            t-on-mouseout.capture="(ev) => this.ignoreEventInSelectionMode(ev)"
+            t-on-mouseenter.capture="(ev) => this.ignoreEventInSelectionMode(ev)"
+            t-on-touchstart="(ev) => this.onRowTouchStart(record, ev)"
+            t-on-touchend="() => this.onRowTouchEnd(record)"
+            t-on-touchmove="() => this.onRowTouchMove(record)">
+
+            <td t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)"
+                class="o_list_record_selector user-select-none"
+                t-on-click.stop="(ev) => this.toggleOpenRow(ev, record)"
+                tabindex="-1">
+                <!--CheckBox disabled="!_canSelectRecord" value="record.selected" onChange.alike="() => this.toggleRecordSelection(record)" /-->
+            </td>
+
+            <t t-foreach="getColumns(record)" t-as="column" t-key="column.id">
+                <t t-if="column.type === 'field'">
+                    <t t-set="isInvisible" t-value="evalInvisible(column.invisible, record) or !(column.name in record.data)"/>
+                    <td t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)"
+                        class="o_data_cell cursor-pointer"
+                        t-att-class="getCellClass(column, record) + ' ' + rowClass + ' ' + rank"
+                        t-att-style="style"
+                        t-att-name="column.name"
+                        t-att-colspan="column.colspan"
+                        t-att-data-tooltip="!isInvisible ? getCellTitle(column, record) : false"
+                        data-tooltip-delay="1000"
+                        t-on-click="(ev) => this.onCellClicked(record, column, ev)"
+                        tabindex="-1">
+                        <span>
+                            <t t-if="!isInvisible">
+                                <t t-if="canUseFormatter(column, record)" t-out="getFormattedValue(column, record)"/>
+                                <Field t-else="" name="column.name" record="record" type="column.widget" class="getFieldClass(column)" fieldInfo="column" t-props="getFieldProps(record, column)"/>
+                            </t>
+                        </span>
+                    </td>
+                </t>
+                <t t-if="column.type === 'widget'">
+                    <td class="o_data_cell" t-att-class="getCellClass(column, record)">
+                        <Widget t-props="column.props" record="record"/>
+                    </td>
+                </t>
+                <t t-set="rowClass" t-value="'treeview-td'"/>
+                <t t-set="rank" t-value="''"/>
+                <t t-set="style" t-value="''"/>
+            </t>
+            <td tabindex="-1" />
+        </tr>
+    </t>
+
+</templates>

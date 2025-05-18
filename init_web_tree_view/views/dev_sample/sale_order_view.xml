@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_sale_order_init_tree_view" model="ir.ui.view">
+        <field name="name">view.sale.order.init.tree.view</field>
+        <field name="model">sale.order</field>
+        <field name="arch" type="xml">
+            <init_tree child_field="child_ids">
+                <field name="name"/>
+                <field name="create_date" string="Creation Date" widget="date" optional="show"/>
+                <field name="partner_id"/>
+                <field name="company_id"/>
+                <field name="amount_total" widget="monetary"/>
+                <field name="state" widget="badge"/>
+            </init_tree>
+        </field>
+    </record>
+
+</odoo>

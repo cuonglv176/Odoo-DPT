@@ -125,7 +125,7 @@
         <field name="name">dpt.service.management.view</field>
         <field name="model">dpt.service.management</field>
         <field name="arch" type="xml">
-            <init_tree childField="child_ids">
+            <init_tree child_field="child_ids">
                 <field name="code"/>
                 <field name="name"/>
                 <field name="service_type_id"/>
