@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_partner_form_inherit_service_pricelist" model="ir.ui.view">
+            <field name="name">res.partner.form.inherit.service.pricelist</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Bảng giá dịch vụ" name="service_pricelist">
+                        <field name="service_pricelist_ids" context="{'default_partner_id': active_id}">
+                            <tree>
+                                <field name="service_id"/>
+                                <field name="uom_id"/>
+                                <field name="compute_price"/>
+                                <field name="fixed_price" string="Giá" widget="monetary"/>
+                                <field name="currency_id"/>
+                                <field name="date_start"/>
+                                <field name="date_end"/>
+                                <field name="min_amount" widget="monetary"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+    </data>
+</odoo>

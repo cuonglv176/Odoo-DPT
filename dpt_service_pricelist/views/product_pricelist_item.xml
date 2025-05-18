@@ -78,5 +78,26 @@
             </field>
         </record>
 
+        <!-- Action cho bảng giá dịch vụ -->
+        <record id="action_service_pricelist" model="ir.actions.act_window">
+            <field name="name">Bảng giá dịch vụ</field>
+            <field name="res_model">product.pricelist.item</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('service_id', '!=', False)]</field>
+            <field name="context">{'default_compute_price': 'fixed'}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Tạo bảng giá dịch vụ đầu tiên!
+                </p>
+            </field>
+        </record>
+
+        <!-- Menu item cho Bảng giá dịch vụ -->
+        <menuitem id="menu_service_pricelist"
+                  name="Bảng giá dịch vụ"
+                  parent="dpt_service_management.service_management_root_menu"
+                  action="action_service_pricelist"
+                  sequence="20"/>
+
     </data>
 </odoo>
