@@ -4,7 +4,7 @@ from odoo.osv.expression import AND, OR
 
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
-    _rec_name = 'name'
+
     code = fields.Char('Code')
     dpt_level = fields.Selection([
         ('l1', 'L1'),
