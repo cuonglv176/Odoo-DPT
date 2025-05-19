@@ -54,7 +54,6 @@
                             <field name="price" sum="Tổng giá"/>
                             <field name="discount_percent"/>
                             <field name="total_price" sum="Tổng giá sau KM"/>
-                            <field name="partner_id"/>
                             <field name="description"/>
                         </tree>
                     </field>
