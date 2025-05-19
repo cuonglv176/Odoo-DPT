@@ -5,6 +5,10 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
+            <field name="department_id" position="before">
+                <field name="company_join_date"/>
+                <field name="legal_entity"/>
+            </field>
             <field name="mobile_phone" position="before">
                 <field name="code"/>
                 <field name="bod_code"/>
@@ -12,7 +16,13 @@
                 <field name="parent_department_id"/>
                 <field name="dpt_level"/>
             </field>
+            <field name="identification_id" position="after">
+                <field name="identification_date"/>
+                <field name="place_of_identification"/>
+            </field>
+            <field name="marital" position="after">
+                <field name="has_children"/>
+            </field>
         </field>
     </record>
-
 </odoo>
