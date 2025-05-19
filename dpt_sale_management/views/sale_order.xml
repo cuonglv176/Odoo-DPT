@@ -4,7 +4,6 @@
     <record id="view_sale_order_inherit_form" model="ir.ui.view">
         <field name="name">sale.order.inherit</field>
         <field name="model">sale.order</field>
-        <field name="priority" eval="100"/>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <button name="action_quotation_send" position="before">
@@ -49,7 +48,6 @@
                 <page name="dpt_service_combo" string="Combo dịch vụ">
                     <field name="service_combo_ids" readonly="state == 'cancel' or locked">
                         <tree>
-                            <field name="combo_id"/>
                             <field name="code"/>
                             <field name="price" sum="Tổng giá"/>
                             <field name="discount_percent"/>
@@ -65,83 +63,22 @@
                             <field name="sequence" widget="handle"/>
                             <field name="currency_id" column_invisible="1" force_save="1"/>
                             <field name="currency_cny_id" optional="hide"/>
-                            <field name="service_id" domain="[('child_ids', '=', False)]" required="True"/>
+                            <field name="service_id" domain="[('child_ids', '=', False)]"/>
                             <field name="combo_id"/> <!-- Thêm trường combo_id -->
-                            <field name="uom_id" invisible="1" required="True"/>
+                            <field name="uom_id" invisible="1"/>
                             <!--                            <field name="description"/>-->
-                            <field name="compute_value" readonly="False" force_save="1"/>
+                            <field name="compute_value" readonly="1" force_save="1"/>
                             <field name="compute_uom_id" readonly="1" force_save="1"/>
                             <field name="qty" column_invisible="1" force_save="1"/>
                             <field name="uom_ids" column_invisible="1"/>
                             <field name="price" readonly="0" force_save="1" context="{'check_price': True}"/>
-                            <field name="price_cny" readonly="False" force_save="1"/>
+                            <field name="price_cny" readonly="0" force_save="1"/>
                             <field name="old_price" column_invisible="0" force_save="1"/>
                             <!--                            <field name="currency_id" invisible="1"/>-->
                             <field name="amount_total" readonly="1" force_save="1"/>
                             <field name="department_id" context="{'dpt_sale_management': 1}"/>
                             <field name="note"/>
                         </tree>
-                        <form>
-                            <sheet string="DPT Sale Service Management">
-                                <group>
-                                    <group>
-                                        <field name="sale_id"/>
-                                    </group>
-                                    <group>
-                                        <field name="service_id"/>
-                                    </group>
-                                </group>
-                                <group>
-                                    <field name="description"/>
-                                </group>
-                                <group>
-                                    <group>
-                                        <field name="qty"/>
-                                    </group>
-                                </group>
-                                <group>
-                                    <field name="uom_ids"/>
-                                </group>
-                                <group>
-                                    <group>
-                                        <field name="uom_id"/>
-                                        <field name="price_cny"/>
-                                        <field name="currency_cny_id"/>
-                                        <field name="amount_total"/>
-                                        <field name="pricelist_item_id"/>
-                                        <field name="compute_uom_id"/>
-                                    </group>
-                                    <group>
-                                        <field name="price"/>
-                                        <field name="currency_id"/>
-                                        <field name="department_id"/>
-                                        <field name="sequence"/>
-                                        <field name="price_in_pricelist"/>
-                                        <field name="compute_value"/>
-                                    </group>
-                                </group>
-                                <group>
-                                    <field name="note"/>
-                                </group>
-                                <group>
-                                    <group>
-                                        <field name="purchase_id"/>
-                                        <field name="new_price"/>
-                                        <field name="approval_id"/>
-                                        <field name="is_edit_new_price"/>
-                                    </group>
-                                    <group>
-                                        <field name="price_status"/>
-                                        <field name="new_amount_total"/>
-                                        <field name="is_zero_price"/>
-                                        <field name="picking_id"/>
-                                    </group>
-                                </group>
-                                <group>
-                                    <separator/>
-                                </group>
-                            </sheet>
-                        </form>
                     </field>
                     <group col="6" class="mt-2 mt-md-0">
                         <group class="oe_subtotal_footer" colspan="2">
@@ -166,98 +103,19 @@
                             <field name="fields_id"/>
                             <field name="type" column_invisible="1"/>
                             <field name="fields_type" column_invisible="1"/>
-                            <field name="value_char" invisible="fields_type != 'char'" string="Kiểu chữ"
+                            <field name="value_char" invisible="fields_type != 'char'"
                                    required="type == 'required' and fields_type == 'char'"/>
                             <field name="value_integer" invisible="fields_type != 'integer'"
                                    required="type == 'required' and fields_type == 'integer'"/>
                             <field name="value_date" invisible="fields_type != 'date'"
                                    required="type == 'required' and fields_type == 'date'"/>
-                            <field name="selection_value_id" invisible="fields_type != 'selection'" string="Kiểu lựa chọn"
+                            <field name="selection_value_id" invisible="fields_type != 'selection'"
                                    required="type == 'required' and fields_type == 'selection'"
                                    domain="[('fields_id','=',fields_id)]"/>
 
                             <field name="uom_id" invisible="not using_calculation_price" column_invisible="1"
                                    required="using_calculation_price" options="{'no_create': True, 'no_open': True}"/>
                         </tree>
-                        <form>
-                            <sheet string="dpt.sale.order.fields">
-                                <group>
-                                    <group>
-                                        <field name="sequence"/>
-                                        <field name="service_id"/>
-                                        <field name="value_char"/>
-                                        <field name="value_date"/>
-                                        <field name="type"/>
-                                        <field name="using_calculation_price"/>
-                                        <field name="ticket_id"/>
-                                        <field name="picking_id"/>
-                                    </group>
-                                    <group>
-                                        <field name="sale_id"/>
-                                        <field name="fields_id"/>
-                                        <field name="value_integer"/>
-                                        <field name="selection_value_id"/>
-                                        <field name="fields_type"/>
-                                        <field name="uom_id"/>
-                                        <field name="approval_id"/>
-                                    </group>
-                                </group>
-                                <group>
-                                    <separator/>
-                                </group>
-                            </sheet>
-                        </form>
-                    </field>
-                </page>
-
-                <page name="dpt_export_import" string="Export Import">
-                    <field name="order_line" readonly="state == 'cancel'">
-                        <tree string="Sales Order Lines" editable="bottom">
-                            <field name="legal_xhd" string="Pháp nhân xuất hóa đơn"/>
-                            <!-- Additional fields for order lines will be here -->
-                        </tree>
-                        <form string="Sales Order Item" edit="false">
-                            <field name="display_type" invisible="1"/>
-                            <sheet>
-                                <div class="oe_title">
-                                    <h1>
-                                        <field name="display_name"/>
-                                    </h1>
-                                </div>
-                                <group>
-                                    <group>
-                                        <field name="product_updatable" invisible="1"/>
-                                        <field name="order_id" readonly="1" force_save="1"/>
-                                        <field name="product_uom_category_id" invisible="1"/>
-                                        <field name="product_uom_readonly" invisible="1"/>
-                                        <field name="qty_delivered_method" invisible="1"/>
-                                        <field name="state" invisible="1"/>
-                                        <field name="product_id" readonly="id and not product_updatable" required="not display_type" force_save="1" widget="many2one_barcode"/>
-                                        <field name="name"/>
-                                        <field name="product_uom_qty"/>
-                                        <field name="qty_delivered" invisible="state not in ['sale', 'done']" readonly="qty_delivered_method != 'manual'"/>
-                                        <field name="qty_invoiced" invisible="state not in ['sale', 'done']"/>
-                                        <field name="product_uom" force_save="1" groups="uom.group_uom" readonly="product_uom_readonly" required="not display_type"/>
-                                        <field name="product_uom" groups="!uom.group_uom" invisible="1"/>
-                                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                                        <field name="order_partner_id" invisible="1"/>
-                                        <field name="display_type" invisible="1"/>
-                                        <field name="product_updatable" invisible="1"/>
-                                    </group>
-                                    <group>
-                                        <field name="company_id" invisible="1"/>
-                                        <field name="tax_country_id" invisible="1"/>
-                                        <field name="price_unit"/>
-                                        <field name="discount" groups="product.group_discount_per_so_line"/>
-                                        <field name="price_subtotal" widget="monetary"/>
-                                        <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" context="{'search_view_ref': 'account.account_tax_view_search'}" domain="[('type_tax_use', '=', 'sale'), ('company_id', '=', company_id), ('country_id', '=', tax_country_id)]" readonly="qty_invoiced &gt; 0"/>
-                                        <field name="price_tax" widget="monetary"/>
-                                        <field name="price_total" widget="monetary"/>
-                                        <field name="currency_id" invisible="1"/>
-                                    </group>
-                                </group>
-                            </sheet>
-                        </form>
                     </field>
                 </page>
             </page>
@@ -287,31 +145,11 @@
                         <sup>3</sup>
                     </span>
                 </div>
-                <field name="x_studio_l_n_thanh_ton_h" string="Là đơn thanh toán hộ" widget="boolean_toggle" force_save="1" readonly="True"/>
-                <field name="x_studio_luu_y_khi_tat_toan" string="Lưu ý khi tất toán"/>
             </field>
-
-            <!-- Group for partner_details modifications -->
-            <group name="partner_details" position="inside">
-                <field name="partner_invoice_id" invisiblle="1"/>
-                <field name="delivery_set"/>
-                <field name="is_all_service"/>
-            </group>
-
-            <!-- Page Optional Products -->
-            <page name="optional_products" position="inside">
-                <field name="sale_order_option_ids"/>
-            </page>
-
-            <!-- Customer Signature Page -->
-            <page name="customer_signature" position="inside">
-                <field name="signed_by"/>
-                <field name="signed_on"/>
-                <field name="signature"/>
-            </page>
-
-            <!-- The rest of appropriate xpaths from the studio data -->
-            <!-- Additional visibility and attribute settings -->
+            <!--            <notebook position="after">-->
+            <!--                <label for="note" string="Note"/>-->
+            <!--                <field name="note"/>-->
+            <!--            </notebook>-->
         </field>
     </record>
 
