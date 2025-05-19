@@ -293,12 +293,6 @@
                 <field name="x_studio_luu_y_khi_tat_toan" string="Lưu ý khi tất toán"/>
             </field>
 
-            <!-- Resto de xpaths del studio -->
-            <xpath expr="//button[@name='create_new_contract']" position="replace"/>
-            <div name="button_box" position="inside">
-                <field name="partner_credit_warning"/>
-            </div>
-
             <!-- Group for partner_details modifications -->
             <group name="partner_details" position="inside">
                 <field name="partner_invoice_id" invisiblle="1"/>
