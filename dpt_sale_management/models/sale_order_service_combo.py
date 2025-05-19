@@ -13,7 +13,10 @@ class ServiceCombo(models.Model):
     partner_id = fields.Many2one('res.partner', string='Khách hàng',
                                  help='Nếu được chọn, combo này chỉ áp dụng cho khách hàng cụ thể')
     service_ids = fields.Many2many('dpt.service.management', string='Dịch vụ trong combo')
-    sale_id = fields.Many2one('sale.order',string='Order')
+    # Thêm trường service_id để khắc phục lỗi
+    service_id = fields.Many2one('dpt.service.management', string='Dịch vụ chính',
+                                 help='Dịch vụ đại diện cho combo')
+    sale_id = fields.Many2one('sale.order', string='Order')
     # Thông tin giá và tính toán
     price = fields.Float('Giá combo', help='Để trống sẽ tính tổng từ các dịch vụ')
     discount_percent = fields.Float('Giảm giá (%)', default=0.0)
@@ -66,3 +69,11 @@ class ServiceCombo(models.Model):
             })
 
         return services
+
+    @api.onchange('service_ids')
+    def onchange_service_ids(self):
+        """
+        Khi thay đổi danh sách dịch vụ, tự động chọn dịch vụ đầu tiên làm dịch vụ chính
+        """
+        if self.service_ids and not self.service_id:
+            self.service_id = self.service_ids[0]
