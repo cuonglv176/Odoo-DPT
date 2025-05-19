@@ -49,14 +49,13 @@
                 <page name="dpt_service_combo" string="Combo dịch vụ">
                     <field name="service_combo_ids" readonly="state == 'cancel' or locked">
                         <tree>
+                            <field name="combo_id"/>
                             <field name="code"/>
-                            <field name="name"/>
                             <field name="price" sum="Tổng giá"/>
                             <field name="discount_percent"/>
                             <field name="total_price" sum="Tổng giá sau KM"/>
                             <field name="partner_id"/>
                             <field name="description"/>
-                            <field name="active"/>
                         </tree>
                     </field>
                 </page>
