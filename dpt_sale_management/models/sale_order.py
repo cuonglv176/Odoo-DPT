@@ -17,6 +17,7 @@ SALE_ORDER_STATE = [
     ('cancel', "Cancelled"),
 ]
 
+
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
@@ -50,46 +51,46 @@ class SaleOrder(models.Model):
     is_quotation = fields.Boolean(default=False, compute='compute_show_is_quotation')
     active = fields.Boolean('Active', default=True)
 
+    # Thêm phương thức onchange_service_combo_ids vào class SaleOrder
     @api.onchange('service_combo_ids')
     def onchange_service_combo_ids(self):
-        """Khi chọn combo dịch vụ, tự động thêm các dịch vụ vào sale_service_ids"""
-        if not self.service_combo_ids:
-            return
+        """Tự động tạo dịch vụ khi combo được thêm vào order"""
+        # Xác định các combo mới được thêm vào
+        current_combo_ids = self.service_combo_ids.ids if self.service_combo_ids else []
+        existing_combo_ids = []
+        for service in self.sale_service_ids:
+            if service.combo_id and service.combo_id.id not in existing_combo_ids:
+                existing_combo_ids.append(service.combo_id.id)
 
-        # Lưu lại các dịch vụ không thuộc combo nào
-        existing_services = self.sale_service_ids.filtered(lambda s: not s.combo_id)
+        # Tìm các combo mới được thêm vào
+        new_combo_ids = [combo_id for combo_id in current_combo_ids if combo_id not in existing_combo_ids]
+        # Tìm các combo bị xóa đi
+        removed_combo_ids = [combo_id for combo_id in existing_combo_ids if combo_id not in current_combo_ids]
 
-        # Xóa tất cả dịch vụ có nguồn gốc từ combo
-        self.sale_service_ids = [(5, 0, 0)]
+        # Xóa các dịch vụ thuộc combo bị xóa
+        if removed_combo_ids:
+            services_to_remove = self.sale_service_ids.filtered(lambda s: s.combo_id.id in removed_combo_ids)
+            self.sale_service_ids -= services_to_remove
 
-        # Thêm lại các dịch vụ không thuộc combo
-        new_services = []
-        for service in existing_services:
-            new_services.append((0, 0, {
-                'service_id': service.service_id.id,
-                'price': service.price,
-                'uom_id': service.uom_id.id,
-                'qty': service.qty,
-                'price_status': service.price_status,
-                'department_id': service.department_id.id,
-            }))
+        # Thêm dịch vụ từ các combo mới
+        if new_combo_ids:
+            new_services = []
+            for combo_id in new_combo_ids:
+                combo = self.env['dpt.sale.order.service.combo'].browse(combo_id)
+                services = combo.get_combo_services()
+                for service_data in services:
+                    new_services.append((0, 0, {
+                        'service_id': service_data['service_id'],
+                        'price': service_data['price'],
+                        'uom_id': service_data['uom_id'],
+                        'qty': service_data['qty'],
+                        'combo_id': combo.id,
+                        'price_status': 'calculated',
+                        'department_id': service_data['department_id'],
+                    }))
 
-        # Thêm các dịch vụ từ combo
-        combo_services = []
-        for combo in self.service_combo_ids:
-            services = combo.get_combo_services()
-            for service_data in services:
-                combo_services.append((0, 0, {
-                    'service_id': service_data['service_id'],
-                    'price': service_data['price'],
-                    'uom_id': service_data['uom_id'],
-                    'qty': service_data['qty'],
-                    'combo_id': combo.id,
-                    'price_status': 'calculated',
-                    'department_id': service_data['department_id'],
-                }))
-        # Gán tất cả dịch vụ vào sale_service_ids
-        self.sale_service_ids = new_services + combo_services
+            if new_services:
+                self.sale_service_ids = [(4, service.id) for service in self.sale_service_ids] + new_services
 
     @api.depends('sale_service_ids', 'sale_service_ids.service_id', 'sale_service_ids.service_id.pricelist_item_ids')
     def compute_show_is_quotation(self):
