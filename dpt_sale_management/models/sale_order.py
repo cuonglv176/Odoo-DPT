@@ -28,7 +28,7 @@ class SaleOrder(models.Model):
         readonly=True, copy=False, index=True,
         tracking=3,
         default='draft')
-    service_combo_ids = fields.Many2many('dpt.sale.order.service.combo', string='Combo dịch vụ',
+    service_combo_ids = fields.One2many('dpt.sale.order.service.combo','sale_id', string='Combo dịch vụ',
                                          tracking=True)
     sale_service_ids = fields.One2many('dpt.sale.service.management', 'sale_id', string='Service', tracking=True,
                                        inverse='onchange_sale_service_ids')
