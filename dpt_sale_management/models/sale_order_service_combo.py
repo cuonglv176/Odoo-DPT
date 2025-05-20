@@ -21,40 +21,16 @@ class ServiceCombo(models.Model):
     def onchange_combo_id(self):
         if self.combo_id:
             self.price = self.combo_id.price
-            self.discount_percent = self.combo_id.discount_percent
 
-    from odoo import models, fields, api, _
-    from odoo.exceptions import ValidationError
-
-    class ServiceCombo(models.Model):
-        _name = 'dpt.sale.order.service.combo'
-        _description = 'Combo dịch vụ'
-
-        combo_id = fields.Many2one('dpt.service.combo', string='Combo')
-        code = fields.Char('Mã combo', related='combo_id.code')
-        description = fields.Text('Mô tả')
-        service_ids = fields.Many2many('dpt.service.management', string='Dịch vụ trong combo',
-                                       related='combo_id.service_ids')
-        sale_id = fields.Many2one('sale.order', string='Order')
-        price = fields.Float('Giá combo', help='Để trống sẽ tính tổng từ các dịch vụ')
-        discount_percent = fields.Float('Giảm giá', default=0.0)
-        total_price = fields.Float('Tổng giá sau KM', compute='_compute_total_price')
-        sale_service_ids = fields.One2many('dpt.sale.service.management', 'combo_id', 'Chi tiết dịch vụ')
-
-        @api.onchange('combo_id')
-        def onchange_combo_id(self):
-            if self.combo_id:
-                self.price = self.combo_id.price
-
-        @api.depends('price', 'discount_percent', 'sale_service_ids', 'sale_service_ids.price')
-        def _compute_total_price(self):
-            for record in self:
-                if record.price:
-                    base_price = record.price
-                else:
-                    base_price = sum(service.price for service in record.sale_service_ids)
-                if record.discount_percent:
-                    discount_amount = base_price * (record.discount_percent / 100.0)
-                    record.total_price = base_price - discount_amount
-                else:
-                    record.total_price = base_price
+    @api.depends('price', 'discount_percent', 'sale_service_ids', 'sale_service_ids.price')
+    def _compute_total_price(self):
+        for record in self:
+            if record.price:
+                base_price = record.price
+            else:
+                base_price = sum(service.price for service in record.sale_service_ids)
+            if record.discount_percent:
+                discount_amount = base_price * (record.discount_percent / 100.0)
+                record.total_price = base_price - discount_amount
+            else:
+                record.total_price = base_price
