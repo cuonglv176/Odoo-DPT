@@ -50,10 +50,10 @@
                         <tree editable="bottom">
                             <field name="combo_id"/>
                             <field name="code"/>
-                            <field name="price" sum="Tổng giá"/>
-                            <field name="discount_percent"/>
-                            <field name="total_price" sum="Tổng giá sau KM"/>
                             <field name="description"/>
+                            <field name="price" sum="Tổng giá"/>
+                            <field name="amount_discount"/>
+                            <field name="amount_total" sum="Tổng"/>
                         </tree>
                     </field>
                 </page>
