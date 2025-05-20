@@ -45,7 +45,6 @@ class ServiceCombo(models.Model):
         def onchange_combo_id(self):
             if self.combo_id:
                 self.price = self.combo_id.price
-                self.discount_percent = self.combo_id.discount_percent
 
         @api.depends('price', 'discount_percent', 'sale_service_ids', 'sale_service_ids.price')
         def _compute_total_price(self):
