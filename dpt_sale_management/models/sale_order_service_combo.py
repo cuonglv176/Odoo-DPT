@@ -14,7 +14,6 @@ class ServiceCombo(models.Model):
     sale_id = fields.Many2one('sale.order', string='Order')
     price = fields.Float('Giá Combo', help='Để trống sẽ tính tổng từ các dịch vụ')
     amount_discount = fields.Float('Giảm giá', default=0.0)
-    discount_percent = fields.Float('Phần trăm giảm giá', default=0.0)  # Añadido para solucionar error
     amount_total = fields.Float('Tổng', compute='_compute_total_price')
     sale_service_ids = fields.One2many('dpt.sale.service.management', 'combo_id', 'Chi tiết dịch vụ')
 
@@ -40,18 +39,15 @@ class ServiceCombo(models.Model):
                 if new_services:
                     self.sale_service_ids = [(5, 0, 0)] + new_services  # Eliminar servicios existentes y agregar nuevos
 
-    @api.depends('price', 'amount_discount', 'discount_percent', 'sale_service_ids', 'sale_service_ids.amount_total')
+    @api.depends('price', 'amount_discount', 'sale_service_ids', 'sale_service_ids.amount_total')
     def _compute_total_price(self):
         for record in self:
             if record.price:
                 base_price = record.price
             else:
                 base_price = sum(service.amount_total for service in record.sale_service_ids)
-            if record.discount_percent:
-                discount_amount = base_price * (record.discount_percent / 100.0)
-                record.amount_total = base_price - discount_amount
-            else:
-                record.amount_total = base_price - record.amount_discount
+            # Usar solo amount_discount ya que discount_percent no existe en la BD
+            record.amount_total = base_price - record.amount_discount
 
     def get_combo_services(self):
         """Trả về danh sách dịch vụ trong combo"""
