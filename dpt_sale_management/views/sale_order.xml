@@ -47,7 +47,8 @@
             <page name="order_lines" position="before">
                 <page name="dpt_service_combo" string="Combo dịch vụ">
                     <field name="service_combo_ids" readonly="state == 'cancel' or locked">
-                        <tree>
+                        <tree editable="bottom">
+                            <field name="combo_id"/>
                             <field name="code"/>
                             <field name="price" sum="Tổng giá"/>
                             <field name="discount_percent"/>
