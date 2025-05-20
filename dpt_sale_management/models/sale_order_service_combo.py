@@ -5,6 +5,7 @@ from odoo.exceptions import ValidationError
 class ServiceCombo(models.Model):
     _name = 'dpt.sale.order.service.combo'
     _description = 'Combo dịch vụ'
+    _rec_name = 'combo_id'
 
     combo_id = fields.Many2one('dpt.service.combo', string='Combo')
     code = fields.Char('Mã combo', related='combo_id.code')
