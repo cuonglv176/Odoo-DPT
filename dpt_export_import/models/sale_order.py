@@ -29,7 +29,7 @@ class SaleOrder(models.Model):
 
     def _compute_declaration_count(self):
         for rec in self:
-            declaration_count = len(self.env['dpt.export.import'].search([('sale_ids', 'in', [self.id])]))
+            declaration_count = len(self.env['dpt.export.import'].search([('sale_ids', 'in', [item.id])]))
             rec.declaration_count = declaration_count
             rec.declaration_line_count = len(rec.dpt_export_import_line_ids)
 
