@@ -61,17 +61,14 @@ class SaleOrder(models.Model):
         for service in self.sale_service_ids:
             if service.combo_id and service.combo_id.id not in existing_combo_ids:
                 existing_combo_ids.append(service.combo_id.id)
-
         # Tìm các combo mới được thêm vào
         new_combo_ids = [combo_id for combo_id in current_combo_ids if combo_id not in existing_combo_ids]
         # Tìm các combo bị xóa đi
         removed_combo_ids = [combo_id for combo_id in existing_combo_ids if combo_id not in current_combo_ids]
-
         # Xóa các dịch vụ thuộc combo bị xóa
         if removed_combo_ids:
             services_to_remove = self.sale_service_ids.filtered(lambda s: s.combo_id.id in removed_combo_ids)
             self.sale_service_ids -= services_to_remove
-
         # Thêm dịch vụ từ các combo mới
         if new_combo_ids:
             new_services = []
@@ -88,7 +85,6 @@ class SaleOrder(models.Model):
                         'price_status': 'calculated',
                         'department_id': service_data['department_id'],
                     }))
-
             if new_services:
                 self.sale_service_ids = [(4, service.id) for service in self.sale_service_ids] + new_services
 
