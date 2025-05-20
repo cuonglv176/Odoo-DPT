@@ -14,6 +14,7 @@ class ServiceCombo(models.Model):
     sale_id = fields.Many2one('sale.order', string='Order')
     price = fields.Float('Giá Combo', help='Để trống sẽ tính tổng từ các dịch vụ')
     amount_discount = fields.Float('Giảm giá', default=0.0)
+    discount_percent = fields.Float('Phần trăm giảm giá', default=0.0)  # Añadido para solucionar error
     amount_total = fields.Float('Tổng', compute='_compute_total_price')
     sale_service_ids = fields.One2many('dpt.sale.service.management', 'combo_id', 'Chi tiết dịch vụ')
 
@@ -21,8 +22,25 @@ class ServiceCombo(models.Model):
     def onchange_combo_id(self):
         if self.combo_id:
             self.price = self.combo_id.price
+            # Crear los servicios automáticamente cuando se cambia el combo
+            if self.combo_id.service_ids:
+                new_services = []
+                services = self.get_combo_services()
+                for service_data in services:
+                    new_services.append((0, 0, {
+                        'service_id': service_data['service_id'],
+                        'price': service_data['price'],
+                        'uom_id': service_data['uom_id'],
+                        'qty': service_data['qty'],
+                        'combo_id': self.id,
+                        'sale_id': self.sale_id.id,
+                        'price_status': 'calculated',
+                        'department_id': service_data['department_id'],
+                    }))
+                if new_services:
+                    self.sale_service_ids = [(5, 0, 0)] + new_services  # Eliminar servicios existentes y agregar nuevos
 
-    @api.depends('price', 'amount_discount', 'sale_service_ids', 'sale_service_ids.amount_total')
+    @api.depends('price', 'amount_discount', 'discount_percent', 'sale_service_ids', 'sale_service_ids.amount_total')
     def _compute_total_price(self):
         for record in self:
             if record.price:
@@ -30,9 +48,10 @@ class ServiceCombo(models.Model):
             else:
                 base_price = sum(service.amount_total for service in record.sale_service_ids)
             if record.discount_percent:
-                record.amount_total = base_price - record.amount_discount
+                discount_amount = base_price * (record.discount_percent / 100.0)
+                record.amount_total = base_price - discount_amount
             else:
-                record.amount_total = base_price
+                record.amount_total = base_price - record.amount_discount
 
     def get_combo_services(self):
         """Trả về danh sách dịch vụ trong combo"""
@@ -46,44 +65,3 @@ class ServiceCombo(models.Model):
                 'department_id': service.department_id.id if service.department_id else False,
             })
         return services
-
-    @api.onchange('combo_id')
-    def onchange_combo_services(self):
-        """Tự động tạo dịch vụ khi combo được thêm vào order"""
-        # Xác định các combo mới được thêm vào
-        current_combo_ids = self.service_combo_ids.ids if self.service_combo_ids else []
-        existing_combo_ids = []
-        for service in self.sale_service_ids:
-            if service.combo_id and service.combo_id.id not in existing_combo_ids:
-                existing_combo_ids.append(service.combo_id.id)
-
-        # Tìm các combo mới được thêm vào
-        new_combo_ids = [combo_id for combo_id in current_combo_ids if combo_id not in existing_combo_ids]
-
-        # Tìm các combo bị xóa đi
-        removed_combo_ids = [combo_id for combo_id in existing_combo_ids if combo_id not in current_combo_ids]
-
-        # Xóa các dịch vụ thuộc combo bị xóa
-        if removed_combo_ids:
-            services_to_remove = self.sale_service_ids.filtered(lambda s: s.combo_id.id in removed_combo_ids)
-            self.sale_service_ids -= services_to_remove
-
-        # Thêm dịch vụ từ các combo mới
-        if new_combo_ids:
-            new_services = []
-            for combo_id in new_combo_ids:
-                combo = self.env['dpt.sale.order.service.combo'].browse(combo_id)
-                services = combo.get_combo_services()
-                for service_data in services:
-                    new_services.append((0, 0, {
-                        'service_id': service_data['service_id'],
-                        'price': service_data['price'],
-                        'uom_id': service_data['uom_id'],
-                        'qty': service_data['qty'],
-                        'combo_id': combo.id,
-                        'sale_id': self.sale_id.id,
-                        'price_status': 'calculated',
-                        'department_id': service_data['department_id'],
-                    }))
-            if new_services:
-                self.sale_service_ids = [(4, service.id) for service in self.sale_service_ids] + new_services
