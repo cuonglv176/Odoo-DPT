@@ -18,6 +18,9 @@ class ServiceCombo(models.Model):
     amount_total = fields.Float('Tổng', compute='_compute_total_price')
     sale_service_ids = fields.One2many('dpt.sale.service.management', 'combo_id', 'Chi tiết dịch vụ')
 
+    # Para almacenar temporalmente los servicios durante la creación
+    _services_to_create = {}
+
     @api.onchange('combo_id')
     def onchange_combo_id(self):
         if self.combo_id:
@@ -32,13 +35,39 @@ class ServiceCombo(models.Model):
                         'price': service_data['price'],
                         'uom_id': service_data['uom_id'],
                         'qty': service_data['qty'],
-                        'combo_id': self.id,
-                        'sale_id': self.sale_id.id,
+                        'combo_id': self.id if not self._origin.id else self._origin.id,
+                        'sale_id': self.sale_id.id if self.sale_id else False,
                         'price_status': 'calculated',
                         'department_id': service_data['department_id'],
                     }))
                 if new_services:
-                    self.sale_service_ids = [(5, 0, 0)] + new_services  # Eliminar servicios existentes y agregar nuevos
+                    # Guardar los servicios para crearlos después de guardar si es un nuevo registro
+                    if not self._origin.id:
+                        self._services_to_create[self.id] = new_services
+                    self.sale_service_ids = [(5, 0, 0)] + new_services
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super(ServiceCombo, self).create(vals_list)
+        # Crear servicios para cada nuevo registro
+        for record in records:
+            if record.combo_id and record.combo_id.service_ids:
+                services = record.get_combo_services()
+                new_services = []
+                for service_data in services:
+                    new_services.append({
+                        'service_id': service_data['service_id'],
+                        'price': service_data['price'],
+                        'uom_id': service_data['uom_id'],
+                        'qty': service_data['qty'],
+                        'combo_id': record.id,
+                        'sale_id': record.sale_id.id if record.sale_id else False,
+                        'price_status': 'calculated',
+                        'department_id': service_data['department_id'],
+                    })
+                if new_services:
+                    self.env['dpt.sale.service.management'].create(new_services)
+        return records
 
     @api.depends('price', 'amount_discount', 'sale_service_ids', 'sale_service_ids.amount_total')
     def _compute_total_price(self):
@@ -47,7 +76,6 @@ class ServiceCombo(models.Model):
                 base_price = record.price
             else:
                 base_price = sum(service.amount_total for service in record.sale_service_ids)
-            # Usar solo amount_discount ya que discount_percent no existe en la BD
             record.amount_total = base_price - record.amount_discount
 
     def get_combo_services(self):
