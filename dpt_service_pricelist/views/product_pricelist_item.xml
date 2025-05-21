@@ -94,11 +94,11 @@
         </record>
 
         <!-- Menu item cho Bảng giá dịch vụ -->
-        <menuitem id="menu_service_pricelist"
+        <menuitem id="menu_service_pricelist_item"
                   name="Bảng giá dịch vụ"
                   parent="dpt_service_management.service_management_root_menu"
                   action="action_service_pricelist_item"
-                  sequence="20"/>
+                  sequence="35"/>
 
     </data>
 </odoo>

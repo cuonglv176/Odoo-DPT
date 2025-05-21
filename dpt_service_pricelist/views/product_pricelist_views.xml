@@ -73,7 +73,7 @@
 
 
     <!-- Menu dành cho bảng giá -->
-    <record id="action_service_pricelist" model="ir.actions.act_window">
+    <record id="action_service_pricelist_combo" model="ir.actions.act_window">
         <field name="name">Bảng giá dịch vụ</field>
         <field name="res_model">product.pricelist</field>
         <field name="view_mode">tree,form</field>
@@ -85,33 +85,12 @@
     </record>
 
     <!-- Menu chính cho bảng giá -->
-    <menuitem id="menu_service_pricelist"
+    <menuitem id="menu_service_pricelist_combo"
               name="Bảng giá"
               parent="dpt_service_management.service_management_root_menu"
-              action="action_service_pricelist"
+              action="action_service_pricelist_combo"
               sequence="30"/>
 
-    <!-- Menu cho bảng giá đang chờ phê duyệt -->
-    <record id="action_pending_pricelist_approval" model="ir.actions.act_window">
-        <field name="name">Duyệt bảng giá</field>
-        <field name="res_model">product.pricelist</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[('state', '=', 'pending')]</field>
-        <field name="context">{'search_default_pending_pricelists': 1}</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Không có bảng giá nào đang chờ duyệt
-            </p>
-        </field>
-    </record>
-
-    <!-- Menu cho phê duyệt bảng giá -->
-    <menuitem id="menu_pending_pricelist_approval"
-              name="Duyệt bảng giá"
-              parent="dpt_service_management.service_management_root_menu"
-              action="action_pending_pricelist_approval"
-              groups="base.group_system"
-              sequence="31"/>
 
     <!-- Cron job để kiểm tra bảng giá hết hạn -->
     <record id="ir_cron_check_expired_pricelists" model="ir.cron">
