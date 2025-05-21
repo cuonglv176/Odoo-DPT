@@ -18,9 +18,6 @@
             <field name="model">product.pricelist</field>
             <field name="inherit_id" ref="product.product_pricelist_view"/>
             <field name="arch" type="xml">
-                <field name="currency_id" position="before">
-                    <field name="partner_id" options="{'no_create': True}" />
-                </field>
                 <xpath expr="//page[@name='pricelist_rules']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>

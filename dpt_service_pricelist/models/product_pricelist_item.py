@@ -28,6 +28,7 @@ class ProductPricelistItem(models.Model):
         ('product_total_amount', 'Product Total Amount'),
         ('declaration_total_amount', 'Declaration Total Amount'),
         ('purchase_total_amount', 'Purchase Total Amount'),
+        ('invoice_total_amount', 'Tổng giá trị xuất hoá đơn'),
     ], 'Based On', tracking=True, copy=True)
     min_amount = fields.Float(string="Min Amount", digits='Product Price', tracking=True, copy=True)
     # re define
@@ -47,6 +48,9 @@ class ProductPricelistItem(models.Model):
     date_start = fields.Datetime(tracking=True)
     date_end = fields.Datetime(tracking=True)
     currency_id = fields.Many2one(tracking=True)
+
+    # Bỏ yêu cầu product_tmpl_id
+    product_tmpl_id = fields.Many2one(required=False)
 
     @api.onchange('service_id')
     def onchange_service(self):
