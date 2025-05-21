@@ -37,7 +37,7 @@
     <!-- Menu duyệt bảng giá -->
     <menuitem id="menu_pending_pricelist_approval"
               name="Bảng giá"
-              parent="service_management_root_menu"
+              parent="dpt_service_management.service_management_root_menu"
               action="action_pending_pricelist_approval"
               groups="base.group_system"
               sequence="31"/>
