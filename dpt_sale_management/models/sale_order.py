@@ -28,14 +28,27 @@ class SaleOrder(models.Model):
         readonly=True, copy=False, index=True,
         tracking=3,
         default='draft')
-    service_combo_ids = fields.One2many('dpt.sale.order.service.combo','sale_id', string='Combo dịch vụ',
+
+    # Valores reales
+    service_combo_ids = fields.One2many('dpt.sale.order.service.combo','sale_id', string='Combo dịch vụ thực tế',
                                          tracking=True)
-    sale_service_ids = fields.One2many('dpt.sale.service.management', 'sale_id', string='Service', tracking=True,
+    sale_service_ids = fields.One2many('dpt.sale.service.management', 'sale_id', string='Service thực tế', tracking=True,
                                        inverse='onchange_sale_service_ids')
+
+    # Valores planificados (nuevos campos)
+    planned_service_combo_ids = fields.One2many('dpt.sale.order.service.combo','planned_sale_id',
+                                                string='Combo dịch vụ dự kiến', tracking=True)
+    planned_sale_service_ids = fields.One2many('dpt.sale.service.management', 'planned_sale_id',
+                                              string='Service dự kiến', tracking=True)
+
+    # Campos existentes
     fields_ids = fields.One2many('dpt.sale.order.fields', 'sale_id', string='Fields')
     service_total_untax_amount = fields.Float(compute='_compute_service_amount')
     service_tax_amount = fields.Float(compute='_compute_service_amount')
     service_total_amount = fields.Float(compute='_compute_service_amount')
+    # Nuevo campo para el total planificado
+    planned_service_total_amount = fields.Float(string='Tổng dự kiến', compute='_compute_planned_service_amount')
+
     update_pricelist = fields.Boolean('Update Pricelist')
     show_action_calculation = fields.Boolean('Show Action Calculation', compute='compute_show_action_calculation')
     weight = fields.Float('Weight')
@@ -50,6 +63,12 @@ class SaleOrder(models.Model):
     times_of_quotation = fields.Integer(default=0, string='Số lần báo giá')
     is_quotation = fields.Boolean(default=False, compute='compute_show_is_quotation')
     active = fields.Boolean('Active', default=True)
+
+    # Método para calcular el total planificado
+    @api.depends('planned_sale_service_ids.amount_total')
+    def _compute_planned_service_amount(self):
+        for record in self:
+            record.planned_service_total_amount = sum(record.planned_sale_service_ids.mapped('amount_total'))
 
     # Thêm phương thức onchange_service_combo_ids vào class SaleOrder
     @api.onchange('service_combo_ids')
@@ -87,6 +106,44 @@ class SaleOrder(models.Model):
                     }))
             if new_services:
                 self.sale_service_ids = [(4, service.id) for service in self.sale_service_ids] + new_services
+
+    # Nuevo método para manejar combos planificados
+    @api.onchange('planned_service_combo_ids')
+    def onchange_planned_service_combo_ids(self):
+        """Tự động tạo dịch vụ khi combo được thêm vào order (cho dự kiến)"""
+        # Xác định các combo mới được thêm vào
+        current_combo_ids = self.planned_service_combo_ids.ids if self.planned_service_combo_ids else []
+        existing_combo_ids = []
+        for service in self.planned_sale_service_ids:
+            if service.combo_id and service.combo_id.id not in existing_combo_ids:
+                existing_combo_ids.append(service.combo_id.id)
+        # Tìm các combo mới được thêm vào
+        new_combo_ids = [combo_id for combo_id in current_combo_ids if combo_id not in existing_combo_ids]
+        # Tìm các combo bị xóa đi
+        removed_combo_ids = [combo_id for combo_id in existing_combo_ids if combo_id not in current_combo_ids]
+        # Xóa các dịch vụ thuộc combo bị xóa
+        if removed_combo_ids:
+            services_to_remove = self.planned_sale_service_ids.filtered(lambda s: s.combo_id.id in removed_combo_ids)
+            self.planned_sale_service_ids -= services_to_remove
+        # Thêm dịch vụ từ các combo mới
+        if new_combo_ids:
+            new_services = []
+            for combo_id in new_combo_ids:
+                combo = self.env['dpt.sale.order.service.combo'].browse(combo_id)
+                services = combo.get_combo_services()
+                for service_data in services:
+                    new_services.append((0, 0, {
+                        'service_id': service_data['service_id'],
+                        'price': service_data['price'],
+                        'uom_id': service_data['uom_id'],
+                        'qty': service_data['qty'],
+                        'combo_id': combo.id,
+                        'price_status': 'calculated',
+                        'department_id': service_data['department_id'],
+                        'planned_sale_id': self.id,
+                    }))
+            if new_services:
+                self.planned_sale_service_ids = [(4, service.id) for service in self.planned_sale_service_ids] + new_services
 
     @api.depends('sale_service_ids', 'sale_service_ids.service_id', 'sale_service_ids.service_id.pricelist_item_ids')
     def compute_show_is_quotation(self):
