@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action hiển thị bảng giá -->
+    <record id="action_product_pricelist_dpt" model="ir.actions.act_window">
+        <field name="name">Bảng giá dịch vụ</field>
+        <field name="res_model">product.pricelist</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'default_state': 'draft'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo bảng giá dịch vụ mới
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu bảng giá -->
+    <menuitem id="menu_product_pricelist_dpt"
+              name="Bảng giá dịch vụ"
+              parent="service_management_root_menu"
+              action="action_product_pricelist_dpt"
+              sequence="30"/>
+
+    <!-- Menu dành riêng cho duyệt bảng giá -->
+    <record id="action_pending_pricelist_approval" model="ir.actions.act_window">
+        <field name="name">Duyệt bảng giá</field>
+        <field name="res_model">product.pricelist</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state', '=', 'pending')]</field>
+        <field name="context">{'default_state': 'pending'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Không có bảng giá nào đang chờ duyệt
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu duyệt bảng giá -->
+    <menuitem id="menu_pending_pricelist_approval"
+              name="Bảng giá"
+              parent="service_management_root_menu"
+              action="action_pending_pricelist_approval"
+              groups="base.group_system"
+              sequence="31"/>
+
+    <!-- Filter các bảng giá theo trạng thái -->
+    <record id="pricelist_view_search_dpt" model="ir.ui.view">
+        <field name="name">product.pricelist.search.dpt</field>
+        <field name="model">product.pricelist</field>
+        <field name="inherit_id" ref="product.pricelist_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="partner_id"/>
+                <filter string="Nháp" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Chờ duyệt" name="pending" domain="[('state', '=', 'pending')]"/>
+                <filter string="Đã duyệt" name="active" domain="[('state', '=', 'active')]"/>
+                <filter string="Tạm dừng" name="suspended" domain="[('state', '=', 'suspended')]"/>
+                <filter string="Từ chối" name="rejected" domain="[('state', '=', 'rejected')]"/>
+                <filter string="Hết hạn" name="expired" domain="[('state', '=', 'expired')]"/>
+                <separator/>
+                <filter string="Của tôi" name="my_pricelist" domain="[('create_uid', '=', uid)]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
