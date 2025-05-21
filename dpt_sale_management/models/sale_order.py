@@ -40,6 +40,16 @@ class SaleOrder(models.Model):
                                                 string='Combo dịch vụ dự kiến', tracking=True)
     planned_sale_service_ids = fields.One2many('dpt.sale.service.management', 'planned_sale_id',
                                               string='Service dự kiến', tracking=True)
+    # Thêm trường mới cho việc tất toán và chốt giá
+    settle_by = fields.Selection([
+        ('planned', 'Tất toán theo dự kiến'),
+        ('actual', 'Tất toán theo thực tế')
+    ], string='Phương thức tất toán', default='actual', tracking=True,
+        help='Chọn phương thức tất toán theo dự kiến hoặc thực tế')
+
+    is_price_fixed = fields.Boolean(string='Đã chốt giá với khách',
+                                    tracking=True,
+                                    help='Tích vào đây nếu đã chốt giá báo giá với khách hàng')
 
     # Campos existentes
     fields_ids = fields.One2many('dpt.sale.order.fields', 'sale_id', string='Fields')

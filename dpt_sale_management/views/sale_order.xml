@@ -32,6 +32,7 @@
                 <field name="employee_sale"/>
                 <field name="employee_cs"/>
                 <field name="times_of_quotation" readonly="1"/>
+                <field name="settle_by" widget="radio"/>
             </field>
             <xpath expr="//page[@name='order_lines']/field[@name='order_line']/tree/field[@name='product_template_id']"
                    position="before">
@@ -41,6 +42,11 @@
             <page name="order_lines" position="before">
                 <!-- Tab para servicios planificados -->
                 <page name="planned_services" string="Dịch vụ dự kiến">
+                    <div class="oe_inline">
+                        <field name="is_price_fixed" class="oe_inline"/>
+                        <label for="is_price_fixed" class="oe_inline font-weight-bold"
+                               style="color: red; margin-left: 4px;"/>
+                    </div>
                     <notebook>
                         <page name="planned_combo" string="Combo dịch vụ">
                             <field name="planned_service_combo_ids" readonly="state == 'cancel' or locked">

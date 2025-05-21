@@ -38,6 +38,7 @@ class DPTSaleServiceManagement(models.Model):
         ('approved_approval', 'Approved Approval'),
         ('calculated', 'Calculated')
     ], string='Price Status', default='no_price', tracking=True)
+    planned_sale_id = fields.Many2one('sale.order', string='Planned Order')
 
     @api.onchange('price')
     def onchange_check_price(self):
