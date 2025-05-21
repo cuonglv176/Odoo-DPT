@@ -8,24 +8,25 @@
                 <header>
                     <!-- Các nút theo luồng mới -->
                     <button name="action_submit_approval" string="Gửi phê duyệt" type="object" class="btn-primary"
-                            invisible="state != 'draft'" />
+                            invisible="state != 'draft'"/>
                     <button name="action_activate" string="Phê duyệt" type="object" class="btn-primary"
                             invisible="state != 'pending' or not approver_ids"
-                            groups="base.group_system" />
+                            groups="base.group_system"/>
                     <button name="action_reject" string="Từ chối" type="object" class="btn-danger"
                             invisible="state != 'pending' or not approver_ids"
-                            groups="base.group_system" />
+                            groups="base.group_system"/>
                     <button name="action_suspend" string="Tạm dừng" type="object"
-                            invisible="state != 'active'" />
+                            invisible="state != 'active'"/>
                     <button name="action_resume" string="Kích hoạt lại" type="object" class="btn-primary"
-                            invisible="state != 'suspended'" />
+                            invisible="state != 'suspended'"/>
                     <button name="action_draft" string="Chuyển về nháp" type="object"
-                            invisible="state not in ['rejected', 'cancelled']" />
+                            invisible="state not in ['rejected', 'cancelled']"/>
                     <button name="action_cancel" string="Hủy" type="object"
-                            invisible="state in ['cancelled', 'expired', 'draft']" />
+                            invisible="state in ['cancelled', 'expired', 'draft']"/>
                     <button name="action_create_new_version" string="Tạo phiên bản mới" type="object"
-                            class="btn-secondary" invisible="state == 'draft'" />
-                    <field name="state" widget="statusbar" statusbar_visible="draft,pending,active,suspended,expired,cancelled" />
+                            class="btn-secondary" invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,pending,active,suspended,expired,cancelled"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -82,33 +83,20 @@
                         </page>
                         <!-- Thêm tab mới để hiển thị các đơn vị -->
                         <page string="Đơn vị" name="units">
-                            <field name="service_uom_ids" invisible="1"/>
-                            <field name="service_uom_summary" invisible="1"/>
-                            <div class="alert alert-info" role="alert" invisible="service_uom_ids">
-                                <p>Không có đơn vị nào được tìm thấy. Vui lòng thêm dịch vụ vào combo.</p>
-                            </div>
-                            <!-- Hiển thị bảng đơn vị theo dịch vụ -->
-                            <field name="service_ids" invisible="not service_uom_ids">
-                                <tree create="false" edit="false" delete="false">
-                                    <field name="name"/>
-                                    <field name="uom_ids" widget="many2many_tags"/>
+                            <field name="service_uom_ids">
+                                <tree editable="bottom">
+                                    <field name="name" readonly="1"/>
+                                    <field name="category_id" readonly="1"/>
+                                    <field name="description"/>
                                 </tree>
                             </field>
-                            <!-- Hiển thị tất cả các đơn vị được sử dụng -->
-                            <separator string="Tất cả đơn vị được sử dụng" invisible="not service_uom_ids"/>
-                            <field name="service_uom_ids" invisible="not service_uom_ids">
-                                <tree create="false" edit="false" delete="false">
-                <field name="name"/>
-                                    <field name="category_id" groups="uom.group_uom"/>
-            </tree>
-        </field>
                         </page>
                         <page string="Thông tin phê duyệt" name="approval_info"
                               invisible="not approval_date">
                             <group>
                                 <field name="approval_date"/>
                                 <field name="approved_by"/>
-                </group>
+                            </group>
                         </page>
                     </notebook>
                 </sheet>

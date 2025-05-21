@@ -59,7 +59,6 @@
         <field name="inherit_id" ref="product.product_pricelist_view_tree"/>
         <field name="arch" type="xml">
             <field name="currency_id" position="after">
-                <field name="partner_id"/>
                 <field name="date_start"/>
                 <field name="date_end"/>
                 <field name="state" widget="badge"
