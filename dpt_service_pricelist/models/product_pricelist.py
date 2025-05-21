@@ -7,7 +7,7 @@ class ProductPricelist(models.Model):
     _inherit = 'product.pricelist'
 
     partner_id = fields.Many2one('res.partner', 'Customer', domain=[('customer_rank', '>', 0)], tracking=True)
-
+    service_id = fields.Many2one('dpt.service.management', 'Service', tracking=True)
     # Trường trạng thái
     state = fields.Selection([
         ('draft', 'Nháp'),
