@@ -1,32 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Action hiển thị bảng giá -->
-    <record id="action_product_pricelist_dpt" model="ir.actions.act_window">
-        <field name="name">Bảng giá dịch vụ</field>
-        <field name="res_model">product.pricelist</field>
-        <field name="view_mode">tree,form</field>
-        <field name="context">{'default_state': 'draft'}</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Tạo bảng giá dịch vụ mới
-            </p>
-        </field>
-    </record>
-
-    <!-- Menu bảng giá -->
-    <menuitem id="menu_product_pricelist_dpt"
-              name="Bảng giá dịch vụ"
-              parent="service_management_root_menu"
-              action="action_product_pricelist_dpt"
-              sequence="30"/>
-
     <!-- Menu dành riêng cho duyệt bảng giá -->
-    <record id="action_pending_pricelist_approval" model="ir.actions.act_window">
+    <record id="action_service_pricelist" model="ir.actions.act_window">
         <field name="name">Duyệt bảng giá</field>
         <field name="res_model">product.pricelist</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain">[('state', '=', 'pending')]</field>
-        <field name="context">{'default_state': 'pending'}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Không có bảng giá nào đang chờ duyệt
@@ -38,9 +16,8 @@
     <menuitem id="menu_pending_pricelist_approval"
               name="Bảng giá"
               parent="dpt_service_management.service_management_root_menu"
-              action="action_pending_pricelist_approval"
-              groups="base.group_system"
-              sequence="31"/>
+              action="action_service_pricelist"
+              sequence="30"/>
 
     <!-- Filter các bảng giá theo trạng thái -->
     <record id="pricelist_view_search_dpt" model="ir.ui.view">
