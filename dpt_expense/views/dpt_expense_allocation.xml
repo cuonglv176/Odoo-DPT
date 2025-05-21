@@ -40,6 +40,9 @@
                         <page name="sale_order" string="Đơn hàng">
                             <field name="sale_ids" readonly="1" force_save="1"/>
                         </page>
+                        <page name="account_move" string="Bút toán phân bổ">
+                            <field name="allocation_move_ids" readonly="1" force_save="1"/>
+                        </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">

@@ -22,6 +22,7 @@ class DPTExpenseAllocation(models.Model):
     shipping_id = fields.Many2one('dpt.shipping.slip', string='Shipping')
     sale_ids = fields.Many2many('sale.order', string='Orders', compute="_compute_order")
     state = fields.Selection([('draft', 'Draft'), ('allocated', 'Allocated')], string='State', default='draft')
+    allocation_move_ids = fields.One2many('account.move', 'expense_allocation_id', string='Allocation Moves')
 
     @api.depends('shipping_id')
     def _compute_order(self):
@@ -94,6 +95,7 @@ class DPTExpenseAllocation(models.Model):
                             'partner_id': self.shipping_id.po_id.partner_id.id,
                             'sale_id': sale_id.id,
                             'journal_id': journal_id.id,
+                            'expense_allocation_id': self.id,
                             'invoice_line_ids': [(0, 0, {
                                 'product_id': self.expense_id.id,
                                 'account_id': self.expense_id.property_account_expense_id.id,
