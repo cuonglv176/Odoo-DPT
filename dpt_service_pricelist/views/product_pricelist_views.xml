@@ -10,11 +10,7 @@
                 <header>
                     <button name="action_submit_approval" string="Gửi phê duyệt" class="oe_highlight"
                             type="object" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
-                    <button name="action_activate" string="Phê duyệt" class="oe_highlight"
-                            type="object" groups="base.group_system"
-                            attrs="{'invisible': [('state', '!=', 'pending')]}"/>
-                    <button name="action_reject" string="Từ chối" type="object"
-                            groups="base.group_system" attrs="{'invisible': [('state', '!=', 'pending')]}"/>
+                    <!-- action_activate không tồn tại, sử dụng các phương thức hiện có -->
                     <button name="action_suspend" string="Tạm dừng" type="object"
                             attrs="{'invisible': [('state', '!=', 'active')]}"/>
                     <button name="action_resume" string="Kích hoạt lại" type="object" class="oe_highlight"
@@ -96,7 +92,7 @@
         </field>
     </record>
 
-    <!-- Menu dành riêng cho duyệt bảng giá -->
+    <!-- Menu dành cho bảng giá -->
     <record id="action_service_pricelist" model="ir.actions.act_window">
         <field name="name">Bảng giá dịch vụ</field>
         <field name="res_model">product.pricelist</field>
@@ -108,14 +104,14 @@
         </field>
     </record>
 
-    <!-- Menu duyệt bảng giá -->
+    <!-- Menu chính cho bảng giá -->
     <menuitem id="menu_service_pricelist"
               name="Bảng giá dịch vụ"
               parent="dpt_service_management.service_management_root_menu"
               action="action_service_pricelist"
               sequence="30"/>
 
-    <!-- Menu cho bảng giá đang chờ duyệt -->
+    <!-- Menu cho bảng giá đang chờ phê duyệt -->
     <record id="action_pending_pricelist_approval" model="ir.actions.act_window">
         <field name="name">Duyệt bảng giá</field>
         <field name="res_model">product.pricelist</field>
@@ -129,6 +125,7 @@
         </field>
     </record>
 
+    <!-- Menu cho phê duyệt bảng giá -->
     <menuitem id="menu_pending_pricelist_approval"
               name="Duyệt bảng giá"
               parent="dpt_service_management.service_management_root_menu"
