@@ -43,9 +43,42 @@ class DPTServiceCombo(models.Model):
     approved_by = fields.Many2one('res.users', string='Phê duyệt bởi', readonly=True, copy=False)
     rejection_reason = fields.Text(string='Lý do từ chối', readonly=True, copy=False)
 
+    # Thêm trường mới để lưu trữ các đơn vị đo lường từ các dịch vụ trong combo
+    service_uom_ids = fields.Many2many('uom.uom', string='Đơn vị đo lường', compute='_compute_service_uom_ids')
+    service_uom_summary = fields.Text(string='Tổng hợp đơn vị', compute='_compute_service_uom_summary')
+
     _sql_constraints = [
         ('code_uniq', 'unique (code)', "Mã gói combo đã tồn tại!")
     ]
+
+    @api.depends('service_ids', 'service_ids.uom_ids')
+    def _compute_service_uom_ids(self):
+        """Tính toán tất cả các đơn vị đo lường từ các dịch vụ trong combo"""
+        for combo in self:
+            uom_ids = []
+            for service in combo.service_ids:
+                for uom in service.uom_ids:
+                    if uom.id not in uom_ids:
+                        uom_ids.append(uom.id)
+            combo.service_uom_ids = [(6, 0, uom_ids)]
+
+    @api.depends('service_ids', 'service_ids.uom_ids')
+    def _compute_service_uom_summary(self):
+        """Tạo bảng tổng hợp về đơn vị theo dịch vụ"""
+        for combo in self:
+            summary = {}
+            for service in combo.service_ids:
+                if service.id not in summary:
+                    summary[service.id] = {
+                        'service_name': service.name,
+                        'uoms': []
+                    }
+                for uom in service.uom_ids:
+                    summary[service.id]['uoms'].append({
+                        'uom_name': uom.name,
+                        'uom_id': uom.id
+                    })
+            combo.service_uom_summary = str(summary) if summary else False
 
     @api.depends('service_ids')
     def _compute_total_services(self):
@@ -67,13 +100,11 @@ class DPTServiceCombo(models.Model):
                 for approver in approval_type.user_ids:
                     approvers.append(approver.id)
             record.approver_ids = [(6, 0, approvers)]
-
     @api.model
     def create(self, vals):
         if vals.get('code', 'COMBO/') == 'COMBO/':
             vals['code'] = self._generate_combo_code()
         return super(DPTServiceCombo, self).create(vals)
-
     def _generate_combo_code(self):
         sequence = self.env['ir.sequence'].next_by_code('dpt.service.combo') or '001'
         return f'COMBO/{sequence}'

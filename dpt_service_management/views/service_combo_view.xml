@@ -80,12 +80,35 @@
                                 </tree>
                             </field>
                         </page>
+                        <!-- Thêm tab mới để hiển thị các đơn vị -->
+                        <page string="Đơn vị" name="units">
+                            <field name="service_uom_ids" invisible="1"/>
+                            <field name="service_uom_summary" invisible="1"/>
+                            <div class="alert alert-info" role="alert" invisible="service_uom_ids">
+                                <p>Không có đơn vị nào được tìm thấy. Vui lòng thêm dịch vụ vào combo.</p>
+                            </div>
+                            <!-- Hiển thị bảng đơn vị theo dịch vụ -->
+                            <field name="service_ids" invisible="not service_uom_ids">
+                                <tree create="false" edit="false" delete="false">
+                                    <field name="name"/>
+                                    <field name="uom_ids" widget="many2many_tags"/>
+                                </tree>
+                            </field>
+                            <!-- Hiển thị tất cả các đơn vị được sử dụng -->
+                            <separator string="Tất cả đơn vị được sử dụng" invisible="not service_uom_ids"/>
+                            <field name="service_uom_ids" invisible="not service_uom_ids">
+                                <tree create="false" edit="false" delete="false">
+                <field name="name"/>
+                                    <field name="category_id" groups="uom.group_uom"/>
+            </tree>
+        </field>
+                        </page>
                         <page string="Thông tin phê duyệt" name="approval_info"
                               invisible="not approval_date">
                             <group>
                                 <field name="approval_date"/>
                                 <field name="approved_by"/>
-                            </group>
+                </group>
                         </page>
                     </notebook>
                 </sheet>
@@ -158,6 +181,6 @@
     <menuitem id="menu_service_combo"
               name="Gói combo dịch vụ"
               parent="service_management_root_menu"
-              action="action_service_combo" 
+              action="action_service_combo"
               sequence="16"/>
 </odoo>
