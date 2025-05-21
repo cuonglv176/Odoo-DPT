@@ -18,24 +18,4 @@
               parent="dpt_service_management.service_management_root_menu"
               action="action_service_pricelist"
               sequence="30"/>
-
-    <!-- Filter các bảng giá theo trạng thái -->
-    <record id="pricelist_view_search_dpt" model="ir.ui.view">
-        <field name="name">product.pricelist.search.dpt</field>
-        <field name="model">product.pricelist</field>
-        <field name="inherit_id" ref="product.pricelist_view_search"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='name']" position="after">
-                <field name="partner_id"/>
-                <filter string="Nháp" name="draft" domain="[('state', '=', 'draft')]"/>
-                <filter string="Chờ duyệt" name="pending" domain="[('state', '=', 'pending')]"/>
-                <filter string="Đã duyệt" name="active" domain="[('state', '=', 'active')]"/>
-                <filter string="Tạm dừng" name="suspended" domain="[('state', '=', 'suspended')]"/>
-                <filter string="Từ chối" name="rejected" domain="[('state', '=', 'rejected')]"/>
-                <filter string="Hết hạn" name="expired" domain="[('state', '=', 'expired')]"/>
-                <separator/>
-                <filter string="Của tôi" name="my_pricelist" domain="[('create_uid', '=', uid)]"/>
-            </xpath>
-        </field>
-    </record>
 </odoo>
