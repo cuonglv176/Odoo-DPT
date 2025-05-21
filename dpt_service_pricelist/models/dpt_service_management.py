@@ -14,3 +14,9 @@ class DPTServiceManagement(models.Model):
         valid_pricelist_ids -= valid_pricelist_ids.filtered(
             lambda p: not p.partner_id and p.uom_id.id in valid_partner_pricelist_ids.mapped('uom_id').ids)
         return valid_pricelist_ids
+
+
+class DPTServiceCombo(models.Model):
+    _inherit = 'dpt.service.combo'
+
+    pricelist_item_ids = fields.One2many('product.pricelist.item', 'combo_id', string='Pricelist')

@@ -14,6 +14,7 @@ class ProductPricelistItemDetail(models.Model):
     max_value = fields.Float('Max Value', tracking=True)
     currency_id = fields.Many2one(related='item_id.currency_id')
     service_id = fields.Many2one(related='item_id.service_id')
+    combo_id = fields.Many2one(related='item_id.combo_id')
 
     def unlink(self):
         # log to front end of deleted bookings

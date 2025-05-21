@@ -51,22 +51,23 @@
                             <field name="combo_id"/>
                             <field name="code"/>
                             <field name="description"/>
-                            <field name="price" sum="Tổng giá"/>
-                            <field name="amount_discount"/>
-                            <field name="amount_total" sum="Tổng"/>
+                            <field name="qty"/>
+                            <field name="price" sum="Đơn giá"/>
+                            <field name="amount_discount" string="Khuyến mãi"/>
+                            <field name="amount_total" sum="Thành tiền"/>
                         </tree>
                     </field>
                 </page>
                 <page name="sale_service" string="Service">
                     <field name="sale_service_ids" readonly="state == 'cancel' or locked">
                         <tree editable="bottom">
+                             <field name="combo_id"/> <!-- Thêm trường combo_id -->
                             <field name="id" string="ID"/>
                             <field name="sequence" widget="handle"/>
                             <field name="currency_id" column_invisible="1" force_save="1"/>
                             <field name="currency_cny_id" optional="hide"/>
                             <field name="service_id" domain="[('child_ids', '=', False)]"/>
-                            <field name="combo_id"/> <!-- Thêm trường combo_id -->
-                            <field name="uom_id" invisible="1"/>
+                            <field name="uom_id" column_invisible="1"/>
                             <!--                            <field name="description"/>-->
                             <field name="compute_value" readonly="1" force_save="1"/>
                             <field name="compute_uom_id" readonly="1" force_save="1"/>

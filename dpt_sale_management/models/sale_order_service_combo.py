@@ -13,9 +13,10 @@ class ServiceCombo(models.Model):
     service_ids = fields.Many2many('dpt.service.management', string='Dịch vụ trong combo',
                                    related='combo_id.service_ids')
     sale_id = fields.Many2one('sale.order', string='Order')
-    price = fields.Float('Giá Combo', help='Để trống sẽ tính tổng từ các dịch vụ')
-    amount_discount = fields.Float('Giảm giá', default=0.0)
-    amount_total = fields.Float('Tổng', compute='_compute_total_price')
+    qty = fields.Integer('Số lượng')
+    price = fields.Float('Đơn giá', help='Để trống sẽ tính tổng từ các dịch vụ')
+    amount_discount = fields.Float('Khuyến mãi', default=0.0)
+    amount_total = fields.Float('Thành tiền', compute='_compute_total_price')
     sale_service_ids = fields.One2many('dpt.sale.service.management', 'combo_id', 'Chi tiết dịch vụ')
 
     # Para almacenar temporalmente los servicios durante la creación
@@ -69,11 +70,11 @@ class ServiceCombo(models.Model):
                     self.env['dpt.sale.service.management'].create(new_services)
         return records
 
-    @api.depends('price', 'amount_discount', 'sale_service_ids', 'sale_service_ids.amount_total')
+    @api.depends('price','qty', 'amount_discount', 'sale_service_ids', 'sale_service_ids.amount_total')
     def _compute_total_price(self):
         for record in self:
             if record.price:
-                base_price = record.price
+                base_price = record.price * record.qty
             else:
                 base_price = sum(service.amount_total for service in record.sale_service_ids)
             record.amount_total = base_price - record.amount_discount

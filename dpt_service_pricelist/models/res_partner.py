@@ -7,3 +7,7 @@ class ResPartner(models.Model):
     service_pricelist_ids = fields.One2many('product.pricelist.item', 'partner_id', 
                                            string='Bảng giá dịch vụ',
                                            domain=[('service_id', '!=', False)])
+
+    combo_pricelist_ids = fields.One2many('product.pricelist.item', 'partner_id',
+                                            string='Bảng giá Combo',
+                                            domain=[('combo_id', '!=', False)])

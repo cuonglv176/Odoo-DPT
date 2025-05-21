@@ -20,6 +20,7 @@ class ProductPricelistItem(models.Model):
 
     partner_id = fields.Many2one('res.partner', 'Customer', domain=[('customer_rank', '>', 0)], tracking=True)
     service_id = fields.Many2one('dpt.service.management', 'Service', tracking=True, copy=True)
+    combo_id = fields.Many2one('dpt.service.combo', 'Combo', tracking=True, copy=True)
     service_uom_ids = fields.Many2many(related='service_id.uom_ids', tracking=True, copy=True)
     uom_id = fields.Many2one('uom.uom', string='Unit', tracking=True, copy=True)
     version = fields.Integer('Version', default=1, tracking=True, copy=True)

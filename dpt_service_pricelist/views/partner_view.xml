@@ -21,6 +21,20 @@
                             </tree>
                         </field>
                     </page>
+                    <page string="Bảng giá Combo" name="combo_pricelist">
+                        <field name="combo_pricelist_ids" context="{'default_partner_id': active_id}">
+                            <tree>
+                                <field name="service_id"/>
+                                <field name="uom_id"/>
+                                <field name="compute_price"/>
+                                <field name="fixed_price" string="Giá" widget="monetary"/>
+                                <field name="currency_id"/>
+                                <field name="date_start"/>
+                                <field name="date_end"/>
+                                <field name="min_amount" widget="monetary"/>
+                            </tree>
+                        </field>
+                    </page>
                 </notebook>
             </field>
         </record>
