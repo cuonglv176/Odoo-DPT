@@ -18,7 +18,7 @@ class ServiceCombo(models.Model):
     amount_discount = fields.Float('Khuyến mãi', default=0.0)
     amount_total = fields.Float('Thành tiền', compute='_compute_total_price')
     sale_service_ids = fields.One2many('dpt.sale.service.management', 'combo_id', 'Chi tiết dịch vụ')
-
+    planned_sale_id = fields.Many2one('sale.order', string='Planned Sale')
     # Para almacenar temporalmente los servicios durante la creación
     _services_to_create = {}
 
