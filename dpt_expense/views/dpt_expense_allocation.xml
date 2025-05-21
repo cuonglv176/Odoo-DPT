@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 
-    <record id="dpt_shipping_slip_search_views" model="ir.ui.view">
-        <field name="name">dpt_shipping_slip_search_views</field>
-        <field name="model">dpt.shipping.slip</field>
+    <record id="dpt_expense_allocation_search_views" model="ir.ui.view">
+        <field name="name">dpt_expense_allocation_search_views</field>
+        <field name="model">dpt.expense.allocation</field>
         <field name="arch" type="xml">
             <search string="Shipping slip">
                 <field name="name"/>
