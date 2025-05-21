@@ -19,9 +19,9 @@
         </record>
 
 
-         <record id="view_service_combo_form_pricelist_inherit" model="ir.ui.view">
-            <field name="name">view_service_form_pricelist_inherit</field>
-            <field name="model">dpt.service.management</field>
+        <record id="view_service_combo_form_pricelist_inherit" model="ir.ui.view">
+            <field name="name">view_service_combo_form_pricelist_inherit</field>
+            <field name="model">dpt.service.combo</field>
             <field name="inherit_id" ref="dpt_service_management.view_service_combo_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='services']" position="after">
