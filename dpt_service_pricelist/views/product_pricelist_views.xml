@@ -131,17 +131,4 @@
               action="action_pending_pricelist_approval"
               groups="base.group_system"
               sequence="31"/>
-
-    <!-- Cron job để kiểm tra bảng giá hết hạn -->
-    <record id="ir_cron_check_expired_pricelists" model="ir.cron">
-        <field name="name">Kiểm tra bảng giá hết hạn</field>
-        <field name="model_id" ref="product.model_product_pricelist"/>
-        <field name="state">code</field>
-        <field name="code">model._cron_check_expired_pricelists()</field>
-        <field name="interval_number">1</field>
-        <field name="interval_type">days</field>
-        <field name="numbercall">-1</field>
-        <field name="doall" eval="False"/>
-        <field name="active" eval="True"/>
-    </record>
 </odoo>
