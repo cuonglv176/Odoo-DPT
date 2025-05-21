@@ -1,10 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Form View cho product.pricelist -->
+    <record id="view_product_pricelist_form_inherit_dpt" model="ir.ui.view">
+        <field name="name">product.pricelist.form.inherit.dpt</field>
+        <field name="model">product.pricelist</field>
+        <field name="inherit_id" ref="product.product_pricelist_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <button name="action_submit_approval" string="Gửi phê duyệt" class="oe_highlight"
+                            type="object" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                    <button name="action_activate" string="Phê duyệt" class="oe_highlight"
+                            type="object" groups="base.group_system"
+                            attrs="{'invisible': [('state', '!=', 'pending')]}"/>
+                    <button name="action_reject" string="Từ chối" type="object"
+                            groups="base.group_system" attrs="{'invisible': [('state', '!=', 'pending')]}"/>
+                    <button name="action_suspend" string="Tạm dừng" type="object"
+                            attrs="{'invisible': [('state', '!=', 'active')]}"/>
+                    <button name="action_resume" string="Kích hoạt lại" type="object" class="oe_highlight"
+                            attrs="{'invisible': [('state', '!=', 'suspended')]}"/>
+                    <button name="action_draft" string="Đặt về nháp" type="object"
+                            attrs="{'invisible': [('state', 'not in', ['rejected', 'expired'])]}"/>
+                    <button name="action_view_approval" string="Xem phê duyệt" type="object"
+                            attrs="{'invisible': [('approval_id', '=', False)]}"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,pending,active,suspended,expired"/>
+                </header>
+            </xpath>
+
+            <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="partner_id"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="approval_id" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//notebook" position="inside">
+                <page string="Thông tin phê duyệt" attrs="{'invisible': [('state', '=', 'draft')]}">
+                    <group>
+                        <group>
+                            <field name="approval_date" readonly="1"
+                                   attrs="{'invisible': [('approval_date', '=', False)]}"/>
+                            <field name="approved_by" readonly="1"
+                                   attrs="{'invisible': [('approved_by', '=', False)]}"/>
+                        </group>
+                        <group>
+                            <field name="rejection_reason" readonly="1"
+                                   attrs="{'invisible': [('rejection_reason', '=', False)]}"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Tree View cho product.pricelist -->
+    <record id="view_product_pricelist_tree_inherit_dpt" model="ir.ui.view">
+        <field name="name">product.pricelist.tree.inherit.dpt</field>
+        <field name="model">product.pricelist</field>
+        <field name="inherit_id" ref="product.product_pricelist_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="currency_id" position="after">
+                <field name="partner_id"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'active'"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'pending'"
+                       decoration-danger="state in ['rejected', 'expired']"
+                       decoration-muted="state == 'suspended'"/>
+                <field name="approved_by" optional="hide"/>
+                <field name="approval_date" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Search View cho product.pricelist -->
+    <record id="pricelist_view_search_dpt" model="ir.ui.view">
+        <field name="name">product.pricelist.search.dpt</field>
+        <field name="model">product.pricelist</field>
+        <field name="inherit_id" ref="product.pricelist_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="partner_id"/>
+                <filter string="Nháp" name="draft_pricelists" domain="[('state', '=', 'draft')]"/>
+                <filter string="Chờ duyệt" name="pending_pricelists" domain="[('state', '=', 'pending')]"/>
+                <filter string="Đang hoạt động" name="active_pricelists" domain="[('state', '=', 'active')]"/>
+                <filter string="Tạm dừng" name="suspended_pricelists" domain="[('state', '=', 'suspended')]"/>
+                <filter string="Bị từ chối" name="rejected_pricelists" domain="[('state', '=', 'rejected')]"/>
+                <filter string="Hết hạn" name="expired_pricelists" domain="[('state', '=', 'expired')]"/>
+                <separator/>
+                <filter string="Của tôi" name="my_pricelists" domain="[('create_uid', '=', uid)]"/>
+            </xpath>
+        </field>
+    </record>
+
     <!-- Menu dành riêng cho duyệt bảng giá -->
     <record id="action_service_pricelist" model="ir.actions.act_window">
+        <field name="name">Bảng giá dịch vụ</field>
+        <field name="res_model">product.pricelist</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo bảng giá dịch vụ mới
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu duyệt bảng giá -->
+    <menuitem id="menu_service_pricelist"
+              name="Bảng giá dịch vụ"
+              parent="dpt_service_management.service_management_root_menu"
+              action="action_service_pricelist"
+              sequence="30"/>
+
+    <!-- Menu cho bảng giá đang chờ duyệt -->
+    <record id="action_pending_pricelist_approval" model="ir.actions.act_window">
         <field name="name">Duyệt bảng giá</field>
         <field name="res_model">product.pricelist</field>
         <field name="view_mode">tree,form</field>
+        <field name="domain">[('state', '=', 'pending')]</field>
+        <field name="context">{'search_default_pending_pricelists': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Không có bảng giá nào đang chờ duyệt
@@ -12,10 +129,23 @@
         </field>
     </record>
 
-    <!-- Menu duyệt bảng giá -->
     <menuitem id="menu_pending_pricelist_approval"
-              name="Bảng giá"
+              name="Duyệt bảng giá"
               parent="dpt_service_management.service_management_root_menu"
-              action="action_service_pricelist"
-              sequence="30"/>
+              action="action_pending_pricelist_approval"
+              groups="base.group_system"
+              sequence="31"/>
+
+    <!-- Cron job để kiểm tra bảng giá hết hạn -->
+    <record id="ir_cron_check_expired_pricelists" model="ir.cron">
+        <field name="name">Kiểm tra bảng giá hết hạn</field>
+        <field name="model_id" ref="product.model_product_pricelist"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_check_expired_pricelists()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="active" eval="True"/>
+    </record>
 </odoo>
