@@ -71,25 +71,6 @@
         </field>
     </record>
 
-    <!-- Search View cho product.pricelist -->
-    <record id="pricelist_view_search_dpt" model="ir.ui.view">
-        <field name="name">product.pricelist.search.dpt</field>
-        <field name="model">product.pricelist</field>
-        <field name="inherit_id" ref="product.pricelist_view_search"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='name']" position="after">
-                <field name="partner_id"/>
-                <filter string="Nháp" name="draft_pricelists" domain="[('state', '=', 'draft')]"/>
-                <filter string="Chờ duyệt" name="pending_pricelists" domain="[('state', '=', 'pending')]"/>
-                <filter string="Đang hoạt động" name="active_pricelists" domain="[('state', '=', 'active')]"/>
-                <filter string="Tạm dừng" name="suspended_pricelists" domain="[('state', '=', 'suspended')]"/>
-                <filter string="Bị từ chối" name="rejected_pricelists" domain="[('state', '=', 'rejected')]"/>
-                <filter string="Hết hạn" name="expired_pricelists" domain="[('state', '=', 'expired')]"/>
-                <separator/>
-                <filter string="Của tôi" name="my_pricelists" domain="[('create_uid', '=', uid)]"/>
-            </xpath>
-        </field>
-    </record>
 
     <!-- Menu dành cho bảng giá -->
     <record id="action_service_pricelist" model="ir.actions.act_window">
@@ -131,4 +112,17 @@
               action="action_pending_pricelist_approval"
               groups="base.group_system"
               sequence="31"/>
+
+    <!-- Cron job để kiểm tra bảng giá hết hạn -->
+    <record id="ir_cron_check_expired_pricelists" model="ir.cron">
+        <field name="name">Kiểm tra bảng giá hết hạn</field>
+        <field name="model_id" ref="product.model_product_pricelist"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_check_expired_pricelists()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="active" eval="True"/>
+    </record>
 </odoo>
