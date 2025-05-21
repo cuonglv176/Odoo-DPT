@@ -79,7 +79,7 @@
         </record>
 
         <!-- Action cho bảng giá dịch vụ -->
-        <record id="action_service_pricelist" model="ir.actions.act_window">
+        <record id="action_service_pricelist_item" model="ir.actions.act_window">
             <field name="name">Bảng giá dịch vụ</field>
             <field name="res_model">product.pricelist.item</field>
             <field name="view_mode">tree,form</field>
@@ -97,7 +97,7 @@
         <menuitem id="menu_service_pricelist"
                   name="Bảng giá dịch vụ"
                   parent="dpt_service_management.service_management_root_menu"
-                  action="action_service_pricelist"
+                  action="action_service_pricelist_item"
                   sequence="20"/>
 
     </data>

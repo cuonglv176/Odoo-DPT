@@ -86,7 +86,7 @@
 
     <!-- Menu chính cho bảng giá -->
     <menuitem id="menu_service_pricelist"
-              name="Bảng giá dịch vụ"
+              name="Bảng giá"
               parent="dpt_service_management.service_management_root_menu"
               action="action_service_pricelist"
               sequence="30"/>
