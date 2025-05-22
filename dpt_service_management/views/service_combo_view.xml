@@ -105,7 +105,7 @@
                         </page>
                         <!-- Thêm tab mới cho các trường thông tin -->
                         <page string="Các trường thông tin" name="required_fields">
-                            <button name="_sync_required_fields_from_services" string="Đồng bộ từ dịch vụ"
+                            <button name="sync_required_fields_from_services" string="Đồng bộ từ dịch vụ"
                                     type="object" class="btn-secondary mb-2"/>
                             <field name="required_fields_ids">
                                 <tree>

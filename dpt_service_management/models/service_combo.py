@@ -72,9 +72,9 @@ class DPTServiceCombo(models.Model):
             self.expense_account_id = self.service_ids[0].expense_account_id
 
         # Tự động lấy các trường thông tin từ dịch vụ
-        self._sync_required_fields_from_services()
+        self.sync_required_fields_from_services()
 
-    def _sync_required_fields_from_services(self):
+    def sync_required_fields_from_services(self):
         """Đồng bộ các trường thông tin từ dịch vụ"""
         self.ensure_one()
         if not self.service_ids:
