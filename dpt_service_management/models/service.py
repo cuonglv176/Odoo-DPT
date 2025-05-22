@@ -171,6 +171,7 @@ class RequiredField(models.Model):
         ("options", "Options")
     ], string='Type Fields', default='options', tracking=True)
     service_id = fields.Many2one('dpt.service.management', string='Service', ondelete='cascade', tracking=True)
+    combo_id = fields.Many2one('dpt.service.combo', string='Combo', ondelete='cascade', tracking=True)
     using_calculation_price = fields.Boolean('Using Calculation Price', tracking=True)
     uom_id = fields.Many2one('uom.uom', 'Unit', tracking=True)
     default_compute_from = fields.Selection([

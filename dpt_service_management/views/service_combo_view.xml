@@ -103,6 +103,51 @@
                                 </tree>
                             </field>
                         </page>
+                        <!-- Thêm tab mới cho các trường thông tin -->
+                        <page string="Các trường thông tin" name="required_fields">
+                            <button name="_sync_required_fields_from_services" string="Đồng bộ từ dịch vụ"
+                                    type="object" class="btn-secondary mb-2"/>
+                            <field name="required_fields_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="fields_type"/>
+                                    <field name="type"/>
+                                    <field name="description"/>
+                                    <field name="uom_id"/>
+                                    <field name="using_calculation_price"/>
+                                    <field name="default_compute_from"/>
+                                </tree>
+                                <form>
+                                    <sheet>
+                                        <group>
+                                            <group>
+                <field name="name"/>
+                                                <field name="description"/>
+                                                <field name="fields_type"/>
+                                                <field name="type"/>
+                                                <field name="field"/>
+                <field name="code"/>
+                                                <field name="is_template"/>
+                </group>
+                                            <group>
+                                                <field name="uom_id"/>
+                                                <field name="using_calculation_price"/>
+                                                <field name="default_compute_from"/>
+                                            </group>
+                                        </group>
+                                        <notebook>
+                                            <page string="Selection Value" attrs="{'invisible': [('fields_type', '!=', 'selection')]}">
+                                                <field name="selection_value_ids">
+                                                    <tree editable="bottom">
+                                                        <field name="name"/>
+                                                    </tree>
+        </field>
+                                            </page>
+                                        </notebook>
+                                    </sheet>
+                                </form>
+        </field>
+                        </page>
                         <!-- Thêm tab mới cho kế toán -->
                         <page string="Kế toán" name="accounting">
                             <group>

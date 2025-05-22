@@ -44,6 +44,10 @@ class DPTServiceCombo(models.Model):
                                         domain=[('deprecated', '=', False)],
                                         tracking=True, copy=True)
 
+    # Thêm trường One2many cho các trường thông tin
+    required_fields_ids = fields.One2many('dpt.service.management.required.fields', 'combo_id',
+                                         string='Các trường thông tin', copy=True, auto_join=True)
+
     # Thêm các trường liên quan đến phê duyệt
     approval_id = fields.Many2one('approval.request', string='Yêu cầu phê duyệt', copy=False, readonly=True)
     approver_ids = fields.Many2many('res.users', string='Người phê duyệt', compute='_compute_approver_ids', store=False)
@@ -58,6 +62,73 @@ class DPTServiceCombo(models.Model):
     _sql_constraints = [
         ('code_uniq', 'unique (code)', "Mã gói combo đã tồn tại!")
     ]
+
+    @api.onchange('service_ids')
+    def _onchange_service_ids(self):
+        """Khi thay đổi dịch vụ, cập nhật tài khoản và các trường thông tin"""
+        if self.service_ids and not self.revenue_account_id:
+            self.revenue_account_id = self.service_ids[0].revenue_account_id
+        if self.service_ids and not self.expense_account_id:
+            self.expense_account_id = self.service_ids[0].expense_account_id
+
+        # Tự động lấy các trường thông tin từ dịch vụ
+        self._sync_required_fields_from_services()
+
+    def _sync_required_fields_from_services(self):
+        """Đồng bộ các trường thông tin từ dịch vụ"""
+        self.ensure_one()
+        if not self.service_ids:
+            return
+
+        # Xóa các trường thông tin cũ nếu có
+        self.required_fields_ids.unlink()
+
+        # Thu thập tất cả các trường thông tin từ dịch vụ
+        required_fields_data = []
+        existing_fields = {}  # Để theo dõi các trường đã thêm
+
+        for service in self.service_ids:
+            for required_field in service.required_fields_ids:
+                field_key = required_field.name or required_field.code
+
+                # Nếu trường này chưa được thêm
+                if field_key not in existing_fields:
+                    # Tạo dữ liệu cho trường thông tin mới
+                    vals = {
+                        'name': required_field.name,
+                        'description': required_field.description,
+                        'fields_type': required_field.fields_type,
+                        'field': required_field.field,
+                        'type': required_field.type,
+                        'using_calculation_price': required_field.using_calculation_price,
+                        'uom_id': required_field.uom_id.id if required_field.uom_id else False,
+                        'default_compute_from': required_field.default_compute_from,
+                        'code': required_field.code,
+                        'is_template': required_field.is_template,
+                        'combo_id': self.id,
+                    }
+
+                    # Nếu trường là fields_id, thêm vào
+                    if required_field.fields_id:
+                        vals['fields_id'] = required_field.fields_id.id
+
+                    required_fields_data.append(vals)
+                    existing_fields[field_key] = True
+
+        # Tạo các bản ghi trường thông tin mới
+        if required_fields_data:
+            for vals in required_fields_data:
+                new_required_field = self.env['dpt.service.management.required.fields'].create(vals)
+
+                # Xử lý các giá trị selection nếu có
+                if new_required_field.fields_type == 'selection':
+                    for selection in self.env['dpt.sale.order.fields.selection'].search([
+                        ('fields_id', '=', vals.get('fields_id'))
+                    ]):
+                        self.env['dpt.sale.order.fields.selection'].create({
+                            'fields_id': new_required_field.id,
+                            'name': selection.name,
+                        })
 
     @api.depends('service_ids', 'service_ids.uom_ids')
     def _compute_service_uom_ids(self):
