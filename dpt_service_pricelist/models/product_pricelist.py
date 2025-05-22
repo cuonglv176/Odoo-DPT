@@ -82,7 +82,7 @@ class ProductPricelist(models.Model):
             'date': fields.Datetime.now(),
             'request_owner_id': self.env.user.id,
             'reference': f'product.pricelist,{self.id}',
-            'request_status': 'pending',
+            'request_status': 'new',  # Bắt đầu với trạng thái 'new' thay vì 'pending'
         }
         approval_request = self.env['approval.request'].create(vals)
 
@@ -91,6 +91,9 @@ class ProductPricelist(models.Model):
             'state': 'pending',
             'approval_id': approval_request.id,
         })
+
+        # Tự động gửi (submit) approval request
+        approval_request.action_confirm()  # Gọi phương thức confirm để chuyển request sang trạng thái "Pending"
 
         return {
             'type': 'ir.actions.act_window',
