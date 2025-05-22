@@ -48,8 +48,8 @@ def _create_invoices(self, grouped=False, final=False, date=None):
                 raise UserError(f"Tờ khai: {import_name} chưa được thông quan, vui lòng kiểm tra lại!!!")
             import_not_ids = self.env['dpt.export.import'].search(
                 [('sale_ids', 'in', order.ids)])
-            if not import_not_ids:
-                raise UserError(f"Không có tờ khai: vui lòng kiểm tra lại!!!")
+            # if not import_not_ids:
+            #     raise UserError(f"Không có tờ khai: vui lòng kiểm tra lại!!!")
 
             vehicle_stage_ids = self.env['dpt.vehicle.stage'].search([('is_finish_stage', '=', True)])
             shipping_ids = self.env['dpt.shipping.slip'].search(
