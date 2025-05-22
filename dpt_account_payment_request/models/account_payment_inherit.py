@@ -58,6 +58,8 @@ class AccountPaymentType(models.Model):
     rule_ids = fields.One2many('dpt.account.payment.type.rule', 'type_id', string='Rules')
     default_partner_id = fields.Many2one('res.partner', "Default Partner")
     is_cn_payment = fields.Boolean('Là thanh toán phí nội địa TQ')
+    is_user_detail = fields.Boolean('Chi tiết User',default=False)
+    is_account_journal = fields.Boolean('Sổ nhật ký',default=False)
     payment_user_type = fields.Selection([
         ('customer', 'Khách hàng'),
         ('company', 'Công ty'),
@@ -110,6 +112,8 @@ class AccountPayment(models.Model):
         ('ltv', 'LTV'),
         ('dpt', 'DPT'),
     ], string='Pháp nhân thanh toán', tracking=True)
+    shipping_fee = fields.Float(string='Phí chuyển tiền', tracking=True)
+    type_id_name = fields.Char(related="type_id.name", tracking=True, store=True)
     payment_type = fields.Selection(selection=[
         ('inbound', 'Inbound'),
         ('outbound', 'Outbound')]
@@ -121,6 +125,8 @@ class AccountPayment(models.Model):
     last_rate_currency = fields.Float('Last Rate Currency', tracking=True)
     acc_number = fields.Char(related="partner_bank_id.acc_number", tracking=True)
     acc_holder_name = fields.Char(related="partner_bank_id.acc_holder_name", tracking=True)
+    is_cn_payment = fields.Boolean(related="type_id.is_cn_payment", tracking=True)
+    is_user_detail = fields.Boolean(related="type_id.is_user_detail", tracking=True)
     bank_id = fields.Many2one(related="partner_bank_id.bank_id", tracking=True)
     amount_in_text = fields.Char('Amount in Text', compute="_compute_amount_in_text", tracking=True)
     refund_date = fields.Date(string='Ngày hoàn ứng', tracking=True)
@@ -216,9 +222,9 @@ class AccountPayment(models.Model):
                 user_view_ids.append(approver_id.user_id.id)
             rec.user_view_ids = [(6, 0, user_view_ids)]
 
-    @api.onchange('last_rate_currency', 'amount_request')
+    @api.onchange('last_rate_currency', 'amount_request', 'shipping_fee')
     def onchange_update_amount(self):
-        self.amount = self.amount_request * self.last_rate_currency
+        self.amount = self.amount_request * self.last_rate_currency + self.shipping_fee
 
     @api.depends('amount')
     def _compute_amount_in_text(self):
