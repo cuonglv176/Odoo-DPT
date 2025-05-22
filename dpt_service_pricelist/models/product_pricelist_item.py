@@ -101,3 +101,64 @@ class ProductPricelistItem(models.Model):
             service_id.message_post(
                 body=_("Delete Pricelist: %s") % ','.join(pricelist_item_ids.mapped('uom_id').mapped('name')))
         return super(ProductPricelistItem, self).unlink()
+
+    # Thêm phương thức để tính giá dựa trên điều kiện đơn vị
+    def compute_price_with_conditions(self, value, selected_uoms):
+        """Tính toán giá dựa trên giá trị và các đơn vị được chọn
+
+        Args:
+            value (float): Giá trị để tính toán (ví dụ: tổng tiền, số lượng...)
+            selected_uoms (recordset): Danh sách các đơn vị được chọn
+
+        Returns:
+            float: Giá tính toán được hoặc None nếu không áp dụng được
+        """
+        self.ensure_one()
+
+        if self.compute_price == 'fixed':
+            # Với giá cố định, chỉ cần kiểm tra điều kiện đơn vị
+            if self.is_applicable_for_uoms(selected_uoms):
+                return self.fixed_price
+
+        elif self.compute_price == 'percentage':
+            # Với giá phần trăm
+            if self.is_applicable_for_uoms(selected_uoms):
+                return value * (self.percent_price / 100.0)
+
+        elif self.compute_price == 'table':
+            # Với giá bảng, tìm mục phù hợp trong bảng
+            for detail in self.pricelist_table_detail_ids:
+                if detail.is_applicable(value, selected_uoms):
+                    return detail.amount
+
+            # Không tìm thấy mục phù hợp
+            return None
+
+        return None
+
+    # Thêm vào class ProductPricelistItem
+
+    def is_applicable_for_uoms(self, selected_uoms):
+        """Kiểm tra xem bảng giá có áp dụng được cho các đơn vị đã chọn không
+
+        Args:
+            selected_uoms: recordset các đơn vị đã chọn
+
+        Returns:
+            bool: True nếu áp dụng được, False nếu không
+        """
+        self.ensure_one()
+
+        # Trường hợp không có giới hạn đơn vị
+        if not self.uom_id and not self.pricelist_table_detail_ids:
+            return True
+
+        # Kiểm tra trường hợp chỉ có một đơn vị
+        if self.uom_id and not self.pricelist_table_detail_ids:
+            return self.uom_id.id in selected_uoms.ids
+
+        # Trường hợp bảng giá theo bảng (đơn vị được kiểm tra trong chi tiết)
+        if self.compute_price == 'table':
+            return True
+
+        return True
