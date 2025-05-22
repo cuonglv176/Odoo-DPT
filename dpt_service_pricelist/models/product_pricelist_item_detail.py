@@ -1,10 +1,10 @@
-from odoo import fields, models, api, _
-
-
 class ProductPricelistItemDetail(models.Model):
     _name = 'product.pricelist.item.detail'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin']
+    _order = 'sequence, min_value'  # Sắp xếp theo sequence và min_value
 
+    sequence = fields.Integer(string='Thứ tự', default=10,
+                              help='Xác định thứ tự áp dụng của các điều kiện giá')
     item_id = fields.Many2one('product.pricelist.item', 'Pricelist Item', tracking=True)
     pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', tracking=True)
     amount = fields.Monetary(currency_field='currency_id', string="Amount", digits='Product Price', tracking=True)
@@ -16,11 +16,22 @@ class ProductPricelistItemDetail(models.Model):
     service_id = fields.Many2one(related='item_id.service_id')
     combo_id = fields.Many2one(related='item_id.combo_id')
 
+    # Thêm các trường mới
+    price_type = fields.Selection([
+        ('fixed_range', 'Khoảng giá (cố định cho cả khoảng)'),
+        ('unit_price', 'Đơn giá (giá nhân với số lượng)')
+    ], string='Kiểu giá', default='fixed_range', required=True, tracking=True,
+        help="Khoảng giá: áp dụng giá cố định cho toàn bộ khoảng\n"
+             "Đơn giá: nhân giá với số lượng vượt quá mức Min Value")
+
+    compute_uom_id = fields.Many2one('uom.uom', string='Đơn vị tính',
+                                     help="Đơn vị tính dùng để tính giá (km, kg, m3...)", tracking=True)
+
     # Thêm các trường mới để xử lý điều kiện đơn vị
     condition_type = fields.Selection([
         ('simple', 'Đơn vị đơn'),
-        ('or', '(OR)'),
-        ('and', '(AND)')
+        ('or', 'Thỏa mãn bất kỳ đơn vị nào (OR)'),
+        ('and', 'Thỏa mãn tất cả đơn vị (AND)')
     ], string='Loại điều kiện', default='simple', tracking=True)
 
     uom_condition_ids = fields.Many2many('uom.uom', 'pricelist_item_detail_uom_rel',
@@ -78,6 +89,29 @@ class ProductPricelistItemDetail(models.Model):
             return all(uom_id in selected_uom_ids for uom_id in condition_uom_ids)
 
         return False
+
+    def compute_price(self, value):
+        """Tính giá dựa trên giá trị và kiểu giá (khoảng giá hoặc đơn giá)
+
+        Args:
+            value (float): Giá trị để tính toán (ví dụ: số km, số kg...)
+
+        Returns:
+            float: Giá tính được dựa trên kiểu giá
+        """
+        self.ensure_one()
+
+        if self.price_type == 'fixed_range':
+            # Khoảng giá: trả về giá cố định cho cả khoảng
+            return self.amount
+        elif self.price_type == 'unit_price':
+            # Đơn giá: nhân với số lượng vượt quá min_value
+            excess_value = value - self.min_value
+            if excess_value <= 0:
+                return 0
+            return excess_value * self.amount
+
+        return self.amount
 
     def unlink(self):
         # log to front end of deleted bookings
