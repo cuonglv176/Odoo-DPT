@@ -14,95 +14,137 @@ class MailMessage(models.Model):
         return res
 
 
-class ProductPricelistItem(models.Model):
-    _name = 'product.pricelist.item'
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin', 'product.pricelist.item']
+class ProductPricelistItemDetail(models.Model):
+    _name = 'product.pricelist.item.detail'
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin']
+    _order = 'sequence, min_value'  # Sắp xếp theo sequence và min_value
 
-    partner_id = fields.Many2one('res.partner', 'Customer', domain=[('customer_rank', '>', 0)], tracking=True)
-    service_id = fields.Many2one('dpt.service.management', 'Service', tracking=True, copy=True)
-    combo_id = fields.Many2one('dpt.service.combo', 'Combo', tracking=True, copy=True)
-    service_uom_ids = fields.Many2many(related='service_id.uom_ids', tracking=True, copy=True)
-    uom_id = fields.Many2one('uom.uom', string='Unit', tracking=True, copy=True)
-    version = fields.Integer('Version', default=1, tracking=True, copy=True)
-    percent_based_on = fields.Selection([
-        ('product_total_amount', 'Product Total Amount'),
-        ('declaration_total_amount', 'Declaration Total Amount'),
-        ('purchase_total_amount', 'Purchase Total Amount'),
-        ('invoice_total_amount', 'Tổng giá trị xuất hoá đơn'),
-    ], 'Based On', tracking=True, copy=True)
-    min_amount = fields.Float(string="Min Amount", digits='Product Price', tracking=True, copy=True)
-    # re define
-    compute_price = fields.Selection(
-        selection=[
-            ('fixed', "Fixed Price"),
-            ('percentage', "Percentage"),
-            ('table', "Table"),
-        ],
-        index=True, default='fixed', required=True, tracking=True, copy=True)
-    pricelist_table_detail_ids = fields.One2many('product.pricelist.item.detail', 'item_id', string='Pricelist Table',
-                                                 tracking=True)
-    is_price = fields.Boolean('Is Price', tracking=True, copy=True)
-    is_accumulated = fields.Boolean('Is Accumulated', tracking=True, copy=True)
+    sequence = fields.Integer(string='Thứ tự', default=10,
+                              help='Xác định thứ tự áp dụng của các điều kiện giá')
+    item_id = fields.Many2one('product.pricelist.item', 'Pricelist Item', tracking=True)
+    pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', tracking=True)
+    amount = fields.Monetary(currency_field='currency_id', string="Amount", digits='Product Price', tracking=True)
+    uom_id = fields.Many2one('uom.uom', 'Product Units', tracking=True)
+    description = fields.Char('Description', tracking=True)
+    min_value = fields.Float('Min Value', tracking=True)
+    max_value = fields.Float('Max Value', tracking=True)
+    currency_id = fields.Many2one(related='item_id.currency_id')
+    service_id = fields.Many2one(related='item_id.service_id')
+    combo_id = fields.Many2one(related='item_id.combo_id')
 
-    # re-define for tracking
-    date_start = fields.Datetime(tracking=True)
-    date_end = fields.Datetime(tracking=True)
-    currency_id = fields.Many2one(tracking=True)
+    # Thêm các trường mới
+    price_type = fields.Selection([
+        ('fixed_range', 'Khoảng giá (cố định cho cả khoảng)'),
+        ('unit_price', 'Đơn giá (giá nhân với số lượng)')
+    ], string='Kiểu giá', default='fixed_range', required=True, tracking=True,
+        help="Khoảng giá: áp dụng giá cố định cho toàn bộ khoảng\n"
+             "Đơn giá: nhân giá với số lượng vượt quá mức Min Value")
 
-    # Bỏ yêu cầu product_tmpl_id
-    product_tmpl_id = fields.Many2one(required=False)
+    compute_uom_id = fields.Many2one('uom.uom', string='Đơn vị tính',
+                                     help="Đơn vị tính dùng để tính giá (km, kg, m3...)", tracking=True)
 
-    @api.onchange('service_id')
-    def onchange_service(self):
-        return {
-            'domain': {'uom_id': [('id', 'in', self.service_id.uom_ids.ids)]}
-        }
+    # Thêm các trường mới để xử lý điều kiện đơn vị
+    condition_type = fields.Selection([
+        ('simple', 'Đơn vị đơn'),
+        ('or', 'Thỏa mãn bất kỳ đơn vị nào (OR)'),
+        ('and', 'Thỏa mãn tất cả đơn vị (AND)')
+    ], string='Loại điều kiện', default='simple', tracking=True)
 
-    @api.model
-    def create(self, vals):
-        if not vals.get('pricelist_id', False):
-            partner_id = vals.get('partner_id', False)
-            currency_id = vals.get('currency_id', False)
-            if partner_id:
-                pricelist_id = self.env['product.pricelist'].search(
-                    [('partner_id', '=', partner_id), ('currency_id', '=', currency_id),
-                     ('company_id', '=', self.env.company.id)], limit=1)
-                if not pricelist_id:
-                    partner_obj_id = self.env['res.partner'].sudo().browse(partner_id)
-                    pricelist_id = self.env['product.pricelist'].create({
-                        'name': 'Bảng giá khách hàng %s' % partner_obj_id.name,
-                        'partner_id': partner_id,
-                        'currency_id': currency_id,
-                        'company_id': self.env.company.id
-                    })
-                    vals['pricelist_id'] = pricelist_id.id
-            else:
-                pricelist_id = self.env['product.pricelist'].search(
-                    [('partner_id', '=', False), ('currency_id', '=', currency_id),
-                     ('company_id', '=', self.env.company.id)], limit=1)
-                if not pricelist_id:
-                    pricelist_id = self.env['product.pricelist'].create({
-                        'name': 'Bảng giá chung',
-                        'currency_id': currency_id,
-                        'company_id': self.env.company.id
-                    })
-                vals['pricelist_id'] = pricelist_id.id
-        return super().create(vals)
+    uom_condition_ids = fields.Many2many('uom.uom', 'pricelist_item_detail_uom_rel',
+                                         'detail_id', 'uom_id', string='Điều kiện đơn vị', tracking=True)
+
+    @api.onchange('condition_type')
+    def _onchange_condition_type(self):
+        if self.condition_type == 'simple' and self.uom_id:
+            self.uom_condition_ids = [(6, 0, [self.uom_id.id])]
+        elif self.condition_type != 'simple' and self.uom_id and not self.uom_condition_ids:
+            self.uom_condition_ids = [(6, 0, [self.uom_id.id])]
+
+    @api.onchange('uom_id')
+    def _onchange_uom_id(self):
+        if self.condition_type == 'simple' and self.uom_id:
+            self.uom_condition_ids = [(6, 0, [self.uom_id.id])]
+
+    def is_applicable(self, value, selected_uoms):
+        """Kiểm tra xem mục bảng giá này có được áp dụng không
+
+        Args:
+            value (float): Giá trị để kiểm tra trong khoảng min_value-max_value
+            selected_uoms (recordset): Danh sách các đơn vị được chọn
+
+        Returns:
+            bool: True nếu thỏa mãn điều kiện, False nếu không
+        """
+        self.ensure_one()
+
+        # Kiểm tra điều kiện khoảng giá trị
+        if self.min_value and value < self.min_value:
+            return False
+        if self.max_value and value > self.max_value:
+            return False
+
+        # Kiểm tra điều kiện đơn vị
+        if not self.uom_condition_ids:
+            return False
+
+        selected_uom_ids = selected_uoms.ids
+
+        if self.condition_type == 'simple':
+            # Với kiểu đơn, phải khớp chính xác 1 đơn vị
+            condition_uom_id = self.uom_id.id
+            return condition_uom_id in selected_uom_ids
+
+        elif self.condition_type == 'or':
+            # Với kiểu OR, chỉ cần 1 đơn vị khớp
+            condition_uom_ids = self.uom_condition_ids.ids
+            return any(uom_id in selected_uom_ids for uom_id in condition_uom_ids)
+
+        elif self.condition_type == 'and':
+            # Với kiểu AND, tất cả đơn vị trong điều kiện phải được chọn
+            condition_uom_ids = self.uom_condition_ids.ids
+            return all(uom_id in selected_uom_ids for uom_id in condition_uom_ids)
+
+        return False
+
+    def compute_price(self, value):
+        """Tính giá dựa trên giá trị và kiểu giá (khoảng giá hoặc đơn giá)
+
+        Args:
+            value (float): Giá trị để tính toán (ví dụ: số km, số kg...)
+
+        Returns:
+            float: Giá tính được dựa trên kiểu giá
+        """
+        self.ensure_one()
+
+        if self.price_type == 'fixed_range':
+            # Khoảng giá: trả về giá cố định cho cả khoảng
+            return self.amount
+        elif self.price_type == 'unit_price':
+            # Đơn giá: nhân với số lượng vượt quá min_value
+            excess_value = value - self.min_value
+            if excess_value <= 0:
+                return 0
+            return excess_value * self.amount
+
+        return self.amount
 
     def unlink(self):
         # log to front end of deleted bookings
         mapping_delete = {}
         for item in self:
-            if mapping_delete.get(item.service_id):
-                mapping_delete[item.service_id] = mapping_delete[f'{item.service_id.id}'] | item
+            if mapping_delete.get(item.item_id.service_id):
+                mapping_delete[item.item_id.service_id] = mapping_delete.get(item.item_id.service_id) | item
             else:
-                mapping_delete[item.service_id] = item
-        for service_id, pricelist_item_ids in mapping_delete.items():
+                mapping_delete[item.item_id.service_id] = item
+        for service_id, pricelist_item_detail_ids in mapping_delete.items():
             service_id.message_post(
-                body=_("Delete Pricelist: %s") % ','.join(pricelist_item_ids.mapped('uom_id').mapped('name')))
-        return super(ProductPricelistItem, self).unlink()
+                body=_("Delete Pricelist Table: %s") % ','.join(
+                    pricelist_item_detail_ids.mapped('uom_id').mapped('name')))
+        return super(ProductPricelistItemDetail, self).unlink()
 
     # Thêm phương thức để tính giá dựa trên điều kiện đơn vị
+    # Cập nhật phương thức compute_price_with_conditions
     def compute_price_with_conditions(self, value, selected_uoms):
         """Tính toán giá dựa trên giá trị và các đơn vị được chọn
 
@@ -126,13 +168,48 @@ class ProductPricelistItem(models.Model):
                 return value * (self.percent_price / 100.0)
 
         elif self.compute_price == 'table':
-            # Với giá bảng, tìm mục phù hợp trong bảng
-            for detail in self.pricelist_table_detail_ids:
-                if detail.is_applicable(value, selected_uoms):
-                    return detail.amount
+            # Sắp xếp chi tiết bảng giá theo sequence và min_value
+            details = self.pricelist_table_detail_ids.sorted(lambda d: (d.sequence, d.min_value))
 
-            # Không tìm thấy mục phù hợp
-            return None
+            # Với giá bảng, tính tổng giá từ tất cả các mức áp dụng
+            total_price = 0.0
+            applied_details = []
+
+            # Trường hợp giá tích lũy: tính tổng các mức giá áp dụng
+            if self.is_accumulated:
+                for detail in details:
+                    if detail.is_applicable(value, selected_uoms):
+                        if detail.price_type == 'fixed_range':
+                            # Khoảng giá: chỉ tính mức giá nào có value nằm trong khoảng
+                            if detail.min_value <= value <= (detail.max_value or float('inf')):
+                                total_price += detail.amount
+                                applied_details.append(detail)
+                        elif detail.price_type == 'unit_price':
+                            # Đơn giá: tính cho phần giá trị vượt quá min_value
+                            # nhưng không vượt quá max_value
+                            excess_value = min(value, detail.max_value or float('inf')) - detail.min_value
+                            if excess_value > 0:
+                                total_price += excess_value * detail.amount
+                                applied_details.append(detail)
+
+                return total_price if applied_details else None
+
+            # Trường hợp không tích lũy: tìm mức giá đầu tiên phù hợp
+            else:
+                # Nếu là giá theo khoảng, tìm khoảng chứa value
+                for detail in details:
+                    if detail.is_applicable(value, selected_uoms):
+                        if detail.price_type == 'fixed_range':
+                            # Với khoảng giá, trả về giá cố định
+                            return detail.amount
+                        elif detail.price_type == 'unit_price':
+                            # Với đơn giá, tính theo công thức: (value - min_value) * amount
+                            excess_value = value - detail.min_value
+                            if excess_value > 0:
+                                return excess_value * detail.amount
+
+                # Không tìm thấy mức giá phù hợp
+                return None
 
         return None
 
