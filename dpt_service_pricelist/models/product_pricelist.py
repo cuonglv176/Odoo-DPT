@@ -28,6 +28,11 @@ class ProductPricelist(models.Model):
     date_start = fields.Date(string='Ngày bắt đầu', tracking=True)
     date_end = fields.Date(string='Ngày kết thúc', tracking=True)
 
+    # Trường combo_item_ids để lưu các item là combo
+    combo_item_ids = fields.One2many('product.pricelist.item', 'pricelist_id',
+                                  string='Bảng giá Combo',
+                                  domain=[('combo_id', '!=', False)])
+
     def _compute_approver_ids(self):
         """Lấy danh sách người phê duyệt dựa vào cấu hình phê duyệt"""
         for record in self:
@@ -125,6 +130,56 @@ class ProductPricelist(models.Model):
                 })
             else:
                 pricelist.state = 'draft'
+
+    def action_add_combo_services(self):
+        """Thêm tự động dịch vụ từ các combo đã chọn vào tab dịch vụ"""
+        self.ensure_one()
+        services_added = 0
+
+        # Duyệt qua các combo đã chọn
+        for combo_item in self.combo_item_ids:
+            combo = combo_item.combo_id
+            if not combo:
+                continue
+
+            # Lấy danh sách dịch vụ thuộc combo
+            services = combo.service_ids
+
+            # Cho mỗi dịch vụ trong combo, thêm vào bảng giá dịch vụ
+            for service in services:
+                # Kiểm tra xem dịch vụ đã tồn tại trong bảng giá dịch vụ chưa
+                existing_item = self.env['product.pricelist.item'].search([
+                    ('pricelist_id', '=', self.id),
+                    ('service_id', '=', service.id),
+                    ('combo_id', '=', False)
+                ], limit=1)
+
+                if not existing_item:
+                    # Tạo bảng giá mới cho dịch vụ
+                    self.env['product.pricelist.item'].create({
+                        'pricelist_id': self.id,
+                        'service_id': service.id,
+                        'partner_id': combo_item.partner_id.id,
+                        'currency_id': combo_item.currency_id.id,
+                        'compute_price': 'fixed',
+                        'fixed_price': 0.0,  # Giá mặc định, người dùng có thể điều chỉnh sau
+                        'date_start': combo_item.date_start,
+                        'date_end': combo_item.date_end,
+                    })
+                    services_added += 1
+
+        # Hiển thị thông báo
+        message = _(f'Đã thêm {services_added} dịch vụ từ combo vào tab Dịch vụ')
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Thêm dịch vụ thành công'),
+                'message': message,
+                'sticky': False,
+                'next': {'type': 'ir.actions.client', 'tag': 'reload'},
+            }
+        }
 
     @api.model
     def _cron_check_expired_pricelists(self):
