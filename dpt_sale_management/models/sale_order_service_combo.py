@@ -20,9 +20,9 @@ class ServiceCombo(models.Model):
     amount_total = fields.Float('Thành tiền', compute='_compute_total_price')
     sale_service_ids = fields.One2many('dpt.sale.service.management', 'combo_id', 'Chi tiết dịch vụ')
 
-    # Trường mới để theo dõi trạng thái khóa giá
-    is_price_fixed = fields.Boolean(related='planned_sale_id.is_price_fixed',
-                                    string='Đã chốt giá', readonly=True)
+    # Thay đổi trường is_price_fixed thành trường độc lập (không phải related field)
+    is_price_fixed = fields.Boolean(string='Đã chốt giá', copy=False, tracking=True,
+                                    help='Đánh dấu combo dịch vụ đã được chốt giá với khách')
     locked_price = fields.Float('Giá đã khóa', copy=False)
 
     # Para almacenar temporalmente los servicios durante la creación
@@ -50,6 +50,7 @@ class ServiceCombo(models.Model):
                         'combo_id': self.id if not self._origin.id else self._origin.id,
                         'price_status': 'calculated',
                         'department_id': service_data['department_id'],
+                        'is_price_fixed': self.is_price_fixed,  # Kế thừa trạng thái chốt giá từ combo
                     }
 
                     # Gán đúng trường đơn hàng (thực tế hoặc dự kiến)
@@ -59,7 +60,7 @@ class ServiceCombo(models.Model):
                         service_vals['planned_sale_id'] = related_planned_sale_id
 
                         # Nếu đã chốt giá, lưu giá hiện tại vào trường locked_price
-                        if self.planned_sale_id and self.planned_sale_id.is_price_fixed:
+                        if self.is_price_fixed:
                             service_vals['locked_price'] = service_data['price']
 
                     new_services.append((0, 0, service_vals))
@@ -69,6 +70,22 @@ class ServiceCombo(models.Model):
                     if not self._origin.id:
                         self._services_to_create[self.id] = new_services
                     self.sale_service_ids = [(5, 0, 0)] + new_services
+
+    # Thêm onchange cho trường is_price_fixed
+    @api.onchange('is_price_fixed')
+    def _onchange_is_price_fixed(self):
+        """Khi thay đổi trạng thái chốt giá của combo, cập nhật cho tất cả dịch vụ thuộc combo"""
+        for combo in self:
+            # Nếu combo đã chốt giá, khóa giá hiện tại
+            if combo.is_price_fixed and not combo.locked_price and combo.price > 0:
+                combo.locked_price = combo.price
+
+            # Cập nhật trạng thái chốt giá cho tất cả dịch vụ thuộc combo
+            for service in combo.sale_service_ids:
+                service.is_price_fixed = combo.is_price_fixed
+                # Nếu đã chốt giá, lưu giá hiện tại của dịch vụ
+                if combo.is_price_fixed and not service.locked_price and service.price > 0:
+                    service.locked_price = service.price
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -92,6 +109,7 @@ class ServiceCombo(models.Model):
                         'combo_id': record.id,
                         'price_status': 'calculated',
                         'department_id': service_data['department_id'],
+                        'is_price_fixed': record.is_price_fixed,  # Kế thừa trạng thái chốt giá từ combo
                     }
 
                     # Gán đúng trường đơn hàng (thực tế hoặc dự kiến)
@@ -100,9 +118,8 @@ class ServiceCombo(models.Model):
                     if related_planned_sale_id:
                         service_vals['planned_sale_id'] = related_planned_sale_id
 
-                        # Kiểm tra nếu đơn hàng đã chốt giá
-                        planned_order = self.env['sale.order'].browse(related_planned_sale_id)
-                        if planned_order and planned_order.is_price_fixed:
+                        # Nếu đã chốt giá, lưu giá hiện tại vào trường locked_price
+                        if record.is_price_fixed:
                             service_vals['locked_price'] = service_data['price']
 
                     new_services.append(service_vals)
@@ -110,6 +127,30 @@ class ServiceCombo(models.Model):
                 if new_services:
                     self.env['dpt.sale.service.management'].create(new_services)
         return records
+
+    # Ghi đè phương thức write để cập nhật trạng thái chốt giá cho các dịch vụ
+    def write(self, vals):
+        res = super(ServiceCombo, self).write(vals)
+
+        # Nếu có thay đổi trạng thái chốt giá
+        if 'is_price_fixed' in vals:
+            for combo in self:
+                # Khóa giá nếu đã chốt giá
+                if vals['is_price_fixed'] and not combo.locked_price and combo.price > 0:
+                    combo.locked_price = combo.price
+
+                # Cập nhật trạng thái chốt giá cho tất cả dịch vụ thuộc combo
+                services = self.env['dpt.sale.service.management'].search([
+                    ('combo_id', '=', combo.id)
+                ])
+                for service in services:
+                    service_vals = {'is_price_fixed': vals['is_price_fixed']}
+                    # Nếu đã chốt giá, lưu giá hiện tại của dịch vụ
+                    if vals['is_price_fixed'] and not service.locked_price and service.price > 0:
+                        service_vals['locked_price'] = service.price
+                    service.write(service_vals)
+
+        return res
 
     @api.depends('price', 'qty', 'amount_discount', 'sale_service_ids', 'sale_service_ids.amount_total')
     def _compute_total_price(self):
@@ -124,8 +165,8 @@ class ServiceCombo(models.Model):
     @api.onchange('price')
     def _onchange_price(self):
         for record in self:
-            # Kiểm tra nếu combo này thuộc về đơn hàng dự kiến và đã chốt giá
-            if record.planned_sale_id and record.planned_sale_id.is_price_fixed:
+            # Kiểm tra nếu combo này đã chốt giá
+            if record.is_price_fixed:
                 if record.locked_price > 0 and record.price != record.locked_price:
                     record.price = record.locked_price
                     return {

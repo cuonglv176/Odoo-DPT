@@ -39,6 +39,8 @@ class DPTSaleServiceManagement(models.Model):
         ('calculated', 'Calculated')
     ], string='Price Status', default='no_price', tracking=True)
     planned_sale_id = fields.Many2one('sale.order', string='Planned Order')
+    is_price_fixed = fields.Boolean(string='Đã chốt giá', copy=False, tracking=True,
+                                    help='Đánh dấu dịch vụ đã được chốt giá với khách')
 
     @api.onchange('price')
     def onchange_check_price(self):

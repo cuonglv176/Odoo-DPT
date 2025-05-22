@@ -42,11 +42,6 @@
             <page name="order_lines" position="before">
                 <!-- Tab para servicios planificados -->
                 <page name="planned_services" string="Dịch vụ dự kiến">
-                    <div class="oe_inline">
-                        <field name="is_price_fixed" class="oe_inline" widget="boolean_toggle"/>
-                        <label for="is_price_fixed" class="oe_inline font-weight-bold"
-                               style="color: red; margin-left: 4px;"/>
-                    </div>
                     <notebook>
                         <page name="planned_combo" string="Combo dịch vụ">
                             <field name="planned_service_combo_ids" readonly="state == 'cancel' or locked">
@@ -58,6 +53,7 @@
                                     <field name="price" sum="Đơn giá"/>
                                     <field name="amount_discount" string="Khuyến mãi"/>
                                     <field name="amount_total" sum="Thành tiền"/>
+                                    <field name="is_price_fixed" widget="boolean_toggle"/>
                                 </tree>
                             </field>
                         </page>
@@ -81,6 +77,8 @@
                                     <field name="amount_total" readonly="1" force_save="1"/>
                                     <field name="department_id" context="{'dpt_sale_management': 1}"/>
                                     <field name="note"/>
+                                    <field name="is_price_fixed" widget="boolean_toggle"/>
+
                                 </tree>
                             </field>
                             <group col="6" class="mt-2 mt-md-0">

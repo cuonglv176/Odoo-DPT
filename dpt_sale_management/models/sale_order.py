@@ -46,11 +46,6 @@ class SaleOrder(models.Model):
         ('actual', 'Tất toán theo thực tế')
     ], string='Phương thức tất toán', default='actual', tracking=True,
         help='Chọn phương thức tất toán theo dự kiến hoặc thực tế')
-
-    is_price_fixed = fields.Boolean(string='Đã chốt giá với khách',
-                                    tracking=True,
-                                    help='Tích vào đây nếu đã chốt giá báo giá với khách hàng')
-
     # Campos existentes
     fields_ids = fields.One2many('dpt.sale.order.fields', 'sale_id', string='Fields')
     service_total_untax_amount = fields.Float(compute='_compute_service_amount')
