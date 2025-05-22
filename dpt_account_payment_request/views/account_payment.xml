@@ -18,9 +18,10 @@
                 <field name="payment_due"/>
                 <field name="type_id"/>
                 <field name="journal_id"/>
-                <field name="payment_user_type" widget="radio"/>
+                <field name="payment_user_type" widget="radio" invisible="1"/>
                 <field name="payment_user" widget="radio"/>
                 <field name="payment_method_line_id"/>
+                <field name="ref" string="Nội dung phiếu"/>
                 <field name="partner_id" string="Customer"/>
                 <field name="amount_signed" string="Amount in Currency" groups="base.group_multi_currency"
                        optional="hide"/>
@@ -181,11 +182,11 @@
                                    decoration-danger="request_status == 'refused'"
                                    decoration-muted="request_status == 'cancel'"/>
                             <field name="payment_type" widget="radio" options="{'horizontal': True}"
-                                   readonly="state != 'draft' or lock_status == 'locked'" />
+                                   readonly="state != 'draft' or lock_status == 'locked'" invisible="1" />
                             <field name="sale_id" string="Sale Order" readonly="lock_status == 'locked'"/>
                             <field name="dpt_user_partner_id" readonly="lock_status == 'locked'"/>
                             <field name="purchase_id" readonly="lock_status == 'locked'"/>
-                            <field name="payment_user_type" widget="radio" required="1" readonly="lock_status == 'locked'"/>
+                            <field name="payment_user_type" widget="radio" required="1" readonly="lock_status == 'locked'" invisible="1"/>
                             <field name="payment_user" widget="radio" required="1" readonly="lock_status == 'locked'"/>
                             <field name="partner_id" context="{'default_is_company': True}" string="Customer"
                                    options="{'no_quick_create': True}" required="1"
@@ -323,6 +324,7 @@
         <field name="view_ids" eval="[(5, 0, 0),
             (0, 0, {'view_mode': 'tree', 'view_id': ref('dpt_view_account_payment_request_tree')}),
             (0, 0, {'view_mode': 'form', 'view_id': ref('dpt_view_account_payment_request_form')})]"/>
+        <field name="domain">[('type_id', '!=', False)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Register a payment request
