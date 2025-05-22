@@ -36,6 +36,14 @@ class DPTServiceCombo(models.Model):
     total_services = fields.Integer(string='Tổng số dịch vụ', compute='_compute_total_services', store=True)
     total_price = fields.Float(string='Tổng giá trị', compute='_compute_total_price', store=True)
 
+    # Thêm trường tài khoản doanh thu và chi phí
+    revenue_account_id = fields.Many2one('account.account', string='Tài khoản doanh thu',
+                                        domain=[('deprecated', '=', False)],
+                                        tracking=True, copy=True)
+    expense_account_id = fields.Many2one('account.account', string='Tài khoản chi phí',
+                                        domain=[('deprecated', '=', False)],
+                                        tracking=True, copy=True)
+
     # Thêm các trường liên quan đến phê duyệt
     approval_id = fields.Many2one('approval.request', string='Yêu cầu phê duyệt', copy=False, readonly=True)
     approver_ids = fields.Many2many('res.users', string='Người phê duyệt', compute='_compute_approver_ids', store=False)
@@ -82,6 +90,11 @@ class DPTServiceCombo(models.Model):
 
     @api.depends('service_ids')
     def _compute_total_services(self):
+        for combo in self:
+            combo.total_services = len(combo.service_ids)
+
+    @api.depends('service_ids', 'service_ids.price')
+    def _compute_total_price(self):
         for combo in self:
             combo.total_services = len(combo.service_ids)
 
