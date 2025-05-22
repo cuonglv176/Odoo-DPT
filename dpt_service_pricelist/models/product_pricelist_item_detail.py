@@ -1,3 +1,6 @@
+
+from odoo import fields, models, api, _
+
 class ProductPricelistItemDetail(models.Model):
     _name = 'product.pricelist.item.detail'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin']
