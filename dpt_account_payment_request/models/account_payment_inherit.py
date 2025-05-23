@@ -127,6 +127,7 @@ class AccountPayment(models.Model):
     acc_holder_name = fields.Char(related="partner_bank_id.acc_holder_name", tracking=True)
     is_cn_payment = fields.Boolean(related="type_id.is_cn_payment", tracking=True)
     is_user_detail = fields.Boolean(related="type_id.is_user_detail", tracking=True)
+    is_account_journal = fields.Boolean(related="type_id.is_account_journal", tracking=True)
     bank_id = fields.Many2one(related="partner_bank_id.bank_id", tracking=True)
     amount_in_text = fields.Char('Amount in Text', compute="_compute_amount_in_text", tracking=True)
     refund_date = fields.Date(string='Ngày hoàn ứng', tracking=True)
