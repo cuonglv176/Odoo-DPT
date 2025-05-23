@@ -88,7 +88,7 @@
                 </page>
 
                 <!-- Tab para servicios reales -->
-                <page name="actual_services" string="Dịch vụ thực tế">
+                <page name="sale_service" string="Dịch vụ thực tế">
                     <separator string="COMBO"/>
                     <field name="service_combo_ids" readonly="state == 'cancel' or locked">
                         <tree editable="bottom">
