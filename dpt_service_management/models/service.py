@@ -173,7 +173,10 @@ class RequiredField(models.Model):
     service_id = fields.Many2one('dpt.service.management', string='Service', ondelete='cascade', tracking=True)
     combo_id = fields.Many2one('dpt.service.combo', string='Combo', ondelete='cascade', tracking=True)
     using_calculation_price = fields.Boolean('Using Calculation Price', tracking=True)
+    # Thêm trường many2many và giữ trường many2one cũ cho khả năng tương thích ngược
     uom_id = fields.Many2one('uom.uom', 'Unit', tracking=True)
+    uom_ids = fields.Many2many('uom.uom', string='Units', tracking=True,
+                               help='Có thể chọn nhiều đơn vị tính cho trường này')
     default_compute_from = fields.Selection([
         ('weight_in_so', 'Weight in SO'),
         ('volume_in_so', 'Volume in SO'),
@@ -213,8 +216,15 @@ class RequiredField(models.Model):
             else:
                 mapping_delete[item.service_id] = item
         for service_id, required_field_ids in mapping_delete.items():
+            # Lấy tên đơn vị từ cả uom_id và uom_ids
+            uom_names = []
+            for field in required_field_ids:
+                if field.uom_id:
+                    uom_names.append(field.uom_id.name)
+                if field.uom_ids:
+                    uom_names.extend(field.uom_ids.mapped('name'))
             service_id.message_post(
-                body=_("Delete Required field: %s") % ','.join(required_field_ids.mapped('uom_id').mapped('name')))
+                body=_("Delete Required field: %s") % ','.join(set(uom_names)))
         return super(RequiredField, self).unlink()
 
 
