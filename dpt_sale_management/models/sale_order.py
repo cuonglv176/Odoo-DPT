@@ -708,6 +708,68 @@ class SaleOrder(models.Model):
             # ...
         self.onchange_calculation_tax()
 
+    @api.onchange('partner_id')
+    def onchange_get_data_required_fields(self):
+        if self.partner_id.service_field_ids:
+            for sale_service_id in self.fields_ids:
+                if sale_service_id.fields_id.is_template:
+                    for partner_service_field_id in self.partner_id.service_field_ids:
+                        if sale_service_id.fields_id.code == partner_service_field_id.code:
+                            sale_service_id.write({
+                                'value_char': partner_service_field_id.value_char,
+                                'value_integer': partner_service_field_id.value_integer,
+                                'value_date': partner_service_field_id.value_date,
+                                'selection_value_id': partner_service_field_id.selection_value_id.id,
+                            })
+
+    def action_update_fields(self):
+        for field_id in self.fields_ids:
+            if field_id.fields_id.is_template:
+                partner_field_id = self.env['dpt.partner.required.fields'].search(
+                    [('partner_id', '=', self.partner_id.id), ('code', '=', field_id.fields_id.code)])
+                if not partner_field_id:
+                    self.env['dpt.partner.required.fields'].create({
+                        'name': field_id.fields_id.name,
+                        'description': field_id.fields_id.description,
+                        'fields_type': field_id.fields_id.fields_type,
+                        'uom_id': field_id.fields_id.uom_id.id,
+                        'code': field_id.fields_id.code,
+                        'value_char': field_id.value_char,
+                        'value_integer': field_id.value_integer,
+                        'value_date': field_id.value_date,
+                        'selection_value_id': field_id.selection_value_id.id,
+                        'partner_id': self.partner_id.id,
+                    })
+                else:
+                    partner_field_id.write({
+                        'value_char': field_id.value_char,
+                        'value_integer': field_id.value_integer,
+                        'value_date': field_id.value_date,
+                        'selection_value_id': field_id.selection_value_id.id,
+                    })
+
+    def send_quotation_department(self):
+        self.times_of_quotation = self.times_of_quotation + 1
+        self.state = 'wait_price'
+
+    @api.depends('sale_service_ids.amount_total')
+    def _compute_service_amount(self):
+        untax_amount = 0
+        tax_amount = 0
+        for r in self.sale_service_ids:
+            untax_amount += r.amount_total
+            tax_amount += r.amount_total * 8 / 100
+        self.service_total_untax_amount = untax_amount
+        self.service_tax_amount = tax_amount
+        self.service_total_amount = untax_amount
+
+    def compute_show_action_calculation(self):
+        # only show action calculation when current user is in the same department
+        for item in self:
+            not_compute_price_service_ids = True or item.sale_service_ids.filtered(
+                lambda ss: ss.department_id.id in self.env.user.employee_ids.mapped('department_id').ids)
+            item.show_action_calculation = True if not_compute_price_service_ids else False
+
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         sale = super(SaleOrder, self).copy(default)
