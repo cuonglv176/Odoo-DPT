@@ -6,6 +6,7 @@ import xlsxwriter
 import base64
 import io as stringIOModule
 from odoo.modules.module import get_module_resource
+import logging
 
 COLUMN = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q']
 
@@ -358,41 +359,109 @@ class SaleOrder(models.Model):
         # Gọi hàm cập nhật thêm
         self.onchange_get_data_required_fields()
 
-    def get_combo_price_from_pricelist(self, combo_id):
-        """Lấy giá combo từ bảng giá"""
-        self.ensure_one()
-        if not combo_id or not self.partner_id:
-            return False, 0.0
+    def distribute_combo_price(self):
+        """Phân bổ giá combo cho các dịch vụ theo tỉ lệ"""
+        # Đánh dấu các dịch vụ đã xử lý để tránh xử lý lại
+        processed_services = self.env['dpt.sale.service.management']
 
-        # Tìm bảng giá ưu tiên của khách hàng
-        pricelist = self.env['product.pricelist'].search([
-            ('partner_id', '=', self.partner_id.id),
-            ('state', '=', 'active')
-        ], limit=1)
+        for combo in self.service_combo_ids:
+            # Lấy giá combo từ bảng giá
+            combo_item, combo_price = self.get_combo_price_from_pricelist(combo)
+            if not combo_item or combo_price <= 0:
+                continue
 
-        # Nếu không có bảng giá riêng, tìm bảng giá chung
-        if not pricelist:
-            pricelist = self.env['product.pricelist'].search([
-                ('partner_id', '=', False),
-                ('state', '=', 'active')
-            ], limit=1)
+            # Log thông tin để debug
+            _logger = logging.getLogger(__name__)
+            _logger.info(f"Combo {combo.name}: Giá từ bảng giá: {combo_price}")
 
-        if not pricelist:
-            return False, 0.0
+            # Cập nhật giá cho combo
+            combo.price = combo_price
 
-        # Tìm mục giá cho combo này
-        today = fields.Date.today()
-        combo_item = self.env['product.pricelist.item'].search([
-            ('pricelist_id', '=', pricelist.id),
-            ('combo_id', '=', combo_id.combo_id.id),
-            '|', ('date_start', '<=', today), ('date_start', '=', False),
-            '|', ('date_end', '>=', today), ('date_end', '=', False)
-        ], limit=1)
+            # Lấy các dịch vụ thuộc combo này
+            services = self.sale_service_ids.filtered(lambda s: s.combo_id.id == combo.id)
+            if not services:
+                continue
 
-        if not combo_item:
-            return False, 0.0
+            # Tính tổng giá gốc của các dịch vụ trong combo
+            total_original_price = sum(service.service_id.price for service in services)
+            if total_original_price <= 0:
+                # Nếu tổng giá gốc bằng 0, phân bổ đều
+                price_per_service = combo_price / len(services)
+                for service in services:
+                    # Cập nhật đơn giá (price), không thay đổi compute_value để đảm bảo tính đúng thành tiền
+                    service.with_context(from_pricelist=True, skip_recalculation=True).write({
+                        'price': price_per_service,
+                        'price_in_pricelist': price_per_service,
+                        'compute_value': 1,  # Đảm bảo compute_value là 1 để amount_total = price
+                        'qty': 1,  # Đặt số lượng là 1
+                        'price_status': 'calculated',
+                        'pricelist_item_id': combo_item.id  # Liên kết với bảng giá
+                    })
+                    _logger.info(f"Dịch vụ {service.service_id.name}: Phân bổ giá đều: {price_per_service}")
+                    processed_services |= service
+            else:
+                # Phân bổ theo tỉ lệ giá gốc
+                for service in services:
+                    ratio = service.service_id.price / total_original_price
+                    distributed_price = combo_price * ratio
+                    # Cập nhật đơn giá (price), không thay đổi compute_value để đảm bảo tính đúng thành tiền
+                    service.with_context(from_pricelist=True, skip_recalculation=True).write({
+                        'price': distributed_price,
+                        'price_in_pricelist': distributed_price,
+                        'compute_value': 1,  # Đảm bảo compute_value là 1 để amount_total = price
+                        'qty': 1,  # Đặt số lượng là 1
+                        'price_status': 'calculated',
+                        'pricelist_item_id': combo_item.id  # Liên kết với bảng giá
+                    })
+                    _logger.info(
+                        f"Dịch vụ {service.service_id.name}: Phân bổ theo tỉ lệ: {distributed_price} (tỉ lệ: {ratio})")
+                    processed_services |= service
 
-        return combo_item, combo_item.fixed_price
+        # Tương tự cho các combo dự kiến
+        for planned_combo in self.planned_service_combo_ids:
+            combo_item, combo_price = self.get_combo_price_from_pricelist(planned_combo)
+            if not combo_item or combo_price <= 0:
+                continue
+
+            # Cập nhật giá cho combo
+            planned_combo.price = combo_price
+
+            planned_services = self.planned_sale_service_ids.filtered(lambda s: s.combo_id.id == planned_combo.id)
+            if not planned_services:
+                continue
+
+            total_original_price = sum(service.service_id.price for service in planned_services)
+            if total_original_price <= 0:
+                price_per_service = combo_price / len(planned_services)
+                for service in planned_services:
+                    service.with_context(from_pricelist=True, skip_recalculation=True).write({
+                        'price': price_per_service,
+                        'price_in_pricelist': price_per_service,
+                        'compute_value': 1,
+                        'qty': 1,
+                        'price_status': 'calculated',
+                        'pricelist_item_id': combo_item.id
+                    })
+                    processed_services |= service
+            else:
+                for service in planned_services:
+                    ratio = service.service_id.price / total_original_price
+                    distributed_price = combo_price * ratio
+                    service.with_context(from_pricelist=True, skip_recalculation=True).write({
+                        'price': distributed_price,
+                        'price_in_pricelist': distributed_price,
+                        'compute_value': 1,
+                        'qty': 1,
+                        'price_status': 'calculated',
+                        'pricelist_item_id': combo_item.id
+                    })
+                    processed_services |= service
+
+        # Đảm bảo thành tiền được tính đúng sau khi phân bổ
+        for service in processed_services:
+            service.amount_total = service.price * service.compute_value
+
+        return processed_services
 
     def distribute_combo_price(self):
         """Phân bổ giá combo cho các dịch vụ theo tỉ lệ"""
