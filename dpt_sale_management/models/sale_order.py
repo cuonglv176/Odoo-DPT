@@ -247,18 +247,27 @@ class SaleOrder(models.Model):
             # else:
             #     raise ValidationError(_("Please fill required fields!!!"))
 
-    @api.onchange('sale_service_ids')
+    @api.onchange('sale_service_ids', 'planned_sale_service_ids')
     def onchange_sale_service_ids(self):
         fields_dict = {}
         sale_order = self.env['sale.order'].browse(self.origin)
         list_exist = sale_order.fields_ids.fields_id.ids
         list_onchange = [item.fields_id.id for item in self.fields_ids]
 
-        # Duyệt qua từng sale_service và xử lý nếu sale_service và service_id của nó tồn tại
+        # Kết hợp cả dịch vụ thực tế và dự kiến
+        all_services = []
+        # Xử lý dịch vụ thực tế
         for sale_service in self.sale_service_ids:
-            if not sale_service or not sale_service.service_id:
-                continue  # Bỏ qua nếu sale_service không hợp lệ
+            if sale_service and sale_service.service_id:
+                all_services.append((sale_service, 'actual'))
 
+        # Xử lý dịch vụ dự kiến
+        for planned_service in self.planned_sale_service_ids:
+            if planned_service and planned_service.service_id:
+                all_services.append((planned_service, 'planned'))
+
+        # Duyệt qua từng sale_service và xử lý
+        for sale_service, service_type in all_services:
             for req_field in sale_service.service_id.required_fields_ids:
                 # Nếu req_field không tồn tại, bỏ qua
                 if not req_field:
@@ -329,7 +338,17 @@ class SaleOrder(models.Model):
                         rec.update(default_value)
 
                 # Lưu vào dictionary với key là (req_field.id, sale_service.id) để tránh trùng lặp
+                # Key dùng tuple gồm req_field.id và trường đó thuộc về service nào
                 fields_dict[(req_field.id, sale_service.id)] = rec
+
+        # Xử lý các trường trùng lặp giữa dịch vụ thực tế và dự kiến
+        # Lấy unique theo fields_id để loại bỏ trùng lặp
+        unique_fields = {}
+        for key, value in fields_dict.items():
+            field_id = value['fields_id']
+            # Nếu chưa có trong unique_fields hoặc sequence lớn hơn => ưu tiên giữ lại
+            if field_id not in unique_fields or value['sequence'] > unique_fields[field_id]['sequence']:
+                unique_fields[field_id] = value
 
         if fields_dict:
             sorted_vals = sorted(fields_dict.values(), key=lambda x: x["sequence"], reverse=True)
@@ -337,7 +356,7 @@ class SaleOrder(models.Model):
             self.fields_ids = [(0, 0, item) for item in sorted_vals]
         else:
             # Nếu không còn sale_service nào thì xóa hết fields_ids
-            if not self.sale_service_ids:
+            if not self.sale_service_ids and not self.planned_sale_service_ids:
                 self.fields_ids = [(5, 0, 0)]
 
         # Gọi hàm cập nhật thêm nếu cần
