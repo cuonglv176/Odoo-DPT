@@ -236,7 +236,7 @@
                             <field name="payment_method_line_id" options="{'no_create': True, 'no_open': True}"
                                    required="1"
                                    readonly="state != 'draft' or lock_status == 'locked'"
-                                   invisible="s_account_journal == False or create_uid == uid or is_cn_payment == False"
+                                   invisible="is_account_journal == False or create_uid == uid or is_cn_payment == False"
                             />
 
                             <field name="partner_bank_id" string="Customer Bank Account" readonly="lock_status == 'locked'"
