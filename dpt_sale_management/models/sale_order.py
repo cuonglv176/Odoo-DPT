@@ -409,11 +409,7 @@ class SaleOrder(models.Model):
             if not combo_item or combo_price <= 0:
                 continue
 
-            # Log thông tin để debug
-            _logger = logging.getLogger(__name__)
-            _logger.info(f"Combo {combo.name}: Giá từ bảng giá: {combo_price}")
-
-            # Cập nhật giá cho combo
+            # Cập nhật giá combo từ bảng giá
             combo.price = combo_price
 
             # Lấy các dịch vụ thuộc combo này
@@ -423,38 +419,47 @@ class SaleOrder(models.Model):
 
             # Tính tổng giá gốc của các dịch vụ trong combo
             total_original_price = sum(service.service_id.price for service in services)
-            if total_original_price <= 0:
-                # Nếu tổng giá gốc bằng 0, phân bổ đều
-                price_per_service = combo_price / len(services)
-                for service in services:
-                    # Cập nhật đơn giá (price), không thay đổi compute_value để đảm bảo tính đúng thành tiền
-                    service.with_context(from_pricelist=True, skip_recalculation=True).write({
-                        'price': price_per_service,
-                        'price_in_pricelist': price_per_service,
-                        'compute_value': 1,  # Đảm bảo compute_value là 1 để amount_total = price
-                        'qty': 1,  # Đặt số lượng là 1
-                        'price_status': 'calculated',
-                        'pricelist_item_id': combo_item.id  # Liên kết với bảng giá
-                    })
-                    _logger.info(f"Dịch vụ {service.service_id.name}: Phân bổ giá đều: {price_per_service}")
-                    processed_services |= service
-            else:
-                # Phân bổ theo tỉ lệ giá gốc
-                for service in services:
+
+            # Phân bổ giá cho từng dịch vụ
+            for service in services:
+                # Tìm trường dpt.sale.order.fields phù hợp để lấy giá trị số lượng
+                compute_value = 1
+                compute_uom_id = False
+
+                # Nếu có uom_id trong bảng giá
+                if combo_item.uom_id:
+                    # Tìm field có cùng uom_id và thuộc service này
+                    compute_field = self.fields_ids.filtered(
+                        lambda f: f.uom_id.id == combo_item.uom_id.id and
+                                  f.using_calculation_price and
+                                  f.service_id.id == service.service_id.id and
+                                  f.fields_type == 'integer')
+
+                    if compute_field:
+                        compute_value = compute_field.value_integer or 1
+                        compute_uom_id = compute_field.uom_id.id
+
+                # Tính giá phân bổ
+                if total_original_price <= 0:
+                    # Nếu tổng giá gốc bằng 0, phân bổ đều
+                    distributed_price = combo_price / len(services)
+                else:
+                    # Phân bổ theo tỉ lệ giá gốc
                     ratio = service.service_id.price / total_original_price
                     distributed_price = combo_price * ratio
-                    # Cập nhật đơn giá (price), không thay đổi compute_value để đảm bảo tính đúng thành tiền
-                    service.with_context(from_pricelist=True, skip_recalculation=True).write({
-                        'price': distributed_price,
-                        'price_in_pricelist': distributed_price,
-                        'compute_value': 1,  # Đảm bảo compute_value là 1 để amount_total = price
-                        'qty': 1,  # Đặt số lượng là 1
-                        'price_status': 'calculated',
-                        'pricelist_item_id': combo_item.id  # Liên kết với bảng giá
-                    })
-                    _logger.info(
-                        f"Dịch vụ {service.service_id.name}: Phân bổ theo tỉ lệ: {distributed_price} (tỉ lệ: {ratio})")
-                    processed_services |= service
+
+                # Cập nhật đơn giá và số lượng
+                service.with_context(from_pricelist=True).write({
+                    'price': distributed_price / compute_value if combo_item.is_price else distributed_price,
+                    'price_in_pricelist': distributed_price,
+                    'compute_value': compute_value,
+                    'compute_uom_id': compute_uom_id,
+                    'price_status': 'calculated',
+                    'pricelist_item_id': combo_item.id,
+                })
+
+                # Đánh dấu dịch vụ đã xử lý
+                processed_services |= service
 
         # Tương tự cho các combo dự kiến
         for planned_combo in self.planned_service_combo_ids:
@@ -462,7 +467,7 @@ class SaleOrder(models.Model):
             if not combo_item or combo_price <= 0:
                 continue
 
-            # Cập nhật giá cho combo
+            # Cập nhật giá combo từ bảng giá
             planned_combo.price = combo_price
 
             planned_services = self.planned_sale_service_ids.filtered(lambda s: s.combo_id.id == planned_combo.id)
@@ -470,113 +475,47 @@ class SaleOrder(models.Model):
                 continue
 
             total_original_price = sum(service.service_id.price for service in planned_services)
-            if total_original_price <= 0:
-                price_per_service = combo_price / len(planned_services)
-                for service in planned_services:
-                    service.with_context(from_pricelist=True, skip_recalculation=True).write({
-                        'price': price_per_service,
-                        'price_in_pricelist': price_per_service,
-                        'compute_value': 1,
-                        'qty': 1,
-                        'price_status': 'calculated',
-                        'pricelist_item_id': combo_item.id
-                    })
-                    processed_services |= service
-            else:
-                for service in planned_services:
+
+            # Phân bổ giá cho từng dịch vụ dự kiến
+            for service in planned_services:
+                # Tìm trường dpt.sale.order.fields phù hợp để lấy giá trị số lượng
+                compute_value = 1
+                compute_uom_id = False
+
+                # Nếu có uom_id trong bảng giá
+                if combo_item.uom_id:
+                    # Tìm field có cùng uom_id và thuộc service này
+                    compute_field = self.fields_ids.filtered(
+                        lambda f: f.uom_id.id == combo_item.uom_id.id and
+                                  f.using_calculation_price and
+                                  f.service_id.id == service.service_id.id and
+                                  f.fields_type == 'integer')
+
+                    if compute_field:
+                        compute_value = compute_field.value_integer or 1
+                        compute_uom_id = compute_field.uom_id.id
+
+                # Tính giá phân bổ
+                if total_original_price <= 0:
+                    # Nếu tổng giá gốc bằng 0, phân bổ đều
+                    distributed_price = combo_price / len(planned_services)
+                else:
+                    # Phân bổ theo tỉ lệ giá gốc
                     ratio = service.service_id.price / total_original_price
                     distributed_price = combo_price * ratio
-                    service.with_context(from_pricelist=True, skip_recalculation=True).write({
-                        'price': distributed_price,
-                        'price_in_pricelist': distributed_price,
-                        'compute_value': 1,
-                        'qty': 1,
-                        'price_status': 'calculated',
-                        'pricelist_item_id': combo_item.id
-                    })
-                    processed_services |= service
 
-        # Đảm bảo thành tiền được tính đúng sau khi phân bổ
-        for service in processed_services:
-            service.amount_total = service.price * service.compute_value
+                # Cập nhật đơn giá và số lượng
+                service.with_context(from_pricelist=True).write({
+                    'price': distributed_price / compute_value if combo_item.is_price else distributed_price,
+                    'price_in_pricelist': distributed_price,
+                    'compute_value': compute_value,
+                    'compute_uom_id': compute_uom_id,
+                    'price_status': 'calculated',
+                    'pricelist_item_id': combo_item.id,
+                })
 
-        return processed_services
-
-    def distribute_combo_price(self):
-        """Phân bổ giá combo cho các dịch vụ theo tỉ lệ"""
-        # Đánh dấu các combo đã xử lý để tránh xử lý lại
-        processed_services = self.env['dpt.sale.service.management']
-
-        for combo in self.service_combo_ids:
-            # Lấy giá combo từ bảng giá
-            combo_item, combo_price = self.get_combo_price_from_pricelist(combo)
-            if not combo_item or combo_price <= 0:
-                continue
-
-            # Lấy các dịch vụ thuộc combo này
-            services = self.sale_service_ids.filtered(lambda s: s.combo_id.id == combo.id)
-            if not services:
-                continue
-
-            # Thiết lập giá combo từ bảng giá
-            combo.price = combo_price
-
-            # Tính tổng giá gốc của các dịch vụ trong combo
-            total_original_price = sum(service.service_id.price for service in services)
-            if total_original_price <= 0:
-                # Nếu tổng giá gốc bằng 0, phân bổ đều
-                price_per_service = combo_price / len(services)
-                for service in services:
-                    service.with_context(from_pricelist=True).write({
-                        'price': price_per_service,
-                        'price_in_pricelist': price_per_service,
-                        'price_status': 'calculated',
-                    })
-                    processed_services |= service
-            else:
-                # Phân bổ theo tỉ lệ giá gốc
-                for service in services:
-                    ratio = service.service_id.price / total_original_price
-                    distributed_price = combo_price * ratio
-                    service.with_context(from_pricelist=True).write({
-                        'price': distributed_price,
-                        'price_in_pricelist': distributed_price,
-                        'price_status': 'calculated',
-                    })
-                    processed_services |= service
-
-        # Tương tự cho các combo dự kiến
-        for planned_combo in self.planned_service_combo_ids:
-            combo_item, combo_price = self.get_combo_price_from_pricelist(planned_combo)
-            if not combo_item or combo_price <= 0:
-                continue
-
-            # Thiết lập giá combo từ bảng giá
-            planned_combo.price = combo_price
-            planned_services = self.planned_sale_service_ids.filtered(lambda s: s.combo_id.id == planned_combo.id)
-            if not planned_services:
-                continue
-
-            total_original_price = sum(service.service_id.price for service in planned_services)
-            if total_original_price <= 0:
-                price_per_service = combo_price / len(planned_services)
-                for service in planned_services:
-                    service.with_context(from_pricelist=True).write({
-                        'price': price_per_service,
-                        'price_in_pricelist': price_per_service,
-                        'price_status': 'calculated',
-                    })
-                    processed_services |= service
-            else:
-                for service in planned_services:
-                    ratio = service.service_id.price / total_original_price
-                    distributed_price = combo_price * ratio
-                    service.with_context(from_pricelist=True).write({
-                        'price': distributed_price,
-                        'price_in_pricelist': distributed_price,
-                        'price_status': 'calculated',
-                    })
-                    processed_services |= service
+                # Đánh dấu dịch vụ đã xử lý
+                processed_services |= service
 
         return processed_services
 
