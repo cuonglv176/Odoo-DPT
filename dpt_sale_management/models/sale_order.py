@@ -396,6 +396,9 @@ class SaleOrder(models.Model):
 
     def distribute_combo_price(self):
         """Phân bổ giá combo cho các dịch vụ theo tỉ lệ"""
+        # Đánh dấu các combo đã xử lý để tránh xử lý lại
+        processed_services = self.env['dpt.sale.service.management']
+
         for combo in self.service_combo_ids:
             # Lấy giá combo từ bảng giá
             combo_item, combo_price = self.get_combo_price_from_pricelist(combo)
@@ -406,6 +409,9 @@ class SaleOrder(models.Model):
             services = self.sale_service_ids.filtered(lambda s: s.combo_id.id == combo.id)
             if not services:
                 continue
+
+            # Thiết lập giá combo từ bảng giá
+            combo.price = combo_price
 
             # Tính tổng giá gốc của các dịch vụ trong combo
             total_original_price = sum(service.service_id.price for service in services)
@@ -418,6 +424,7 @@ class SaleOrder(models.Model):
                         'price_in_pricelist': price_per_service,
                         'price_status': 'calculated',
                     })
+                    processed_services |= service
             else:
                 # Phân bổ theo tỉ lệ giá gốc
                 for service in services:
@@ -428,6 +435,7 @@ class SaleOrder(models.Model):
                         'price_in_pricelist': distributed_price,
                         'price_status': 'calculated',
                     })
+                    processed_services |= service
 
         # Tương tự cho các combo dự kiến
         for planned_combo in self.planned_service_combo_ids:
@@ -435,6 +443,8 @@ class SaleOrder(models.Model):
             if not combo_item or combo_price <= 0:
                 continue
 
+            # Thiết lập giá combo từ bảng giá
+            planned_combo.price = combo_price
             planned_services = self.planned_sale_service_ids.filtered(lambda s: s.combo_id.id == planned_combo.id)
             if not planned_services:
                 continue
@@ -448,6 +458,7 @@ class SaleOrder(models.Model):
                         'price_in_pricelist': price_per_service,
                         'price_status': 'calculated',
                     })
+                    processed_services |= service
             else:
                 for service in planned_services:
                     ratio = service.service_id.price / total_original_price
@@ -457,124 +468,32 @@ class SaleOrder(models.Model):
                         'price_in_pricelist': distributed_price,
                         'price_status': 'calculated',
                     })
+                    processed_services |= service
 
-    def action_confirm(self):
-        res = super(SaleOrder, self).action_confirm()
-        for order_id in self:
-            # if order_id.sale_service_ids.filtered(lambda ss: ss.price_in_pricelist != ss.price):
-            #     raise ValidationError(_('Please approve new price!'))
-            if not order_id.update_pricelist:
-                continue
-            for sale_service_id in order_id.sale_service_ids.filtered(lambda ss: ss.price_in_pricelist != ss.price):
-                if not sale_service_id.uom_id:
-                    raise ValidationError(_("Please insert Units"))
-                pricelist_id = self.env['product.pricelist'].sudo().search([('partner_id', '=', self.partner_id.id)])
-                if not pricelist_id:
-                    pricelist_id = self.env['product.pricelist'].sudo().create({
-                        'name': 'Bảng giá của khách hàng %s' % self.partner_id.name,
-                        'partner_id': self.partner_id.id,
-                        'currency_id': sale_service_id.currency_id.id,
-                    })
-                price_list_item_id = self.env['product.pricelist.item'].sudo().search(
-                    [('pricelist_id', '=', pricelist_id.id), ('service_id', '=', sale_service_id.service_id.id),
-                     ('uom_id', '=', sale_service_id.uom_id.id), ('partner_id', '=', self.partner_id.id)])
-                if not price_list_item_id:
-                    self.env['product.pricelist.item'].sudo().create({
-                        'partner_id': self.partner_id.id,
-                        'pricelist_id': pricelist_id.id,
-                        'service_id': sale_service_id.service_id.id,
-                        'uom_id': sale_service_id.uom_id.id,
-                        'compute_price': 'fixed',
-                        'fixed_price': sale_service_id.price,
-                        'is_price': False,
-                    })
-                else:
-                    price_list_item_id.write({
-                        'compute_price': 'fixed',
-                        'fixed_price': sale_service_id.price,
-                        'is_price': False,
-                    })
-            order_id.action_update_fields()
-        return res
-
-    @api.onchange('partner_id')
-    def onchange_get_data_required_fields(self):
-        if self.partner_id.service_field_ids:
-            for sale_service_id in self.fields_ids:
-                if sale_service_id.fields_id.is_template:
-                    for partner_service_field_id in self.partner_id.service_field_ids:
-                        if sale_service_id.fields_id.code == partner_service_field_id.code:
-                            sale_service_id.write({
-                                'value_char': partner_service_field_id.value_char,
-                                'value_integer': partner_service_field_id.value_integer,
-                                'value_date': partner_service_field_id.value_date,
-                                'selection_value_id': partner_service_field_id.selection_value_id.id,
-                            })
-
-    def action_update_fields(self):
-        for field_id in self.fields_ids:
-            if field_id.fields_id.is_template:
-                partner_field_id = self.env['dpt.partner.required.fields'].search(
-                    [('partner_id', '=', self.partner_id.id), ('code', '=', field_id.fields_id.code)])
-                if not partner_field_id:
-                    self.env['dpt.partner.required.fields'].create({
-                        'name': field_id.fields_id.name,
-                        'description': field_id.fields_id.description,
-                        'fields_type': field_id.fields_id.fields_type,
-                        'uom_id': field_id.fields_id.uom_id.id,
-                        'code': field_id.fields_id.code,
-                        'value_char': field_id.value_char,
-                        'value_integer': field_id.value_integer,
-                        'value_date': field_id.value_date,
-                        'selection_value_id': field_id.selection_value_id.id,
-                        'partner_id': self.partner_id.id,
-                    })
-                else:
-                    partner_field_id.write({
-                        'value_char': field_id.value_char,
-                        'value_integer': field_id.value_integer,
-                        'value_date': field_id.value_date,
-                        'selection_value_id': field_id.selection_value_id.id,
-                    })
-
-    def send_quotation_department(self):
-        self.times_of_quotation = self.times_of_quotation + 1
-        self.state = 'wait_price'
-
-    @api.depends('sale_service_ids.amount_total')
-    def _compute_service_amount(self):
-        untax_amount = 0
-        tax_amount = 0
-        for r in self.sale_service_ids:
-            untax_amount += r.amount_total
-            tax_amount += r.amount_total * 8 / 100
-        self.service_total_untax_amount = untax_amount
-        self.service_tax_amount = tax_amount
-        self.service_total_amount = untax_amount
-
-    def compute_show_action_calculation(self):
-        # only show action calculation when current user is in the same department
-        for item in self:
-            not_compute_price_service_ids = True or item.sale_service_ids.filtered(
-                lambda ss: ss.department_id.id in self.env.user.employee_ids.mapped('department_id').ids)
-            item.show_action_calculation = True if not_compute_price_service_ids else False
+        return processed_services
 
     def action_calculation(self):
         # Trước tiên phân bổ giá cho các dịch vụ thuộc combo
-        self.distribute_combo_price()
+        processed_services = self.distribute_combo_price()
 
         # Sau đó tính giá cho các dịch vụ không thuộc combo hoặc chưa có giá
         for sale_service_id in self.sale_service_ids:
+            # Bỏ qua các dịch vụ đã được xử lý từ combo
+            if sale_service_id in processed_services:
+                continue
+
             # Bỏ qua các dịch vụ đã có giá từ combo
             if sale_service_id.combo_id and sale_service_id.price > 0 and sale_service_id.price_status == 'calculated':
                 continue
 
             if not sale_service_id.uom_id:
                 continue
+
             approved = sale_service_id.approval_id.filtered(
                 lambda approval: approval.request_status in ('approved', 'refused'))
             if approved:
                 continue
+
             current_uom_id = sale_service_id.uom_id
             service_price_ids = sale_service_id.service_id.get_active_pricelist(partner_id=self.partner_id)
             if current_uom_id:
@@ -667,16 +586,18 @@ class SaleOrder(models.Model):
                 'compute_uom_id': compute_uom_id,
                 'price_status': price_status,
             })
-
         # Tương tự cho planned_sale_service_ids
         for planned_service_id in self.planned_sale_service_ids:
+            # Bỏ qua các dịch vụ đã được xử lý từ combo
+            if planned_service_id in processed_services:
+                continue
+
             # Bỏ qua dịch vụ dự kiến đã có giá từ combo
             if planned_service_id.combo_id and planned_service_id.price > 0 and planned_service_id.price_status == 'calculated':
                 continue
 
             # Áp dụng logic tương tự như với sale_service_ids
-            # (Phần code tương tự như với sale_service_ids, bạn có thể tách thành hàm riêng để tái sử dụng)
-
+            # ...
         self.onchange_calculation_tax()
 
     @api.returns('self', lambda value: value.id)
