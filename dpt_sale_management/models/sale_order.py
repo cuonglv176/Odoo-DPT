@@ -31,16 +31,17 @@ class SaleOrder(models.Model):
         default='draft')
 
     # Valores reales
-    service_combo_ids = fields.One2many('dpt.sale.order.service.combo','sale_id', string='Combo dịch vụ thực tế',
-                                         tracking=True)
-    sale_service_ids = fields.One2many('dpt.sale.service.management', 'sale_id', string='Service thực tế', tracking=True,
+    service_combo_ids = fields.One2many('dpt.sale.order.service.combo', 'sale_id', string='Combo dịch vụ thực tế',
+                                        tracking=True)
+    sale_service_ids = fields.One2many('dpt.sale.service.management', 'sale_id', string='Service thực tế',
+                                       tracking=True,
                                        inverse='onchange_sale_service_ids')
 
     # Valores planificados (nuevos campos)
-    planned_service_combo_ids = fields.One2many('dpt.sale.order.service.combo','planned_sale_id',
+    planned_service_combo_ids = fields.One2many('dpt.sale.order.service.combo', 'planned_sale_id',
                                                 string='Combo dịch vụ dự kiến', tracking=True)
     planned_sale_service_ids = fields.One2many('dpt.sale.service.management', 'planned_sale_id',
-                                              string='Service dự kiến', tracking=True)
+                                               string='Service dự kiến', tracking=True)
     # Thêm trường mới cho việc tất toán và chốt giá
     settle_by = fields.Selection([
         ('planned', 'Tất toán theo dự kiến'),
@@ -149,7 +150,8 @@ class SaleOrder(models.Model):
                         'planned_sale_id': self.id,
                     }))
             if new_services:
-                self.planned_sale_service_ids = [(4, service.id) for service in self.planned_sale_service_ids] + new_services
+                self.planned_sale_service_ids = [(4, service.id) for service in
+                                                 self.planned_sale_service_ids] + new_services
 
     @api.depends('sale_service_ids', 'sale_service_ids.service_id', 'sale_service_ids.service_id.pricelist_item_ids')
     def compute_show_is_quotation(self):
@@ -358,6 +360,43 @@ class SaleOrder(models.Model):
 
         # Gọi hàm cập nhật thêm
         self.onchange_get_data_required_fields()
+
+    def get_combo_price_from_pricelist(self, combo_id):
+        """Lấy giá combo từ bảng giá"""
+        self.ensure_one()
+        if not combo_id or not self.partner_id:
+            return False, 0.0
+
+        # Tìm bảng giá ưu tiên của khách hàng
+        pricelist = self.env['product.pricelist'].search([
+            ('partner_id', '=', self.partner_id.id),
+            ('state', '=', 'active')
+        ], limit=1)
+
+        # Nếu không có bảng giá riêng, tìm bảng giá chung
+        if not pricelist:
+            pricelist = self.env['product.pricelist'].search([
+                ('partner_id', '=', False),
+                ('state', '=', 'active')
+            ], limit=1)
+
+        if not pricelist:
+            return False, 0.0
+
+        # Tìm mục giá cho combo này
+        today = fields.Date.today()
+        # Trực tiếp lấy combo_id.combo_id thay vì combo_id.combo_id.id
+        combo_item = self.env['product.pricelist.item'].search([
+            ('pricelist_id', '=', pricelist.id),
+            ('combo_id', '=', combo_id.combo_id.id),
+            '|', ('date_start', '<=', today), ('date_start', '=', False),
+            '|', ('date_end', '>=', today), ('date_end', '=', False)
+        ], limit=1)
+
+        if not combo_item:
+            return False, 0.0
+
+        return combo_item, combo_item.fixed_price
 
     def distribute_combo_price(self):
         """Phân bổ giá combo cho các dịch vụ theo tỉ lệ"""
