@@ -6,6 +6,7 @@
 
     'data': [
         'security/ir.model.access.csv',
+        'views/account_move.xml',
         'views/dpt_expense_allocation.xml',
         'views/uom_uom.xml',
     ],

@@ -36,10 +36,10 @@ class DPTExpenseAllocation(models.Model):
 
     @api.onchange('shipping_id')
     def _onchange_get_expense(self):
-        if not self.shipping_id or not self.shipping_id.po_id:
+        if not self.shipping_id or not self.shipping_id.po_ids:
             return
-        self.currency_id = self.shipping_id.po_id.currency_id if self.shipping_id.po_id.currency_id else self.env.company.currency_id
-        self.total_expense = self.shipping_id.po_id.amount_total
+        self.currency_id = self.shipping_id.po_ids[0].currency_id if self.shipping_id.po_ids[0].currency_id else self.env.company.currency_id
+        self.total_expense = self.shipping_id.po_ids.mapped('amount_total')
 
     def action_allocate(self):
         self.state = 'allocated'
@@ -90,17 +90,37 @@ class DPTExpenseAllocation(models.Model):
                     journal_id = self.env['account.journal'].sudo().search([('type','=','purchase')], limit=1)
                     if not journal_id:
                         raise ValidationError("Vui lòng cấu hình sổ nhật ký mua hàng!!")
+                    move_id = self.env['account.move'].sudo().create({
+                        # 'partner_id': self.shipping_id.po_id.partner_id.id,
+                        'sale_id': sale_id.id,
+                        'journal_id': journal_id.id,
+                        'expense_allocation_id': self.id,
+                    })
+                    move_line_vals = []
                     for sale_id, expense in expense_by_order.items():
-                        move_id = self.env['account.move'].sudo().create({
-                            'partner_id': self.shipping_id.po_id.partner_id.id,
-                            'sale_id': sale_id.id,
+                        move_line_vals.append({
+                            'move_id': move_id.id,
                             'journal_id': journal_id.id,
-                            'expense_allocation_id': self.id,
-                            'invoice_line_ids': [(0, 0, {
-                                'product_id': self.expense_id.id,
-                                'account_id': self.expense_id.property_account_expense_id.id,
-                                'quantity': 1,
-                                'price_unit': expense
-                            })]
+                            'product_id': self.expense_id.id,
+                            'account_id': self.expense_id.property_account_expense_id.id,
+                            'display_type': 'product',
+                            'price_unit': expense,
+                            'quantity': 1,
+                            'expense_id': self.expense_id.id,
                         })
-                        move_id.action_post()
+                    for partner_id in self.shipping_id.po_ids.mapped('partner_id'):
+                        if not partner_id:
+                            continue
+                        po_ids = self.shipping_id.po_ids.filtered(lambda po:po.partner_id == partner_id)
+                        move_line_vals.append({
+                            'move_id': move_id.id,
+                            'partner_id': partner_id.id,
+                            'journal_id': journal_id.id,
+                            'account_id': partner_id.property_account_payable_id.id if partner_id.property_account_payable_id else None,
+                            'display_type': 'payment_term',
+                            'credit': sum(po_ids.mapped('amount_total')),
+                            'balance': -sum(po_ids.mapped('amount_total')),
+                            'expense_id': self.expense_id.id,
+                        })
+                    self.env['account.move.line'].create(move_line_vals)
+                    move_id.action_post()

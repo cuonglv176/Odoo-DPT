@@ -52,7 +52,7 @@
                             <field name="name" required="1"/>
                             <field name="delivery_slip_type" invisible="1"/>
                             <field name="send_shipping_id" options="{'no_create': True}" readonly="1" force_save="1"/>
-                            <field name="po_id" options="{'no_create': True}"/>
+                            <field name="po_ids" widget="many2many_tags" options="{'no_create': True}"/>
                             <field name="estimate_arrival_warehouse_vn" invisible="not send_shipping_id"/>
                             <field name="transfer_code" invisible="1"/>
                             <field name="transfer_code_chinese" invisible="1"/>
