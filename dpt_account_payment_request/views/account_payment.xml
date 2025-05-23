@@ -18,9 +18,10 @@
                 <field name="payment_due"/>
                 <field name="type_id"/>
                 <field name="journal_id"/>
-                <field name="payment_user_type" widget="radio"/>
+                <field name="payment_user_type" widget="radio" invisible="1"/>
                 <field name="payment_user" widget="radio"/>
                 <field name="payment_method_line_id"/>
+                <field name="ref" string="Nội dung phiếu"/>
                 <field name="partner_id" string="Customer"/>
                 <field name="amount_signed" string="Amount in Currency" groups="base.group_multi_currency"
                        optional="hide"/>
@@ -80,6 +81,10 @@
                     <field name="need_cancel_request" invisible="1"/>
                     <field name="show_reset_to_draft_button" invisible="1"/>
                     <field name="is_reconciled" invisible="1"/>
+                    <field name="is_cn_payment" invisible="1"/>
+                    <field name="is_user_detail" invisible="1"/>
+                    <field name="is_account_journal" invisible="1"/>
+                    <field name="create_uid" invisible="1"/>
                     <field name="is_matched" invisible="1"/>
                     <field name="payment_method_code" invisible="1"/>
                     <field name="show_partner_bank_account" invisible="1"/>
@@ -181,15 +186,15 @@
                                    decoration-danger="request_status == 'refused'"
                                    decoration-muted="request_status == 'cancel'"/>
                             <field name="payment_type" widget="radio" options="{'horizontal': True}"
-                                   readonly="state != 'draft' or lock_status == 'locked'" />
-                            <field name="sale_id" string="Sale Order" readonly="lock_status == 'locked'"/>
-                            <field name="dpt_user_partner_id" readonly="lock_status == 'locked'"/>
-                            <field name="purchase_id" readonly="lock_status == 'locked'"/>
-                            <field name="payment_user_type" widget="radio" required="1" readonly="lock_status == 'locked'"/>
+                                   readonly="state != 'draft' or lock_status == 'locked'" invisible="1" />
+                            <field name="sale_id" string="Sale Order" readonly="lock_status == 'locked'" invisible="is_user_detail == False"/>
+                            <field name="dpt_user_partner_id" readonly="lock_status == 'locked'" invisible="is_user_detail == False"/>
+                            <field name="purchase_id" readonly="lock_status == 'locked'" invisible="is_user_detail == False"/>
+                            <field name="payment_user_type" widget="radio" required="1" readonly="lock_status == 'locked'" invisible="1"/>
                             <field name="payment_user" widget="radio" required="1" readonly="lock_status == 'locked'"/>
                             <field name="partner_id" context="{'default_is_company': True}" string="Customer"
                                    options="{'no_quick_create': True}" required="1"
-                                   invisible="partner_type != 'customer' or is_internal_transfer"
+                                   invisible="create_uid == uid or partner_type != 'customer' or is_internal_transfer"
                                    readonly="state != 'draft' or lock_status == 'locked'"/>
                             <field name="partner_id" context="{'default_is_company': True}" string="Vendor"
                                    options="{'no_quick_create': True}"
@@ -204,13 +209,15 @@
                             </div>
                             <field name="hide_in_cn_payment" invisible="1"/>
                             <field name="last_rate_currency" readonly="lock_status == 'locked'" invisible="hide_in_cn_payment"/>
+                            <field name="type_id_name" invisible="1"/>
+                            <field name="shipping_fee" invisible="type_id_name != 'Thanh toán ngoại tệ'"/>
                             <label for="amount" string="Tổng tiền VNĐ" readonly="lock_status == 'locked'" invisible="hide_in_cn_payment"/>
                             <div name="amount_div" class="o_row" invisible="hide_in_cn_payment">
                                 <field name="amount" readonly="state != 'draft' or lock_status == 'locked'"/>
                             </div>
                             <field name="amount_in_text" readonly="lock_status == 'locked'" invisible="hide_in_cn_payment"/>
                             <field name="service_sale_id" invisible="1"/>
-                            <field name="refund_date" readonly="lock_status == 'locked'"/>
+                            <field name="refund_date" readonly="lock_status == 'locked'" invisible="type_id_name != 'Đề nghị hoàn ứng'"/>
                             <field name="date"
                                    readonly="state != 'draft' or lock_status == 'locked'"/>
                             <field name="ref" string="Memo" required="1" readonly="lock_status == 'locked'"/>
@@ -223,29 +230,38 @@
                             <field name="user_id" readonly="lock_status == 'locked'"/>
                             <field name="journal_id" required="1"
                                    domain="[('id', 'in', available_journal_ids)]"
-                                   readonly="state != 'draft' or lock_status == 'locked'"/>
+                                   readonly="state != 'draft' or lock_status == 'locked'"
+                                   invisible="is_account_journal == False or create_uid == uid or is_cn_payment == False"
+                            />
                             <field name="payment_method_line_id" options="{'no_create': True, 'no_open': True}"
                                    required="1"
-                                   readonly="state != 'draft' or lock_status == 'locked'"/>
+                                   readonly="state != 'draft' or lock_status == 'locked'"
+                                   invisible="s_account_journal == False or create_uid == uid or is_cn_payment == False"
+                            />
 
                             <field name="partner_bank_id" string="Customer Bank Account" readonly="lock_status == 'locked'"
                                    context="{'default_partner_id': partner_id, 'display_account_trust': True}"
-                                   invisible="not show_partner_bank_account or partner_type != 'customer' or is_internal_transfer or payment_type == 'inbound'"
-                                   required="journal_type == 'bank'"/>
+                                   invisible="create_uid == uid or is_cn_payment == False or not show_partner_bank_account or partner_type != 'customer' or is_internal_transfer or payment_type == 'inbound'"
+                                   required="journal_type == 'bank'"
+                            />
 
                             <field name="partner_bank_id" string="Vendor Bank Account" readonly="lock_status == 'locked'"
                                    context="{'default_partner_id': partner_id, 'display_account_trust': True}"
-                                   invisible="not show_partner_bank_account or partner_type != 'supplier' or is_internal_transfer or payment_type == 'inbound'"
+                                   invisible="create_uid == uid or is_cn_payment == False or not show_partner_bank_account or partner_type != 'supplier' or is_internal_transfer or payment_type == 'inbound'"
                                    required="journal_type == 'bank'"/>
 
                             <!-- This field should always be readonly but using readonly="1" overrides the other partner_bank_id
                             fields readonly condition in the framework, preventing the modification of these fields -->
                             <field name="partner_bank_id" string="Company Bank Account" readonly="lock_status == 'locked'"
                                    context="{'default_partner_id': partner_id, 'display_account_trust': True}"
-                                   invisible="not show_partner_bank_account or is_internal_transfer or payment_type == 'outbound'"
+                                   invisible="create_uid == uid or is_cn_payment == False or not show_partner_bank_account or is_internal_transfer or payment_type == 'outbound'"
                                    required="journal_type == 'bank'"/>
-                            <field name="acc_number" readonly="lock_status == 'locked'"/>
-                            <field name="acc_holder_name" readonly="lock_status == 'locked'"/>
+                            <field name="acc_number" readonly="lock_status == 'locked'"
+                                   invisible="create_uid == uid or is_cn_payment == False"
+                            />
+                            <field name="acc_holder_name" readonly="lock_status == 'locked'"
+                                   invisible="create_uid == uid or is_cn_payment == False"
+                            />
                             <field name="destination_journal_id"
                                    placeholder="e.g. Cash"
                                    context="{'default_partner_id': partner_id}"
@@ -323,6 +339,7 @@
         <field name="view_ids" eval="[(5, 0, 0),
             (0, 0, {'view_mode': 'tree', 'view_id': ref('dpt_view_account_payment_request_tree')}),
             (0, 0, {'view_mode': 'form', 'view_id': ref('dpt_view_account_payment_request_form')})]"/>
+        <field name="domain">[('type_id', '!=', False)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Register a payment request

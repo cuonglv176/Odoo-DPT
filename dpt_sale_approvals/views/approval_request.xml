@@ -13,6 +13,9 @@
             <field name="name" position="after">
                 <field name="payment_due"/>
             </field>
+            <field name="activity_ids" position="before">
+                <field name="payment_type_id"/>
+            </field>
         </field>
     </record>
 
