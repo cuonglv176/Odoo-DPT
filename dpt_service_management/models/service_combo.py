@@ -65,12 +65,6 @@ class DPTServiceCombo(models.Model):
 
     @api.onchange('service_ids')
     def _onchange_service_ids(self):
-        """Khi thay đổi dịch vụ, cập nhật tài khoản và các trường thông tin"""
-        if self.service_ids and not self.revenue_account_id:
-            self.revenue_account_id = self.service_ids[0].revenue_account_id
-        if self.service_ids and not self.expense_account_id:
-            self.expense_account_id = self.service_ids[0].expense_account_id
-
         # Tự động lấy các trường thông tin từ dịch vụ
         self.sync_required_fields_from_services()
 
