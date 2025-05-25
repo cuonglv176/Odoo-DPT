@@ -13,7 +13,7 @@
         - Interactive Dashboard with Charts
     """,
     'author': 'Your Company',
-    'depends': ['base', 'web'],
+    'depends': ['base', 'mail', 'web'],
     'data': [
         'security/ir.model.access.csv',
         'data/account_data.xml',
