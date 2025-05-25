@@ -124,22 +124,55 @@ class DPTShippingSlip(models.Model):
     def _search_export_import_name(self, operator, value):
         return [('export_import_ids.display_name', operator, value)]
 
-    @api.constrains('export_import_ids')
-    @api.onchange('export_import_ids')
+    @api.constrains('export_import_ids', 'delivery_slip_type')
+    @api.onchange('export_import_ids', 'delivery_slip_type')
     def constrains_export_import(self):
         for item in self:
             sale_order_ids = item.export_import_ids.mapped('sale_id') | item.export_import_ids.mapped(
                 'sale_ids') | item.export_import_ids.mapped('line_ids').mapped('sale_id')
-            main_in_picking_ids = self.env['stock.picking'].search(
-                [('sale_purchase_id', 'in', sale_order_ids.ids), ('is_main_incoming', '=', True)])
-            # in_picking_ids = self.env['stock.picking'].search(
-            #     [('sale_purchase_id', 'in', sale_order_ids.ids), ('x_transfer_type', '=', 'incoming_transfer')])
-            out_picking_ids = self.env['stock.picking'].search(
-                [('sale_purchase_id', 'in', sale_order_ids.ids),
-                 ('x_transfer_type', '=', 'outgoing_transfer')]).filtered(
-                lambda sp: not sp.out_shipping_ids or item.id in sp.out_shipping_ids.ids)
             item.sale_ids = [(6, 0, sale_order_ids.ids)]
-            # item.in_picking_ids = [(6, 0, in_picking_ids.ids)]
+            # main picking:
+            if item.delivery_slip_type == 'container_tq':
+                source_warehouse_id = None
+                dest_warehouse_id = self.env['stock.warehouse'].sudo().search(
+                    [('is_main_incoming_warehouse', '=', True)])
+            elif item.delivery_slip_type == 'container_vn':
+                source_warehouse_id = self.env['stock.warehouse'].sudo().search(
+                    [('is_tq_transit_warehouse', '=', True)])
+                dest_warehouse_id = self.env['stock.warehouse'].sudo().search([('is_vn_transit_warehouse', '=', True)])
+            elif item.delivery_slip_type == 'last_delivery_vn':
+                source_warehouse_id = self.env['stock.warehouse'].sudo().search(
+                    [('is_main_outgoing_warehouse', '=', True)])
+                dest_warehouse_id = None
+            else:
+                source_warehouse_id = None
+                dest_warehouse_id = None
+            domain = [('sale_purchase_id', 'in', sale_order_ids.ids), ('is_main_incoming', '=', True)]
+            if source_warehouse_id:
+                domain += [('location_id.warehouse_id', '=', source_warehouse_id.id)]
+            if dest_warehouse_id:
+                domain += [('location_dest_id.warehouse_id', '=', dest_warehouse_id.id)]
+            main_in_picking_ids = self.env['stock.picking'].search(domain)
+            # out picking
+            if item.delivery_slip_type == 'container_tq':
+                source_warehouse_id = self.env['stock.warehouse'].sudo().search(
+                    [('is_main_incoming_warehouse', '=', True)])
+                dest_warehouse_id = self.env['stock.warehouse'].sudo().search(
+                    [('is_tq_transit_warehouse', '=', True)])
+            elif item.delivery_slip_type == 'container_vn':
+                source_warehouse_id = self.env['stock.warehouse'].sudo().search([('is_vn_transit_warehouse', '=', True)])
+                dest_warehouse_id = self.env['stock.warehouse'].sudo().search(
+                    [('is_main_outgoing_warehouse', '=', True)])
+            else:
+                source_warehouse_id = None
+                dest_warehouse_id = None
+            domain = [('sale_purchase_id', 'in', sale_order_ids.ids), ('x_transfer_type', '=', 'outgoing_transfer')]
+            if source_warehouse_id:
+                domain += [('location_id.warehouse_id', '=', source_warehouse_id.id)]
+            if dest_warehouse_id:
+                domain += [('location_dest_id.warehouse_id', '=', dest_warehouse_id.id)]
+            out_picking_ids = self.env['stock.picking'].search(domain).filtered(
+                lambda sp: not sp.out_shipping_ids or item.id in sp.out_shipping_ids.ids)
             item.out_picking_ids = [(6, 0, out_picking_ids.ids)]
             item.main_in_picking_ids = [(6, 0, main_in_picking_ids.ids)]
             item.export_import_ids.shipping_slip_id = item.id
