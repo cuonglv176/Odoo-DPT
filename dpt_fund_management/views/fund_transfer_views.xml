@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Tree View -->
+        <record id="view_dpt_fund_transfer_tree" model="ir.ui.view">
+            <field name="name">dpt.fund.transfer.tree</field>
+            <field name="model">dpt.fund.transfer</field>
+            <field name="arch" type="xml">
+                <tree decoration-info="state == 'draft'" decoration-warning="state == 'pending'" decoration-success="state == 'received'" decoration-danger="state == 'cancelled'">
+                    <field name="date"/>
+                    <field name="name"/>
+                    <field name="from_fund_id"/>
+                    <field name="to_fund_id"/>
+                    <field name="amount"/>
+                    <field name="from_currency_id" column_invisible="1"/>
+                    <field name="converted_amount"/>
+                    <field name="to_currency_id" column_invisible="1"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_dpt_fund_transfer_form" model="ir.ui.view">
+            <field name="name">dpt.fund.transfer.form</field>
+            <field name="model">dpt.fund.transfer</field>
+            <field name="arch" type="xml">
+                <form string="Chuyển tiền">
+                    <header>
+                        <button name="action_send_transfer" string="Gửi chuyển tiền" type="object" class="btn-primary" invisible="state != 'draft'"/>
+                        <button name="action_confirm_received" string="Xác nhận đã nhận" type="object" class="btn-success" invisible="state != 'pending'"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,pending,received"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" name="action_view_pending_transfer" icon="fa-clock-o" invisible="not pending_transfer_id">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_text">Đang chuyển</span>
+                                </div>
+                            </button>
+                        </div>
+
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="date"/>
+                                <field name="from_fund_id"/>
+                                <field name="to_fund_id"/>
+                            </group>
+                            <group>
+                                <field name="amount"/>
+                                <field name="from_currency_id" readonly="1"/>
+                                <field name="to_currency_id" readonly="1"/>
+                                <field name="exchange_rate_id" domain="[('from_currency_id', '=', from_currency_id), ('to_currency_id', '=', to_currency_id)]"/>
+                            </group>
+                        </group>
+
+                        <group string="Thông tin quy đổi">
+                            <group>
+                                <field name="converted_amount" readonly="1"/>
+                                <field name="bank_fee"/>
+                            </group>
+                            <group>
+                                <field name="actual_received" readonly="1"/>
+                            </group>
+                        </group>
+
+                        <group string="Theo dõi giao dịch" invisible="state == 'draft'">
+                            <group>
+                                <field name="debit_transaction_id" readonly="1"/>
+                                <field name="credit_transaction_id" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="pending_transfer_id" readonly="1"/>
+                            </group>
+                        </group>
+
+                        <field name="description" placeholder="Mô tả..."/>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_dpt_fund_transfer_search" model="ir.ui.view">
+            <field name="name">dpt.fund.transfer.search</field>
+            <field name="model">dpt.fund.transfer</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="from_fund_id"/>
+                    <field name="to_fund_id"/>
+                    <field name="date"/>
+                    <separator/>
+                    <filter string="Hôm nay" name="today" domain="[('date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Tuần này" name="this_week" domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=context_today().weekday())).strftime('%Y-%m-%d'))]"/>
+                    <filter string="Tháng này" name="this_month" domain="[('date', '&gt;=', context_today().strftime('%Y-%m-01'))]"/>
+                    <separator/>
+                    <filter string="Nháp" name="draft" domain="[('state', '=', 'draft')]"/>
+                    <filter string="Đang chuyển" name="pending" domain="[('state', '=', 'pending')]"/>
+                    <filter string="Đã nhận" name="received" domain="[('state', '=', 'received')]"/>
+                    <filter string="Đã hủy" name="cancelled" domain="[('state', '=', 'cancelled')]"/>
+                    <group expand="0" string="Nhóm theo">
+                        <filter string="Quỹ chuyển" name="group_from" context="{'group_by': 'from_fund_id'}"/>
+                        <filter string="Quỹ nhận" name="group_to" context="{'group_by': 'to_fund_id'}"/>
+                        <filter string="Ngày" name="group_date" context="{'group_by': 'date'}"/>
+                        <filter string="Trạng thái" name="group_state" context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_dpt_fund_transfer" model="ir.actions.act_window">
+            <field name="name">Chuyển tiền</field>
+            <field name="res_model">dpt.fund.transfer</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_this_month': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Tạo lệnh chuyển tiền đầu tiên!
+                </p>
+                <p>
+                    Quản lý việc chuyển tiền giữa các quỹ VN và TQ.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

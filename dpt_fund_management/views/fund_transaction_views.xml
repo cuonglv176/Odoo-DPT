@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Tree View -->
+        <record id="view_dpt_fund_transaction_tree" model="ir.ui.view">
+            <field name="name">dpt.fund.transaction.tree</field>
+            <field name="model">dpt.fund.transaction</field>
+            <field name="arch" type="xml">
+                <tree decoration-info="state == 'draft'" decoration-success="state == 'posted'" decoration-warning="state == 'confirmed'">
+                    <field name="date"/>
+                    <field name="name"/>
+                    <field name="fund_account_id"/>
+                    <field name="transaction_type"/>
+                    <field name="amount" sum="Total Amount"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_dpt_fund_transaction_form" model="ir.ui.view">
+            <field name="name">dpt.fund.transaction.form</field>
+            <field name="model">dpt.fund.transaction</field>
+            <field name="arch" type="xml">
+                <form string="Giao dịch Quỹ">
+                    <header>
+                        <button name="action_confirm" string="Xác nhận" type="object" class="btn-primary" invisible="state != 'draft'"/>
+                        <button name="action_post" string="Ghi sổ" type="object" class="btn-primary" invisible="state != 'confirmed'"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,posted"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" name="action_view_journal_entry" icon="fa-book" invisible="not journal_entry_id">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_text">Bút toán</span>
+                                </div>
+                            </button>
+                        </div>
+
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="date"/>
+                                <field name="fund_account_id"/>
+                                <field name="transaction_type"/>
+                            </group>
+                            <group>
+                                <field name="amount"/>
+                                <field name="debit_account_id" required="transaction_type == 'expense'"/>
+                                <field name="credit_account_id" required="transaction_type == 'income'"/>
+                                <field name="journal_entry_id" readonly="1"/>
+                            </group>
+                        </group>
+
+                        <group string="Thông tin tỷ giá" invisible="not exchange_rate_id">
+                            <group>
+                                <field name="exchange_rate_id"/>
+                                <field name="original_currency_id"/>
+                            </group>
+                            <group>
+                                <field name="original_amount"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_dpt_fund_transaction_search" model="ir.ui.view">
+            <field name="name">dpt.fund.transaction.search</field>
+            <field name="model">dpt.fund.transaction</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="fund_account_id"/>
+                    <field name="date"/>
+                    <separator/>
+                    <filter string="Hôm nay" name="today" domain="[('date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Tuần này" name="this_week" domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=context_today().weekday())).strftime('%Y-%m-%d'))]"/>
+                    <filter string="Tháng này" name="this_month" domain="[('date', '&gt;=', context_today().strftime('%Y-%m-01'))]"/>
+                    <separator/>
+                    <filter string="Thu" name="income" domain="[('transaction_type', '=', 'income')]"/>
+                    <filter string="Chi" name="expense" domain="[('transaction_type', '=', 'expense')]"/>
+                    <separator/>
+                    <filter string="Nháp" name="draft" domain="[('state', '=', 'draft')]"/>
+                    <filter string="Đã xác nhận" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                    <filter string="Đã ghi sổ" name="posted" domain="[('state', '=', 'posted')]"/>
+                    <group expand="0" string="Nhóm theo">
+                        <filter string="Tài khoản quỹ" name="group_fund" context="{'group_by': 'fund_account_id'}"/>
+                        <filter string="Loại giao dịch" name="group_type" context="{'group_by': 'transaction_type'}"/>
+                        <filter string="Ngày" name="group_date" context="{'group_by': 'date'}"/>
+                        <filter string="Trạng thái" name="group_state" context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_dpt_fund_transaction" model="ir.actions.act_window">
+            <field name="name">Giao dịch Quỹ</field>
+            <field name="res_model">dpt.fund.transaction</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_this_month': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Tạo giao dịch quỹ đầu tiên!
+                </p>
+                <p>
+                    Ghi nhận các giao dịch thu chi của quỹ.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

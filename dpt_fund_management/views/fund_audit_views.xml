@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Tree View -->
+        <record id="view_dpt_fund_audit_tree" model="ir.ui.view">
+            <field name="name">dpt.fund.audit.tree</field>
+            <field name="model">dpt.fund.audit</field>
+            <field name="arch" type="xml">
+                <tree decoration-info="state == 'draft'" decoration-warning="state == 'audited'" decoration-success="state == 'approved'" decoration-danger="difference_type == 'shortage'">
+                    <field name="audit_date"/>
+                    <field name="name"/>
+                    <field name="fund_account_id"/>
+                    <field name="auditor_id"/>
+                    <field name="book_balance"/>
+                    <field name="actual_balance"/>
+                    <field name="difference"/>
+                    <field name="difference_type"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_dpt_fund_audit_form" model="ir.ui.view">
+            <field name="name">dpt.fund.audit.form</field>
+            <field name="model">dpt.fund.audit</field>
+            <field name="arch" type="xml">
+                <form string="Kiểm kê Quỹ">
+                    <header>
+                        <button name="action_audit" string="Thực hiện kiểm kê" type="object" class="btn-primary" invisible="state != 'draft'"/>
+                        <button name="action_create_adjustment" string="Tạo điều chỉnh" type="object" class="btn-warning" invisible="state != 'audited' or not adjustment_needed"/>
+                        <button name="action_approve" string="Duyệt" type="object" class="btn-success" invisible="state not in ['audited', 'adjusted']"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,audited,adjusted,approved"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" name="action_view_adjustment_entry" icon="fa-book" invisible="not adjustment_entry_id">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_text">Bút toán điều chỉnh</span>
+                                </div>
+                            </button>
+                        </div>
+
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name" placeholder="Số phiếu kiểm kê..."/></h1>
+                        </div>
+
+                        <group>
+                            <group>
+                                <field name="audit_date"/>
+                                <field name="auditor_id"/>
+                                <field name="fund_account_id"/>
+                            </group>
+                            <group>
+                                <field name="book_balance" readonly="1"/>
+                                <field name="actual_balance"/>
+                                <field name="difference" readonly="1"/>
+                                <field name="difference_type" readonly="1"/>
+                                <field name="adjustment_needed" readonly="1"/>
+                            </group>
+                        </group>
+
+                        <group string="Phân tích chênh lệch" invisible="difference_type == 'match'">
+                            <field name="reason" nolabel="1" placeholder="Mô tả lý do chênh lệch..."/>
+                        </group>
+
+                        <notebook>
+                            <page string="Chi tiết kiểm kê" name="audit_lines">
+                                <field name="audit_line_ids">
+                                    <tree editable="bottom">
+                                        <field name="denomination"/>
+                                        <field name="quantity"/>
+                                        <field name="amount" sum="Tổng tiền"/>
+                                    </tree>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="actual_balance" readonly="1" string="Tổng thực tế"/>
+                                </group>
+                            </page>
+                        </notebook>
+
+                        <div class="alert alert-warning" role="alert" invisible="difference_type == 'match'">
+                            <strong>Cảnh báo:</strong>
+                            <span invisible="difference_type != 'surplus'">Thừa tiền <field name="difference" readonly="1"/> VND</span>
+                            <span invisible="difference_type != 'shortage'">Thiếu tiền <field name="difference" readonly="1"/> VND</span>
+                        </div>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_dpt_fund_audit_search" model="ir.ui.view">
+            <field name="name">dpt.fund.audit.search</field>
+            <field name="model">dpt.fund.audit</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="fund_account_id"/>
+                    <field name="auditor_id"/>
+                    <field name="audit_date"/>
+                    <separator/>
+                    <filter string="Hôm nay" name="today" domain="[('audit_date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Tuần này" name="this_week" domain="[('audit_date', '&gt;=', (context_today() - datetime.timedelta(days=context_today().weekday())).strftime('%Y-%m-%d'))]"/>
+                    <filter string="Tháng này" name="this_month" domain="[('audit_date', '&gt;=', context_today().strftime('%Y-%m-01'))]"/>
+                    <separator/>
+                    <filter string="Nháp" name="draft" domain="[('state', '=', 'draft')]"/>
+                    <filter string="Đã kiểm kê" name="audited" domain="[('state', '=', 'audited')]"/>
+                    <filter string="Đã điều chỉnh" name="adjusted" domain="[('state', '=', 'adjusted')]"/>
+                    <filter string="Đã duyệt" name="approved" domain="[('state', '=', 'approved')]"/>
+                    <separator/>
+                    <filter string="Khớp" name="match" domain="[('difference_type', '=', 'match')]"/>
+                    <filter string="Thừa tiền" name="surplus" domain="[('difference_type', '=', 'surplus')]"/>
+                    <filter string="Thiếu tiền" name="shortage" domain="[('difference_type', '=', 'shortage')]"/>
+                    <separator/>
+                    <filter string="Cần điều chỉnh" name="need_adjustment" domain="[('adjustment_needed', '=', True)]"/>
+                    <group expand="0" string="Nhóm theo">
+                        <filter string="Tài khoản quỹ" name="group_fund" context="{'group_by': 'fund_account_id'}"/>
+                        <filter string="Người kiểm kê" name="group_auditor" context="{'group_by': 'auditor_id'}"/>
+                        <filter string="Loại chênh lệch" name="group_difference" context="{'group_by': 'difference_type'}"/>
+                        <filter string="Ngày" name="group_date" context="{'group_by': 'audit_date'}"/>
+                        <filter string="Trạng thái" name="group_state" context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_dpt_fund_audit" model="ir.actions.act_window">
+            <field name="name">Kiểm kê Quỹ</field>
+            <field name="res_model">dpt.fund.audit</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_this_month': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Tạo phiếu kiểm kê đầu tiên!
+                </p>
+                <p>
+                    Thực hiện kiểm kê định kỳ các quỹ tiền mặt.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

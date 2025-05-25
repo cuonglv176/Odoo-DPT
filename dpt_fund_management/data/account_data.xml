@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Tài khoản quỹ VN -->
+        <record id="account_fund_vn" model="account.account">
+            <field name="code">112.1</field>
+            <field name="name">Quỹ VN</field>
+            <field name="account_type">asset_current</field>
+            <field name="reconcile">True</field>
+        </record>
+
+        <!-- Tài khoản quỹ TQ -->
+        <record id="account_fund_china" model="account.account">
+            <field name="code">112.2</field>
+            <field name="name">Quỹ TQ</field>
+            <field name="account_type">asset_current</field>
+            <field name="reconcile">True</field>
+        </record>
+
+        <!-- Tài khoản trung gian -->
+        <record id="account_intermediate" model="account.account">
+            <field name="code">113</field>
+            <field name="name">Tài khoản trung gian</field>
+            <field name="account_type">asset_current</field>
+            <field name="reconcile">True</field>
+        </record>
+
+        <!-- Tài khoản theo dõi số dư quỹ TQ -->
+        <record id="account_china_balance_501" model="account.account">
+            <field name="code">501</field>
+            <field name="name">Số dư quỹ TQ (501)</field>
+            <field name="account_type">asset_current</field>
+        </record>
+
+        <record id="account_china_balance_502" model="account.account">
+            <field name="code">502</field>
+            <field name="name">Số dư quỹ TQ (502)</field>
+            <field name="account_type">asset_current</field>
+        </record>
+
+        <!-- Tài khoản chênh lệch -->
+        <record id="account_difference" model="account.account">
+            <field name="code">515</field>
+            <field name="name">Chênh lệch kiểm kê</field>
+            <field name="account_type">expense</field>
+        </record>
+
+        <!-- Tài khoản mất tiền -->
+        <record id="account_loss" model="account.account">
+            <field name="code">642</field>
+            <field name="name">Chi phí mất tiền</field>
+            <field name="account_type">expense</field>
+        </record>
+
+        <!-- Dữ liệu quỹ mặc định -->
+        <record id="fund_vn_default" model="dpt.fund.account">
+            <field name="name">Quỹ Việt Nam</field>
+            <field name="code">VN001</field>
+            <field name="currency_id" ref="base.VND"/>
+            <field name="account_id" ref="account_fund_vn"/>
+            <field name="fund_type">vn</field>
+        </record>
+
+        <record id="fund_china_default" model="dpt.fund.account">
+            <field name="name">Quỹ Trung Quốc</field>
+            <field name="code">CN001</field>
+            <field name="currency_id" ref="base.CNY"/>
+            <field name="account_id" ref="account_fund_china"/>
+            <field name="fund_type">china</field>
+        </record>
+
+        <record id="fund_intermediate_default" model="dpt.fund.account">
+            <field name="name">Tài khoản trung gian</field>
+            <field name="code">IM001</field>
+            <field name="currency_id" ref="base.VND"/>
+            <field name="account_id" ref="account_intermediate"/>
+            <field name="fund_type">intermediate</field>
+        </record>
+
+    </data>
+</odoo>

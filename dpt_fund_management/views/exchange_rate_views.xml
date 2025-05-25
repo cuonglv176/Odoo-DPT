@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Tree View -->
+        <record id="view_dpt_exchange_rate_tree" model="ir.ui.view">
+            <field name="name">dpt.exchange.rate.tree</field>
+            <field name="model">dpt.exchange.rate</field>
+            <field name="arch" type="xml">
+                <tree decoration-muted="not is_active">
+                    <field name="date"/>
+                    <field name="from_currency_id"/>
+                    <field name="to_currency_id"/>
+                    <field name="rate"/>
+                    <field name="vietinbank_buy"/>
+                    <field name="vietinbank_sell"/>
+                    <field name="is_active"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_dpt_exchange_rate_form" model="ir.ui.view">
+            <field name="name">dpt.exchange.rate.form</field>
+            <field name="model">dpt.exchange.rate</field>
+            <field name="arch" type="xml">
+                <form string="Tỷ giá">
+                    <header>
+                        <button name="action_activate" string="Kích hoạt" type="object" class="btn-primary" invisible="is_active"/>
+                        <button name="action_deactivate" string="Vô hiệu hóa" type="object" class="btn-secondary" invisible="not is_active"/>
+                    </header>
+                    <sheet>
+                        <widget name="web_ribbon" title="Không hoạt động" bg_color="bg-danger" invisible="is_active"/>
+
+                        <group>
+                            <group>
+                                <field name="date"/>
+                                <field name="from_currency_id"/>
+                                <field name="to_currency_id"/>
+                                <field name="is_active"/>
+                            </group>
+                            <group>
+                                <field name="rate"/>
+                                <field name="inverse_rate" readonly="1"/>
+                            </group>
+                        </group>
+
+                        <group string="Tỷ giá Vietinbank">
+                            <group>
+                                <field name="vietinbank_buy"/>
+                                <field name="vietinbank_sell"/>
+                            </group>
+                            <group>
+                                <field name="vietinbank_transfer"/>
+                            </group>
+                        </group>
+
+                        <group string="Thông tin bổ sung">
+                            <field name="source"/>
+                            <field name="notes" placeholder="Ghi chú..."/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_dpt_exchange_rate_search" model="ir.ui.view">
+            <field name="name">dpt.exchange.rate.search</field>
+            <field name="model">dpt.exchange.rate</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="from_currency_id"/>
+                    <field name="to_currency_id"/>
+                    <field name="date"/>
+                    <separator/>
+                    <filter string="Hoạt động" name="active" domain="[('is_active', '=', True)]"/>
+                    <filter string="Không hoạt động" name="inactive" domain="[('is_active', '=', False)]"/>
+                    <separator/>
+                    <filter string="Hôm nay" name="today" domain="[('date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Tuần này" name="this_week" domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=context_today().weekday())).strftime('%Y-%m-%d'))]"/>
+                    <filter string="Tháng này" name="this_month" domain="[('date', '&gt;=', context_today().strftime('%Y-%m-01'))]"/>
+                    <separator/>
+                    <filter string="CNY/VND" name="cny_vnd" domain="[('from_currency_id.name', '=', 'CNY'), ('to_currency_id.name', '=', 'VND')]"/>
+                    <filter string="VND/CNY" name="vnd_cny" domain="[('from_currency_id.name', '=', 'VND'), ('to_currency_id.name', '=', 'CNY')]"/>
+                    <filter string="USD/VND" name="usd_vnd" domain="[('from_currency_id.name', '=', 'USD'), ('to_currency_id.name', '=', 'VND')]"/>
+                    <group expand="0" string="Nhóm theo">
+                        <filter string="Từ tiền tệ" name="group_from" context="{'group_by': 'from_currency_id'}"/>
+                        <filter string="Đến tiền tệ" name="group_to" context="{'group_by': 'to_currency_id'}"/>
+                        <filter string="Ngày" name="group_date" context="{'group_by': 'date'}"/>
+                        <filter string="Nguồn" name="group_source" context="{'group_by': 'source'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Calendar View -->
+        <record id="view_dpt_exchange_rate_calendar" model="ir.ui.view">
+            <field name="name">dpt.exchange.rate.calendar</field>
+            <field name="model">dpt.exchange.rate</field>
+            <field name="arch" type="xml">
+                <calendar string="Tỷ giá" date_start="date" color="from_currency_id">
+                    <field name="from_currency_id"/>
+                    <field name="to_currency_id"/>
+                    <field name="rate"/>
+                </calendar>
+            </field>
+        </record>
+
+        <!-- Graph View -->
+        <record id="view_dpt_exchange_rate_graph" model="ir.ui.view">
+            <field name="name">dpt.exchange.rate.graph</field>
+            <field name="model">dpt.exchange.rate</field>
+            <field name="arch" type="xml">
+                <graph string="Biểu đồ tỷ giá" type="line">
+                    <field name="date" type="row"/>
+                    <field name="rate" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_dpt_exchange_rate" model="ir.actions.act_window">
+            <field name="name">Tỷ giá</field>
+            <field name="res_model">dpt.exchange.rate</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="context">{'search_default_active': 1, 'search_default_this_month': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Tạo tỷ giá đầu tiên!
+                </p>
+                <p>
+                    Quản lý tỷ giá hối đoái giữa các loại tiền tệ.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>
