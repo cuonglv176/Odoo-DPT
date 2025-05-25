@@ -23,33 +23,33 @@
 
                     <!-- Summary Cards -->
                     <div class="row mt16">
-<!--                        <div class="col-lg-3 col-6">-->
-<!--                            <div class="card bg-primary text-white">-->
-<!--                                <div class="card-body">-->
-<!--                                    <h4><field name="total_balance" widget="monetary"/></h4>-->
-<!--                                    <p>Total Balance</p>-->
-<!--                                    <button name="action_view_accounts" string="View Accounts" type="object" class="btn btn-light btn-sm"/>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="col-lg-3 col-6">-->
-<!--                            <div class="card bg-success text-white">-->
-<!--                                <div class="card-body">-->
-<!--                                    <h4><field name="total_income" widget="monetary"/></h4>-->
-<!--                                    <p>Total Income</p>-->
-<!--                                    <button name="action_view_transactions" string="View Transactions" type="object" class="btn btn-light btn-sm"/>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="col-lg-3 col-6">-->
-<!--                            <div class="card bg-danger text-white">-->
-<!--                                <div class="card-body">-->
-<!--                                    <h4><field name="total_expense" widget="monetary"/></h4>-->
-<!--                                    <p>Total Expense</p>-->
-<!--                                    <button name="action_view_transactions" string="View Transactions" type="object" class="btn btn-light btn-sm"/>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
+                        <div class="col-lg-3 col-6">
+                            <div class="card bg-primary text-white">
+                                <div class="card-body">
+                                    <h4><field name="total_balance" widget="monetary"/></h4>
+                                    <p>Total Balance</p>
+                                    <button name="action_view_accounts" string="View Accounts" type="object" class="btn btn-light btn-sm"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="card bg-success text-white">
+                                <div class="card-body">
+                                    <h4><field name="total_income" widget="monetary"/></h4>
+                                    <p>Total Income</p>
+                                    <button name="action_view_transactions" string="View Transactions" type="object" class="btn btn-light btn-sm"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="card bg-danger text-white">
+                                <div class="card-body">
+                                    <h4><field name="total_expense" widget="monetary"/></h4>
+                                    <p>Total Expense</p>
+                                    <button name="action_view_transactions" string="View Transactions" type="object" class="btn btn-light btn-sm"/>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-lg-3 col-6">
                             <div class="card bg-info text-white">
                                 <div class="card-body">
@@ -120,22 +120,22 @@
                     </div>
 
                     <!-- Quick Actions -->
-                    <div class="row mt16">
-                        <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5><i class="fa fa-bolt"></i> Quick Actions</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="btn-group" role="group">
-                                        <button name="%(action_fund_account)d" string="New Account" type="action" class="btn btn-primary"/>
-                                        <button name="%(action_fund_transaction)d" string="New Transaction" type="action" class="btn btn-success"/>
-                                        <button name="%(action_fund_transfer)d" string="New Transfer" type="action" class="btn btn-info"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<!--                    <div class="row mt16">-->
+<!--                        <div class="col-lg-12">-->
+<!--                            <div class="card">-->
+<!--                                <div class="card-header">-->
+<!--                                    <h5><i class="fa fa-bolt"></i> Quick Actions</h5>-->
+<!--                                </div>-->
+<!--                                <div class="card-body">-->
+<!--                                    <div class="btn-group" role="group">-->
+<!--                                        <button name="%(action_fund_account)d" string="New Account" type="action" class="btn btn-primary"/>-->
+<!--                                        <button name="%(action_fund_transaction)d" string="New Transaction" type="action" class="btn btn-success"/>-->
+<!--                                        <button name="%(action_fund_transfer)d" string="New Transfer" type="action" class="btn btn-info"/>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
                 </sheet>
             </form>
         </field>
