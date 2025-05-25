@@ -26,8 +26,8 @@
             <field name="arch" type="xml">
                 <form string="Tỷ giá">
                     <header>
-                        <button name="action_activate" string="Kích hoạt" type="object" class="btn-primary" invisible="is_active"/>
-                        <button name="action_deactivate" string="Vô hiệu hóa" type="object" class="btn-secondary" invisible="not is_active"/>
+<!--                        <button name="action_activate" string="Kích hoạt" type="object" class="btn-primary" invisible="is_active"/>-->
+<!--                        <button name="action_deactivate" string="Vô hiệu hóa" type="object" class="btn-secondary" invisible="not is_active"/>-->
                     </header>
                     <sheet>
                         <widget name="web_ribbon" title="Không hoạt động" bg_color="bg-danger" invisible="is_active"/>
