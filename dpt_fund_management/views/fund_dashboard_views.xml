@@ -11,7 +11,9 @@
                 </header>
                 <sheet>
                     <div class="oe_title">
-                        <h1><field name="name"/></h1>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
                     </div>
 
                     <group>
@@ -26,34 +28,45 @@
                         <div class="col-lg-3 col-6">
                             <div class="card bg-primary text-white">
                                 <div class="card-body">
-                                    <h4><field name="total_balance" widget="monetary"/></h4>
+                                    <h4>
+                                        <field name="total_balance" widget="monetary"/>
+                                    </h4>
                                     <p>Total Balance</p>
-                                    <button name="action_view_accounts" string="View Accounts" type="object" class="btn btn-light btn-sm"/>
+                                    <button name="action_view_accounts" string="View Accounts" type="object"
+                                            class="btn btn-light btn-sm"/>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-3 col-6">
                             <div class="card bg-success text-white">
                                 <div class="card-body">
-                                    <h4><field name="total_income" widget="monetary"/></h4>
+                                    <h4>
+                                        <field name="total_income" widget="monetary"/>
+                                    </h4>
                                     <p>Total Income</p>
-                                    <button name="action_view_transactions" string="View Transactions" type="object" class="btn btn-light btn-sm"/>
+                                    <button name="action_view_transactions" string="View Transactions" type="object"
+                                            class="btn btn-light btn-sm"/>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-3 col-6">
                             <div class="card bg-danger text-white">
                                 <div class="card-body">
-                                    <h4><field name="total_expense" widget="monetary"/></h4>
+                                    <h4>
+                                        <field name="total_expense" widget="monetary"/>
+                                    </h4>
                                     <p>Total Expense</p>
-                                    <button name="action_view_transactions" string="View Transactions" type="object" class="btn btn-light btn-sm"/>
+                                    <button name="action_view_transactions" string="View Transactions" type="object"
+                                            class="btn btn-light btn-sm"/>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-3 col-6">
                             <div class="card bg-info text-white">
                                 <div class="card-body">
-                                    <h4><field name="net_profit" widget="monetary"/></h4>
+                                    <h4>
+                                        <field name="net_profit" widget="monetary"/>
+                                    </h4>
                                     <p>Net Profit</p>
                                     <span class="badge badge-light">
                                         <field name="roi_percentage"/>% ROI
@@ -68,10 +81,12 @@
                         <div class="col-lg-4">
                             <div class="card">
                                 <div class="card-body text-center">
-                                    <h3 class="text-primary"><field name="roi_percentage"/>%</h3>
+                                    <h3 class="text-primary"><field name="roi_percentage"/>%
+                                    </h3>
                                     <p class="text-muted">ROI Percentage</p>
                                     <div class="progress">
-                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 50%"></div>
+                                        <div class="progress-bar bg-primary" role="progressbar"
+                                             style="width: 50%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -79,7 +94,9 @@
                         <div class="col-lg-4">
                             <div class="card">
                                 <div class="card-body text-center">
-                                    <h3 class="text-success"><field name="liquidity_ratio"/></h3>
+                                    <h3 class="text-success">
+                                        <field name="liquidity_ratio"/>
+                                    </h3>
                                     <p class="text-muted">Liquidity Ratio</p>
                                     <small class="text-muted">Target: &gt; 2.0</small>
                                 </div>
@@ -88,7 +105,8 @@
                         <div class="col-lg-4">
                             <div class="card">
                                 <div class="card-body text-center">
-                                    <h3 class="text-warning"><field name="diversification_score"/>%</h3>
+                                    <h3 class="text-warning"><field name="diversification_score"/>%
+                                    </h3>
                                     <p class="text-muted">Diversification Score</p>
                                     <small class="text-muted">Portfolio spread</small>
                                 </div>
@@ -101,18 +119,30 @@
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h5><i class="fa fa-bell"></i> Alerts &amp; Notifications</h5>
+                                    <h5>
+                                        <i class="fa fa-bell"></i>
+                                        Alerts &amp; Notifications
+                                    </h5>
                                 </div>
                                 <div class="card-body">
-                                    <div class="alert alert-info" attrs="{'invisible': [('pending_transfers', '=', 0)]}">
-                                        <strong>Pending Transfers:</strong> You have <field name="pending_transfers"/> transfers waiting for approval.
-                                        <button name="action_view_transfers" string="Review" type="object" class="btn btn-sm btn-outline-primary ml-2"/>
+                                    <div class="alert alert-info"
+                                         attrs="{'invisible': [('pending_transfers', '=', 0)]}">
+                                        <strong>Pending Transfers:</strong>
+                                        You have
+                                        <field name="pending_transfers"/>
+                                        transfers waiting for approval.
+                                        <button name="action_view_transfers" string="Review" type="object"
+                                                class="btn btn-sm btn-outline-primary ml-2"/>
                                     </div>
-                                    <div class="alert alert-warning" attrs="{'invisible': [('liquidity_ratio', '&gt;=', 2)]}">
-                                        <strong>Low Liquidity:</strong> Your liquidity ratio is below the recommended threshold of 2.0
+                                    <div class="alert alert-warning"
+                                         attrs="{'invisible': [('liquidity_ratio', '&gt;=', 2)]}">
+                                        <strong>Low Liquidity:</strong>
+                                        Your liquidity ratio is below the recommended threshold of 2.0
                                     </div>
-                                    <div class="alert alert-success" attrs="{'invisible': ['|', ('pending_transfers', '&gt;', 0), ('liquidity_ratio', '&lt;', 2)]}">
-                                        <strong>All Good:</strong> No alerts at this time. Your fund management is on track!
+                                    <div class="alert alert-success"
+                                         attrs="{'invisible': ['|', ('pending_transfers', '&gt;', 0), ('liquidity_ratio', '&lt;', 2)]}">
+                                        <strong>All Good:</strong>
+                                        No alerts at this time. Your fund management is on track!
                                     </div>
                                 </div>
                             </div>
@@ -120,22 +150,29 @@
                     </div>
 
                     <!-- Quick Actions -->
-<!--                    <div class="row mt16">-->
-<!--                        <div class="col-lg-12">-->
-<!--                            <div class="card">-->
-<!--                                <div class="card-header">-->
-<!--                                    <h5><i class="fa fa-bolt"></i> Quick Actions</h5>-->
-<!--                                </div>-->
-<!--                                <div class="card-body">-->
-<!--                                    <div class="btn-group" role="group">-->
-<!--                                        <button name="%(action_fund_account)d" string="New Account" type="action" class="btn btn-primary"/>-->
-<!--                                        <button name="%(action_fund_transaction)d" string="New Transaction" type="action" class="btn btn-success"/>-->
-<!--                                        <button name="%(action_fund_transfer)d" string="New Transfer" type="action" class="btn btn-info"/>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
+                    <div class="row mt16">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>
+                                        <i class="fa fa-bolt"/>
+                                        Quick Actions
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="btn-group" role="group">
+                                        <button name="action_new_account" string="New Account" type="object"
+                                                class="btn btn-primary"/>
+                                        <button name="action_new_transaction" string="New Transaction" type="object"
+                                                class="btn btn-success"/>
+                                        <button name="action_new_transfer" string="New Transfer" type="object"
+                                                class="btn btn-info"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </sheet>
             </form>
         </field>

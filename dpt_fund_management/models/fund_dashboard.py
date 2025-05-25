@@ -278,3 +278,30 @@ class FundDashboard(models.Model):
             'view_mode': 'tree,form',
             'domain': [('state', '=', 'pending')],
         }
+
+    def action_new_account(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'New Fund Account',
+            'res_model': 'dpt.fund.account',
+            'view_mode': 'form',
+            'target': 'new',
+        }
+
+    def action_new_transaction(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'New Transaction',
+            'res_model': 'dpt.fund.transaction',
+            'view_mode': 'form',
+            'target': 'new',
+        }
+
+    def action_new_transfer(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'New Transfer',
+            'res_model': 'dpt.fund.transfer',
+            'view_mode': 'form',
+            'target': 'new',
+        }
