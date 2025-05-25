@@ -131,6 +131,7 @@
                                         Bạn có
                                         <field name="pending_transfers"/>
                                         giao dịch chuyển khoản đang chờ phê duyệt.
+                                        transfers waiting for approval.
                                         <button name="action_view_transfers" string="Review" type="object"
                                                 class="btn btn-sm btn-outline-primary ml-2"/>
                                     </div>
