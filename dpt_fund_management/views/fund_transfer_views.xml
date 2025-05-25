@@ -33,13 +33,13 @@
                         <field name="state" widget="statusbar" statusbar_visible="draft,pending,received"/>
                     </header>
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" type="object" name="action_view_pending_transfer" icon="fa-clock-o" invisible="not pending_transfer_id">
-                                <div class="o_field_widget o_stat_info">
-                                    <span class="o_stat_text">Đang chuyển</span>
-                                </div>
-                            </button>
-                        </div>
+<!--                        <div class="oe_button_box" name="button_box">-->
+<!--                            <button class="oe_stat_button" type="object" name="action_view_pending_transfer" icon="fa-clock-o" invisible="not pending_transfer_id">-->
+<!--                                <div class="o_field_widget o_stat_info">-->
+<!--                                    <span class="o_stat_text">Đang chuyển</span>-->
+<!--                                </div>-->
+<!--                            </button>-->
+<!--                        </div>-->
 
                         <group>
                             <group>
