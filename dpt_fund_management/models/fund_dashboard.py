@@ -6,6 +6,7 @@ import json
 class FundDashboard(models.Model):
     _name = 'fund.dashboard'
     _description = 'Fund Management Dashboard'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = 'name'
 
     name = fields.Char(string='Dashboard Name', default='Fund Management Dashboard')
@@ -33,23 +34,24 @@ class FundDashboard(models.Model):
     def _compute_summary(self):
         for record in self:
             # Total Balance from all active accounts
-            accounts = self.env['fund.account'].search([('state', '=', 'active')])
+            accounts = self.env['dpt.fund.account'].search([('state', '=', 'active')])
             record.total_balance = sum(accounts.mapped('balance'))
 
             # Income and Expense from transactions
             domain = [
                 ('transaction_date', '>=', record.date_from),
-                ('transaction_date', '<=', record.date_to)
+                ('transaction_date', '<=', record.date_to),
+                ('state', '=', 'posted')
             ]
 
-            transactions = self.env['fund.transaction'].search(domain)
+            transactions = self.env['dpt.fund.transaction'].search(domain)
             record.total_income = sum(transactions.filtered(lambda t: t.transaction_type == 'income').mapped('amount'))
             record.total_expense = sum(
                 transactions.filtered(lambda t: t.transaction_type == 'expense').mapped('amount'))
             record.net_profit = record.total_income - record.total_expense
 
             # Pending transfers
-            record.pending_transfers = self.env['fund.transfer'].search_count([('state', '=', 'pending')])
+            record.pending_transfers = self.env['dpt.fund.transfer'].search_count([('state', '=', 'pending')])
 
     @api.depends('total_income', 'total_expense', 'total_balance')
     def _compute_performance(self):
@@ -61,16 +63,17 @@ class FundDashboard(models.Model):
                 record.roi_percentage = 0
 
             # Liquidity ratio (cash + bank / monthly expenses)
-            cash_accounts = self.env['fund.account'].search([
+            cash_accounts = self.env['dpt.fund.account'].search([
                 ('account_type', 'in', ['cash', 'bank']),
                 ('state', '=', 'active')
             ])
             liquid_balance = sum(cash_accounts.mapped('balance'))
-            monthly_expense = record.total_expense / max(1, (record.date_to - record.date_from).days / 30)
-            record.liquidity_ratio = liquid_balance / max(1, monthly_expense)
+            days_diff = (record.date_to - record.date_from).days or 1
+            monthly_expense = record.total_expense / max(1, days_diff / 30)
+            record.liquidity_ratio = liquid_balance / max(1, monthly_expense) if monthly_expense > 0 else 0
 
             # Diversification score
-            account_types = self.env['fund.account'].search([('state', '=', 'active')]).mapped('account_type')
+            account_types = self.env['dpt.fund.account'].search([('state', '=', 'active')]).mapped('account_type')
             unique_types = len(set(account_types))
             total_possible_types = 4  # cash, bank, investment, credit
             record.diversification_score = (unique_types / total_possible_types) * 100
@@ -79,7 +82,7 @@ class FundDashboard(models.Model):
     def _compute_charts(self):
         for record in self:
             # Account Distribution Chart
-            accounts = self.env['fund.account'].search([('state', '=', 'active')])
+            accounts = self.env['dpt.fund.account'].search([('state', '=', 'active')])
             account_data = {}
             for account in accounts:
                 if account.account_type not in account_data:
@@ -92,7 +95,7 @@ class FundDashboard(models.Model):
                     'data': list(account_data.values()),
                     'backgroundColor': ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
                 }]
-            })
+            }) if account_data else json.dumps({})
 
             # Monthly Performance Chart
             monthly_data = record._get_monthly_performance()
@@ -110,9 +113,10 @@ class FundDashboard(models.Model):
             month_start = datetime.now().replace(day=1) - timedelta(days=30 * i)
             month_end = (month_start + timedelta(days=32)).replace(day=1) - timedelta(days=1)
 
-            transactions = self.env['fund.transaction'].search([
+            transactions = self.env['dpt.fund.transaction'].search([
                 ('transaction_date', '>=', month_start.date()),
-                ('transaction_date', '<=', month_end.date())
+                ('transaction_date', '<=', month_end.date()),
+                ('state', '=', 'posted')
             ])
 
             income = sum(transactions.filtered(lambda t: t.transaction_type == 'income').mapped('amount'))
@@ -146,9 +150,10 @@ class FundDashboard(models.Model):
 
     def _get_transaction_trend(self):
         """Get daily transaction trend for the selected period"""
-        transactions = self.env['fund.transaction'].search([
+        transactions = self.env['dpt.fund.transaction'].search([
             ('transaction_date', '>=', self.date_from),
-            ('transaction_date', '<=', self.date_to)
+            ('transaction_date', '<=', self.date_to),
+            ('state', '=', 'posted')
         ])
 
         daily_data = {}
@@ -198,6 +203,23 @@ class FundDashboard(models.Model):
 
         return alerts
 
+    def refresh_dashboard(self):
+        """Refresh dashboard data - Button method"""
+        self._compute_summary()
+        self._compute_performance()
+        self._compute_charts()
+        self.message_post(body="Dashboard data refreshed successfully")
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Success',
+                'message': 'Dashboard data has been refreshed!',
+                'type': 'success',
+                'sticky': False,
+            }
+        }
+
     @api.model
     def get_dashboard_data(self):
         """API method to get all dashboard data"""
@@ -222,4 +244,37 @@ class FundDashboard(models.Model):
                 'transaction_trend': json.loads(dashboard.transaction_trend_chart or '{}'),
             },
             'alerts': dashboard.get_alert_data(),
+        }
+
+    def action_view_accounts(self):
+        """Action to view fund accounts"""
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Fund Accounts',
+            'res_model': 'dpt.fund.account',
+            'view_mode': 'tree,form',
+            'domain': [('state', '=', 'active')],
+        }
+
+    def action_view_transactions(self):
+        """Action to view transactions"""
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Transactions',
+            'res_model': 'dpt.fund.transaction',
+            'view_mode': 'tree,form',
+            'domain': [
+                ('transaction_date', '>=', self.date_from),
+                ('transaction_date', '<=', self.date_to)
+            ],
+        }
+
+    def action_view_transfers(self):
+        """Action to view transfers"""
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Fund Transfers',
+            'res_model': 'dpt.fund.transfer',
+            'view_mode': 'tree,form',
+            'domain': [('state', '=', 'pending')],
         }
