@@ -148,6 +148,7 @@
                         </div>
                     </div>
 
+                    <!-- Thao Tác Nhanh -->
                     <!-- Quick Actions -->
                     <div class="row mt16">
                         <div class="col-lg-12">
@@ -166,6 +167,9 @@
                                                 class="btn btn-success"/>
                                         <button name="action_new_transfer" string="Chuyển Khoản Mới" type="object"
                                                 class="btn btn-info"/>
+                                        <button name="action_export_report" string="Xuất Báo Cáo" type="object"
+                                                class="btn btn-warning"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
