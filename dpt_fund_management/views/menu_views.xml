@@ -68,11 +68,12 @@
                   parent="menu_fund_management_root"
                   sequence="40"/>
 
-<!--        <menuitem id="menu_fund_dashboard"-->
-<!--                  name="Dashboard"-->
-<!--                  parent="menu_fund_management_root"-->
-<!--                  action="action_fund_dashboard"-->
-<!--                  sequence="5"/>-->
+        <!-- Menu Item -->
+        <menuitem id="menu_fund_dashboard"
+                  name="Dashboard"
+                  parent="menu_fund_management_root"
+                  action="action_fund_dashboard"
+                  sequence="1"/>
 
     </data>
 </odoo>

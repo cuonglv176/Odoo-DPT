@@ -1,159 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-        <!-- Dashboard Kanban View -->
-        <record id="view_fund_dashboard_kanban" model="ir.ui.view">
-            <field name="name">fund.dashboard.kanban</field>
-            <field name="model">dpt.fund.account</field>
-            <field name="arch" type="xml">
-                <kanban class="o_kanban_dashboard" create="false" edit="false" delete="false">
-                    <field name="id"/>
-                    <field name="name"/>
-                    <field name="fund_type"/>
-                    <field name="balance"/>
-                    <field name="currency_id"/>
-                    <field name="is_active"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
-                                <div class="o_kanban_image_fill_left d-none d-md-block">
-                                    <i class="fa fa-university fa-3x text-primary"/>
-                                </div>
-                                <div class="oe_kanban_details">
-                                    <div class="o_kanban_record_top">
-                                        <div class="o_kanban_record_headings">
-                                            <strong class="o_kanban_record_title">
-                                                <field name="name"/>
-                                            </strong>
-                                            <small class="o_kanban_record_subtitle text-muted">
-                                                <field name="code"/>
-                                            </small>
-                                        </div>
-                                        <div class="o_kanban_record_body">
-                                            <field name="fund_type" widget="badge"
-                                                   decoration-primary="fund_type=='vn'"
-                                                   decoration-success="fund_type=='china'"
-                                                   decoration-warning="fund_type=='intermediate'"/>
-                                        </div>
-                                    </div>
-                                    <div class="o_kanban_record_bottom">
-                                        <div class="oe_kanban_bottom_left">
-                                            <div class="o_kanban_inline_block">
-                                                <field name="balance" widget="monetary"/>
-                                            </div>
-                                        </div>
-                                        <div class="oe_kanban_bottom_right">
-                                            <field name="is_active" widget="boolean_toggle"/>
-                                        </div>
-                                    </div>
+    <!-- Dashboard Form View -->
+    <record id="view_fund_dashboard_form" model="ir.ui.view">
+        <field name="name">fund.dashboard.form</field>
+        <field name="model">fund.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Fund Dashboard">
+                <header>
+                    <button name="refresh_dashboard" string="Refresh Data" type="object" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                    </group>
+
+                    <!-- Summary Cards -->
+                    <div class="row mt16">
+                        <div class="col-lg-3 col-6">
+                            <div class="card bg-primary text-white">
+                                <div class="card-body">
+                                    <h4><field name="total_balance" widget="monetary"/></h4>
+                                    <p>Total Balance</p>
                                 </div>
                             </div>
-                        </t>
-                    </templates>
-                </kanban>
-            </field>
-        </record>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="card bg-success text-white">
+                                <div class="card-body">
+                                    <h4><field name="total_income" widget="monetary"/></h4>
+                                    <p>Total Income</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="card bg-danger text-white">
+                                <div class="card-body">
+                                    <h4><field name="total_expense" widget="monetary"/></h4>
+                                    <p>Total Expense</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="card bg-info text-white">
+                                <div class="card-body">
+                                    <h4><field name="net_profit" widget="monetary"/></h4>
+                                    <p>Net Profit</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-        <!-- Dashboard Tree View -->
-        <record id="view_fund_dashboard_tree" model="ir.ui.view">
-            <field name="name">fund.dashboard.tree</field>
-            <field name="model">dpt.fund.account</field>
-            <field name="arch" type="xml">
-                <tree string="Dashboard Quỹ" create="false" edit="false" delete="false">
-                    <field name="name"/>
-                    <field name="code"/>
-                    <field name="fund_type" widget="badge"
-                           decoration-primary="fund_type=='vn'"
-                           decoration-success="fund_type=='china'"
-                           decoration-warning="fund_type=='intermediate'"/>
-                    <field name="balance" widget="monetary" sum="Total Balance"/>
-                    <field name="currency_id"/>
-                    <field name="is_active" widget="boolean_toggle"/>
-                    <field name="last_transaction_date"/>
-                </tree>
-            </field>
-        </record>
+                    <!-- Performance Metrics -->
+                    <div class="row mt16">
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h3><field name="roi_percentage"/>%</h3>
+                                    <p>ROI Percentage</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h3><field name="liquidity_ratio"/></h3>
+                                    <p>Liquidity Ratio</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h3><field name="diversification_score"/>%</h3>
+                                    <p>Diversification Score</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-        <!-- Dashboard Graph View -->
-        <record id="view_fund_dashboard_graph" model="ir.ui.view">
-            <field name="name">fund.dashboard.graph</field>
-            <field name="model">dpt.fund.account</field>
-            <field name="arch" type="xml">
-                <graph string="Biểu đồ Quỹ" type="pie" sample="1">
-                    <field name="fund_type"/>
-                    <field name="balance" type="measure"/>
-                </graph>
-            </field>
-        </record>
+                    <!-- Charts Section -->
+                    <div class="row mt16">
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Account Distribution</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="accountDistributionChart" width="400" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Monthly Performance</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="monthlyPerformanceChart" width="400" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-        <!-- Dashboard Pivot View -->
-        <record id="view_fund_dashboard_pivot" model="ir.ui.view">
-            <field name="name">fund.dashboard.pivot</field>
-            <field name="model">dpt.fund.account</field>
-            <field name="arch" type="xml">
-                <pivot string="Phân tích Quỹ" sample="1">
-                    <field name="fund_type" type="row"/>
-                    <field name="currency_id" type="col"/>
-                    <field name="balance" type="measure"/>
-                </pivot>
-            </field>
-        </record>
+                    <div class="row mt16">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Transaction Trend</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="transactionTrendChart" width="800" height="300"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
 
-        <!-- Dashboard Action -->
-        <record id="action_fund_dashboard" model="ir.actions.act_window">
-            <field name="name">Dashboard Quỹ</field>
-            <field name="res_model">dpt.fund.account</field>
-            <field name="view_mode">kanban,tree,graph,pivot,form</field>
-            <field name="view_id" ref="view_fund_dashboard_kanban"/>
-            <field name="domain">[('is_active', '=', True)]</field>
-            <field name="context">{
-                'search_default_group_by_fund_type': 1,
-            }</field>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    Chào mừng đến với Dashboard Quản lý Quỹ!
-                </p>
-                <p>
-                    Tại đây bạn có thể xem tổng quan về tất cả các quỹ và giao dịch.
-                </p>
-                <p>
-                    <a href="#" data-oe-model="dpt.fund.account" data-oe-id="new" class="btn btn-primary">
-                        Tạo Tài khoản Quỹ đầu tiên
-                    </a>
-                </p>
-            </field>
-        </record>
+    <!-- Dashboard Action -->
+    <record id="action_fund_dashboard" model="ir.actions.act_window">
+        <field name="name">Fund Dashboard</field>
+        <field name="res_model">fund.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+    </record>
 
-        <!-- Dashboard Search View -->
-        <record id="view_fund_dashboard_search" model="ir.ui.view">
-            <field name="name">fund.dashboard.search</field>
-            <field name="model">dpt.fund.account</field>
-            <field name="arch" type="xml">
-                <search string="Tìm kiếm Dashboard">
-                    <field name="name" string="Tên/Mã" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
-                    <field name="fund_type"/>
-                    <field name="currency_id"/>
 
-                    <filter string="Hoạt động" name="active" domain="[('is_active', '=', True)]"/>
-                    <filter string="Không hoạt động" name="inactive" domain="[('is_active', '=', False)]"/>
-
-                    <separator/>
-                    <filter string="Quỹ VN" name="vn_funds" domain="[('fund_type', '=', 'vn')]"/>
-                    <filter string="Quỹ TQ" name="china_funds" domain="[('fund_type', '=', 'china')]"/>
-                    <filter string="TK Trung gian" name="intermediate_funds" domain="[('fund_type', '=', 'intermediate')]"/>
-
-                    <separator/>
-                    <filter string="Có số dư > 0" name="has_balance" domain="[('balance', '>', 0)]"/>
-                    <filter string="Số dư = 0" name="zero_balance" domain="[('balance', '=', 0)]"/>
-
-                    <group expand="0" string="Nhóm theo">
-                        <filter string="Loại quỹ" name="group_by_fund_type" context="{'group_by': 'fund_type'}"/>
-                        <filter string="Tiền tệ" name="group_by_currency" context="{'group_by': 'currency_id'}"/>
-                        <filter string="Trạng thái" name="group_by_active" context="{'group_by': 'is_active'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-
-    </data>
 </odoo>
