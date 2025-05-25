@@ -59,7 +59,6 @@ class DPTShippingSlip(models.Model):
         ('last_delivery_vn', 'Last Delivery VN'),
     ], "Delivery Slip Type")
     product_ids = fields.Many2many('product.product', 'Sản phẩm', compute="_compute_product")
-    po_ids = fields.Many2many('purchase.order', string='Đơn mua')
 
     @api.depends('sale_ids', 'ticket_ids')
     def _compute_product(self):

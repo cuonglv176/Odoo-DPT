@@ -35,11 +35,11 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" type="object" name="action_view_adjustment_entry" icon="fa-book" invisible="not adjustment_entry_id">
-                                <div class="o_field_widget o_stat_info">
-                                    <span class="o_stat_text">Bút toán điều chỉnh</span>
-                                </div>
-                            </button>
+<!--                            <button class="oe_stat_button" type="object" name="action_view_adjustment_entry" icon="fa-book" invisible="not adjustment_entry_id">-->
+<!--                                <div class="o_field_widget o_stat_info">-->
+<!--                                    <span class="o_stat_text">Bút toán điều chỉnh</span>-->
+<!--                                </div>-->
+<!--                            </button>-->
                         </div>
 
                         <div class="oe_title">

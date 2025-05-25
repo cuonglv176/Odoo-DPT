@@ -8,6 +8,7 @@
         'security/ir.model.access.csv',
         'views/account_move.xml',
         'views/dpt_expense_allocation.xml',
+        'views/purchase_order.xml',
         'views/uom_uom.xml',
     ],
 }

@@ -26,6 +26,7 @@ class DptExchangeRate(models.Model):
     ], default='manual', tracking=True)
 
     is_active = fields.Boolean('Hoạt động', default=True, tracking=True)
+    notes = fields.Text('Ghi chú')
 
     # Relations
     transaction_ids = fields.One2many('dpt.fund.transaction', 'exchange_rate_id', 'Giao dịch sử dụng')
