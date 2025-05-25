@@ -51,7 +51,7 @@
                                 <field name="vietinbank_sell"/>
                             </group>
                             <group>
-                                <field name="vietinbank_transfer"/>
+<!--                                <field name="vietinbank_transfer"/>-->
                             </group>
                         </group>
 
