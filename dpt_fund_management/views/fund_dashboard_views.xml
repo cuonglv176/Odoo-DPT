@@ -2,8 +2,8 @@
 <odoo>
     <!-- Dashboard Form View -->
     <record id="view_fund_dashboard_form" model="ir.ui.view">
-        <field name="name">fund.dashboard.form</field>
-        <field name="model">fund.dashboard</field>
+        <field name="name">dpt.fund.dashboard.form</field>
+        <field name="model">dpt.fund.dashboard</field>
         <field name="arch" type="xml">
             <form string="Fund Dashboard">
                 <header>
@@ -181,7 +181,7 @@
     <!-- Dashboard List View -->
     <record id="view_fund_dashboard_tree" model="ir.ui.view">
         <field name="name">fund.dashboard.tree</field>
-        <field name="model">fund.dashboard</field>
+        <field name="model">dpt.fund.dashboard</field>
         <field name="arch" type="xml">
             <tree string="Fund Dashboards">
                 <field name="name"/>
@@ -197,7 +197,7 @@
     <!-- Dashboard Action -->
     <record id="action_fund_dashboard" model="ir.actions.act_window">
         <field name="name">Fund Dashboard</field>
-        <field name="res_model">fund.dashboard</field>
+        <field name="res_model">dpt.fund.dashboard</field>
         <field name="view_mode">form,tree</field>
         <field name="target">current</field>
         <field name="help" type="html">

@@ -4,7 +4,7 @@ import json
 
 
 class FundDashboard(models.Model):
-    _name = 'fund.dashboard'
+    _name = 'dpt.fund.dashboard'
     _description = 'Fund Management Dashboard'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = 'name'
