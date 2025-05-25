@@ -126,7 +126,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="alert alert-info"
-                                         attrs="{'invisible': [('pending_transfers', '=', 0)]}">
+                                         invisible="pending_transfers == 0">
                                         <strong>Pending Transfers:</strong>
                                         You have
                                         <field name="pending_transfers"/>
@@ -135,12 +135,12 @@
                                                 class="btn btn-sm btn-outline-primary ml-2"/>
                                     </div>
                                     <div class="alert alert-warning"
-                                         attrs="{'invisible': [('liquidity_ratio', '&gt;=', 2)]}">
+                                         invisible="liquidity_ratio >= 2">
                                         <strong>Low Liquidity:</strong>
                                         Your liquidity ratio is below the recommended threshold of 2.0
                                     </div>
                                     <div class="alert alert-success"
-                                         attrs="{'invisible': ['|', ('pending_transfers', '&gt;', 0), ('liquidity_ratio', '&lt;', 2)]}">
+                                          invisible="pending_transfers > 0 and liquidity_ratio < 2">
                                         <strong>All Good:</strong>
                                         No alerts at this time. Your fund management is on track!
                                     </div>
