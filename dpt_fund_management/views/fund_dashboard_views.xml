@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Dashboard View -->
+        <record id="view_fund_dashboard" model="ir.ui.view">
+            <field name="name">fund.dashboard</field>
+            <field name="model">dpt.fund.account</field>
+            <field name="arch" type="xml">
+                <dashboard>
+                    <view type="graph" ref="view_fund_account_graph"/>
+                    <group string="Tổng quan Quỹ">
+                        <aggregate name="total_balance" string="Tổng số dư" field="balance" widget="monetary"/>
+                        <aggregate name="total_accounts" string="Tổng TK" field="id" group_operator="count"/>
+                        <aggregate name="active_accounts" string="TK hoạt động" field="id" group_operator="count" domain="[('is_active','=',True)]"/>
+                    </group>
+                    <group string="Theo loại quỹ">
+                        <aggregate name="vn_funds" string="Quỹ VN" field="id" group_operator="count" domain="[('fund_type','=','vn')]"/>
+                        <aggregate name="china_funds" string="Quỹ TQ" field="id" group_operator="count" domain="[('fund_type','=','china')]"/>
+                        <aggregate name="intermediate_funds" string="TK Trung gian" field="id" group_operator="count" domain="[('fund_type','=','intermediate')]"/>
+                    </group>
+                </dashboard>
+            </field>
+        </record>
+
+        <!-- Graph View for Dashboard -->
+        <record id="view_fund_account_graph" model="ir.ui.view">
+            <field name="name">fund.account.graph</field>
+            <field name="model">dpt.fund.account</field>
+            <field name="arch" type="xml">
+                <graph string="Biểu đồ Quỹ" type="pie">
+                    <field name="fund_type"/>
+                    <field name="balance" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- Dashboard Action -->
+        <record id="action_fund_dashboard" model="ir.actions.act_window">
+            <field name="name">Dashboard Quỹ</field>
+            <field name="res_model">dpt.fund.account</field>
+            <field name="view_mode">dashboard,tree,form</field>
+            <field name="view_id" ref="view_fund_dashboard"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Chào mừng đến với Dashboard Quản lý Quỹ!
+                </p>
+                <p>
+                    Tại đây bạn có thể xem tổng quan về tất cả các quỹ và giao dịch.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

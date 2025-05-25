@@ -68,12 +68,6 @@
                   parent="menu_fund_management_root"
                   sequence="40"/>
 
-        <!-- Dashboard Actions -->
-        <record id="action_fund_dashboard" model="ir.actions.client">
-            <field name="name">Dashboard Quỹ</field>
-            <field name="tag">fund_dashboard</field>
-        </record>
-
         <menuitem id="menu_fund_dashboard"
                   name="Dashboard"
                   parent="menu_fund_management_root"

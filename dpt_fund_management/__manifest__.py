@@ -23,6 +23,7 @@
         'views/exchange_rate_views.xml',
         'views/fund_audit_views.xml',
         'views/pending_transfer_views.xml',
+        'views/fund_dashboard_views.xml',
         'views/menu_views.xml',
     ],
     'demo': [],
