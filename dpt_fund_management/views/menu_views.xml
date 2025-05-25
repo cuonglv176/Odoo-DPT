@@ -8,6 +8,13 @@
                   web_icon="dpt_fund_management,static/description/icon.png"
                   sequence="10"/>
 
+        <!-- Menu Item -->
+        <menuitem id="menu_fund_dashboard"
+                  name="Dashboard"
+                  parent="menu_fund_management_root"
+                  action="action_fund_dashboard"
+                  sequence="1"/>
+
         <!-- Fund Management -->
         <menuitem id="menu_fund_management"
                   name="Quản lý Quỹ"
@@ -68,12 +75,6 @@
                   parent="menu_fund_management_root"
                   sequence="40"/>
 
-        <!-- Menu Item -->
-        <menuitem id="menu_fund_dashboard"
-                  name="Dashboard"
-                  parent="menu_fund_management_root"
-                  action="action_fund_dashboard"
-                  sequence="1"/>
 
     </data>
 </odoo>
