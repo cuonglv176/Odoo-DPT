@@ -41,7 +41,7 @@
                             </group>
                             <group>
                                 <field name="rate"/>
-                                <field name="inverse_rate" readonly="1"/>
+<!--                                <field name="inverse_rate" readonly="1"/>-->
                             </group>
                         </group>
 
