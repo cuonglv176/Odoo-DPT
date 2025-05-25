@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError
 class DptExchangeRate(models.Model):
     _name = 'dpt.exchange.rate'
     _description = 'Tỷ giá hối đoái'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date desc'
 
     name = fields.Char('Tên', compute='_compute_name', store=True)
@@ -13,10 +13,12 @@ class DptExchangeRate(models.Model):
     from_currency_id = fields.Many2one('res.currency', 'Từ tiền tệ', required=True, tracking=True)
     to_currency_id = fields.Many2one('res.currency', 'Sang tiền tệ', required=True, tracking=True)
     rate = fields.Float('Tỷ giá', required=True, digits=(12, 6), tracking=True)
+    inverse_rate = fields.Float('Tỷ giá nghịch đảo', compute='_compute_inverse_rate', store=True, digits=(12, 6))
 
     # Tỷ giá Vietinbank
     vietinbank_buy = fields.Float('VTB - Mua vào', digits=(12, 2))
     vietinbank_sell = fields.Float('VTB - Bán ra', digits=(12, 2))
+    vietinbank_transfer = fields.Float('VTB - Chuyển khoản', digits=(12, 2))
     margin = fields.Float('Chênh lệch', default=65)
 
     source = fields.Selection([
@@ -40,6 +42,14 @@ class DptExchangeRate(models.Model):
             else:
                 record.name = "Tỷ giá mới"
 
+    @api.depends('rate')
+    def _compute_inverse_rate(self):
+        for record in self:
+            if record.rate:
+                record.inverse_rate = 1.0 / record.rate
+            else:
+                record.inverse_rate = 0.0
+
     @api.constrains('rate')
     def _check_rate(self):
         for record in self:
@@ -52,6 +62,17 @@ class DptExchangeRate(models.Model):
             if record.from_currency_id.id == record.to_currency_id.id:
                 raise ValidationError('Tiền tệ nguồn và đích phải khác nhau!')
 
+    def action_activate(self):
+        """Kích hoạt tỷ giá"""
+        for record in self:
+            record.is_active = True
+
+    def action_deactivate(self):
+        """Vô hiệu hóa tỷ giá"""
+        for record in self:
+            record.is_active = False
+
+    @api.model
     def get_latest_rate(self, from_currency, to_currency, date=None):
         """Lấy tỷ giá mới nhất"""
         if not date:
@@ -65,3 +86,10 @@ class DptExchangeRate(models.Model):
         ], order='date desc', limit=1)
 
         return rate.rate if rate else 1.0
+
+    def name_get(self):
+        result = []
+        for record in self:
+            name = f'{record.from_currency_id.name}/{record.to_currency_id.name} ({record.rate:,.2f}) - {record.date}'
+            result.append((record.id, name))
+        return result

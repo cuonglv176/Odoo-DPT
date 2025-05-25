@@ -4,3 +4,4 @@ from . import fund_transfer
 from . import exchange_rate
 from . import fund_audit
 from . import pending_transfer
+from . import fund_dashboard

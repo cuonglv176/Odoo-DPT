@@ -300,7 +300,7 @@ class SaleOrder(models.Model):
                         'value_integer': existing_field.value_integer,
                         'value_date': existing_field.value_date,
                         'selection_value_id': existing_field.selection_value_id.id if existing_field.selection_value_id else False,
-                        'sale_service_id': sale_service.id if service_type == 'actual' else False,
+                        'sale_service_id': sale_service.id,
                         'service_id': sale_service.service_id.id,
                     }
 
@@ -316,7 +316,7 @@ class SaleOrder(models.Model):
                                 'value_integer': field_data.value_integer,
                                 'value_date': field_data.value_date,
                                 'selection_value_id': field_data.selection_value_id.id if field_data.selection_value_id else False,
-                                'sale_service_id': sale_service.id if service_type == 'actual' else False,
+                                'sale_service_id': sale_service.id,
                                 'service_id': sale_service.service_id.id,
                             }
                             break
@@ -333,7 +333,7 @@ class SaleOrder(models.Model):
                                 'value_integer': field_data.value_integer,
                                 'value_date': field_data.value_date,
                                 'selection_value_id': field_data.selection_value_id.id if field_data.selection_value_id else False,
-                                'sale_service_id': sale_service.id if service_type == 'actual' else False,
+                                'sale_service_id': sale_service.id,
                                 'service_id': sale_service.service_id.id,
                             }
                             break
@@ -344,7 +344,7 @@ class SaleOrder(models.Model):
                         'sequence': 1 if req_field.type == 'required' else 0,
                         'fields_id': req_field.id,
                         'sale_id': self.id,
-                        'sale_service_id': sale_service.id if service_type == 'actual' else False,
+                        'sale_service_id': sale_service.id,
                         'service_id': sale_service.service_id.id,
                     }
                     default_value = req_field.get_default_value(so=self)
