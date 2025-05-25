@@ -23,7 +23,7 @@
                         </group>
                     </group>
 
-                    <!-- Summary Cards -->
+                    <!-- Thẻ Tóm Tắt -->
                     <div class="row mt16">
                         <div class="col-lg-3 col-6">
                             <div class="card bg-primary text-white">
@@ -76,7 +76,7 @@
                         </div>
                     </div>
 
-                    <!-- Performance Metrics -->
+                    <!-- Chỉ Số Hiệu Suất -->
                     <div class="row mt16">
                         <div class="col-lg-4">
                             <div class="card">
@@ -86,7 +86,8 @@
                                     </h3>
                                     <p class="text-muted">Tỷ Lệ Hoàn Vốn (ROI)</p>
                                     <div class="progress">
-                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 50%"/>
+                                        <div class="progress-bar bg-primary" role="progressbar"
+                                             t-attf-style="width: {{record.roi_percentage.raw_value or 0}}%"/>
                                     </div>
                                 </div>
                             </div>
@@ -115,7 +116,7 @@
                         </div>
                     </div>
 
-                    <!-- Alerts Section -->
+                    <!-- Phần Cảnh Báo -->
                     <div class="row mt16">
                         <div class="col-lg-12">
                             <div class="card">
@@ -131,8 +132,7 @@
                                         Bạn có
                                         <field name="pending_transfers"/>
                                         giao dịch chuyển khoản đang chờ phê duyệt.
-                                        transfers waiting for approval.
-                                        <button name="action_view_transfers" string="Review" type="object"
+                                        <button name="action_view_transfers" string="Xem Lại" type="object"
                                                 class="btn btn-sm btn-outline-primary ml-2"/>
                                     </div>
                                     <div class="alert alert-warning" attrs="{'invisible': [('liquidity_ratio', '>=', 2)]}">
@@ -149,7 +149,6 @@
                     </div>
 
                     <!-- Thao Tác Nhanh -->
-                    <!-- Quick Actions -->
                     <div class="row mt16">
                         <div class="col-lg-12">
                             <div class="card">
