@@ -2,7 +2,7 @@
 {
     'name': "DPT Expense",
 
-    'depends': ['base', 'hr_expense', 'dpt_shipping'],
+    'depends': ['base', 'hr_expense', 'dpt_shipping', 'purchase', 'dpt_purchase_management'],
 
     'data': [
         'security/ir.model.access.csv',
