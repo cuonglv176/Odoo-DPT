@@ -81,12 +81,12 @@
                         <div class="col-lg-4">
                             <div class="card">
                                 <div class="card-body text-center">
-                                    <h3 class="text-primary"><field name="roi_percentage"/>%
+                                    <h3 class="text-primary">
+                                        <field name="roi_percentage"/>%
                                     </h3>
                                     <p class="text-muted">ROI Percentage</p>
                                     <div class="progress">
-                                        <div class="progress-bar bg-primary" role="progressbar"
-                                             style="width: 50%"></div>
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 50%"/>
                                     </div>
                                 </div>
                             </div>
@@ -98,14 +98,15 @@
                                         <field name="liquidity_ratio"/>
                                     </h3>
                                     <p class="text-muted">Liquidity Ratio</p>
-                                    <small class="text-muted">Target: &gt; 2.0</small>
+                                    <small class="text-muted">Target: > 2.0</small>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-4">
                             <div class="card">
                                 <div class="card-body text-center">
-                                    <h3 class="text-warning"><field name="diversification_score"/>%
+                                    <h3 class="text-warning">
+                                        <field name="diversification_score"/>%
                                     </h3>
                                     <p class="text-muted">Diversification Score</p>
                                     <small class="text-muted">Portfolio spread</small>
@@ -120,13 +121,12 @@
                             <div class="card">
                                 <div class="card-header">
                                     <h5>
-                                        <i class="fa fa-bell"></i>
+                                        <i class="fa fa-bell"/>
                                         Alerts &amp; Notifications
                                     </h5>
                                 </div>
                                 <div class="card-body">
-                                    <div class="alert alert-info"
-                                         invisible="pending_transfers == 0">
+                                    <div class="alert alert-info" invisible="pending_transfers == 0">
                                         <strong>Pending Transfers:</strong>
                                         You have
                                         <field name="pending_transfers"/>
@@ -134,13 +134,11 @@
                                         <button name="action_view_transfers" string="Review" type="object"
                                                 class="btn btn-sm btn-outline-primary ml-2"/>
                                     </div>
-                                    <div class="alert alert-warning"
-                                         invisible="liquidity_ratio >= 2">
+                                    <div class="alert alert-warning" invisible="liquidity_ratio >= 2">
                                         <strong>Low Liquidity:</strong>
                                         Your liquidity ratio is below the recommended threshold of 2.0
                                     </div>
-                                    <div class="alert alert-success"
-                                          invisible="pending_transfers > 0 and liquidity_ratio < 2">
+                                    <div class="alert alert-success" invisible="pending_transfers > 0 or liquidity_ratio &lt; 2">
                                         <strong>All Good:</strong>
                                         No alerts at this time. Your fund management is on track!
                                     </div>
@@ -209,6 +207,5 @@
             </p>
         </field>
     </record>
-
 
 </odoo>
