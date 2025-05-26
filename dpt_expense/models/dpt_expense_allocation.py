@@ -42,7 +42,7 @@ class DPTExpenseAllocation(models.Model):
             return
         self.currency_id = self.purchase_order_ids[0].currency_id if self.purchase_order_ids[
             0].currency_id else self.env.company.currency_id
-        self.total_expense = self.purchase_order_ids.mapped('amount_total')
+        self.total_expense = sum(self.purchase_order_ids.mapped('amount_total'))
 
     def action_allocate(self):
         self.state = 'allocated'
