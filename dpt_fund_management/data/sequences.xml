@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Fund Account Sequence -->
+        <record id="seq_fund_account" model="ir.sequence">
+            <field name="name">Tài khoản Quỹ</field>
+            <field name="code">dpt.fund.account</field>
+            <field name="prefix">FA</field>
+            <field name="padding">3</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+        </record>
+
+        <!-- Fund Transaction Sequence -->
+        <record id="seq_fund_transaction" model="ir.sequence">
+            <field name="name">Giao dịch Quỹ</field>
+            <field name="code">dpt.fund.transaction</field>
+            <field name="prefix">FT</field>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+        </record>
+
+        <!-- Fund Transfer Sequence -->
+        <record id="seq_fund_transfer" model="ir.sequence">
+            <field name="name">Chuyển tiền</field>
+            <field name="code">dpt.fund.transfer</field>
+            <field name="prefix">TF</field>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+        </record>
+
+        <!-- Fund Audit Sequence -->
+        <record id="seq_fund_audit" model="ir.sequence">
+            <field name="name">Kiểm kê Quỹ</field>
+            <field name="code">dpt.fund.audit</field>
+            <field name="prefix">AU</field>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+        </record>
+
+    </data>
+</odoo>

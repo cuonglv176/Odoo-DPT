@@ -1,0 +1,58 @@
+.fund_dashboard_widget {
+    padding: 20px;
+}
+
+.fund_dashboard_widget .card {
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: none;
+    border-radius: 8px;
+}
+
+.fund_dashboard_widget .card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    font-weight: 600;
+}
+
+.fund_dashboard_widget .summary-card {
+    text-align: center;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 8px;
+    color: white;
+}
+
+.fund_dashboard_widget .summary-card h3 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+.fund_dashboard_widget .summary-card p {
+    margin: 5px 0 0 0;
+    opacity: 0.9;
+}
+
+.fund_dashboard_widget .bg-primary {
+    background-color: #007bff !important;
+}
+
+.fund_dashboard_widget .bg-success {
+    background-color: #28a745 !important;
+}
+
+.fund_dashboard_widget .bg-danger {
+    background-color: #dc3545 !important;
+}
+
+.fund_dashboard_widget .bg-info {
+    background-color: #17a2b8 !important;
+}
+
+.fund_dashboard_widget canvas {
+    max-height: 400px;
+}
+
+.fund_dashboard_widget .alert {
+    margin-bottom: 10px;
+}

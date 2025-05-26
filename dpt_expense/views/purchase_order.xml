@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="purchase_order_expense_form_inherit" model="ir.ui.view">
+        <field name="name">purchase_order_expense_form_inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="expense_allocation" string="Phân bổ chi phí">
+                    <separator string="Phiếu vận chuyển"/>
+                    <field name="shipping_slip_ids"/>
+                    <separator string="Đơn hàng tính chi phí"/>
+                    <field name="order_expense_ids"/>
+                    <separator string="Tổng hợp Đơn hàng tính chi phí"/>
+                    <field name="total_order_expense_ids"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -76,9 +76,9 @@
                                     <field name="price_unit" on_change="1"/>
                                     <field name="price_unit2" on_change="1"/>
                                     <field name="price_unit3" on_change="1" groups="purchase.group_purchase_manager"/>
-                                    <field name="price_subtotal" on_change="1"/>
-                                    <field name="price_subtotal2"/>
-                                    <field name="price_subtotal3" groups="purchase.group_purchase_manager"/>
+                                    <field name="price_subtotal" on_change="1" sum="Tổng"/>
+                                    <field name="price_subtotal2" sum="Tổng"/>
+                                    <field name="price_subtotal3" groups="purchase.group_purchase_manager" sum="Tổng"/>
                                     <field name="date_planned"/>
                                 </tree>
 
@@ -223,9 +223,13 @@
                                            placeholder="Xác định điều khoản và điều kiện của bạn..."
                                            field_id="notes_0"/>
                                 </group>
-                                <group class="oe_subtotal_footer" invisible="1">
-                                    <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" colspan="2"
-                                           readonly="1" field_id="tax_totals_0"/>
+<!--                                <group class="oe_subtotal_footer" invisible="1">-->
+<!--                                    <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" colspan="2"-->
+<!--                                           readonly="1" field_id="tax_totals_0"/>-->
+<!--                                </group>-->
+                                <group class="oe_subtotal_footer" >
+                                    <label for="amount_total" string="Tổng tiền thanh toán"/>
+                                    <field name="amount_total" readonly="1" nolabel="1"/>
                                 </group>
                             </group>
                             <div class="clearfix"/>

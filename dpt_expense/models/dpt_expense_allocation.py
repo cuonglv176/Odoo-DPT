@@ -18,28 +18,31 @@ class DPTExpenseAllocation(models.Model):
     expense_id = fields.Many2one('product.product', string='Expense')
     total_expense = fields.Monetary(string='Total Expense', currency_field='currency_id')
     total_expense_in_main_currency = fields.Monetary(string='Total Expense In Main Currency',
-                                                  currency_field='main_currency_id')
-    shipping_id = fields.Many2one('dpt.shipping.slip', string='Shipping')
-    sale_ids = fields.Many2many('sale.order', string='Orders', compute="_compute_order")
+                                                     currency_field='main_currency_id')
+    purchase_order_ids = fields.Many2many('purchase.order', string='Purchase Orders')
+    shipping_ids = fields.Many2many('dpt.shipping.slip', string='Shipping', compute="_compute_order_shipping")
+    sale_ids = fields.Many2many('sale.order', string='Orders', compute="_compute_order_shipping")
     state = fields.Selection([('draft', 'Draft'), ('allocated', 'Allocated')], string='State', default='draft')
     allocation_move_ids = fields.One2many('account.move', 'expense_allocation_id', string='Allocation Moves')
 
-    @api.depends('shipping_id')
-    def _compute_order(self):
+    @api.depends('purchase_order_ids')
+    def _compute_order_shipping(self):
         for item in self:
-            item.sale_ids = item.shipping_id.sale_ids
+            item.sale_ids = item.purchase_order_ids.mapped('total_order_expense_ids')
+            item.shipping_ids = item.purchase_order_ids.mapped('shipping_slip_ids')
 
-    @api.depends('shipping_id')
+    @api.depends('purchase_order_ids')
     def _compute_main_currency(self):
         for item in self:
             item.main_currency_id = self.env.company.currency_id
 
-    @api.onchange('shipping_id')
+    @api.onchange('purchase_order_ids')
     def _onchange_get_expense(self):
-        if not self.shipping_id or not self.shipping_id.po_ids:
+        if not self.purchase_order_ids:
             return
-        self.currency_id = self.shipping_id.po_ids[0].currency_id if self.shipping_id.po_ids[0].currency_id else self.env.company.currency_id
-        self.total_expense = self.shipping_id.po_ids.mapped('amount_total')
+        self.currency_id = self.purchase_order_ids[0].currency_id if self.purchase_order_ids[
+            0].currency_id else self.env.company.currency_id
+        self.total_expense = self.purchase_order_ids.mapped('amount_total')
 
     def action_allocate(self):
         self.state = 'allocated'
@@ -87,12 +90,12 @@ class DPTExpenseAllocation(models.Model):
                             uom_id)
                     expense_by_order[sale_id] = expense
                 if expense_by_order:
-                    journal_id = self.env['account.journal'].sudo().search([('type','=','purchase')], limit=1)
+                    journal_id = self.env['account.journal'].sudo().search([('type', '=', 'purchase')], limit=1)
                     if not journal_id:
                         raise ValidationError("Vui lòng cấu hình sổ nhật ký mua hàng!!")
                     move_id = self.env['account.move'].sudo().create({
                         # 'partner_id': self.shipping_id.po_id.partner_id.id,
-                        'sale_id': sale_id.id,
+                        # 'sale_id': sale_id.id,
                         'journal_id': journal_id.id,
                         'expense_allocation_id': self.id,
                     })
@@ -108,10 +111,10 @@ class DPTExpenseAllocation(models.Model):
                             'quantity': 1,
                             'expense_id': self.expense_id.id,
                         })
-                    for partner_id in self.shipping_id.po_ids.mapped('partner_id'):
+                    for partner_id in self.purchase_order_ids.mapped('partner_id'):
                         if not partner_id:
                             continue
-                        po_ids = self.shipping_id.po_ids.filtered(lambda po:po.partner_id == partner_id)
+                        po_ids = self.purchase_order_ids.filtered(lambda po: po.partner_id == partner_id)
                         move_line_vals.append({
                             'move_id': move_id.id,
                             'partner_id': partner_id.id,

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="fund_dashboard_widget_template">
+        <div class="fund_dashboard_widget">
+            <div id="alertContainer" class="mb-3"></div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Account Distribution</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas t-ref="accountDistribution"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Monthly Performance</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas t-ref="monthlyPerformance"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Transaction Trend</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas t-ref="transactionTrend"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -14,7 +14,7 @@ class ServiceCombo(models.Model):
                                    related='combo_id.service_ids')
     sale_id = fields.Many2one('sale.order', string='Order')
     planned_sale_id = fields.Many2one('sale.order', string='Planned Order')
-    qty = fields.Integer('Số lượng')
+    qty = fields.Integer('Số lượng', default=1)
     price = fields.Float('Đơn giá', help='Để trống sẽ tính tổng từ các dịch vụ')
     amount_discount = fields.Float('Khuyến mãi', default=0.0)
     amount_total = fields.Float('Thành tiền', compute='_compute_total_price')
@@ -47,6 +47,7 @@ class ServiceCombo(models.Model):
                         'price': service_data['price'],
                         'uom_id': service_data['uom_id'],
                         'qty': service_data['qty'],
+                        'compute_value': self.qty or 1,  # Sử dụng số lượng combo
                         'combo_id': self.id if not self._origin.id else self._origin.id,
                         'price_status': 'calculated',
                         'department_id': service_data['department_id'],
@@ -70,6 +71,14 @@ class ServiceCombo(models.Model):
                     if not self._origin.id:
                         self._services_to_create[self.id] = new_services
                     self.sale_service_ids = [(5, 0, 0)] + new_services
+
+    # Thêm onchange cho trường qty - cập nhật số lượng dịch vụ khi số lượng combo thay đổi
+    @api.onchange('qty')
+    def onchange_qty(self):
+        """Cập nhật số lượng cho các dịch vụ khi thay đổi số lượng combo"""
+        if self.qty and self.sale_service_ids:
+            for service in self.sale_service_ids:
+                service.compute_value = self.qty
 
     # Thêm onchange cho trường is_price_fixed
     @api.onchange('is_price_fixed')
@@ -106,6 +115,7 @@ class ServiceCombo(models.Model):
                         'price': service_data['price'],
                         'uom_id': service_data['uom_id'],
                         'qty': service_data['qty'],
+                        'compute_value': record.qty or 1,  # Sử dụng số lượng combo
                         'combo_id': record.id,
                         'price_status': 'calculated',
                         'department_id': service_data['department_id'],
@@ -128,9 +138,18 @@ class ServiceCombo(models.Model):
                     self.env['dpt.sale.service.management'].create(new_services)
         return records
 
-    # Ghi đè phương thức write để cập nhật trạng thái chốt giá cho các dịch vụ
+    # Ghi đè phương thức write để cập nhật số lượng cho dịch vụ khi số lượng combo thay đổi
     def write(self, vals):
         res = super(ServiceCombo, self).write(vals)
+
+        # Nếu có thay đổi số lượng, cập nhật số lượng cho các dịch vụ
+        if 'qty' in vals:
+            for combo in self:
+                services = self.env['dpt.sale.service.management'].search([
+                    ('combo_id', '=', combo.id)
+                ])
+                for service in services:
+                    service.compute_value = vals['qty']
 
         # Nếu có thay đổi trạng thái chốt giá
         if 'is_price_fixed' in vals:
