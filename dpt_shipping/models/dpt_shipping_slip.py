@@ -430,7 +430,7 @@ class DPTShippingSlip(models.Model):
         for data in datas:
             row10_data = [index, data.get("Khách hàng", ''), data.get("Mã đơn hàng", ''), data.get("Tên sản phẩm", ''),
                           data.get("Mã lô", ''), data.get("Nhóm kiện", ''), data.get("Kích thước", ''),
-                          data.get("Trọng lượng(kg)", ''), data.get("Thể tích(m3)", ''), data.get("Thể tích(m3)", '')]
+                          data.get("Trọng lượng(kg)", ''), data.get("Thể tích(m3)", ''), data.get("Ghi chú", '')]
             for col, value in enumerate(row10_data, 1):
                 cell = ws.cell(row=index + 9, column=col)
                 cell.value = value
