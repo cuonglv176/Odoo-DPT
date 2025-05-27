@@ -199,6 +199,3 @@ class ProductPricelistItem(models.Model):
                     applicable_uoms.append(field.uom_id.id)
 
             return bool(set(selected_uoms.ids).intersection(set(applicable_uoms)))
-
-        # Logic hiện tại
-        # ...
