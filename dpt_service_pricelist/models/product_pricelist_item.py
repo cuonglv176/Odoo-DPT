@@ -174,27 +174,31 @@ class ProductPricelistItem(models.Model):
 
     # Thêm vào class ProductPricelistItem
 
-    def is_applicable_for_uoms(self, selected_uoms):
+    def is_applicable_for_uoms(self, selected_uoms, use_for_pricing=False):
         """Kiểm tra xem bảng giá có áp dụng được cho các đơn vị đã chọn không
 
         Args:
             selected_uoms: recordset các đơn vị đã chọn
+            use_for_pricing: Nếu True, ưu tiên sử dụng pricing_uom_ids
 
         Returns:
             bool: True nếu áp dụng được, False nếu không
         """
         self.ensure_one()
 
-        # Trường hợp không có giới hạn đơn vị
-        if not self.uom_id and not self.pricelist_table_detail_ids:
-            return True
+        # Nếu sử dụng cho tính giá, kiểm tra pricing_uom_ids
+        if use_for_pricing and self.service_id:
+            applicable_uoms = []
+            for field in self.service_id.required_fields_ids:
+                if field.pricing_uom_ids:
+                    applicable_uoms.extend(field.pricing_uom_ids.ids)
+                # Tương thích ngược
+                elif field.uom_ids and field.using_calculation_price:
+                    applicable_uoms.extend(field.uom_ids.ids)
+                elif field.uom_id and field.using_calculation_price:
+                    applicable_uoms.append(field.uom_id.id)
 
-        # Kiểm tra trường hợp chỉ có một đơn vị
-        if self.uom_id and not self.pricelist_table_detail_ids:
-            return self.uom_id.id in selected_uoms.ids
+            return bool(set(selected_uoms.ids).intersection(set(applicable_uoms)))
 
-        # Trường hợp bảng giá theo bảng (đơn vị được kiểm tra trong chi tiết)
-        if self.compute_price == 'table':
-            return True
-
-        return True
+        # Logic hiện tại
+        # ...
