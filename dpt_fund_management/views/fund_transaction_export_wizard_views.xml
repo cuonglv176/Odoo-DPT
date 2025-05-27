@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_fund_transaction_export_wizard_form" model="ir.ui.view">
+        <field name="name">dpt.fund.transaction.export.wizard.form</field>
+        <field name="model">dpt.fund.transaction.export.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Export Giao Dịch">
+                <header>
+                    <button name="action_export"
+                            string="📥 Export Excel"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_download"
+                            string="💾 Tải Xuống"
+                            type="object"
+                            class="btn-success"
+                            invisible="state != 'done'"/>
+                    <button name="action_back"
+                            string="🔙 Quay Lại"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="state != 'done'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <i class="fa fa-file-excel-o"/> Export Giao Dịch
+                        </h1>
+                        <h3 class="text-muted">
+                            <field name="fund_account_id" readonly="1"/>
+                        </h3>
+                    </div>
+
+                    <group invisible="state != 'draft'">
+                        <group string="📁 Thông Tin File">
+                            <field name="name" placeholder="Tên file export..."/>
+                        </group>
+                        <group string="📅 Bộ Lọc Thời Gian">
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                    </group>
+
+                    <group invisible="state != 'draft'">
+                        <group string="🔍 Bộ Lọc Giao Dịch">
+                            <field name="transaction_type"/>
+                            <field name="state_filter"/>
+                        </group>
+                        <group string="⚙️ Tùy Chọn">
+                            <field name="include_summary"/>
+                        </group>
+                    </group>
+
+                    <!-- Kết quả export -->
+                    <div invisible="state != 'done'" class="alert alert-success">
+                        <h4><i class="fa fa-check-circle"/> Export Thành Công!</h4>
+                        <p>
+                            File Excel đã được tạo thành công.
+                            Click <strong>"💾 Tải Xuống"</strong> để download file.
+                        </p>
+                        <div class="mt16">
+                            <strong>Tên file:</strong> <field name="file_name" readonly="1"/>
+                        </div>
+                    </div>
+
+                    <!-- Hidden fields -->
+                    <field name="file_data" invisible="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

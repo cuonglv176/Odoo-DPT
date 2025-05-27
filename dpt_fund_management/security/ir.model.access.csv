@@ -7,3 +7,5 @@ access_dpt_fund_audit,dpt.fund.audit,model_dpt_fund_audit,base.group_user,1,1,1,
 access_dpt_fund_audit_line,dpt.fund.audit.line,model_dpt_fund_audit_line,base.group_user,1,1,1,1
 access_dpt_pending_transfer,dpt.pending.transfer,model_dpt_pending_transfer,base.group_user,1,1,1,1
 access_dpt_fund_dashboard,access_dpt_fund_dashboard,model_dpt_fund_dashboard,base.group_user,1,1,1,1
+access_dpt.bank.transaction.import.wizard,access_dpt.bank.transaction.import.wizard,model_dpt_bank_transaction_import_wizard,base.group_user,1,1,1,1
+access_dpt_fund_transaction_export_wizard,dpt.fund.transaction.export.wizard,model_dpt_fund_transaction_export_wizard,base.group_user,1,1,1,1

@@ -268,15 +268,19 @@ class DptFundAccount(models.Model):
     def action_export_transactions(self):
         """Export giao dịch ra Excel"""
         self.ensure_one()
-
-        # Tạo wizard export hoặc direct export
+        if not self.transaction_ids:
+            raise UserError(_('Không có giao dịch nào để export!'))
         return {
-            'type': 'ir.actions.act_url',
-            'url': f'/web/export/transactions/{self.id}',
+            'name': _('Export Giao Dịch - %s') % self.name,
+            'type': 'ir.actions.act_window',
+            'res_model': 'dpt.fund.transaction.export.wizard',
+            'view_mode': 'form',
             'target': 'new',
+            'context': {
+                'default_fund_account_id': self.id,
+                'default_name': f'Export_{self.code}_{fields.Date.today().strftime("%Y%m%d")}',
+            }
         }
-
-
 
     @api.model
     def create(self, vals):
