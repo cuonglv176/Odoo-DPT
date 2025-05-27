@@ -26,6 +26,12 @@
                 <form string="Tài khoản Quỹ">
                     <header>
                         <button name="get_balance_in_currency" string="Quy đổi VND" type="object" class="btn-primary"/>
+                        <button name="%(action_bank_transaction_import_wizard)d"
+                                string="Import Giao Dịch"
+                                type="action"
+                                class="btn-primary"
+                                context="{'default_account_id': active_id}"
+                                invisible="account_type != 'bank'"/
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -38,7 +44,9 @@
 
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
-                            <h1><field name="name" placeholder="Tên quỹ..."/></h1>
+                            <h1>
+                                <field name="name" placeholder="Tên quỹ..."/>
+                            </h1>
                         </div>
 
                         <group>
@@ -96,7 +104,7 @@
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids"/>
-<!--                        <field name="activity_ids"/>-->
+                        <!--                        <field name="activity_ids"/>-->
                         <field name="message_ids"/>
                     </div>
                 </form>
@@ -119,7 +127,8 @@
                     <separator/>
                     <filter string="Quỹ VN" name="vn_fund" domain="[('fund_type', '=', 'vn')]"/>
                     <filter string="Quỹ TQ" name="china_fund" domain="[('fund_type', '=', 'china')]"/>
-                    <filter string="Tài khoản trung gian" name="intermediate" domain="[('fund_type', '=', 'intermediate')]"/>
+                    <filter string="Tài khoản trung gian" name="intermediate"
+                            domain="[('fund_type', '=', 'intermediate')]"/>
                     <group expand="0" string="Nhóm theo">
                         <filter string="Loại quỹ" name="group_fund_type" context="{'group_by': 'fund_type'}"/>
                         <filter string="Tiền tệ" name="group_currency" context="{'group_by': 'currency_id'}"/>

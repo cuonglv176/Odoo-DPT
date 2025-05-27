@@ -14,6 +14,13 @@
     """,
     'author': 'Your Company',
     'depends': ['base', 'mail', 'account', 'web'],
+    'external_dependencies': {
+        'python': [
+            'xlrd',  # Đọc file .xls
+            'xlsxwriter',  # Tạo file .xlsx
+            'openpyxl',  # Đọc file .xlsx (tùy chọn)
+        ],
+    },
     'data': [
         'security/ir.model.access.csv',
         'data/account_data.xml',
@@ -25,6 +32,7 @@
         'views/fund_audit_views.xml',
         'views/pending_transfer_views.xml',
         'views/fund_dashboard_views.xml',
+        'views/bank_transaction_import_wizard_views.xml',
         'views/menu_views.xml',
     ],
     'assets': {

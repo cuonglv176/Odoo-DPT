@@ -29,6 +29,13 @@ class DptFundTransaction(models.Model):
         ('confirmed', 'Đã xác nhận'),
         ('posted', 'Đã ghi sổ')
     ], string='Trạng thái', default='draft', tracking=True)
+    import_source = fields.Selection([
+        ('manual', 'Nhập Thủ Công'),
+        ('bank_excel', 'Import Excel Ngân Hàng'),
+        ('api', 'API Ngân Hàng'),
+    ], string='Nguồn Dữ Liệu', default='manual')
+
+    import_reference = fields.Char('Mã Import', help="Mã tham chiếu từ file import")
 
     # Accounting fields
     debit_account_id = fields.Many2one('account.account', string='Tài khoản nợ')
