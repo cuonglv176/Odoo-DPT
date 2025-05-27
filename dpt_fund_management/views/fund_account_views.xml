@@ -20,96 +20,213 @@
 
         <!-- Form View -->
         <record id="view_dpt_fund_account_form" model="ir.ui.view">
-            <field name="name">dpt.fund.account.form</field>
-            <field name="model">dpt.fund.account</field>
-            <field name="arch" type="xml">
-                <form string="Tài khoản Quỹ">
-                    <header>
-                        <button name="get_balance_in_currency" string="Quy đổi VND" type="object" class="btn-primary"/>
-                        <button name="%(dpt_fund_management.action_bank_transaction_import_wizard)d"
-                                string="Import Giao Dịch"
-                                type="action"
-                                class="btn-primary"
-                                context="{'default_account_id': active_id}"
-                                invisible="account_type != 'bank'"/>
-                    </header>
-                    <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" type="object" name="action_view_transactions" icon="fa-list">
-                                <field string="Giao dịch" name="transaction_ids" widget="statinfo"/>
-                            </button>
+    <field name="name">dpt.fund.account.form</field>
+    <field name="model">dpt.fund.account</field>
+    <field name="arch" type="xml">
+        <form string="Tài khoản Quỹ">
+            <header>
+                <!-- Button quy đổi VND -->
+                <button name="get_balance_in_currency"
+                        string="💱 Quy đổi VND"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="currency_id == %(base.VND)d"/>
+
+                <!-- Button Import - Sử dụng Python Action -->
+                <button name="action_import_transactions"
+                        string="📥 Import Giao Dịch"
+                        type="object"
+                        class="btn-primary"
+                        invisible="account_type != 'bank'"
+                        help="Import giao dịch từ file Excel"/>
+
+                <!-- Button Export -->
+                <button name="action_export_transactions"
+                        string="📤 Export Excel"
+                        type="object"
+                        class="btn-secondary"
+                        help="Xuất giao dịch ra file Excel"/>
+
+                <!-- Button Đối soát -->
+                <button name="action_reconcile_account"
+                        string="🔄 Đối Soát"
+                        type="object"
+                        class="btn-info"
+                        invisible="account_type != 'bank'"
+                        help="Đối soát số dư tài khoản"/>
+            </header>
+
+            <sheet>
+                <div class="oe_button_box" name="button_box">
+                    <!-- Smart Button - Số lượng giao dịch -->
+                    <button class="oe_stat_button"
+                            type="object"
+                            name="action_view_transactions"
+                            icon="fa-list-alt">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="transaction_count"/>
+                            </span>
+                            <span class="o_stat_text">Giao Dịch</span>
                         </div>
+                    </button>
 
-                        <widget name="web_ribbon" title="Không hoạt động" bg_color="bg-danger" invisible="is_active"/>
-
-                        <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1>
-                                <field name="name" placeholder="Tên quỹ..."/>
-                            </h1>
+                    <!-- Smart Button - Tổng thu -->
+                    <button class="oe_stat_button"
+                            type="object"
+                            name="action_view_income_transactions"
+                            icon="fa-arrow-up"
+                            style="color: green;">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="total_income" widget="monetary"/>
+                            </span>
+                            <span class="o_stat_text">Tổng Thu</span>
                         </div>
+                    </button>
 
+                    <!-- Smart Button - Tổng chi -->
+                    <button class="oe_stat_button"
+                            type="object"
+                            name="action_view_expense_transactions"
+                            icon="fa-arrow-down"
+                            style="color: red;">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="total_expense" widget="monetary"/>
+                            </span>
+                            <span class="o_stat_text">Tổng Chi</span>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Ribbon trạng thái -->
+                <widget name="web_ribbon"
+                        title="Không hoạt động"
+                        bg_color="bg-danger"
+                        invisible="is_active"/>
+
+                <!-- Title -->
+                <div class="oe_title">
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name" placeholder="Tên tài khoản quỹ..."/>
+                    </h1>
+                    <div invisible="not account_number">
+                        <h3 class="text-muted">
+                            <i class="fa fa-credit-card"/>
+                            <field name="account_number"/>
+                            <span invisible="not bank_name"> - </span>
+                            <field name="bank_name"/>
+                        </h3>
+                    </div>
+                </div>
+
+                <!-- Main Information -->
+                <group>
+                    <group string="Thông Tin Cơ Bản">
+                        <field name="code"/>
+                        <field name="fund_type"/>
+                        <field name="account_type"/>
+                        <field name="currency_id" options="{'no_create': True}"/>
+                        <field name="is_active"/>
+                    </group>
+                    <group string="Số Dư &amp; Tài Khoản">
+                        <field name="balance"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"
+                               style="font-size: 18px; font-weight: bold;"/>
+                        <field name="available_balance"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+                        <field name="account_id"
+                               options="{'no_create': True}"/>
+                        <field name="account_number"
+                               invisible="account_type != 'bank'"/>
+                        <field name="bank_name"
+                               invisible="account_type != 'bank'"/>
+                    </group>
+                </group>
+
+                <!-- Notebook -->
+                <notebook>
+                    <page string="📋 Giao Dịch Gần Đây" name="transactions">
+                        <field name="transaction_ids"
+                               readonly="1"
+                               context="{'default_fund_account_id': active_id}">
+                            <tree string="Giao Dịch"
+                                  decoration-success="transaction_type == 'income'"
+                                  decoration-danger="transaction_type == 'expense'"
+                                  decoration-muted="state == 'cancelled'">
+                                <field name="date"/>
+                                <field name="name"/>
+                                <field name="transaction_type"/>
+                                <field name="amount"
+                                       sum="Tổng Cộng"
+                                       widget="monetary"/>
+                                <field name="reference"/>
+                                <field name="state"/>
+                            </tree>
+                        </field>
+                    </page>
+
+                    <page string="💸 Chuyển Tiền" name="transfers">
                         <group>
-                            <group>
-                                <field name="code"/>
-                                <field name="fund_type"/>
-                                <field name="currency_id"/>
-                                <field name="is_active"/>
-                            </group>
-                            <group>
-                                <field name="account_id"/>
-                                <field name="balance" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                            </group>
-                        </group>
-
-                        <notebook>
-                            <page string="Giao dịch" name="transactions">
-                                <field name="transaction_ids" readonly="1">
-                                    <tree>
+                            <group string="📤 Chuyển Đi">
+                                <field name="transfer_from_ids" nolabel="1">
+                                    <tree decoration-info="state == 'pending'">
                                         <field name="date"/>
                                         <field name="name"/>
-                                        <field name="transaction_type"/>
-                                        <field name="amount" sum="Total"/>
+                                        <field name="to_fund_id"/>
+                                        <field name="amount" widget="monetary"/>
                                         <field name="state"/>
                                     </tree>
                                 </field>
-                            </page>
-                            <page string="Chuyển tiền" name="transfers">
-                                <group>
-                                    <group string="Chuyển đi">
-                                        <field name="transfer_from_ids" nolabel="1">
-                                            <tree>
-                                                <field name="date"/>
-                                                <field name="name"/>
-                                                <field name="to_fund_id"/>
-                                                <field name="amount"/>
-                                                <field name="state"/>
-                                            </tree>
-                                        </field>
-                                    </group>
-                                    <group string="Chuyển đến">
-                                        <field name="transfer_to_ids" nolabel="1">
-                                            <tree>
-                                                <field name="date"/>
-                                                <field name="name"/>
-                                                <field name="from_fund_id"/>
-                                                <field name="converted_amount"/>
-                                                <field name="state"/>
-                                            </tree>
-                                        </field>
-                                    </group>
-                                </group>
-                            </page>
-                        </notebook>
-                    </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids"/>
-                        <!--                        <field name="activity_ids"/>-->
-                        <field name="message_ids"/>
-                    </div>
-                </form>
-            </field>
-        </record>
+                            </group>
+                            <group string="📥 Chuyển Đến">
+                                <field name="transfer_to_ids" nolabel="1">
+                                    <tree decoration-success="state == 'received'">
+                                        <field name="date"/>
+                                        <field name="name"/>
+                                        <field name="from_fund_id"/>
+                                        <field name="converted_amount" widget="monetary"/>
+                                        <field name="state"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </group>
+                    </page>
+
+                    <page string="📊 Thống Kê" name="statistics">
+                        <group>
+                            <group string="📈 Tổng Quan Tài Chính">
+                                <field name="total_income"
+                                       widget="monetary"
+                                       readonly="1"/>
+                                <field name="total_expense"
+                                       widget="monetary"
+                                       readonly="1"/>
+                                <field name="transaction_count" readonly="1"/>
+                            </group>
+                            <group string="📅 Thông Tin Thời Gian">
+                                <field name="last_transaction_date" readonly="1"/>
+                                <field name="create_date" readonly="1"/>
+                                <field name="write_date" readonly="1"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </sheet>
+
+            <!-- Chatter -->
+            <div class="oe_chatter">
+                <field name="message_follower_ids"/>
+                <field name="message_ids"/>
+            </div>
+        </form>
+    </field>
+</record>
+
 
         <!-- Search View -->
         <record id="view_dpt_fund_account_search" model="ir.ui.view">
