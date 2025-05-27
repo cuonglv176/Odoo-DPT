@@ -26,12 +26,12 @@
                 <form string="Tài khoản Quỹ">
                     <header>
                         <button name="get_balance_in_currency" string="Quy đổi VND" type="object" class="btn-primary"/>
-                        <button name="%(action_bank_transaction_import_wizard)d"
+                        <button name="%(dpt_fund_management.action_bank_transaction_import_wizard)d"
                                 string="Import Giao Dịch"
                                 type="action"
                                 class="btn-primary"
                                 context="{'default_account_id': active_id}"
-                                invisible="account_type != 'bank'"/
+                                invisible="account_type != 'bank'"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
