@@ -14,11 +14,8 @@ class DPTExpenseAllocation(models.Model):
 
     name = fields.Char("Name", reuqired=1)
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
-    main_currency_id = fields.Many2one('res.currency', string='Main Currency', compute="_compute_main_currency")
-    expense_id = fields.Many2one('product.product', string='Expense')
+    main_currency_id = fields.Many2one('res.currency', string='Main Currency', compute="_compute_main_expense")
     total_expense = fields.Monetary(string='Total Expense', currency_field='currency_id')
-    total_expense_in_main_currency = fields.Monetary(string='Total Expense In Main Currency',
-                                                     currency_field='main_currency_id')
     purchase_order_ids = fields.Many2many('purchase.order', string='Purchase Orders')
     shipping_ids = fields.Many2many('dpt.shipping.slip', string='Shipping', compute="_compute_order_shipping")
     sale_ids = fields.Many2many('sale.order', string='Orders', compute="_compute_order_shipping")
@@ -31,8 +28,8 @@ class DPTExpenseAllocation(models.Model):
             item.sale_ids = item.purchase_order_ids.mapped('total_order_expense_ids')
             item.shipping_ids = item.purchase_order_ids.mapped('shipping_slip_ids')
 
-    @api.depends('purchase_order_ids')
-    def _compute_main_currency(self):
+    @api.depends('purchase_order_ids', 'total_expense')
+    def _compute_main_expense(self):
         for item in self:
             item.main_currency_id = self.env.company.currency_id
 
@@ -50,6 +47,10 @@ class DPTExpenseAllocation(models.Model):
         revenue_group_by_uom = {}
         quantity_group_by_uom = {}
         uom_by_order = {}
+        journal_id = self.env['account.journal'].sudo().search([('type', '=', 'purchase')], limit=1)
+        if not journal_id:
+            raise ValidationError("Vui lòng cấu hình sổ nhật ký mua hàng!!")
+        # combine sale with revenue
         for sale_id in self.sale_ids:
             uom_quantity = {}
             for sale_service_id in sale_id.sale_service_ids:
@@ -64,9 +65,9 @@ class DPTExpenseAllocation(models.Model):
                     revenue_group_by_uom[sale_service_id.compute_uom_id] = sale_service_id.amount_total
                 if quantity_group_by_uom.get(sale_service_id.compute_uom_id):
                     quantity_group_by_uom[sale_service_id.compute_uom_id] = quantity_group_by_uom[
-                                                                                sale_service_id.compute_uom_id] + sale_service_id.quantity
+                                                                                sale_service_id.compute_uom_id] + sale_service_id.compute_value
                 else:
-                    quantity_group_by_uom[sale_service_id.compute_uom_id] = sale_service_id.quantity
+                    quantity_group_by_uom[sale_service_id.compute_uom_id] = sale_service_id.compute_value
                 if uom_quantity.get(sale_service_id.compute_uom_id):
                     uom_quantity[sale_service_id.compute_uom_id] = uom_quantity[
                                                                        sale_service_id.compute_uom_id] + sale_service_id.compute_value
@@ -76,54 +77,72 @@ class DPTExpenseAllocation(models.Model):
                 uom_by_order.update({
                     sale_id: uom_quantity
                 })
-        # xử lý phân bổ
-        if revenue_group_by_uom:
-            expense_group_by_uom = {}
-            for uom_id, revenue in revenue_group_by_uom.items():
-                expense_group_by_uom[uom_id] = self.total_expense_in_main_currency / total_revenue * revenue
-            if uom_by_order:
-                expense_by_order = {}
-                for sale_id, order_uom_quantity in uom_by_order.items():
-                    expense = 0
-                    for uom_id, uom_quantity in order_uom_quantity.items():
-                        expense += uom_quantity * expense_group_by_uom.get(uom_id, 0) / quantity_group_by_uom.get(
-                            uom_id)
-                    expense_by_order[sale_id] = expense
-                if expense_by_order:
-                    journal_id = self.env['account.journal'].sudo().search([('type', '=', 'purchase')], limit=1)
-                    if not journal_id:
-                        raise ValidationError("Vui lòng cấu hình sổ nhật ký mua hàng!!")
-                    move_id = self.env['account.move'].sudo().create({
-                        # 'partner_id': self.shipping_id.po_id.partner_id.id,
-                        # 'sale_id': sale_id.id,
-                        'journal_id': journal_id.id,
-                        'expense_allocation_id': self.id,
-                    })
-                    move_line_vals = []
-                    for sale_id, expense in expense_by_order.items():
-                        move_line_vals.append({
-                            'move_id': move_id.id,
-                            'journal_id': journal_id.id,
-                            'product_id': self.expense_id.id,
-                            'account_id': self.expense_id.property_account_expense_id.id,
-                            'display_type': 'product',
-                            'price_unit': expense,
-                            'quantity': 1,
-                            'expense_id': self.expense_id.id,
-                        })
-                    for partner_id in self.purchase_order_ids.mapped('partner_id'):
-                        if not partner_id:
-                            continue
-                        po_ids = self.purchase_order_ids.filtered(lambda po: po.partner_id == partner_id)
-                        move_line_vals.append({
-                            'move_id': move_id.id,
-                            'partner_id': partner_id.id,
-                            'journal_id': journal_id.id,
-                            'account_id': partner_id.property_account_payable_id.id if partner_id.property_account_payable_id else None,
-                            'display_type': 'payment_term',
-                            'credit': sum(po_ids.mapped('amount_total')),
-                            'balance': -sum(po_ids.mapped('amount_total')),
-                            'expense_id': self.expense_id.id,
-                        })
-                    self.env['account.move.line'].create(move_line_vals)
-                    move_id.action_post()
+        # combine expense with value
+        expense_by_value = {}
+        for po_id in self.purchase_order_ids:
+            for order_line in po_id.order_line:
+                if not order_line.product_id.can_be_expensed:
+                    continue
+                key = f"{order_line.product_id.id}-{order_line.order_id.partner_id.id}"
+                if expense_by_value.get(key):
+                    expense_by_value[key] = expense_by_value[key] + order_line.price_subtotal3
+                else:
+                    expense_by_value[key] = order_line.price_subtotal3
+
+        if not expense_by_value:
+            raise ValidationError("Không có chi phí nào để phân bổ!!")
+        move_line_vals = []
+        for partner_expense, total_expense in expense_by_value.items():
+            expense_allocated = 0
+            expense_id = self.env['product.product'].sudo().browse(int(partner_expense.split('-')[0]))
+            partner_id = self.env['res.partner'].sudo().browse(int(partner_expense.split('-')[1]))
+            # xử lý phân bổ
+            if revenue_group_by_uom:
+                expense_group_by_uom = {}
+                for uom_id, revenue in revenue_group_by_uom.items():
+                    expense_group_by_uom[uom_id] = round(total_expense / total_revenue * revenue, 2)
+                if uom_by_order:
+                    expense_by_order = {}
+                    index = 1
+                    for sale_id, order_uom_quantity in uom_by_order.items():
+                        if index != len(uom_by_order):
+                            expense = 0
+                            for uom_id, uom_quantity in order_uom_quantity.items():
+                                expense += round((uom_quantity * expense_group_by_uom.get(uom_id,
+                                                                                   0) / quantity_group_by_uom.get(
+                                    uom_id)), 0)
+                            expense_allocated += expense
+                        else:
+                            expense = total_expense - expense_allocated
+                        expense_by_order[sale_id] = expense
+                        index += 1
+                    if expense_by_order:
+                        for sale_id, expense in expense_by_order.items():
+                            move_line_vals.append((0, 0, {
+                                'journal_id': journal_id.id,
+                                'product_id': expense_id.id,
+                                'sale_order_id': sale_id.id,
+                                'account_id': expense_id.property_account_expense_id.id,
+                                'display_type': 'product',
+                                'price_unit': expense,
+                                'debit': expense,
+                                'balance': expense,
+                                'quantity': 1,
+                                # 'expense_id': expense_id.id,
+                            }))
+
+                move_line_vals.append((0, 0, {
+                    'partner_id': partner_id.id,
+                    'journal_id': journal_id.id,
+                    'account_id': partner_id.property_account_payable_id.id if partner_id.property_account_payable_id else None,
+                    'display_type': 'payment_term',
+                    'credit': total_expense,
+                    'balance': -total_expense,
+                    # 'expense_id': expense_id.id,
+                }))
+        move_id = self.env['account.move'].sudo().create({
+            'journal_id': journal_id.id,
+            'expense_allocation_id': self.id,
+            'line_ids': move_line_vals
+        })
+        move_id.action_post()

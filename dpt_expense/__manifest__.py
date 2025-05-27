@@ -2,7 +2,7 @@
 {
     'name': "DPT Expense",
 
-    'depends': ['base', 'hr_expense', 'dpt_shipping', 'purchase', 'dpt_purchase_management'],
+    'depends': ['base', 'account', 'hr_expense', 'dpt_shipping', 'purchase', 'dpt_purchase_management'],
 
     'data': [
         'security/ir.model.access.csv',
@@ -12,4 +12,3 @@
         'views/uom_uom.xml',
     ],
 }
-
