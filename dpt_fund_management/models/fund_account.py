@@ -276,20 +276,7 @@ class DptFundAccount(models.Model):
             'target': 'new',
         }
 
-    def action_reconcile_account(self):
-        """Đối soát tài khoản"""
-        self.ensure_one()
 
-        return {
-            'name': _('Đối Soát Tài Khoản - %s') % self.name,
-            'type': 'ir.actions.act_window',
-            'res_model': 'dpt.fund.reconcile.wizard',
-            'view_mode': 'form',
-            'target': 'new',
-            'context': {
-                'default_account_id': self.id,
-            }
-        }
 
     @api.model
     def create(self, vals):

@@ -46,14 +46,6 @@
                         type="object"
                         class="btn-secondary"
                         help="Xuất giao dịch ra file Excel"/>
-
-                <!-- Button Đối soát -->
-                <button name="action_reconcile_account"
-                        string="🔄 Đối Soát"
-                        type="object"
-                        class="btn-info"
-                        invisible="account_type != 'bank'"
-                        help="Đối soát số dư tài khoản"/>
             </header>
 
             <sheet>
@@ -164,7 +156,6 @@
                                 <field name="amount"
                                        sum="Tổng Cộng"
                                        widget="monetary"/>
-                                <field name="reference"/>
                                 <field name="state"/>
                             </tree>
                         </field>
