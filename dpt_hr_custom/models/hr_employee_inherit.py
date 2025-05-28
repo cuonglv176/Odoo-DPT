@@ -20,7 +20,7 @@ class HrEmployee(models.Model):
    company_join_date = fields.Date(string='Thời gian vào công ty')
    legal_entity = fields.Selection([
        ('dpt', 'DPT'),
-       ('lvt', 'LVT')
+       ('ltv', 'LTV')
    ], string='Pháp nhân', default='dpt')
    has_children = fields.Selection([
        ('yes', 'Đã có con'),
@@ -28,7 +28,6 @@ class HrEmployee(models.Model):
    ], string='Tình trạng con cái', default='no')
    identification_date = fields.Date('Ngày cấp CCCD', groups="hr.group_hr_user", tracking=True)
    place_of_identification = fields.Char('Nơi cấp CCCD', groups="hr.group_hr_user", tracking=True)
-
    @api.onchange('job_id')
    def onchange_job_id(self):
        self.department_id = self.job_id.department_id
