@@ -626,15 +626,13 @@ class KsCustomReport(models.Model):
             rec.ks_cr_column_ids = False
 
     def ks_query_validate(self, ks_query):
-        with api.Environment.manage():
-            try:
-                new_cr = self.pool.cursor()
-                new_cr.execute(ks_query)
-                header_rec = [(col.name, col.type_code) for col in new_cr.description]
-            except Exception as e:
-                raise UserError(_(e))
-            finally:
-                new_cr.close()
+        try:
+            self.env.cr.execute(ks_query)
+            header_rec = [(col.name, col.type_code) for col in self.env.cr.description]
+            self.env.cr.rollback()  # Rollback để không thay đổi dữ liệu
+        except Exception as e:
+            self.env.cr.rollback()  # Đảm bảo rollback khi có lỗi
+            raise UserError(_(str(e)))
 
         if header_rec:
             return header_rec
