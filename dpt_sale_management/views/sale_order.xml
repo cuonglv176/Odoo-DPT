@@ -89,6 +89,9 @@
 
                 <!-- Tab para servicios reales -->
                 <page name="sale_service" string="Dịch vụ thực tế">
+                    <group>
+                        <field name="confirm_service_ticket" widget="boolean_toggle"/>
+                    </group>
                     <separator string="COMBO"/>
                     <field name="service_combo_ids" readonly="state == 'cancel' or locked">
                         <tree editable="bottom">
