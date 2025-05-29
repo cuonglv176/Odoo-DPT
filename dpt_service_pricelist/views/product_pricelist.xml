@@ -164,13 +164,13 @@
             <field name="arch" type="xml">
                 <tree string="Bảng giá Combo">
                     <field name="combo_id"/>
-                    <field name="uom_id"/>
+<!--                    <field name="uom_id"/>-->
                     <field name="compute_price"/>
-                    <field name="fixed_price" string="Giá" widget="monetary"/>
+<!--                    <field name="fixed_price" string="Giá" widget="monetary"/>-->
                     <field name="currency_id"/>
                     <field name="date_start"/>
                     <field name="date_end"/>
-                    <field name="min_amount" widget="monetary"/>
+<!--                    <field name="min_amount" widget="monetary"/>-->
                 </tree>
             </field>
         </record>
