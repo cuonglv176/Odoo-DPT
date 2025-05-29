@@ -291,7 +291,6 @@
                             <field name="sale_service_ids" domain="[('service_id.name', '=', 'Thanh toán quốc tế')]" nolabel="1">
                                 <tree editable="bottom">
                                     <field name="service_id"/>
-                                    <field name="payment_amount"/>
                                     <field name="currency_id"/>
                                     <field name="note"/>
                                 </tree>
