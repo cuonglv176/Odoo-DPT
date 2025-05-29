@@ -41,6 +41,10 @@ class DPTSaleServiceManagement(models.Model):
     planned_sale_id = fields.Many2one('sale.order', string='Planned Order')
     is_price_fixed = fields.Boolean(string='Đã chốt giá', copy=False, tracking=True,
                                     help='Đánh dấu dịch vụ đã được chốt giá với khách')
+    is_confirmed_for_ticket = fields.Boolean(string='Xác nhận tạo ticket', copy=False, tracking=True,
+                                    help='Đánh dấu dịch vụ đã được xác nhận tạo ticket')
+    payment_amount = fields.Monetary(currency_field='currency_id', string='Số tiền cần thanh toán', 
+                                    help='Số tiền cần thanh toán của dịch vụ Thanh toán quốc tế')
 
     @api.onchange('price')
     def onchange_check_price(self):

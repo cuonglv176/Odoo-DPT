@@ -273,6 +273,7 @@
                             <field name="amount_total" readonly="1" force_save="1"/>
                             <field name="department_id" context="{'dpt_sale_management': 1}"/>
                             <field name="note"/>
+                            <field name="payment_amount" invisible="service_id.name != 'Thanh toán quốc tế'"/>
                         </tree>
                     </field>
                     <group col="6" class="mt-2 mt-md-0">
@@ -282,6 +283,21 @@
                             <field name="service_total_amount" colspan="2" readonly="1"/>
                         </group>
                         <div class="clearfix"/>
+                    </group>
+                </page>
+
+                <page name="service_fields" string="Các trường thông tin dịch vụ">
+                    <group>
+                        <group string="Thông tin thanh toán quốc tế">
+                            <field name="sale_service_ids" domain="[('service_id.name', '=', 'Thanh toán quốc tế')]" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="service_id"/>
+                                    <field name="payment_amount"/>
+                                    <field name="currency_id"/>
+                                    <field name="note"/>
+                                </tree>
+                            </field>
+                        </group>
                     </group>
                 </page>
 
