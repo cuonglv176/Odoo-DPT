@@ -273,7 +273,6 @@
                             <field name="amount_total" readonly="1" force_save="1"/>
                             <field name="department_id" context="{'dpt_sale_management': 1}"/>
                             <field name="note"/>
-                            <field name="payment_amount" invisible="service_id.name != 'Thanh toán quốc tế'"/>
                         </tree>
                     </field>
                     <group col="6" class="mt-2 mt-md-0">
