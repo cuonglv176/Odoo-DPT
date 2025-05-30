@@ -195,31 +195,29 @@ class DptExportImportLine(models.Model):
 
     def _inverse_dpt_price_unit(self):
         for rec in self:
-            if rec.dpt_exchange_rate:
-                dpt_price = ((rec.dpt_price_unit / rec.dpt_exchange_rate) - rec.dpt_tax_import - rec.dpt_tax_other) / 0.1
+            dpt_price = 0  # Mặc định để đảm bảo biến tồn tại
+
+            if rec.dpt_exchange_rate and rec.dpt_exchange_rate != 0:
+                dpt_price = ((
+                                         rec.dpt_price_unit / rec.dpt_exchange_rate) - rec.dpt_tax_import - rec.dpt_tax_other) / 0.1
             else:
-                dpt_price = 0
+                _logger.warning(f"[DPT] Tỷ giá = 0 hoặc None ở record ID {rec.id}, không thể tính dpt_price.")
+
             if rec.declaration_type == 'usd':
-                query = f"""
-                        UPDATE dpt_export_import_line
-                        SET dpt_price_usd = %s
-                        WHERE id = %s
-                    """
-                self.env.cr.execute(query, (dpt_price, rec.id))
+                self.env.cr.execute(
+                    "UPDATE dpt_export_import_line SET dpt_price_usd = %s WHERE id = %s",
+                    (dpt_price, rec.id)
+                )
             elif rec.declaration_type == 'cny':
-                query = f"""
-                                        UPDATE dpt_export_import_line
-                                        SET dpt_price_cny_vnd = %s
-                                        WHERE id = %s
-                                    """
-                self.env.cr.execute(query, (dpt_price, rec.id))
+                self.env.cr.execute(
+                    "UPDATE dpt_export_import_line SET dpt_price_cny_vnd = %s WHERE id = %s",
+                    (dpt_price, rec.id)
+                )
             elif rec.declaration_type == 'krw':
-                query = f"""
-                                        UPDATE dpt_export_import_line
-                                        SET dpt_price_krw_vnd = %s
-                                        WHERE id = %s
-                                    """
-                self.env.cr.execute(query, (dpt_price, rec.id))
+                self.env.cr.execute(
+                    "UPDATE dpt_export_import_line SET dpt_price_krw_vnd = %s WHERE id = %s",
+                    (dpt_price, rec.id)
+                )
 
     def action_check_lot_name(self):
         if not self.stock_picking_ids:
