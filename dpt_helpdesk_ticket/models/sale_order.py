@@ -22,27 +22,30 @@ class SaleOrder(models.Model):
                 if value[0] != 0:
                     continue
                 val_create = value[2]
-                service_id = self.env['dpt.service.management'].browse(val_create['service_id'])
-                ticket_id = self.env['helpdesk.ticket'].create({
-                    'sale_id': self.id,
-                    'partner_id': self.partner_id.id,
-                    'department_id': service_id.department_id.id,
-                    'team_id': service_id.helpdesk_team_id.id,
-                })
                 sale_service_id = self.sale_service_ids.search(
                     [('service_id', '=', service_id.id), ('sale_id', '=', self.id)], limit=1)
-                self.env['dpt.helpdesk.servie.line'].create({
-                    'sale_service_id': sale_service_id.id,
-                    'service_id': val_create.get('service_id'),
-                    'description': val_create.get('description'),
-                    'qty': val_create.get('compute_value'),
-                    'uom_id': val_create.get('uom_id'),
-                    'price': val_create.get('price'),
-                    'currency_id': val_create.get('currency_id'),
-                    'amount_total': val_create.get('amount_total'),
-                    'parent_id': ticket_id.id
-                    # 'status': r.price_status,
-                })
+                helpdesk_servie = self.env['dpt.helpdesk.servie.line'].search(
+                    [('sale_service_id', '=', sale_service_id.id)])
+                if sale_service_id.is_create_ticket and not helpdesk_servie:
+                    service_id = self.env['dpt.service.management'].browse(val_create['service_id'])
+                    ticket_id = self.env['helpdesk.ticket'].create({
+                        'sale_id': self.id,
+                        'partner_id': self.partner_id.id,
+                        'department_id': service_id.department_id.id,
+                        'team_id': service_id.helpdesk_team_id.id,
+                    })
+                    self.env['dpt.helpdesk.servie.line'].create({
+                        'sale_service_id': sale_service_id.id,
+                        'service_id': val_create.get('service_id'),
+                        'description': val_create.get('description'),
+                        'qty': val_create.get('compute_value'),
+                        'uom_id': val_create.get('uom_id'),
+                        'price': val_create.get('price'),
+                        'currency_id': val_create.get('currency_id'),
+                        'amount_total': val_create.get('amount_total'),
+                        'parent_id': ticket_id.id
+                        # 'status': r.price_status,
+                    })
         self.action_create_ticket_first()
         return rec
 

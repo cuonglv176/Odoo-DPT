@@ -64,6 +64,7 @@
                             <!--                            <field name="currency_id" invisible="1"/>-->
                             <field name="amount_total" readonly="1" force_save="1"/>
                             <field name="department_id" context="{'dpt_sale_management': 1}"/>
+                            <field name="is_create_ticket" widget="boolean_toggle"/>
                             <field name="note"/>
                         </tree>
                     </field>

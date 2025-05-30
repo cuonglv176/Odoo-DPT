@@ -26,6 +26,7 @@ class DPTSaleServiceManagement(models.Model):
     compute_uom_id = fields.Many2one('uom.uom', 'Compute Unit')
     compute_value = fields.Float('Compute Value', default=1)
     note = fields.Text(string='Note')
+    is_create_ticket = fields.Boolean(string='Tạo Ticket', default=True)
 
     @api.onchange('price')
     def onchange_check_price(self):
