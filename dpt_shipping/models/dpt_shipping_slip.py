@@ -7,7 +7,6 @@ import openpyxl
 from openpyxl.styles import Alignment, Border, Side, Font
 from openpyxl.drawing.image import Image
 import io
-#UngHoangTu
 
 class DPTShippingSlip(models.Model):
     _name = 'dpt.shipping.slip'

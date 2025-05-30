@@ -72,11 +72,12 @@ class StockPicking(models.Model):
 
     def _compute_in_draft_shipping(self):
         for item in self:
-            draft_shipping_slip_ids = self.env['dpt.shipping.slip'].sudo().search(
-                ['|', ('out_picking_ids', 'in', [item.id]), ('in_picking_ids', 'in', [item.id]), '|', '&',
-                 ('vehicle_country', '=', 'chinese'), ('cn_vehicle_stage_id.is_draft_stage', '=', True), '&',
-                 ('vehicle_country', '=', 'vietnamese'), ('vn_vehicle_stage_id.is_draft_stage', '=', True), '&',
-                 ('vehicle_country', '=', 'last_delivery_vn'), ('last_vn_vehicle_stage_id.is_draft_stage', '=', True)])
+            draft_shipping_slip_ids = self.env['dpt.shipping.slip'].sudo().search([
+            '|', '|',
+            '&', ('vehicle_country', '=', 'chinese'), ('cn_vehicle_stage_id.is_draft_stage', '=', True),
+            '&', ('vehicle_country', '=', 'vietnamese'), ('vn_vehicle_stage_id.is_draft_stage', '=', True),
+            '&', ('vehicle_country', '=', 'last_delivery_vn'), ('last_vn_vehicle_stage_id.is_draft_stage', '=', True)
+            ])
             item.in_draft_shipping = True if draft_shipping_slip_ids else False
 
     def _search_in_draft_shipping(self, operator, value):

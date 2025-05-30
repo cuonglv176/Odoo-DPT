@@ -39,7 +39,6 @@ class HrEmployee(models.Model):
 class HrEmployeePublic(models.Model):
    _inherit = 'hr.employee.public'
 
-
    code = fields.Char('Code', related='employee_id.code', compute_sudo=True)
    dpt_level = fields.Selection([
        ('l1', 'L1'),
@@ -51,3 +50,15 @@ class HrEmployeePublic(models.Model):
    parent_department_id = fields.Many2one('hr.department', string='Phòng', related='employee_id.parent_department_id', compute_sudo=True)
    center_id = fields.Many2one('hr.department',string='Trung tâm', related='employee_id.center_id', compute_sudo=True)
    bod_code = fields.Char(string='Mã BOD', related='employee_id.bod_code', compute_sudo=True)
+   
+   company_join_date = fields.Date(string='Thời gian vào công ty', related='employee_id.company_join_date', compute_sudo=True)
+   legal_entity = fields.Selection([
+       ('dpt', 'DPT'),
+       ('ltv', 'LTV')
+   ], string='Pháp nhân', related='employee_id.legal_entity', compute_sudo=True)
+   has_children = fields.Selection([
+       ('yes', 'Đã có con'),
+       ('no', 'Chưa có con')
+   ], string='Tình trạng con cái', related='employee_id.has_children', compute_sudo=True)
+   identification_date = fields.Date('Ngày cấp CCCD', related='employee_id.identification_date', compute_sudo=True)
+   place_of_identification = fields.Char('Nơi cấp CCCD', related='employee_id.place_of_identification', compute_sudo=True)
