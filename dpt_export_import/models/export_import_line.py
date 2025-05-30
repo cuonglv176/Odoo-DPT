@@ -195,7 +195,7 @@ class DptExportImportLine(models.Model):
 
     def _inverse_dpt_price_unit(self):
         for rec in self:
-            dpt_price = 0  # Mặc định để đảm bảo biến tồn tại
+            dpt_price = 1
 
             if rec.dpt_exchange_rate and rec.dpt_exchange_rate != 0:
                 dpt_price = ((
