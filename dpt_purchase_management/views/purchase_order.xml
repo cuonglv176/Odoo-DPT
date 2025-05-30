@@ -279,6 +279,26 @@
                         <div class="clearfix"/>
                     </group>
                 </page>
+                 <page name="sale_field" string="Trường thông tin">
+                    <field name="fields_ids" >
+                        <tree editable="bottom" default_order="sequence desc" decoration-danger="type=='required'">
+                            <field name="sequence" widget="handle"/>
+                            <field name="service_id"/>
+                            <field name="fields_id"/>
+                            <field name="type" column_invisible="1"/>
+                            <field name="fields_type" column_invisible="1"/>
+                            <field name="value_char" invisible="fields_type != 'char'"
+                                   required="type == 'required' and fields_type == 'char'"/>
+                            <field name="value_integer" invisible="fields_type != 'integer'"
+                                   required="type == 'required' and fields_type == 'integer'"/>
+                            <field name="value_date" invisible="fields_type != 'date'"
+                                   required="type == 'required' and fields_type == 'date'"/>
+                            <field name="selection_value_id" invisible="fields_type != 'selection'"
+                                   required="type == 'required' and fields_type == 'selection'"
+                                   domain="[('fields_id','=',fields_id)]"/>
+                        </tree>
+                    </field>
+                </page>
 
             </page>
             <xpath expr="//field[@name='order_line']/tree/field[@name='product_qty']" position="after">

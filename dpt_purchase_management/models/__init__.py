@@ -9,3 +9,4 @@ from . import purchase_order_line_package_detail
 from . import sale_order
 from . import uom_category
 from . import uom_uom
+from . import partner_service_fields
