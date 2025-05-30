@@ -63,6 +63,10 @@ class DPTService(models.Model):
     # image = fields.Image("Image", required=True, tracking=True)
     visible_to_sale_cs = fields.Boolean('Hiển thị với CS, Sale', default=True,
                                        help='Khi tắt, dịch vụ này chỉ hiển thị cho vận hành và kế toán')
+    is_allocation_unit_service = fields.Boolean('Dịch vụ là dịch vụ xác định đơn vị phân bổ', 
+                                              default=False, 
+                                              tracking=True,
+                                              help='Đánh dấu dịch vụ này là dịch vụ xác định đơn vị phân bổ')
 
     _sql_constraints = [
         ('code_name_index', 'CREATE INDEX code_name_index ON dpt_service_management (code, name)',
