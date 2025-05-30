@@ -32,11 +32,15 @@ class DPTShippingSlip(models.Model):
     ticket_ids = fields.Many2many('helpdesk.ticket', string="Tickets")
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle')
     vehicle_country = fields.Selection(related='vehicle_id.country')
-    vn_vehicle_stage_id = fields.Many2one('dpt.vehicle.stage', 'Vietnamese Vehicle Stage',
-                                          domain=[('country', '=', 'vietnamese')])
-    cn_vehicle_stage_id = fields.Many2one('dpt.vehicle.stage', 'Chinese Vehicle Stage',
-                                          domain=[('country', '=', 'chinese')])
-    vehicle_stage_log_ids = fields.One2many('dpt.vehicle.stage.log', 'shipping_slip_id', 'Vehicle Stage Log')
+    vehicle_stage_log_ids = fields.One2many('dpt.vehicle.stage.log', 'shipping_slip_id', 
+                                        string='Vehicle Stage Logs', readonly=True)
+    cn_vehicle_stage_id = fields.Many2one('dpt.vehicle.stage', string='Trạng thái xe container Trung Quốc',
+                                        domain=[('country', '=', 'chinese')])
+    vn_vehicle_stage_id = fields.Many2one('dpt.vehicle.stage', string='Trạng thái xe container Việt Nam',
+                                        domain=[('country', '=', 'vietnamese')])
+    last_vn_vehicle_stage_id = fields.Many2one('dpt.vehicle.stage', string='Trạng thái xe chặng cuối Việt Nam',
+                                        domain=[('country', '=', 'last_delivery_vn')])
+
     send_shipping_id = fields.Many2one('dpt.shipping.slip', 'Shipping Sent')
     vehicle_driver_id = fields.Many2one(related="vehicle_id.driver_id")
     vehicle_license_plate = fields.Char(related="vehicle_id.license_plate")
@@ -52,13 +56,14 @@ class DPTShippingSlip(models.Model):
     last_shipping_slip = fields.Boolean("Last Shipping Slip")
     is_cn_finish_stage = fields.Boolean(related="cn_vehicle_stage_id.is_finish_stage")
     is_vn_finish_stage = fields.Boolean(related="vn_vehicle_stage_id.is_finish_stage")
+    is_last_vn_finish_stage = fields.Boolean(related="last_vn_vehicle_stage_id.is_finish_stage")
     all_so_locked = fields.Boolean("All SO Locked", compute="_compute_all_so_locked")
     delivery_slip_type = fields.Selection([
         ('container_tq', 'Container TQ'),
         ('container_vn', 'Container VN'),
         ('last_delivery_vn', 'Last Delivery VN'),
     ], "Delivery Slip Type")
-    product_ids = fields.Many2many('product.product', 'Sản phẩm', compute="_compute_product")
+    product_ids = fields.Many2many('product.product', string = 'Sản phẩm', compute="_compute_product")
 
     @api.depends('sale_ids', 'ticket_ids')
     def _compute_product(self):
@@ -159,25 +164,12 @@ class DPTShippingSlip(models.Model):
         return f'{sequence}'
 
     def write(self, vals):
-        if 'vn_vehicle_stage_id' not in vals and 'cn_vehicle_stage_id' not in vals:
+        if 'cn_vehicle_stage_id' not in vals and 'vn_vehicle_stage_id' not in vals and 'last_vn_vehicle_stage_id' not in vals:
             return super().write(vals)
         last_time_record_id = self.vehicle_stage_log_ids.sorted(key=lambda x: x['log_datetime'], reverse=True)[:1]
         last_time = last_time_record_id.log_datetime if last_time_record_id else self.create_date
         log_time = fields.Datetime.now() - last_time
-        if self.vehicle_country == 'vietnamese':
-            current_stage_id = self.vn_vehicle_stage_id
-            res = super().write(vals)
-            next_stage_id = self.vn_vehicle_stage_id
-            if current_stage_id == next_stage_id:
-                return res
-            self.env['dpt.vehicle.stage.log'].create({
-                'vehicle_id': self.vehicle_id.id,
-                'shipping_slip_id': self.id,
-                'current_stage_id': current_stage_id.id,
-                'next_stage_id': next_stage_id.id,
-                'log_time': log_time.total_seconds() / 3600,
-            })
-        elif self.vehicle_country == 'chinese':
+        if self.vehicle_country == 'chinese':
             current_stage_id = self.cn_vehicle_stage_id
             res = super().write(vals)
             next_stage_id = self.cn_vehicle_stage_id
@@ -190,9 +182,36 @@ class DPTShippingSlip(models.Model):
                 'next_stage_id': next_stage_id.id,
                 'log_time': log_time.total_seconds() / 3600,
             })
+        elif self.vehicle_country == 'vietnamese':
+            current_stage_id = self.vn_vehicle_stage_id
+            res = super().write(vals)
+            next_stage_id = self.vn_vehicle_stage_id
+            if current_stage_id == next_stage_id:
+                return res
+            self.env['dpt.vehicle.stage.log'].create({
+                'vehicle_id': self.vehicle_id.id,
+                'shipping_slip_id': self.id,
+                'current_stage_id': current_stage_id.id,
+                'next_stage_id': next_stage_id.id,
+                'log_time': log_time.total_seconds() / 3600,
+            })
+        elif self.vehicle_country == 'last_delivery_vn':
+            current_stage_id = self.last_vn_vehicle_stage_id
+            res = super().write(vals)
+            next_stage_id = self.last_vn_vehicle_stage_id
+            if current_stage_id == next_stage_id:
+                return res
+            self.env['dpt.vehicle.stage.log'].create({
+                'vehicle_id': self.vehicle_id.id,
+                'shipping_slip_id': self.id,
+                'current_stage_id': current_stage_id.id,
+                'next_stage_id': next_stage_id.id,
+                'log_time': log_time.total_seconds() / 3600,
+            })
         else:
             return super().write(vals)
         return res
+
 
     @api.constrains('picking_ids', 'transfer_code', 'transfer_code_chinese')
     def constrains_transfer_code(self):

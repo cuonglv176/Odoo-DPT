@@ -14,7 +14,7 @@ class DPTVehicleStage(models.Model):
         ('chinese', 'Chinese'),
         ('vietnamese1', 'Kho Việt Nam'),
         ('vietnamese2', 'Chặng cuối Việt Nam'),
-    ], default='chinese', string='Country')
+    ], default='chinese', string='Quốc gia')
     active = fields.Boolean('Active', default=True)
     is_draft_stage = fields.Boolean('Is Draft Stage')
     is_ready_stage = fields.Boolean('Is Ready Stage')

@@ -755,13 +755,19 @@ msgid "Vehicle License Plate"
 msgstr "Biển số xe"
 
 #. module: dpt_shipping
-#: model:ir.actions.act_window,name:dpt_shipping.dpt_vehicle_stage_action
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__cn_vehicle_stage_id
+msgid "Chinese Container Vehicle Stage"
+msgstr "Trạng thái xe container Trung Quốc"
+
+#. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__vn_vehicle_stage_id
-#: model:ir.ui.menu,name:dpt_shipping.dpt_vehicle_stage_menu
-#: model_terms:ir.ui.view,arch_db:dpt_shipping.dpt_vehicle_stage_tree_views
-msgid "Vehicle Stage"
-msgstr "Trạng thái xe"
+msgid "Vietnamese Container Vehicle Stage"
+msgstr "Trạng thái xe container Việt Nam"
+
+#. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__last_vn_vehicle_stage_id
+msgid "Last Mile Vietnamese Vehicle Stage"
+msgstr "Trạng thái xe chặng cuối Việt Nam"
 
 #. module: dpt_shipping
 #: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__vehicle_stage_log_ids
@@ -820,3 +826,14 @@ msgstr ""
 #: model:ir.model,name:dpt_shipping.model_dpt_vehicle_stage_log
 msgid "dpt.vehicle.stage.log"
 msgstr ""
+
+#. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_shipping_slip__product_ids
+msgid "Products"
+msgstr "Sản phẩm"
+
+
+#. module: dpt_shipping
+#: model:ir.model.fields,field_description:dpt_shipping.field_dpt_vehicle_stage__country
+msgid "Country"
+msgstr "Quốc gia"
