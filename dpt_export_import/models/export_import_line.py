@@ -197,12 +197,11 @@ class DptExportImportLine(models.Model):
         for rec in self:
             dpt_price = 1
 
-            if rec.dpt_exchange_rate and rec.dpt_exchange_rate != 0:
-                dpt_price = ((
-                                         rec.dpt_price_unit / rec.dpt_exchange_rate) - rec.dpt_tax_import - rec.dpt_tax_other) / 0.1
-            else:
-                _logger.warning(f"[DPT] Tỷ giá = 0 hoặc None ở record ID {rec.id}, không thể tính dpt_price.")
-
+            if rec.dpt_exchange_rate:
+                dpt_exchange_rate = 1
+                if rec.rec.dpt_exchange_rate > 0:
+                    dpt_exchange_rate = rec.dpt_exchange_rate
+                dpt_price = ((rec.dpt_price_unit / dpt_exchange_rate) - rec.dpt_tax_import - rec.dpt_tax_other) / 0.1
             if rec.declaration_type == 'usd':
                 self.env.cr.execute(
                     "UPDATE dpt_export_import_line SET dpt_price_usd = %s WHERE id = %s",
