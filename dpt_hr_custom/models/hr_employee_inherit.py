@@ -50,7 +50,7 @@ class HrEmployeePublic(models.Model):
    parent_department_id = fields.Many2one('hr.department', string='Phòng', related='employee_id.parent_department_id', compute_sudo=True)
    center_id = fields.Many2one('hr.department',string='Trung tâm', related='employee_id.center_id', compute_sudo=True)
    bod_code = fields.Char(string='Mã BOD', related='employee_id.bod_code', compute_sudo=True)
-   
+   #thêm
    company_join_date = fields.Date(string='Thời gian vào công ty', related='employee_id.company_join_date', compute_sudo=True)
    legal_entity = fields.Selection([
        ('dpt', 'DPT'),
