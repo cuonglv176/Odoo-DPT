@@ -53,26 +53,35 @@ class DPTExpenseAllocation(models.Model):
         # combine sale with revenue
         for sale_id in self.sale_ids:
             uom_quantity = {}
-            for sale_service_id in sale_id.sale_service_ids:
-                if not sale_service_id.compute_uom_id or (
-                        sale_service_id.compute_uom_id and not sale_service_id.compute_uom_id.use_for_allocate_expense):
-                    continue
-                total_revenue += sale_service_id.amount_total
-                if revenue_group_by_uom.get(sale_service_id.compute_uom_id):
-                    revenue_group_by_uom[sale_service_id.compute_uom_id] = revenue_group_by_uom[
-                                                                               sale_service_id.compute_uom_id] + sale_service_id.amount_total
-                else:
-                    revenue_group_by_uom[sale_service_id.compute_uom_id] = sale_service_id.amount_total
-                if quantity_group_by_uom.get(sale_service_id.compute_uom_id):
-                    quantity_group_by_uom[sale_service_id.compute_uom_id] = quantity_group_by_uom[
-                                                                                sale_service_id.compute_uom_id] + sale_service_id.compute_value
-                else:
-                    quantity_group_by_uom[sale_service_id.compute_uom_id] = sale_service_id.compute_value
-                if uom_quantity.get(sale_service_id.compute_uom_id):
-                    uom_quantity[sale_service_id.compute_uom_id] = uom_quantity[
-                                                                       sale_service_id.compute_uom_id] + sale_service_id.compute_value
-                else:
-                    uom_quantity[sale_service_id.compute_uom_id] = sale_service_id.compute_value
+            
+            # Bổ sung kiểm tra combo_id trước
+            combo_services = {}  # Dict để lưu các dịch vụ thuộc combo
+            
+            # Lấy danh sách dịch vụ từ các combo trong đơn hàng
+            for combo in sale_id.service_combo_ids:
+                if combo.combo_id and combo.combo_compute_uom_id and combo.combo_compute_uom_id.use_for_allocate_expense:
+                    # Nếu combo có UOM phù hợp, lưu giá trị và cập nhật tổng
+                    total_revenue += combo.amount_total
+                    
+                    if revenue_group_by_uom.get(combo.combo_compute_uom_id):
+                        revenue_group_by_uom[combo.combo_compute_uom_id] += combo.amount_total
+                    else:
+                        revenue_group_by_uom[combo.combo_compute_uom_id] = combo.amount_total
+                        
+                    if quantity_group_by_uom.get(combo.combo_compute_uom_id):
+                        quantity_group_by_uom[combo.combo_compute_uom_id] += combo.combo_compute_value
+                    else:
+                        quantity_group_by_uom[combo.combo_compute_uom_id] = combo.combo_compute_value
+                        
+                    if uom_quantity.get(combo.combo_compute_uom_id):
+                        uom_quantity[combo.combo_compute_uom_id] += combo.combo_compute_value
+                    else:
+                        uom_quantity[combo.combo_compute_uom_id] = combo.combo_compute_value
+                        
+                    # Lưu lại các dịch vụ trong combo này để tránh tính trùng
+                    for service in sale_id.sale_service_ids.filtered(lambda s: s.combo_id.id == combo.id):
+                        combo_services[service.id] = True
+                        
             if uom_quantity:
                 uom_by_order.update({
                     sale_id: uom_quantity
