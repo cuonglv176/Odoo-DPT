@@ -471,7 +471,7 @@ class SaleOrder(models.Model):
                         price_list_item_id = service_price_id
                 elif service_price_id.compute_price == 'table':
                     compute_field_ids = self.fields_ids.filtered(
-                        lambda f: f.using_calculation_price and f.service_id.id == sale_service_id.service_id.id)
+                        lambda f: f.using_calculation_price and f.sale_service_id.id == sale_service_id.id)
                     # compute_field_ids = self.fields_ids.filtered(
                     #     lambda f: f.using_calculation_price and f.sale_service_id.id == sale_service_id.id)
                     _logger.info("compute_field_ids %s", compute_field_ids)
