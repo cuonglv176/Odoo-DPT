@@ -196,12 +196,27 @@ class DptExportImportLine(models.Model):
     def _inverse_dpt_price_unit(self):
         for rec in self:
             dpt_price = 1
-
             if rec.dpt_exchange_rate:
                 dpt_exchange_rate = 1
-                if rec.rec.dpt_exchange_rate > 0:
+                # Fix the typo: rec.rec.dpt_exchange_rate -> rec.dpt_exchange_rate
+                if rec.dpt_exchange_rate > 0:
                     dpt_exchange_rate = rec.dpt_exchange_rate
-                dpt_price = ((rec.dpt_price_unit / dpt_exchange_rate) - rec.dpt_tax_import - rec.dpt_tax_other) / 0.1
+                # Add safety check to prevent division by zero
+                try:
+                    # Ensure we're not dividing by zero
+                    if dpt_exchange_rate != 0:
+                        base_calculation = ( rec.dpt_price_unit / dpt_exchange_rate) - rec.dpt_tax_import - rec.dpt_tax_other
+                        # Add check for the 0.1 division as well (though this shouldn't be zero)
+                        if base_calculation != 0:
+                            dpt_price = base_calculation / 0.1
+                        else:
+                            dpt_price = 0  # or handle this case as needed
+                    else:
+                        dpt_price = 0  # or handle this case as needed
+                except ZeroDivisionError:
+                    dpt_price = 0  # Fallback value
+
+            # Update the database based on declaration type
             if rec.declaration_type == 'usd':
                 self.env.cr.execute(
                     "UPDATE dpt_export_import_line SET dpt_price_usd = %s WHERE id = %s",
