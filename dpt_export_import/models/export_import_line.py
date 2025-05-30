@@ -195,7 +195,10 @@ class DptExportImportLine(models.Model):
 
     def _inverse_dpt_price_unit(self):
         for rec in self:
-            dpt_price = ((rec.dpt_price_unit / rec.dpt_exchange_rate) - rec.dpt_tax_import - rec.dpt_tax_other) / 0.1
+            if rec.dpt_exchange_rate:
+                dpt_price = ((rec.dpt_price_unit / rec.dpt_exchange_rate) - rec.dpt_tax_import - rec.dpt_tax_other) / 0.1
+            else:
+                dpt_price = 0
             if rec.declaration_type == 'usd':
                 query = f"""
                         UPDATE dpt_export_import_line
