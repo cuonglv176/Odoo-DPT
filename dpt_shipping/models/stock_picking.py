@@ -70,7 +70,7 @@ class StockPicking(models.Model):
                     shipping_name.append(shipping_id.name)
             item.shipping_name = ','.join(shipping_name) if shipping_name else None
 
-
+# ghi chú 
     def _compute_in_draft_shipping(self):
         for item in self:
             draft_shipping_slip_ids = self.env['dpt.shipping.slip'].sudo().search([
