@@ -14,6 +14,11 @@ class DPTServiceCombo(models.Model):
     name = fields.Char(string='Tên gói combo', required=True, tracking=True)
     code = fields.Char(string='Mã gói', default='COMBO/', copy=False, readonly=True, tracking=True)
     description = fields.Text(string='Mô tả', tracking=True)
+    quote_type = fields.Selection([
+        ('bao_giao', 'Báo giá là bao giao'),
+        ('all_in', 'Báo giá là all in')
+    ], string='Loại báo giá', default='bao_giao', tracking=True,
+       help="Bao giao là bao vận chuyển, all in là tất cả giá")
     date_start = fields.Date(string='Ngày bắt đầu', tracking=True)
     date_end = fields.Date(string='Ngày kết thúc', tracking=True)
     price = fields.Float(string='Giá gói', tracking=True)

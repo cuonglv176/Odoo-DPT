@@ -48,6 +48,7 @@
                     <group>
                         <group>
                             <field name="code"/>
+                            <field name="quote_type" widget="radio" options="{'horizontal': true}"/>
                             <field name="version"/>
                             <field name="date_start"/>
                             <field name="date_end"/>
@@ -190,6 +191,7 @@
                   decoration-info="state == 'suspended'">
                 <field name="code"/>
                 <field name="name"/>
+                <field name="quote_type"/>
                 <field name="date_start"/>
                 <field name="date_end"/>
                 <field name="version"/>

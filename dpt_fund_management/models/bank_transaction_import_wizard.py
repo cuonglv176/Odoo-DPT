@@ -16,7 +16,7 @@ class BankTransactionImportWizard(models.TransientModel):
     _description = 'Wizard Import Giao Dịch Ngân Hàng'
 
     name = fields.Char('Tên Import', default='Import Giao Dịch Ngân Hàng')
-    excel_file = fields.Binary('File Excel', required=True,
+    excel_file = fields.Binary('File Excel',
                                help="Upload file Excel chứa dữ liệu giao dịch ngân hàng")
     filename = fields.Char('Tên File')
 

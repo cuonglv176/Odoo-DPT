@@ -84,6 +84,7 @@ class ProductPricelist(models.Model):
         vals = {
             'name': _('Phê duyệt: %s') % self.name,
             'category_id': approval_type.id,
+            'pricelist_id': self.id,
             'date': fields.Datetime.now(),
             'request_owner_id': self.env.user.id,
             'reference': f'product.pricelist,{self.id}',

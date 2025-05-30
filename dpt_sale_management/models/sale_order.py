@@ -115,6 +115,8 @@ class SaleOrder(models.Model):
                     }))
             if new_services:
                 self.sale_service_ids = [(4, service.id) for service in self.sale_service_ids] + new_services
+                # Automatically calculate prices from price lists
+                self.action_calculation()
 
     # Nuevo método para manejar combos planificados
     @api.onchange('planned_service_combo_ids')
@@ -154,6 +156,8 @@ class SaleOrder(models.Model):
             if new_services:
                 self.planned_sale_service_ids = [(4, service.id) for service in
                                                  self.planned_sale_service_ids] + new_services
+                # Automatically calculate prices from price lists
+                self.action_calculation()
 
     @api.depends('sale_service_ids', 'sale_service_ids.service_id', 'sale_service_ids.service_id.pricelist_item_ids')
     def compute_show_is_quotation(self):
@@ -210,6 +214,8 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self).create(vals_list)
         res.check_required_fields()
         res.onchange_calculation_tax()
+        # Automatically calculate prices from price lists
+        res.action_calculation()
         return res
 
     def write(self, vals):
@@ -219,6 +225,10 @@ class SaleOrder(models.Model):
             self.onchange_calculation_tax()
         if vals.get('state') == 'sale':
             self.action_update_fields()
+
+        # Automatically calculate prices from price lists if services or combos are modified
+        if 'sale_service_ids' in vals or 'planned_sale_service_ids' in vals or 'service_combo_ids' in vals or 'planned_service_combo_ids' in vals:
+            self.action_calculation()
         return res
 
     def action_unlock(self):
@@ -426,8 +436,15 @@ class SaleOrder(models.Model):
             if not services:
                 continue
 
+            # Lấy loại báo giá từ combo
+            quote_type = combo.combo_id.quote_type or 'bao_giao'  # Mặc định là bao giao nếu không có giá trị
+
             # Tính tổng giá gốc của các dịch vụ trong combo
             total_original_price = sum(service.service_id.price for service in services)
+
+            # Phân loại dịch vụ theo loại báo giá
+            shipping_services = services.filtered(lambda s: s.service_id.name and 'vận chuyển' in s.service_id.name.lower())
+            other_services = services - shipping_services
 
             # Phân bổ giá cho từng dịch vụ
             for service in services:
@@ -448,14 +465,37 @@ class SaleOrder(models.Model):
                         compute_value = compute_field.value_integer or 1
                         compute_uom_id = compute_field.uom_id.id
 
-                # Tính giá phân bổ
-                if total_original_price <= 0:
-                    # Nếu tổng giá gốc bằng 0, phân bổ đều
-                    distributed_price = combo_price / len(services)
-                else:
-                    # Phân bổ theo tỉ lệ giá gốc
-                    ratio = service.service_id.price / total_original_price
-                    distributed_price = combo_price * ratio
+                # Tính giá phân bổ dựa trên loại báo giá
+                if quote_type == 'bao_giao':
+                    # Nếu là "bao giao" (bao vận chuyển)
+                    if service in shipping_services:
+                        # Dịch vụ vận chuyển được tính toàn bộ giá
+                        distributed_price = service.service_id.price
+                    else:
+                        # Các dịch vụ khác được phân bổ phần còn lại
+                        shipping_total = sum(s.service_id.price for s in shipping_services)
+                        remaining_price = combo_price - shipping_total
+
+                        if len(other_services) > 0:
+                            if total_original_price - shipping_total <= 0:
+                                # Nếu tổng giá gốc (trừ vận chuyển) bằng 0, phân bổ đều
+                                distributed_price = remaining_price / len(other_services)
+                            else:
+                                # Phân bổ theo tỉ lệ giá gốc
+                                non_shipping_total = total_original_price - shipping_total
+                                ratio = service.service_id.price / non_shipping_total
+                                distributed_price = remaining_price * ratio
+                        else:
+                            distributed_price = 0
+                else:  # 'all_in'
+                    # Nếu là "all in" (tất cả giá), phân bổ theo tỉ lệ giá gốc
+                    if total_original_price <= 0:
+                        # Nếu tổng giá gốc bằng 0, phân bổ đều
+                        distributed_price = combo_price / len(services)
+                    else:
+                        # Phân bổ theo tỉ lệ giá gốc
+                        ratio = service.service_id.price / total_original_price
+                        distributed_price = combo_price * ratio
 
                 # Cập nhật đơn giá và số lượng
                 service.with_context(from_pricelist=True).write({
@@ -483,7 +523,14 @@ class SaleOrder(models.Model):
             if not planned_services:
                 continue
 
+            # Lấy loại báo giá từ combo
+            quote_type = planned_combo.combo_id.quote_type or 'bao_giao'  # Mặc định là bao giao nếu không có giá trị
+
             total_original_price = sum(service.service_id.price for service in planned_services)
+
+            # Phân loại dịch vụ theo loại báo giá
+            shipping_services = planned_services.filtered(lambda s: s.service_id.name and 'vận chuyển' in s.service_id.name.lower())
+            other_services = planned_services - shipping_services
 
             # Phân bổ giá cho từng dịch vụ dự kiến
             for service in planned_services:
@@ -504,14 +551,37 @@ class SaleOrder(models.Model):
                         compute_value = compute_field.value_integer or 1
                         compute_uom_id = compute_field.uom_id.id
 
-                # Tính giá phân bổ
-                if total_original_price <= 0:
-                    # Nếu tổng giá gốc bằng 0, phân bổ đều
-                    distributed_price = combo_price / len(planned_services)
-                else:
-                    # Phân bổ theo tỉ lệ giá gốc
-                    ratio = service.service_id.price / total_original_price
-                    distributed_price = combo_price * ratio
+                # Tính giá phân bổ dựa trên loại báo giá
+                if quote_type == 'bao_giao':
+                    # Nếu là "bao giao" (bao vận chuyển)
+                    if service in shipping_services:
+                        # Dịch vụ vận chuyển được tính toàn bộ giá
+                        distributed_price = service.service_id.price
+                    else:
+                        # Các dịch vụ khác được phân bổ phần còn lại
+                        shipping_total = sum(s.service_id.price for s in shipping_services)
+                        remaining_price = combo_price - shipping_total
+
+                        if len(other_services) > 0:
+                            if total_original_price - shipping_total <= 0:
+                                # Nếu tổng giá gốc (trừ vận chuyển) bằng 0, phân bổ đều
+                                distributed_price = remaining_price / len(other_services)
+                            else:
+                                # Phân bổ theo tỉ lệ giá gốc
+                                non_shipping_total = total_original_price - shipping_total
+                                ratio = service.service_id.price / non_shipping_total
+                                distributed_price = remaining_price * ratio
+                        else:
+                            distributed_price = 0
+                else:  # 'all_in'
+                    # Nếu là "all in" (tất cả giá), phân bổ theo tỉ lệ giá gốc
+                    if total_original_price <= 0:
+                        # Nếu tổng giá gốc bằng 0, phân bổ đều
+                        distributed_price = combo_price / len(planned_services)
+                    else:
+                        # Phân bổ theo tỉ lệ giá gốc
+                        ratio = service.service_id.price / total_original_price
+                        distributed_price = combo_price * ratio
 
                 # Cập nhật đơn giá và số lượng
                 service.with_context(from_pricelist=True).write({
