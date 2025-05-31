@@ -7,7 +7,8 @@ class ServiceCombo(models.Model):
     _description = 'Combo dịch vụ'
     _rec_name = 'combo_id'
 
-    combo_id = fields.Many2one('dpt.service.combo', string='Combo')
+    combo_id = fields.Many2one('dpt.service.combo', string='Combo', 
+                              domain="[('state', '=', 'active')]")
     code = fields.Char('Mã combo', related='combo_id.code')
     description = fields.Text('Mô tả')
     service_ids = fields.Many2many('dpt.service.management', string='Dịch vụ trong combo',
@@ -24,6 +25,12 @@ class ServiceCombo(models.Model):
     is_price_fixed = fields.Boolean(string='Đã chốt giá', copy=False, tracking=True,
                                     help='Đánh dấu combo dịch vụ đã được chốt giá với khách')
     locked_price = fields.Float('Giá đã khóa', copy=False)
+    
+    # Thêm trường cho phân bổ chi phí
+    combo_compute_uom_id = fields.Many2one('uom.uom', string='Đơn vị',
+                                          help='Đơn vị tính dùng để phân bổ chi phí')
+    combo_compute_value = fields.Float(string='Số lượng', default=1.0,
+                                      help='Giá trị dùng để phân bổ chi phí')
 
     # Para almacenar temporalmente los servicios durante la creación
     _services_to_create = {}
