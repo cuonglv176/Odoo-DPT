@@ -22,12 +22,12 @@ class SaleOrder(models.Model):
                 if value[0] != 0:
                     continue
                 val_create = value[2]
+                service_id = self.env['dpt.service.management'].browse(val_create['service_id'])
                 sale_service_id = self.sale_service_ids.search(
                     [('service_id', '=', service_id.id), ('sale_id', '=', self.id)], limit=1)
                 helpdesk_servie = self.env['dpt.helpdesk.servie.line'].search(
                     [('sale_service_id', '=', sale_service_id.id)])
                 if sale_service_id.is_create_ticket and not helpdesk_servie:
-                    service_id = self.env['dpt.service.management'].browse(val_create['service_id'])
                     ticket_id = self.env['helpdesk.ticket'].create({
                         'sale_id': self.id,
                         'partner_id': self.partner_id.id,
