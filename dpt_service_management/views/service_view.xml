@@ -16,6 +16,7 @@
                             <field name="code"/>
                             <field name="parent_id" string="Dịch vụ tầng trên"/>
                             <field name="visible_to_sale_cs" widget="boolean_toggle"/>
+                            <field name="is_allocation_unit_service" widget="boolean_toggle"/>
                             <field name="service_type_id"/>
                             <field name="cost_account_id"/>
                             <field name="revenue_account_id"/>
@@ -79,7 +80,12 @@
                                     <field name="description"/>
                                     <field name="selection_value_ids" widget="many2many_tags"/>
                                     <field name="type" widget="radio"/>
-                                    <field name="uom_id" invisible="not using_calculation_price"
+                                    <!--                                    <field name="uom_id" invisible="not using_calculation_price"-->
+                                    <!--                                           options="{'no_create': True, 'no_create_edit': True}"/>-->
+                                    <field name="condition_uom_ids" widget="many2many_tags"
+                                           options="{'no_create': True, 'no_create_edit': True}"/>
+                                    <field name="pricing_uom_ids" widget="many2many_tags"
+                                           invisible="not using_calculation_price"
                                            options="{'no_create': True, 'no_create_edit': True}"/>
                                     <field name="using_calculation_price" widget="boolean_toggle"/>
                                     <field name="default_compute_from"/>

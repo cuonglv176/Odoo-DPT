@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dpt_fund_account,dpt.fund.account,model_dpt_fund_account,base.group_user,1,1,1,1
+access_dpt_fund_transaction,dpt.fund.transaction,model_dpt_fund_transaction,base.group_user,1,1,1,1
+access_dpt_fund_transfer,dpt.fund.transfer,model_dpt_fund_transfer,base.group_user,1,1,1,1
+access_dpt_exchange_rate,dpt.exchange.rate,model_dpt_exchange_rate,base.group_user,1,1,1,1
+access_dpt_fund_audit,dpt.fund.audit,model_dpt_fund_audit,base.group_user,1,1,1,1
+access_dpt_fund_audit_line,dpt.fund.audit.line,model_dpt_fund_audit_line,base.group_user,1,1,1,1
+access_dpt_pending_transfer,dpt.pending.transfer,model_dpt_pending_transfer,base.group_user,1,1,1,1
+access_dpt_fund_dashboard,access_dpt_fund_dashboard,model_dpt_fund_dashboard,base.group_user,1,1,1,1
+access_dpt.bank.transaction.import.wizard,access_dpt.bank.transaction.import.wizard,model_dpt_bank_transaction_import_wizard,base.group_user,1,1,1,1
+access_dpt_fund_transaction_export_wizard,dpt.fund.transaction.export.wizard,model_dpt_fund_transaction_export_wizard,base.group_user,1,1,1,1

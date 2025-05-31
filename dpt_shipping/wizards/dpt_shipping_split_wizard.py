@@ -32,11 +32,13 @@ class DPTShippingSplitWizard(models.TransientModel):
                     [('usage', '=', 'internal'), ('warehouse_id.is_tq_transit_warehouse', '=', True)], limit=1)
                 transit_location_dest_id = self.env['stock.location'].sudo().search(
                     [('usage', '=', 'internal'), ('warehouse_id.is_vn_transit_warehouse', '=', True)], limit=1)
+                location_dest_id = self.env['stock.location'].sudo().search(
+                    [('usage', '=', 'internal'), ('warehouse_id.is_main_outgoing_warehouse', '=', True)], limit=1)
                 to_container_vn_picking_ids = to_container_vn_picking_ids | picking_id.with_context(
                     confirm_immediately=True).create_in_transfer_picking(transit_location_id, transit_location_dest_id)
 
                 to_vn_picking_ids = to_vn_picking_ids | picking_id.create_in_transfer_picking(
-                    transit_location_id=transit_location_dest_id, location_dest_id=picking_id.delivery_dest_location_id)
+                    transit_location_id=transit_location_dest_id, location_dest_id=location_dest_id)
         if self.estimate_arrival_warehouse_vn:
             to_vn_picking_ids.write({
                 'estimate_arrival_warehouse_vn': self.estimate_arrival_warehouse_vn

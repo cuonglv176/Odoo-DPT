@@ -626,15 +626,12 @@ class KsCustomReport(models.Model):
             rec.ks_cr_column_ids = False
 
     def ks_query_validate(self, ks_query):
-        with api.Environment.manage():
+        with self.env.registry.cursor() as new_cr:
             try:
-                new_cr = self.pool.cursor()
                 new_cr.execute(ks_query)
                 header_rec = [(col.name, col.type_code) for col in new_cr.description]
             except Exception as e:
-                raise UserError(_(e))
-            finally:
-                new_cr.close()
+                raise UserError(_(str(e)))
 
         if header_rec:
             return header_rec

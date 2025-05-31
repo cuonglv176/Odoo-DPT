@@ -6,6 +6,7 @@ import xlsxwriter
 import base64
 import io as stringIOModule
 from odoo.modules.module import get_module_resource
+import logging
 
 COLUMN = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q']
 
@@ -28,14 +29,33 @@ class SaleOrder(models.Model):
         readonly=True, copy=False, index=True,
         tracking=3,
         default='draft')
-    service_combo_ids = fields.One2many('dpt.sale.order.service.combo','sale_id', string='Combo dịch vụ',
-                                         tracking=True)
-    sale_service_ids = fields.One2many('dpt.sale.service.management', 'sale_id', string='Service', tracking=True,
+
+    # Valores reales
+    service_combo_ids = fields.One2many('dpt.sale.order.service.combo', 'sale_id', string='Combo dịch vụ thực tế',
+                                        tracking=True)
+    sale_service_ids = fields.One2many('dpt.sale.service.management', 'sale_id', string='Service thực tế',
+                                       tracking=True,
                                        inverse='onchange_sale_service_ids')
+
+    # Valores planificados (nuevos campos)
+    planned_service_combo_ids = fields.One2many('dpt.sale.order.service.combo', 'planned_sale_id',
+                                                string='Combo dịch vụ dự kiến', tracking=True)
+    planned_sale_service_ids = fields.One2many('dpt.sale.service.management', 'planned_sale_id',
+                                               string='Service dự kiến', tracking=True)
+    # Thêm trường mới cho việc tất toán và chốt giá
+    settle_by = fields.Selection([
+        ('planned', 'Tất toán theo dự kiến'),
+        ('actual', 'Tất toán theo thực tế')
+    ], string='Phương thức tất toán', default='actual', tracking=True,
+        help='Chọn phương thức tất toán theo dự kiến hoặc thực tế')
+    # Campos existentes
     fields_ids = fields.One2many('dpt.sale.order.fields', 'sale_id', string='Fields')
     service_total_untax_amount = fields.Float(compute='_compute_service_amount')
     service_tax_amount = fields.Float(compute='_compute_service_amount')
     service_total_amount = fields.Float(compute='_compute_service_amount')
+    # Nuevo campo para el total planificado
+    planned_service_total_amount = fields.Float(string='Tổng dự kiến', compute='_compute_planned_service_amount')
+
     update_pricelist = fields.Boolean('Update Pricelist')
     show_action_calculation = fields.Boolean('Show Action Calculation', compute='compute_show_action_calculation')
     weight = fields.Float('Weight')
@@ -50,6 +70,14 @@ class SaleOrder(models.Model):
     times_of_quotation = fields.Integer(default=0, string='Số lần báo giá')
     is_quotation = fields.Boolean(default=False, compute='compute_show_is_quotation')
     active = fields.Boolean('Active', default=True)
+    confirm_service_ticket = fields.Boolean('Xác nhận tạo ticket cho dịch vụ', default=False, 
+                                          help='Đánh dấu để tạo ticket cho tất cả dịch vụ')
+
+    # Método para calcular el total planificado
+    @api.depends('planned_sale_service_ids.amount_total')
+    def _compute_planned_service_amount(self):
+        for record in self:
+            record.planned_service_total_amount = sum(record.planned_sale_service_ids.mapped('amount_total'))
 
     # Thêm phương thức onchange_service_combo_ids vào class SaleOrder
     @api.onchange('service_combo_ids')
@@ -85,8 +113,189 @@ class SaleOrder(models.Model):
                         'price_status': 'calculated',
                         'department_id': service_data['department_id'],
                     }))
+
+                # Thêm các trường thông tin từ combo vào đơn hàng
+                if combo.combo_id and combo.combo_id.required_fields_ids:
+                    fields_dict = {}
+                    for req_field in combo.combo_id.required_fields_ids:
+                        # Nếu req_field không tồn tại, bỏ qua
+                        if not req_field:
+                            continue
+
+                        # Tạo key duy nhất để tránh trùng lặp
+                        field_key = (req_field.id, 'combo')
+
+                        # Kiểm tra nếu trường đã tồn tại
+                        existing_field = self.fields_ids.filtered(
+                            lambda f: f.fields_id.id == req_field.id
+                        )
+
+                        # Lấy service_id từ combo.service_ids nếu có
+                        service_id = False
+                        if combo.service_ids:
+                            # Ưu tiên dịch vụ có cùng uom_id với req_field
+                            matching_service = combo.service_ids.filtered(
+                                lambda s: s.uom_id.id == req_field.uom_id.id
+                            )
+                            if matching_service:
+                                service_id = matching_service[0].id
+                            else:
+                                # Nếu không có, lấy dịch vụ đầu tiên
+                                service_id = combo.service_ids[0].id
+
+                        if existing_field:
+                            rec = {
+                                'sequence': 1 if existing_field.fields_id.type == 'required' else 0,
+                                'fields_id': req_field.id,
+                                'sale_id': self.id,
+                                'value_char': existing_field.value_char,
+                                'value_integer': existing_field.value_integer,
+                                'value_date': existing_field.value_date,
+                                'selection_value_id': existing_field.selection_value_id.id if existing_field.selection_value_id else False,
+                                'service_id': service_id,
+                                'using_calculation_price': req_field.using_calculation_price,
+                                'uom_id': req_field.uom_id.id if req_field.uom_id else False,
+                            }
+                        else:
+                            # Tạo giá trị mặc định
+                            rec = {
+                                'sequence': 1 if req_field.type == 'required' else 0,
+                                'fields_id': req_field.id,
+                                'sale_id': self.id,
+                                'service_id': service_id,
+                                'using_calculation_price': req_field.using_calculation_price,
+                                'uom_id': req_field.uom_id.id if req_field.uom_id else False,
+                            }
+                            default_value = req_field.get_default_value(so=self)
+                            if default_value:
+                                rec.update(default_value)
+
+                        fields_dict[field_key] = rec
+
+                    # Thêm các trường thông tin vào đơn hàng
+                    if fields_dict:
+                        for item in fields_dict.values():
+                            # Kiểm tra nếu trường đã tồn tại
+                            existing = self.fields_ids.filtered(
+                                lambda f: f.fields_id.id == item['fields_id']
+                            )
+                            if not existing:
+                                self.fields_ids = [(0, 0, item)]
+
             if new_services:
                 self.sale_service_ids = [(4, service.id) for service in self.sale_service_ids] + new_services
+                # Automatically calculate prices from price lists
+                self.action_calculation()
+
+    # Nuevo método para manejar combos planificados
+    @api.onchange('planned_service_combo_ids')
+    def onchange_planned_service_combo_ids(self):
+        """Tự động tạo dịch vụ khi combo được thêm vào order (cho dự kiến)"""
+        # Xác định các combo mới được thêm vào
+        current_combo_ids = self.planned_service_combo_ids.ids if self.planned_service_combo_ids else []
+        existing_combo_ids = []
+        for service in self.planned_sale_service_ids:
+            if service.combo_id and service.combo_id.id not in existing_combo_ids:
+                existing_combo_ids.append(service.combo_id.id)
+        # Tìm các combo mới được thêm vào
+        new_combo_ids = [combo_id for combo_id in current_combo_ids if combo_id not in existing_combo_ids]
+        # Tìm các combo bị xóa đi
+        removed_combo_ids = [combo_id for combo_id in existing_combo_ids if combo_id not in current_combo_ids]
+        # Xóa các dịch vụ thuộc combo bị xóa
+        if removed_combo_ids:
+            services_to_remove = self.planned_sale_service_ids.filtered(lambda s: s.combo_id.id in removed_combo_ids)
+            self.planned_sale_service_ids -= services_to_remove
+        # Thêm dịch vụ từ các combo mới
+        if new_combo_ids:
+            new_services = []
+            for combo_id in new_combo_ids:
+                combo = self.env['dpt.sale.order.service.combo'].browse(combo_id)
+                services = combo.get_combo_services()
+                for service_data in services:
+                    new_services.append((0, 0, {
+                        'service_id': service_data['service_id'],
+                        'price': service_data['price'],
+                        'uom_id': service_data['uom_id'],
+                        'qty': service_data['qty'],
+                        'combo_id': combo.id,
+                        'price_status': 'calculated',
+                        'department_id': service_data['department_id'],
+                        'planned_sale_id': self.id,
+                    }))
+
+                # Thêm các trường thông tin từ combo vào đơn hàng
+                if combo.combo_id and combo.combo_id.required_fields_ids:
+                    fields_dict = {}
+                    for req_field in combo.combo_id.required_fields_ids:
+                        # Nếu req_field không tồn tại, bỏ qua
+                        if not req_field:
+                            continue
+
+                        # Tạo key duy nhất để tránh trùng lặp
+                        field_key = (req_field.id, 'combo_planned')
+
+                        # Kiểm tra nếu trường đã tồn tại
+                        existing_field = self.fields_ids.filtered(
+                            lambda f: f.fields_id.id == req_field.id
+                        )
+
+                        # Lấy service_id từ combo.service_ids nếu có
+                        service_id = False
+                        if combo.service_ids:
+                            # Ưu tiên dịch vụ có cùng uom_id với req_field
+                            matching_service = combo.service_ids.filtered(
+                                lambda s: s.uom_id.id == req_field.uom_id.id
+                            )
+                            if matching_service:
+                                service_id = matching_service[0].id
+                            else:
+                                # Nếu không có, lấy dịch vụ đầu tiên
+                                service_id = combo.service_ids[0].id
+
+                        if existing_field:
+                            rec = {
+                                'sequence': 1 if existing_field.fields_id.type == 'required' else 0,
+                                'fields_id': req_field.id,
+                                'sale_id': self.id,
+                                'value_char': existing_field.value_char,
+                                'value_integer': existing_field.value_integer,
+                                'value_date': existing_field.value_date,
+                                'selection_value_id': existing_field.selection_value_id.id if existing_field.selection_value_id else False,
+                                'service_id': service_id,
+                                'using_calculation_price': req_field.using_calculation_price,
+                                'uom_id': req_field.uom_id.id if req_field.uom_id else False,
+                            }
+                        else:
+                            # Tạo giá trị mặc định
+                            rec = {
+                                'sequence': 1 if req_field.type == 'required' else 0,
+                                'fields_id': req_field.id,
+                                'sale_id': self.id,
+                                'service_id': service_id,
+                                'using_calculation_price': req_field.using_calculation_price,
+                                'uom_id': req_field.uom_id.id if req_field.uom_id else False,
+                            }
+                            default_value = req_field.get_default_value(so=self)
+                            if default_value:
+                                rec.update(default_value)
+
+                        fields_dict[field_key] = rec
+
+                    # Thêm các trường thông tin vào đơn hàng
+                    if fields_dict:
+                        for item in fields_dict.values():
+                            # Kiểm tra nếu trường đã tồn tại
+                            existing = self.fields_ids.filtered(
+                                lambda f: f.fields_id.id == item['fields_id']
+                            )
+                            if not existing:
+                                self.fields_ids = [(0, 0, item)]
+
+            if new_services:
+                self.planned_sale_service_ids = [(4, service.id) for service in
+                                                 self.planned_sale_service_ids] + new_services
+                # Automatically calculate prices from price lists
+                self.action_calculation()
 
     @api.depends('sale_service_ids', 'sale_service_ids.service_id', 'sale_service_ids.service_id.pricelist_item_ids')
     def compute_show_is_quotation(self):
@@ -143,6 +352,8 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self).create(vals_list)
         res.check_required_fields()
         res.onchange_calculation_tax()
+        # Automatically calculate prices from price lists
+        res.action_calculation()
         return res
 
     def write(self, vals):
@@ -152,6 +363,10 @@ class SaleOrder(models.Model):
             self.onchange_calculation_tax()
         if vals.get('state') == 'sale':
             self.action_update_fields()
+
+        # Automatically calculate prices from price lists if services or combos are modified
+        if 'sale_service_ids' in vals or 'planned_sale_service_ids' in vals or 'service_combo_ids' in vals or 'planned_service_combo_ids' in vals:
+            self.action_calculation()
         return res
 
     def action_unlock(self):
@@ -185,140 +400,841 @@ class SaleOrder(models.Model):
             # else:
             #     raise ValidationError(_("Please fill required fields!!!"))
 
-    @api.onchange('sale_service_ids')
+    @api.onchange('sale_service_ids', 'planned_sale_service_ids')
     def onchange_sale_service_ids(self):
         fields_dict = {}
-        sale_order = self.env['sale.order'].browse(self.origin)
-        list_exist = sale_order.fields_ids.fields_id.ids
+        sale_order = self.env['sale.order'].browse(self.origin) if self.origin else False
+        list_exist = sale_order.fields_ids.fields_id.ids if sale_order else []
         list_onchange = [item.fields_id.id for item in self.fields_ids]
 
-        # Duyệt qua từng sale_service và xử lý nếu sale_service và service_id của nó tồn tại
+        # Kết hợp cả dịch vụ thực tế và dự kiến để xử lý
+        all_services = []
+        # Dịch vụ thực tế (ưu tiên xử lý trước)
         for sale_service in self.sale_service_ids:
-            if not sale_service or not sale_service.service_id:
-                continue  # Bỏ qua nếu sale_service không hợp lệ
+            if sale_service and sale_service.service_id:
+                all_services.append((sale_service, 'actual'))
 
+        # Dịch vụ dự kiến (chỉ thêm vào nếu không tồn tại trong thực tế)
+        actual_service_ids = set(service.service_id.id for service in self.sale_service_ids if service.service_id)
+        for planned_service in self.planned_sale_service_ids:
+            if planned_service and planned_service.service_id and planned_service.service_id.id not in actual_service_ids:
+                all_services.append((planned_service, 'planned'))
+
+        # Duyệt qua từng dịch vụ để xử lý
+        for sale_service, service_type in all_services:
             for req_field in sale_service.service_id.required_fields_ids:
                 # Nếu req_field không tồn tại, bỏ qua
                 if not req_field:
                     continue
 
-                # Nếu trường đã được xử lý rồi thì bỏ qua (tránh trùng lặp)
-                if (req_field.id, sale_service.id) in fields_dict:
+                # Tạo key duy nhất để tránh trùng lặp
+                # Sử dụng service_id thay vì sale_service_id để tránh trùng lặp giữa thực tế và dự kiến
+                field_key = (req_field.id, sale_service.service_id.id)
+
+                # Nếu đã xử lý field này cho service này (từ thực tế), bỏ qua
+                if field_key in fields_dict and service_type == 'planned':
                     continue
 
                 rec = None
-                # Kiểm tra nếu trường đã tồn tại với cùng sale_service_id
+                # Kiểm tra nếu trường đã tồn tại với cùng service_id
                 existing_field = self.fields_ids.filtered(
-                    lambda f: f.fields_id.id == req_field.id and f.sale_service_id.id == sale_service.id
+                    lambda f: f.fields_id.id == req_field.id and f.service_id.id == sale_service.service_id.id
                 )
+
                 if existing_field:
                     rec = {
-                        'sequence': 1 if existing_field.type == 'required' else 0,
+                        'sequence': 1 if existing_field.fields_id.type == 'required' else 0,
                         'fields_id': req_field.id,
                         'sale_id': self.id,
                         'value_char': existing_field.value_char,
                         'value_integer': existing_field.value_integer,
                         'value_date': existing_field.value_date,
-                        'selection_value_id': existing_field.selection_value_id.id,
+                        'selection_value_id': existing_field.selection_value_id.id if existing_field.selection_value_id else False,
                         'sale_service_id': sale_service.id,
+                        'service_id': sale_service.service_id.id,
                     }
 
                 # Ưu tiên lấy dữ liệu từ sale order nếu trường tồn tại trong đó
-                if req_field.id in list_exist:
+                elif req_field.id in list_exist and sale_order:
                     for field_data in sale_order.fields_ids:
                         if field_data.fields_id.id == req_field.id:
                             rec = {
-                                'sequence': 1 if field_data.type == 'required' else 0,
+                                'sequence': 1 if field_data.fields_id.type == 'required' else 0,
                                 'fields_id': req_field.id,
                                 'sale_id': self.id,
                                 'value_char': field_data.value_char,
                                 'value_integer': field_data.value_integer,
                                 'value_date': field_data.value_date,
-                                'selection_value_id': field_data.selection_value_id.id,
+                                'selection_value_id': field_data.selection_value_id.id if field_data.selection_value_id else False,
                                 'sale_service_id': sale_service.id,
+                                'service_id': sale_service.service_id.id,
                             }
                             break
-                # Nếu không có trong sale order, kiểm tra từ dữ liệu của record hiện tại (onchange)
+
+                # Nếu không có trong sale order, kiểm tra từ dữ liệu của record hiện tại
                 elif req_field.id in list_onchange:
                     for field_data in self.fields_ids:
                         if field_data.fields_id.id == req_field.id:
                             rec = {
-                                'sequence': 1 if field_data.type == 'required' else 0,
+                                'sequence': 1 if field_data.fields_id.type == 'required' else 0,
                                 'fields_id': req_field.id,
                                 'sale_id': self.id,
                                 'value_char': field_data.value_char,
                                 'value_integer': field_data.value_integer,
                                 'value_date': field_data.value_date,
-                                'selection_value_id': field_data.selection_value_id.id,
+                                'selection_value_id': field_data.selection_value_id.id if field_data.selection_value_id else False,
                                 'sale_service_id': sale_service.id,
+                                'service_id': sale_service.service_id.id,
                             }
                             break
 
-                # Nếu không có dữ liệu từ hai nguồn trên, tạo giá trị mặc định
+                # Nếu không có dữ liệu từ các nguồn trên, tạo giá trị mặc định
                 if not rec:
                     rec = {
                         'sequence': 1 if req_field.type == 'required' else 0,
                         'fields_id': req_field.id,
                         'sale_id': self.id,
                         'sale_service_id': sale_service.id,
+                        'service_id': sale_service.service_id.id,
                     }
                     default_value = req_field.get_default_value(so=self)
                     if default_value:
                         rec.update(default_value)
 
-                # Lưu vào dictionary với key là (req_field.id, sale_service.id) để tránh trùng lặp
-                fields_dict[(req_field.id, sale_service.id)] = rec
+                # Lưu vào dictionary, ưu tiên dịch vụ thực tế hơn dự kiến
+                if field_key not in fields_dict or service_type == 'actual':
+                    fields_dict[field_key] = rec
 
+        # Kết hợp và sắp xếp kết quả
         if fields_dict:
             sorted_vals = sorted(fields_dict.values(), key=lambda x: x["sequence"], reverse=True)
             self.fields_ids = [(5, 0, 0)]  # Xóa dữ liệu cũ
             self.fields_ids = [(0, 0, item) for item in sorted_vals]
         else:
-            # Nếu không còn sale_service nào thì xóa hết fields_ids
-            if not self.sale_service_ids:
+            # Nếu không còn dịch vụ nào thì xóa hết fields_ids
+            if not self.sale_service_ids and not self.planned_sale_service_ids:
                 self.fields_ids = [(5, 0, 0)]
 
-        # Gọi hàm cập nhật thêm nếu cần
+        # Gọi hàm cập nhật thêm
         self.onchange_get_data_required_fields()
 
-    def action_confirm(self):
-        res = super(SaleOrder, self).action_confirm()
-        for order_id in self:
-            # if order_id.sale_service_ids.filtered(lambda ss: ss.price_in_pricelist != ss.price):
-            #     raise ValidationError(_('Please approve new price!'))
-            if not order_id.update_pricelist:
+    def get_combo_price_from_pricelist(self, combo_id):
+        """Lấy giá combo từ bảng giá"""
+        self.ensure_one()
+        if not combo_id or not self.partner_id:
+            return False, 0.0
+
+        # Tìm bảng giá ưu tiên của khách hàng
+        pricelist = self.env['product.pricelist'].search([
+            ('partner_id', '=', self.partner_id.id),
+            ('state', '=', 'active')
+        ], limit=1)
+
+        # Nếu không có bảng giá riêng, tìm bảng giá chung
+        if not pricelist:
+            pricelist = self.env['product.pricelist'].search([
+                ('partner_id', '=', False),
+                ('state', '=', 'active')
+            ], limit=1)
+
+        if not pricelist:
+            return False, 0.0
+
+        # Tìm mục giá cho combo này
+        today = fields.Date.today()
+        # Trực tiếp lấy combo_id.combo_id thay vì combo_id.combo_id.id
+        combo_item = self.env['product.pricelist.item'].search([
+            ('pricelist_id', '=', pricelist.id),
+            ('combo_id', '=', combo_id.combo_id.id),
+            '|', ('date_start', '<=', today), ('date_start', '=', False),
+            '|', ('date_end', '>=', today), ('date_end', '=', False)
+        ], limit=1)
+
+        if not combo_item:
+            return False, 0.0
+
+        return combo_item, combo_item.fixed_price
+
+    def distribute_combo_price(self):
+        """Phân bổ giá combo cho các dịch vụ theo tỉ lệ"""
+        # Đánh dấu các dịch vụ đã xử lý để tránh xử lý lại
+        processed_services = self.env['dpt.sale.service.management']
+
+        for combo in self.service_combo_ids:
+            # Lấy giá combo từ bảng giá
+            combo_item, combo_price = self.get_combo_price_from_pricelist(combo)
+            if not combo_item or combo_price <= 0:
                 continue
-            for sale_service_id in order_id.sale_service_ids.filtered(lambda ss: ss.price_in_pricelist != ss.price):
-                if not sale_service_id.uom_id:
-                    raise ValidationError(_("Please insert Units"))
-                pricelist_id = self.env['product.pricelist'].sudo().search([('partner_id', '=', self.partner_id.id)])
-                if not pricelist_id:
-                    pricelist_id = self.env['product.pricelist'].sudo().create({
-                        'name': 'Bảng giá của khách hàng %s' % self.partner_id.name,
-                        'partner_id': self.partner_id.id,
-                        'currency_id': sale_service_id.currency_id.id,
-                    })
-                price_list_item_id = self.env['product.pricelist.item'].sudo().search(
-                    [('pricelist_id', '=', pricelist_id.id), ('service_id', '=', sale_service_id.service_id.id),
-                     ('uom_id', '=', sale_service_id.uom_id.id), ('partner_id', '=', self.partner_id.id)])
-                if not price_list_item_id:
-                    self.env['product.pricelist.item'].sudo().create({
-                        'partner_id': self.partner_id.id,
-                        'pricelist_id': pricelist_id.id,
-                        'service_id': sale_service_id.service_id.id,
-                        'uom_id': sale_service_id.uom_id.id,
-                        'compute_price': 'fixed',
-                        'fixed_price': sale_service_id.price,
-                        'is_price': False,
-                    })
-                else:
-                    price_list_item_id.write({
-                        'compute_price': 'fixed',
-                        'fixed_price': sale_service_id.price,
-                        'is_price': False,
-                    })
-            order_id.action_update_fields()
-        return res
+
+            # Cập nhật giá combo từ bảng giá
+            combo.price = combo_price
+
+            # Lấy các dịch vụ thuộc combo này
+            services = self.sale_service_ids.filtered(lambda s: s.combo_id.id == combo.id)
+            if not services:
+                continue
+
+            # Lấy loại báo giá từ combo
+            quote_type = combo.combo_id.quote_type or 'bao_giao'  # Mặc định là bao giao nếu không có giá trị
+
+            # Tính tổng giá gốc của các dịch vụ trong combo
+            total_original_price = sum(service.service_id.price for service in services)
+
+            # Phân loại dịch vụ theo loại báo giá
+            shipping_services = services.filtered(lambda s: s.service_id.name and 'vận chuyển' in s.service_id.name.lower())
+            other_services = services - shipping_services
+
+            # Phân bổ giá cho từng dịch vụ
+            for service in services:
+                # Tìm trường dpt.sale.order.fields phù hợp để lấy giá trị số lượng
+                compute_value = 1
+                compute_uom_id = False
+
+                # Nếu có uom_id trong bảng giá
+                if combo_item.uom_id:
+                    # Tìm field có cùng uom_id và thuộc service này
+                    compute_field = self.fields_ids.filtered(
+                        lambda f: f.uom_id.id == combo_item.uom_id.id and
+                                  f.using_calculation_price and
+                                  f.service_id.id == service.service_id.id and
+                                  f.fields_type == 'integer')
+
+                    if compute_field:
+                        # Check if the unit is m3 or kg and use the corresponding field from the sale order
+                        uom = self.env['uom.uom'].browse(compute_field.uom_id.id)
+                        if uom.name == 'm3' and self.volume:
+                            # Use volume field from sale order
+                            compute_value = self.volume
+                        elif uom.name == 'kg' and self.weight:
+                            # Use weight field from sale order
+                            compute_value = self.weight
+                        else:
+                            # Use the field value as before
+                            compute_value = compute_field.value_integer or 1
+                        compute_uom_id = compute_field.uom_id.id
+
+                # Tính giá phân bổ dựa trên loại báo giá
+                if quote_type == 'bao_giao':
+                    # Nếu là "bao giao" (bao vận chuyển)
+                    if service in shipping_services:
+                        # Dịch vụ vận chuyển được tính toàn bộ giá
+                        distributed_price = service.service_id.price
+                    else:
+                        # Các dịch vụ khác được phân bổ phần còn lại
+                        shipping_total = sum(s.service_id.price for s in shipping_services)
+                        remaining_price = combo_price - shipping_total
+
+                        if len(other_services) > 0:
+                            if total_original_price - shipping_total <= 0:
+                                # Nếu tổng giá gốc (trừ vận chuyển) bằng 0, phân bổ đều
+                                distributed_price = remaining_price / len(other_services)
+                            else:
+                                # Phân bổ theo tỉ lệ giá gốc
+                                non_shipping_total = total_original_price - shipping_total
+                                ratio = service.service_id.price / non_shipping_total
+                                distributed_price = remaining_price * ratio
+                        else:
+                            distributed_price = 0
+                else:  # 'all_in'
+                    # Nếu là "all in" (tất cả giá), phân bổ theo tỉ lệ giá gốc
+                    if total_original_price <= 0:
+                        # Nếu tổng giá gốc bằng 0, phân bổ đều
+                        distributed_price = combo_price / len(services)
+                    else:
+                        # Phân bổ theo tỉ lệ giá gốc
+                        ratio = service.service_id.price / total_original_price
+                        distributed_price = combo_price * ratio
+
+                # Cập nhật đơn giá và số lượng
+                # Nếu là đơn vị m3 hoặc kg, nhân giá với số lượng thay vì chia
+                unit_price = distributed_price
+                if combo_item.is_price:
+                    # Kiểm tra nếu đơn vị là m3 hoặc kg
+                    if compute_uom_id and compute_field:
+                        uom = self.env['uom.uom'].browse(compute_uom_id)
+                        if uom.name in ['m3', 'kg']:
+                            # Giữ nguyên giá đơn vị, không chia cho compute_value
+                            unit_price = distributed_price
+                        else:
+                            # Đối với các đơn vị khác, vẫn chia như cũ
+                            unit_price = distributed_price / compute_value
+                    else:
+                        unit_price = distributed_price / compute_value
+
+                service.with_context(from_pricelist=True).write({
+                    'price': unit_price,
+                    'price_in_pricelist': distributed_price,
+                    'compute_value': compute_value,
+                    'compute_uom_id': compute_uom_id,
+                    'price_status': 'calculated',
+                    'pricelist_item_id': combo_item.id,
+                })
+
+                # Đánh dấu dịch vụ đã xử lý
+                processed_services |= service
+
+        # Tương tự cho các combo dự kiến
+        for planned_combo in self.planned_service_combo_ids:
+            combo_item, combo_price = self.get_combo_price_from_pricelist(planned_combo)
+            if not combo_item or combo_price <= 0:
+                continue
+
+            # Cập nhật giá combo từ bảng giá
+            planned_combo.price = combo_price
+
+            planned_services = self.planned_sale_service_ids.filtered(lambda s: s.combo_id.id == planned_combo.id)
+            if not planned_services:
+                continue
+
+            # Lấy loại báo giá từ combo
+            quote_type = planned_combo.combo_id.quote_type or 'bao_giao'  # Mặc định là bao giao nếu không có giá trị
+
+            total_original_price = sum(service.service_id.price for service in planned_services)
+
+            # Phân loại dịch vụ theo loại báo giá
+            shipping_services = planned_services.filtered(lambda s: s.service_id.name and 'vận chuyển' in s.service_id.name.lower())
+            other_services = planned_services - shipping_services
+
+            # Phân bổ giá cho từng dịch vụ dự kiến
+            for service in planned_services:
+                # Tìm trường dpt.sale.order.fields phù hợp để lấy giá trị số lượng
+                compute_value = 1
+                compute_uom_id = False
+
+                # Nếu có uom_id trong bảng giá
+                if combo_item.uom_id:
+                    # Tìm field có cùng uom_id và thuộc service này
+                    compute_field = self.fields_ids.filtered(
+                        lambda f: f.uom_id.id == combo_item.uom_id.id and
+                                  f.using_calculation_price and
+                                  f.service_id.id == service.service_id.id and
+                                  f.fields_type == 'integer')
+
+                    if compute_field:
+                        # Check if the unit is m3 or kg and use the corresponding field from the sale order
+                        uom = self.env['uom.uom'].browse(compute_field.uom_id.id)
+                        if uom.name == 'm3' and self.volume:
+                            # Use volume field from sale order
+                            compute_value = self.volume
+                        elif uom.name == 'kg' and self.weight:
+                            # Use weight field from sale order
+                            compute_value = self.weight
+                        else:
+                            # Use the field value as before
+                            compute_value = compute_field.value_integer or 1
+                        compute_uom_id = compute_field.uom_id.id
+
+                # Tính giá phân bổ dựa trên loại báo giá
+                if quote_type == 'bao_giao':
+                    # Nếu là "bao giao" (bao vận chuyển)
+                    if service in shipping_services:
+                        # Dịch vụ vận chuyển được tính toàn bộ giá
+                        distributed_price = service.service_id.price
+                    else:
+                        # Các dịch vụ khác được phân bổ phần còn lại
+                        shipping_total = sum(s.service_id.price for s in shipping_services)
+                        remaining_price = combo_price - shipping_total
+
+                        if len(other_services) > 0:
+                            if total_original_price - shipping_total <= 0:
+                                # Nếu tổng giá gốc (trừ vận chuyển) bằng 0, phân bổ đều
+                                distributed_price = remaining_price / len(other_services)
+                            else:
+                                # Phân bổ theo tỉ lệ giá gốc
+                                non_shipping_total = total_original_price - shipping_total
+                                ratio = service.service_id.price / non_shipping_total
+                                distributed_price = remaining_price * ratio
+                        else:
+                            distributed_price = 0
+                else:  # 'all_in'
+                    # Nếu là "all in" (tất cả giá), phân bổ theo tỉ lệ giá gốc
+                    if total_original_price <= 0:
+                        # Nếu tổng giá gốc bằng 0, phân bổ đều
+                        distributed_price = combo_price / len(planned_services)
+                    else:
+                        # Phân bổ theo tỉ lệ giá gốc
+                        ratio = service.service_id.price / total_original_price
+                        distributed_price = combo_price * ratio
+
+                # Cập nhật đơn giá và số lượng
+                # Nếu là đơn vị m3 hoặc kg, nhân giá với số lượng thay vì chia
+                unit_price = distributed_price
+                if combo_item.is_price:
+                    # Kiểm tra nếu đơn vị là m3 hoặc kg
+                    if compute_uom_id and compute_field:
+                        uom = self.env['uom.uom'].browse(compute_uom_id)
+                        if uom.name in ['m3', 'kg']:
+                            # Giữ nguyên giá đơn vị, không chia cho compute_value
+                            unit_price = distributed_price
+                        else:
+                            # Đối với các đơn vị khác, vẫn chia như cũ
+                            unit_price = distributed_price / compute_value
+                    else:
+                        unit_price = distributed_price / compute_value
+
+                service.with_context(from_pricelist=True).write({
+                    'price': unit_price,
+                    'price_in_pricelist': distributed_price,
+                    'compute_value': compute_value,
+                    'compute_uom_id': compute_uom_id,
+                    'price_status': 'calculated',
+                    'pricelist_item_id': combo_item.id,
+                })
+
+                # Đánh dấu dịch vụ đã xử lý
+                processed_services |= service
+
+        return processed_services
+
+    def action_calculation(self):
+        """Tính giá dịch vụ từ bảng giá và cập nhật vào đơn hàng"""
+        # Trước tiên phân bổ giá cho các dịch vụ thuộc combo
+        processed_services = self.distribute_combo_price()
+
+        # Sau đó tính giá cho các dịch vụ không thuộc combo hoặc chưa có giá
+        for sale_service_id in self.sale_service_ids:
+            # Bỏ qua các dịch vụ đã được xử lý từ combo
+            if sale_service_id in processed_services:
+                continue
+
+            # Bỏ qua các dịch vụ đã có giá từ combo
+            if sale_service_id.combo_id and sale_service_id.price > 0 and sale_service_id.price_status == 'calculated':
+                continue
+
+            # Bỏ qua dịch vụ không có đơn vị
+            if not sale_service_id.uom_id:
+                continue
+
+            # Bỏ qua dịch vụ đã được phê duyệt hoặc từ chối
+            approved = sale_service_id.approval_id.filtered(
+                lambda approval: approval.request_status in ('approved', 'refused'))
+            if approved:
+                continue
+
+            # Lấy bảng giá phù hợp với đơn vị và khách hàng
+            current_uom_id = sale_service_id.uom_id
+            selected_uoms = self.env['uom.uom'].browse([current_uom_id.id]) if current_uom_id else self.env['uom.uom']
+
+            # Lấy danh sách bảng giá đang hoạt động, có thêm tham số selected_uoms
+            service_price_ids = sale_service_id.service_id.get_active_pricelist(
+                partner_id=self.partner_id,
+                selected_uoms=selected_uoms
+            )
+
+            # Lọc theo đơn vị và khách hàng nếu có
+            if current_uom_id:
+                service_price_ids = service_price_ids.filtered(
+                    lambda sp: sp.uom_id.id == current_uom_id.id and (
+                            sp.partner_id and sp.partner_id.id == self.partner_id.id or not sp.partner_id
+                    )
+                )
+
+            if not service_price_ids:
+                continue
+
+            max_price = 0
+            price_list_item_id = None
+            compute_value = 1
+            compute_uom_id = None
+
+            # Logic tính giá
+            for service_price_id in service_price_ids:
+                # Giá cố định
+                if service_price_id.compute_price == 'fixed':
+                    price = max(service_price_id.currency_id.rate * service_price_id.fixed_price,
+                                service_price_id.min_amount)
+                    if price > max_price:
+                        max_price = price
+                        price_list_item_id = service_price_id
+
+                # Giá theo phần trăm
+                elif service_price_id.compute_price == 'percentage':
+                    price_base = 0
+
+                    # Xác định giá trị cơ sở để tính phần trăm
+                    if service_price_id.percent_based_on == 'product_total_amount':
+                        price_base = sum(self.order_line.mapped('price_subtotal'))
+                    elif service_price_id.percent_based_on == 'declaration_total_amount':
+                        price_base = sum(self.order_line.mapped('declared_unit_total'))
+                    elif service_price_id.percent_based_on == 'purchase_total_amount':
+                        purchase_ids = self.purchase_ids.filtered(lambda po: po.purchase_type == 'external')
+                        price_base = 0
+                        for order_line in purchase_ids.mapped('order_line'):
+                            price_base += order_line.price_subtotal * order_line.order_id.last_rate_currency
+                    elif service_price_id.percent_based_on == 'invoice_total_amount':
+                        # Tổng giá trị xuất hoá đơn - thêm xử lý ở đây nếu có
+                        pass
+
+                    # Tính giá từ phần trăm
+                    if price_base:
+                        price = max(
+                            service_price_id.currency_id.rate * (price_base * service_price_id.percent_price / 100),
+                            service_price_id.min_amount)
+                        if price and price > max_price:
+                            max_price = price
+                            price_list_item_id = service_price_id
+
+                # Giá theo bảng
+                elif service_price_id.compute_price == 'table':
+                    # Tìm các trường để tính giá
+                    compute_field_ids = self.fields_ids.filtered(
+                        lambda f: f.using_calculation_price and
+                                  f.service_id.id == sale_service_id.service_id.id)
+
+                    for compute_field_id in compute_field_ids:
+                        # Kiểm tra nếu compute_field_id không có giá trị
+                        if not compute_field_id.value_integer:
+                            continue
+
+                        # Xử lý giá không tích lũy
+                        if not service_price_id.is_accumulated:
+                            detail_price_ids = service_price_id.pricelist_table_detail_ids.filtered(
+                                lambda ptd: ptd.uom_id.id == compute_field_id.uom_id.id and
+                                            compute_field_id.value_integer >= ptd.min_value and
+                                            (not ptd.max_value or compute_field_id.value_integer <= ptd.max_value)
+                            )
+
+                            for detail_price_id in detail_price_ids:
+                                # Tính giá dựa trên kiểu giá (đơn giá hoặc khoảng giá)
+                                if detail_price_id.price_type == 'unit_price':
+                                    price = compute_field_id.value_integer * detail_price_id.amount
+                                else:  # fixed_range
+                                    price = detail_price_id.amount
+
+                                # Áp dụng is_price nếu cần
+                                if not service_price_id.is_price:
+                                    price = detail_price_id.amount
+
+                                price = max(service_price_id.currency_id.rate * price, service_price_id.min_amount)
+
+                                if price > max_price:
+                                    max_price = price
+                                    price_list_item_id = service_price_id
+                                    # Check if the unit is m3 or kg and use the corresponding field from the sale order
+                                    uom = self.env['uom.uom'].browse(compute_field_id.uom_id.id)
+                                    if uom.name == 'm3' and self.volume:
+                                        # Use volume field from sale order
+                                        compute_value = self.volume
+                                    elif uom.name == 'kg' and self.weight:
+                                        # Use weight field from sale order
+                                        compute_value = self.weight
+                                    else:
+                                        # Use the field value as before
+                                        compute_value = compute_field_id.value_integer
+                                    compute_uom_id = compute_field_id.uom_id.id
+
+                        # Xử lý giá tích lũy
+                        else:
+                            detail_price_ids = service_price_id.pricelist_table_detail_ids.filtered(
+                                lambda ptd: ptd.uom_id.id == compute_field_id.uom_id.id
+                            ).sorted(key=lambda r: r.min_value)
+
+                            total_price = 0
+                            has_applicable = False
+
+                            for detail_price_id in detail_price_ids:
+                                # Bỏ qua nếu giá trị nhỏ hơn min_value
+                                if detail_price_id.min_value > compute_field_id.value_integer:
+                                    continue
+
+                                has_applicable = True
+
+                                # Tính giá theo khoảng
+                                if detail_price_id.max_value:
+                                    applicable_value = min(compute_field_id.value_integer,
+                                                           detail_price_id.max_value) - detail_price_id.min_value + 1
+                                else:
+                                    applicable_value = compute_field_id.value_integer - detail_price_id.min_value + 1
+
+                                # Áp dụng giá theo kiểu
+                                if detail_price_id.price_type == 'unit_price':
+                                    price = applicable_value * detail_price_id.amount
+                                else:  # fixed_range
+                                    price = detail_price_id.amount
+
+                                # Kiểm tra is_price
+                                if not service_price_id.is_price and detail_price_id.price_type == 'fixed_range':
+                                    price = detail_price_id.amount
+
+                                total_price += service_price_id.currency_id.rate * price
+
+                            # Chỉ cập nhật nếu có mức giá áp dụng được
+                            if has_applicable and max(total_price, service_price_id.min_amount) > max_price:
+                                max_price = max(total_price, service_price_id.min_amount)
+                                price_list_item_id = service_price_id
+                                # Check if the unit is m3 or kg and use the corresponding field from the sale order
+                                uom = self.env['uom.uom'].browse(compute_field_id.uom_id.id)
+                                if uom.name == 'm3' and self.volume:
+                                    # Use volume field from sale order
+                                    compute_value = self.volume
+                                elif uom.name == 'kg' and self.weight:
+                                    # Use weight field from sale order
+                                    compute_value = self.weight
+                                else:
+                                    # Use the field value as before
+                                    compute_value = compute_field_id.value_integer
+                                compute_uom_id = compute_field_id.uom_id.id
+
+            # Cập nhật trạng thái giá
+            price_status = sale_service_id.price_status or 'no_price'
+            if sale_service_id.service_id.pricelist_item_ids and price_status == 'no_price':
+                price_status = 'calculated'
+
+            # Cập nhật thông tin giá và đơn vị cho dịch vụ
+            if price_list_item_id or service_price_ids:
+                final_uom_id = price_list_item_id.uom_id.id if price_list_item_id and price_list_item_id.uom_id else (
+                    service_price_ids[:1].uom_id.id if service_price_ids and service_price_ids[
+                                                                             :1].uom_id else current_uom_id.id
+                )
+
+                # Tính giá đơn vị nếu có compute_value
+                unit_price = max_price
+                if price_list_item_id and price_list_item_id.is_price and compute_value > 0:
+                    # Kiểm tra nếu đơn vị là m3 hoặc kg
+                    if compute_uom_id:
+                        uom = self.env['uom.uom'].browse(compute_uom_id)
+                        if uom.name not in ['m3', 'kg']:
+                            # Đối với các đơn vị khác, vẫn chia như cũ
+                            unit_price = max_price / compute_value
+                    else:
+                        unit_price = max_price / compute_value
+
+                # Cập nhật vào dịch vụ
+                sale_service_id.with_context(from_pricelist=True).write({
+                    'uom_id': final_uom_id,
+                    'price': unit_price,
+                    'qty': compute_value if price_list_item_id and price_list_item_id.is_price else 1,
+                    'pricelist_item_id': price_list_item_id.id if price_list_item_id else (
+                        service_price_ids[:1].id if service_price_ids else None),
+                    'price_in_pricelist': max_price,
+                    'compute_value': compute_value,
+                    'compute_uom_id': compute_uom_id,
+                    'price_status': price_status,
+                })
+
+        # Tương tự cho planned_sale_service_ids - xử lý tương tự như trên
+        for planned_service_id in self.planned_sale_service_ids:
+            # Bỏ qua các dịch vụ đã được xử lý từ combo
+            if planned_service_id in processed_services:
+                continue
+
+            # Bỏ qua dịch vụ dự kiến đã có giá từ combo
+            if planned_service_id.combo_id and planned_service_id.price > 0 and planned_service_id.price_status == 'calculated':
+                continue
+
+            # Bỏ qua dịch vụ không có đơn vị
+            if not planned_service_id.uom_id:
+                continue
+
+            # Bỏ qua dịch vụ đã được phê duyệt hoặc từ chối
+            approved = planned_service_id.approval_id.filtered(
+                lambda approval: approval.request_status in ('approved', 'refused'))
+            if approved:
+                continue
+
+            # Lấy bảng giá phù hợp với đơn vị và khách hàng
+            current_uom_id = planned_service_id.uom_id
+            selected_uoms = self.env['uom.uom'].browse([current_uom_id.id]) if current_uom_id else self.env['uom.uom']
+
+            # Lấy danh sách bảng giá đang hoạt động, có thêm tham số selected_uoms
+            service_price_ids = planned_service_id.service_id.get_active_pricelist(
+                partner_id=self.partner_id,
+                selected_uoms=selected_uoms
+            )
+
+            # Lọc theo đơn vị và khách hàng nếu có
+            if current_uom_id:
+                service_price_ids = service_price_ids.filtered(
+                    lambda sp: sp.uom_id.id == current_uom_id.id and (
+                            sp.partner_id and sp.partner_id.id == self.partner_id.id or not sp.partner_id
+                    )
+                )
+
+            if not service_price_ids:
+                continue
+
+            max_price = 0
+            price_list_item_id = None
+            compute_value = 1
+            compute_uom_id = None
+
+            # Logic tính giá
+            for service_price_id in service_price_ids:
+                # Giá cố định
+                if service_price_id.compute_price == 'fixed':
+                    price = max(service_price_id.currency_id.rate * service_price_id.fixed_price,
+                                service_price_id.min_amount)
+                    if price > max_price:
+                        max_price = price
+                        price_list_item_id = service_price_id
+
+                # Giá theo phần trăm
+                elif service_price_id.compute_price == 'percentage':
+                    price_base = 0
+
+                    # Xác định giá trị cơ sở để tính phần trăm
+                    if service_price_id.percent_based_on == 'product_total_amount':
+                        price_base = sum(self.order_line.mapped('price_subtotal'))
+                    elif service_price_id.percent_based_on == 'declaration_total_amount':
+                        price_base = sum(self.order_line.mapped('declared_unit_total'))
+                    elif service_price_id.percent_based_on == 'purchase_total_amount':
+                        purchase_ids = self.purchase_ids.filtered(lambda po: po.purchase_type == 'external')
+                        price_base = 0
+                        for order_line in purchase_ids.mapped('order_line'):
+                            price_base += order_line.price_subtotal * order_line.order_id.last_rate_currency
+                    elif service_price_id.percent_based_on == 'invoice_total_amount':
+                        # Tổng giá trị xuất hoá đơn - thêm xử lý ở đây nếu có
+                        pass
+
+                    # Tính giá từ phần trăm
+                    if price_base:
+                        price = max(
+                            service_price_id.currency_id.rate * (price_base * service_price_id.percent_price / 100),
+                            service_price_id.min_amount)
+                        if price and price > max_price:
+                            max_price = price
+                            price_list_item_id = service_price_id
+
+                # Giá theo bảng
+                elif service_price_id.compute_price == 'table':
+                    # Tìm các trường để tính giá
+                    compute_field_ids = self.fields_ids.filtered(
+                        lambda f: f.using_calculation_price and
+                                  f.service_id.id == planned_service_id.service_id.id)
+
+                    for compute_field_id in compute_field_ids:
+                        # Kiểm tra nếu compute_field_id không có giá trị
+                        if not compute_field_id.value_integer:
+                            continue
+
+                        # Xử lý giá không tích lũy
+                        if not service_price_id.is_accumulated:
+                            detail_price_ids = service_price_id.pricelist_table_detail_ids.filtered(
+                                lambda ptd: ptd.uom_id.id == compute_field_id.uom_id.id and
+                                            compute_field_id.value_integer >= ptd.min_value and
+                                            (not ptd.max_value or compute_field_id.value_integer <= ptd.max_value)
+                            )
+
+                            for detail_price_id in detail_price_ids:
+                                # Tính giá dựa trên kiểu giá (đơn giá hoặc khoảng giá)
+                                if detail_price_id.price_type == 'unit_price':
+                                    price = compute_field_id.value_integer * detail_price_id.amount
+                                else:  # fixed_range
+                                    price = detail_price_id.amount
+
+                                # Áp dụng is_price nếu cần
+                                if not service_price_id.is_price:
+                                    price = detail_price_id.amount
+
+                                price = max(service_price_id.currency_id.rate * price, service_price_id.min_amount)
+
+                                if price > max_price:
+                                    max_price = price
+                                    price_list_item_id = service_price_id
+                                    # Check if the unit is m3 or kg and use the corresponding field from the sale order
+                                    uom = self.env['uom.uom'].browse(compute_field_id.uom_id.id)
+                                    if uom.name == 'm3' and self.volume:
+                                        # Use volume field from sale order
+                                        compute_value = self.volume
+                                    elif uom.name == 'kg' and self.weight:
+                                        # Use weight field from sale order
+                                        compute_value = self.weight
+                                    else:
+                                        # Use the field value as before
+                                        compute_value = compute_field_id.value_integer
+                                    compute_uom_id = compute_field_id.uom_id.id
+
+                        # Xử lý giá tích lũy
+                        else:
+                            detail_price_ids = service_price_id.pricelist_table_detail_ids.filtered(
+                                lambda ptd: ptd.uom_id.id == compute_field_id.uom_id.id
+                            ).sorted(key=lambda r: r.min_value)
+
+                            total_price = 0
+                            has_applicable = False
+
+                            for detail_price_id in detail_price_ids:
+                                # Bỏ qua nếu giá trị nhỏ hơn min_value
+                                if detail_price_id.min_value > compute_field_id.value_integer:
+                                    continue
+
+                                has_applicable = True
+
+                                # Tính giá theo khoảng
+                                if detail_price_id.max_value:
+                                    applicable_value = min(compute_field_id.value_integer,
+                                                           detail_price_id.max_value) - detail_price_id.min_value + 1
+                                else:
+                                    applicable_value = compute_field_id.value_integer - detail_price_id.min_value + 1
+
+                                # Áp dụng giá theo kiểu
+                                if detail_price_id.price_type == 'unit_price':
+                                    price = applicable_value * detail_price_id.amount
+                                else:  # fixed_range
+                                    price = detail_price_id.amount
+
+                                # Kiểm tra is_price
+                                if not service_price_id.is_price and detail_price_id.price_type == 'fixed_range':
+                                    price = detail_price_id.amount
+
+                                total_price += service_price_id.currency_id.rate * price
+
+                            # Chỉ cập nhật nếu có mức giá áp dụng được
+                            if has_applicable and max(total_price, service_price_id.min_amount) > max_price:
+                                max_price = max(total_price, service_price_id.min_amount)
+                                price_list_item_id = service_price_id
+                                # Check if the unit is m3 or kg and use the corresponding field from the sale order
+                                uom = self.env['uom.uom'].browse(compute_field_id.uom_id.id)
+                                if uom.name == 'm3' and self.volume:
+                                    # Use volume field from sale order
+                                    compute_value = self.volume
+                                elif uom.name == 'kg' and self.weight:
+                                    # Use weight field from sale order
+                                    compute_value = self.weight
+                                else:
+                                    # Use the field value as before
+                                    compute_value = compute_field_id.value_integer
+                                compute_uom_id = compute_field_id.uom_id.id
+
+            # Cập nhật trạng thái giá
+            price_status = planned_service_id.price_status or 'no_price'
+            if planned_service_id.service_id.pricelist_item_ids and price_status == 'no_price':
+                price_status = 'calculated'
+
+            # Cập nhật thông tin giá và đơn vị cho dịch vụ
+            if price_list_item_id or service_price_ids:
+                final_uom_id = price_list_item_id.uom_id.id if price_list_item_id and price_list_item_id.uom_id else (
+                    service_price_ids[:1].uom_id.id if service_price_ids and service_price_ids[
+                                                                             :1].uom_id else current_uom_id.id
+                )
+
+                # Tính giá đơn vị nếu có compute_value
+                unit_price = max_price
+                if price_list_item_id and price_list_item_id.is_price and compute_value > 0:
+                    # Kiểm tra nếu đơn vị là m3 hoặc kg
+                    if compute_uom_id:
+                        uom = self.env['uom.uom'].browse(compute_uom_id)
+                        if uom.name not in ['m3', 'kg']:
+                            # Đối với các đơn vị khác, vẫn chia như cũ
+                            unit_price = max_price / compute_value
+                    else:
+                        unit_price = max_price / compute_value
+
+                # Cập nhật vào dịch vụ
+                planned_service_id.with_context(from_pricelist=True).write({
+                    'uom_id': final_uom_id,
+                    'price': unit_price,
+                    'qty': compute_value if price_list_item_id and price_list_item_id.is_price else 1,
+                    'pricelist_item_id': price_list_item_id.id if price_list_item_id else (
+                        service_price_ids[:1].id if service_price_ids else None),
+                    'price_in_pricelist': max_price,
+                    'compute_value': compute_value,
+                    'compute_uom_id': compute_uom_id,
+                    'price_status': price_status,
+                })
+
+        # Cập nhật thuế sau khi tính toán giá
+        self.onchange_calculation_tax()
 
     @api.onchange('partner_id')
     def onchange_get_data_required_fields(self):
@@ -381,110 +1297,6 @@ class SaleOrder(models.Model):
             not_compute_price_service_ids = True or item.sale_service_ids.filtered(
                 lambda ss: ss.department_id.id in self.env.user.employee_ids.mapped('department_id').ids)
             item.show_action_calculation = True if not_compute_price_service_ids else False
-
-    def action_calculation(self):
-        # self.sale_service_ids._compute_price_status()
-        # get default based on pricelist
-        # for sale_service_id in self.sale_service_ids.filtered(
-        #         lambda ss: ss.department_id.id == self.env.user.employee_ids[:1].department_id.id):
-
-        for sale_service_id in self.sale_service_ids:
-            if not sale_service_id.uom_id:
-                continue
-            approved = sale_service_id.approval_id.filtered(
-                lambda approval: approval.request_status in ('approved', 'refused'))
-            if approved:
-                continue
-            current_uom_id = sale_service_id.uom_id
-            service_price_ids = sale_service_id.service_id.get_active_pricelist(partner_id=self.partner_id)
-            if current_uom_id:
-                service_price_ids = service_price_ids.filtered(lambda sp: sp.uom_id.id == current_uom_id.id and (
-                        sp.partner_id and sp.partner_id.id == self.partner_id.id or not sp.partner_id))
-            if not service_price_ids:
-                continue
-            max_price = 0
-            price_list_item_id = None
-            compute_value = 1
-            compute_uom_id = None
-            for service_price_id in service_price_ids:
-                if service_price_id.compute_price == 'fixed':
-                    price = max(service_price_id.currency_id.rate * service_price_id.fixed_price,
-                                service_price_id.min_amount)
-                    if price > max_price:
-                        max_price = price
-                        price_list_item_id = service_price_id
-                elif service_price_id.compute_price == 'percentage':
-                    price_base = 0
-                    price = 0
-                    if service_price_id.percent_based_on == 'product_total_amount':
-                        price_base = sum(self.order_line.mapped('price_subtotal'))
-                    elif service_price_id.percent_based_on == 'declaration_total_amount':
-                        price_base = sum(self.order_line.mapped('declared_unit_total'))
-                    elif service_price_id.percent_based_on == 'purchase_total_amount':
-                        purchase_ids = self.purchase_ids.filtered(lambda po: po.purchase_type == 'external')
-                        price_base = 0
-                        for order_line in purchase_ids.mapped('order_line'):
-                            price_base += order_line.price_subtotal * order_line.order_id.last_rate_currency
-                    if price_base:
-                        price = max(
-                            service_price_id.currency_id.rate * (price_base * service_price_id.percent_price / 100),
-                            service_price_id.min_amount)
-                    if price and price > max_price:
-                        max_price = price
-                        price_list_item_id = service_price_id
-                elif service_price_id.compute_price == 'table':
-                    compute_field_ids = self.fields_ids.filtered(
-                        lambda f: f.using_calculation_price and f.service_id.id == sale_service_id.service_id.id)
-                    # compute_field_ids = self.fields_ids.filtered(
-                    #     lambda f: f.using_calculation_price and f.sale_service_id.id == sale_service_id.id)
-                    for compute_field_id in compute_field_ids:
-                        if not service_price_id.is_accumulated:
-                            detail_price_ids = service_price_id.pricelist_table_detail_ids.filtered(lambda
-                                                                                                        ptd: ptd.uom_id.id == compute_field_id.uom_id.id and compute_field_id.value_integer >= ptd.min_value and compute_field_id.value_integer <= ptd.max_value)
-                            for detail_price_id in detail_price_ids:
-                                price = compute_field_id.value_integer * detail_price_id.amount if service_price_id.is_price else detail_price_id.amount
-                                price = max(service_price_id.currency_id.rate * price, service_price_id.min_amount)
-                                if price > max_price:
-                                    max_price = price
-                                    price_list_item_id = service_price_id
-                                    compute_value = compute_field_id.value_integer
-                                    compute_uom_id = compute_field_id.uom_id.id
-                        else:
-                            detail_price_ids = service_price_id.pricelist_table_detail_ids.filtered(
-                                lambda ptd: ptd.uom_id.id == compute_field_id.uom_id.id)
-                            total_price = 0
-                            for detail_price_id in detail_price_ids.sorted(key=lambda r: r.min_value):
-                                if detail_price_id.min_value > compute_field_id.value_integer:
-                                    continue
-                                if detail_price_id.max_value:
-                                    price = (min(compute_field_id.value_integer,
-                                                 detail_price_id.max_value) - detail_price_id.min_value + 1) * detail_price_id.amount if service_price_id.is_price else detail_price_id.amount
-                                else:
-                                    price = (
-                                                    compute_field_id.value_integer - detail_price_id.min_value + 1) * detail_price_id.amount if service_price_id.is_price else detail_price_id.amount
-                                total_price += service_price_id.currency_id.rate * price
-                            if max(total_price, service_price_id.min_amount) > max_price:
-                                max_price = max(total_price, service_price_id.min_amount)
-                                price_list_item_id = service_price_id
-                                compute_value = compute_field_id.value_integer
-                                compute_uom_id = compute_field_id.uom_id.id
-            price_status = sale_service_id.price_status or 'no_price'
-            if sale_service_id.service_id.pricelist_item_ids and price_status == 'no_price':
-                price_status = 'calculated'
-
-            sale_service_id.with_context(from_pricelist=True).write({
-                'uom_id': price_list_item_id.uom_id.id if price_list_item_id else (
-                    service_price_ids[:1].uom_id.id if service_price_ids and service_price_ids[:1].uom_id else None),
-                'price': max_price / compute_value if price_list_item_id and price_list_item_id.is_price else max_price,
-                'qty': 1,
-                'pricelist_item_id': price_list_item_id.id if price_list_item_id else (
-                    service_price_ids[:1].id if service_price_ids else None),
-                'price_in_pricelist': max_price,
-                'compute_value': compute_value,
-                'compute_uom_id': compute_uom_id,
-                'price_status': price_status,
-            })
-        self.onchange_calculation_tax()
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):

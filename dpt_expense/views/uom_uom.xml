@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="uom_uom_expense_form_view_inherit" model="ir.ui.view">
+        <field name="name">uom_uom_expense_form_view_inherit</field>
+        <field name="model">uom.uom</field>
+        <field name="inherit_id" ref="dpt_purchase_management.product_uom_form_view_packing_inherit"/>
+        <field name="arch" type="xml">
+            <field name="is_default_package_unit" position="after">
+                <field name="use_for_allocate_expense" widget="boolean_toggle"/>
+            </field>
+        </field>
+    </record>
+</odoo>

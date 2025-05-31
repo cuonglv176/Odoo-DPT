@@ -24,6 +24,8 @@
                         <field name="is_cn_payment"/>
                         <field name="is_bypass" widget="boolean_toggle"/>
                         <field name="is_ke_toan_truong" widget="boolean_toggle"/>
+                        <field name="payment_user_type" widget="radio"/>
+                        <field name="payment_type" widget="radio"/>
                     </group>
                     <notebook>
                         <page string="Rules">

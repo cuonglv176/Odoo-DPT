@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Main Menu -->
+        <menuitem id="menu_fund_management_root"
+                  name="Quản lý Quỹ"
+                  web_icon="dpt_fund_management,static/description/icon.png"
+                  sequence="10"/>
+
+        <!-- Menu Item -->
+        <menuitem id="menu_fund_dashboard"
+                  name="Dashboard"
+                  parent="menu_fund_management_root"
+                  action="action_fund_dashboard"
+                  sequence="1"/>
+
+        <!-- Fund Management -->
+        <menuitem id="menu_fund_management"
+                  name="Quản lý Quỹ"
+                  parent="menu_fund_management_root"
+                  sequence="10"/>
+
+        <menuitem id="menu_fund_account"
+                  name="Tài khoản Quỹ"
+                  parent="menu_fund_management"
+                  action="action_dpt_fund_account"
+                  sequence="10"/>
+
+        <menuitem id="menu_fund_transaction"
+                  name="Giao dịch Quỹ"
+                  parent="menu_fund_management"
+                  action="action_dpt_fund_transaction"
+                  sequence="20"/>
+
+        <menuitem id="menu_fund_transfer"
+                  name="Chuyển tiền"
+                  parent="menu_fund_management"
+                  action="action_dpt_fund_transfer"
+                  sequence="30"/>
+
+        <menuitem id="menu_pending_transfer"
+                  name="Tiền đang chuyển"
+                  parent="menu_fund_management"
+                  action="action_dpt_pending_transfer"
+                  sequence="40"/>
+
+        <!-- Exchange Rate -->
+        <menuitem id="menu_exchange_rate"
+                  name="Tỷ giá"
+                  parent="menu_fund_management_root"
+                  sequence="20"/>
+
+        <menuitem id="menu_exchange_rate_list"
+                  name="Danh sách tỷ giá"
+                  parent="menu_exchange_rate"
+                  action="action_dpt_exchange_rate"
+                  sequence="10"/>
+
+        <!-- Audit -->
+        <menuitem id="menu_fund_audit"
+                  name="Kiểm kê"
+                  parent="menu_fund_management_root"
+                  sequence="30"/>
+
+        <menuitem id="menu_fund_audit_list"
+                  name="Kiểm kê Quỹ"
+                  parent="menu_fund_audit"
+                  action="action_dpt_fund_audit"
+                  sequence="10"/>
+
+        <!-- Reports -->
+        <menuitem id="menu_fund_reports"
+                  name="Báo cáo"
+                  parent="menu_fund_management_root"
+                  sequence="40"/>
+
+
+    </data>
+</odoo>

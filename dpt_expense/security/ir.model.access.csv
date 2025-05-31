@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dpt_expense_allocation,dpt_expense.dpt_expense_allocation,model_dpt_expense_allocation,base.group_user,1,1,1,1

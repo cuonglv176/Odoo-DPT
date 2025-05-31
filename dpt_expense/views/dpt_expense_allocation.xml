@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="dpt_expense_allocation_search_views" model="ir.ui.view">
+        <field name="name">dpt_expense_allocation_search_views</field>
+        <field name="model">dpt.expense.allocation</field>
+        <field name="arch" type="xml">
+            <search string="Shipping slip">
+                <field name="name"/>
+                <field name="purchase_order_ids"/>
+                <field name="shipping_ids"/>
+                <field name="state"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="dpt_expense_allocation_form_views" model="ir.ui.view">
+        <field name="name">dpt_expense_allocation_form_views</field>
+        <field name="model">dpt.expense.allocation</field>
+        <field name="arch" type="xml">
+            <form string="Phân bổ chi phí">
+                <header>
+                    <button name="action_allocate" string="Phân bổ chi phí" class="btn-primary" type="object"
+                            invisible="state == 'allocated'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1"/>
+                            <field name="purchase_order_ids" options="{'no_create': True, 'no_open': True}"
+                                   required="1"/>
+                            <field name="shipping_ids"/>
+                        </group>
+                        <group>
+                            <field name="total_expense"/>
+                            <field name="currency_id" required="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="sale_order" string="Đơn hàng">
+                            <field name="sale_ids" readonly="1" force_save="1">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="partner_id"/>
+                                    <field name="expense_amount_total"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="account_move" string="Bút toán phân bổ">
+                            <field name="allocation_move_ids" readonly="1" force_save="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="dpt_expense_allocation_tree_views" model="ir.ui.view">
+        <field name="name">dpt_expense_allocation_tree_views</field>
+        <field name="model">dpt.expense.allocation</field>
+        <field name="arch" type="xml">
+            <tree string="Phân bổ chi phí">
+                <field name="name"/>
+                <field name="purchase_order_ids" widget="many2many_tags"/>
+                <field name="shipping_ids" widget="many2many_tags"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="dpt_expense_allocation_action" model="ir.actions.act_window">
+        <field name="name">Phân bổ chi phí</field>
+        <field name="res_model">dpt.expense.allocation</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="dpt_expense_allocation_menu" name="Phân bổ chi phí" sequence="40"
+              action="dpt_expense_allocation_action" parent="hr_expense.menu_hr_expense_root"/>
+</odoo>

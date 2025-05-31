@@ -25,13 +25,153 @@
                     <attribute name="invisible">1</attribute>
                 </xpath>
                 <xpath expr="//page[@name='pricelist_rules']" position="after">
-                    <page name="pricelist_rules_service" string="Price Rules">
+                    <!-- Tab Dịch vụ lẻ -->
+                    <page name="pricelist_rules_service" string="Dịch vụ">
                         <field name="item_ids" nolabel="1"
+                               domain="[('service_id', '!=', False), ('combo_id', '=', False)]"
                                context="{'default_base':'list_price', 'default_partner_id': partner_id,
                                      'form_view_ref': 'dpt_service_pricelist.product_pricelist_item_view_form_service_pricelist',
                                      'tree_view_ref': 'dpt_service_pricelist.product_pricelist_item_view_tree_service_pricelist'}"/>
                     </page>
+
+                    <!-- Tab Combo dịch vụ -->
+                    <page name="pricelist_rules_combo" string="Combo dịch vụ">
+                        <button name="action_add_combo_services" string="Thêm dịch vụ từ Combo"
+                                type="object" class="btn-primary mb-2"
+                                help="Thêm tự động các dịch vụ từ Combo đã chọn vào tab Dịch vụ"/>
+                        <field name="combo_item_ids" nolabel="1"
+                               context="{'default_base':'list_price', 'default_partner_id': partner_id,
+                                     'default_compute_price': 'fixed',
+                                     'form_view_ref': 'dpt_service_pricelist.product_pricelist_item_view_form_combo_pricelist',
+                                     'tree_view_ref': 'dpt_service_pricelist.product_pricelist_item_view_tree_combo_pricelist'}"/>
+                    </page>
                 </xpath>
+            </field>
+        </record>
+
+        <!-- Form View cho Combo -->
+        <record id="product_pricelist_item_view_form_combo_pricelist" model="ir.ui.view">
+            <field name="name">product.pricelist.item.form.combo</field>
+            <field name="model">product.pricelist.item</field>
+            <field name="priority">15</field>
+            <field name="arch" type="xml">
+                <form string="Bảng giá Combo">
+                    <sheet>
+                        <field name="name" invisible="1"/>
+                        <field name="company_id" invisible="1"/>
+                        <group>
+                            <group>
+                                <field name="combo_id" domain="[('active', '=', True)]"
+                                       options="{'no_create': True}" required="1"/>
+                                <field name="uom_id" options="{'no_create': True}"/>
+                                <field name="compute_price" widget="radio" options="{'horizontal': true}"/>
+                                <field name="is_price" invisible="compute_price != 'table'"/>
+                                <field name="is_accumulated" invisible="compute_price != 'table'"/>
+                                <field name="currency_id" options="{'no_create': True}" readonly="0" required="1"/>
+                                <field name="fixed_price" widget="monetary" invisible="compute_price != 'fixed'"
+                                       options="{'field_digits': True}"/>
+                                <label for="percent_price" string="Percentage"
+                                       invisible="compute_price != 'percentage'"/>
+                                <div class="o_row" invisible="compute_price != 'percentage'">
+                                    <field name="percent_price" class="oe_inline"
+                                           invisible="compute_price != 'percentage'"/>%
+                                </div>
+                                <field name="percent_based_on" invisible="compute_price != 'percentage'"/>
+                                <field name="min_amount" widget="monetary" options="{'field_digits': True}"/>
+                            </group>
+                            <group>
+                                <field name="partner_id" options="{'no_create': True}"/>
+                                <field name="date_start"/>
+                                <field name="date_end"/>
+                                <field name="version" readonly="1"/>
+                            </group>
+                        </group>
+                        <notebook invisible="compute_price != 'table'">
+                            <page string="Bảng giá" name="price_table">
+                                <field name="pricelist_table_detail_ids">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="currency_id" column_invisible="1" force_save="1"/>
+                                        <field name="condition_type" widget="selection"/>
+                                        <field name="uom_id" options="{'no_create': True}"
+                                               invisible="condition_type != 'simple'"/>
+                                        <field name="uom_condition_ids" widget="many2many_tags"
+                                               options="{'no_create': True}"
+                                               invisible="condition_type == 'simple'"/>
+                                        <field name="price_type"/>
+                                        <field name="compute_uom_id" options="{'no_create': True}"/>
+                                        <field name="description"/>
+                                        <field name="min_value"/>
+                                        <field name="max_value"/>
+                                        <field name="amount"/>
+                                    </tree>
+                                    <form>
+                                        <sheet>
+                                            <group>
+                                                <group>
+                                                    <field name="sequence"/>
+                                                    <field name="condition_type" widget="radio"/>
+                                                    <field name="uom_id" options="{'no_create': True}"
+                                                           invisible="condition_type != 'simple'"/>
+                                                    <field name="uom_condition_ids" widget="many2many_tags"
+                                                           options="{'no_create': True}"
+                                                           invisible="condition_type == 'simple'"/>
+                                                    <field name="price_type" widget="radio"/>
+                                                    <field name="compute_uom_id" options="{'no_create': True}"/>
+                                                    <field name="min_value"/>
+                                                    <field name="max_value"/>
+                                                </group>
+                                                <group>
+                                                    <field name="description"/>
+                                                    <field name="amount" widget="monetary"
+                                                           string="Giá cố định" attrs="{'string': 'Đơn giá', 'invisible': [('price_type', '!=', 'unit_price')]}"/>
+                                                    <field name="currency_id" invisible="1"/>
+                                                </group>
+                                            </group>
+                                            <div class="alert alert-info" role="alert" style="margin-top: 10px;"
+                                                 invisible="price_type != 'unit_price'">
+                                                <strong>Hướng dẫn đơn giá:</strong>
+                                                <p>Đơn giá sẽ được tính với phần giá trị vượt quá mức thấp nhất (Min Value).</p>
+                                                <p>Ví dụ: Nếu Min Value = 20, Amount = 10,000 và giá trị là 25, giá sẽ là: (25-20) × 10,000 = 50,000</p>
+                                            </div>
+                                            <div class="alert alert-info" role="alert" style="margin-top: 10px;"
+                                                 invisible="condition_type == 'simple'">
+                                                <strong>Hướng dẫn loại điều kiện:</strong>
+                                                <ul>
+                                                    <li><strong>Thỏa mãn bất kỳ đơn vị nào (OR)</strong>:
+                                                        Áp dụng khi bất kỳ đơn vị nào được chọn từ danh sách
+                                                    </li>
+                                                    <li><strong>Thỏa mãn tất cả đơn vị (AND)</strong>:
+                                                        Áp dụng chỉ khi tất cả các đơn vị trong danh sách đều được chọn
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </sheet>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View cho Combo -->
+        <record id="product_pricelist_item_view_tree_combo_pricelist" model="ir.ui.view">
+            <field name="name">product.pricelist.item.tree.combo</field>
+            <field name="model">product.pricelist.item</field>
+            <field name="priority">15</field>
+            <field name="arch" type="xml">
+                <tree string="Bảng giá Combo">
+                    <field name="combo_id"/>
+<!--                    <field name="uom_id"/>-->
+                    <field name="compute_price"/>
+<!--                    <field name="fixed_price" string="Giá" widget="monetary"/>-->
+                    <field name="currency_id"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+<!--                    <field name="min_amount" widget="monetary"/>-->
+                </tree>
             </field>
         </record>
 

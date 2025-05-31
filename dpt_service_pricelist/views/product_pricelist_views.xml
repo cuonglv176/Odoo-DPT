@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View cho product.pricelist -->
+    <record id="view_product_pricelist_form_inherit_dpt" model="ir.ui.view">
+        <field name="name">product.pricelist.form.inherit.dpt</field>
+        <field name="model">product.pricelist</field>
+        <field name="inherit_id" ref="product.product_pricelist_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <button name="action_submit_approval" string="Gửi phê duyệt" class="oe_highlight"
+                            type="object" invisible="state != 'draft'"/>
+                    <button name="action_suspend" string="Tạm dừng" type="object"
+                            invisible="state != 'active'"/>
+                    <button name="action_resume" string="Kích hoạt lại" type="object" class="oe_highlight"
+                            invisible="state != 'suspended'"/>
+                    <button name="action_draft" string="Đặt về nháp" type="object"
+                            invisible="state not in ('rejected', 'expired')"/>
+                    <button name="action_view_approval" string="Xem phê duyệt" type="object"
+                            invisible="not approval_id"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,pending,active,suspended,expired"/>
+                </header>
+            </xpath>
+
+            <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="approval_id" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='product_tmpl_id']" position="attributes">
+                <attribute name="required">0</attribute>
+            </xpath>
+
+            <xpath expr="//notebook" position="inside">
+                <page string="Thông tin phê duyệt" invisible="state == 'draft'">
+                    <group>
+                        <group>
+                            <field name="approval_date" readonly="1"
+                                   invisible="not approval_date"/>
+                            <field name="approved_by" readonly="1"
+                                   invisible="not approved_by"/>
+                        </group>
+                        <group>
+                            <field name="rejection_reason" readonly="1"
+                                   invisible="not rejection_reason"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Tree View cho product.pricelist -->
+    <record id="view_product_pricelist_tree_inherit_dpt" model="ir.ui.view">
+        <field name="name">product.pricelist.tree.inherit.dpt</field>
+        <field name="model">product.pricelist</field>
+        <field name="inherit_id" ref="product.product_pricelist_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="currency_id" position="after">
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'active'"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'pending'"
+                       decoration-danger="state in ['rejected', 'expired']"
+                       decoration-muted="state == 'suspended'"/>
+                <field name="approved_by" optional="hide"/>
+                <field name="approval_date" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+
+    <!-- Menu dành cho bảng giá -->
+    <record id="action_service_pricelist_combo" model="ir.actions.act_window">
+        <field name="name">Bảng giá dịch vụ</field>
+        <field name="res_model">product.pricelist</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo bảng giá dịch vụ mới
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu chính cho bảng giá -->
+    <menuitem id="menu_service_pricelist_combo"
+              name="Bảng giá"
+              parent="dpt_service_management.service_management_root_menu"
+              action="action_service_pricelist_combo"
+              sequence="30"/>
+
+
+    <!-- Cron job để kiểm tra bảng giá hết hạn -->
+    <record id="ir_cron_check_expired_pricelists" model="ir.cron">
+        <field name="name">Kiểm tra bảng giá hết hạn</field>
+        <field name="model_id" ref="product.model_product_pricelist"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_check_expired_pricelists()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>

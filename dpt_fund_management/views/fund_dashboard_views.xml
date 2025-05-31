@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Dashboard Form View -->
+    <record id="view_fund_dashboard_form" model="ir.ui.view">
+        <field name="name">dpt.fund.dashboard.form</field>
+        <field name="model">dpt.fund.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Bảng Điều Khiển Quỹ">
+                <header>
+                    <button name="refresh_dashboard" string="Làm Mới Dữ Liệu" type="object" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="date_from" string="Từ Ngày"/>
+                            <field name="date_to" string="Đến Ngày"/>
+                        </group>
+                    </group>
+
+                    <!-- Summary Cards -->
+                    <div class="row mt16">
+                        <div class="col-lg-3 col-6">
+                            <div class="card bg-primary text-white">
+                                <div class="card-body">
+                                    <h4>
+                                        <field name="total_balance" widget="monetary"/>
+                                    </h4>
+                                    <p>Tổng Số Dư</p>
+                                    <button name="action_view_accounts" string="Xem Tài Khoản" type="object"
+                                            class="btn btn-light btn-sm"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="card bg-success text-white">
+                                <div class="card-body">
+                                    <h4>
+                                        <field name="total_income" widget="monetary"/>
+                                    </h4>
+                                    <p>Tổng Thu Nhập</p>
+                                    <button name="action_view_transactions" string="Xem Giao Dịch" type="object"
+                                            class="btn btn-light btn-sm"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="card bg-danger text-white">
+                                <div class="card-body">
+                                    <h4>
+                                        <field name="total_expense" widget="monetary"/>
+                                    </h4>
+                                    <p>Tổng Chi Phí</p>
+                                    <button name="action_view_transactions" string="Xem Giao Dịch" type="object"
+                                            class="btn btn-light btn-sm"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="card bg-info text-white">
+                                <div class="card-body">
+                                    <h4>
+                                        <field name="net_profit" widget="monetary"/>
+                                    </h4>
+                                    <p>Lợi Nhuận Ròng</p>
+                                    <span class="badge badge-light">
+                                        <field name="roi_percentage"/>% ROI
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Performance Metrics -->
+                    <div class="row mt16">
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h3 class="text-primary">
+                                        <field name="roi_percentage"/>%
+                                    </h3>
+                                    <p class="text-muted">Tỷ Lệ Hoàn Vốn (ROI)</p>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 50%"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h3 class="text-success">
+                                        <field name="liquidity_ratio"/>
+                                    </h3>
+                                    <p class="text-muted">Tỷ Lệ Thanh Khoản</p>
+                                    <small class="text-muted">Mục tiêu: > 2.0</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h3 class="text-warning">
+                                        <field name="diversification_score"/>%
+                                    </h3>
+                                    <p class="text-muted">Điểm Đa Dạng Hóa</p>
+                                    <small class="text-muted">Phân tán danh mục</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Alerts Section -->
+                    <div class="row mt16">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>
+                                        <i class="fa fa-bell"/>
+                                        Cảnh Báo &amp; Thông Báo
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="alert alert-info" invisible="pending_transfers == 0">
+                                        <strong>Giao dịch chờ:</strong>
+                                        Bạn có
+                                        <field name="pending_transfers"/>
+                                        giao dịch chuyển khoản đang chờ phê duyệt.
+                                        <button name="action_view_transfers" string="Review" type="object"
+                                                class="btn btn-sm btn-outline-primary ml-2"/>
+                                    </div>
+                                    <div class="alert alert-warning" invisible="liquidity_ratio >= 2">
+                                        <strong>Thanh khoản thấp:</strong>
+                                        Tỷ lệ thanh khoản của bạn thấp hơn ngưỡng khuyến nghị là 2.0
+                                    </div>
+                                    <div class="alert alert-success" invisible="pending_transfers > 0 or liquidity_ratio &lt; 2">
+                                        <strong>Tất cả đều tốt:</strong>
+                                       Hiện tại không có cảnh báo nào. Việc quản lý quỹ của bạn đang đi đúng hướng!
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="row mt16">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>
+                                        <i class="fa fa-bolt"/>
+                                        Thao Tác Nhanh
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="btn-group" role="group">
+                                        <button name="action_new_account" string="Tài Khoản Mới" type="object"
+                                                class="btn btn-primary"/>
+                                        <button name="action_new_transaction" string="Giao Dịch Mới" type="object"
+                                                class="btn btn-success"/>
+                                        <button name="action_new_transfer" string="Chuyển Khoản Mới" type="object"
+                                                class="btn btn-info"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Dashboard List View -->
+    <record id="view_fund_dashboard_tree" model="ir.ui.view">
+        <field name="name">fund.dashboard.tree</field>
+        <field name="model">dpt.fund.dashboard</field>
+        <field name="arch" type="xml">
+            <tree string="Bảng Điều Khiển Quỹ">
+                <field name="name" string="Tên"/>
+                <field name="date_from" string="Từ Ngày"/>
+                <field name="date_to" string="Đến Ngày"/>
+                <field name="total_balance" widget="monetary" string="Tổng Số Dư"/>
+                <field name="net_profit" widget="monetary" string="Lợi Nhuận Ròng"/>
+                <field name="roi_percentage" string="ROI (%)"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Dashboard Action -->
+    <record id="action_fund_dashboard" model="ir.actions.act_window">
+        <field name="name">Bảng Điều Khiển Quỹ</field>
+        <field name="res_model">dpt.fund.dashboard</field>
+        <field name="view_mode">form,tree</field>
+        <field name="target">current</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Chào mừng đến với Bảng Điều Khiển Quản Lý Quỹ!
+            </p>
+            <p>
+                Nhận thông tin chi tiết về hiệu suất quỹ, theo dõi giao dịch và giám sát các chỉ số quan trọng.
+            </p>
+        </field>
+    </record>
+
+</odoo>

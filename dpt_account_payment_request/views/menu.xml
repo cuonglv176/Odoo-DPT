@@ -22,6 +22,7 @@
                   name="Payment Request Type"
                   parent="dpt_account_payment_request_menu"
                   action="dpt_action_account_payments_type_request"
+                  groups="base.group_system"
                   sequence="20"/>
 
     </data>

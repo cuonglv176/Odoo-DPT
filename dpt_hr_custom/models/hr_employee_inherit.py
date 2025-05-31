@@ -62,3 +62,4 @@ class HrEmployeePublic(models.Model):
    ], string='Tình trạng con cái', related='employee_id.has_children', compute_sudo=True)
    identification_date = fields.Date('Ngày cấp CCCD', related='employee_id.identification_date', compute_sudo=True)
    place_of_identification = fields.Char('Nơi cấp CCCD', related='employee_id.place_of_identification', compute_sudo=True)
+
