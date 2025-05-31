@@ -7,7 +7,8 @@ class ServiceCombo(models.Model):
     _description = 'Combo dịch vụ'
     _rec_name = 'combo_id'
 
-    combo_id = fields.Many2one('dpt.service.combo', string='Combo')
+    combo_id = fields.Many2one('dpt.service.combo', string='Combo', 
+                              domain="[('state', '=', 'active')]")
     code = fields.Char('Mã combo', related='combo_id.code')
     description = fields.Text('Mô tả')
     service_ids = fields.Many2many('dpt.service.management', string='Dịch vụ trong combo',
