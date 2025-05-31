@@ -113,8 +113,79 @@ class SaleOrder(models.Model):
                         'price_status': 'calculated',
                         'department_id': service_data['department_id'],
                     }))
+
+                # Thêm các trường thông tin từ combo vào đơn hàng
+                if combo.combo_id and combo.combo_id.required_fields_ids:
+                    fields_dict = {}
+                    for req_field in combo.combo_id.required_fields_ids:
+                        # Nếu req_field không tồn tại, bỏ qua
+                        if not req_field:
+                            continue
+
+                        # Tạo key duy nhất để tránh trùng lặp
+                        field_key = (req_field.id, 'combo')
+
+                        # Kiểm tra nếu trường đã tồn tại
+                        existing_field = self.fields_ids.filtered(
+                            lambda f: f.fields_id.id == req_field.id
+                        )
+
+                        # Lấy service_id từ combo.service_ids nếu có
+                        service_id = False
+                        if combo.service_ids:
+                            # Ưu tiên dịch vụ có cùng uom_id với req_field
+                            matching_service = combo.service_ids.filtered(
+                                lambda s: s.uom_id.id == req_field.uom_id.id
+                            )
+                            if matching_service:
+                                service_id = matching_service[0].id
+                            else:
+                                # Nếu không có, lấy dịch vụ đầu tiên
+                                service_id = combo.service_ids[0].id
+
+                        if existing_field:
+                            rec = {
+                                'sequence': 1 if existing_field.fields_id.type == 'required' else 0,
+                                'fields_id': req_field.id,
+                                'sale_id': self.id,
+                                'value_char': existing_field.value_char,
+                                'value_integer': existing_field.value_integer,
+                                'value_date': existing_field.value_date,
+                                'selection_value_id': existing_field.selection_value_id.id if existing_field.selection_value_id else False,
+                                'service_id': service_id,
+                                'using_calculation_price': req_field.using_calculation_price,
+                                'uom_id': req_field.uom_id.id if req_field.uom_id else False,
+                            }
+                        else:
+                            # Tạo giá trị mặc định
+                            rec = {
+                                'sequence': 1 if req_field.type == 'required' else 0,
+                                'fields_id': req_field.id,
+                                'sale_id': self.id,
+                                'service_id': service_id,
+                                'using_calculation_price': req_field.using_calculation_price,
+                                'uom_id': req_field.uom_id.id if req_field.uom_id else False,
+                            }
+                            default_value = req_field.get_default_value(so=self)
+                            if default_value:
+                                rec.update(default_value)
+
+                        fields_dict[field_key] = rec
+
+                    # Thêm các trường thông tin vào đơn hàng
+                    if fields_dict:
+                        for item in fields_dict.values():
+                            # Kiểm tra nếu trường đã tồn tại
+                            existing = self.fields_ids.filtered(
+                                lambda f: f.fields_id.id == item['fields_id']
+                            )
+                            if not existing:
+                                self.fields_ids = [(0, 0, item)]
+
             if new_services:
                 self.sale_service_ids = [(4, service.id) for service in self.sale_service_ids] + new_services
+                # Automatically calculate prices from price lists
+                self.action_calculation()
 
     # Nuevo método para manejar combos planificados
     @api.onchange('planned_service_combo_ids')
@@ -151,9 +222,80 @@ class SaleOrder(models.Model):
                         'department_id': service_data['department_id'],
                         'planned_sale_id': self.id,
                     }))
+
+                # Thêm các trường thông tin từ combo vào đơn hàng
+                if combo.combo_id and combo.combo_id.required_fields_ids:
+                    fields_dict = {}
+                    for req_field in combo.combo_id.required_fields_ids:
+                        # Nếu req_field không tồn tại, bỏ qua
+                        if not req_field:
+                            continue
+
+                        # Tạo key duy nhất để tránh trùng lặp
+                        field_key = (req_field.id, 'combo_planned')
+
+                        # Kiểm tra nếu trường đã tồn tại
+                        existing_field = self.fields_ids.filtered(
+                            lambda f: f.fields_id.id == req_field.id
+                        )
+
+                        # Lấy service_id từ combo.service_ids nếu có
+                        service_id = False
+                        if combo.service_ids:
+                            # Ưu tiên dịch vụ có cùng uom_id với req_field
+                            matching_service = combo.service_ids.filtered(
+                                lambda s: s.uom_id.id == req_field.uom_id.id
+                            )
+                            if matching_service:
+                                service_id = matching_service[0].id
+                            else:
+                                # Nếu không có, lấy dịch vụ đầu tiên
+                                service_id = combo.service_ids[0].id
+
+                        if existing_field:
+                            rec = {
+                                'sequence': 1 if existing_field.fields_id.type == 'required' else 0,
+                                'fields_id': req_field.id,
+                                'sale_id': self.id,
+                                'value_char': existing_field.value_char,
+                                'value_integer': existing_field.value_integer,
+                                'value_date': existing_field.value_date,
+                                'selection_value_id': existing_field.selection_value_id.id if existing_field.selection_value_id else False,
+                                'service_id': service_id,
+                                'using_calculation_price': req_field.using_calculation_price,
+                                'uom_id': req_field.uom_id.id if req_field.uom_id else False,
+                            }
+                        else:
+                            # Tạo giá trị mặc định
+                            rec = {
+                                'sequence': 1 if req_field.type == 'required' else 0,
+                                'fields_id': req_field.id,
+                                'sale_id': self.id,
+                                'service_id': service_id,
+                                'using_calculation_price': req_field.using_calculation_price,
+                                'uom_id': req_field.uom_id.id if req_field.uom_id else False,
+                            }
+                            default_value = req_field.get_default_value(so=self)
+                            if default_value:
+                                rec.update(default_value)
+
+                        fields_dict[field_key] = rec
+
+                    # Thêm các trường thông tin vào đơn hàng
+                    if fields_dict:
+                        for item in fields_dict.values():
+                            # Kiểm tra nếu trường đã tồn tại
+                            existing = self.fields_ids.filtered(
+                                lambda f: f.fields_id.id == item['fields_id']
+                            )
+                            if not existing:
+                                self.fields_ids = [(0, 0, item)]
+
             if new_services:
                 self.planned_sale_service_ids = [(4, service.id) for service in
                                                  self.planned_sale_service_ids] + new_services
+                # Automatically calculate prices from price lists
+                self.action_calculation()
 
     @api.depends('sale_service_ids', 'sale_service_ids.service_id', 'sale_service_ids.service_id.pricelist_item_ids')
     def compute_show_is_quotation(self):
@@ -210,6 +352,8 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self).create(vals_list)
         res.check_required_fields()
         res.onchange_calculation_tax()
+        # Automatically calculate prices from price lists
+        res.action_calculation()
         return res
 
     def write(self, vals):
@@ -219,6 +363,10 @@ class SaleOrder(models.Model):
             self.onchange_calculation_tax()
         if vals.get('state') == 'sale':
             self.action_update_fields()
+
+        # Automatically calculate prices from price lists if services or combos are modified
+        if 'sale_service_ids' in vals or 'planned_sale_service_ids' in vals or 'service_combo_ids' in vals or 'planned_service_combo_ids' in vals:
+            self.action_calculation()
         return res
 
     def action_unlock(self):
@@ -426,8 +574,15 @@ class SaleOrder(models.Model):
             if not services:
                 continue
 
+            # Lấy loại báo giá từ combo
+            quote_type = combo.combo_id.quote_type or 'bao_giao'  # Mặc định là bao giao nếu không có giá trị
+
             # Tính tổng giá gốc của các dịch vụ trong combo
             total_original_price = sum(service.service_id.price for service in services)
+
+            # Phân loại dịch vụ theo loại báo giá
+            shipping_services = services.filtered(lambda s: s.service_id.name and 'vận chuyển' in s.service_id.name.lower())
+            other_services = services - shipping_services
 
             # Phân bổ giá cho từng dịch vụ
             for service in services:
@@ -445,21 +600,69 @@ class SaleOrder(models.Model):
                                   f.fields_type == 'integer')
 
                     if compute_field:
-                        compute_value = compute_field.value_integer or 1
+                        # Check if the unit is m3 or kg and use the corresponding field from the sale order
+                        uom = self.env['uom.uom'].browse(compute_field.uom_id.id)
+                        if uom.name == 'm3' and self.volume:
+                            # Use volume field from sale order
+                            compute_value = self.volume
+                        elif uom.name == 'kg' and self.weight:
+                            # Use weight field from sale order
+                            compute_value = self.weight
+                        else:
+                            # Use the field value as before
+                            compute_value = compute_field.value_integer or 1
                         compute_uom_id = compute_field.uom_id.id
 
-                # Tính giá phân bổ
-                if total_original_price <= 0:
-                    # Nếu tổng giá gốc bằng 0, phân bổ đều
-                    distributed_price = combo_price / len(services)
-                else:
-                    # Phân bổ theo tỉ lệ giá gốc
-                    ratio = service.service_id.price / total_original_price
-                    distributed_price = combo_price * ratio
+                # Tính giá phân bổ dựa trên loại báo giá
+                if quote_type == 'bao_giao':
+                    # Nếu là "bao giao" (bao vận chuyển)
+                    if service in shipping_services:
+                        # Dịch vụ vận chuyển được tính toàn bộ giá
+                        distributed_price = service.service_id.price
+                    else:
+                        # Các dịch vụ khác được phân bổ phần còn lại
+                        shipping_total = sum(s.service_id.price for s in shipping_services)
+                        remaining_price = combo_price - shipping_total
+
+                        if len(other_services) > 0:
+                            if total_original_price - shipping_total <= 0:
+                                # Nếu tổng giá gốc (trừ vận chuyển) bằng 0, phân bổ đều
+                                distributed_price = remaining_price / len(other_services)
+                            else:
+                                # Phân bổ theo tỉ lệ giá gốc
+                                non_shipping_total = total_original_price - shipping_total
+                                ratio = service.service_id.price / non_shipping_total
+                                distributed_price = remaining_price * ratio
+                        else:
+                            distributed_price = 0
+                else:  # 'all_in'
+                    # Nếu là "all in" (tất cả giá), phân bổ theo tỉ lệ giá gốc
+                    if total_original_price <= 0:
+                        # Nếu tổng giá gốc bằng 0, phân bổ đều
+                        distributed_price = combo_price / len(services)
+                    else:
+                        # Phân bổ theo tỉ lệ giá gốc
+                        ratio = service.service_id.price / total_original_price
+                        distributed_price = combo_price * ratio
 
                 # Cập nhật đơn giá và số lượng
+                # Nếu là đơn vị m3 hoặc kg, nhân giá với số lượng thay vì chia
+                unit_price = distributed_price
+                if combo_item.is_price:
+                    # Kiểm tra nếu đơn vị là m3 hoặc kg
+                    if compute_uom_id and compute_field:
+                        uom = self.env['uom.uom'].browse(compute_uom_id)
+                        if uom.name in ['m3', 'kg']:
+                            # Giữ nguyên giá đơn vị, không chia cho compute_value
+                            unit_price = distributed_price
+                        else:
+                            # Đối với các đơn vị khác, vẫn chia như cũ
+                            unit_price = distributed_price / compute_value
+                    else:
+                        unit_price = distributed_price / compute_value
+
                 service.with_context(from_pricelist=True).write({
-                    'price': distributed_price / compute_value if combo_item.is_price else distributed_price,
+                    'price': unit_price,
                     'price_in_pricelist': distributed_price,
                     'compute_value': compute_value,
                     'compute_uom_id': compute_uom_id,
@@ -483,7 +686,14 @@ class SaleOrder(models.Model):
             if not planned_services:
                 continue
 
+            # Lấy loại báo giá từ combo
+            quote_type = planned_combo.combo_id.quote_type or 'bao_giao'  # Mặc định là bao giao nếu không có giá trị
+
             total_original_price = sum(service.service_id.price for service in planned_services)
+
+            # Phân loại dịch vụ theo loại báo giá
+            shipping_services = planned_services.filtered(lambda s: s.service_id.name and 'vận chuyển' in s.service_id.name.lower())
+            other_services = planned_services - shipping_services
 
             # Phân bổ giá cho từng dịch vụ dự kiến
             for service in planned_services:
@@ -501,21 +711,69 @@ class SaleOrder(models.Model):
                                   f.fields_type == 'integer')
 
                     if compute_field:
-                        compute_value = compute_field.value_integer or 1
+                        # Check if the unit is m3 or kg and use the corresponding field from the sale order
+                        uom = self.env['uom.uom'].browse(compute_field.uom_id.id)
+                        if uom.name == 'm3' and self.volume:
+                            # Use volume field from sale order
+                            compute_value = self.volume
+                        elif uom.name == 'kg' and self.weight:
+                            # Use weight field from sale order
+                            compute_value = self.weight
+                        else:
+                            # Use the field value as before
+                            compute_value = compute_field.value_integer or 1
                         compute_uom_id = compute_field.uom_id.id
 
-                # Tính giá phân bổ
-                if total_original_price <= 0:
-                    # Nếu tổng giá gốc bằng 0, phân bổ đều
-                    distributed_price = combo_price / len(planned_services)
-                else:
-                    # Phân bổ theo tỉ lệ giá gốc
-                    ratio = service.service_id.price / total_original_price
-                    distributed_price = combo_price * ratio
+                # Tính giá phân bổ dựa trên loại báo giá
+                if quote_type == 'bao_giao':
+                    # Nếu là "bao giao" (bao vận chuyển)
+                    if service in shipping_services:
+                        # Dịch vụ vận chuyển được tính toàn bộ giá
+                        distributed_price = service.service_id.price
+                    else:
+                        # Các dịch vụ khác được phân bổ phần còn lại
+                        shipping_total = sum(s.service_id.price for s in shipping_services)
+                        remaining_price = combo_price - shipping_total
+
+                        if len(other_services) > 0:
+                            if total_original_price - shipping_total <= 0:
+                                # Nếu tổng giá gốc (trừ vận chuyển) bằng 0, phân bổ đều
+                                distributed_price = remaining_price / len(other_services)
+                            else:
+                                # Phân bổ theo tỉ lệ giá gốc
+                                non_shipping_total = total_original_price - shipping_total
+                                ratio = service.service_id.price / non_shipping_total
+                                distributed_price = remaining_price * ratio
+                        else:
+                            distributed_price = 0
+                else:  # 'all_in'
+                    # Nếu là "all in" (tất cả giá), phân bổ theo tỉ lệ giá gốc
+                    if total_original_price <= 0:
+                        # Nếu tổng giá gốc bằng 0, phân bổ đều
+                        distributed_price = combo_price / len(planned_services)
+                    else:
+                        # Phân bổ theo tỉ lệ giá gốc
+                        ratio = service.service_id.price / total_original_price
+                        distributed_price = combo_price * ratio
 
                 # Cập nhật đơn giá và số lượng
+                # Nếu là đơn vị m3 hoặc kg, nhân giá với số lượng thay vì chia
+                unit_price = distributed_price
+                if combo_item.is_price:
+                    # Kiểm tra nếu đơn vị là m3 hoặc kg
+                    if compute_uom_id and compute_field:
+                        uom = self.env['uom.uom'].browse(compute_uom_id)
+                        if uom.name in ['m3', 'kg']:
+                            # Giữ nguyên giá đơn vị, không chia cho compute_value
+                            unit_price = distributed_price
+                        else:
+                            # Đối với các đơn vị khác, vẫn chia như cũ
+                            unit_price = distributed_price / compute_value
+                    else:
+                        unit_price = distributed_price / compute_value
+
                 service.with_context(from_pricelist=True).write({
-                    'price': distributed_price / compute_value if combo_item.is_price else distributed_price,
+                    'price': unit_price,
                     'price_in_pricelist': distributed_price,
                     'compute_value': compute_value,
                     'compute_uom_id': compute_uom_id,
@@ -652,7 +910,17 @@ class SaleOrder(models.Model):
                                 if price > max_price:
                                     max_price = price
                                     price_list_item_id = service_price_id
-                                    compute_value = compute_field_id.value_integer
+                                    # Check if the unit is m3 or kg and use the corresponding field from the sale order
+                                    uom = self.env['uom.uom'].browse(compute_field_id.uom_id.id)
+                                    if uom.name == 'm3' and self.volume:
+                                        # Use volume field from sale order
+                                        compute_value = self.volume
+                                    elif uom.name == 'kg' and self.weight:
+                                        # Use weight field from sale order
+                                        compute_value = self.weight
+                                    else:
+                                        # Use the field value as before
+                                        compute_value = compute_field_id.value_integer
                                     compute_uom_id = compute_field_id.uom_id.id
 
                         # Xử lý giá tích lũy
@@ -694,7 +962,17 @@ class SaleOrder(models.Model):
                             if has_applicable and max(total_price, service_price_id.min_amount) > max_price:
                                 max_price = max(total_price, service_price_id.min_amount)
                                 price_list_item_id = service_price_id
-                                compute_value = compute_field_id.value_integer
+                                # Check if the unit is m3 or kg and use the corresponding field from the sale order
+                                uom = self.env['uom.uom'].browse(compute_field_id.uom_id.id)
+                                if uom.name == 'm3' and self.volume:
+                                    # Use volume field from sale order
+                                    compute_value = self.volume
+                                elif uom.name == 'kg' and self.weight:
+                                    # Use weight field from sale order
+                                    compute_value = self.weight
+                                else:
+                                    # Use the field value as before
+                                    compute_value = compute_field_id.value_integer
                                 compute_uom_id = compute_field_id.uom_id.id
 
             # Cập nhật trạng thái giá
@@ -710,7 +988,16 @@ class SaleOrder(models.Model):
                 )
 
                 # Tính giá đơn vị nếu có compute_value
-                unit_price = max_price / compute_value if price_list_item_id and price_list_item_id.is_price and compute_value > 0 else max_price
+                unit_price = max_price
+                if price_list_item_id and price_list_item_id.is_price and compute_value > 0:
+                    # Kiểm tra nếu đơn vị là m3 hoặc kg
+                    if compute_uom_id:
+                        uom = self.env['uom.uom'].browse(compute_uom_id)
+                        if uom.name not in ['m3', 'kg']:
+                            # Đối với các đơn vị khác, vẫn chia như cũ
+                            unit_price = max_price / compute_value
+                    else:
+                        unit_price = max_price / compute_value
 
                 # Cập nhật vào dịch vụ
                 sale_service_id.with_context(from_pricelist=True).write({
@@ -844,7 +1131,17 @@ class SaleOrder(models.Model):
                                 if price > max_price:
                                     max_price = price
                                     price_list_item_id = service_price_id
-                                    compute_value = compute_field_id.value_integer
+                                    # Check if the unit is m3 or kg and use the corresponding field from the sale order
+                                    uom = self.env['uom.uom'].browse(compute_field_id.uom_id.id)
+                                    if uom.name == 'm3' and self.volume:
+                                        # Use volume field from sale order
+                                        compute_value = self.volume
+                                    elif uom.name == 'kg' and self.weight:
+                                        # Use weight field from sale order
+                                        compute_value = self.weight
+                                    else:
+                                        # Use the field value as before
+                                        compute_value = compute_field_id.value_integer
                                     compute_uom_id = compute_field_id.uom_id.id
 
                         # Xử lý giá tích lũy
@@ -886,7 +1183,17 @@ class SaleOrder(models.Model):
                             if has_applicable and max(total_price, service_price_id.min_amount) > max_price:
                                 max_price = max(total_price, service_price_id.min_amount)
                                 price_list_item_id = service_price_id
-                                compute_value = compute_field_id.value_integer
+                                # Check if the unit is m3 or kg and use the corresponding field from the sale order
+                                uom = self.env['uom.uom'].browse(compute_field_id.uom_id.id)
+                                if uom.name == 'm3' and self.volume:
+                                    # Use volume field from sale order
+                                    compute_value = self.volume
+                                elif uom.name == 'kg' and self.weight:
+                                    # Use weight field from sale order
+                                    compute_value = self.weight
+                                else:
+                                    # Use the field value as before
+                                    compute_value = compute_field_id.value_integer
                                 compute_uom_id = compute_field_id.uom_id.id
 
             # Cập nhật trạng thái giá
@@ -902,7 +1209,16 @@ class SaleOrder(models.Model):
                 )
 
                 # Tính giá đơn vị nếu có compute_value
-                unit_price = max_price / compute_value if price_list_item_id and price_list_item_id.is_price and compute_value > 0 else max_price
+                unit_price = max_price
+                if price_list_item_id and price_list_item_id.is_price and compute_value > 0:
+                    # Kiểm tra nếu đơn vị là m3 hoặc kg
+                    if compute_uom_id:
+                        uom = self.env['uom.uom'].browse(compute_uom_id)
+                        if uom.name not in ['m3', 'kg']:
+                            # Đối với các đơn vị khác, vẫn chia như cũ
+                            unit_price = max_price / compute_value
+                    else:
+                        unit_price = max_price / compute_value
 
                 # Cập nhật vào dịch vụ
                 planned_service_id.with_context(from_pricelist=True).write({

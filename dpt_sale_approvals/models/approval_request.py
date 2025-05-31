@@ -19,6 +19,7 @@ class ApprovalRequest(models.Model):
     payment_type_id = fields.Many2one('dpt.account.payment.type', related='payment_id.type_id', string='Loại yêu cầu')
     approver_ids = fields.One2many('approval.approver', 'request_id', string="Approvers", check_company=True,
                                    compute='_compute_approver_ids', store=True, readonly=False)
+    pricelist_id = fields.Many2one('product.pricelist',string="Pricelist")
 
     @api.depends('category_id', 'request_owner_id')
     def _compute_approver_ids(self):

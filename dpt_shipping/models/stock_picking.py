@@ -69,19 +69,22 @@ class StockPicking(models.Model):
                 if shipping_id.name:
                     shipping_name.append(shipping_id.name)
             item.shipping_name = ','.join(shipping_name) if shipping_name else None
-
+#
     def _compute_in_draft_shipping(self):
         for item in self:
-            draft_shipping_slip_ids = self.env['dpt.shipping.slip'].sudo().search(
-                ['|', ('out_picking_ids', 'in', [item.id]), ('in_picking_ids', 'in', [item.id]), '|', '&',
-                 ('vehicle_country', '=', 'chinese'), ('cn_vehicle_stage_id.is_draft_stage', '=', True), '&',
-                 ('vehicle_country', '=', 'vietnamese'), ('vn_vehicle_stage_id.is_draft_stage', '=', True)])
+            draft_shipping_slip_ids = self.env['dpt.shipping.slip'].sudo().search([
+            '|', '|',
+            '&', ('vehicle_country', '=', 'chinese'), ('cn_vehicle_stage_id.is_draft_stage', '=', True),
+            '&', ('vehicle_country', '=', 'vietnamese'), ('vn_vehicle_stage_id.is_draft_stage', '=', True),
+            '&', ('vehicle_country', '=', 'last_delivery_vn'), ('last_vn_vehicle_stage_id.is_draft_stage', '=', True)
+            ])
             item.in_draft_shipping = True if draft_shipping_slip_ids else False
 
     def _search_in_draft_shipping(self, operator, value):
         draft_shipping_slip_ids = self.env['dpt.shipping.slip'].sudo().search(
-            ['|', '&', ('vehicle_country', '=', 'chinese'), ('cn_vehicle_stage_id.is_draft_stage', '=', True), '&',
-             ('vehicle_country', '=', 'vietnamese'), ('vn_vehicle_stage_id.is_draft_stage', '=', True)])
+            ['|', '&', ('vehicle_country', '=', 'chinese'), ('cn_vehicle_stage_id.is_draft_stage', '=', True), '|', '&',
+             ('vehicle_country', '=', 'vietnamese'), ('vn_vehicle_stage_id.is_draft_stage', '=', True), '&',
+             ('vehicle_country', '=', 'last_delivery_vn'), ('last_vn_vehicle_stage_id.is_draft_stage', '=', True)])
         picking_ids = draft_shipping_slip_ids.out_picking_ids | draft_shipping_slip_ids.in_picking_ids
         if (operator == '!=' and value) or (operator == '==' and not value):
             return [('id', 'not in', picking_ids.ids)]
@@ -145,6 +148,9 @@ class StockPicking(models.Model):
         elif shipping_slip_id.vehicle_country == 'vietnamese':
             invalid_picking_ids = shipping_slip_id.in_picking_ids.filtered(
                 lambda sp: not sp.finish_stock_services or not sp.have_stock_label or not sp.have_export_import)
+        elif shipping_slip_id.vehicle_country == 'last_delivery_vn':
+            invalid_picking_ids = shipping_slip_id.out_picking_ids.filtered(
+                lambda sp: not sp.finish_stock_services or not sp.have_stock_label or not sp.have_export_import)
         else:
             return
         if not invalid_picking_ids:
@@ -156,6 +162,8 @@ class StockPicking(models.Model):
                     shipping_slip_id.cn_vehicle_stage_id = ready_stage_id
                 elif shipping_slip_id.vehicle_country == 'vietnamese':
                     shipping_slip_id.vn_vehicle_stage_id = ready_stage_id
+                elif shipping_slip_id.vehicle_country == 'last_delivery_vn':
+                    shipping_slip_id.last_vn_vehicle_stage_id = ready_stage_id
 
     def action_update_transfer_quantity(self):
         return {
