@@ -26,9 +26,27 @@
                 </group>
             </xpath>
             <xpath expr="//group/group[1]" position="inside">
+                <field name="total_credit" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'invisible': [('is_company', '=', False)]}"/>
+                <field name="total_debit" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'invisible': [('is_company', '=', False)]}"/>
+            </xpath>
 
+            <!-- Remove readonly attribute from vat field to allow child companies to have their own tax ID -->
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="readonly">0</attribute>
             </xpath>
         </field>
     </record>
 
+    <!-- Inherit search view to add parent/child company filters -->
+    <record id="view_res_partner_filter_inherit" model="ir.ui.view">
+        <field name="name">res.partner.filter.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <filter name="type_company" position="after">
+                <filter string="Parent Companies" name="parent_companies" domain="[('is_company', '=', True), ('parent_id', '=', False)]"/>
+                <filter string="Child Companies" name="child_companies" domain="[('is_company', '=', True), ('parent_id', '!=', False)]"/>
+            </filter>
+        </field>
+    </record>
 </odoo>

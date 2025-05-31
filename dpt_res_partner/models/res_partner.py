@@ -8,6 +8,34 @@ import re
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
+    @api.model
+    def _commercial_fields(self):
+        """ Override to remove vat from commercial fields to allow child companies to have their own tax ID """
+        fields = super(ResPartner, self)._commercial_fields()
+        if 'vat' in fields:
+            fields.remove('vat')
+        return fields
+
+    total_credit = fields.Monetary(
+        compute='_compute_total_credit_debit',
+        string='Total Receivable',
+        help="Total receivable amount for this partner and all its children.")
+
+    total_debit = fields.Monetary(
+        compute='_compute_total_credit_debit',
+        string='Total Payable',
+        help="Total payable amount for this partner and all its children.")
+
+    @api.depends('credit', 'debit', 'child_ids.credit', 'child_ids.debit')
+    def _compute_total_credit_debit(self):
+        for partner in self:
+            # Get all children companies (only companies, not contacts)
+            children = partner.child_ids.filtered(lambda c: c.is_company)
+
+            # Calculate total credit and debit including children
+            partner.total_credit = partner.credit + sum(child.credit for child in children)
+            partner.total_debit = partner.debit + sum(child.debit for child in children)
+
     dpt_user_name = fields.Char('User Name')
     dpt_ul = fields.Char('UL')
     dpt_shipping_type = fields.Selection(selection=[
