@@ -462,7 +462,17 @@ class SaleOrder(models.Model):
                                   f.fields_type == 'integer')
 
                     if compute_field:
-                        compute_value = compute_field.value_integer or 1
+                        # Check if the unit is m3 or kg and use the corresponding field from the sale order
+                        uom = self.env['uom.uom'].browse(compute_field.uom_id.id)
+                        if uom.name == 'm3' and self.volume:
+                            # Use volume field from sale order
+                            compute_value = self.volume
+                        elif uom.name == 'kg' and self.weight:
+                            # Use weight field from sale order
+                            compute_value = self.weight
+                        else:
+                            # Use the field value as before
+                            compute_value = compute_field.value_integer or 1
                         compute_uom_id = compute_field.uom_id.id
 
                 # Tính giá phân bổ dựa trên loại báo giá
@@ -563,7 +573,17 @@ class SaleOrder(models.Model):
                                   f.fields_type == 'integer')
 
                     if compute_field:
-                        compute_value = compute_field.value_integer or 1
+                        # Check if the unit is m3 or kg and use the corresponding field from the sale order
+                        uom = self.env['uom.uom'].browse(compute_field.uom_id.id)
+                        if uom.name == 'm3' and self.volume:
+                            # Use volume field from sale order
+                            compute_value = self.volume
+                        elif uom.name == 'kg' and self.weight:
+                            # Use weight field from sale order
+                            compute_value = self.weight
+                        else:
+                            # Use the field value as before
+                            compute_value = compute_field.value_integer or 1
                         compute_uom_id = compute_field.uom_id.id
 
                 # Tính giá phân bổ dựa trên loại báo giá
@@ -752,7 +772,17 @@ class SaleOrder(models.Model):
                                 if price > max_price:
                                     max_price = price
                                     price_list_item_id = service_price_id
-                                    compute_value = compute_field_id.value_integer
+                                    # Check if the unit is m3 or kg and use the corresponding field from the sale order
+                                    uom = self.env['uom.uom'].browse(compute_field_id.uom_id.id)
+                                    if uom.name == 'm3' and self.volume:
+                                        # Use volume field from sale order
+                                        compute_value = self.volume
+                                    elif uom.name == 'kg' and self.weight:
+                                        # Use weight field from sale order
+                                        compute_value = self.weight
+                                    else:
+                                        # Use the field value as before
+                                        compute_value = compute_field_id.value_integer
                                     compute_uom_id = compute_field_id.uom_id.id
 
                         # Xử lý giá tích lũy
@@ -794,7 +824,17 @@ class SaleOrder(models.Model):
                             if has_applicable and max(total_price, service_price_id.min_amount) > max_price:
                                 max_price = max(total_price, service_price_id.min_amount)
                                 price_list_item_id = service_price_id
-                                compute_value = compute_field_id.value_integer
+                                # Check if the unit is m3 or kg and use the corresponding field from the sale order
+                                uom = self.env['uom.uom'].browse(compute_field_id.uom_id.id)
+                                if uom.name == 'm3' and self.volume:
+                                    # Use volume field from sale order
+                                    compute_value = self.volume
+                                elif uom.name == 'kg' and self.weight:
+                                    # Use weight field from sale order
+                                    compute_value = self.weight
+                                else:
+                                    # Use the field value as before
+                                    compute_value = compute_field_id.value_integer
                                 compute_uom_id = compute_field_id.uom_id.id
 
             # Cập nhật trạng thái giá
@@ -953,7 +993,17 @@ class SaleOrder(models.Model):
                                 if price > max_price:
                                     max_price = price
                                     price_list_item_id = service_price_id
-                                    compute_value = compute_field_id.value_integer
+                                    # Check if the unit is m3 or kg and use the corresponding field from the sale order
+                                    uom = self.env['uom.uom'].browse(compute_field_id.uom_id.id)
+                                    if uom.name == 'm3' and self.volume:
+                                        # Use volume field from sale order
+                                        compute_value = self.volume
+                                    elif uom.name == 'kg' and self.weight:
+                                        # Use weight field from sale order
+                                        compute_value = self.weight
+                                    else:
+                                        # Use the field value as before
+                                        compute_value = compute_field_id.value_integer
                                     compute_uom_id = compute_field_id.uom_id.id
 
                         # Xử lý giá tích lũy
@@ -995,7 +1045,17 @@ class SaleOrder(models.Model):
                             if has_applicable and max(total_price, service_price_id.min_amount) > max_price:
                                 max_price = max(total_price, service_price_id.min_amount)
                                 price_list_item_id = service_price_id
-                                compute_value = compute_field_id.value_integer
+                                # Check if the unit is m3 or kg and use the corresponding field from the sale order
+                                uom = self.env['uom.uom'].browse(compute_field_id.uom_id.id)
+                                if uom.name == 'm3' and self.volume:
+                                    # Use volume field from sale order
+                                    compute_value = self.volume
+                                elif uom.name == 'kg' and self.weight:
+                                    # Use weight field from sale order
+                                    compute_value = self.weight
+                                else:
+                                    # Use the field value as before
+                                    compute_value = compute_field_id.value_integer
                                 compute_uom_id = compute_field_id.uom_id.id
 
             # Cập nhật trạng thái giá
