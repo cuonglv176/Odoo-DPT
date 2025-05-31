@@ -113,6 +113,75 @@ class SaleOrder(models.Model):
                         'price_status': 'calculated',
                         'department_id': service_data['department_id'],
                     }))
+
+                # Thêm các trường thông tin từ combo vào đơn hàng
+                if combo.combo_id and combo.combo_id.required_fields_ids:
+                    fields_dict = {}
+                    for req_field in combo.combo_id.required_fields_ids:
+                        # Nếu req_field không tồn tại, bỏ qua
+                        if not req_field:
+                            continue
+
+                        # Tạo key duy nhất để tránh trùng lặp
+                        field_key = (req_field.id, 'combo')
+
+                        # Kiểm tra nếu trường đã tồn tại
+                        existing_field = self.fields_ids.filtered(
+                            lambda f: f.fields_id.id == req_field.id
+                        )
+
+                        # Lấy service_id từ combo.service_ids nếu có
+                        service_id = False
+                        if combo.service_ids:
+                            # Ưu tiên dịch vụ có cùng uom_id với req_field
+                            matching_service = combo.service_ids.filtered(
+                                lambda s: s.uom_id.id == req_field.uom_id.id
+                            )
+                            if matching_service:
+                                service_id = matching_service[0].id
+                            else:
+                                # Nếu không có, lấy dịch vụ đầu tiên
+                                service_id = combo.service_ids[0].id
+
+                        if existing_field:
+                            rec = {
+                                'sequence': 1 if existing_field.fields_id.type == 'required' else 0,
+                                'fields_id': req_field.id,
+                                'sale_id': self.id,
+                                'value_char': existing_field.value_char,
+                                'value_integer': existing_field.value_integer,
+                                'value_date': existing_field.value_date,
+                                'selection_value_id': existing_field.selection_value_id.id if existing_field.selection_value_id else False,
+                                'service_id': service_id,
+                                'using_calculation_price': req_field.using_calculation_price,
+                                'uom_id': req_field.uom_id.id if req_field.uom_id else False,
+                            }
+                        else:
+                            # Tạo giá trị mặc định
+                            rec = {
+                                'sequence': 1 if req_field.type == 'required' else 0,
+                                'fields_id': req_field.id,
+                                'sale_id': self.id,
+                                'service_id': service_id,
+                                'using_calculation_price': req_field.using_calculation_price,
+                                'uom_id': req_field.uom_id.id if req_field.uom_id else False,
+                            }
+                            default_value = req_field.get_default_value(so=self)
+                            if default_value:
+                                rec.update(default_value)
+
+                        fields_dict[field_key] = rec
+
+                    # Thêm các trường thông tin vào đơn hàng
+                    if fields_dict:
+                        for item in fields_dict.values():
+                            # Kiểm tra nếu trường đã tồn tại
+                            existing = self.fields_ids.filtered(
+                                lambda f: f.fields_id.id == item['fields_id']
+                            )
+                            if not existing:
+                                self.fields_ids = [(0, 0, item)]
+
             if new_services:
                 self.sale_service_ids = [(4, service.id) for service in self.sale_service_ids] + new_services
                 # Automatically calculate prices from price lists
@@ -153,6 +222,75 @@ class SaleOrder(models.Model):
                         'department_id': service_data['department_id'],
                         'planned_sale_id': self.id,
                     }))
+
+                # Thêm các trường thông tin từ combo vào đơn hàng
+                if combo.combo_id and combo.combo_id.required_fields_ids:
+                    fields_dict = {}
+                    for req_field in combo.combo_id.required_fields_ids:
+                        # Nếu req_field không tồn tại, bỏ qua
+                        if not req_field:
+                            continue
+
+                        # Tạo key duy nhất để tránh trùng lặp
+                        field_key = (req_field.id, 'combo_planned')
+
+                        # Kiểm tra nếu trường đã tồn tại
+                        existing_field = self.fields_ids.filtered(
+                            lambda f: f.fields_id.id == req_field.id
+                        )
+
+                        # Lấy service_id từ combo.service_ids nếu có
+                        service_id = False
+                        if combo.service_ids:
+                            # Ưu tiên dịch vụ có cùng uom_id với req_field
+                            matching_service = combo.service_ids.filtered(
+                                lambda s: s.uom_id.id == req_field.uom_id.id
+                            )
+                            if matching_service:
+                                service_id = matching_service[0].id
+                            else:
+                                # Nếu không có, lấy dịch vụ đầu tiên
+                                service_id = combo.service_ids[0].id
+
+                        if existing_field:
+                            rec = {
+                                'sequence': 1 if existing_field.fields_id.type == 'required' else 0,
+                                'fields_id': req_field.id,
+                                'sale_id': self.id,
+                                'value_char': existing_field.value_char,
+                                'value_integer': existing_field.value_integer,
+                                'value_date': existing_field.value_date,
+                                'selection_value_id': existing_field.selection_value_id.id if existing_field.selection_value_id else False,
+                                'service_id': service_id,
+                                'using_calculation_price': req_field.using_calculation_price,
+                                'uom_id': req_field.uom_id.id if req_field.uom_id else False,
+                            }
+                        else:
+                            # Tạo giá trị mặc định
+                            rec = {
+                                'sequence': 1 if req_field.type == 'required' else 0,
+                                'fields_id': req_field.id,
+                                'sale_id': self.id,
+                                'service_id': service_id,
+                                'using_calculation_price': req_field.using_calculation_price,
+                                'uom_id': req_field.uom_id.id if req_field.uom_id else False,
+                            }
+                            default_value = req_field.get_default_value(so=self)
+                            if default_value:
+                                rec.update(default_value)
+
+                        fields_dict[field_key] = rec
+
+                    # Thêm các trường thông tin vào đơn hàng
+                    if fields_dict:
+                        for item in fields_dict.values():
+                            # Kiểm tra nếu trường đã tồn tại
+                            existing = self.fields_ids.filtered(
+                                lambda f: f.fields_id.id == item['fields_id']
+                            )
+                            if not existing:
+                                self.fields_ids = [(0, 0, item)]
+
             if new_services:
                 self.planned_sale_service_ids = [(4, service.id) for service in
                                                  self.planned_sale_service_ids] + new_services
