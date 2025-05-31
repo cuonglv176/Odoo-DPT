@@ -498,8 +498,23 @@ class SaleOrder(models.Model):
                         distributed_price = combo_price * ratio
 
                 # Cập nhật đơn giá và số lượng
+                # Nếu là đơn vị m3 hoặc kg, nhân giá với số lượng thay vì chia
+                unit_price = distributed_price
+                if combo_item.is_price:
+                    # Kiểm tra nếu đơn vị là m3 hoặc kg
+                    if compute_uom_id and compute_field:
+                        uom = self.env['uom.uom'].browse(compute_uom_id)
+                        if uom.name in ['m3', 'kg']:
+                            # Giữ nguyên giá đơn vị, không chia cho compute_value
+                            unit_price = distributed_price
+                        else:
+                            # Đối với các đơn vị khác, vẫn chia như cũ
+                            unit_price = distributed_price / compute_value
+                    else:
+                        unit_price = distributed_price / compute_value
+
                 service.with_context(from_pricelist=True).write({
-                    'price': distributed_price / compute_value if combo_item.is_price else distributed_price,
+                    'price': unit_price,
                     'price_in_pricelist': distributed_price,
                     'compute_value': compute_value,
                     'compute_uom_id': compute_uom_id,
@@ -584,8 +599,23 @@ class SaleOrder(models.Model):
                         distributed_price = combo_price * ratio
 
                 # Cập nhật đơn giá và số lượng
+                # Nếu là đơn vị m3 hoặc kg, nhân giá với số lượng thay vì chia
+                unit_price = distributed_price
+                if combo_item.is_price:
+                    # Kiểm tra nếu đơn vị là m3 hoặc kg
+                    if compute_uom_id and compute_field:
+                        uom = self.env['uom.uom'].browse(compute_uom_id)
+                        if uom.name in ['m3', 'kg']:
+                            # Giữ nguyên giá đơn vị, không chia cho compute_value
+                            unit_price = distributed_price
+                        else:
+                            # Đối với các đơn vị khác, vẫn chia như cũ
+                            unit_price = distributed_price / compute_value
+                    else:
+                        unit_price = distributed_price / compute_value
+
                 service.with_context(from_pricelist=True).write({
-                    'price': distributed_price / compute_value if combo_item.is_price else distributed_price,
+                    'price': unit_price,
                     'price_in_pricelist': distributed_price,
                     'compute_value': compute_value,
                     'compute_uom_id': compute_uom_id,
@@ -780,7 +810,16 @@ class SaleOrder(models.Model):
                 )
 
                 # Tính giá đơn vị nếu có compute_value
-                unit_price = max_price / compute_value if price_list_item_id and price_list_item_id.is_price and compute_value > 0 else max_price
+                unit_price = max_price
+                if price_list_item_id and price_list_item_id.is_price and compute_value > 0:
+                    # Kiểm tra nếu đơn vị là m3 hoặc kg
+                    if compute_uom_id:
+                        uom = self.env['uom.uom'].browse(compute_uom_id)
+                        if uom.name not in ['m3', 'kg']:
+                            # Đối với các đơn vị khác, vẫn chia như cũ
+                            unit_price = max_price / compute_value
+                    else:
+                        unit_price = max_price / compute_value
 
                 # Cập nhật vào dịch vụ
                 sale_service_id.with_context(from_pricelist=True).write({
@@ -972,7 +1011,16 @@ class SaleOrder(models.Model):
                 )
 
                 # Tính giá đơn vị nếu có compute_value
-                unit_price = max_price / compute_value if price_list_item_id and price_list_item_id.is_price and compute_value > 0 else max_price
+                unit_price = max_price
+                if price_list_item_id and price_list_item_id.is_price and compute_value > 0:
+                    # Kiểm tra nếu đơn vị là m3 hoặc kg
+                    if compute_uom_id:
+                        uom = self.env['uom.uom'].browse(compute_uom_id)
+                        if uom.name not in ['m3', 'kg']:
+                            # Đối với các đơn vị khác, vẫn chia như cũ
+                            unit_price = max_price / compute_value
+                    else:
+                        unit_price = max_price / compute_value
 
                 # Cập nhật vào dịch vụ
                 planned_service_id.with_context(from_pricelist=True).write({
