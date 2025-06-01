@@ -31,7 +31,10 @@ class ServiceCombo(models.Model):
     @api.onchange('combo_id')
     def onchange_combo_id(self):
         if self.combo_id:
+            # Cập nhật các trường từ combo
             self.price = self.combo_id.price
+            self.description = self.combo_id.description
+            self.code = self.combo_id.code
             # Crear los servicios automáticamente cuando se cambia el combo
             if self.combo_id.service_ids:
                 new_services = []
@@ -98,6 +101,19 @@ class ServiceCombo(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        # Cập nhật các trường từ combo trước khi tạo record
+        for vals in vals_list:
+            if vals.get('combo_id'):
+                combo = self.env['dpt.service.combo'].browse(vals['combo_id'])
+                if combo:
+                    # Cập nhật các trường từ combo nếu chưa được set
+                    if not vals.get('description'):
+                        vals['description'] = combo.description
+                    if not vals.get('code'):
+                        vals['code'] = combo.code
+                    if not vals.get('price'):
+                        vals['price'] = combo.price
+
         records = super(ServiceCombo, self).create(vals_list)
         # Crear servicios para cada nuevo registro
         for record in records:
