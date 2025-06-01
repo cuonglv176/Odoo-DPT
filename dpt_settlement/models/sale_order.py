@@ -113,14 +113,17 @@ def _create_invoices(self, grouped=False, final=False, date=None):
         if order.sale_service_ids:
             for sale_service_id in order.sale_service_ids:
                 if sale_service_id.price != 0:
-                    invoice_line_vals.append(Command.create(
-                        {
-                            'product_id': sale_service_id.service_id.product_id.id,
-                            'display_type': 'product',
-                            'quantity': sale_service_id.compute_value,
-                            'price_unit': sale_service_id.price,
-                            'service_line_ids': [(6, 0, sale_service_id.ids)],
-                        }))
+                    line_vals = {
+                        'product_id': sale_service_id.service_id.product_id.id,
+                        'display_type': 'product',
+                        'quantity': sale_service_id.compute_value,
+                        'price_unit': sale_service_id.price,
+                        'service_line_ids': [(6, 0, sale_service_id.ids)],
+                    }
+                    # Add combo information if the service is part of a combo
+                    if sale_service_id.combo_id:
+                        line_vals['combo_id'] = sale_service_id.combo_id.id
+                    invoice_line_vals.append(Command.create(line_vals))
 
         # if not any(not line.display_type for line in invoiceable_lines):
         #     invoice_vals_list.append(invoice_vals)
