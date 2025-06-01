@@ -76,20 +76,22 @@ class PartnerLedgerCustomHandler(models.AbstractModel):
         else:
             partners = []
 
+        # Process parent-child relationships
+        parent_partners = partners.filtered(lambda p: p.is_company and not p.parent_id)
+        child_partners = partners.filtered(lambda p: p.is_company and p.parent_id)
+
         # Add 'Partner Unknown' if needed
         if None in groupby_partners.keys():
-            partners = [p for p in partners] + [None]
+            partners_list = list(partners) + [None]
+        else:
+            partners_list = list(partners)
 
-        # Process parent-child relationships
-        parent_partners = partners.filtered(lambda p: p and p.is_company and not p.parent_id)
-        child_partners = partners.filtered(lambda p: p and p.is_company and p.parent_id)
-        
         # Create a mapping of parent to children
         parent_to_children = {}
         for child in child_partners:
             if child.parent_id in parent_partners:
                 parent_to_children.setdefault(child.parent_id.id, []).append(child.id)
-        
+
         # Add child values to parent
         for parent_id, child_ids in parent_to_children.items():
             for child_id in child_ids:
@@ -99,15 +101,15 @@ class PartnerLedgerCustomHandler(models.AbstractModel):
                             for field in ['debit', 'credit', 'balance']:
                                 groupby_partners[parent_id][column_group_key][field] += groupby_partners[child_id][column_group_key].get(field, 0.0)
 
-        return [(partner, groupby_partners[partner.id if partner else None]) for partner in partners]
+        return [(partner, groupby_partners[partner.id if partner else None]) for partner in partners_list]
 
     def _report_expand_unfoldable_line_partner_ledger(self, line_dict_id, groupby, options, progress, offset, unfold_all_batch_data=None):
         """Override to show child companies when a parent company is expanded."""
         result = super()._report_expand_unfoldable_line_partner_ledger(line_dict_id, groupby, options, progress, offset, unfold_all_batch_data)
-        
+
         report = self.env['account.report'].browse(options['report_id'])
         markup, model, record_id = report._parse_line_id(line_dict_id)[-1]
-        
+
         if model == 'res.partner':
             partner = self.env['res.partner'].browse(record_id)
             if partner.is_company and not partner.parent_id:
@@ -116,7 +118,7 @@ class PartnerLedgerCustomHandler(models.AbstractModel):
                     ('parent_id', '=', partner.id),
                     ('is_company', '=', True)
                 ])
-                
+
                 if child_companies:
                     # Add a section for child companies
                     child_section_line = {
@@ -127,15 +129,15 @@ class PartnerLedgerCustomHandler(models.AbstractModel):
                         'level': 4,
                         'unfoldable': False,
                     }
-                    
+
                     # Insert the child section line at the end of the lines
                     result['lines'].append(child_section_line)
-                    
+
                     # Add lines for each child company
                     for child in child_companies:
                         # Get the child company's data
                         child_data = self._get_aml_values(options, [child.id], offset=0, limit=None)[child.id]
-                        
+
                         if child_data:
                             # Create a line for the child company
                             child_line = {
@@ -147,8 +149,8 @@ class PartnerLedgerCustomHandler(models.AbstractModel):
                                 'unfoldable': True,
                                 'expand_function': '_report_expand_unfoldable_line_partner_ledger',
                             }
-                            
+
                             # Add the child company line
                             result['lines'].append(child_line)
-        
+
         return result
