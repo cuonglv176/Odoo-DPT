@@ -53,6 +53,7 @@ class AccountPaymentType(models.Model):
     _name = 'dpt.account.payment.type'
 
     name = fields.Char(string='Name')
+    code = fields.Char(string='Mã')
     is_bypass = fields.Boolean(string='Bỏ qua người quản lý', default=False)
     is_ke_toan_truong = fields.Boolean(string='Kế toán trưởng duyệt cuối', default=False)
     rule_ids = fields.One2many('dpt.account.payment.type.rule', 'type_id', string='Rules')
