@@ -7,7 +7,7 @@
     'author': 'CuongLV',
     'maintainer': 'Your Name',
     'website': 'http://dpt.com',
-    'depends': ['sale', 'sale_management', 'base'],
+    'depends': ['sale', 'sale_management', 'init_web_tree_view', 'base'],
     'data': [
         'security/ir.model.access.csv',
         'views/res_partner.xml',
