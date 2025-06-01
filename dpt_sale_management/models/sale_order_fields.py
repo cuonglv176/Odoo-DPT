@@ -36,7 +36,12 @@ class SaleOrderField(models.Model):
     using_calculation_price = fields.Boolean(related='fields_id.using_calculation_price')
     uom_id = fields.Many2one(related="fields_id.uom_id")
     sale_service_id = fields.Many2one('dpt.sale.service.management')
-    sale_service_id_key = fields.Integer(related='sale_service_id.id')
+    sale_service_id_key = fields.Integer(related='sale_service_id.id', store=True)
+
+    @api.onchange('sale_service_id')
+    def onchange_sale_service_id(self):
+        if self.sale_service_id:
+            self.sale_service_id_key = self.sale_service_id.id
 
     @api.onchange('sale_id')
     def onchange_get_data_required_fields(self):
@@ -67,12 +72,18 @@ class SaleOrderField(models.Model):
         if 'value_char' in vals or 'value_integer' in vals or 'value_date' in vals:
             # self.sale_id.action_calculation()
             self.check_required_fields()
+        if 'sale_service_id' in vals and vals.get('sale_service_id'):
+            for record in self:
+                if record.sale_service_id:
+                    record.sale_service_id_key = record.sale_service_id.id
         return res
 
     @api.model
     def create(self, vals_list):
         res = super(SaleOrderField, self).create(vals_list)
         res.check_required_fields()
+        if isinstance(vals_list, dict) and vals_list.get('sale_service_id'):
+            res.sale_service_id_key = res.sale_service_id.id
         return res
 
     @api.depends('fields_id', 'fields_id.type')
