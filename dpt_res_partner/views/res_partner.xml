@@ -86,12 +86,4 @@
           </p>
         </field>
     </record>
-
-    <!-- Add view reference for init_tree view -->
-    <record id="account_res_partner_action_customer_view_init_tree" model="ir.actions.act_window.view">
-        <field name="sequence">3</field>
-        <field name="view_mode">init_tree</field>
-        <field name="view_id" ref="view_partner_init_tree"/>
-        <field name="act_window_id" ref="account.res_partner_action_customer"/>
-    </record>
 </odoo>
