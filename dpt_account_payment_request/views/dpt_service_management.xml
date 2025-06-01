@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_service_form_inherit" model="ir.ui.view">
+            <field name="name">view_service_form_inherit</field>
+            <field name="model">dpt.service.management</field>
+            <field name="inherit_id" ref="dpt_service_management.view_service_form"/>
+            <field name="arch" type="xml">
+                <field name="service_type_id" position="after">
+                    <field name="account_payment_type_id"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>
