@@ -124,9 +124,33 @@ class SaleOrder(models.Model):
                     if default_value:
                         matching_field.write(default_value)
 
+    def _compute_combo_and_service_total(self):
+        """Tính tổng tiền bao gồm cả combo và dịch vụ riêng lẻ"""
+        for record in self:
+            # Tính tổng tiền dịch vụ riêng lẻ (không thuộc combo)
+            service_untax_amount = sum(
+                record.sale_service_ids.filtered(lambda s: not s.combo_id).mapped('amount_total'))
+
+            # Tính tổng tiền combo
+            combo_untax_amount = sum(record.service_combo_ids.mapped('amount_total'))
+
+            # Tổng tiền chưa thuế = tổng dịch vụ riêng lẻ + tổng combo
+            total_untax_amount = service_untax_amount + combo_untax_amount
+
+            # Tính thuế (giả sử 8% như trong code ban đầu)
+            tax_amount = total_untax_amount * 8 / 100
+
+            record.service_total_untax_amount = total_untax_amount
+            record.service_tax_amount = tax_amount
+            record.service_total_amount = total_untax_amount
+
     @api.onchange('planned_service_combo_ids')
     def onchange_planned_service_combo_ids(self):
-       self.service_combo_ids = self.planned_service_combo_ids
+        self.service_combo_ids = self.planned_service_combo_ids
+        # Automatically update fields from combo
+        self._update_fields_from_combo()
+
+
 
     # @api.onchange('planned_service_combo_ids')
     # def onchange_planned_service_combo_ids(self):
@@ -510,12 +534,22 @@ class SaleOrder(models.Model):
             combo.price = combo_price
             combo.compute_uom_id = combo_item.uom_id
 
-            # Cập nhật các trường thông tin từ combo (thay vì tạo dịch vụ mới)
-            # Gọi hàm cập nhật trường thông tin đã thêm ở trên
+            # Cập nhật các trường thông tin từ combo
             self._update_fields_from_combo()
 
         # Tương tự cho planned_service_combo_ids
-        # (giữ lại code xử lý cho planned_service_combo_ids)
+        for planned_combo in self.planned_service_combo_ids:
+            # Lấy giá combo từ bảng giá
+            combo_item, combo_price = self.get_combo_price_from_pricelist(planned_combo)
+            if not combo_item or combo_price <= 0:
+                continue
+
+            # Cập nhật giá combo từ bảng giá
+            planned_combo.price = combo_price
+            planned_combo.compute_uom_id = combo_item.uom_id
+
+            # Cập nhật các trường thông tin từ combo
+            self._update_fields_from_combo()
 
         return processed_services
 
@@ -1013,21 +1047,16 @@ class SaleOrder(models.Model):
         self.times_of_quotation = self.times_of_quotation + 1
         self.state = 'wait_price'
 
-    @api.depends('sale_service_ids.amount_total', 'service_combo_ids.price')
+    @api.depends('sale_service_ids.amount_total', 'service_combo_ids.amount_total')
     def _compute_service_amount(self):
         for record in self:
-            # Tính tổng tiền dịch vụ riêng lẻ
-            service_untax_amount = sum(record.sale_service_ids.mapped('amount_total'))
+            # Tính tổng tiền dịch vụ riêng lẻ (không thuộc combo)
+            service_untax_amount = sum(record.sale_service_ids.filtered(lambda s: not s.combo_id).mapped('amount_total'))
 
-            # Tính tổng tiền combo (chỉ tính combo không thuộc dịch vụ đã tính ở trên)
-            # Lấy danh sách dịch vụ thuộc combo
-            services_in_combo = record.sale_service_ids.filtered(lambda s: s.combo_id)
-            combo_service_amount = sum(services_in_combo.mapped('amount_total'))
+            # Tính tổng tiền combo
+            combo_untax_amount = sum(record.service_combo_ids.mapped('amount_total'))
 
-            # Tổng tiền từ combo (chỉ tính combo không thuộc dịch vụ đã tính)
-            combo_untax_amount = sum(record.service_combo_ids.mapped('price')) - combo_service_amount
-
-            # Tổng tiền chưa thuế = tổng dịch vụ + tổng combo
+            # Tổng tiền chưa thuế = tổng dịch vụ riêng lẻ + tổng combo
             total_untax_amount = service_untax_amount + combo_untax_amount
 
             # Tính thuế (giả sử 8% như trong code ban đầu)
