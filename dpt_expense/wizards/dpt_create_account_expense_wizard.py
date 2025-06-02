@@ -13,6 +13,8 @@ class DPTCreateAccountExpenseWizard(models.TransientModel):
     ], "Tạo hóa đơn hay phân bổ chi phí?", required=True, default='expense_allocation')
 
     def action_confirm(self):
+        for invoice_id in self.po_id.invoice_ids:
+            invoice_id.action_cancel()
         if self.type == 'expense_allocation':
             self.po_id.action_allocate()
         if self.type == 'expense_invoice':
