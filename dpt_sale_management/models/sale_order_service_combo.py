@@ -16,6 +16,7 @@ class ServiceCombo(models.Model):
     planned_sale_id = fields.Many2one('sale.order', string='Planned Order')
     qty = fields.Integer('Số lượng', default=1)
     price = fields.Float('Đơn giá', help='Để trống sẽ tính tổng từ các dịch vụ')
+    compute_uom_id = fields.Many2one('uom.uom', string='Đơn vị', help='Đơn vị tính dùng để phân bổ chi phí')
     amount_discount = fields.Float('Khuyến mãi', default=0.0)
     amount_total = fields.Float('Thành tiền', compute='_compute_total_price')
     sale_service_ids = fields.One2many('dpt.sale.service.management', 'combo_id', 'Chi tiết dịch vụ')

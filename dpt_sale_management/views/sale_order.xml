@@ -48,6 +48,7 @@
                             <field name="combo_id"/>
                             <field name="code"/>
                             <field name="description"/>
+                            <field name="compute_uom_id" readonly="1"/>
                             <field name="qty"/>
                             <field name="price" sum="Đơn giá"/>
                             <field name="amount_discount" string="Khuyến mãi"/>

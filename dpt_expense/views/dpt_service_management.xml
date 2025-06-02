@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_service_form_view_inherit" model="ir.ui.view">
+        <field name="name">view_service_form_view_inherit</field>
+        <field name="model">dpt.service.management</field>
+        <field name="inherit_id" ref="dpt_service_management.view_service_form"/>
+        <field name="arch" type="xml">
+            <field name="visible_to_sale_cs" position="after">
+                <field name="use_for_allocate_expense" widget="boolean_toggle"/>
+            </field>
+        </field>
+    </record>
+</odoo>

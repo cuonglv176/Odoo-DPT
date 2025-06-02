@@ -53,9 +53,11 @@ class DPTExpenseAllocation(models.Model):
         # combine sale with revenue
         for sale_id in self.sale_ids:
             uom_quantity = {}
+            # dịch vụ
             for sale_service_id in sale_id.sale_service_ids:
-                if not sale_service_id.compute_uom_id or (
-                        sale_service_id.compute_uom_id and not sale_service_id.compute_uom_id.use_for_allocate_expense):
+                if sale_service_id.combo_id or not sale_service_id.compute_uom_id or (
+                        sale_service_id.compute_uom_id and not sale_service_id.compute_uom_id.use_for_allocate_expense) or sale_service_id.service_id or (
+                        sale_service_id.service_id and not sale_service_id.service_id.use_for_allocate_expense):
                     continue
                 total_revenue += sale_service_id.amount_total
                 if revenue_group_by_uom.get(sale_service_id.compute_uom_id):
@@ -73,6 +75,30 @@ class DPTExpenseAllocation(models.Model):
                                                                        sale_service_id.compute_uom_id] + sale_service_id.compute_value
                 else:
                     uom_quantity[sale_service_id.compute_uom_id] = sale_service_id.compute_value
+
+            # combo
+            for service_combo_id in sale_id.service_combo_ids:
+                if not service_combo_id.compute_uom_id or (
+                        service_combo_id.compute_uom_id and not service_combo_id.compute_uom_id.use_for_allocate_expense) or service_combo_id.combo_id or (
+                        service_combo_id.combo_id and not service_combo_id.combo_id.use_for_allocate_expense):
+                    continue
+                total_revenue += service_combo_id.amount_total
+                if revenue_group_by_uom.get(service_combo_id.compute_uom_id):
+                    revenue_group_by_uom[service_combo_id.compute_uom_id] = revenue_group_by_uom[
+                                                                               service_combo_id.compute_uom_id] + service_combo_id.amount_total
+                else:
+                    revenue_group_by_uom[service_combo_id.compute_uom_id] = service_combo_id.amount_total
+                if quantity_group_by_uom.get(service_combo_id.compute_uom_id):
+                    quantity_group_by_uom[service_combo_id.compute_uom_id] = quantity_group_by_uom[
+                                                                                service_combo_id.compute_uom_id] + service_combo_id.compute_value
+                else:
+                    quantity_group_by_uom[service_combo_id.compute_uom_id] = service_combo_id.compute_value
+                if uom_quantity.get(service_combo_id.compute_uom_id):
+                    uom_quantity[service_combo_id.compute_uom_id] = uom_quantity[
+                                                                       service_combo_id.compute_uom_id] + service_combo_id.compute_value
+                else:
+                    uom_quantity[service_combo_id.compute_uom_id] = service_combo_id.compute_value
+
             if uom_quantity:
                 uom_by_order.update({
                     sale_id: uom_quantity
@@ -109,7 +135,7 @@ class DPTExpenseAllocation(models.Model):
                             expense = 0
                             for uom_id, uom_quantity in order_uom_quantity.items():
                                 expense += round((uom_quantity * expense_group_by_uom.get(uom_id,
-                                                                                   0) / quantity_group_by_uom.get(
+                                                                                          0) / quantity_group_by_uom.get(
                                     uom_id)), 0)
                             expense_allocated += expense
                         else:

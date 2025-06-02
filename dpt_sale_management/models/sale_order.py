@@ -568,6 +568,7 @@ class SaleOrder(models.Model):
 
             # Cập nhật giá combo từ bảng giá
             combo.price = combo_price
+            combo.compute_uom_id = combo_item.uom_id
 
             # Lấy các dịch vụ thuộc combo này
             services = self.sale_service_ids.filtered(lambda s: s.combo_id.id == combo.id)

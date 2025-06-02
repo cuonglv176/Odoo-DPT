@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_service_combo_form_view_inherit" model="ir.ui.view">
+        <field name="name">view_service_combo_form_view_inherit</field>
+        <field name="model">dpt.service.combo</field>
+        <field name="inherit_id" ref="dpt_service_management.view_service_combo_form"/>
+        <field name="arch" type="xml">
+            <field name="active" position="after">
+                <field name="use_for_allocate_expense" widget="boolean_toggle"/>
+            </field>
+        </field>
+    </record>
+</odoo>
