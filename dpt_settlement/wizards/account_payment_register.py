@@ -9,6 +9,6 @@ class AccountPaymentRegister(models.TransientModel):
     picking_ids = fields.Many2many('stock.picking', string='Pickings')
     sale_order_id = fields.Many2one('sale.order', string='Sales Order')
 
-    def action_create_payments(self):
-        res = super().action_create_payments()
-        return res
+    # def action_create_payments(self):
+    #     res = super().action_create_payments()
+    #     return res
