@@ -12,5 +12,6 @@
         'views/dpt_service_management.xml',
         'views/purchase_order.xml',
         'views/uom_uom.xml',
+        'wizards/dpt_create_account_expense_wizard.xml',
     ],
 }
