@@ -95,7 +95,7 @@ class SaleOrder(models.Model):
                 continue
 
             # Lấy các trường thông tin từ combo
-            combo_fields = combo.combo_id.required_field_ids
+            combo_fields = combo.combo_id.required_fields_ids
 
             # Cập nhật vào các trường thông tin của đơn hàng
             for combo_field in combo_fields:
