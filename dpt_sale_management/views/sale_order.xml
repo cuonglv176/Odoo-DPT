@@ -56,10 +56,9 @@
                             <field name="is_price_fixed" widget="boolean_toggle"/>
                         </tree>
                     </field>
-                    <separator string="DỊCH VỤ CHI TIẾT"/>
+                    <separator string="DỊCH VỤ"/>
                     <field name="planned_sale_service_ids" readonly="state == 'cancel' or locked">
                         <tree editable="bottom">
-                            <field name="combo_id"/> <!-- Thêm trường combo_id -->
                             <field name="id" string="ID"/>
                             <field name="sequence" widget="handle"/>
                             <field name="currency_id" column_invisible="1" force_save="1"/>
@@ -105,7 +104,6 @@
                     <separator string="DỊCH VỤ CHI TIẾT"/>
                     <field name="sale_service_ids" readonly="state == 'cancel' or locked">
                         <tree editable="bottom">
-                            <field name="combo_id"/> <!-- Thêm trường combo_id -->
                             <field name="id" string="ID"/>
                             <field name="sequence" widget="handle"/>
                             <field name="currency_id" column_invisible="1" force_save="1"/>

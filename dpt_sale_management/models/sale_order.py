@@ -38,7 +38,8 @@ class SaleOrder(models.Model):
                                        inverse='onchange_get_fields_form_combo_service')
 
     planned_service_combo_ids = fields.One2many('dpt.sale.order.service.combo', 'planned_sale_id',
-                                                inverse='onchange_get_fields_form_combo_service', string='Combo dịch vụ dự kiến',
+                                                inverse='onchange_get_fields_form_combo_service',
+                                                string='Combo dịch vụ dự kiến',
                                                 tracking=True)
     planned_sale_service_ids = fields.One2many('dpt.sale.service.management', 'planned_sale_id',
                                                string='Service dự kiến', tracking=True,
@@ -353,11 +354,18 @@ class SaleOrder(models.Model):
     def _compute_combo_price(self, sale_combo_combo_ids):
         for combo in sale_combo_combo_ids:
             combo_pricelist_id = self.get_combo_price_from_pricelist(combo)
+            compute_value = 1
             compute_uom_id = combo_pricelist_id.uom_id
             if not combo_pricelist_id:
                 continue
+            compute_field_qty_id = self.fields_ids.filtered(
+                lambda f: f.using_calculation_price and f.combo_id.id == combo.combo_id.id
+                          and f.uom_id.id == combo_pricelist_id.uom_id.id)[:1]
+            compute_value = compute_field_qty_id.value_integer
+
             if combo_pricelist_id.compute_price == 'fixed':
                 combo.price = combo_pricelist_id.fixed_price
+
             elif combo_pricelist_id.compute_price == 'percentage':
                 if combo_pricelist_id.percent_based_on == 'product_total_amount':
                     price_base = sum(self.order_line.mapped('price_subtotal'))
@@ -375,7 +383,6 @@ class SaleOrder(models.Model):
                 compute_field_ids = self.fields_ids.filtered(
                     lambda f: f.using_calculation_price and f.combo_id.id == combo.combo_id.id)
                 price = 0
-                compute_value = 1
                 for compute_field_id in compute_field_ids:
                     if not compute_field_id.value_integer:
                         continue
@@ -395,16 +402,8 @@ class SaleOrder(models.Model):
                             price = detail_price_id.amount
 
                         price = max(compute_field_id.currency_id.rate * price, compute_field_id.min_amount)
-
                         if price > max_price:
                             max_price = price
-                            uom = self.env['uom.uom'].browse(compute_field_id.uom_id.id)
-                            if uom.name == 'm3' and self.volume:
-                                compute_value = self.volume
-                            elif uom.name == 'kg' and self.weight:
-                                compute_value = self.weight
-                            else:
-                                compute_value = compute_field_id.value_integer
                             compute_uom_id = compute_field_id.uom_id.id
                 combo.price = price
                 combo.qty = compute_value
