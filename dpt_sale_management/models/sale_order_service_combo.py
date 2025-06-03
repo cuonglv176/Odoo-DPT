@@ -77,28 +77,28 @@ class ServiceCombo(models.Model):
     #                 self.sale_service_ids = [(5, 0, 0)] + new_services
 
     # Thêm onchange cho trường qty - cập nhật số lượng dịch vụ khi số lượng combo thay đổi
-    @api.onchange('qty')
-    def onchange_qty(self):
-        """Cập nhật số lượng cho các dịch vụ khi thay đổi số lượng combo"""
-        if self.qty and self.sale_service_ids:
-            for service in self.sale_service_ids:
-                service.compute_value = self.qty
+    # @api.onchange('qty')
+    # def onchange_qty(self):
+    #     """Cập nhật số lượng cho các dịch vụ khi thay đổi số lượng combo"""
+    #     if self.qty and self.sale_service_ids:
+    #         for service in self.sale_service_ids:
+    #             service.compute_value = self.qty
 
     # Thêm onchange cho trường is_price_fixed
-    @api.onchange('is_price_fixed')
-    def _onchange_is_price_fixed(self):
-        """Khi thay đổi trạng thái chốt giá của combo, cập nhật cho tất cả dịch vụ thuộc combo"""
-        for combo in self:
-            # Nếu combo đã chốt giá, khóa giá hiện tại
-            if combo.is_price_fixed and not combo.locked_price and combo.price > 0:
-                combo.locked_price = combo.price
-
-            # Cập nhật trạng thái chốt giá cho tất cả dịch vụ thuộc combo
-            for service in combo.sale_service_ids:
-                service.is_price_fixed = combo.is_price_fixed
-                # Nếu đã chốt giá, lưu giá hiện tại của dịch vụ
-                if combo.is_price_fixed and not service.locked_price and service.price > 0:
-                    service.locked_price = service.price
+    # @api.onchange('is_price_fixed')
+    # def _onchange_is_price_fixed(self):
+    #     """Khi thay đổi trạng thái chốt giá của combo, cập nhật cho tất cả dịch vụ thuộc combo"""
+    #     for combo in self:
+    #         # Nếu combo đã chốt giá, khóa giá hiện tại
+    #         if combo.is_price_fixed and not combo.locked_price and combo.price > 0:
+    #             combo.locked_price = combo.price
+    #
+    #         # Cập nhật trạng thái chốt giá cho tất cả dịch vụ thuộc combo
+    #         for service in combo.sale_service_ids:
+    #             service.is_price_fixed = combo.is_price_fixed
+    #             # Nếu đã chốt giá, lưu giá hiện tại của dịch vụ
+    #             if combo.is_price_fixed and not service.locked_price and service.price > 0:
+    #                 service.locked_price = service.price
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -213,16 +213,16 @@ class ServiceCombo(models.Model):
                     }
                 elif not record.locked_price:
                     record.locked_price = record.price
-
-    def get_combo_services(self):
-        """Trả về danh sách dịch vụ trong combo"""
-        services = []
-        for service in self.service_ids:
-            services.append({
-                'service_id': service.id,
-                'price': service.price,
-                'uom_id': service.uom_id.id,
-                'qty': 1,
-                'department_id': service.department_id.id if service.department_id else False,
-            })
-        return services
+    #
+    # def get_combo_services(self):
+    #     """Trả về danh sách dịch vụ trong combo"""
+    #     services = []
+    #     for service in self.service_ids:
+    #         services.append({
+    #             'service_id': service.id,
+    #             'price': service.price,
+    #             'uom_id': service.uom_id.id,
+    #             'qty': 1,
+    #             'department_id': service.department_id.id if service.department_id else False,
+    #         })
+    #     return services
