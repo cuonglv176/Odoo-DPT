@@ -110,20 +110,94 @@ def _create_invoices(self, grouped=False, final=False, date=None):
                     'price_unit': order.purchase_amount_total
                 }))
 
-        if order.sale_service_ids:
-            for sale_service_id in order.sale_service_ids:
-                if sale_service_id.price != 0:
-                    line_vals = {
-                        'product_id': sale_service_id.service_id.product_id.id,
-                        'display_type': 'product',
-                        'quantity': sale_service_id.compute_value,
-                        'price_unit': sale_service_id.price,
-                        'service_line_ids': [(6, 0, sale_service_id.ids)],
-                    }
-                    # Add combo information if the service is part of a combo
-                    if sale_service_id.combo_id:
-                        line_vals['combo_id'] = sale_service_id.combo_id.id
-                    invoice_line_vals.append(Command.create(line_vals))
+        if order.settle_by == 'planned':
+            if order.planned_sale_service_ids:
+                for sale_service_id in order.sale_service_ids:
+                    if sale_service_id.price != 0:
+                        if not sale_service_id.service_id.product_id:
+                            product_vals = {
+                                'name': sale_service_id.service_id.name,
+                                'type': 'service',
+                                'invoice_policy': 'order',
+                                'sale_ok': True,
+                                'purchase_ok': False,
+                                'list_price': sale_service_id.price,
+                                'default_code': sale_service_id.service_id.code or f"SERV-{sale_service_id.service_id.id}",
+                                'taxes_id': [(6, 0,
+                                              sale_service_id.service_id.tax_ids.ids)] if sale_service_id.service_id.tax_ids else False,
+                            }
+                            new_product = self.env['product.product'].sudo().create(product_vals)
+                            sale_service_id.service_id.sudo().write({'product_id': new_product.id})
+                        line_vals = {
+                            'product_id': sale_service_id.service_id.product_id.id,
+                            'display_type': 'product',
+                            'quantity': sale_service_id.compute_value,
+                            'price_unit': sale_service_id.price,
+                            'service_line_ids': [(6, 0, sale_service_id.ids)],
+                        }
+                        invoice_line_vals.append(Command.create(line_vals))
+            if order.planned_service_combo_ids:
+                for sale_service_id in order.sale_service_ids:
+                    if sale_service_id.price != 0:
+                        # Kiểm tra nếu dịch vụ không có sản phẩm liên kết
+                        if not sale_service_id.service_id.product_id:
+                            # Tạo sản phẩm mới từ thông tin dịch vụ
+                            product_vals = {
+                                'name': sale_service_id.service_id.name,
+                                'type': 'service',
+                                'invoice_policy': 'order',
+                                'sale_ok': True,
+                                'purchase_ok': False,
+                                'list_price': sale_service_id.price,
+                                'default_code': sale_service_id.service_id.code or f"SERV-{sale_service_id.service_id.id}",
+                                'taxes_id': [(6, 0,
+                                              sale_service_id.service_id.tax_ids.ids)] if sale_service_id.service_id.tax_ids else False,
+                            }
+                            new_product = self.env['product.product'].sudo().create(product_vals)
+                            sale_service_id.service_id.sudo().write({'product_id': new_product.id})
+                        line_vals = {
+                            'product_id': sale_service_id.service_id.product_id.id,
+                            'display_type': 'product',
+                            'quantity': sale_service_id.compute_value,
+                            'price_unit': sale_service_id.price,
+                            'service_line_ids': [(6, 0, sale_service_id.ids)],
+                        }
+                        # Add combo information if the service is part of a combo
+                        if sale_service_id.combo_id:
+                            line_vals['combo_id'] = sale_service_id.combo_id.id
+                        invoice_line_vals.append(Command.create(line_vals))
+
+        if order.settle_by == 'actual':
+            if order.sale_service_ids:
+                for sale_service_id in order.sale_service_ids:
+                    if sale_service_id.price != 0:
+                        # Kiểm tra nếu dịch vụ không có sản phẩm liên kết
+                        if not sale_service_id.service_id.product_id:
+                            # Tạo sản phẩm mới từ thông tin dịch vụ
+                            product_vals = {
+                                'name': sale_service_id.service_id.name,
+                                'type': 'service',
+                                'invoice_policy': 'order',
+                                'sale_ok': True,
+                                'purchase_ok': False,
+                                'list_price': sale_service_id.price,
+                                'default_code': sale_service_id.service_id.code or f"SERV-{sale_service_id.service_id.id}",
+                                'taxes_id': [(6, 0,
+                                              sale_service_id.service_id.tax_ids.ids)] if sale_service_id.service_id.tax_ids else False,
+                            }
+                            new_product = self.env['product.product'].sudo().create(product_vals)
+                            sale_service_id.service_id.sudo().write({'product_id': new_product.id})
+                        line_vals = {
+                            'product_id': sale_service_id.service_id.product_id.id,
+                            'display_type': 'product',
+                            'quantity': sale_service_id.compute_value,
+                            'price_unit': sale_service_id.price,
+                            'service_line_ids': [(6, 0, sale_service_id.ids)],
+                        }
+                        # Add combo information if the service is part of a combo
+                        if sale_service_id.combo_id:
+                            line_vals['combo_id'] = sale_service_id.combo_id.id
+                        invoice_line_vals.append(Command.create(line_vals))
 
         # if not any(not line.display_type for line in invoiceable_lines):
         #     invoice_vals_list.append(invoice_vals)

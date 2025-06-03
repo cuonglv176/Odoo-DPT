@@ -63,6 +63,7 @@ class DPTServiceCombo(models.Model):
     # Thêm trường mới để lưu trữ các đơn vị đo lường từ các dịch vụ trong combo
     service_uom_ids = fields.Many2many('uom.uom', string='Đơn vị đo lường', compute='_compute_service_uom_ids')
     service_uom_summary = fields.Text(string='Tổng hợp đơn vị', compute='_compute_service_uom_summary')
+    product_id = fields.Many2one('product.product', string='Product')
 
     _sql_constraints = [
         ('code_uniq', 'unique (code)', "Mã gói combo đã tồn tại!")
