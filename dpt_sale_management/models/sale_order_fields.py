@@ -17,6 +17,7 @@ class SaleOrderField(models.Model):
 
     sequence = fields.Integer(default=_default_sequence, compute='_compute_sequence', store=True)
     sale_id = fields.Many2one('sale.order', string='Sale Order')
+    combo_id = fields.Many2one(related='fields_id.combo_id')
     service_id = fields.Many2one(related='fields_id.service_id')
     fields_id = fields.Many2one('dpt.service.management.required.fields', string='Fields')
     value_char = fields.Char(string='Value Char')
