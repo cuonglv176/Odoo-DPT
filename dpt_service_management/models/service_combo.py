@@ -184,6 +184,7 @@ class DPTServiceCombo(models.Model):
                 for approver in approval_type.user_ids:
                     approvers.append(approver.id)
             record.approver_ids = [(6, 0, approvers)]
+
     @api.model
     def create(self, vals):
         if vals.get('code', 'COMBO/') == 'COMBO/':
@@ -230,10 +231,10 @@ class DPTServiceCombo(models.Model):
             'request_owner_id': self.env.user.id,
             'reference': f'dpt.service.combo,{self.id}',
             'request_status': 'pending',
+            'combo_id': self.id,
         }
         approval_request = self.env['approval.request'].create(vals)
-
-        # Cập nhật trạng thái và liên kết approval_id
+        approval_request.action_confirm()
         self.write({
             'state': 'pending',
             'approval_id': approval_request.id,
