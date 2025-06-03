@@ -300,6 +300,7 @@ class SaleOrder(models.Model):
             self.action_update_fields()
         if 'sale_service_ids' in vals or 'planned_sale_service_ids' in vals or 'service_combo_ids' in vals or 'planned_service_combo_ids' in vals:
             self.action_calculation()
+            self.onchange_get_fields_form_combo_service()
         return res
 
     def action_unlock(self):
