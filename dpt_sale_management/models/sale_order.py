@@ -408,7 +408,6 @@ class SaleOrder(models.Model):
                             compute_uom_id = compute_field_id.uom_id.id
                 combo.price = price
                 combo.qty = compute_value
-                combo.uom_id = compute_uom_id
             combo.compute_uom_id = compute_uom_id
 
     def _compute_service_price(self, service_ids):
