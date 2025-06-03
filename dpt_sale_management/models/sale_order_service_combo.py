@@ -117,42 +117,42 @@ class ServiceCombo(models.Model):
 
         records = super(ServiceCombo, self).create(vals_list)
         # Crear servicios para cada nuevo registro
-        for record in records:
-            if record.combo_id and record.combo_id.service_ids:
-                services = record.get_combo_services()
-                new_services = []
-
-                # Xác định đơn đặt hàng liên quan (thực tế hoặc dự kiến)
-                related_sale_id = record.sale_id.id if record.sale_id else False
-                related_planned_sale_id = record.planned_sale_id.id if record.planned_sale_id else False
-
-                for service_data in services:
-                    service_vals = {
-                        'service_id': service_data['service_id'],
-                        'price': service_data['price'],
-                        'uom_id': service_data['uom_id'],
-                        'qty': service_data['qty'],
-                        'compute_value': record.qty or 1,  # Sử dụng số lượng combo
-                        'combo_id': record.id,
-                        'price_status': 'calculated',
-                        'department_id': service_data['department_id'],
-                        'is_price_fixed': record.is_price_fixed,  # Kế thừa trạng thái chốt giá từ combo
-                    }
-
-                    # Gán đúng trường đơn hàng (thực tế hoặc dự kiến)
-                    if related_sale_id:
-                        service_vals['sale_id'] = related_sale_id
-                    if related_planned_sale_id:
-                        service_vals['planned_sale_id'] = related_planned_sale_id
-
-                        # Nếu đã chốt giá, lưu giá hiện tại vào trường locked_price
-                        if record.is_price_fixed:
-                            service_vals['locked_price'] = service_data['price']
-
-                    new_services.append(service_vals)
-
-                if new_services:
-                    self.env['dpt.sale.service.management'].create(new_services)
+        # for record in records:
+        #     if record.combo_id and record.combo_id.service_ids:
+        #         services = record.get_combo_services()
+        #         new_services = []
+        #
+        #         # Xác định đơn đặt hàng liên quan (thực tế hoặc dự kiến)
+        #         related_sale_id = record.sale_id.id if record.sale_id else False
+        #         related_planned_sale_id = record.planned_sale_id.id if record.planned_sale_id else False
+        #
+        #         for service_data in services:
+        #             service_vals = {
+        #                 'service_id': service_data['service_id'],
+        #                 'price': service_data['price'],
+        #                 'uom_id': service_data['uom_id'],
+        #                 'qty': service_data['qty'],
+        #                 'compute_value': record.qty or 1,  # Sử dụng số lượng combo
+        #                 'combo_id': record.id,
+        #                 'price_status': 'calculated',
+        #                 'department_id': service_data['department_id'],
+        #                 'is_price_fixed': record.is_price_fixed,  # Kế thừa trạng thái chốt giá từ combo
+        #             }
+        #
+        #             # Gán đúng trường đơn hàng (thực tế hoặc dự kiến)
+        #             if related_sale_id:
+        #                 service_vals['sale_id'] = related_sale_id
+        #             if related_planned_sale_id:
+        #                 service_vals['planned_sale_id'] = related_planned_sale_id
+        #
+        #                 # Nếu đã chốt giá, lưu giá hiện tại vào trường locked_price
+        #                 if record.is_price_fixed:
+        #                     service_vals['locked_price'] = service_data['price']
+        #
+        #             new_services.append(service_vals)
+        #
+        #         if new_services:
+        #             self.env['dpt.sale.service.management'].create(new_services)
         return records
 
     # Ghi đè phương thức write để cập nhật số lượng cho dịch vụ khi số lượng combo thay đổi
