@@ -7,6 +7,7 @@ import base64
 import io as stringIOModule
 from odoo.modules.module import get_module_resource
 import logging
+
 _logger = logging.getLogger(__name__)
 COLUMN = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q']
 
@@ -76,7 +77,8 @@ class SaleOrder(models.Model):
     @api.depends('planned_sale_service_ids.amount_total')
     def _compute_planned_service_amount(self):
         for record in self:
-            record.planned_service_total_amount = sum(record.planned_sale_service_ids.mapped('amount_total'))
+            record.planned_service_total_amount = sum(record.planned_sale_service_ids.mapped('amount_total')) + sum(
+                record.planned_service_combo_ids.mapped('amount_total'))
 
     @api.onchange('sale_service_ids', 'planned_sale_service_ids', 'service_combo_ids', 'planned_service_combo_ids')
     def onchange_get_fields_form_combo_service(self):
@@ -383,8 +385,6 @@ class SaleOrder(models.Model):
                 compute_field_ids = self.fields_ids.filtered(
                     lambda f: f.using_calculation_price and f.combo_id.id == combo.combo_id.id)
                 price = 0
-                _logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-                _logger.info(compute_field_ids)
                 for compute_field_id in compute_field_ids:
                     if not compute_field_id.value_integer:
                         continue
