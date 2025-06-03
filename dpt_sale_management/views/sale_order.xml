@@ -137,6 +137,8 @@
                             <field name="using_calculation_price" column_invisible="1"/>
                             <field name="sale_service_id" column_invisible="1"/>
                             <field name="sequence" widget="handle"/>
+                             <field name="sale_combo_id_key" string="ID Combo"/>
+                            <field name="combo_id"/>
                             <field name="sale_service_id_key" string="ID Dịch vụ"/>
                             <field name="service_id"/>
                             <field name="fields_id"/>

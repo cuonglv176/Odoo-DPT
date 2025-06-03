@@ -386,25 +386,17 @@ class SaleOrder(models.Model):
                 for compute_field_id in compute_field_ids:
                     if not compute_field_id.value_integer:
                         continue
-                        # pricelist_table_detail_ids
                     detail_price_ids = combo_pricelist_id.pricelist_table_detail_ids.filtered(
-                        lambda ptd: ptd.uom_id.id == compute_field_id.uom_id.id and
-                                    compute_field_id.value_integer >= ptd.min_value and
-                                    (not ptd.max_value or compute_field_id.value_integer <= ptd.max_value)
-                    )
-
+                        lambda ptd: ptd.uom_id.id == compute_field_id.uom_id.id)
                     for detail_price_id in detail_price_ids:
-                        if detail_price_id.price_type == 'unit_price':
-                            price = compute_field_id.value_integer * detail_price_id.amount
-                        else:
-                            price = detail_price_id.amount
-                        if not combo_pricelist_id.is_price:
-                            price = detail_price_id.amount
-
-                        price = max(compute_field_id.currency_id.rate * price, compute_field_id.min_amount)
-                        if price > max_price:
-                            max_price = price
-                            compute_uom_id = compute_field_id.uom_id.id
+                        if detail_price_id.min_value <= compute_field_id.value_integer <= detail_price_id.max_value:
+                            if detail_price_id.price_type == 'unit_price':
+                                price = detail_price_id.amount
+                            else:
+                                price = detail_price_id.amount
+                            if price < combo_pricelist_id.min_amount:
+                                price = combo_pricelist_id.min_amount
+                                compute_uom_id = compute_field_id.uom_id.id
                 combo.price = price
                 combo.qty = compute_value
             combo.compute_uom_id = compute_uom_id

@@ -37,7 +37,9 @@ class SaleOrderField(models.Model):
     using_calculation_price = fields.Boolean(related='fields_id.using_calculation_price')
     uom_id = fields.Many2one(related="fields_id.uom_id")
     sale_service_id = fields.Many2one('dpt.sale.service.management')
+    sale_combo_id = fields.Many2one('dpt.sale.service.management')
     sale_service_id_key = fields.Integer(related='sale_service_id.id', store=True)
+    sale_combo_id_key = fields.Integer(related='sale_combo_id.id', store=True)
 
     @api.onchange('sale_service_id')
     def onchange_sale_service_id(self):
