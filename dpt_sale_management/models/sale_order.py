@@ -238,6 +238,10 @@ class SaleOrder(models.Model):
     def onchange_planned_service_combo_ids(self):
         self.service_combo_ids = self.planned_service_combo_ids
 
+    @api.onchange('planned_sale_service_ids')
+    def onchange_planned_sale_service_ids(self):
+        self.sale_service_ids = self.planned_sale_service_ids
+
     @api.depends('sale_service_ids', 'sale_service_ids.service_id', 'sale_service_ids.service_id.pricelist_item_ids')
     def compute_show_is_quotation(self):
         for rec in self:
