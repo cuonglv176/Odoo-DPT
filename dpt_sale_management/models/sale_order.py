@@ -33,7 +33,6 @@ class SaleOrder(models.Model):
 
     service_combo_ids = fields.One2many('dpt.sale.order.service.combo', 'sale_id', string='Combo dịch vụ thực tế',
                                         inverse='onchange_get_fields_form_combo_service',
-                                        domain=[('state', '=', 'active')],
                                         tracking=True)
     sale_service_ids = fields.One2many('dpt.sale.service.management', 'sale_id', string='Service thực tế',
                                        tracking=True,
@@ -41,7 +40,7 @@ class SaleOrder(models.Model):
 
     planned_service_combo_ids = fields.One2many('dpt.sale.order.service.combo', 'planned_sale_id',
                                                 inverse='onchange_get_fields_form_combo_service',
-                                                string='Combo dịch vụ dự kiến', domain=[('state', '=', 'active')],
+                                                string='Combo dịch vụ dự kiến',
                                                 tracking=True)
     planned_sale_service_ids = fields.One2many('dpt.sale.service.management', 'planned_sale_id',
                                                string='Service dự kiến', tracking=True,
