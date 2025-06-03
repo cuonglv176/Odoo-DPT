@@ -250,19 +250,20 @@ class RequiredField(models.Model):
             else:
                 mapping_delete[item.service_id] = item
         for service_id, required_field_ids in mapping_delete.items():
-            # Lấy tên đơn vị từ cả các trường đơn vị tính
-            uom_names = []
-            for field in required_field_ids:
-                if field.uom_id:
-                    uom_names.append(field.uom_id.name)
-                if field.uom_ids:
-                    uom_names.extend(field.uom_ids.mapped('name'))
-                if field.condition_uom_ids:
-                    uom_names.extend(field.condition_uom_ids.mapped('name'))
-                if field.pricing_uom_ids:
-                    uom_names.extend(field.pricing_uom_ids.mapped('name'))
-            service_id.message_post(
-                body=_("Delete Required field: %s") % ','.join(set(uom_names)))
+            if service_id:
+                # Lấy tên đơn vị từ cả các trường đơn vị tính
+                uom_names = []
+                for field in required_field_ids:
+                    if field.uom_id:
+                        uom_names.append(field.uom_id.name)
+                    if field.uom_ids:
+                        uom_names.extend(field.uom_ids.mapped('name'))
+                    if field.condition_uom_ids:
+                        uom_names.extend(field.condition_uom_ids.mapped('name'))
+                    if field.pricing_uom_ids:
+                        uom_names.extend(field.pricing_uom_ids.mapped('name'))
+                service_id.message_post(
+                    body=_("Delete Required field: %s") % ','.join(set(uom_names)))
         return super(RequiredField, self).unlink()
 
 
