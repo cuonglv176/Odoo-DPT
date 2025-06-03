@@ -389,7 +389,7 @@ class SaleOrder(models.Model):
                     if not compute_field_id.value_integer:
                         continue
                     detail_price_ids = combo_pricelist_id.pricelist_table_detail_ids.filtered(
-                        lambda ptd: ptd.uom_id.id == compute_field_id.uom_id.id)
+                        lambda ptd: ptd.compute_uom_id.id == compute_field_id.uom_id.id)
                     _logger.info(detail_price_ids)
                     for detail_price_id in detail_price_ids:
                         if detail_price_id.min_value <= compute_field_id.value_integer <= detail_price_id.max_value:
