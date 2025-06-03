@@ -7,7 +7,7 @@ import base64
 import io as stringIOModule
 from odoo.modules.module import get_module_resource
 import logging
-
+_logger = logging.getLogger(__name__)
 COLUMN = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q']
 
 SALE_ORDER_STATE = [
@@ -383,13 +383,17 @@ class SaleOrder(models.Model):
                 compute_field_ids = self.fields_ids.filtered(
                     lambda f: f.using_calculation_price and f.combo_id.id == combo.combo_id.id)
                 price = 0
+                _logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+                _logger.info(compute_field_ids)
                 for compute_field_id in compute_field_ids:
                     if not compute_field_id.value_integer:
                         continue
                     detail_price_ids = combo_pricelist_id.pricelist_table_detail_ids.filtered(
                         lambda ptd: ptd.uom_id.id == compute_field_id.uom_id.id)
+                    _logger.info(detail_price_ids)
                     for detail_price_id in detail_price_ids:
                         if detail_price_id.min_value <= compute_field_id.value_integer <= detail_price_id.max_value:
+                            _logger.info(detail_price_id.max_value)
                             if detail_price_id.price_type == 'unit_price':
                                 price = detail_price_id.amount
                             else:
