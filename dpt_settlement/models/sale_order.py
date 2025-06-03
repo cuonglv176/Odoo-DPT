@@ -152,7 +152,7 @@ def _create_invoices(self, grouped=False, final=False, date=None):
                                 'property_account_income_id':  planned_service_combo_id.combo_id.revenue_account_id.id,
                             }
                             new_product = self.env['product.product'].sudo().create(product_vals)
-                            planned_service_combo_id.service_id.sudo().write({'product_id': new_product.id})
+                            planned_service_combo_id.combo_id.sudo().write({'product_id': new_product.id})
                         line_vals = {
                             'product_id': planned_service_combo_id.service_id.product_id.id,
                             'display_type': 'product',
@@ -205,7 +205,7 @@ def _create_invoices(self, grouped=False, final=False, date=None):
                                 'property_account_income_id':  service_combo_id.combo_id.revenue_account_id.id,
                             }
                             new_product = self.env['product.product'].sudo().create(product_vals)
-                            service_combo_id.service_id.sudo().write({'product_id': new_product.id})
+                            service_combo_id.combo_id.sudo().write({'product_id': new_product.id})
                         line_vals = {
                             'product_id': service_combo_id.service_id.product_id.id,
                             'display_type': 'product',
