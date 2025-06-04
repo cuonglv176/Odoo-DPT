@@ -399,9 +399,13 @@ class SaleOrder(models.Model):
                         if detail_price_id.min_value <= compute_field_id.value_integer <= detail_price_id.max_value:
                             _logger.info(detail_price_id.max_value)
                             if detail_price_id.price_type == 'unit_price':
-                                price = detail_price_id.amount
+                                if detail_price_id.amount > price:
+                                    price = detail_price_id.amount
+                                    compute_uom_id = detail_price_id.compute_uom_id.id
                             else:
-                                price = detail_price_id.amount
+                                if detail_price_id.amount > price:
+                                    price = detail_price_id.amount
+                                    compute_uom_id = detail_price_id.compute_uom_id.id
                             if price < combo_pricelist_id.min_amount:
                                 price = combo_pricelist_id.min_amount
                                 compute_uom_id = compute_field_id.uom_id.id
