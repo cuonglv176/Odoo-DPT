@@ -73,6 +73,12 @@ class SaleOrder(models.Model):
     active = fields.Boolean('Active', default=True)
     confirm_service_ticket = fields.Boolean('Xác nhận tạo ticket cho dịch vụ', default=False,
                                             help='Đánh dấu để tạo ticket cho tất cả dịch vụ')
+    quote_type = fields.Selection([
+        ('thuong', 'Báo giá thường'),
+        ('bao_giao', 'Báo giá bao giao'),
+        ('all_in', 'Báo giá all in')
+    ], string='Loại báo giá', default='thuong', tracking=True,
+        help="Bao giao là bao vận chuyển, all in là tất cả giá")
 
     @api.depends('planned_sale_service_ids.amount_total')
     def _compute_planned_service_amount(self):
@@ -615,11 +621,60 @@ class SaleOrder(models.Model):
                 })
 
     def action_calculation(self):
-        self._compute_combo_price(self.service_combo_ids)
-        self._compute_combo_price(self.planned_service_combo_ids)
-        self._compute_service_price(self.sale_service_ids)
-        self._compute_service_price(self.planned_sale_service_ids)
+        """Tính toán giá dịch vụ dựa trên loại báo giá"""
+        # Lọc dịch vụ theo loại báo giá
+        combo_ids = self._filter_services_by_quote_type(self.service_combo_ids)
+        planned_combo_ids = self._filter_services_by_quote_type(self.planned_service_combo_ids)
+        service_ids = self._filter_services_by_quote_type(self.sale_service_ids)
+        planned_service_ids = self._filter_services_by_quote_type(self.planned_sale_service_ids)
+
+        # Tính giá cho các dịch vụ đã lọc
+        self._compute_combo_price(combo_ids)
+        self._compute_combo_price(planned_combo_ids)
+        self._compute_service_price(service_ids)
+        self._compute_service_price(planned_service_ids)
         self.onchange_calculation_tax()
+
+    def _filter_services_by_quote_type(self, service_records):
+        """
+        Lọc dịch vụ dựa trên loại báo giá được chọn
+
+        Args:
+            service_records: Recordset dịch vụ cần lọc
+
+        Returns:
+            Recordset các dịch vụ phù hợp với loại báo giá
+        """
+        if not service_records:
+            return service_records
+
+        # Với báo giá thường, trả về tất cả dịch vụ
+        if self.quote_type == 'thuong':
+            return service_records
+
+        filtered_services = self.env[service_records._name]
+
+        for service in service_records:
+            service_model = None
+
+            # Xác định dịch vụ từ sale_service hoặc combo
+            if hasattr(service, 'service_id') and service.service_id:
+                service_model = service.service_id
+            elif hasattr(service, 'combo_id') and service.combo_id:
+                # Xử lý combo (trong trường hợp này, chúng ta sẽ để lại combo)
+                filtered_services |= service
+                continue
+
+            if service_model:
+                # Báo giá bao giao: bỏ qua các dịch vụ có is_bao_giao = True
+                if self.quote_type == 'bao_giao' and not service_model.is_bao_giao:
+                    filtered_services |= service
+
+                # Báo giá all in: bỏ qua các dịch vụ có is_allin = True
+                elif self.quote_type == 'all_in' and not service_model.is_allin:
+                    filtered_services |= service
+
+        return filtered_services
 
     @api.onchange('partner_id')
     def onchange_get_data_required_fields(self):

@@ -62,7 +62,9 @@ class DPTService(models.Model):
     product_id = fields.Many2one('product.product', string='Product')
     # image = fields.Image("Image", required=True, tracking=True)
     visible_to_sale_cs = fields.Boolean('Hiển thị với CS, Sale', default=True,
-                                       help='Khi tắt, dịch vụ này chỉ hiển thị cho vận hành và kế toán')
+                                        help='Khi tắt, dịch vụ này chỉ hiển thị cho vận hành và kế toán')
+    is_bao_giao = fields.Boolean(default=False, string='Bao giao')
+    is_allin = fields.Boolean(default=False, string='All In')
 
     _sql_constraints = [
         ('code_name_index', 'CREATE INDEX code_name_index ON dpt_service_management (code, name)',
@@ -176,25 +178,25 @@ class RequiredField(models.Model):
 
     # Trường đơn vị tính cũ (giữ lại để tương thích ngược)
     uom_id = fields.Many2one('uom.uom', 'Đơn vị tính đơn', tracking=True,
-                            help='Đơn vị tính cũ (đã được thay thế bằng condition_uom_ids và pricing_uom_ids)')
+                             help='Đơn vị tính cũ (đã được thay thế bằng condition_uom_ids và pricing_uom_ids)')
     uom_ids = fields.Many2many('uom.uom', string='Đơn vị tính',
-                              relation='dpt_required_fields_uom_rel',
-                              column1='required_field_id', column2='uom_id',
-                              tracking=True,
-                              help='Đơn vị tính cũ (đã được thay thế bằng condition_uom_ids và pricing_uom_ids)')
+                               relation='dpt_required_fields_uom_rel',
+                               column1='required_field_id', column2='uom_id',
+                               tracking=True,
+                               help='Đơn vị tính cũ (đã được thay thế bằng condition_uom_ids và pricing_uom_ids)')
 
     # Trường đơn vị tính mới (phân biệt mục đích)
     condition_uom_ids = fields.Many2many('uom.uom', string='Đơn vị điều kiện',
-                                        relation='dpt_required_fields_condition_uom_rel',
-                                        column1='required_field_id', column2='uom_id',
-                                        tracking=True,
-                                        help='Đơn vị tính dùng làm điều kiện trong dịch vụ')
+                                         relation='dpt_required_fields_condition_uom_rel',
+                                         column1='required_field_id', column2='uom_id',
+                                         tracking=True,
+                                         help='Đơn vị tính dùng làm điều kiện trong dịch vụ')
 
     pricing_uom_ids = fields.Many2many('uom.uom', string='Đơn vị tính giá',
-                                      relation='dpt_required_fields_pricing_uom_rel',
-                                      column1='required_field_id', column2='uom_id',
-                                      tracking=True,
-                                      help='Đơn vị tính dùng để tính giá dịch vụ')
+                                       relation='dpt_required_fields_pricing_uom_rel',
+                                       column1='required_field_id', column2='uom_id',
+                                       tracking=True,
+                                       help='Đơn vị tính dùng để tính giá dịch vụ')
 
     default_compute_from = fields.Selection([
         ('weight_in_so', 'Weight in SO'),
