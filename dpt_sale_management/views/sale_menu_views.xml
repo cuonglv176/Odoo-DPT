@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Ẩn menu Sales Order gốc -->
+    <record id="sale.menu_sale_order" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+    
+    <record id="sale.menu_sale_quotations" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+
+    <!-- Tạo action cho Báo giá -->
+    <record id="action_quotations_custom" model="ir.actions.act_window">
+        <field name="name">Báo giá</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+        <field name="context">{'search_default_my_quotation': 1}</field>
+        <field name="domain">[('state', 'in', ('draft', 'wait_price', 'sent'))]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo báo giá mới
+            </p>
+        </field>
+    </record>
+
+    <!-- Tạo action cho Đơn hàng -->
+    <record id="action_orders_custom" model="ir.actions.act_window">
+        <field name="name">Đơn hàng</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
+        <field name="context">{'search_default_my_sale_orders_filter': 1}</field>
+        <field name="domain">[('state', 'not in', ('draft', 'wait_price', 'sent', 'cancel'))]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo đơn hàng mới
+            </p>
+        </field>
+    </record>
+
+    <!-- Tạo menu Báo giá -->
+    <record id="menu_quotation" model="ir.ui.menu">
+        <field name="name">Báo giá</field>
+        <field name="sequence">2</field>
+        <field name="parent_id" ref="sale.sale_menu_root"/>
+        <field name="action" ref="action_quotations_custom"/>
+        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+    <!-- Tạo menu Đơn hàng -->
+    <record id="menu_sale_order" model="ir.ui.menu">
+        <field name="name">Đơn hàng</field>
+        <field name="sequence">3</field>
+        <field name="parent_id" ref="sale.sale_menu_root"/>
+        <field name="action" ref="action_orders_custom"/>
+        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+    
+    <!-- Tạo menu con cho Báo giá -->
+    <record id="menu_quotation_draft" model="ir.ui.menu">
+        <field name="name">Nháp</field>
+        <field name="sequence">1</field>
+        <field name="parent_id" ref="menu_quotation"/>
+        <field name="action" ref="sale.action_quotations"/>
+        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+    
+    <record id="menu_quotation_wait_price" model="ir.ui.menu">
+        <field name="name">Chờ báo giá</field>
+        <field name="sequence">2</field>
+        <field name="parent_id" ref="menu_quotation"/>
+        <field name="action" ref="action_quotations_custom"/>
+        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+        <field name="domain">[('state', '=', 'wait_price')]</field>
+    </record>
+    
+    <record id="menu_quotation_sent" model="ir.ui.menu">
+        <field name="name">Báo giá đã gửi</field>
+        <field name="sequence">3</field>
+        <field name="parent_id" ref="menu_quotation"/>
+        <field name="action" ref="action_quotations_custom"/>
+        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+        <field name="domain">[('state', '=', 'sent')]</field>
+    </record>
+    
+    <!-- Tạo menu con cho Đơn hàng -->
+    <record id="menu_sale_order_confirmed" model="ir.ui.menu">
+        <field name="name">Đơn hàng</field>
+        <field name="sequence">1</field>
+        <field name="parent_id" ref="menu_sale_order"/>
+        <field name="action" ref="action_orders_custom"/>
+        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+    
+    <record id="menu_sale_order_cancelled" model="ir.ui.menu">
+        <field name="name">Huỷ</field>
+        <field name="sequence">2</field>
+        <field name="parent_id" ref="menu_sale_order"/>
+        <field name="action" ref="action_orders_custom"/>
+        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+        <field name="domain">[('state', '=', 'cancel')]</field>
+    </record>
+    
+    <!-- Thêm menu Huỷ vào menu Báo giá -->
+    <record id="menu_quotation_cancelled" model="ir.ui.menu">
+        <field name="name">Huỷ</field>
+        <field name="sequence">4</field>
+        <field name="parent_id" ref="menu_quotation"/>
+        <field name="action" ref="action_quotations_custom"/>
+        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+        <field name="domain">[('state', '=', 'cancel'), ('is_quotation', '=', True)]</field>
+    </record>
+</odoo>
