@@ -59,6 +59,12 @@ class DPTServiceCombo(models.Model):
     service_uom_ids = fields.Many2many('uom.uom', string='Đơn vị đo lường', compute='_compute_service_uom_ids')
     service_uom_summary = fields.Text(string='Tổng hợp đơn vị', compute='_compute_service_uom_summary')
     product_id = fields.Many2one('product.product', string='Product')
+    quote_type = fields.Selection([
+        ('thuong', 'Báo giá thường'),
+        ('bao_giao', 'Báo giá bao giao'),
+        ('all_in', 'Báo giá all in')
+    ], string='Loại báo giá', default='thuong', tracking=True,
+        help="Bao giao là bao vận chuyển, all in là tất cả giá")
 
     _sql_constraints = [
         ('code_uniq', 'unique (code)', "Mã gói combo đã tồn tại!")
