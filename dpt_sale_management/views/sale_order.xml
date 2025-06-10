@@ -77,6 +77,8 @@
                             <field name="department_id" context="{'dpt_sale_management': 1}"/>
                             <field name="note"/>
                             <field name="is_price_fixed" widget="boolean_toggle"/>
+                            <field name="is_bao_giao" widget="boolean_toggle"/>
+                            <field name="is_allin" widget="boolean_toggle"/>
 
                         </tree>
                     </field>
@@ -122,6 +124,8 @@
                             <field name="old_price" column_invisible="0" force_save="1"/>
                             <field name="amount_total" readonly="1" force_save="1"/>
                             <field name="department_id" context="{'dpt_sale_management': 1}"/>
+                            <field name="is_bao_giao" widget="boolean_toggle"/>
+                            <field name="is_allin" widget="boolean_toggle"/>
                             <field name="note"/>
                         </tree>
                     </field>
@@ -140,7 +144,7 @@
                             <field name="using_calculation_price" column_invisible="1"/>
                             <field name="sale_service_id" column_invisible="1"/>
                             <field name="sequence" widget="handle"/>
-                             <field name="sale_combo_id_key" string="ID Combo"/>
+                            <field name="sale_combo_id_key" string="ID Combo"/>
                             <field name="combo_id"/>
                             <field name="sale_service_id_key" string="ID Dịch vụ"/>
                             <field name="service_id"/>
