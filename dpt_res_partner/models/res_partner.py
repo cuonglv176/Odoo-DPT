@@ -7,7 +7,6 @@ import re
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
-    # cccd
     cccd = fields.Char(string='Căn cước công dân', help='Số căn cước công dân hoặc CMND')
     @api.model
     def _commercial_fields(self):
