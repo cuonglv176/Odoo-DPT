@@ -265,7 +265,7 @@
                             <field name="service_id"/>
                             <field name="uom_id"/>
                             <field name="compute_value" readonly="1" force_save="1"/>
-                            <field name="compute_uom_id" readonly="1" force_save="1"/>
+                            <field name="compute_uom_id" force_save="1"/>
                             <field name="qty" column_invisible="1" force_save="1"/>
                             <field name="uom_ids" column_invisible="1"/>
                             <field name="price" readonly="0" force_save="1"/>

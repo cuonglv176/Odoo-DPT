@@ -67,7 +67,7 @@
                             <field name="service_id" domain="[('child_ids', '=', False)]"/>
                             <field name="uom_id" column_invisible="1"/>
                             <field name="compute_value" readonly="1" force_save="1"/>
-                            <field name="compute_uom_id" readonly="1" force_save="1"/>
+                            <field name="compute_uom_id" force_save="1"/>
                             <field name="qty" column_invisible="1" force_save="1"/>
                             <field name="uom_ids" column_invisible="1"/>
                             <field name="price" readonly="0" force_save="1" context="{'check_price': True}"/>
@@ -96,7 +96,9 @@
                             <field name="combo_id"/>
                             <field name="code"/>
                             <field name="description"/>
-                            <field name="qty"/>
+                            <field name="qty" column_invisible="1"/>
+                            <field name="combo_compute_uom_id"/>
+                            <field name="combo_compute_value"/>
                             <field name="price" sum="Đơn giá"/>
                             <field name="amount_discount" string="Khuyến mãi"/>
                             <field name="amount_total" sum="Thành tiền"/>
@@ -112,7 +114,7 @@
                             <field name="service_id" domain="[('child_ids', '=', False)]"/>
                             <field name="uom_id" column_invisible="1"/>
                             <field name="compute_value" readonly="1" force_save="1"/>
-                            <field name="compute_uom_id" readonly="1" force_save="1"/>
+                            <field name="compute_uom_id" force_save="1"/>
                             <field name="qty" column_invisible="1" force_save="1"/>
                             <field name="uom_ids" column_invisible="1"/>
                             <field name="price" readonly="0" force_save="1" context="{'check_price': True}"/>

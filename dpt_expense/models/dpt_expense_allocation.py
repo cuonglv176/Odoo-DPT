@@ -98,7 +98,6 @@ class DPTExpenseAllocation(models.Model):
                                                                        service_combo_id.compute_uom_id] + service_combo_id.compute_value
                 else:
                     uom_quantity[service_combo_id.compute_uom_id] = service_combo_id.compute_value
-
             if uom_quantity:
                 uom_by_order.update({
                     sale_id: uom_quantity
