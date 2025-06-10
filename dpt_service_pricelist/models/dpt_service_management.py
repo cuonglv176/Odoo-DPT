@@ -70,9 +70,9 @@ class DPTServiceManagement(models.Model):
             recordset: Các bảng giá phù hợp
         """
         self = self.sudo()
-        # Lọc các bảng giá còn hiệu lực
-        valid_pricelist_ids = self.pricelist_item_ids.filtered(lambda p: not p.date_end or (
-                p.date_start and p.date_end and p.date_start <= fields.Datetime.now() and p.date_end >= fields.Datetime.now()))
+        # Lọc các bảng giá còn hiệu lực và có trạng thái active
+        valid_pricelist_ids = self.pricelist_item_ids.filtered(lambda p: p.pricelist_id.state == 'active' and (not p.date_end or (
+                p.date_start and p.date_end and p.date_start <= fields.Datetime.now() and p.date_end >= fields.Datetime.now())))
         # Lọc theo khách hàng
         valid_partner_pricelist_ids = valid_pricelist_ids.filtered(lambda p: p.partner_id == partner_id)
 
