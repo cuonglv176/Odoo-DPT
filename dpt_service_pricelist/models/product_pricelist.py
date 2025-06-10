@@ -223,3 +223,12 @@ class ProductPricelist(models.Model):
                         'rejection_reason': reason,
                     })
         return True
+
+    def write(self, vals):
+        for record in self:
+            if record.state == 'active':
+                # Chỉ cho phép thay đổi trạng thái
+                if vals.keys() != ['state']:
+                    raise UserError(_("Không thể chỉnh sửa bảng giá ở trạng thái 'Đang hoạt động'. "
+                                    "Vui lòng chuyển về trạng thái khác để sửa đổi."))
+        return super(ProductPricelist, self).write(vals)

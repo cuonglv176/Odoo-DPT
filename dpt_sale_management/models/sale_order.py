@@ -345,22 +345,29 @@ class SaleOrder(models.Model):
         """Lấy giá combo từ bảng giá"""
         self.ensure_one()
         if not sale_combo_id or not self.partner_id:
-            return False, 0.0
+            return False
         today = fields.Date.today()
-        combo_pricelist_id = self.env['product.pricelist.item'].search([
-            ('partner_id', '=', self.partner_id.id),
+
+        # Domain chung cho cả hai lần tìm kiếm
+        base_domain = [
             ('combo_id', '=', sale_combo_id.combo_id.id),
+            ('pricelist_id.state', '=', 'active'),
             '|', ('date_start', '<=', today), ('date_start', '=', False),
-            '|', ('date_end', '>=', today), ('date_end', '=', False)
-        ], limit=1)
+            '|', ('date_end', '>=', today), ('date_end', '=', False),
+        ]
+
+        # 1. Ưu tiên tìm bảng giá theo khách hàng cụ thể
+        partner_domain = base_domain + [('partner_id', '=', self.partner_id.id)]
+        combo_pricelist_id = self.env['product.pricelist.item'].search(partner_domain, limit=1)
+
+        # 2. Nếu không có, tìm bảng giá chung (không gán cho khách hàng nào)
         if not combo_pricelist_id:
-            combo_pricelist_id = self.env['product.pricelist.item'].search([
-                ('combo_id', '=', sale_combo_id.combo_id.id),
-                '|', ('date_start', '<=', today), ('date_start', '=', False),
-                '|', ('date_end', '>=', today), ('date_end', '=', False)
-            ], limit=1)
+            general_domain = base_domain + [('partner_id', '=', False)]
+            combo_pricelist_id = self.env['product.pricelist.item'].search(general_domain, limit=1)
+
         if not combo_pricelist_id:
-            raise ValidationError(_("Combo chưa bảng giá vui lòng check lại: %s!!!") % sale_combo_id.combo_id.name)
+            raise ValidationError(_("Combo chưa có bảng giá hoạt động hoặc không tìm thấy bảng giá phù hợp: %s!!!") % sale_combo_id.combo_id.name)
+
         return combo_pricelist_id
 
     def _compute_combo_price(self, sale_combo_combo_ids):
