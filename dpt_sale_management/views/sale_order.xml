@@ -98,7 +98,7 @@
                             <field name="combo_id"/>
                             <field name="code"/>
                             <field name="description"/>
-                            <field name="qty" column_invisible="1"/>
+                            <field name="qty"/>
                             <field name="combo_compute_uom_id"/>
                             <field name="combo_compute_value"/>
                             <field name="price" sum="Đơn giá"/>
