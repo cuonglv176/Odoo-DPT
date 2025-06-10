@@ -99,8 +99,6 @@
                             <field name="code"/>
                             <field name="description"/>
                             <field name="qty"/>
-                            <field name="combo_compute_uom_id"/>
-                            <field name="combo_compute_value"/>
                             <field name="price" sum="Đơn giá"/>
                             <field name="amount_discount" string="Khuyến mãi"/>
                             <field name="amount_total" sum="Thành tiền"/>
