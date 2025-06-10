@@ -44,7 +44,7 @@
                 </button>
             </xpath>
             <field name="state" position="before">
-                <button name="action_create_expense_allocation" type="object" string="Tạo phân bổ chi phí"
+                <button name="action_popup_create_account_move" type="object" string="Tạo hóa đơn / phân bổ"
                         class="oe_highlight" invisible="state not in ('purchase','done')"/>
             </field>
             <xpath expr="//button[@name='action_create_invoice']" position="attributes">

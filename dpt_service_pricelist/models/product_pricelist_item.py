@@ -43,6 +43,12 @@ class ProductPricelistItem(models.Model):
                                                  tracking=True)
     is_price = fields.Boolean('Is Price', tracking=True, copy=True)
     is_accumulated = fields.Boolean('Is Accumulated', tracking=True, copy=True)
+    quote_type = fields.Selection([
+        ('thuong', 'Báo giá thường'),
+        ('bao_giao', 'Báo giá bao giao'),
+        ('all_in', 'Báo giá all in')
+    ], string='Loại báo giá', default='thuong', tracking=True,
+        help="Bao giao là bao vận chuyển, all in là tất cả giá")
 
     # re-define for tracking
     date_start = fields.Datetime(tracking=True)
@@ -199,3 +205,62 @@ class ProductPricelistItem(models.Model):
                     applicable_uoms.append(field.uom_id.id)
 
             return bool(set(selected_uoms.ids).intersection(set(applicable_uoms)))
+
+    # Phương thức mới - Kiểm tra liệu dịch vụ có phù hợp với loại báo giá không
+    def is_service_compatible_with_quote_type(self, quote_type=None):
+        """
+        Kiểm tra xem dịch vụ có phù hợp với loại báo giá đã chọn không
+
+        Args:
+            quote_type (str): Loại báo giá ('thuong', 'bao_giao', 'all_in')
+
+        Returns:
+            bool: True nếu dịch vụ phù hợp với loại báo giá, False nếu không
+        """
+        self.ensure_one()
+        if not self.service_id:
+            return True
+
+        # Nếu không có quote_type, sử dụng quote_type của bảng giá
+        if not quote_type:
+            quote_type = self.quote_type
+
+        # Báo giá thường: áp dụng tất cả dịch vụ
+        if quote_type == 'thuong':
+            return True
+
+        # Báo giá bao giao: chỉ tính các dịch vụ KHÔNG có is_bao_giao = True
+        elif quote_type == 'bao_giao':
+            return not self.service_id.is_bao_giao
+
+        # Báo giá all in: chỉ tính các dịch vụ KHÔNG có is_allin = True
+        elif quote_type == 'all_in':
+            return not self.service_id.is_allin
+
+        return True
+
+    # Phương thức tính giá tổng hợp dựa trên loại báo giá
+    def compute_price_by_quote_type(self, value, selected_uoms, quote_type=None):
+        """
+        Tính giá dịch vụ dựa trên loại báo giá
+
+        Args:
+            value (float): Giá trị để tính toán
+            selected_uoms (recordset): Các đơn vị đã chọn
+            quote_type (str): Loại báo giá ('thuong', 'bao_giao', 'all_in')
+
+        Returns:
+            float: Giá tính toán được hoặc None nếu không áp dụng
+        """
+        self.ensure_one()
+
+        # Nếu không có quote_type, sử dụng quote_type của bảng giá
+        if not quote_type:
+            quote_type = self.quote_type
+
+        # Kiểm tra tính tương thích của dịch vụ với loại báo giá
+        if not self.is_service_compatible_with_quote_type(quote_type):
+            return None
+
+        # Tính giá dựa trên các điều kiện
+        return self.compute_price_with_conditions(value, selected_uoms)

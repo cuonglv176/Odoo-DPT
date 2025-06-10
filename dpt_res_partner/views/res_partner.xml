@@ -26,9 +26,64 @@
                 </group>
             </xpath>
             <xpath expr="//group/group[1]" position="inside">
+                <field name="total_credit" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="not is_company"/>
+                <field name="total_debit" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="not is_company"/>
+            </xpath>
 
+            <!-- Remove readonly attribute from vat field to allow child companies to have their own tax ID -->
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="readonly">0</attribute>
             </xpath>
         </field>
     </record>
 
+    <!-- Inherit search view to add parent/child company filters -->
+    <record id="view_res_partner_filter_inherit" model="ir.ui.view">
+        <field name="name">res.partner.filter.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <filter name="type_company" position="after">
+                <filter string="Parent Companies" name="parent_companies" domain="[('is_company', '=', True), ('parent_id', '=', False)]"/>
+                <filter string="Child Companies" name="child_companies" domain="[('is_company', '=', True), ('parent_id', '!=', False)]"/>
+            </filter>
+        </field>
+    </record>
+
+    <!-- Add init_tree view for res.partner -->
+    <record id="view_partner_init_tree" model="ir.ui.view">
+        <field name="name">res.partner.init.tree</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <init_tree child_field="child_ids">
+                <field name="name"/>
+                <field name="display_name"/>
+                <field name="function"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="user_id"/>
+                <field name="vat"/>
+                <field name="company_type"/>
+                <field name="is_company"/>
+                <field name="country_id"/>
+                <field name="total_credit" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="not is_company"/>
+                <field name="total_debit" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="not is_company"/>
+            </init_tree>
+        </field>
+    </record>
+
+    <!-- Update res_partner_action_customer to include init_tree view -->
+    <record id="account.res_partner_action_customer" model="ir.actions.act_window">
+        <field name="name">Customers</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,init_tree,form</field>
+        <field name="context">{'search_default_customer': 1,'res_partner_search_mode': 'customer', 'default_is_company': True, 'default_customer_rank': 1}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a new customer in your address book
+          </p><p>
+            Odoo helps you easily track all activities related to a customer.
+          </p>
+        </field>
+    </record>
 </odoo>

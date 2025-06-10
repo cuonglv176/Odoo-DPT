@@ -117,7 +117,7 @@
                                                            options="{'no_create': True}"
                                                            invisible="condition_type == 'simple'"/>
                                                     <field name="price_type" widget="radio"/>
-                                                    <field name="compute_uom_id" options="{'no_create': True}"/>
+                                                    <field name="compute_uom_id" options="{'no_create': True}" required="1"/>
                                                     <field name="min_value"/>
                                                     <field name="max_value"/>
                                                 </group>

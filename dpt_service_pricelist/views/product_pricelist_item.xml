@@ -19,6 +19,7 @@
                                 <field name="uom_id"
                                        domain="[('id','in', service_uom_ids)]" options="{'no_create': True}"/>
                                 <field name="compute_price" widget="radio" options="{'horizontal': true}"/>
+                                <field name="quote_type" widget="radio" options="{'horizontal': true}"/>
                                 <field name="is_price" invisible="compute_price != 'table'"/>
                                 <field name="is_accumulated" invisible="compute_price != 'table'"/>
                                 <field name="currency_id" options="{'no_create': True}" readonly="0" required="1"/>

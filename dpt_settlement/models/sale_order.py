@@ -110,17 +110,109 @@ def _create_invoices(self, grouped=False, final=False, date=None):
                     'price_unit': order.purchase_amount_total
                 }))
 
-        if order.sale_service_ids:
-            for sale_service_id in order.sale_service_ids:
-                if sale_service_id.price != 0:
-                    invoice_line_vals.append(Command.create(
-                        {
+        if order.settle_by == 'planned':
+            if order.planned_sale_service_ids:
+                for sale_service_id in order.sale_service_ids:
+                    if sale_service_id.price != 0:
+                        if not sale_service_id.service_id.product_id:
+                            product_vals = {
+                                'name': sale_service_id.service_id.name,
+                                'type': 'service',
+                                'invoice_policy': 'order',
+                                'sale_ok': True,
+                                'purchase_ok': False,
+                                'list_price': sale_service_id.price,
+                                'default_code': sale_service_id.service_id.code or f"SERV-{sale_service_id.service_id.id}",
+                                'taxes_id': [(6, 0,
+                                              sale_service_id.service_id.tax_ids.ids)] if sale_service_id.service_id.tax_ids else False,
+                            }
+                            new_product = self.env['product.product'].sudo().create(product_vals)
+                            sale_service_id.service_id.sudo().write({'product_id': new_product.id})
+                        line_vals = {
                             'product_id': sale_service_id.service_id.product_id.id,
                             'display_type': 'product',
                             'quantity': sale_service_id.compute_value,
                             'price_unit': sale_service_id.price,
                             'service_line_ids': [(6, 0, sale_service_id.ids)],
-                        }))
+                        }
+                        invoice_line_vals.append(Command.create(line_vals))
+            if order.planned_service_combo_ids:
+                for planned_service_combo_id in order.planned_service_combo_ids:
+                    if planned_service_combo_id.price != 0:
+                        if not planned_service_combo_id.combo_id.product_id:
+                            product_vals = {
+                                'name': planned_service_combo_id.combo_id.name,
+                                'type': 'service',
+                                'invoice_policy': 'order',
+                                'sale_ok': True,
+                                'purchase_ok': False,
+                                'list_price': planned_service_combo_id.price,
+                                'default_code': planned_service_combo_id.combo_id.code or f"COMBO-{planned_service_combo_id.combo_id.id}",
+                                'property_account_expense_id':  planned_service_combo_id.combo_id.expense_account_id.id,
+                                'property_account_income_id':  planned_service_combo_id.combo_id.revenue_account_id.id,
+                            }
+                            new_product = self.env['product.product'].sudo().create(product_vals)
+                            planned_service_combo_id.combo_id.sudo().write({'product_id': new_product.id})
+                        line_vals = {
+                            'product_id': planned_service_combo_id.combo_id.product_id.id,
+                            'display_type': 'product',
+                            'quantity': planned_service_combo_id.qty,
+                            'price_unit': planned_service_combo_id.price,
+                        }
+                        invoice_line_vals.append(Command.create(line_vals))
+
+        if order.settle_by == 'actual':
+            if order.sale_service_ids:
+                for sale_service_id in order.sale_service_ids:
+                    if sale_service_id.price != 0:
+                        # Kiểm tra nếu dịch vụ không có sản phẩm liên kết
+                        if not sale_service_id.service_id.product_id:
+                            # Tạo sản phẩm mới từ thông tin dịch vụ
+                            product_vals = {
+                                'name': sale_service_id.service_id.name,
+                                'type': 'service',
+                                'invoice_policy': 'order',
+                                'sale_ok': True,
+                                'purchase_ok': False,
+                                'list_price': sale_service_id.price,
+                                'default_code': sale_service_id.service_id.code or f"SERV-{sale_service_id.service_id.id}",
+                                'property_account_expense_id': sale_service_id.service_id.expense_account_id.id,
+                                'property_account_income_id': sale_service_id.service_id.revenue_account_id.id,
+                            }
+                            new_product = self.env['product.product'].sudo().create(product_vals)
+                            sale_service_id.service_id.sudo().write({'product_id': new_product.id})
+                        line_vals = {
+                            'product_id': sale_service_id.service_id.product_id.id,
+                            'display_type': 'product',
+                            'quantity': sale_service_id.compute_value,
+                            'price_unit': sale_service_id.price,
+                            'service_line_ids': [(6, 0, sale_service_id.ids)],
+                        }
+                        invoice_line_vals.append(Command.create(line_vals))
+            if order.service_combo_ids:
+                for service_combo_id in order.service_combo_ids:
+                    if service_combo_id.price != 0:
+                        if not service_combo_id.combo_id.product_id:
+                            product_vals = {
+                                'name': service_combo_id.combo_id.name,
+                                'type': 'service',
+                                'invoice_policy': 'order',
+                                'sale_ok': True,
+                                'purchase_ok': False,
+                                'list_price': service_combo_id.price,
+                                'default_code': service_combo_id.combo_id.code or f"COMBO-{planned_service_combo_id.combo_id.id}",
+                                'property_account_expense_id':  service_combo_id.combo_id.expense_account_id.id,
+                                'property_account_income_id':  service_combo_id.combo_id.revenue_account_id.id,
+                            }
+                            new_product = self.env['product.product'].sudo().create(product_vals)
+                            service_combo_id.combo_id.sudo().write({'product_id': new_product.id})
+                        line_vals = {
+                            'product_id': service_combo_id.combo_id.product_id.id,
+                            'display_type': 'product',
+                            'quantity': service_combo_id.qty,
+                            'price_unit': service_combo_id.price,
+                        }
+                        invoice_line_vals.append(Command.create(line_vals))
 
         # if not any(not line.display_type for line in invoiceable_lines):
         #     invoice_vals_list.append(invoice_vals)

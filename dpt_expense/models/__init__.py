@@ -2,6 +2,8 @@
 
 from . import account_move
 from . import dpt_expense_allocation
+from . import dpt_service_management
+from . import dpt_service_combo
 from . import purchase_order
 from . import sale_order
 from . import uom_uom

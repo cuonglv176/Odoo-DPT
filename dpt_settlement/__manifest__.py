@@ -9,5 +9,6 @@
     'data': [
         'views/sale_order.xml',
         'views/product.xml',
+        'views/account_move_views.xml',
     ],
 }

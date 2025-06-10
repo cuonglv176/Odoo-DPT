@@ -37,9 +37,12 @@
                     <button name="action_export_picking_report" string="Xuất Excel"
                             type="object" class="btn-primary" invisible="delivery_slip_type != 'container_vn'"/>
                     <field name="vehicle_country" invisible="1"/>
-                    <field name="cn_vehicle_stage_id" invisible="vehicle_country != 'chinese'"/>
-                    <field name="vn_vehicle_stage_id" invisible="vehicle_country != 'vietnamese'"/>
-                    <field name="last_vn_vehicle_stage_id" invisible="delivery_slip_type != 'last_delivery_vn'"/>
+                    <field name="vn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
+                           invisible="vehicle_country != 'vietnamese'"/>
+                    <field name="cn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
+                           invisible="vehicle_country != 'chinese'"/>
+                    <field name="last_vn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
+                           invisible="vehicle_country != 'last_delivery_vn'"/>
                     <field name="num_not_confirm_picking" invisible="1"/>
                     <field name="active" invisible="1"/>
                     <field name="non_finish_transfer" invisible="1"/>

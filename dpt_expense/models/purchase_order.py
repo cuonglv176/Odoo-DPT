@@ -49,3 +49,13 @@ class PurchaseOrder(models.Model):
         action['res_id'] = expense_allocation.id
         action['view_mode'] = 'form'
         return action
+
+    def action_popup_create_account_move(self):
+        return {
+            'name': _('Tạo hóa đơn / phân bổ'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'dpt.create.account.expense.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_po_id': self.id},
+        }

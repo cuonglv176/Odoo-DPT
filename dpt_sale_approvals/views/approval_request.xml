@@ -29,6 +29,7 @@
                 <field name="sequence_code" invisible="1"/>
                 <field name="sale_id" invisible="sequence_code != 'BAOGIA'" readonly="1"/>
                 <field name="pricelist_id" invisible="sequence_code != 'BGKH'" readonly="1"/>
+                <field name="combo_id" invisible="sequence_code != 'SCM'" readonly="1"/>
                 <field name="payment_id" invisible="sequence_code != 'DNTT'" readonly="1"
                        context="{'form_view_ref':'dpt_account_payment_request.dpt_view_account_payment_request_form'}"/>
                 <field name="payment_due" invisible="sequence_code != 'DNTT'" readonly="1"/>
