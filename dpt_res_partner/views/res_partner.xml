@@ -5,6 +5,10 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="cccd" placeholder="Mã CCCD"/>
+            </xpath>
             <xpath expr="//group" position="after">
                 <group string="DPT Information">
                     <field name="dpt_type_of_partner"/>
