@@ -42,6 +42,7 @@
                 <field name="dpt_tax_other" widget="percentage"/>
                 <field name="dpt_amount_tax_other"/>
                 <field name="dpt_exchange_rate"/>
+                <field name="dpt_exchange_rate_base"/>
                 <field name="dpt_total_vat"/>
                 <field name="dpt_total_usd_vnd"/>
                 <field name="dpt_total_cny_vnd"/>
@@ -112,6 +113,7 @@
                             <field name="dpt_uom1_id"/>
                             <field name="declaration_type" widget="radio" options="{'horizontal': true}"/>
                             <field name="dpt_exchange_rate"/>
+                            <field name="dpt_exchange_rate_base"/>
                             <!-- dunghq: Thêm trường selection Giá HQ -->
                             <field name="customs_price_type" widget="radio" options="{'horizontal': true}"/>
                             <field name="dpt_price_usd" invisible="declaration_type != 'usd'"/>
@@ -203,6 +205,7 @@
                 <field name="dpt_tax_other" widget="percentage"/>
                 <field name="dpt_amount_tax_other"/>
                 <field name="dpt_exchange_rate"/>
+                <field name="dpt_exchange_rate_base"/>
                 <!-- dunghq: Thêm trường customs_price_type vào tree view -->
                 <field name="customs_price_type"/>
                 <field name="dpt_total_vat"/>

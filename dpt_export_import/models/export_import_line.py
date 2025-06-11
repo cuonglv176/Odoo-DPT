@@ -48,7 +48,10 @@ class DptExportImportLine(models.Model):
     dpt_amount_tax = fields.Monetary(string='Amount Tax', currency_field='currency_id',
                                      compute="_compute_dpt_amount_tax")
     dpt_exchange_rate = fields.Float(string='Tỉ giá HQ', tracking=True, currency_field='currency_id', store=True,
-                                     digits=(12, 4), compute="compute_dpt_exchange_rate")
+                                     digits=(12, 4), compute="_compute_dpt_exchange_rate")
+    dpt_exchange_rate_base = fields.Float(string='Tỉ giá XHĐ', tracking=True, currency_field='currency_id',
+                                            store=True,
+                                            digits=(12, 4), compute="_compute_dpt_exchange_rate_base")
     hs_code_id = fields.Many2one('dpt.export.import.acfta', string='HS Code', tracking=True)
     dpt_code_hs = fields.Char(string='H')
     dpt_sl1 = fields.Float(string='SL1', tracking=True, digits=(12, 4))
@@ -257,9 +260,30 @@ class DptExportImportLine(models.Model):
                 rec.dpt_exchange_rate = company_rate
             else:
                 rec.dpt_exchange_rate = 0
+    
+    @api.onchange('declaration_type')
+    def onchange_dpt_exchange_rate_base(self):
+        for rec in self:
+            company_rate_base = 0
+            if rec.declaration_type == 'usd':
+                currency_usd_id = self.env['res.currency'].search(
+                    [('category', '=', 'base'), ('category_code', '=', 'USD')], limit=1)
+                company_rate_base = currency_usd_id.rate_ids[:1].company_rate
+            elif rec.declaration_type == 'cny':
+                currency_cny_id = self.env['res.currency'].search(
+                    [('category', '=', 'base'), ('category_code', '=', 'CNY')], limit=1)
+                company_rate_base = currency_cny_id.rate_ids[:1].company_rate
+            elif rec.declaration_type == 'krw':
+                currency_krw_id = self.env['res.currency'].search(
+                    [('category', '=', 'base'), ('category_code', '=', 'KRW')], limit=1)
+                company_rate_base = currency_krw_id.rate_ids[:1].company_rate
+            if company_rate_base != 0:
+                rec.dpt_exchange_rate_base = company_rate_base
+            else:
+                rec.dpt_exchange_rate_base = 0
 
     @api.depends('declaration_type')
-    def compute_dpt_exchange_rate(self):
+    def _compute_dpt_exchange_rate(self):
         for rec in self:
             company_rate = 0
             if rec.declaration_type == 'usd':
@@ -278,7 +302,6 @@ class DptExportImportLine(models.Model):
                 rec.dpt_exchange_rate = company_rate
             else:
                 rec.dpt_exchange_rate = 0
-
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=10):
         args = args or []
@@ -620,3 +643,4 @@ class DptExportImportLine(models.Model):
 
             record.risk_reason = reason
     # dunghq
+
