@@ -51,7 +51,7 @@ class DptExportImportLine(models.Model):
                                      digits=(12, 4), compute="_compute_dpt_exchange_rate")
     dpt_exchange_rate_base = fields.Float(string='Tỉ giá XHĐ', tracking=True, currency_field='currency_id',
                                             store=True,
-                                            digits=(12, 4), compute="_compute_dpt_exchange_rate_base")
+                                            digits=(12, 4), compute="onchange_dpt_exchange_rate_base")
     dpt_exchange_rate_base_final = fields.Float(string='Tỷ giá NH (cuối cùng)', tracking=True, digits=(12, 4))
     dpt_basic_value = fields.Monetary(
         string='Giá trị cơ bản',
