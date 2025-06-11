@@ -114,6 +114,8 @@
                             <field name="declaration_type" widget="radio" options="{'horizontal': true}"/>
                             <field name="dpt_exchange_rate"/>
                             <field name="dpt_exchange_rate_base"/>
+                            <field name="dpt_exchange_rate_base_final"/>
+                            <field name="dpt_basic_value" readonly="1"/>
                             <!-- dunghq: Thêm trường selection Giá HQ -->
                             <field name="customs_price_type" widget="radio" options="{'horizontal': true}"/>
                             <field name="dpt_price_usd" invisible="declaration_type != 'usd'"/>

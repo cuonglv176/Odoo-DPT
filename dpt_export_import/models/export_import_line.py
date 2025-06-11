@@ -52,6 +52,14 @@ class DptExportImportLine(models.Model):
     dpt_exchange_rate_base = fields.Float(string='Tỉ giá XHĐ', tracking=True, currency_field='currency_id',
                                             store=True,
                                             digits=(12, 4), compute="_compute_dpt_exchange_rate_base")
+    dpt_exchange_rate_base_final = fields.Float(string='Tỷ giá NH (cuối cùng)', tracking=True, digits=(12, 4))
+    dpt_basic_value = fields.Monetary(
+        string='Giá trị cơ bản',
+        currency_field='currency_id',
+        compute='_compute_dpt_basic_value',
+        store=True,
+        tracking=True
+    )
     hs_code_id = fields.Many2one('dpt.export.import.acfta', string='HS Code', tracking=True)
     dpt_code_hs = fields.Char(string='H')
     dpt_sl1 = fields.Float(string='SL1', tracking=True, digits=(12, 4))
@@ -130,6 +138,20 @@ class DptExportImportLine(models.Model):
     picking_count = fields.Integer('Picking Count', compute="_compute_picking_count")
     is_history = fields.Boolean(string='History', default=False, tracking=True)
     active = fields.Boolean('Active', default=True)
+
+    @api.depends('declaration_type', 'dpt_price_usd', 'dpt_price_cny_vnd', 'dpt_price_krw_vnd',
+                 'dpt_exchange_rate_base_final', 'dpt_sl1')
+    def _compute_dpt_basic_value(self):
+        for rec in self:
+            price = 0
+            if rec.declaration_type == 'usd':
+                price = rec.dpt_price_usd
+            elif rec.declaration_type == 'cny':
+                price = rec.dpt_price_cny_vnd
+            elif rec.declaration_type == 'krw':
+                price = rec.dpt_price_krw_vnd
+
+            rec.dpt_basic_value = price * (rec.dpt_exchange_rate_base_final or 0) * rec.dpt_sl1
 
     @api.depends('dpt_price_krw_vnd', 'dpt_sl1', 'declaration_type')
     def _compute_dpt_total_krw_vnd(self):
