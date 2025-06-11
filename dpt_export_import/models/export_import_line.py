@@ -47,7 +47,7 @@ class DptExportImportLine(models.Model):
     dpt_tax = fields.Float(string='VAT(%)', tracking=True)
     dpt_amount_tax = fields.Monetary(string='Amount Tax', currency_field='currency_id',
                                      compute="_compute_dpt_amount_tax")
-    dpt_exchange_rate = fields.Float(string='Tỉ giá XNK', tracking=True, currency_field='currency_id', store=True,
+    dpt_exchange_rate = fields.Float(string='Tỉ giá HQ', tracking=True, currency_field='currency_id', store=True,
                                      digits=(12, 4), compute="compute_dpt_exchange_rate")
     hs_code_id = fields.Many2one('dpt.export.import.acfta', string='HS Code', tracking=True)
     dpt_code_hs = fields.Char(string='H')
