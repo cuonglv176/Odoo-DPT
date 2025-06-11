@@ -386,13 +386,13 @@ class SaleOrder(models.Model):
                 combo.price = combo_pricelist_id.fixed_price
 
             elif combo_pricelist_id.compute_price == 'percentage':
+                price_base = 0
                 if combo_pricelist_id.percent_based_on == 'product_total_amount':
                     price_base = sum(self.order_line.mapped('price_subtotal'))
                 elif combo_pricelist_id.percent_based_on == 'declaration_total_amount':
                     price_base = sum(self.order_line.mapped('declared_unit_total'))
                 elif combo_pricelist_id.percent_based_on == 'purchase_total_amount':
                     purchase_ids = self.purchase_ids.filtered(lambda po: po.purchase_type == 'external')
-                    price_base = 0
                     for order_line in purchase_ids.mapped('order_line'):
                         price_base += order_line.price_subtotal * order_line.order_id.last_rate_currency
                 elif combo_pricelist_id.percent_based_on == 'invoice_total_amount':
