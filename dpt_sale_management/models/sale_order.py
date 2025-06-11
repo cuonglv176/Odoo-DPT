@@ -366,7 +366,8 @@ class SaleOrder(models.Model):
             combo_pricelist_id = self.env['product.pricelist.item'].search(general_domain, limit=1)
 
         if not combo_pricelist_id:
-            combo_pricelist_id = self.env['product.pricelist.item'].search(base_domain, limit=1)
+            raise ValidationError(_("Combo chưa có bảng giá hoạt động hoặc không tìm thấy bảng giá phù hợp: %s!!!") % sale_combo_id.combo_id.name)
+
         return combo_pricelist_id
 
     def _compute_combo_price(self, sale_combo_combo_ids, type='combo'):
