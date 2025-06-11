@@ -442,7 +442,7 @@ class SaleOrder(models.Model):
             for planned_sale_service_id in planned_sale_service_ids:
                 amount_planned_total += planned_sale_service_id.amount_total
         elif self.quote_type == 'all_in':
-            sale_service_ids = self.sale_service_ids.filtered(lambda sale_service: sale_service_id.is_allin)
+            sale_service_ids = self.sale_service_ids.filtered(lambda sale_service: sale_service.is_allin)
             for sale_service_id in sale_service_ids:
                 amount_total += sale_service_id.amount_total
             planned_sale_service_ids = self.planned_sale_service_ids.filtered(lambda planned_sale_service: planned_sale_service.is_allin)
