@@ -15,7 +15,7 @@
                 <field name="is_quotation" invisible="1"/>
                 <field name="show_action_calculation" invisible="1"/>
                 <field name="active" invisible="1"/>
-                <button string="Export Quotation" name="export_excel_quotation" type="object"/>
+                <button string="Export Quotation" name="export_excel_quotation_popup" type="object"/>
             </button>
             <button name="action_quotation_send" position="attributes">
                 <attribute name="invisible">1</attribute>
