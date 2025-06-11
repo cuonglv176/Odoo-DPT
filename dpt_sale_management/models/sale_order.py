@@ -370,7 +370,7 @@ class SaleOrder(models.Model):
 
         return combo_pricelist_id
 
-    def _compute_combo_price(self, sale_combo_combo_ids):
+    def _compute_combo_price(self, sale_combo_combo_ids, type='combo'):
         for combo in sale_combo_combo_ids:
             combo_pricelist_id = self.get_combo_price_from_pricelist(combo)
             compute_value = 1
@@ -424,7 +424,31 @@ class SaleOrder(models.Model):
                                 compute_uom_id = compute_field_id.uom_id.id
                 combo.price = price
                 combo.qty = compute_value
+            amount_total, amount_planned_total = self._get_service_allin_baogiao()
+            if type == 'combo':
+                combo.price = combo.price - (amount_total / combo.qty)
+            if type == 'planned_combo':
+                combo.price = combo.price - (amount_planned_total / combo.qty)
             combo.compute_uom_id = compute_uom_id
+
+    def _get_service_allin_baogiao(self):
+        amount_total = 0
+        amount_planned_total = 0
+        if self.quote_type == 'bao_giao':
+            sale_service_ids = self.sale_service_ids.filtered(lambda sale_service: sale_service.is_bao_giao)
+            for sale_service_id in sale_service_ids:
+                amount_total += sale_service_id.amount_total
+            planned_sale_service_ids = self.planned_sale_service_ids.filtered(lambda sale_service: sale_service.is_bao_giao)
+            for planned_sale_service_id in planned_sale_service_ids:
+                amount_planned_total += planned_sale_service_id.amount_total
+        elif self.quote_type == 'all_in':
+            sale_service_ids = self.sale_service_ids.filtered(lambda sale_service: sale_service_id.is_allin)
+            for sale_service_id in sale_service_ids:
+                amount_total += sale_service_id.amount_total
+            planned_sale_service_ids = self.planned_sale_service_ids.filtered(lambda planned_sale_service: planned_sale_service.is_allin)
+            for planned_sale_service_id in planned_sale_service_ids:
+                amount_planned_total += planned_sale_service_id.amount_total
+        return amount_total, amount_planned_total
 
     def _compute_service_price(self, service_ids):
         for sale_service_id in service_ids:
@@ -636,8 +660,8 @@ class SaleOrder(models.Model):
         planned_service_ids = self._filter_services_by_quote_type(self.planned_sale_service_ids)
 
         # Tính giá cho các dịch vụ đã lọc
-        self._compute_combo_price(combo_ids)
-        self._compute_combo_price(planned_combo_ids)
+        self._compute_combo_price(combo_ids,'combo')
+        self._compute_combo_price(planned_combo_ids,'planned_combo')
         self._compute_service_price(service_ids)
         self._compute_service_price(planned_service_ids)
         self.onchange_calculation_tax()
