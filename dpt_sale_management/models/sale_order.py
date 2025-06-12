@@ -426,9 +426,9 @@ class SaleOrder(models.Model):
                 combo.qty = compute_value
             amount_total, amount_planned_total = self._get_service_allin_baogiao()
             if type == 'combo':
-                combo.price = combo.price - (amount_total / combo.qty)
+                combo.price = combo.price - ((amount_total / combo.qty) if combo.qty else 0)
             if type == 'planned_combo':
-                combo.price = combo.price - (amount_planned_total / combo.qty)
+                combo.price = combo.price - ((amount_planned_total / combo.qty) if combo.qty else 0)
             combo.compute_uom_id = compute_uom_id
 
     def _get_service_allin_baogiao(self):
