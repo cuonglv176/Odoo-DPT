@@ -1227,6 +1227,22 @@ class SaleOrder(models.Model):
         worksheet.write(f'E{row + 2}', 'CÔNG TY TNHH DPT VINA HOLDINGS')
         worksheet.write(f'H7', f"Tỷ giá tệ từ hệ thống: {self.currency_id.search([('name', '=', 'CNY')]).rate}")
         worksheet.write(f'H8', f"Tỷ giá USD từ hệ thống: {self.currency_id.search([('name', '=', 'USD')]).rate}")
+        # update money by product
+        alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        col = 7
+        for order_line in self.order_line:
+            worksheet.write(f'{alphabet[col]}19', order_line.product_id.name, special_format)
+            col += 1
+
+        row = 20
+        for sale_service_id in self.sale_service_ids:
+            col = 7
+            for order_line in self.order_line:
+                amount = (sale_service_id.amount_total / self.service_total_amount) * order_line.price_subtotal if self.service_total_amount else 0
+                worksheet.write(f'{alphabet[col]}{row}', amount, None)
+                col += 1
+            row += 1
+
         workbook.close()
         xls = output.getvalue()
         vals = {
