@@ -47,11 +47,39 @@ class DptExportImportLine(models.Model):
     dpt_tax = fields.Float(string='VAT(%)', tracking=True)
     dpt_amount_tax = fields.Monetary(string='Amount Tax', currency_field='currency_id',
                                      compute="_compute_dpt_amount_tax")
+    dpt_amount_tax_import_basic = fields.Monetary(
+        string='Tiền thuế NK (XHĐ)', 
+        currency_field='currency_id',
+        compute='_compute_basic_taxes', 
+        store=True, 
+        tracking=True
+    )
+    dpt_amount_tax_other_basic = fields.Monetary(
+        string='Tiền thuế Khác (XHĐ)', 
+        currency_field='currency_id',
+        compute='_compute_basic_taxes', 
+        store=True, 
+        tracking=True
+    )
+    dpt_amount_tax_vat_basic = fields.Monetary(
+        string='Tiền thuế VAT (XHĐ)', 
+        currency_field='currency_id',
+        compute='_compute_basic_taxes', 
+        store=True, 
+        tracking=True
+    )
+    dpt_total_tax_basic = fields.Monetary(
+        string='Tổng thuế (XHĐ)', 
+        currency_field='currency_id',
+        compute='_compute_basic_taxes', 
+        store=True, 
+        tracking=True
+    )
     dpt_exchange_rate = fields.Float(string='Tỉ giá HQ', tracking=True, currency_field='currency_id', store=True,
                                      digits=(12, 4), compute="_compute_dpt_exchange_rate")
     dpt_exchange_rate_basic = fields.Float(string='Tỉ giá XHĐ', tracking=True, currency_field='currency_id',
                                             store=True,
-                                            digits=(12, 4), compute="onchange_dpt_exchange_rate_basic")
+                                            digits=(12, 4))
     dpt_exchange_rate_basic_final = fields.Float(string='Tỷ giá NH (cuối cùng)', tracking=True, digits=(12, 4))
     dpt_basic_value = fields.Monetary(
         string='Giá trị cơ bản',
@@ -665,4 +693,25 @@ class DptExportImportLine(models.Model):
 
             record.risk_reason = reason
     # dunghq
+
+    @api.depends('dpt_basic_value', 'dpt_tax_import', 'dpt_tax_other', 'dpt_tax')
+    def _compute_basic_taxes(self):
+        for rec in self:
+            # Tiền thuế NK = Giá trị cơ bản × Thuế NK %
+            amount_tax_import_basic = rec.dpt_basic_value * rec.dpt_tax_import
+
+            # Tiền thuế Khác XHĐ= Giá trị cơ bản × Thuế Khác%
+            amount_tax_other_basic = rec.dpt_basic_value * rec.dpt_tax_other
+
+            # Tiền thuế VAT XHĐ = (Giá trị cơ bản + Tiền thuế NK + thuế khác) × VAT %
+            base_for_vat = rec.dpt_basic_value + amount_tax_import_basic + amount_tax_other_basic
+            amount_tax_vat_basic = base_for_vat * rec.dpt_tax
+
+            # Tổng thuế XHĐ = Tiền thuế NK + Tiền thuế khác + Tiền VAT
+            total_tax_basic = amount_tax_import_basic + amount_tax_other_basic + amount_tax_vat_basic
+
+            rec.dpt_amount_tax_import_basic = amount_tax_import_basic
+            rec.dpt_amount_tax_other_basic = amount_tax_other_basic
+            rec.dpt_amount_tax_vat_basic = amount_tax_vat_basic
+            rec.dpt_total_tax_basic = total_tax_basic
 

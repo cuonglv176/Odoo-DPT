@@ -113,9 +113,6 @@
                             <field name="dpt_uom1_id"/>
                             <field name="declaration_type" widget="radio" options="{'horizontal': true}"/>
                             <field name="dpt_exchange_rate"/>
-                            <field name="dpt_exchange_rate_basic"/>
-                            <field name="dpt_exchange_rate_basic_final"/>
-                            <field name="dpt_basic_value" readonly="1"/>
                             <!-- dunghq: Thêm trường selection Giá HQ -->
                             <field name="customs_price_type" widget="radio" options="{'horizontal': true}"/>
                             <field name="dpt_price_usd" invisible="declaration_type != 'usd'"/>
@@ -152,6 +149,15 @@
                             <field name="dpt_g_w_kg"/>
                              <!-- dunghq: Thêm trường risk_reason vào form view với widget selection -->
                             <field name="risk_reason" widget="selection"/>
+                            <!-- Thêm các trường tỷ giá và thuế xuất hóa đơn -->
+                            <separator string="Xuất hóa đơn"/>
+                            <field name="dpt_exchange_rate_basic" string="Tỉ giá XHĐ"/>
+                            <field name="dpt_exchange_rate_basic_final" string="Tỷ giá NH (cuối cùng)"/>
+                            <field name="dpt_basic_value" string="Giá trị cơ bản"/>
+                            <field name="dpt_amount_tax_import_basic"/>
+                            <field name="dpt_amount_tax_other_basic"/>
+                            <field name="dpt_amount_tax_vat_basic"/>
+                            <field name="dpt_total_tax_basic" class="oe_subtotal_footer_separator"/>
                         </group>
                     </group>
                 </sheet>
