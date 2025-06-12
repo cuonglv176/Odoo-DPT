@@ -22,7 +22,6 @@
                 <field name="dpt_location"/>
                 <field name="dpt_dk_gia"/>
                 <field name="dpt_exchange_rate"/>
-                <field name="dpt_exchange_rate_base"/>
                 <field name="dpt_currency_id"/>
                 <field name="dpt_short_name"/>
                 <field name="dpt_date_dk"/>
@@ -56,7 +55,6 @@
                             <field name="hs_code_id"/>
                             <field name="dpt_tax"/>
                             <field name="dpt_exchange_rate"/>
-                            <field name="dpt_exchange_rate_base"/>
                         </group>
                         <group>
                             <field name="dpt_uom_id"/>
@@ -121,7 +119,6 @@
                                     <field name="dpt_tax_other" widget="percentage"/>
                                     <field name="dpt_amount_tax_other"/>
                                     <field name="dpt_exchange_rate"/>
-                                    <field name="dpt_exchange_rate_base"/>
                                     <field name="dpt_total_vat"/>
                                     <field name="dpt_total_usd_vnd"/>
                                     <field name="dpt_price_cny_vnd"/>

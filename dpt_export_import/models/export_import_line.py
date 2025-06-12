@@ -49,10 +49,10 @@ class DptExportImportLine(models.Model):
                                      compute="_compute_dpt_amount_tax")
     dpt_exchange_rate = fields.Float(string='Tỉ giá HQ', tracking=True, currency_field='currency_id', store=True,
                                      digits=(12, 4), compute="_compute_dpt_exchange_rate")
-    dpt_exchange_rate_base = fields.Float(string='Tỉ giá XHĐ', tracking=True, currency_field='currency_id',
+    dpt_exchange_rate_basic = fields.Float(string='Tỉ giá XHĐ', tracking=True, currency_field='currency_id',
                                             store=True,
-                                            digits=(12, 4), compute="_compute_dpt_exchange_rate_base")
-    dpt_exchange_rate_base_final = fields.Float(string='Tỷ giá NH (cuối cùng)', tracking=True, digits=(12, 4))
+                                            digits=(12, 4), compute="onchange_dpt_exchange_rate_basic")
+    dpt_exchange_rate_basic_final = fields.Float(string='Tỷ giá NH (cuối cùng)', tracking=True, digits=(12, 4))
     dpt_basic_value = fields.Monetary(
         string='Giá trị cơ bản',
         currency_field='currency_id',
@@ -140,7 +140,7 @@ class DptExportImportLine(models.Model):
     active = fields.Boolean('Active', default=True)
 
     @api.depends('declaration_type', 'dpt_price_usd', 'dpt_price_cny_vnd', 'dpt_price_krw_vnd',
-                 'dpt_exchange_rate_base_final', 'dpt_sl1')
+                 'dpt_exchange_rate_basic_final', 'dpt_sl1')
     def _compute_dpt_basic_value(self):
         for rec in self:
             price = 0
@@ -151,7 +151,7 @@ class DptExportImportLine(models.Model):
             elif rec.declaration_type == 'krw':
                 price = rec.dpt_price_krw_vnd
 
-            rec.dpt_basic_value = price * (rec.dpt_exchange_rate_base_final or 0) * rec.dpt_sl1
+            rec.dpt_basic_value = price * (rec.dpt_exchange_rate_basic_final or 0) * rec.dpt_sl1
 
     @api.depends('dpt_price_krw_vnd', 'dpt_sl1', 'declaration_type')
     def _compute_dpt_total_krw_vnd(self):
@@ -284,25 +284,25 @@ class DptExportImportLine(models.Model):
                 rec.dpt_exchange_rate = 0
     
     @api.onchange('declaration_type')
-    def onchange_dpt_exchange_rate_base(self):
+    def onchange_dpt_exchange_rate_basic(self):
         for rec in self:
-            company_rate_base = 0
+            company_rate_basic = 0
             if rec.declaration_type == 'usd':
                 currency_usd_id = self.env['res.currency'].search(
-                    [('category', '=', 'base'), ('category_code', '=', 'USD')], limit=1)
-                company_rate_base = currency_usd_id.rate_ids[:1].company_rate
+                    [('category', '=', 'basic'), ('category_code', '=', 'USD')], limit=1)
+                company_rate_basic = currency_usd_id.rate_ids[:1].company_rate
             elif rec.declaration_type == 'cny':
                 currency_cny_id = self.env['res.currency'].search(
-                    [('category', '=', 'base'), ('category_code', '=', 'CNY')], limit=1)
-                company_rate_base = currency_cny_id.rate_ids[:1].company_rate
+                    [('category', '=', 'basic'), ('category_code', '=', 'CNY')], limit=1)
+                company_rate_basic = currency_cny_id.rate_ids[:1].company_rate
             elif rec.declaration_type == 'krw':
                 currency_krw_id = self.env['res.currency'].search(
-                    [('category', '=', 'base'), ('category_code', '=', 'KRW')], limit=1)
-                company_rate_base = currency_krw_id.rate_ids[:1].company_rate
-            if company_rate_base != 0:
-                rec.dpt_exchange_rate_base = company_rate_base
+                    [('category', '=', 'basic'), ('category_code', '=', 'KRW')], limit=1)
+                company_rate_basic = currency_krw_id.rate_ids[:1].company_rate
+            if company_rate_basic != 0:
+                rec.dpt_exchange_rate_basic = company_rate_basic
             else:
-                rec.dpt_exchange_rate_base = 0
+                rec.dpt_exchange_rate_basic = 0
 
     @api.depends('declaration_type')
     def _compute_dpt_exchange_rate(self):
