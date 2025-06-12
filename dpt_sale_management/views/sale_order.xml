@@ -15,7 +15,7 @@
                 <field name="is_quotation" invisible="1"/>
                 <field name="show_action_calculation" invisible="1"/>
                 <field name="active" invisible="1"/>
-                <button string="Export Quotation" name="export_excel_quotation" type="object"/>
+                <button string="Export Quotation" name="export_excel_quotation_popup" type="object"/>
             </button>
             <button name="action_quotation_send" position="attributes">
                 <attribute name="invisible">1</attribute>
@@ -77,6 +77,8 @@
                             <field name="department_id" context="{'dpt_sale_management': 1}"/>
                             <field name="note"/>
                             <field name="is_price_fixed" widget="boolean_toggle"/>
+                            <field name="is_bao_giao" widget="boolean_toggle"/>
+                            <field name="is_allin" widget="boolean_toggle"/>
 
                         </tree>
                     </field>
@@ -96,9 +98,7 @@
                             <field name="combo_id"/>
                             <field name="code"/>
                             <field name="description"/>
-                            <field name="qty" column_invisible="1"/>
-                            <field name="combo_compute_uom_id"/>
-                            <field name="combo_compute_value"/>
+                            <field name="qty"/>
                             <field name="price" sum="Đơn giá"/>
                             <field name="amount_discount" string="Khuyến mãi"/>
                             <field name="amount_total" sum="Thành tiền"/>
@@ -122,6 +122,8 @@
                             <field name="old_price" column_invisible="0" force_save="1"/>
                             <field name="amount_total" readonly="1" force_save="1"/>
                             <field name="department_id" context="{'dpt_sale_management': 1}"/>
+                            <field name="is_bao_giao" widget="boolean_toggle"/>
+                            <field name="is_allin" widget="boolean_toggle"/>
                             <field name="note"/>
                         </tree>
                     </field>
@@ -140,7 +142,7 @@
                             <field name="using_calculation_price" column_invisible="1"/>
                             <field name="sale_service_id" column_invisible="1"/>
                             <field name="sequence" widget="handle"/>
-                             <field name="sale_combo_id_key" string="ID Combo"/>
+                            <field name="sale_combo_id_key" string="ID Combo"/>
                             <field name="combo_id"/>
                             <field name="sale_service_id_key" string="ID Dịch vụ"/>
                             <field name="service_id"/>

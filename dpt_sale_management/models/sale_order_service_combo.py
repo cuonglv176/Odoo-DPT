@@ -25,12 +25,6 @@ class ServiceCombo(models.Model):
     is_price_fixed = fields.Boolean(string='Đã chốt giá', copy=False, tracking=True,
                                     help='Đánh dấu combo dịch vụ đã được chốt giá với khách')
     locked_price = fields.Float('Giá đã khóa', copy=False)
-    
-    # Thêm trường cho phân bổ chi phí
-    combo_compute_uom_id = fields.Many2one('uom.uom', string='Đơn vị',
-                                          help='Đơn vị tính dùng để phân bổ chi phí')
-    combo_compute_value = fields.Float(string='Số lượng', default=1.0,
-                                      help='Giá trị dùng để phân bổ chi phí')
 
     # Para almacenar temporalmente los servicios durante la creación
     _services_to_create = {}

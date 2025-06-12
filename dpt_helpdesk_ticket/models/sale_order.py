@@ -123,6 +123,45 @@ class SaleOrder(models.Model):
                             'team_id': service.service_id.helpdesk_team_id.id,
                         })
                         service.ticket_id = ticket_id
+        for combo in self.service_combo_ids:
+            for service_id in combo.service_ids:
+                service_ids = []
+                if service_id.is_create_ticket_first:
+                    if service_id.is_create_ticket or self.confirm_service_ticket:
+                        service_ids.append((0, 0, {
+                            'service_id': service_id.id,
+                            'sale_service_id': service.id,
+                            'description': service.description,
+                            'qty': service.compute_value,
+                            'uom_id': service.uom_id.id,
+                            'price': service.price,
+                            'currency_id': service.currency_id.id,
+                            'amount_total': service.amount_total,
+                            # 'status': r.price_status,
+                        }))
+                    stage_done_id = self.env['helpdesk.stage'].search(
+                        [('is_done_stage', '=', True), ('team_ids', 'in', [service_id.helpdesk_team_id.id])])
+                    if service_id.auo_complete and (
+                            service_id.is_create_ticket or self.confirm_service_ticket):
+                        ticket_id = self.env['helpdesk.ticket'].create({
+                            'sale_id': self.id,
+                            'partner_id': self.partner_id.id,
+                            'service_lines_ids': service_ids,
+                            'department_id': service_id.department_id.id,
+                            'team_id': service_id.helpdesk_team_id.id,
+                            'stage_id': stage_done_id.id,
+                        })
+                    else:
+                        if service_id.is_create_ticket or self.confirm_service_ticket:
+                            ticket_id = self.env['helpdesk.ticket'].create({
+                                'sale_id': self.id,
+                                'partner_id': self.partner_id.id,
+                                'service_lines_ids': service_ids,
+                                'department_id': service_id.department_id.id,
+                                'team_id': service_id.helpdesk_team_id.id,
+                            })
+
+
 
     def action_create_ticket(self):
         list_department = []

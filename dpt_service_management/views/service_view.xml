@@ -32,6 +32,8 @@
                             <field name="steps_count"/>
                             <field name="zezo_price" widget="boolean_toggle"/>
                             <field name="auo_complete" widget="boolean_toggle"/>
+                            <field name="is_bao_giao" widget="boolean_toggle"/>
+                            <field name="is_allin" widget="boolean_toggle"/>
                             <field name="active" widget="boolean_toggle"/>
                             <!--                            <field name="image"/>-->
                         </group>
@@ -123,6 +125,8 @@
                 <field name="cost_account_id"/>
                 <field name="revenue_account_id"/>
                 <field name="steps_count"/>
+                <field name="is_bao_giao" widget="boolean_toggle"/>
+                <field name="is_allin" widget="boolean_toggle"/>
             </tree>
         </field>
     </record>
