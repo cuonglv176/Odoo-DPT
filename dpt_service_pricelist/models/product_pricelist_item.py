@@ -103,9 +103,9 @@ class ProductPricelistItem(models.Model):
                 mapping_delete[item.service_id] = mapping_delete[f'{item.service_id.id}'] | item
             else:
                 mapping_delete[item.service_id] = item
-        for service_id, pricelist_item_ids in mapping_delete.items():
-            service_id.message_post(
-                body=_("Delete Pricelist: %s") % ','.join(pricelist_item_ids.mapped('uom_id').mapped('name')))
+        # for service_id, pricelist_item_ids in mapping_delete.items():
+        #     service_id.message_post(
+        #         body=_("Delete Pricelist: %s") % ','.join(pricelist_item_ids.mapped('uom_id').mapped('name')))
         return super(ProductPricelistItem, self).unlink()
 
     # Thêm phương thức để tính giá dựa trên điều kiện đơn vị
