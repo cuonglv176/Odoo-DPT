@@ -422,6 +422,7 @@ class SaleOrder(models.Model):
                             if price < combo_pricelist_id.min_amount:
                                 price = combo_pricelist_id.min_amount
                                 compute_uom_id = compute_field_id.uom_id.id
+                    compute_value = compute_field_id.value_integer
                 combo.price = price
                 combo.qty = compute_value
             amount_total, amount_planned_total = self._get_service_allin_baogiao()
