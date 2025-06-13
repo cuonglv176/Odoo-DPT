@@ -404,7 +404,7 @@ class SaleOrder(models.Model):
                 price = 0
                 total_amount = 0
                 for compute_field_id in compute_field_ids:
-                    compute_value = compute_field_id.value_integer
+                    value_integer = compute_field_id.value_integer
                     if not compute_field_id.value_integer:
                         continue
                     detail_price_ids = combo_pricelist_id.pricelist_table_detail_ids.filtered(
@@ -413,18 +413,21 @@ class SaleOrder(models.Model):
                     for detail_price_id in detail_price_ids:
                         if detail_price_id.min_value <= compute_field_id.value_integer <= detail_price_id.max_value:
                             if detail_price_id.price_type == 'unit_price':
-                                if (detail_price_id.amount * compute_value) > total_amount:
+                                if (detail_price_id.amount * value_integer) > total_amount:
                                     price = detail_price_id.amount
                                     total_amount = detail_price_id.amount * compute_field_id.value_integer
                                     compute_uom_id = detail_price_id.compute_uom_id.id
+                                    compute_value = compute_field_id.value_integer
                             else:
-                                if (detail_price_id.amount * compute_value) > total_amount:
+                                if (detail_price_id.amount * value_integer) > total_amount:
                                     price = detail_price_id.amount
                                     total_amount = detail_price_id.amount * compute_field_id.value_integer
                                     compute_uom_id = detail_price_id.compute_uom_id.id
+                                    compute_value = compute_field_id.value_integer
                             if price < combo_pricelist_id.min_amount:
                                 price = combo_pricelist_id.min_amount
                                 compute_uom_id = compute_field_id.uom_id.id
+                                compute_value = compute_field_id.value_integer
                 combo.price = price
                 combo.qty = compute_value
             amount_total, amount_planned_total = self._get_service_allin_baogiao()
