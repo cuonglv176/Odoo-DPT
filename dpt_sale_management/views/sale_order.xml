@@ -27,8 +27,6 @@
                 <attribute name="invisible">1</attribute>
             </page>
             <field name="sale_order_template_id" position="after">
-                <field name="type_so_route"/>
-                <field name="line_transfer"/>
                 <field name="employee_sale"/>
                 <field name="employee_cs"/>
                 <field name="times_of_quotation" readonly="1"/>
