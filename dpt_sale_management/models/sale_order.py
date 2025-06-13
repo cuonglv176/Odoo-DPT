@@ -865,10 +865,10 @@ class SaleOrder(models.Model):
         data = []
         for r in self.order_line:
             data.append((r.product_id.name, r.product_uom_qty, r.price_subtotal, ''))
-        data.append(('Thể tích (m3)', self.volume,
-                     sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'm3').mapped('price')), ''))
-        data.append(('Khối lượng (kg)', self.weight,
-                     sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'kg').mapped('price')), ''))
+        data.append(('Thể tích (m3)', "{:,}".format(self.volume),
+                     "{:,}".format(sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'm3').mapped('price'))), ''))
+        data.append(('Khối lượng (kg)', "{:,}".format(self.weight),
+                     "{:,}".format(sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'kg').mapped('price'))), ''))
 
         # Bắt đầu từ hàng thứ hai, viết dữ liệu vào worksheet
         row = 10
@@ -891,11 +891,11 @@ class SaleOrder(models.Model):
         data = []
         nk_tax_amount = 0
         for r in self.order_line:
-            data.append((f'NK CO Form E_{r.product_id.name}', r.import_tax_rate, r.import_tax_amount, ''))
+            data.append((f'NK CO Form E_{r.product_id.name}', r.import_tax_rate, "{:,}".format(r.import_tax_amount), ''))
             nk_tax_amount += r.import_tax_amount
         vat_tax_amount = 0
         for r in self.order_line:
-            data.append((f'VAT_{r.product_id.name}', r.vat_tax_rate, r.vat_tax_amount, ''))
+            data.append((f'VAT_{r.product_id.name}', r.vat_tax_rate, "{:,}".format(r.vat_tax_amount), ''))
             vat_tax_amount += r.vat_tax_amount
         start = row
         for item, quantity, cost, note in data:
@@ -913,11 +913,11 @@ class SaleOrder(models.Model):
         #     data.append((r.service_id.name, r.compute_value, r.price, ''))
         start = row
         data.append(('Tổng chi phí vận chuyển theo kg', 'VND/lô',
-                     sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'kg').mapped(
-                         'amount_total')), ''))
+                     "{:,}".format(sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'kg').mapped(
+                         'amount_total'))), ''))
         data.append(('Tổng chi phí vận chuyển theo m3', 'VND/lô',
-                     sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'm3').mapped(
-                         'amount_total')), ''))
+                     "{:,}".format(sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'm3').mapped(
+                         'amount_total'))), ''))
         for item, quantity, cost, note in data:
             format = None
             if item in ('Tổng chi phí vận chuyển theo kg', 'Tổng chi phí vận chuyển theo m3'):
@@ -1011,27 +1011,27 @@ class SaleOrder(models.Model):
         data = []
         for r in self.order_line:
             data.append((r.product_id.name, r.product_uom_qty, r.price_subtotal, ''))
-        data.append(('Cước vận chuyển nội địa TQ', '', '', ''))
-        data.append(('Tổng tiền hàng + cước nội địa TQ', '', '', ''))
-        data.append(('Thể tích (m3)', self.volume, '', ''))
-        data.append(('Khối lượng (kg)', self.weight, '', ''))
-        data.append(('Phí vận chuyển/ m3', '', '', ''))
-        data.append(('Phí vận chuyển/ kg', '', '', ''))
+        # data.append(('Cước vận chuyển nội địa TQ', '', '', ''))
+        # data.append(('Tổng tiền hàng + cước nội địa TQ', '', '', ''))
+        # data.append(('Thể tích (m3)', self.volume, '', ''))
+        # data.append(('Khối lượng (kg)', self.weight, '', ''))
+        # data.append(('Phí vận chuyển/ m3', '', '', ''))
+        # data.append(('Phí vận chuyển/ kg', '', '', ''))
 
         # Bắt đầu từ hàng thứ hai, viết dữ liệu vào worksheet
         row = 10
-        for item, quantity, cost, note in data:
-            format = None
-            if item == 'Tổng tiền hàng + cước nội địa TQ':
-                format = special_format
-            worksheet.write(row, 2, item, format)
-            worksheet.write(row, 3, quantity, format)
-            worksheet.write(row, 4, cost, format)
-            worksheet.write(row, 5, note, format)
-            row += 1
-
-        # [Hàng hóa] Merge cells cho cột 'Tên hàng hóa'
-        worksheet.merge_range(f'B10:B{row}', 'Hàng hóa', merge_format)
+        # for item, quantity, cost, note in data:
+        #     format = None
+        #     if item == 'Tổng tiền hàng + cước nội địa TQ':
+        #         format = special_format
+        #     worksheet.write(row, 2, item, format)
+        #     worksheet.write(row, 3, quantity, format)
+        #     worksheet.write(row, 4, cost, format)
+        #     worksheet.write(row, 5, note, format)
+        #     row += 1
+        #
+        # # [Hàng hóa] Merge cells cho cột 'Tên hàng hóa'
+        # worksheet.merge_range(f'B10:B{row}', 'Hàng hóa', merge_format)
         # worksheet.add_table('B11:F42')
 
         # [Thuế]
@@ -1039,11 +1039,11 @@ class SaleOrder(models.Model):
         data = []
         nk_tax_amount = 0
         for r in self.order_line:
-            data.append((f'NK CO Form E_{r.product_id.name}', r.import_tax_rate, r.import_tax_amount, ''))
+            data.append((f'NK CO Form E_{r.product_id.name}', r.import_tax_rate, "{:,}".format(r.import_tax_amount), ''))
             nk_tax_amount += r.import_tax_amount
         vat_tax_amount = 0
         for r in self.order_line:
-            data.append((f'VAT_{r.product_id.name}', r.vat_tax_rate, r.vat_tax_amount, ''))
+            data.append((f'VAT_{r.product_id.name}', r.vat_tax_rate, "{:,}".format(r.vat_tax_amount), ''))
             vat_tax_amount += r.vat_tax_amount
         start = row
         for item, quantity, cost, note in data:
@@ -1062,16 +1062,10 @@ class SaleOrder(models.Model):
             data.append((r.service_id.name, r.compute_value, r.price, ''))
             total += r.price
         start = row
-        data.append(('Tổng chi phí vận chuyển theo kg', 'VND/lô', total, ''))
-        data.append(('Tổng chi phí vận chuyển theo m3', 'VND/lô', total, ''))
-        data.append(('Chi phí theo kg', 'VND/kg', round(total / self.weight, 2) if self.weight else '', ''))
-        data.append(('Chi phí theo m3', 'VND/m3', round(total / self.volume, 2) if self.volume else '', ''))
-        for r in self.order_line:
-            data.append((f'Tổng chi phí/{r.product_id.name}', 'VND/sản phẩm',
-                         round(total / len(self.order_line), 2) if len(self.order_line) else '', ''))
+        data.append(('Tổng chi phí vận chuyển', '', "{:,}".format(self.service_total_amount), ''))
         for item, quantity, cost, note in data:
             format = None
-            if item in ('Tổng chi phí vận chuyển theo kg', 'Tổng chi phí vận chuyển theo m3'):
+            if item in ('Tổng chi phí vận chuyển'):
                 format = special_format
             worksheet.write(row, 2, item, format)
             worksheet.write(row, 3, quantity, format)
