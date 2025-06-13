@@ -1059,8 +1059,9 @@ class SaleOrder(models.Model):
         data = []
         total = 0
         for r in self.sale_service_ids:
-            data.append((r.service_id.name, r.compute_value, r.price, ''))
-            total += r.price
+            if r.service_id:
+                data.append((r.service_id.name, r.compute_value, "{:,}".format(r.price), ''))
+                total += r.price
         start = row
         data.append(('Tổng chi phí vận chuyển', '', "{:,}".format(self.service_total_amount), ''))
         for item, quantity, cost, note in data:
