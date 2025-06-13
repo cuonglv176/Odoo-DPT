@@ -858,28 +858,40 @@ class SaleOrder(models.Model):
         # [Hàng hóa] title cột
         worksheet.write('C10', 'Tên hàng hóa', bold_format)
         worksheet.write('D10', 'Số lượng', bold_format)
-        worksheet.write('E10', 'Chi phí (VND)', bold_format)
-        worksheet.write('F10', 'Note', bold_format)
+        worksheet.write('E10', 'Đơn giá', bold_format)
+        worksheet.write('F10', 'Thành tiền', bold_format)
+        worksheet.write('G10', 'Note', bold_format)
 
         # [Hàng hóa] data
         data = []
         for r in self.order_line:
-            data.append((r.product_id.name, r.product_uom_qty, r.price_subtotal, ''))
+            data.append((r.product_id.name, r.product_uom_qty, "{:,}".format(r.price), "{:,}".format(r.price_subtotal), ''))
         data.append(('Thể tích (m3)', "{:,}".format(self.volume),
-                     "{:,}".format(sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'm3').mapped('price'))), ''))
+                     "{:,}".format(
+                         sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'm3').mapped(
+                             'price'))),
+                     "{:,}".format(
+                         sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'm3').mapped(
+                             'amount_total'))), ''))
         data.append(('Khối lượng (kg)', "{:,}".format(self.weight),
-                     "{:,}".format(sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'kg').mapped('price'))), ''))
+                     "{:,}".format(
+                         sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'kg').mapped(
+                             'price'))),
+                     "{:,}".format(
+                         sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'kg').mapped(
+                             'amount_total'))), ''))
 
         # Bắt đầu từ hàng thứ hai, viết dữ liệu vào worksheet
         row = 10
-        for item, quantity, cost, note in data:
+        for item, quantity, cost, amount_total, note in data:
             format = None
             if item == 'Tổng tiền hàng + cước nội địa TQ':
                 format = special_format
             worksheet.write(row, 2, item, format)
             worksheet.write(row, 3, quantity, format)
             worksheet.write(row, 4, cost, format)
-            worksheet.write(row, 5, note, format)
+            worksheet.write(row, 5, amount_total, format)
+            worksheet.write(row, 6, note, format)
             row += 1
 
         # [Hàng hóa] Merge cells cho cột 'Tên hàng hóa'
@@ -891,18 +903,20 @@ class SaleOrder(models.Model):
         data = []
         nk_tax_amount = 0
         for r in self.order_line:
-            data.append((f'NK CO Form E_{r.product_id.name}', r.import_tax_rate, "{:,}".format(r.import_tax_amount), ''))
+            data.append(
+                (f'NK CO Form E_{r.product_id.name}', '', f'{r.import_tax_rate}%', "{:,}".format(r.import_tax_amount), ''))
             nk_tax_amount += r.import_tax_amount
         vat_tax_amount = 0
         for r in self.order_line:
-            data.append((f'VAT_{r.product_id.name}', r.vat_tax_rate, "{:,}".format(r.vat_tax_amount), ''))
+            data.append((f'VAT_{r.product_id.name}', '', f"{r.vat_tax_rate}%", "{:,}".format(r.vat_tax_amount), ''))
             vat_tax_amount += r.vat_tax_amount
         start = row
-        for item, quantity, cost, note in data:
+        for item, quantity, cost, amount_total, note in data:
             worksheet.write(row, 2, item)
             worksheet.write(row, 3, quantity)
             worksheet.write(row, 4, cost)
-            worksheet.write(row, 5, note)
+            worksheet.write(row, 5, amount_total)
+            worksheet.write(row, 6, note)
             row += 1
         worksheet.merge_range(f'B{start + 1}:B{row}', 'Thuế', merge_format)
 
@@ -912,20 +926,23 @@ class SaleOrder(models.Model):
         # for r in self.sale_service_ids:
         #     data.append((r.service_id.name, r.compute_value, r.price, ''))
         start = row
-        data.append(('Tổng chi phí vận chuyển theo kg', 'VND/lô',
-                     "{:,}".format(sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'kg').mapped(
-                         'amount_total'))), ''))
-        data.append(('Tổng chi phí vận chuyển theo m3', 'VND/lô',
-                     "{:,}".format(sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'm3').mapped(
-                         'amount_total'))), ''))
-        for item, quantity, cost, note in data:
+        data.append(('Tổng chi phí vận chuyển theo kg', 'VND/lô', '',
+                     "{:,}".format(
+                         sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'kg').mapped(
+                             'amount_total'))), ''))
+        data.append(('Tổng chi phí vận chuyển theo m3', 'VND/lô', '',
+                     "{:,}".format(
+                         sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'm3').mapped(
+                             'amount_total'))), ''))
+        for item, quantity, cost, amount_total, note in data:
             format = None
             if item in ('Tổng chi phí vận chuyển theo kg', 'Tổng chi phí vận chuyển theo m3'):
                 format = special_format
             worksheet.write(row, 2, item, format)
             worksheet.write(row, 3, quantity, format)
             worksheet.write(row, 4, cost, format)
-            worksheet.write(row, 5, note, format)
+            worksheet.write(row, 5, amount_total, format)
+            worksheet.write(row, 6, note, format)
             row += 1
         worksheet.merge_range(f'B{start + 1}:B{row}', 'Cước vận chuyển', merge_format)
 
@@ -939,11 +956,11 @@ class SaleOrder(models.Model):
         workbook.close()
         xls = output.getvalue()
         vals = {
-        'name': f'Bao_gia_{self.name}' + '.xls',
-        'datas': base64.b64encode(xls),
-        'type': 'binary',
-        'res_model': 'sale.order',
-        'res_id': self.id,
+            'name': f'Bao_gia_{self.name}' + '.xls',
+            'datas': base64.b64encode(xls),
+            'type': 'binary',
+            'res_model': 'sale.order',
+            'res_id': self.id,
         }
         file_xls = self.env['ir.attachment'].create(vals)
         return {
@@ -1004,53 +1021,36 @@ class SaleOrder(models.Model):
         # [Hàng hóa] title cột
         worksheet.write('C10', 'Tên hàng hóa', bold_format)
         worksheet.write('D10', 'Số lượng', bold_format)
-        worksheet.write('E10', 'Chi phí (VND)', bold_format)
-        worksheet.write('F10', 'Note', bold_format)
+        worksheet.write('E10', 'Đơn giá', bold_format)
+        worksheet.write('F10', 'Thành tiền', bold_format)
+        worksheet.write('G10', 'Note', bold_format)
 
         # [Hàng hóa] data
         data = []
         for r in self.order_line:
-            data.append((r.product_id.name, r.product_uom_qty, r.price_subtotal, ''))
-        # data.append(('Cước vận chuyển nội địa TQ', '', '', ''))
-        # data.append(('Tổng tiền hàng + cước nội địa TQ', '', '', ''))
-        # data.append(('Thể tích (m3)', self.volume, '', ''))
-        # data.append(('Khối lượng (kg)', self.weight, '', ''))
-        # data.append(('Phí vận chuyển/ m3', '', '', ''))
-        # data.append(('Phí vận chuyển/ kg', '', '', ''))
-
-        # Bắt đầu từ hàng thứ hai, viết dữ liệu vào worksheet
+            data.append((r.product_id.name, r.product_uom_qty, "{:,}".format(r.price_unit),
+                         "{:,}".format(r.price_subtotal), ''))
         row = 10
-        # for item, quantity, cost, note in data:
-        #     format = None
-        #     if item == 'Tổng tiền hàng + cước nội địa TQ':
-        #         format = special_format
-        #     worksheet.write(row, 2, item, format)
-        #     worksheet.write(row, 3, quantity, format)
-        #     worksheet.write(row, 4, cost, format)
-        #     worksheet.write(row, 5, note, format)
-        #     row += 1
-        #
-        # # [Hàng hóa] Merge cells cho cột 'Tên hàng hóa'
-        # worksheet.merge_range(f'B10:B{row}', 'Hàng hóa', merge_format)
-        # worksheet.add_table('B11:F42')
 
         # [Thuế]
         # [Thuế] Title data
         data = []
         nk_tax_amount = 0
         for r in self.order_line:
-            data.append((f'NK CO Form E_{r.product_id.name}', r.import_tax_rate, "{:,}".format(r.import_tax_amount), ''))
+            data.append(
+                (f'NK CO Form E_{r.product_id.name}', '', f'{r.import_tax_rate}%', "{:,}".format(r.import_tax_amount), ''))
             nk_tax_amount += r.import_tax_amount
         vat_tax_amount = 0
         for r in self.order_line:
-            data.append((f'VAT_{r.product_id.name}', r.vat_tax_rate, "{:,}".format(r.vat_tax_amount), ''))
+            data.append((f'VAT_{r.product_id.name}', '', f"{r.vat_tax_rate}%", "{:,}".format(r.vat_tax_amount), ''))
             vat_tax_amount += r.vat_tax_amount
         start = row
-        for item, quantity, cost, note in data:
+        for item, quantity, cost, amount_total, note in data:
             worksheet.write(row, 2, item)
             worksheet.write(row, 3, quantity)
             worksheet.write(row, 4, cost)
-            worksheet.write(row, 5, note)
+            worksheet.write(row, 5, amount_total)
+            worksheet.write(row, 6, note)
             row += 1
         worksheet.merge_range(f'B{start + 1}:B{row}', 'Thuế', merge_format)
 
@@ -1060,18 +1060,20 @@ class SaleOrder(models.Model):
         total = 0
         for r in self.sale_service_ids:
             if r.service_id:
-                data.append((r.service_id.name, r.compute_value, "{:,}".format(r.price), ''))
-                total += r.price
+                data.append(
+                    (r.service_id.name, r.compute_value, "{:,}".format(r.price), "{:,}".format(r.amount_total), ''))
+                total += r.amount_total
         start = row
-        data.append(('Tổng chi phí vận chuyển', '', "{:,}".format(self.service_total_amount), ''))
-        for item, quantity, cost, note in data:
+        data.append(('Tổng chi phí vận chuyển', '', '', "{:,}".format(self.service_total_amount), ''))
+        for item, quantity, cost, amount_total, note in data:
             format = None
             if str(item) in ('Tổng chi phí vận chuyển'):
                 format = special_format
             worksheet.write(row, 2, item, format)
             worksheet.write(row, 3, quantity, format)
             worksheet.write(row, 4, cost, format)
-            worksheet.write(row, 5, note, format)
+            worksheet.write(row, 5, amount_total, format)
+            worksheet.write(row, 6, note, format)
             row += 1
         worksheet.merge_range(f'B{start + 1}:B{row}', 'Báo giá chi tiết', merge_format)
 
@@ -1152,26 +1154,33 @@ class SaleOrder(models.Model):
         worksheet.write('B10', 'Mã HS', bold_format)
         worksheet.write('C10', 'Tên hàng hóa', bold_format)
         worksheet.write('D10', 'Số lượng', bold_format)
-        worksheet.write('E10', 'Chi phí (VND)', bold_format)
-        worksheet.write('F10', 'Note', bold_format)
+        worksheet.write('E10', 'Đơn giá', bold_format)
+        worksheet.write('F10', 'Thành tiền', bold_format)
+        worksheet.write('G10', 'Note', bold_format)
 
         # [Hàng hóa] data
         data = []
         data.append(('Thể tích (m3)', "{:,}".format(self.volume),
-                     "{:,}".format(sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'm3').mapped('price'))), ''))
+                     "{:,}".format(
+                         sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'm3').mapped(
+                             'price'))), "{:,}".format(
+            sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'm3').mapped(
+                'amount_total'))), ''))
         data.append(('Khối lượng (kg)', "{:,}".format(self.weight),
-                     "{:,}".format(sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'kg').mapped('price'))), ''))
+                     "{:,}".format(
+                         sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'kg').mapped(
+                             'price'))), "{:,}".format(
+            sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'm3').mapped(
+                'amount_total'))), ''))
 
         # Bắt đầu từ hàng thứ hai, viết dữ liệu vào worksheet
         row = 10
-        for item, quantity, cost, note in data:
-            format = None
-            if item == 'Tổng tiền hàng + cước nội địa TQ':
-                format = special_format
-            worksheet.write(row, 2, item, format)
-            worksheet.write(row, 3, quantity, format)
-            worksheet.write(row, 4, cost, format)
-            worksheet.write(row, 5, note, format)
+        for item, quantity, cost, amount_total, note in data:
+            worksheet.write(row, 2, item, None)
+            worksheet.write(row, 3, quantity, None)
+            worksheet.write(row, 4, cost, None)
+            worksheet.write(row, 5, amount_total, None)
+            worksheet.write(row, 6, note, None)
             row += 1
 
         # [Hàng hóa] Merge cells cho cột 'Tên hàng hóa'
@@ -1181,16 +1190,18 @@ class SaleOrder(models.Model):
         # [Báo giá chi tiết] Data
         data = []
         for r in self.order_line:
-            data.append((r.product_id.name, r.product_uom_qty, "{:,}".format(r.price_subtotal), ''))
+            data.append((r.product_id.name, r.product_uom_qty, "{:,}".format(r.price_unit),
+                         "{:,}".format(r.price_subtotal), ''))
         start = row
-        for item, quantity, cost, note in data:
+        for item, quantity, cost, amount_total, note in data:
             format = None
             if item in ('Tổng chi phí vận chuyển theo kg', 'Tổng chi phí vận chuyển theo m3'):
                 format = special_format
             worksheet.write(row, 2, item, format)
             worksheet.write(row, 3, quantity, format)
             worksheet.write(row, 4, cost, format)
-            worksheet.write(row, 5, note, format)
+            worksheet.write(row, 5, amount_total, format)
+            worksheet.write(row, 6, note, format)
             row += 1
         worksheet.merge_range(f'B{start + 1}:B{row}', 'Báo giá chi tiết', merge_format)
 
