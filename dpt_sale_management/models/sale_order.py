@@ -920,13 +920,13 @@ class SaleOrder(models.Model):
                          'amount_total')), ''))
         for item, quantity, cost, note in data:
             format = None
-        if item in ('Tổng chi phí vận chuyển theo kg', 'Tổng chi phí vận chuyển theo m3'):
-            format = special_format
-        worksheet.write(row, 2, item, format)
-        worksheet.write(row, 3, quantity, format)
-        worksheet.write(row, 4, cost, format)
-        worksheet.write(row, 5, note, format)
-        row += 1
+            if item in ('Tổng chi phí vận chuyển theo kg', 'Tổng chi phí vận chuyển theo m3'):
+                format = special_format
+            worksheet.write(row, 2, item, format)
+            worksheet.write(row, 3, quantity, format)
+            worksheet.write(row, 4, cost, format)
+            worksheet.write(row, 5, note, format)
+            row += 1
         worksheet.merge_range(f'B{start + 1}:B{row}', 'Cước vận chuyển', merge_format)
 
         worksheet.write(f'B{row + 2}', 'Liên hệ:', employee_contact_format)
