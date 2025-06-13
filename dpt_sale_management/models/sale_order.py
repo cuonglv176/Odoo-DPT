@@ -412,8 +412,6 @@ class SaleOrder(models.Model):
                     _logger.info(detail_price_ids)
                     for detail_price_id in detail_price_ids:
                         if detail_price_id.min_value <= compute_field_id.value_integer <= detail_price_id.max_value:
-                            total_amount = detail_price_id.amount * compute_field_id.value_integer
-
                             if detail_price_id.price_type == 'unit_price':
                                 if (detail_price_id.amount * compute_value) > total_amount:
                                     price = detail_price_id.amount
