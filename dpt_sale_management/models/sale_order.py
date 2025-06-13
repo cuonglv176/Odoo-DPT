@@ -1156,7 +1156,8 @@ class SaleOrder(models.Model):
         worksheet.write('F10', 'Note', bold_format)
 
         # [Hàng hóa] data
-        data = []data.append(('Thể tích (m3)', "{:,}".format(self.volume),
+        data = []
+        data.append(('Thể tích (m3)', "{:,}".format(self.volume),
                      "{:,}".format(sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'm3').mapped('price'))), ''))
         data.append(('Khối lượng (kg)', "{:,}".format(self.weight),
                      "{:,}".format(sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'kg').mapped('price'))), ''))
