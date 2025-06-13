@@ -1065,7 +1065,7 @@ class SaleOrder(models.Model):
         data.append(('Tổng chi phí vận chuyển', '', "{:,}".format(self.service_total_amount), ''))
         for item, quantity, cost, note in data:
             format = None
-            if item in ('Tổng chi phí vận chuyển'):
+            if str(item) in ('Tổng chi phí vận chuyển'):
                 format = special_format
             worksheet.write(row, 2, item, format)
             worksheet.write(row, 3, quantity, format)
