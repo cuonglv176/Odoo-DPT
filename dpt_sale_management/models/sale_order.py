@@ -1149,6 +1149,7 @@ class SaleOrder(models.Model):
                                        ' Chúng tôi xin được gửi tới quý khách giá cước cho hàng nhập của quý khách như sau',
                               )
         # [Hàng hóa] title cột
+        worksheet.write('B10', 'Mã HS', bold_format)
         worksheet.write('C10', 'Tên hàng hóa', bold_format)
         worksheet.write('D10', 'Số lượng', bold_format)
         worksheet.write('E10', 'Chi phí (VND)', bold_format)
@@ -1156,14 +1157,8 @@ class SaleOrder(models.Model):
 
         # [Hàng hóa] data
         data = []
-        for r in self.order_line:
-            data.append((r.product_id.name, r.product_uom_qty, r.price_subtotal, ''))
-        data.append(('Cước vận chuyển nội địa TQ', '', '', ''))
-        data.append(('Tổng tiền hàng + cước nội địa TQ', '', '', ''))
         data.append(('Thể tích (m3)', self.volume, '', ''))
         data.append(('Khối lượng (kg)', self.weight, '', ''))
-        data.append(('Phí vận chuyển/ m3', '', '', ''))
-        data.append(('Phí vận chuyển/ kg', '', '', ''))
 
         # Bắt đầu từ hàng thứ hai, viết dữ liệu vào worksheet
         row = 10
@@ -1178,41 +1173,14 @@ class SaleOrder(models.Model):
             row += 1
 
         # [Hàng hóa] Merge cells cho cột 'Tên hàng hóa'
-        worksheet.merge_range(f'B10:B{row}', 'Hàng hóa', merge_format)
-        # worksheet.add_table('B11:F42')
-
-        # [Thuế]
-        # [Thuế] Title data
-        data = []
-        nk_tax_amount = 0
-        for r in self.order_line:
-            data.append((f'NK CO Form E_{r.product_id.name}', r.import_tax_rate, r.import_tax_amount, ''))
-            nk_tax_amount += r.import_tax_amount
-        vat_tax_amount = 0
-        for r in self.order_line:
-            data.append((f'VAT_{r.product_id.name}', r.vat_tax_rate, r.vat_tax_amount, ''))
-            vat_tax_amount += r.vat_tax_amount
-        start = row
-        for item, quantity, cost, note in data:
-            worksheet.write(row, 2, item)
-            worksheet.write(row, 3, quantity)
-            worksheet.write(row, 4, cost)
-            worksheet.write(row, 5, note)
-            row += 1
-        worksheet.merge_range(f'B{start + 1}:B{row}', 'Thuế', merge_format)
+        worksheet.merge_range(f'B11:B{row}', 'Hàng hóa', merge_format)
 
         # [Báo giá chi tiết]
         # [Báo giá chi tiết] Data
         data = []
-        for r in self.sale_service_ids:
-            data.append((r.service_id.name, r.compute_value, r.price, ''))
-        start = row
-        data.append(('Tổng chi phí vận chuyển theo kg', 'VND/lô', '', ''))
-        data.append(('Tổng chi phí vận chuyển theo m3', 'VND/lô', '', ''))
-        data.append(('Chi phí theo kg', 'VND/kg', '', ''))
-        data.append(('Chi phí theo m3', 'VND/m3', '', ''))
         for r in self.order_line:
-            data.append((f'Tổng chi phí/{r.product_id.name}', 'VND/sản phẩm', '', ''))
+            data.append((r.product_id.name, r.product_uom_qty, "{:,}".format(r.price_subtotal), ''))
+        start = row
         for item, quantity, cost, note in data:
             format = None
             if item in ('Tổng chi phí vận chuyển theo kg', 'Tổng chi phí vận chuyển theo m3'):
@@ -1231,22 +1199,6 @@ class SaleOrder(models.Model):
         worksheet.write(f'E{row + 2}', 'CÔNG TY TNHH DPT VINA HOLDINGS')
         worksheet.write(f'H7', f"Tỷ giá tệ từ hệ thống: {self.currency_id.search([('name', '=', 'CNY')]).rate}")
         worksheet.write(f'H8', f"Tỷ giá USD từ hệ thống: {self.currency_id.search([('name', '=', 'USD')]).rate}")
-        # update money by product
-        alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        col = 7
-        for order_line in self.order_line:
-            worksheet.write(f'{alphabet[col]}19', order_line.product_id.name, special_format)
-            col += 1
-
-        row = 20
-        for sale_service_id in self.sale_service_ids:
-            col = 7
-            for order_line in self.order_line:
-                amount = (
-                                     sale_service_id.amount_total / self.service_total_amount) * order_line.price_subtotal if self.service_total_amount else 0
-                worksheet.write(f'{alphabet[col]}{row}', amount, None)
-                col += 1
-            row += 1
 
         workbook.close()
         xls = output.getvalue()
