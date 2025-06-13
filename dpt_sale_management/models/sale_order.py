@@ -865,7 +865,7 @@ class SaleOrder(models.Model):
         # [Hàng hóa] data
         data = []
         for r in self.order_line:
-            data.append((r.product_id.name, r.product_uom_qty, "{:,}".format(r.price), "{:,}".format(r.price_subtotal), ''))
+            data.append((r.product_id.name, r.product_uom_qty, "{:,}".format(r.price_unit), "{:,}".format(r.price_subtotal), ''))
         data.append(('Thể tích (m3)', "{:,}".format(self.volume),
                      "{:,}".format(
                          sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'm3').mapped(
