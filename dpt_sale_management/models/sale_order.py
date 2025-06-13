@@ -366,7 +366,8 @@ class SaleOrder(models.Model):
             combo_pricelist_id = self.env['product.pricelist.item'].search(general_domain, limit=1)
 
         if not combo_pricelist_id:
-            raise ValidationError(_("Combo chưa có bảng giá hoạt động hoặc không tìm thấy bảng giá phù hợp: %s!!!") % sale_combo_id.combo_id.name)
+            raise ValidationError(
+                _("Combo chưa có bảng giá hoạt động hoặc không tìm thấy bảng giá phù hợp: %s!!!") % sale_combo_id.combo_id.name)
 
         return combo_pricelist_id
 
@@ -447,14 +448,16 @@ class SaleOrder(models.Model):
             sale_service_ids = self.sale_service_ids.filtered(lambda sale_service: sale_service.is_bao_giao)
             for sale_service_id in sale_service_ids:
                 amount_total += sale_service_id.amount_total
-            planned_sale_service_ids = self.planned_sale_service_ids.filtered(lambda sale_service: sale_service.is_bao_giao)
+            planned_sale_service_ids = self.planned_sale_service_ids.filtered(
+                lambda sale_service: sale_service.is_bao_giao)
             for planned_sale_service_id in planned_sale_service_ids:
                 amount_planned_total += planned_sale_service_id.amount_total
         elif self.quote_type == 'all_in':
             sale_service_ids = self.sale_service_ids.filtered(lambda sale_service: sale_service.is_allin)
             for sale_service_id in sale_service_ids:
                 amount_total += sale_service_id.amount_total
-            planned_sale_service_ids = self.planned_sale_service_ids.filtered(lambda planned_sale_service: planned_sale_service.is_allin)
+            planned_sale_service_ids = self.planned_sale_service_ids.filtered(
+                lambda planned_sale_service: planned_sale_service.is_allin)
             for planned_sale_service_id in planned_sale_service_ids:
                 amount_planned_total += planned_sale_service_id.amount_total
         return amount_total, amount_planned_total
@@ -669,8 +672,8 @@ class SaleOrder(models.Model):
         planned_service_ids = self._filter_services_by_quote_type(self.planned_sale_service_ids)
 
         # Tính giá cho các dịch vụ đã lọc
-        self._compute_combo_price(combo_ids,'combo')
-        self._compute_combo_price(planned_combo_ids,'planned_combo')
+        self._compute_combo_price(combo_ids, 'combo')
+        self._compute_combo_price(planned_combo_ids, 'planned_combo')
         self._compute_service_price(service_ids)
         self._compute_service_price(planned_service_ids)
         self.onchange_calculation_tax()
@@ -862,12 +865,10 @@ class SaleOrder(models.Model):
         data = []
         for r in self.order_line:
             data.append((r.product_id.name, r.product_uom_qty, r.price_subtotal, ''))
-        data.append(('Cước vận chuyển nội địa TQ', '', '', ''))
-        data.append(('Tổng tiền hàng + cước nội địa TQ', '', '', ''))
-        data.append(('Thể tích (m3)', self.volume, '', ''))
-        data.append(('Khối lượng (kg)', self.weight, '', ''))
-        data.append(('Phí vận chuyển/ m3', '', '', ''))
-        data.append(('Phí vận chuyển/ kg', '', '', ''))
+        data.append(('Thể tích (m3)', self.volume,
+                     sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'm3').mapped('price')), ''))
+        data.append(('Khối lượng (kg)', self.weight,
+                     sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'kg').mapped('price')), ''))
 
         # Bắt đầu từ hàng thứ hai, viết dữ liệu vào worksheet
         row = 10
@@ -911,22 +912,22 @@ class SaleOrder(models.Model):
         # for r in self.sale_service_ids:
         #     data.append((r.service_id.name, r.compute_value, r.price, ''))
         start = row
-        data.append(('Tổng chi phí vận chuyển theo kg', 'VND/lô', '', ''))
-        data.append(('Tổng chi phí vận chuyển theo m3', 'VND/lô', '', ''))
-        data.append(('Chi phí theo kg', 'VND/kg', '', ''))
-        data.append(('Chi phí theo m3', 'VND/m3', '', ''))
-        for r in self.order_line:
-            data.append((f'Tổng chi phí/{r.product_id.name}', 'VND/sản phẩm', '', ''))
+        data.append(('Tổng chi phí vận chuyển theo kg', 'VND/lô',
+                     sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'kg').mapped(
+                         'amount_total')), ''))
+        data.append(('Tổng chi phí vận chuyển theo m3', 'VND/lô',
+                     sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'm3').mapped(
+                         'amount_total')), ''))
         for item, quantity, cost, note in data:
             format = None
-            if item in ('Tổng chi phí vận chuyển theo kg', 'Tổng chi phí vận chuyển theo m3'):
-                format = special_format
-            worksheet.write(row, 2, item, format)
-            worksheet.write(row, 3, quantity, format)
-            worksheet.write(row, 4, cost, format)
-            worksheet.write(row, 5, note, format)
-            row += 1
-        worksheet.merge_range(f'B{start + 1}:B{row}', 'Báo giá chi tiết', merge_format)
+        if item in ('Tổng chi phí vận chuyển theo kg', 'Tổng chi phí vận chuyển theo m3'):
+            format = special_format
+        worksheet.write(row, 2, item, format)
+        worksheet.write(row, 3, quantity, format)
+        worksheet.write(row, 4, cost, format)
+        worksheet.write(row, 5, note, format)
+        row += 1
+        worksheet.merge_range(f'B{start + 1}:B{row}', 'Cước vận chuyển', merge_format)
 
         worksheet.write(f'B{row + 2}', 'Liên hệ:', employee_contact_format)
         worksheet.write(f'C{row + 2}', f'Chuyên viên: {self.employee_sale.name or ""}')
@@ -938,12 +939,11 @@ class SaleOrder(models.Model):
         workbook.close()
         xls = output.getvalue()
         vals = {
-            'name': f'Bao_gia_{self.name}' + '.xls',
-            'datas': base64.b64encode(xls),
-            # 'datas_fname': 'Template_ngan_sach.xls',
-            'type': 'binary',
-            'res_model': 'sale.order',
-            'res_id': self.id,
+        'name': f'Bao_gia_{self.name}' + '.xls',
+        'datas': base64.b64encode(xls),
+        'type': 'binary',
+        'res_model': 'sale.order',
+        'res_id': self.id,
         }
         file_xls = self.env['ir.attachment'].create(vals)
         return {
@@ -1064,10 +1064,11 @@ class SaleOrder(models.Model):
         start = row
         data.append(('Tổng chi phí vận chuyển theo kg', 'VND/lô', total, ''))
         data.append(('Tổng chi phí vận chuyển theo m3', 'VND/lô', total, ''))
-        data.append(('Chi phí theo kg', 'VND/kg', round(total/self.weight, 2) if self.weight else '', ''))
-        data.append(('Chi phí theo m3', 'VND/m3', round(total/self.volume, 2) if self.volume else '', ''))
+        data.append(('Chi phí theo kg', 'VND/kg', round(total / self.weight, 2) if self.weight else '', ''))
+        data.append(('Chi phí theo m3', 'VND/m3', round(total / self.volume, 2) if self.volume else '', ''))
         for r in self.order_line:
-            data.append((f'Tổng chi phí/{r.product_id.name}', 'VND/sản phẩm', round(total/len(self.order_line), 2) if len(self.order_line) else '', ''))
+            data.append((f'Tổng chi phí/{r.product_id.name}', 'VND/sản phẩm',
+                         round(total / len(self.order_line), 2) if len(self.order_line) else '', ''))
         for item, quantity, cost, note in data:
             format = None
             if item in ('Tổng chi phí vận chuyển theo kg', 'Tổng chi phí vận chuyển theo m3'):
@@ -1246,7 +1247,8 @@ class SaleOrder(models.Model):
         for sale_service_id in self.sale_service_ids:
             col = 7
             for order_line in self.order_line:
-                amount = (sale_service_id.amount_total / self.service_total_amount) * order_line.price_subtotal if self.service_total_amount else 0
+                amount = (
+                                     sale_service_id.amount_total / self.service_total_amount) * order_line.price_subtotal if self.service_total_amount else 0
                 worksheet.write(f'{alphabet[col]}{row}', amount, None)
                 col += 1
             row += 1
