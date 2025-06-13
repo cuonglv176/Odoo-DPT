@@ -904,11 +904,11 @@ class SaleOrder(models.Model):
         nk_tax_amount = 0
         for r in self.order_line:
             data.append(
-                (f'NK CO Form E_{r.product_id.name}', '', f'{r.import_tax_rate}%', "{:,}".format(r.import_tax_amount), ''))
+                (f'NK CO Form E_{r.product_id.name}', '', f'{r.import_tax_rate * 100}%', "{:,}".format(r.import_tax_amount), ''))
             nk_tax_amount += r.import_tax_amount
         vat_tax_amount = 0
         for r in self.order_line:
-            data.append((f'VAT_{r.product_id.name}', '', f"{r.vat_tax_rate}%", "{:,}".format(r.vat_tax_amount), ''))
+            data.append((f'VAT_{r.product_id.name}', '', f"{r.vat_tax_rate * 100}%", "{:,}".format(r.vat_tax_amount), ''))
             vat_tax_amount += r.vat_tax_amount
         start = row
         for item, quantity, cost, amount_total, note in data:
@@ -1038,11 +1038,11 @@ class SaleOrder(models.Model):
         nk_tax_amount = 0
         for r in self.order_line:
             data.append(
-                (f'NK CO Form E_{r.product_id.name}', '', f'{r.import_tax_rate}%', "{:,}".format(r.import_tax_amount), ''))
+                (f'NK CO Form E_{r.product_id.name}', '', f'{r.import_tax_rate * 100}%', "{:,}".format(r.import_tax_amount), ''))
             nk_tax_amount += r.import_tax_amount
         vat_tax_amount = 0
         for r in self.order_line:
-            data.append((f'VAT_{r.product_id.name}', '', f"{r.vat_tax_rate}%", "{:,}".format(r.vat_tax_amount), ''))
+            data.append((f'VAT_{r.product_id.name}', '', f"{r.vat_tax_rate * 100}%", "{:,}".format(r.vat_tax_amount), ''))
             vat_tax_amount += r.vat_tax_amount
         start = row
         for item, quantity, cost, amount_total, note in data:
