@@ -1170,7 +1170,7 @@ class SaleOrder(models.Model):
                      "{:,}".format(
                          sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'kg').mapped(
                              'price'))), "{:,}".format(
-            sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'm3').mapped(
+            sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'kg').mapped(
                 'amount_total'))), ''))
 
         # Bắt đầu từ hàng thứ hai, viết dữ liệu vào worksheet
