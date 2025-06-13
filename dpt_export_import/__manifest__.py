@@ -13,6 +13,7 @@
     'data': [
         'security/ir.model.access.csv',
         'data/approval_category_data.xml',
+        'wizards/price_approval_wizard_view.xml',
         'views/menu.xml',
         'views/export_import_view.xml',
         'views/product_template_view.xml',
