@@ -176,8 +176,8 @@ def _create_invoices(self, grouped=False, final=False, date=None):
                                 'purchase_ok': False,
                                 'list_price': sale_service_id.price,
                                 'default_code': sale_service_id.service_id.code or f"SERV-{sale_service_id.service_id.id}",
-                                'property_account_expense_id': sale_service_id.service_id.expense_account_id.id,
-                                'property_account_income_id': sale_service_id.service_id.revenue_account_id.id,
+                                # 'property_account_expense_id': sale_service_id.service_id.expense_account_id.id,
+                                # 'property_account_income_id': sale_service_id.service_id.revenue_account_id.id,
                             }
                             new_product = self.env['product.product'].sudo().create(product_vals)
                             sale_service_id.service_id.sudo().write({'product_id': new_product.id})
