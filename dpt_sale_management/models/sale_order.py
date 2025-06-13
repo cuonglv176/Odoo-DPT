@@ -403,6 +403,7 @@ class SaleOrder(models.Model):
                     lambda f: f.using_calculation_price and f.combo_id.id == combo.combo_id.id)
                 price = 0
                 for compute_field_id in compute_field_ids:
+                    compute_value = compute_field_id.value_integer
                     if not compute_field_id.value_integer:
                         continue
                     detail_price_ids = combo_pricelist_id.pricelist_table_detail_ids.filtered(
@@ -412,17 +413,16 @@ class SaleOrder(models.Model):
                         if detail_price_id.min_value <= compute_field_id.value_integer <= detail_price_id.max_value:
                             _logger.info(detail_price_id.max_value)
                             if detail_price_id.price_type == 'unit_price':
-                                if detail_price_id.amount > price:
+                                if detail_price_id.amount * compute_value > price * compute_value:
                                     price = detail_price_id.amount
                                     compute_uom_id = detail_price_id.compute_uom_id.id
                             else:
-                                if detail_price_id.amount > price:
+                                if detail_price_id.amount * compute_value > price * compute_value:
                                     price = detail_price_id.amount
                                     compute_uom_id = detail_price_id.compute_uom_id.id
                             if price < combo_pricelist_id.min_amount:
                                 price = combo_pricelist_id.min_amount
                                 compute_uom_id = compute_field_id.uom_id.id
-                    compute_value = compute_field_id.value_integer
                 combo.price = price
                 combo.qty = compute_value
             amount_total, amount_planned_total = self._get_service_allin_baogiao()
