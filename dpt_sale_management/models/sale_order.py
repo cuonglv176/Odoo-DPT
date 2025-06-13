@@ -402,6 +402,7 @@ class SaleOrder(models.Model):
                 compute_field_ids = self.fields_ids.filtered(
                     lambda f: f.using_calculation_price and f.combo_id.id == combo.combo_id.id)
                 price = 0
+                total_amount = 0
                 for compute_field_id in compute_field_ids:
                     compute_value = compute_field_id.value_integer
                     if not compute_field_id.value_integer:
@@ -411,14 +412,17 @@ class SaleOrder(models.Model):
                     _logger.info(detail_price_ids)
                     for detail_price_id in detail_price_ids:
                         if detail_price_id.min_value <= compute_field_id.value_integer <= detail_price_id.max_value:
-                            _logger.info(detail_price_id.max_value)
+                            total_amount = detail_price_id.amount * compute_field_id.value_integer
+
                             if detail_price_id.price_type == 'unit_price':
-                                if detail_price_id.amount * compute_value > price * compute_value:
+                                if (detail_price_id.amount * compute_value) > total_amount:
                                     price = detail_price_id.amount
+                                    total_amount = detail_price_id.amount * compute_field_id.value_integer
                                     compute_uom_id = detail_price_id.compute_uom_id.id
                             else:
-                                if detail_price_id.amount * compute_value > price * compute_value:
+                                if (detail_price_id.amount * compute_value) > total_amount:
                                     price = detail_price_id.amount
+                                    total_amount = detail_price_id.amount * compute_field_id.value_integer
                                     compute_uom_id = detail_price_id.compute_uom_id.id
                             if price < combo_pricelist_id.min_amount:
                                 price = combo_pricelist_id.min_amount
