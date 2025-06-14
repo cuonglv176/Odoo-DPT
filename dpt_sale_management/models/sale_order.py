@@ -630,7 +630,8 @@ class SaleOrder(models.Model):
                                     compute_uom_id = compute_field_id.uom_id.id
 
                     detail_price_ids = service_price_id.pricelist_table_detail_ids.filtered(
-                        lambda ptd: ptd.selection_ids in compute_and_field_ids.selection_value_id.ids)
+                        lambda ptd: bool(
+                            set(ptd.selection_ids.ids) & set(compute_and_field_ids.selection_value_id.ids)))
                     for detail_price_id in detail_price_ids:
                         if detail_price_id.price_type == 'unit_price':
                             price = detail_price_id.amount * compute_value
