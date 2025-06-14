@@ -649,6 +649,7 @@ class SaleOrder(models.Model):
                         lambda ptd: bool(
                             set(ptd.selection_ids.ids) & set(compute_and_field_ids.selection_value_id.ids)))
                     _logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+                    _logger.info(service_price_id.name)
                     _logger.info(detail_price_ids)
                     for detail_price_id in detail_price_ids:
                         if detail_price_id.price_type == 'unit_price':
