@@ -652,6 +652,7 @@ class SaleOrder(models.Model):
                     detail_price_ids = service_price_id.pricelist_table_detail_ids.filtered(
                         lambda ptd: ptd.selection_ids.ids in val_selection)
                     _logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+                    _logger.info(service_price_id)
                     _logger.info(val_selection)
                     _logger.info(detail_price_ids)
                     for detail_price_id in detail_price_ids:
