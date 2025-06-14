@@ -559,7 +559,7 @@ class SaleOrder(models.Model):
                                   f.service_id.id == sale_service_id.service_id.id)
                     compute_and_field_ids = self.fields_ids.filtered(
                         lambda f: f.using_calculation_price and
-                                  f.service_id.id == sale_service_id.service_id.id and f.fields_id.condition_type == 'and')
+                                  f.service_id.id == sale_service_id.service_id.id)
                     for compute_field_id in compute_field_ids:
                         if compute_field_id.fields_id.condition_type in ('or', 'simple'):
                             # Bỏ qua nếu không có giá trị
