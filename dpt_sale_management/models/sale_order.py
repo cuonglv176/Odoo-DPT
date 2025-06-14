@@ -469,7 +469,7 @@ class SaleOrder(models.Model):
         today = fields.Date.today()
         # Domain chung cho cả hai lần tìm kiếm
         base_domain = [
-            ('service_id', '=', sale_service_id.combo_id.id),
+            ('service_id', '=', sale_service_id.service_id.id),
             ('pricelist_id.state', '=', 'active'),
             '|', ('date_start', '<=', today), ('date_start', '=', False),
             '|', ('date_end', '>=', today), ('date_end', '=', False),
@@ -650,7 +650,7 @@ class SaleOrder(models.Model):
                         val_selection.append(compute_and_field_id.selection_value_id.id)
 
                     detail_price_ids = service_price_id.pricelist_table_detail_ids.filtered(
-                        lambda ptd: ptd.selection_ids.ids in val_selection)
+                        lambda ptd: set(ptd.selection_ids.ids) == set(val_selection))
                     _logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
                     _logger.info(service_price_id)
                     _logger.info(val_selection)
