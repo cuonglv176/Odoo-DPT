@@ -899,14 +899,14 @@ class SaleOrder(models.Model):
         # [Hàng hóa] data
         data = []
         for r in self.order_line:
-            data.append((r.product_id.name, r.product_uom_qty, f"{r.price_unit:,}", f"{r.price_subtotal:,}", ''))
+            data.append((r.product_id.name, r.product_uom_qty, f"{int(r.price_unit):,}", f"{int(r.price_subtotal):,}", ''))
         data.append(('Thể tích (m3)', "{:,}".format(self.volume),
-                     f"{sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'm3').mapped('price')):,}",
-                     f"{sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'm3').mapped('amount_total')):,}",
+                     f"{int(sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'm3').mapped('price'))):,}",
+                     f"{int(sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'm3').mapped('amount_total'))):,}",
                      ''))
         data.append(('Khối lượng (kg)', "{:,}".format(self.weight),
-                     f"{sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'kg').mapped('price')):,}",
-                     f"{sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'kg').mapped('amount_total')):,}",
+                     f"{int(sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'kg').mapped('price'))):,}",
+                     f"{int(sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'kg').mapped('amount_total'))):,}",
                      ''))
 
         # Bắt đầu từ hàng thứ hai, viết dữ liệu vào worksheet
@@ -928,9 +928,9 @@ class SaleOrder(models.Model):
         data = []
         start = row
         data.append(('Tổng chi phí vận chuyển theo kg', 'VND/lô', '',
-                     f"{sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'kg').mapped('amount_total')):,}", ''))
+                     f"{int(sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'kg').mapped('amount_total'))):,}", ''))
         data.append(('Tổng chi phí vận chuyển theo m3', 'VND/lô', '',
-                     f"{sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'm3').mapped('amount_total')):,}", ''))
+                     f"{int(sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'm3').mapped('amount_total'))):,}", ''))
         for item, quantity, cost, amount_total, note in data:
             format = None
             if item in ('Tổng chi phí vận chuyển theo kg', 'Tổng chi phí vận chuyển theo m3'):
@@ -1029,7 +1029,7 @@ class SaleOrder(models.Model):
         row = 10
         start = row
         for r in self.order_line:
-            data.append((r.product_id.name, r.product_uom_qty, f"{r.price_unit:,}", f"{r.price_subtotal:,}", ''))
+            data.append((r.product_id.name, r.product_uom_qty, f"{int(r.price_unit):,}", f"{int(r.price_subtotal):,}", ''))
         for item, quantity, cost, amount_total, note in data:
             format = None
             worksheet.write(row, 2, item, format)
@@ -1047,15 +1047,15 @@ class SaleOrder(models.Model):
         for r in self.sale_service_ids:
             if r.service_id:
                 data.append(
-                    (r.service_id.name, r.compute_value, f"{r.price:,}", f"{r.amount_total:,}", ''))
+                    (r.service_id.name, r.compute_value, f"{int(r.price):,}", f"{int(r.amount_total):,}", ''))
                 total += r.amount_total
         for r in self.service_combo_ids:
             if r.combo_id:
                 data.append(
-                    (f"{r.combo_id.name}({r.code if r.code else '' })", r.qty, f"{r.price:,}", f"{r.amount_total:,}", ''))
+                    (f"{r.combo_id.name}({r.code if r.code else '' })", r.qty, f"{int(r.price):,}", f"{int(r.amount_total):,}", ''))
                 total += r.amount_total
         start = row
-        data.append(('Tổng chi phí vận chuyển', '', '', f"{self.service_total_amount:,}", ''))
+        data.append(('Tổng chi phí vận chuyển', '', '', f"{int(self.service_total_amount):,}", ''))
         for item, quantity, cost, amount_total, note in data:
             format = None
             if str(item) in ('Tổng chi phí vận chuyển'):
@@ -1173,8 +1173,8 @@ class SaleOrder(models.Model):
         # [Báo giá chi tiết] Data
         data = []
         for r in self.order_line:
-            data.append((r.product_id.name, r.product_uom_qty, f"{r.price_unit:,}",
-                         f"{r.price_subtotal:,}", ''))
+            data.append((r.product_id.name, r.product_uom_qty, f"{int(r.price_unit):,}",
+                         f"{int(r.price_subtotal):,}", ''))
         start = row
         for item, quantity, cost, amount_total, note in data:
             format = None
