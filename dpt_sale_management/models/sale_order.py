@@ -460,31 +460,52 @@ class SaleOrder(models.Model):
         #         amount_planned_total += planned_sale_service_id.amount_total
         return amount_total, amount_planned_total
 
+
+    def get_service_price_from_pricelist(self, sale_service_id):
+        """Lấy giá combo từ bảng giá"""
+        self.ensure_one()
+        if not sale_service_id or not self.partner_id:
+            return False
+        today = fields.Date.today()
+        # Domain chung cho cả hai lần tìm kiếm
+        base_domain = [
+            ('service_id', '=', sale_service_id.combo_id.id),
+            ('pricelist_id.state', '=', 'active'),
+            '|', ('date_start', '<=', today), ('date_start', '=', False),
+            '|', ('date_end', '>=', today), ('date_end', '=', False),
+        ]
+        # 1. Ưu tiên tìm bảng giá theo khách hàng cụ thể
+        partner_domain = base_domain + [('partner_id', '=', self.partner_id.id)]
+        service_pricelist_id = self.env['product.pricelist.item'].search(partner_domain, limit=1)
+        # 2. Nếu không có, tìm bảng giá chung (không gán cho khách hàng nào)
+        if not service_pricelist_id:
+            general_domain = base_domain + [('partner_id', '=', False)]
+            service_pricelist_id = self.env['product.pricelist.item'].search(general_domain, limit=1)
+        if not service_pricelist_id:
+            raise ValidationError(
+                _("Combo chưa có bảng giá hoạt động hoặc không tìm thấy bảng giá phù hợp: %s!!!") % sale_service_id.combo_id.name)
+        return service_pricelist_id
+
     def _compute_service_price(self, service_ids):
         """Tính toán giá dịch vụ dựa trên bảng giá"""
         for sale_service_id in service_ids:
             # Bỏ qua dịch vụ thuộc combo hoặc đã có giá và đã tính toán
             if sale_service_id.combo_id and sale_service_id.price > 0 and sale_service_id.price_status == 'calculated':
                 continue
-
             # Bỏ qua dịch vụ không có đơn vị
             if not sale_service_id.uom_id:
                 continue
-
             # Bỏ qua dịch vụ đã được phê duyệt
             approved = sale_service_id.approval_id.filtered(
                 lambda approval: approval.request_status in ('approved', 'refused'))
             if approved:
                 continue
-
             # Lấy bảng giá phù hợp
             current_uom_id = sale_service_id.uom_id
             selected_uoms = self.env['uom.uom'].browse([current_uom_id.id]) if current_uom_id else self.env['uom.uom']
 
-            service_price_ids = sale_service_id.service_id.get_active_pricelist(
-                partner_id=self.partner_id,
-                selected_uoms=selected_uoms
-            )
+            service_price_ids = self.get_service_price_from_pricelist(sale_service_id)
+            _logger.info(f"service_price_ids --------------: {service_price_ids}")
 
             # Lọc theo đơn vị và khách hàng nếu có
             if current_uom_id:
