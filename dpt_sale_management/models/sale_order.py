@@ -561,7 +561,7 @@ class SaleOrder(models.Model):
                         lambda f: f.using_calculation_price and
                                   f.service_id.id == sale_service_id.service_id.id)
                     for compute_field_id in compute_field_ids:
-                        if compute_field_id.fields_id.condition_type in ('or', 'simple'):
+                        if compute_field_id.condition_type in ('or', 'simple'):
                             # Bỏ qua nếu không có giá trị
                             if not compute_field_id.value_integer:
                                 continue
