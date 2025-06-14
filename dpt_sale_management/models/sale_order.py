@@ -488,6 +488,7 @@ class SaleOrder(models.Model):
 
     def _compute_service_price(self, service_ids):
         """Tính toán giá dịch vụ dựa trên bảng giá"""
+        _logger.info(f"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
         for sale_service_id in service_ids:
             # Bỏ qua dịch vụ thuộc combo hoặc đã có giá và đã tính toán
             if sale_service_id.combo_id and sale_service_id.price > 0 and sale_service_id.price_status == 'calculated':
