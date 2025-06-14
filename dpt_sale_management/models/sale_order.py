@@ -652,7 +652,7 @@ class SaleOrder(models.Model):
                     detail_price_ids = service_price_id.pricelist_table_detail_ids.filtered(
                         lambda ptd: ptd.selection_ids.ids in val_selection)
                     _logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-                    _logger.info(sale_service_id.service_id.name)
+                    _logger.info(service_price_id)
                     _logger.info(detail_price_ids)
                     for detail_price_id in detail_price_ids:
                         if detail_price_id.price_type == 'unit_price':
