@@ -75,10 +75,8 @@ class SaleOrder(models.Model):
                                             help='Đánh dấu để tạo ticket cho tất cả dịch vụ')
     quote_type = fields.Selection([
         ('thuong', 'Báo giá thường'),
-        ('bao_giao', 'Báo giá bao giao'),
-        ('all_in', 'Báo giá all in')
-    ], string='Loại báo giá', default='thuong', tracking=True,
-        help="Bao giao là bao vận chuyển, all in là tất cả giá")
+        ('dac_biet', 'Báo giá đặc biệt')
+    ], string='Loại báo giá', default='thuong', tracking=True)
 
     @api.depends('planned_sale_service_ids.amount_total')
     def _compute_planned_service_amount(self):
@@ -444,7 +442,7 @@ class SaleOrder(models.Model):
     def _get_service_allin_baogiao(self):
         amount_total = 0
         amount_planned_total = 0
-        if self.quote_type == 'bao_giao':
+        if self.quote_type == 'dac_biet':
             sale_service_ids = self.sale_service_ids.filtered(lambda sale_service: sale_service.is_bao_giao)
             for sale_service_id in sale_service_ids:
                 amount_total += sale_service_id.amount_total
@@ -452,14 +450,14 @@ class SaleOrder(models.Model):
                 lambda sale_service: sale_service.is_bao_giao)
             for planned_sale_service_id in planned_sale_service_ids:
                 amount_planned_total += planned_sale_service_id.amount_total
-        elif self.quote_type == 'all_in':
-            sale_service_ids = self.sale_service_ids.filtered(lambda sale_service: sale_service.is_allin)
-            for sale_service_id in sale_service_ids:
-                amount_total += sale_service_id.amount_total
-            planned_sale_service_ids = self.planned_sale_service_ids.filtered(
-                lambda planned_sale_service: planned_sale_service.is_allin)
-            for planned_sale_service_id in planned_sale_service_ids:
-                amount_planned_total += planned_sale_service_id.amount_total
+        # elif self.quote_type == 'all_in':
+        #     sale_service_ids = self.sale_service_ids.filtered(lambda sale_service: sale_service.is_allin)
+        #     for sale_service_id in sale_service_ids:
+        #         amount_total += sale_service_id.amount_total
+        #     planned_sale_service_ids = self.planned_sale_service_ids.filtered(
+        #         lambda planned_sale_service: planned_sale_service.is_allin)
+        #     for planned_sale_service_id in planned_sale_service_ids:
+        #         amount_planned_total += planned_sale_service_id.amount_total
         return amount_total, amount_planned_total
 
     def _compute_service_price(self, service_ids):
@@ -710,12 +708,12 @@ class SaleOrder(models.Model):
 
             if service_model:
                 # Báo giá bao giao: bỏ qua các dịch vụ có is_bao_giao = True
-                if self.quote_type == 'bao_giao' and not service_model.is_bao_giao:
+                if self.quote_type == 'dac_biet' and not service_model.is_bao_giao:
                     filtered_services |= service
 
-                # Báo giá all in: bỏ qua các dịch vụ có is_allin = True
-                elif self.quote_type == 'all_in' and not service_model.is_allin:
-                    filtered_services |= service
+                # # Báo giá all in: bỏ qua các dịch vụ có is_allin = True
+                # elif self.quote_type == 'all_in' and not service_model.is_allin:
+                #     filtered_services |= service
 
         return filtered_services
 

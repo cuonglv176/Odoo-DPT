@@ -45,14 +45,14 @@ class DPTSaleServiceManagement(models.Model):
                                     help='Đánh dấu dịch vụ đã được xác nhận tạo ticket')
     payment_amount = fields.Monetary(currency_field='currency_id', string='Số tiền cần thanh toán', 
                                     help='Số tiền cần thanh toán của dịch vụ Thanh toán quốc tế')
-    is_bao_giao = fields.Boolean(default=False, string='Bao giao')
-    is_allin = fields.Boolean(default=False, string='All In')
+    is_bao_giao = fields.Boolean(default=False, string='Đặc biệt')
+    # is_allin = fields.Boolean(default=False, string='All In')
 
 
     @api.onchange('service_id')
     def onchange_update_bao_giao_all_in(self):
         self.is_bao_giao = self.service_id.is_bao_giao
-        self.is_allin = self.service_id.is_allin
+        # self.is_allin = self.service_id.is_allin
 
     @api.onchange('price')
     def onchange_check_price(self):

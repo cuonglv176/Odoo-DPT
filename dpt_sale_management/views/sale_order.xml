@@ -76,7 +76,7 @@
                             <field name="note"/>
                             <field name="is_price_fixed" widget="boolean_toggle"/>
                             <field name="is_bao_giao" widget="boolean_toggle"/>
-                            <field name="is_allin" widget="boolean_toggle"/>
+<!--                            <field name="is_allin" widget="boolean_toggle"/>-->
 
                         </tree>
                     </field>
@@ -121,7 +121,7 @@
                             <field name="amount_total" readonly="1" force_save="1"/>
                             <field name="department_id" context="{'dpt_sale_management': 1}"/>
                             <field name="is_bao_giao" widget="boolean_toggle"/>
-                            <field name="is_allin" widget="boolean_toggle"/>
+<!--                            <field name="is_allin" widget="boolean_toggle"/>-->
                             <field name="note"/>
                         </tree>
                     </field>
