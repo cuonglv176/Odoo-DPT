@@ -1,5 +1,5 @@
-
 from odoo import fields, models, api, _
+
 
 class ProductPricelistItemDetail(models.Model):
     _name = 'product.pricelist.item.detail'
@@ -37,8 +37,13 @@ class ProductPricelistItemDetail(models.Model):
         ('and', 'Thỏa mãn tất cả đơn vị (AND)')
     ], string='Loại điều kiện', default='simple', tracking=True)
 
-    field_ids = fields.Many2many('dpt.service.management.required.fields', string='Các trường thông tin', tracking=True)
-    selection_ids = fields.Many2many('dpt.sale.order.fields.selection', string='Các gía trị', tracking=True)
+    field_ids = fields.Many2many('dpt.service.management.required.fields',
+                                 relation='dpt_required_fields_pricelist_item_detail_rel',
+                                 string='Các trường thông tin',
+                                 tracking=True)
+    selection_ids = fields.Many2many('dpt.sale.order.fields.selection',
+                                     relation='dpt_selection_fields_pricelist_item_detail_rel', string='Các gía trị',
+                                     tracking=True)
 
     uom_condition_ids = fields.Many2many('uom.uom', 'pricelist_item_detail_uom_rel',
                                          'detail_id', 'uom_id', string='Điều kiện đơn vị', tracking=True)
