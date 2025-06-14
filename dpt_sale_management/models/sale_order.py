@@ -559,83 +559,35 @@ class SaleOrder(models.Model):
                                   f.service_id.id == sale_service_id.service_id.id)
                     compute_and_field_ids = self.fields_ids.filtered(
                         lambda f: f.using_calculation_price and
-                                  f.service_id.id == sale_service_id.service_id.id and f.fields_id.condition_type == 'and')
+                                  f.service_id.id == sale_service_id.service_id.id)
                     for compute_field_id in compute_field_ids:
-                        if compute_field_id.fields_id.condition_type in ('or', 'simple'):
-                            # Bỏ qua nếu không có giá trị
-                            if not compute_field_id.value_integer:
-                                continue
-                            # 3.1 Xử lý giá không tích lũy
-                            if not service_price_id.is_accumulated:
-                                detail_price_ids = service_price_id.pricelist_table_detail_ids.filtered(
-                                    lambda ptd: ptd.uom_id.id == compute_field_id.uom_id.id and
-                                                compute_field_id.value_integer >= ptd.min_value and
-                                                (not ptd.max_value or compute_field_id.value_integer <= ptd.max_value)
-                                )
+                        # Bỏ qua nếu không có giá trị
+                        if not compute_field_id.value_integer:
+                            continue
+                        # 3.1 Xử lý giá không tích lũy
+                        if not service_price_id.is_accumulated:
+                            detail_price_ids = service_price_id.pricelist_table_detail_ids.filtered(
+                                lambda ptd: ptd.uom_id.id == compute_field_id.uom_id.id and
+                                            compute_field_id.value_integer >= ptd.min_value and
+                                            (not ptd.max_value or compute_field_id.value_integer <= ptd.max_value)
+                            )
 
-                                for detail_price_id in detail_price_ids:
-                                    if detail_price_id.price_type == 'unit_price':
-                                        price = compute_field_id.value_integer * detail_price_id.amount
-                                    else:  # fixed_range
-                                        price = detail_price_id.amount
+                            for detail_price_id in detail_price_ids:
+                                if detail_price_id.price_type == 'unit_price':
+                                    price = compute_field_id.value_integer * detail_price_id.amount
+                                else:  # fixed_range
+                                    price = detail_price_id.amount
 
-                                    # Điều chỉnh theo is_price nếu cần
-                                    if not service_price_id.is_price:
-                                        price = detail_price_id.amount
+                                # Điều chỉnh theo is_price nếu cần
+                                if not service_price_id.is_price:
+                                    price = detail_price_id.amount
 
-                                    price = max(service_price_id.currency_id.rate * price, service_price_id.min_amount)
+                                price = max(service_price_id.currency_id.rate * price, service_price_id.min_amount)
 
-                                    if price > max_price:
-                                        max_price = price
-                                        price_list_item_id = service_price_id
-                                        # Kiểm tra đơn vị là m3 hoặc kg để sử dụng giá trị từ sale order
-                                        uom = self.env['uom.uom'].browse(compute_field_id.uom_id.id)
-                                        if uom.name == 'm3' and self.volume:
-                                            compute_value = self.volume
-                                        elif uom.name == 'kg' and self.weight:
-                                            compute_value = self.weight
-                                        else:
-                                            compute_value = compute_field_id.value_integer
-                                        compute_uom_id = compute_field_id.uom_id.id
-                            # 3.2 Xử lý giá tích lũy
-                            else:
-                                detail_price_ids = service_price_id.pricelist_table_detail_ids.filtered(
-                                    lambda ptd: ptd.uom_id.id == compute_field_id.uom_id.id
-                                ).sorted(key=lambda r: r.min_value)
-
-                                total_price = 0
-                                has_applicable = False
-
-                                for detail_price_id in detail_price_ids:
-                                    # Bỏ qua nếu giá trị nhỏ hơn min_value
-                                    if detail_price_id.min_value > compute_field_id.value_integer:
-                                        continue
-
-                                    has_applicable = True
-
-                                    # Tính giá trị áp dụng
-                                    if detail_price_id.max_value:
-                                        applicable_value = min(compute_field_id.value_integer,
-                                                               detail_price_id.max_value) - detail_price_id.min_value + 1
-                                    else:
-                                        applicable_value = compute_field_id.value_integer - detail_price_id.min_value + 1
-
-                                    # Tính giá theo kiểu
-                                    if detail_price_id.price_type == 'unit_price':
-                                        price = applicable_value * detail_price_id.amount
-                                    else:  # fixed_range
-                                        price = detail_price_id.amount
-
-                                    # Kiểm tra is_price
-                                    if not service_price_id.is_price and detail_price_id.price_type == 'fixed_range':
-                                        price = detail_price_id.amount
-
-                                    total_price += service_price_id.currency_id.rate * price
-
-                                # Cập nhật nếu có mức giá áp dụng
-                                if has_applicable and max(total_price, service_price_id.min_amount) > max_price:
-                                    max_price = max(total_price, service_price_id.min_amount)
+                                if price > max_price:
+                                    max_price = price
                                     price_list_item_id = service_price_id
+                                    # Kiểm tra đơn vị là m3 hoặc kg để sử dụng giá trị từ sale order
                                     uom = self.env['uom.uom'].browse(compute_field_id.uom_id.id)
                                     if uom.name == 'm3' and self.volume:
                                         compute_value = self.volume
@@ -644,12 +596,64 @@ class SaleOrder(models.Model):
                                     else:
                                         compute_value = compute_field_id.value_integer
                                     compute_uom_id = compute_field_id.uom_id.id
+                        # 3.2 Xử lý giá tích lũy
+                        else:
+                            detail_price_ids = service_price_id.pricelist_table_detail_ids.filtered(
+                                lambda ptd: ptd.uom_id.id == compute_field_id.uom_id.id
+                            ).sorted(key=lambda r: r.min_value)
+
+                            total_price = 0
+                            has_applicable = False
+
+                            for detail_price_id in detail_price_ids:
+                                # Bỏ qua nếu giá trị nhỏ hơn min_value
+                                if detail_price_id.min_value > compute_field_id.value_integer:
+                                    continue
+
+                                has_applicable = True
+
+                                # Tính giá trị áp dụng
+                                if detail_price_id.max_value:
+                                    applicable_value = min(compute_field_id.value_integer,
+                                                           detail_price_id.max_value) - detail_price_id.min_value + 1
+                                else:
+                                    applicable_value = compute_field_id.value_integer - detail_price_id.min_value + 1
+
+                                # Tính giá theo kiểu
+                                if detail_price_id.price_type == 'unit_price':
+                                    price = applicable_value * detail_price_id.amount
+                                else:  # fixed_range
+                                    price = detail_price_id.amount
+
+                                # Kiểm tra is_price
+                                if not service_price_id.is_price and detail_price_id.price_type == 'fixed_range':
+                                    price = detail_price_id.amount
+
+                                total_price += service_price_id.currency_id.rate * price
+
+                            # Cập nhật nếu có mức giá áp dụng
+                            if has_applicable and max(total_price, service_price_id.min_amount) > max_price:
+                                max_price = max(total_price, service_price_id.min_amount)
+                                price_list_item_id = service_price_id
+                                uom = self.env['uom.uom'].browse(compute_field_id.uom_id.id)
+                                if uom.name == 'm3' and self.volume:
+                                    compute_value = self.volume
+                                elif uom.name == 'kg' and self.weight:
+                                    compute_value = self.weight
+                                else:
+                                    compute_value = compute_field_id.value_integer
+                                compute_uom_id = compute_field_id.uom_id.id
+
+
+                    val_selection = []
+                    for compute_and_field_id in compute_and_field_ids:
+                        val_selection.append(compute_and_field_id.selection_value_id.id)
 
                     detail_price_ids = service_price_id.pricelist_table_detail_ids.filtered(
-                        lambda ptd: bool(
-                            set(ptd.selection_ids.ids) & set(compute_and_field_ids.selection_value_id.ids)))
+                        lambda ptd: ptd.selection_ids.ids in val_selection)
                     _logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-                    _logger.info(sale_service_id.service_id.name)
+                    _logger.info(service_price_id)
+                    _logger.info(val_selection)
                     _logger.info(detail_price_ids)
                     for detail_price_id in detail_price_ids:
                         if detail_price_id.price_type == 'unit_price':
