@@ -427,8 +427,8 @@ class SaleOrder(models.Model):
                                 price = combo_pricelist_id.min_amount
                                 compute_uom_id = compute_field_id.uom_id.id
                                 compute_value = compute_field_id.value_integer
-                        else:
-                            raise ValidationError(_("Báo giá đã vượt ngưỡng trong bảng giá vui lòng check lại"))
+                        # else:
+                        #     raise ValidationError(_("Báo giá đã vượt ngưỡng trong bảng giá vui lòng check lại"))
 
                 combo.price = price
                 combo.qty = compute_value
