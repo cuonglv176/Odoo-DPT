@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Tạo loại phê duyệt mới cho Combo dịch vụ -->
+        <record id="approval_category_service_combo" model="approval.category">
+            <field name="name">Duyệt combo dịch vụ</field>
+            <field name="sequence_code">SCM</field>
+            <field name="description">Phê duyệt gói combo dịch vụ</field>
+            <field name="automated_sequence" eval="True"/>
+        </record>
+    </data>
+</odoo>

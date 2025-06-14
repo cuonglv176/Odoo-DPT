@@ -8,8 +8,10 @@
             <search string="Shipping slip">
                 <field name="name"/>
                 <field name="export_import_name"/>
-                <field name="vn_vehicle_stage_id"/>
                 <field name="cn_vehicle_stage_id"/>
+                <field name="vn_vehicle_stage_id"/>
+                <field name="last_vn_vehicle_stage_id"/>
+                <field name="product_ids" widget="many2many_tags" string="Sản phẩm"/>
                 <separator/>
                 <filter string="Archive" domain="[('active','!=',True)]" name="archive"/>
                 <filter string="Active" domain="[('active','=',True)]" name="active"/>
@@ -24,25 +26,35 @@
             <form string="Shipping slip">
                 <header>
                     <button name="action_create_shipping_slip_receive" string="Create Shipping Receive"
-                            type="object" class="btn-primary" invisible="send_shipping_id or not non_finish_transfer"/>
+                            type="object" class="btn-primary" invisible="send_shipping_id or not non_finish_transfer or delivery_slip_type == 'last_delivery_vn'"/>
                     <button name="action_create_stock_transfer" string="Create Transfer Picking"
                             type="object" class="btn-primary"
                             invisible="send_shipping_id or out_picking_ids"/>
                     <button name="action_confirm_picking" string="Confirm Picking"
                             type="object" class="btn-primary" invisible="not num_not_confirm_picking"/>
+                    <button name="action_lock_so" string="Khóa SO"
+                            type="object" class="btn-primary" invisible="not is_cn_finish_stage or all_so_locked"/>
+                    <button name="action_export_picking_report" string="Xuất Excel"
+                            type="object" class="btn-primary" invisible="delivery_slip_type != 'container_vn'"/>
                     <field name="vehicle_country" invisible="1"/>
                     <field name="vn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
                            invisible="vehicle_country != 'vietnamese'"/>
                     <field name="cn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
                            invisible="vehicle_country != 'chinese'"/>
+                    <field name="last_vn_vehicle_stage_id" widget="statusbar" options="{'clickable': '1'}"
+                           invisible="vehicle_country != 'last_delivery_vn'"/>
                     <field name="num_not_confirm_picking" invisible="1"/>
                     <field name="active" invisible="1"/>
                     <field name="non_finish_transfer" invisible="1"/>
+                    <field name="last_shipping_slip" invisible="1"/>
+                    <field name="is_cn_finish_stage" invisible="1"/>
+                    <field name="all_so_locked" invisible="1"/>
                 </header>
                 <sheet>
                     <group>
                         <group>
                             <field name="name" required="1"/>
+                            <field name="delivery_slip_type" invisible="1"/>
                             <field name="send_shipping_id" options="{'no_create': True}" readonly="1" force_save="1"/>
                             <field name="estimate_arrival_warehouse_vn" invisible="not send_shipping_id"/>
                             <field name="transfer_code" invisible="1"/>
@@ -61,18 +73,31 @@
                     <label for="note"/>
                     <field name="note" nolable="1"/>
                     <notebook>
-                        <page name="import_export" string="Import Export">
+                        <page name="import_export" string="Import Export" invisible="last_shipping_slip">
                             <field name="export_import_ids" context="{
                                      'form_view_ref': 'dpt_export_import.view_dpt_export_import_form',
                                      'tree_view_ref': 'dpt_export_import.view_dpt_export_import_tree'}"/>
                         </page>
+                        <page name="helpdesk_ticket" string="Tickets" invisible="not last_shipping_slip">
+                            <field name="ticket_ids"/>
+                        </page>
                         <page name="sale_order" string="Order">
                             <field name="sale_ids" readonly="1" force_save="1"/>
                         </page>
-                        <page name="main_in_picking" string="Main IN Picking">
+                        <page name="product" string="Sản phẩm">
+                            <field name="product_ids" readonly="1" force_save="1"/>
+                        </page>
+                        <page name="main_in_picking" string="Main IN Picking" invisible="delivery_slip_type != 'container_tq'">
                             <field name="main_in_picking_ids" context="{
                                      'form_view_ref': 'stock.view_picking_form',
-                                     'tree_view_ref': 'stock.vpicktree'}"
+                                     'tree_view_ref': 'dpt_shipping.dpt_stock_picking_in_shipping_tree_view'}"
+                                   readonly="1" force_save="1"/>
+                        </page>
+                        <page name="main_in_picking_container_vn" string="Phiếu chuyển"
+                              invisible="delivery_slip_type != 'container_vn'">
+                            <field name="main_in_picking_ids" context="{
+                                     'form_view_ref': 'stock.view_picking_form',
+                                     'tree_view_ref': 'dpt_shipping.dpt_stock_picking_in_shipping_tree_view'}"
                                    readonly="1" force_save="1"/>
                         </page>
                         <page name="out_picking" string="Out Picking" invisible="send_shipping_id">
@@ -84,10 +109,10 @@
                         <page name="in_picking" string="In Picking" invisible="not send_shipping_id">
                             <field name="in_picking_ids" context="{
                                      'form_view_ref': 'stock.view_picking_form',
-                                     'tree_view_ref': 'stock.vpicktree'}" readonly="1" force_save="1"/>
+                                     'tree_view_ref': 'dpt_shipping.dpt_stock_picking_in_shipping_tree_view'}" readonly="1" force_save="1"/>
                         </page>
                         <page name="vehicle_stage_tracking" string="Vehicle Stage Tracking">
-                            <field name="vehicle_stage_log_ids">
+                            <!-- <field name="vehicle_stage_log_ids">
                                 <tree editable="bottom" delete="0">
                                     <field name="vehicle_id" column_invisible="1" force_save="1"/>
                                     <field name="shipping_slip_id" column_invisible="1" force_save="1"/>
@@ -97,7 +122,7 @@
                                     <field name="log_time" widget="float_time"/>
                                     <field name="description"/>
                                 </tree>
-                            </field>
+                            </field> -->
                         </page>
                     </notebook>
                 </sheet>
@@ -117,8 +142,10 @@
             <tree string="Shipping slip">
                 <field name="name"/>
                 <field name="export_import_name"/>
-                <field name="vn_vehicle_stage_id"/>
                 <field name="cn_vehicle_stage_id"/>
+                <field name="vn_vehicle_stage_id"/>
+                <field name="last_vn_vehicle_stage_id"/>
+                <field name="product_ids" widget="many2many_tags"/>
                 <field name="active" invisible="1"/>
                 <field name="vehicle_country" invisible="1"/>
             </tree>

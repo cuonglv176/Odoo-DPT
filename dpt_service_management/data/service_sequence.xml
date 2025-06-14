@@ -1,10 +1,20 @@
-
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="seq_dpt_service" model="ir.sequence">
-        <field name="name">DPT Service Code</field>
+    <data noupdate="1">
+        <record id="seq_dpt_service_management" model="ir.sequence">
+            <field name="name">Service Management</field>
         <field name="code">dpt.service.management</field>
-        <field name="prefix">SERV-%(y)s%(month)s-</field>
+            <field name="prefix">SRV</field>
         <field name="padding">4</field>
         <field name="company_id" eval="False"/>
     </record>
+
+        <record id="seq_dpt_service_combo" model="ir.sequence">
+            <field name="name">Service Combo</field>
+            <field name="code">dpt.service.combo</field>
+            <field name="prefix"></field>
+            <field name="padding">3</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
 </odoo>

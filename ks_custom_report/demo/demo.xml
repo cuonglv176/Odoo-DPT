@@ -1,0 +1,58 @@
+<odoo>
+    <data>
+
+        <record id="ks_cr_demo_contact_col1" model="ks_custom_report.ks_column">
+            <field name="name">Name</field>
+            <field name="ks_model_field_chan">display_name</field>
+        </record>
+
+        <record id="ks_cr_demo_contact_col2" model="ks_custom_report.ks_column">
+            <field name="name">Company</field>
+            <field name="ks_model_field_chan">company_id.name</field>
+        </record>
+
+        <record id="ks_cr_demo_contact_col3" model="ks_custom_report.ks_column">
+            <field name="name">Parent Company</field>
+            <field name="ks_model_field_chan">company_id.parent_id.name</field>
+        </record>
+
+        <record id="ks_cr_demo_contact_col4" model="ks_custom_report.ks_column">
+            <field name="name">Bank</field>
+            <field name="ks_model_field_chan">bank_ids.bank_id.name</field>
+        </record>
+
+        <record id="ks_cr_demo_contact_col5" model="ks_custom_report.ks_column">
+            <field name="name">Account Number</field>
+            <field name="ks_model_field_chan">bank_ids.acc_number</field>
+        </record>
+
+        <record id="ks_cr_demo_contact_col6" model="ks_custom_report.ks_column">
+            <field name="name">Login Id</field>
+            <field name="ks_model_field_chan">user_ids.login</field>
+        </record>
+
+        <record id="ks_cr_demo_contact_col7" model="ks_custom_report.ks_column">
+            <field name="name">Created On</field>
+            <field name="ks_model_field_chan">create_date</field>
+        </record>
+
+        <record id="ks_cr_demo_contact" model="ks_custom_report.ks_report">
+            <field name="name">Contact Report</field>
+            <field name="ks_model_id" ref="base.model_res_partner"/>
+            <field name="ks_cr_menu_name">Contact Report</field>
+            <field name="ks_cr_top_menu_id" eval="ref('ks_custom_report.menu_root')"/>
+            <field name="ks_cr_menu_priority">50</field>
+            <field name="ks_cr_group_access" eval="[(6,0,[ref('base.group_system')])]"/>
+            <field name="ks_cr_column_ids" eval="[(6, 0, [
+                ref('ks_cr_demo_contact_col1'),
+                ref('ks_cr_demo_contact_col2'),
+                ref('ks_cr_demo_contact_col3'),
+                ref('ks_cr_demo_contact_col4'),
+                ref('ks_cr_demo_contact_col5'),
+                ref('ks_cr_demo_contact_col6'),
+                ref('ks_cr_demo_contact_col7')])]"
+            />
+        </record>
+
+    </data>
+</odoo>

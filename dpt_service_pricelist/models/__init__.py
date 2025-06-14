@@ -4,3 +4,5 @@ from . import dpt_service_management
 from . import product_pricelist
 from . import product_pricelist_item
 from . import product_pricelist_item_detail
+from . import res_partner
+from . import approval_request

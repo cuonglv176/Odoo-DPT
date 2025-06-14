@@ -12,8 +12,9 @@ class DPTVehicleStage(models.Model):
     is_default = fields.Boolean('Is Default')
     country = fields.Selection([
         ('chinese', 'Chinese'),
-        ('vietnamese', 'Vietnamese'),
-    ], default='chinese', string='Country')
+        ('vietnamese1', 'Kho Việt Nam'),
+        ('vietnamese2', 'Chặng cuối Việt Nam'),
+    ], default='chinese', string='Quốc gia')
     active = fields.Boolean('Active', default=True)
     is_draft_stage = fields.Boolean('Is Draft Stage')
     is_ready_stage = fields.Boolean('Is Ready Stage')

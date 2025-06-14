@@ -21,10 +21,12 @@
         'views/export_import.xml',
         'views/stock_picking.xml',
         'views/stock_quant.xml',
+        'views/stock_warehouse.xml',
         'views/menu.xml',
         'wizards/dpt_get_picking_so_wizard.xml',
         'wizards/dpt_shipping_split_wizard.xml',
         'wizards/dpt_picking_confirm_wizard.xml',
         'wizards/stock_quant_separate.xml',
+        'wizards/stock_quant_export.xml',
     ],
 }

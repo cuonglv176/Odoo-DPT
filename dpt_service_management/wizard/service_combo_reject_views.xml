@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_service_combo_reject_wizard_form" model="ir.ui.view">
+        <field name="name">dpt.service.combo.reject.wizard.form</field>
+        <field name="model">dpt.service.combo.reject.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Từ chối phê duyệt">
+                <group>
+                    <field name="combo_id" invisible="1"/>
+                    <field name="rejection_reason" placeholder="Nhập lý do từ chối phê duyệt..."/>
+                </group>
+                <footer>
+                    <button name="action_confirm_reject" string="Xác nhận" type="object" class="btn-primary"/>
+                    <button string="Hủy" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

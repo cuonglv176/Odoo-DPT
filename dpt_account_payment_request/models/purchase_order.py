@@ -14,6 +14,8 @@ class PurchaseOrder(models.Model):
         view_form_id = self.env.ref('dpt_account_payment_request.dpt_view_account_payment_request_form').id
         amount_payment = (self.currency_id.rate or self.last_rate_currency) * sum(
             self.order_line.mapped('price_subtotal3')) + sum(self.sale_service_ids.mapped('amount_total'))
+        default_account_payment_type_id = self.env['dpt.account.payment.type'].search([('code', '=', '7')])
+        default_amount_request = sum(self.order_line.mapped('price_subtotal2'))
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'account.payment',
@@ -35,6 +37,8 @@ class PurchaseOrder(models.Model):
                 'default_partner_bank_id': self.partner_id.bank_ids[:1] if self.partner_id.bank_ids else None,
                 'default_ref': _(f'Thanh toán cho {self.name}'),
                 'default_name': f"Thanh toán tiền mua hàng {self.name} {self.sale_id.name}",
+                'default_type_id': default_account_payment_type_id.id,
+                'default_amount_request': default_amount_request,
             },
         }
 

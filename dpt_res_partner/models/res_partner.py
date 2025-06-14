@@ -7,6 +7,34 @@ import re
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
+    cccd = fields.Char(string='Căn cước công dân', help='Số căn cước công dân hoặc CMND')
+    @api.model
+    def _commercial_fields(self):
+        """ Override to remove vat from commercial fields to allow child companies to have their own tax ID """
+        fields = super(ResPartner, self)._commercial_fields()
+        if 'vat' in fields:
+            fields.remove('vat')
+        return fields
+
+    total_credit = fields.Monetary(
+        compute='_compute_total_credit_debit',
+        string='Total Receivable',
+        help="Total receivable amount for this partner and all its children.")
+
+    total_debit = fields.Monetary(
+        compute='_compute_total_credit_debit',
+        string='Total Payable',
+        help="Total payable amount for this partner and all its children.")
+
+    @api.depends('credit', 'debit', 'child_ids.credit', 'child_ids.debit')
+    def _compute_total_credit_debit(self):
+        for partner in self:
+            # Get all children companies (only companies, not contacts)
+            children = partner.child_ids.filtered(lambda c: c.is_company)
+
+            # Calculate total credit and debit including children
+            partner.total_credit = partner.credit + sum(child.credit for child in children)
+            partner.total_debit = partner.debit + sum(child.debit for child in children)
 
     dpt_user_name = fields.Char('User Name')
     dpt_ul = fields.Char('UL')
@@ -30,7 +58,8 @@ class ResPartner(models.Model):
     dpt_date_of_delivery = fields.Char('Date of delivery')
     company_type = fields.Selection(string='Company Type',
                                     selection=[('person', 'Individual'), ('company', 'Company'),
-                                               ('household_business', 'Household Business')], inverse='_write_company_type', store=True)
+                                               ('household_business', 'Household Business')],
+                                    inverse='_write_company_type', store=True)
     cs_user_id = fields.Many2one('res.users', string='Nhân viên CS')
     is_user = fields.Boolean(string='Là nhân viên', default=False, compute="_compute_check_employee", store=True)
     is_household_business = fields.Boolean(string='Là hộ kinh doanh', default=False)
@@ -40,6 +69,18 @@ class ResPartner(models.Model):
                                             ('shipping_address', 'Shipping Address'),
                                             ('payment_address', 'Payment Address'),
                                             ('other', 'Other')], string='Type Partner')
+    type = fields.Selection(
+        [('legal_entity', 'Pháp nhân'),
+         ('contact', 'Contact'),
+         ('invoice', 'Invoice Address'),
+         ('delivery', 'Delivery Address'),
+         ('other', 'Other Address'),
+         ], string='Address Type',
+        default='contact',
+        help="- Contact: Use this to organize the contact details of employees of a given company (e.g. CEO, CFO, ...).\n"
+             "- Invoice Address: Preferred address for all invoices. Selected by default when you invoice an order that belongs to this company.\n"
+             "- Delivery Address: Preferred address for all deliveries. Selected by default when you deliver an order that belongs to this company.\n"
+             "- Other: Other address for the company (e.g. subsidiary, ...)")
 
     def _write_company_type(self):
         for record in self:

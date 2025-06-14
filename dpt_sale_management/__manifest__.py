@@ -10,6 +10,7 @@
     'depends': ['sale', 'sale_management', 'dpt_service_management', 'uom', 'dpt_service_pricelist'],
     'data': [
         'security/ir.model.access.csv',
+        'wizards/dpt_quotation_print_wizard.xml',
         'wizards/dpt_sale_calculation.xml',
         'views/sale_order.xml',
         'views/res_partner.xml',

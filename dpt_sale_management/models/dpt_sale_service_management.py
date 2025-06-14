@@ -26,7 +26,33 @@ class DPTSaleServiceManagement(models.Model):
     compute_uom_id = fields.Many2one('uom.uom', 'Compute Unit')
     compute_value = fields.Float('Compute Value', default=1)
     note = fields.Text(string='Note')
-    is_create_ticket = fields.Boolean(string='Tạo Ticket', default=True)
+    combo_id = fields.Many2one('dpt.sale.order.service.combo', string='Combo')
+    is_template = fields.Boolean('Is Template', default=False,
+                                 help='Đánh dấu dịch vụ này là template trong combo')
+    price_status = fields.Selection([
+        ('no_price', 'No Price'),
+        ('wait_price', 'Wait Price'),
+        ('quoted', 'Quoted'),
+        ('wait_approve', 'Wait Approve'),
+        ('approved', 'Approved'),
+        ('approved_approval', 'Approved Approval'),
+        ('calculated', 'Calculated')
+    ], string='Price Status', default='no_price', tracking=True)
+    planned_sale_id = fields.Many2one('sale.order', string='Planned Order')
+    is_price_fixed = fields.Boolean(string='Đã chốt giá', copy=False, tracking=True,
+                                    help='Đánh dấu dịch vụ đã được chốt giá với khách')
+    is_confirmed_for_ticket = fields.Boolean(string='Xác nhận tạo ticket', copy=False, tracking=True,
+                                    help='Đánh dấu dịch vụ đã được xác nhận tạo ticket')
+    payment_amount = fields.Monetary(currency_field='currency_id', string='Số tiền cần thanh toán', 
+                                    help='Số tiền cần thanh toán của dịch vụ Thanh toán quốc tế')
+    is_bao_giao = fields.Boolean(default=False, string='Đặc biệt')
+    # is_allin = fields.Boolean(default=False, string='All In')
+
+
+    @api.onchange('service_id')
+    def onchange_update_bao_giao_all_in(self):
+        self.is_bao_giao = self.service_id.is_bao_giao
+        # self.is_allin = self.service_id.is_allin
 
     @api.onchange('price')
     def onchange_check_price(self):
@@ -64,12 +90,11 @@ class DPTSaleServiceManagement(models.Model):
         return res
 
     def action_check_status_sale_order(self):
-        if self.sale_id.locked:
+        if self.sale_id and self.sale_id.locked:
             raise UserError(_(f'Đơn hàng {self.sale_id.name} đang khoá, vui lòng mở khoá trước khi update dịch vụ!!!.'))
 
     def action_confirm_quote(self):
-
-        if self.sale_id.state in ('sent', 'sale'):
+        if not self.sale_id or self.sale_id.state in ('sent', 'sale'):
             return
         a = 1
         # a = 0
@@ -96,25 +121,15 @@ class DPTSaleServiceManagement(models.Model):
     #         raise UserError(_("Cannot lower price, only increase price."))
     #     return res
 
-    @api.depends('qty', 'price', 'compute_value')
+    @api.depends('compute_value', 'price')
     def _compute_amount_total(self):
         for item in self:
-            if item.pricelist_item_id.is_price and item.pricelist_item_id.compute_price == 'table':
-                item.amount_total = item.qty * item.price * item.compute_value
-            elif not item.pricelist_item_id.is_price and item.pricelist_item_id.compute_price == 'table':
-                item.amount_total = item.price
-            else:
-                item.amount_total = item.compute_value * item.price
+            item.amount_total = item.compute_value * item.price
 
-    @api.onchange('price', 'qty', 'compute_value')
+    @api.onchange('price', 'compute_value')
     def onchange_amount_total(self):
-        if self.price and self.qty:
-            if self.pricelist_item_id.is_price and self.pricelist_item_id.compute_price == 'table':
-                self.amount_total = self.price * self.qty * self.compute_value
-            elif not self.pricelist_item_id.is_price and self.pricelist_item_id.compute_price == 'table':
-                self.amount_total = self.price
-            else:
-                self.amount_total = self.compute_value * self.price
+        if self.price and self.compute_value:
+            self.amount_total = self.compute_value * self.price
 
     @api.onchange('service_id')
     def onchange_service(self):
@@ -131,4 +146,18 @@ class DPTSaleServiceManagement(models.Model):
             'price_in_pricelist': 0,
             'compute_value': 1,
             'compute_uom_id': None,
+        })
+
+    def copy_to_sale_order(self, sale_order_id):
+        """
+        Sao chép dịch vụ template vào sale order
+        """
+        if not self.is_template:
+            return False
+
+        return self.copy({
+            'sale_id': sale_order_id,
+            'is_template': False,
+            'combo_id': self.combo_id.id,
+            'price_status': 'calculated',
         })

@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_service_combo_form" model="ir.ui.view">
+        <field name="name">dpt.service.combo.form</field>
+        <field name="model">dpt.service.combo</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <!-- Các nút theo luồng mới -->
+                    <button name="action_submit_approval" string="Gửi phê duyệt" type="object" class="btn-primary"
+                            invisible="state != 'draft'" />
+                    <button name="action_activate" string="Phê duyệt" type="object" class="btn-primary"
+                            invisible="state != 'pending' or not approver_ids"
+                            groups="base.group_system" />
+                    <button name="action_reject" string="Từ chối" type="object" class="btn-danger"
+                            invisible="state != 'pending' or not approver_ids"
+                            groups="base.group_system" />
+                    <button name="action_suspend" string="Tạm dừng" type="object"
+                            invisible="state != 'active'" />
+                    <button name="action_resume" string="Kích hoạt lại" type="object" class="btn-primary"
+                            invisible="state != 'suspended'" />
+                    <button name="action_draft" string="Chuyển về nháp" type="object"
+                            invisible="state not in ['rejected', 'cancelled']" />
+                    <button name="action_cancel" string="Hủy" type="object"
+                            invisible="state in ['cancelled', 'expired', 'draft']" />
+                    <button name="action_create_new_version" string="Tạo phiên bản mới" type="object"
+                            class="btn-secondary" invisible="state == 'draft'" />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,pending,active,suspended,expired,cancelled" />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_approval" type="object" class="oe_stat_button" icon="fa-thumbs-up"
+                                invisible="not approval_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Phê duyệt</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="not rejection_reason">
+                        <field name="rejection_reason" readonly="1"/>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Tên gói combo"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="version"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="revenue_account_id"/>
+                            <field name="expense_account_id"/>
+                            <field name="approver_ids" widget="many2many_tags" readonly="1"
+                                   invisible="state != 'pending'"/>
+                        </group>
+                        <group>
+                            <field name="price" widget="monetary"/>
+                            <field name="currency_id" options="{'no_create': True}"/>
+                            <field name="total_services"/>
+                            <field name="total_price" widget="monetary"/>
+                            <field name="active" widget="boolean_toggle"/>
+                            <field name="approval_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Mô tả" name="description">
+                            <field name="description" placeholder="Mô tả chi tiết về gói combo dịch vụ..."/>
+                        </page>
+                        <page string="Dịch vụ trong gói" name="services">
+                            <field name="service_ids" domain="[('child_ids', '=', False)]">
+                                <tree>
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                    <field name="service_type_id"/>
+                                    <field name="department_id"/>
+                                    <field name="price" sum="Tổng"/>
+                                    <field name="currency_id"/>
+                                    <field name="uom_id"/>
+                                    <field name="is_bao_giao" widget="boolean_toggle"/>
+                                    <field name="is_allin" widget="boolean_toggle"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <!-- Thêm tab mới để hiển thị các đơn vị -->
+                        <page string="Đơn vị" name="units">
+                            <field name="service_uom_ids" invisible="1"/>
+                            <field name="service_uom_summary" invisible="1"/>
+                            <div class="alert alert-info" role="alert" invisible="service_uom_ids">
+                                <p>Không có đơn vị nào được tìm thấy. Vui lòng thêm dịch vụ vào combo.</p>
+                            </div>
+                            <!-- Hiển thị bảng đơn vị theo dịch vụ -->
+                            <field name="service_ids" invisible="not service_uom_ids">
+                                <tree create="false" edit="false" delete="false">
+                                    <field name="name"/>
+                                    <field name="uom_ids" widget="many2many_tags"/>
+                                </tree>
+                            </field>
+                            <!-- Hiển thị tất cả các đơn vị được sử dụng -->
+                            <separator string="Tất cả đơn vị được sử dụng" invisible="not service_uom_ids"/>
+                            <field name="service_uom_ids" invisible="not service_uom_ids">
+                                <tree create="false" edit="false" delete="false">
+                                    <field name="name"/>
+                                    <field name="category_id" groups="uom.group_uom"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <!-- Thêm tab mới cho các trường thông tin -->
+                        <page string="Các trường thông tin" name="required_fields">
+                            <button name="sync_required_fields_from_services" string="Đồng bộ từ dịch vụ"
+                                    type="object" class="btn-secondary mb-2"/>
+                            <field name="required_fields_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="fields_type"/>
+                                    <field name="type"/>
+                                    <field name="description"/>
+                                    <field name="uom_id"/>
+                                    <field name="using_calculation_price"/>
+                                    <field name="default_compute_from"/>
+                                </tree>
+                                <form>
+                                    <sheet>
+                                        <group>
+                                            <group>
+                <field name="name"/>
+                                                <field name="description"/>
+                                                <field name="fields_type"/>
+                                                <field name="type"/>
+                                                <field name="field"/>
+                <field name="code"/>
+                                                <field name="is_template"/>
+                </group>
+                                            <group>
+                                                <field name="uom_id"/>
+                                                <field name="using_calculation_price"/>
+                                                <field name="default_compute_from"/>
+                                            </group>
+                                        </group>
+                                        <notebook>
+                                            <page string="Selection Value" attrs="{'invisible': [('fields_type', '!=', 'selection')]}">
+                                                <field name="selection_value_ids">
+                                                    <tree editable="bottom">
+                                                        <field name="name"/>
+                                                    </tree>
+        </field>
+                                            </page>
+                                        </notebook>
+                                    </sheet>
+                                </form>
+        </field>
+                        </page>
+                        <!-- Thêm tab mới cho kế toán -->
+                        <page string="Kế toán" name="accounting">
+                            <group>
+                                <group>
+                                    <field name="revenue_account_id" options="{'no_create': True}"/>
+                                </group>
+                                <group>
+                                    <field name="expense_account_id" options="{'no_create': True}"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Thông tin phê duyệt" name="approval_info"
+                              invisible="not approval_date">
+                            <group>
+                                <field name="approval_date"/>
+                                <field name="approved_by"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_service_combo_tree" model="ir.ui.view">
+        <field name="name">dpt.service.combo.tree</field>
+        <field name="model">dpt.service.combo</field>
+        <field name="arch" type="xml">
+            <tree decoration-muted="state == 'cancelled'"
+                  decoration-danger="state == 'expired'"
+                  decoration-success="state == 'active'"
+                  decoration-warning="state == 'pending'"
+                  decoration-info="state == 'suspended'">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="version"/>
+                <field name="price" sum="Tổng"/>
+                <field name="total_price" sum="Tổng giá trị"/>
+                <field name="currency_id"/>
+                <field name="total_services"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_service_combo_search" model="ir.ui.view">
+        <field name="name">dpt.service.combo.search</field>
+        <field name="model">dpt.service.combo</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <filter string="Đang hoạt động" name="active" domain="[('state', '=', 'active')]"/>
+                <filter string="Nháp" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Chờ phê duyệt" name="pending" domain="[('state', '=', 'pending')]"/>
+                <filter string="Bị từ chối" name="rejected" domain="[('state', '=', 'rejected')]"/>
+                <filter string="Tạm dừng" name="suspended" domain="[('state', '=', 'suspended')]"/>
+                <filter string="Hết hạn" name="expired" domain="[('state', '=', 'expired')]"/>
+                <filter string="Đã hủy" name="cancelled" domain="[('state', '=', 'cancelled')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Trạng thái" name="groupby_state" context="{'group_by': 'state'}"/>
+                    <filter string="Phiên bản" name="groupby_version" context="{'group_by': 'version'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_service_combo" model="ir.actions.act_window">
+        <field name="name">Gói combo dịch vụ</field>
+        <field name="res_model">dpt.service.combo</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo gói combo dịch vụ đầu tiên!
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_service_combo"
+              name="Gói combo dịch vụ"
+              parent="service_management_root_menu"
+              action="action_service_combo"
+              sequence="16"/>
+</odoo>

@@ -13,7 +13,7 @@
                 <field name="is_ready_stage" widget="boolean_toggle"/>
                 <field name="is_finish_stage" widget="boolean_toggle"/>
                 <field name="active" widget="boolean_toggle"/>
-                <field name="country"/>
+                <field name="country" string="Quốc gia"/>
             </tree>
         </field>
     </record>

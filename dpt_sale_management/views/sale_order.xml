@@ -15,7 +15,7 @@
                 <field name="is_quotation" invisible="1"/>
                 <field name="show_action_calculation" invisible="1"/>
                 <field name="active" invisible="1"/>
-                <button string="Export Quotation" name="export_excel_quotation" type="object"/>
+                <button string="Export Quotation" name="export_excel_quotation_popup" type="object"/>
             </button>
             <button name="action_quotation_send" position="attributes">
                 <attribute name="invisible">1</attribute>
@@ -23,28 +23,86 @@
             <button name="action_preview_sale_order" position="attributes">
                 <attribute name="invisible">1</attribute>
             </button>
-<!--            <button name="action_unlock" position="attributes">-->
-<!--                <attribute name="invisible">0</attribute>-->
-<!--            </button>-->
-<!--            <button name="action_lock" position="attributes">-->
-<!--                <attribute name="invisible">0</attribute>-->
-<!--            </button>-->
             <page name="optional_products" position="attributes">
                 <attribute name="invisible">1</attribute>
             </page>
             <field name="sale_order_template_id" position="after">
-                <field name="type_so_route"/>
-                <field name="line_transfer"/>
                 <field name="employee_sale"/>
                 <field name="employee_cs"/>
                 <field name="times_of_quotation" readonly="1"/>
+                <field name="settle_by" widget="radio" options="{'horizontal': True}"/>
+                <field name="quote_type" widget="radio" options="{'horizontal': True}"/>
             </field>
-            <xpath expr="//page[@name='order_lines']/field[@name='order_line']/tree/field[@name='product_template_id']" position="before">
+            <xpath expr="//page[@name='order_lines']/field[@name='order_line']/tree/field[@name='product_template_id']"
+                   position="before">
                 <field name="legal_xhd"/>
             </xpath>
-            <!--            <button name="action_cancel" position="replace"/>-->
+
             <page name="order_lines" position="before">
-                <page name="sale_service" string="Service">
+                <!-- Tab para servicios planificados -->
+                <page name="planned_services" string="Dịch vụ dự kiến">
+                    <separator string="COMBO"/>
+                    <field name="planned_service_combo_ids" readonly="state == 'cancel' or locked">
+                        <tree editable="bottom">
+                            <field name="combo_id"/>
+                            <field name="code"/>
+                            <field name="description"/>
+                            <field name="compute_uom_id" readonly="1"/>
+                            <field name="qty"/>
+                            <field name="price" sum="Đơn giá"/>
+                            <field name="amount_discount" string="Khuyến mãi"/>
+                            <field name="amount_total" sum="Thành tiền"/>
+                            <field name="is_price_fixed" widget="boolean_toggle"/>
+                        </tree>
+                    </field>
+                    <separator string="DỊCH VỤ"/>
+                    <field name="planned_sale_service_ids" readonly="state == 'cancel' or locked">
+                        <tree editable="bottom">
+                            <field name="id" string="ID"/>
+                            <field name="sequence" widget="handle"/>
+                            <field name="currency_id" column_invisible="1" force_save="1"/>
+                            <field name="currency_cny_id" optional="hide"/>
+                            <field name="service_id"/>
+                            <field name="uom_id" column_invisible="1"/>
+                            <field name="compute_value" readonly="1" force_save="1"/>
+                            <field name="compute_uom_id" force_save="1"/>
+                            <field name="qty" column_invisible="1" force_save="1"/>
+                            <field name="uom_ids" column_invisible="1"/>
+                            <field name="price" readonly="0" force_save="1" context="{'check_price': True}"/>
+                            <field name="price_cny" readonly="0" force_save="1"/>
+                            <field name="old_price" column_invisible="0" force_save="1"/>
+                            <field name="amount_total" readonly="1" force_save="1"/>
+                            <field name="department_id" context="{'dpt_sale_management': 1}"/>
+                            <field name="note"/>
+                            <field name="is_price_fixed" widget="boolean_toggle"/>
+                            <field name="is_bao_giao" widget="boolean_toggle"/>
+<!--                            <field name="is_allin" widget="boolean_toggle"/>-->
+
+                        </tree>
+                    </field>
+                    <group col="6" class="mt-2 mt-md-0">
+                        <group class="oe_subtotal_footer" colspan="2">
+                            <field name="planned_service_total_amount" colspan="2" readonly="1"/>
+                        </group>
+                        <div class="clearfix"/>
+                    </group>
+                </page>
+
+                <!-- Tab para servicios reales -->
+                <page name="sale_service" string="Dịch vụ thực tế">
+                    <separator string="COMBO"/>
+                    <field name="service_combo_ids" readonly="state == 'cancel' or locked">
+                        <tree editable="bottom">
+                            <field name="combo_id"/>
+                            <field name="code"/>
+                            <field name="description"/>
+                            <field name="qty"/>
+                            <field name="price" sum="Đơn giá"/>
+                            <field name="amount_discount" string="Khuyến mãi"/>
+                            <field name="amount_total" sum="Thành tiền"/>
+                        </tree>
+                    </field>
+                    <separator string="DỊCH VỤ CHI TIẾT"/>
                     <field name="sale_service_ids" readonly="state == 'cancel' or locked">
                         <tree editable="bottom">
                             <field name="id" string="ID"/>
@@ -52,33 +110,29 @@
                             <field name="currency_id" column_invisible="1" force_save="1"/>
                             <field name="currency_cny_id" optional="hide"/>
                             <field name="service_id"/>
-                            <field name="uom_id"/>
-                            <!--                            <field name="description"/>-->
+                            <field name="uom_id" column_invisible="1"/>
                             <field name="compute_value" readonly="1" force_save="1"/>
-                            <field name="compute_uom_id" readonly="1" force_save="1"/>
+                            <field name="compute_uom_id" force_save="1"/>
                             <field name="qty" column_invisible="1" force_save="1"/>
                             <field name="uom_ids" column_invisible="1"/>
                             <field name="price" readonly="0" force_save="1" context="{'check_price': True}"/>
                             <field name="price_cny" readonly="0" force_save="1"/>
                             <field name="old_price" column_invisible="0" force_save="1"/>
-                            <!--                            <field name="currency_id" invisible="1"/>-->
                             <field name="amount_total" readonly="1" force_save="1"/>
                             <field name="department_id" context="{'dpt_sale_management': 1}"/>
-                            <field name="is_create_ticket" widget="boolean_toggle"/>
+                            <field name="is_bao_giao" widget="boolean_toggle"/>
+<!--                            <field name="is_allin" widget="boolean_toggle"/>-->
                             <field name="note"/>
                         </tree>
                     </field>
                     <group col="6" class="mt-2 mt-md-0">
                         <group class="oe_subtotal_footer" colspan="2">
-                            <!--                            <field name="service_total_untax_amount" colspan="2" readonly="1"/>-->
-                            <!--                            <field name="service_tax_amount" colspan="2" readonly="1"/>-->
                             <field name="service_total_amount" colspan="2" readonly="1"/>
                         </group>
                         <div class="clearfix"/>
                     </group>
                 </page>
             </page>
-
             <page name="order_lines" position="after">
                 <page name="sale_field" string="Other Fields">
                     <field name="fields_ids" readonly="state == 'cancel' or locked">
@@ -86,6 +140,8 @@
                             <field name="using_calculation_price" column_invisible="1"/>
                             <field name="sale_service_id" column_invisible="1"/>
                             <field name="sequence" widget="handle"/>
+                            <field name="sale_combo_id_key" string="ID Combo"/>
+                            <field name="combo_id"/>
                             <field name="sale_service_id_key" string="ID Dịch vụ"/>
                             <field name="service_id"/>
                             <field name="fields_id"/>
@@ -100,13 +156,13 @@
                             <field name="selection_value_id" invisible="fields_type != 'selection'"
                                    required="type == 'required' and fields_type == 'selection'"
                                    domain="[('fields_id','=',fields_id)]"/>
-
                             <field name="uom_id" invisible="not using_calculation_price" column_invisible="1"
                                    required="using_calculation_price" options="{'no_create': True, 'no_open': True}"/>
                         </tree>
                     </field>
                 </page>
             </page>
+
             <xpath expr="//label[@for='pricelist_id']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
@@ -134,10 +190,6 @@
                     </span>
                 </div>
             </field>
-<!--            <notebook position="after">-->
-<!--                <label for="note" string="Note"/>-->
-<!--                <field name="note"/>-->
-<!--            </notebook>-->
         </field>
     </record>
 

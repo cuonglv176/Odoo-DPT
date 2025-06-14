@@ -1,0 +1,586 @@
+<data>
+  <xpath expr="//button[@name='create_new_contract']" position="replace"/>
+  <xpath expr="//form[1]/header[1]/button[@name='action_quotation_send'][4]" position="replace"/>
+  <xpath expr="//form[1]/header[1]/button[@name='action_quotation_send'][3]" position="attributes">
+    <attribute name="groups"/>
+    <attribute name="id"/>
+    <attribute name="invisible"/>
+    <attribute name="name"/>
+    <attribute name="string"/>
+    <attribute name="type"/>
+  </xpath>
+  <xpath expr="//form[1]/div[1]" position="inside">
+    <xpath expr="//field[@name='partner_credit_warning']" position="move"/>
+  </xpath>
+  <xpath expr="//button[@name='action_view_project_ids']" position="before">
+    <xpath expr="//field[@name='show_task_button']" position="move"/>
+    <xpath expr="//field[@name='show_project_button']" position="move"/>
+    <xpath expr="//field[@name='show_create_project_button']" position="move"/>
+    <xpath expr="//field[@name='project_ids']" position="move"/>
+    <xpath expr="//field[@name='is_product_milestone']" position="move"/>
+  </xpath>
+  <xpath expr="//button[@name='action_view_project_ids']" position="inside">
+    <xpath expr="//field[@name='project_count']" position="move"/>
+  </xpath>
+  <xpath expr="//button[@name='action_view_milestone']" position="inside">
+    <xpath expr="//field[@name='milestone_count']" position="move"/>
+  </xpath>
+  <xpath expr="//button[@name='action_view_task']" position="inside">
+    <xpath expr="//field[@name='tasks_count']" position="move"/>
+  </xpath>
+  <xpath expr="//button[@name='action_view_task']" position="after">
+    <xpath expr="//field[@name='planning_first_sale_line_id']" position="move"/>
+    <xpath expr="//field[@name='planning_initial_date']" position="move"/>
+  </xpath>
+  <xpath expr="//form[1]/sheet[1]/div[@name='button_box']/button[@name='action_view_planning']/div[1]/span[1]" position="inside">
+    <xpath expr="//field[@name='planning_hours_to_plan']" position="move"/>
+  </xpath>
+  <xpath expr="//form[1]/sheet[1]/div[@name='button_box']/button[@name='469']/div[1]/span[1]" position="inside">
+    <xpath expr="//field[@name='planning_hours_planned']" position="move"/>
+  </xpath>
+  <xpath expr="//button[@name='action_view_delivery']" position="inside">
+    <xpath expr="//field[@name='delivery_count']" position="move"/>
+  </xpath>
+  <xpath expr="//button[@name='861']" position="inside">
+    <xpath expr="//field[@name='expense_count']" position="move"/>
+  </xpath>
+  <xpath expr="//button[@name='action_view_invoice']" position="inside">
+    <xpath expr="//field[@name='invoice_count']" position="move"/>
+  </xpath>
+  <xpath expr="//button[@name='action_open_change_price_approval']" position="inside">
+    <xpath expr="//field[@name='approval_count']" position="move"/>
+  </xpath>
+  <xpath expr="//form[1]/sheet[1]/div[@name='button_box']/button[@name='action_view_purchase_orders']/div[1]/span[1]" position="inside">
+    <xpath expr="//field[@name='purchase_order_count']" position="move"/>
+  </xpath>
+  <xpath expr="//button[@name='get_tickets']" position="inside">
+    <xpath expr="//field[@name='count_ticket']" position="move"/>
+  </xpath>
+  <xpath expr="//button[@name='action_open_po']" position="inside">
+    <xpath expr="//field[@name='product_order_count']" position="move"/>
+  </xpath>
+  <xpath expr="//button[@name='action_show_main_incoming_picking']" position="inside">
+    <xpath expr="//field[@name='number_main_incoming_picking']" position="move"/>
+  </xpath>
+  <xpath expr="//button[@name='action_show_transfer']" position="inside">
+    <xpath expr="//field[@name='number_transfer']" position="move"/>
+  </xpath>
+  <xpath expr="//button[@name='action_show_transfer']" position="after">
+    <xpath expr="//field[@name='is_declaration']" position="move"/>
+  </xpath>
+  <xpath expr="//form[1]/sheet[1]/div[@name='button_box']/button[@name='action_open_declaration']/div[1]/span[1]" position="inside">
+    <xpath expr="//field[@name='declaration_count']" position="move"/>
+  </xpath>
+  <xpath expr="//form[1]/sheet[1]/div[@name='button_box']/button[@name='action_open_declaration_line']/div[1]/span[1]" position="inside">
+    <xpath expr="//field[@name='declaration_line_count']" position="move"/>
+  </xpath>
+  <xpath expr="//group[@name='partner_details']" position="inside">
+    <!--<xpath expr="//field[@name='partner_id']" position="move"/>-->
+    <!--<field name="partner_id" invisiblle="0"/>-->
+    <field name="partner_invoice_id" invisiblle="1"/>
+    <xpath expr="//field[@name='delivery_set']" position="move"/>
+    <xpath expr="//field[@name='is_all_service']" position="move"/>
+  </xpath>
+  <xpath expr="//group[@name='partner_details']" position="inside">
+    <xpath expr="//field[@name='partner_shipping_id']" position="move"/>
+    <xpath expr="//field[@name='sale_order_template_id']" position="move"/>
+    <xpath expr="//field[@name='type_so_route']" position="move"/>
+    <xpath expr="//field[@name='line_transfer']" position="move"/>
+    <xpath expr="//field[@name='employee_sale']" position="move"/>
+    <xpath expr="//field[@name='employee_cs']" position="move"/>
+    <xpath expr="//field[@name='times_of_quotation']" position="move"/>
+  </xpath>
+  <xpath expr="//form[1]/sheet[1]/group[@name='sale_header']/group[@name='order_details']/div[1]" position="before">
+    <xpath expr="//field[@name='validity_date']" position="move"/>
+  </xpath>
+  <xpath expr="//form[1]/sheet[1]/group[@name='sale_header']/group[@name='order_details']/div[2]" position="after">
+    <xpath expr="//form[1]/sheet[1]/group[@name='sale_header']/group[@name='order_details']/field[@name='date_order'][2]" position="move"/>
+    <xpath expr="//field[@name='has_active_pricelist']" position="move"/>
+    <xpath expr="//field[@name='show_update_pricelist']" position="move"/>
+  </xpath>
+  <xpath expr="//button[@name='action_update_prices']" position="before">
+    <xpath expr="//field[@name='update_pricelist']" position="move"/>
+  </xpath>
+  <xpath expr="//form[1]/sheet[1]/group[@name='sale_header']/group[@name='order_details']/div[3]" position="after">
+    <xpath expr="//field[@name='country_code']" position="move"/>
+  </xpath>
+  <xpath expr="//form[1]/sheet[1]/group[@name='sale_header']/group[@name='order_details']/div[3]" position="after">
+    <xpath expr="//form[1]/sheet[1]/group[@name='sale_header']/group[@name='order_details']/field[@name='pricelist_id']" position="move"/>
+    <xpath expr="//field[@name='tax_country_id']" position="move"/>
+  </xpath>
+  <xpath expr="//form[1]/sheet[1]/group[@name='sale_header']/group[@name='order_details']/label[3]" position="before">
+    <xpath expr="//field[@name='payment_term_id']" position="move"/>
+  </xpath>
+  <xpath expr="//form[1]/sheet[1]/group[@name='sale_header']/group[@name='order_details']/div[4]/span[1]" position="before">
+    <xpath expr="//field[@name='weight']" position="move"/>
+  </xpath>
+  <xpath expr="//form[1]/sheet[1]/group[@name='sale_header']/group[@name='order_details']/div[5]/span[1]" position="before">
+    <xpath expr="//field[@name='volume']" position="move"/>
+  </xpath>
+  <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='sale_service']/group[1]" position="before">
+    <xpath expr="//field[@name='sale_service_ids']" position="move"/>
+  </xpath>
+  <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='sale_service']/group[1]/group[1]" position="inside">
+    <xpath expr="//field[@name='service_total_amount']" position="move"/>
+    <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='sale_service']/group[1]/group[1]/field[@name='amount_total']" position="move"/>
+    <xpath expr="//field[@name='purchase_amount_total']" position="move"/>
+    <xpath expr="//field[@name='payment_amount_total']" position="move"/>
+    <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='sale_service']/group[1]/group[1]/field[@name='deposit_amount_total']" position="move"/>
+    <xpath expr="//field[@name='invoice_amount_total']" position="move"/>
+  </xpath>
+  <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='order_lines']/group[@name='note_group']/group[1]" position="inside">
+    <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='order_lines']/group[@name='note_group']/group[1]/field[@name='note']" position="move"/>
+  </xpath>
+  <xpath expr="//group[@name='sale_total']" position="inside">
+    <xpath expr="//field[@name='tax_totals']" position="move"/>
+  </xpath>
+  <xpath expr="//page[@name='dpt_export_import']" position="inside">
+    <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='dpt_export_import']/field[@name='order_line']" position="move"/>
+  </xpath>
+  <xpath expr="//page[@name='sale_field']" position="inside">
+    <xpath expr="//field[@name='fields_ids']" position="move"/>
+  </xpath>
+  <xpath expr="//page[@name='optional_products']" position="inside">
+    <xpath expr="//field[@name='sale_order_option_ids']" position="move"/>
+  </xpath>
+  <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='other_information']/group[1]/group[@name='sales_person']/label[1]" position="before">
+    <xpath expr="//field[@name='user_id']" position="move"/>
+    <xpath expr="//field[@name='team_id']" position="move"/>
+    <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='other_information']/group[1]/group[@name='sales_person']/field[@name='company_id']" position="move"/>
+    <xpath expr="//field[@name='require_signature']" position="move"/>
+  </xpath>
+  <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='other_information']/group[1]/group[@name='sales_person']/div[1]/span[1]" position="before">
+    <xpath expr="//field[@name='require_payment']" position="move"/>
+  </xpath>
+  <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='other_information']/group[1]/group[@name='sales_person']/div[1]/span[1]" position="after">
+    <xpath expr="//field[@name='prepayment_percent']" position="move"/>
+  </xpath>
+  <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='other_information']/group[1]/group[@name='sales_person']/div[1]" position="after">
+    <xpath expr="//field[@name='reference']" position="move"/>
+    <xpath expr="//field[@name='client_order_ref']" position="move"/>
+    <xpath expr="//field[@name='tag_ids']" position="move"/>
+  </xpath>
+  <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='other_information']/group[1]/group[@name='sale_info']/label[1]" position="before">
+    <xpath expr="//field[@name='show_update_fpos']" position="move"/>
+  </xpath>
+  <xpath expr="//button[@name='action_update_taxes']" position="before">
+    <xpath expr="//field[@name='fiscal_position_id']" position="move"/>
+  </xpath>
+  <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='other_information']/group[1]/group[@name='sale_info']/div[1]" position="after">
+    <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='other_information']/group[1]/group[@name='sale_info']/field[@name='partner_invoice_id']" position="move"/>
+    <xpath expr="//field[@name='analytic_account_id']" position="move"/>
+    <xpath expr="//field[@name='visible_project']" position="move"/>
+    <xpath expr="//field[@name='project_id']" position="move"/>
+    <xpath expr="//field[@name='journal_id']" position="move"/>
+  </xpath>
+  <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='other_information']/group[1]/group[@name='sale_info']/div[1]" position="after">
+    <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='other_information']/group[1]/group[@name='sale_info']/field[@name='invoice_status'][2]" position="move"/>
+  </xpath>
+  <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='other_information']/group[1]/group[@name='sale_shipping']/label[1]" position="before">
+    <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='other_information']/group[1]/group[@name='sale_shipping']/field[@name='warehouse_id'][2]" position="move"/>
+    <xpath expr="//field[@name='incoterm']" position="move"/>
+    <xpath expr="//field[@name='incoterm_location']" position="move"/>
+    <xpath expr="//field[@name='picking_policy']" position="move"/>
+    <xpath expr="//field[@name='shipping_weight']" position="move"/>
+  </xpath>
+  <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='other_information']/group[1]/group[@name='sale_shipping']/div[1]/span[1]" position="before">
+    <xpath expr="//field[@name='commitment_date']" position="move"/>
+  </xpath>
+  <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='other_information']/group[1]/group[@name='sale_shipping']/div[1]/span[1]" position="inside">
+    <xpath expr="//field[@name='expected_date']" position="move"/>
+    <xpath expr="//field[@name='show_json_popover']" position="move"/>
+    <xpath expr="//field[@name='json_popover']" position="move"/>
+  </xpath>
+  <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='other_information']/group[1]/group[@name='sale_shipping']/div[1]" position="after">
+    <xpath expr="//field[@name='effective_date']" position="move"/>
+    <xpath expr="//field[@name='delivery_status']" position="move"/>
+  </xpath>
+  <xpath expr="//group[@name='sale_reporting']" position="inside">
+    <xpath expr="//field[@name='origin']" position="move"/>
+    <xpath expr="//field[@name='opportunity_id']" position="move"/>
+    <xpath expr="//field[@name='campaign_id']" position="move"/>
+    <xpath expr="//field[@name='medium_id']" position="move"/>
+    <xpath expr="//field[@name='source_id']" position="move"/>
+  </xpath>
+  <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='customer_signature']/group[1]" position="inside">
+    <xpath expr="//field[@name='signed_by']" position="move"/>
+    <xpath expr="//field[@name='signed_on']" position="move"/>
+    <xpath expr="//field[@name='signature']" position="move"/>
+  </xpath>
+  <xpath expr="//form[1]/div[2]" position="inside">
+    <xpath expr="//field[@name='message_follower_ids']" position="move"/>
+    <xpath expr="//field[@name='activity_ids']" position="move"/>
+    <xpath expr="//field[@name='message_ids']" position="move"/>
+  </xpath>
+  <xpath expr="/form[1]/header[1]/button[12]" position="replace"/>
+  <xpath expr="/form[1]/header[1]/button[9]" position="replace"/>
+  <xpath expr="/form[1]/sheet[1]/notebook[1]/page[5]/field[1]" position="inside">
+    <form>
+      <sheet string="dpt.sale.order.fields">
+        <group>
+          <group>
+            <field name="sequence"/>
+            <field name="service_id"/>
+            <field name="value_char"/>
+            <field name="value_date"/>
+            <field name="type"/>
+            <field name="using_calculation_price"/>
+            <field name="ticket_id"/>
+            <field name="picking_id"/>
+          </group>
+          <group>
+            <field name="sale_id"/>
+            <field name="fields_id"/>
+            <field name="value_integer"/>
+            <field name="selection_value_id"/>
+            <field name="fields_type"/>
+            <field name="uom_id"/>
+            <field name="approval_id"/>
+          </group>
+        </group>
+        <group>
+          <separator/>
+        </group>
+      </sheet>
+    </form>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[1]/field[7]" position="attributes">
+    <attribute name="string">Combo dịch vụ</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[1]/field[6]" position="replace"/>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[2]/field[12]" position="replace"/>
+  <xpath expr="/form[1]/sheet[1]/notebook[1]/page[2]/field[1]/tree[1]//field[@name='legal_xhd']" position="attributes">
+    <attribute name="string">Pháp nhân xuất hóa đơn</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/notebook[1]/page[4]/field[1]/tree[1]//field[@name='value_char']" position="attributes">
+    <attribute name="string">Kiểu chữ</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/notebook[1]/page[4]/field[1]/tree[1]//field[@name='selection_value_id']" position="attributes">
+    <attribute name="string">Kiểu lựa chọn</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/notebook[1]/page[3]/field[1]" position="inside">
+    <form string="Sales Order Item" edit="false">
+      <field name="display_type" invisible="1"/>
+      <sheet>
+        <div class="oe_title">
+          <h1>
+            <field name="display_name"/>
+          </h1>
+        </div>
+        <group>
+          <group>
+            <field name="product_updatable" invisible="1"/>
+            <field name="order_id" readonly="1" force_save="1"/>
+            <field name="product_uom_category_id" invisible="1"/>
+            <field name="product_uom_readonly" invisible="1"/>
+            <field name="qty_delivered_method" invisible="1"/>
+            <field name="state" invisible="1"/>
+            <field name="product_id" readonly="id and not product_updatable" required="not display_type" force_save="1" widget="many2one_barcode"/>
+            <field name="name"/>
+            <field name="product_uom_qty"/>
+            <field name="qty_delivered" invisible="state not in ['sale', 'done']" readonly="qty_delivered_method != 'manual'"/>
+            <field name="qty_invoiced" invisible="state not in ['sale', 'done']"/>
+            <field name="product_uom" force_save="1" groups="uom.group_uom" readonly="product_uom_readonly" required="not display_type"/>
+            <field name="product_uom" groups="!uom.group_uom" invisible="1"/>
+            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+            <field name="order_partner_id" invisible="1"/>
+            <field name="display_type" invisible="1"/>
+            <field name="product_updatable" invisible="1"/>
+          </group>
+          <group>
+            <field name="company_id" invisible="1"/>
+            <field name="tax_country_id" invisible="1"/>
+            <field name="price_unit"/>
+            <field name="discount" groups="product.group_discount_per_so_line"/>
+            <field name="price_subtotal" widget="monetary"/>
+            <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" context="{'search_view_ref': 'account.account_tax_view_search'}" domain="[('type_tax_use', '=', 'sale'), ('company_id', '=', company_id), ('country_id', '=', tax_country_id)]" readonly="qty_invoiced &gt; 0"/>
+            <field name="price_tax" widget="monetary"/>
+            <field name="price_total" widget="monetary"/>
+            <field name="currency_id" invisible="1"/>
+          </group>
+        </group>
+      </sheet>
+    </form>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[2]/div[5]" position="after">
+    <field name="x_studio_l_n_thanh_ton_h"/>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[2]/field[12]" position="attributes">
+    <attribute name="string">Là đơn thanh toán hộ</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[2]/field[12]" position="attributes">
+    <attribute name="widget">boolean_toggle</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/div[1]/button[8]/field[1]" position="attributes">
+    <attribute name="string">Tất toán</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/div[1]/button[10]/div[1]/span[1]/field[1]" position="attributes">
+    <attribute name="string">Thanh toán</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/div[1]/button[10]/div[1]/span[1]/field[1]" position="attributes">
+    <attribute name="string"/>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[2]/field[12]" position="attributes">
+    <attribute name="force_save">1</attribute>
+    <attribute name="readonly">True</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[2]/field[12]" position="after">
+    <field name="x_studio_luu_y_khi_tat_toan"/>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[2]/field[13]" position="attributes">
+    <attribute name="help">Lưu ý khi tất toán</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[2]/field[13]" position="attributes">
+    <attribute name="help"/>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[2]/field[13]" position="attributes">
+    <attribute name="string">Lưu ý khi tất toán</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[1]/field[2]" position="attributes">
+    <attribute name="invisible">True</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[1]/field[7]" position="attributes">
+    <attribute name="force_save">1</attribute>
+    <attribute name="readonly">True</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[1]/field[8]" position="attributes">
+    <attribute name="force_save">1</attribute>
+    <attribute name="readonly">True</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[1]/field[7]" position="attributes">
+    <attribute name="force_save">0</attribute>
+    <attribute name="readonly">False</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[1]/field[8]" position="attributes">
+    <attribute name="force_save">0</attribute>
+    <attribute name="readonly">False</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[1]/field[7]" position="attributes">
+    <attribute name="force_save">1</attribute>
+    <attribute name="readonly">True</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[1]/field[8]" position="attributes">
+    <attribute name="force_save">1</attribute>
+    <attribute name="readonly">True</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[2]/field[3]" position="after">
+    <xpath expr="/form[1]/sheet[1]/group[1]/group[1]/field[8]" position="move"/>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[2]/field[3]" position="after">
+    <xpath expr="/form[1]/sheet[1]/group[1]/group[1]/field[7]" position="move"/>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[2]/field[3]" position="after">
+    <xpath expr="/form[1]/sheet[1]/group[1]/group[2]/field[14]" position="move"/>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[1]/field[9]" position="after">
+    <xpath expr="/form[1]/sheet[1]/group[1]/group[2]/field[15]" position="move"/>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/notebook[1]/page[1]/field[1]/tree[1]//field[@name='uom_id']" position="attributes">
+    <attribute name="required">True</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/notebook[1]/page[1]/field[1]/tree[1]//field[@name='price_cny']" position="attributes">
+    <attribute name="readonly">True</attribute>
+  </xpath>
+  <xpath expr="/form[1]/header[1]/button[12]" position="attributes">
+    <attribute name="invisible">state == "draft"</attribute>
+  </xpath>
+  <xpath expr="/form[1]/header[1]/button[12]" position="attributes">
+    <attribute name="invisible">state != "draft"</attribute>
+  </xpath>
+  <xpath expr="/form[1]/header[1]/button[16]" position="attributes">
+    <attribute name="invisible">state in ["draft", "sent", "sale"] or not id or locked</attribute>
+  </xpath>
+  <xpath expr="/form[1]/header[1]/button[16]" position="attributes">
+    <attribute name="invisible">state not in ["draft", "sent", "sale"] or not id or locked</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[2]/field[4]" position="attributes">
+    <attribute name="invisible">True</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/notebook[1]/page[1]/field[1]/tree[1]//field[@name='compute_value']" position="attributes">
+    <attribute name="readonly">False</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/notebook[1]/page[1]/field[1]/tree[1]//field[@name='uom_id']" position="attributes">
+    <attribute name="required">True</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/notebook[1]/page[@name='sale_service']/field[1]" position="inside">
+    <form>
+      <sheet string="DPT Sale Service Management">
+        <group>
+          <group>
+            <field name="sale_id"/>
+          </group>
+          <group>
+            <field name="service_id"/>
+          </group>
+        </group>
+        <group>
+          <field name="description"/>
+        </group>
+        <group>
+          <group>
+            <field name="qty"/>
+          </group>
+        </group>
+        <group>
+          <field name="uom_ids"/>
+        </group>
+        <group>
+          <group>
+            <field name="uom_id"/>
+            <field name="price_cny"/>
+            <field name="currency_cny_id"/>
+            <field name="amount_total"/>
+            <field name="pricelist_item_id"/>
+            <field name="compute_uom_id"/>
+          </group>
+          <group>
+            <field name="price"/>
+            <field name="currency_id"/>
+            <field name="department_id"/>
+            <field name="sequence"/>
+            <field name="price_in_pricelist"/>
+            <field name="compute_value"/>
+          </group>
+        </group>
+        <group>
+          <field name="note"/>
+        </group>
+        <group>
+          <group>
+            <field name="purchase_id"/>
+            <field name="new_price"/>
+            <field name="approval_id"/>
+            <field name="is_edit_new_price"/>
+          </group>
+          <group>
+            <field name="price_status"/>
+            <field name="new_amount_total"/>
+            <field name="is_zero_price"/>
+            <field name="picking_id"/>
+          </group>
+        </group>
+        <group>
+          <separator/>
+        </group>
+      </sheet>
+    </form>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/notebook[1]/page[1]/field[1]/tree[1]//field[@name='service_id']" position="attributes">
+    <attribute name="required">True</attribute>
+  </xpath>
+  <xpath expr="/form[1]/header[1]/button[16]" position="attributes">
+    <attribute name="invisible">state in ["draft", "sent", "sale"] or not id or locked</attribute>
+  </xpath>
+  <xpath expr="/form[1]/header[1]/button[16]" position="attributes">
+    <attribute name="invisible">state not in ["draft", "sent", "sale"] or not id or locked</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/notebook[1]/page[6]" position="attributes">
+    <attribute name="invisible">True</attribute>
+  </xpath>
+  <xpath expr="/form[1]/header[1]/button[12]" position="attributes">
+    <attribute name="invisible">False</attribute>
+  </xpath>
+  <xpath expr="/form[1]/header[1]/button[12]" position="attributes">
+    <attribute name="invisible">True</attribute>
+  </xpath>
+  <xpath expr="/form[1]/header[1]/button[12]" position="attributes">
+    <attribute name="invisible">state != "draft"</attribute>
+  </xpath>
+  <xpath expr="/form[1]/header[1]/button[12]" position="attributes">
+    <attribute name="invisible">True</attribute>
+  </xpath>
+  <xpath expr="/form[1]/header[1]/button[12]" position="attributes">
+    <attribute name="invisible">False</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[1]/field[6]" position="attributes">
+    <attribute name="required">True</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/notebook[1]/page[1]/field[1]/tree[1]//field[@name='price_cny']" position="attributes">
+    <attribute name="readonly">False</attribute>
+  </xpath>
+  <xpath expr="/form[1]/header[1]/button[16]" position="attributes">
+    <attribute name="invisible">state in ["draft", "sent", "sale"] or not id or locked</attribute>
+  </xpath>
+  <xpath expr="/form[1]/header[1]/button[16]" position="attributes">
+    <attribute name="invisible">state not in ["draft", "sent", "sale"] or not id or locked</attribute>
+  </xpath>
+  <!--<xpath expr="/form[1]/header[1]/button[7]" position="attributes">-->
+  <!--  <attribute name="invisible">state in ["draft", "sent"] or not is_quotation</attribute>-->
+  <!--</xpath>-->
+  <!--<xpath expr="/form[1]/header[1]/button[7]" position="attributes">-->
+  <!--  <attribute name="invisible">state in ["draft", "sent"]</attribute>-->
+  <!--</xpath>-->
+  <!--<xpath expr="/form[1]/header[1]/button[7]" position="attributes">-->
+  <!--  <attribute name="invisible">state in ["draft", "sent"] and is_quotation != True</attribute>-->
+  <!--</xpath>-->
+  <!--<xpath expr="/form[1]/header[1]/button[7]" position="attributes">-->
+  <!--  <attribute name="invisible">True</attribute>-->
+  <!--</xpath>-->
+  <!--<xpath expr="/form[1]/header[1]/button[7]" position="attributes">-->
+  <!--  <attribute name="invisible">False</attribute>-->
+  <!--</xpath>-->
+  <!--<xpath expr="/form[1]/header[1]/button[7]" position="attributes">-->
+  <!--  <attribute name="invisible">True</attribute>-->
+  <!--</xpath>-->
+  <!--<xpath expr="/form[1]/header[1]/button[7]" position="attributes">-->
+  <!--  <attribute name="invisible">state in ["draft", "sent"] and not is_quotation</attribute>-->
+  <!--</xpath>-->
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[1]/field[6]" position="attributes">
+    <attribute name="required">False</attribute>
+  </xpath>
+  <!--<xpath expr="(//button[@type='object'][@name='action_confirm'])[1]" position="attributes">-->
+  <!--  <attribute name="studio_approval">True</attribute>-->
+  <!--</xpath>-->
+  <!--<xpath expr="(//button[@type='object'][@name='action_confirm'])[2]" position="attributes">-->
+  <!--  <attribute name="studio_approval">True</attribute>-->
+  <!--</xpath>-->
+  <!--<xpath expr="(//button[@type='object'][@name='action_confirm'])[1]" position="attributes">-->
+  <!--  <attribute name="studio_approval">False</attribute>-->
+  <!--</xpath>-->
+  <!--<xpath expr="(//button[@type='object'][@name='action_confirm'])[2]" position="attributes">-->
+  <!--  <attribute name="studio_approval">False</attribute>-->
+  <!--</xpath>-->
+  <xpath expr="/form[1]/header[1]/button[12]" position="attributes">
+    <attribute name="invisible">True</attribute>
+  </xpath>
+  <xpath expr="/form[1]/header[1]/button[12]" position="attributes">
+    <attribute name="invisible">declaration_line_count &gt;= 1</attribute>
+  </xpath>
+  <xpath expr="/form[1]/header[1]/button[12]" position="attributes">
+    <attribute name="invisible">not sale_order_option_ids</attribute>
+  </xpath>
+  <xpath expr="/form[1]/header[1]/button[12]" position="attributes">
+    <attribute name="invisible">not is_all_service</attribute>
+  </xpath>
+  <xpath expr="/form[1]/header[1]/button[12]" position="attributes">
+    <attribute name="invisible">not order_line</attribute>
+  </xpath>
+  <xpath expr="/form[1]/header[1]/button[12]" position="attributes">
+    <attribute name="invisible">False</attribute>
+  </xpath>
+  <xpath expr="/form[1]/header[1]/button[12]" position="attributes">
+    <attribute name="invisible">True</attribute>
+  </xpath>
+  <xpath expr="/form[1]/header[1]/button[12]" position="attributes">
+    <attribute name="invisible">not order_line</attribute>
+  </xpath>
+  <xpath expr="/form[1]/header[1]/button[12]" position="attributes">
+    <attribute name="invisible">False</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[1]/field[6]" position="attributes">
+    <attribute name="invisible">True</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[1]/field[8]" position="attributes">
+    <attribute name="string">Combo dịch vụ</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[1]/field[9]" position="attributes">
+    <attribute name="force_save">1</attribute>
+    <attribute name="readonly">True</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[1]/field[9]" position="attributes">
+    <attribute name="invisible">True</attribute>
+  </xpath>
+  <xpath expr="/form[1]/sheet[1]/group[1]/group[1]/field[9]" position="attributes">
+    <attribute name="invisible">False</attribute>
+  </xpath>
+</data>

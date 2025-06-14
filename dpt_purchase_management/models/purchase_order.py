@@ -39,8 +39,6 @@ class PurchaseOrder(models.Model):
     purchase_service_ids = fields.One2many('dpt.purchase.service.management', 'purchase_id', 'Service Line')
     sale_service_ids = fields.One2many('dpt.sale.service.management', 'purchase_id', 'Dịch Vụ')
     service_total_amount = fields.Float(compute='_compute_service_amount')
-    fields_ids = fields.One2many('dpt.purchase.required.fields', 'purchase_id', string='Fields')
-
 
     @api.depends('sale_service_ids.amount_total')
     def _compute_service_amount(self):

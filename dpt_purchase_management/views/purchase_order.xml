@@ -25,6 +25,7 @@
                 <field name="amount_untaxed"/>
             </field>
             <field name="name" position="after">
+                <field name="sale_id"/>
                 <field name="purchase_type"/>
             </field>
         </field>
@@ -75,9 +76,9 @@
                                     <field name="price_unit" on_change="1"/>
                                     <field name="price_unit2" on_change="1"/>
                                     <field name="price_unit3" on_change="1" groups="purchase.group_purchase_manager"/>
-                                    <field name="price_subtotal" on_change="1"/>
-                                    <field name="price_subtotal2"/>
-                                    <field name="price_subtotal3" groups="purchase.group_purchase_manager"/>
+                                    <field name="price_subtotal" on_change="1" sum="Tổng"/>
+                                    <field name="price_subtotal2" sum="Tổng"/>
+                                    <field name="price_subtotal3" groups="purchase.group_purchase_manager" sum="Tổng"/>
                                     <field name="date_planned"/>
                                 </tree>
 
@@ -222,9 +223,13 @@
                                            placeholder="Xác định điều khoản và điều kiện của bạn..."
                                            field_id="notes_0"/>
                                 </group>
-                                <group class="oe_subtotal_footer" invisible="1">
-                                    <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" colspan="2"
-                                           readonly="1" field_id="tax_totals_0"/>
+<!--                                <group class="oe_subtotal_footer" invisible="1">-->
+<!--                                    <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" colspan="2"-->
+<!--                                           readonly="1" field_id="tax_totals_0"/>-->
+<!--                                </group>-->
+                                <group class="oe_subtotal_footer" >
+                                    <label for="amount_total" string="Tổng tiền thanh toán"/>
+                                    <field name="amount_total" readonly="1" nolabel="1"/>
                                 </group>
                             </group>
                             <div class="clearfix"/>
@@ -260,7 +265,7 @@
                             <field name="service_id"/>
                             <field name="uom_id"/>
                             <field name="compute_value" readonly="1" force_save="1"/>
-                            <field name="compute_uom_id" readonly="1" force_save="1"/>
+                            <field name="compute_uom_id" force_save="1"/>
                             <field name="qty" column_invisible="1" force_save="1"/>
                             <field name="uom_ids" column_invisible="1"/>
                             <field name="price" readonly="0" force_save="1"/>
@@ -279,25 +284,19 @@
                         <div class="clearfix"/>
                     </group>
                 </page>
-                 <page name="sale_field" string="Trường thông tin">
-                    <field name="fields_ids" >
-                        <tree editable="bottom" default_order="sequence desc" decoration-danger="type=='required'">
-                            <field name="sequence" widget="handle"/>
-                            <field name="service_id"/>
-                            <field name="fields_id"/>
-                            <field name="type" column_invisible="1"/>
-                            <field name="fields_type" column_invisible="1"/>
-                            <field name="value_char" invisible="fields_type != 'char'"
-                                   required="type == 'required' and fields_type == 'char'"/>
-                            <field name="value_integer" invisible="fields_type != 'integer'"
-                                   required="type == 'required' and fields_type == 'integer'"/>
-                            <field name="value_date" invisible="fields_type != 'date'"
-                                   required="type == 'required' and fields_type == 'date'"/>
-                            <field name="selection_value_id" invisible="fields_type != 'selection'"
-                                   required="type == 'required' and fields_type == 'selection'"
-                                   domain="[('fields_id','=',fields_id)]"/>
-                        </tree>
-                    </field>
+
+                <page name="service_fields" string="Các trường thông tin dịch vụ">
+                    <group>
+                        <group string="Thông tin thanh toán quốc tế">
+                            <field name="sale_service_ids" domain="[('service_id.name', '=', 'Thanh toán quốc tế')]" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="service_id"/>
+                                    <field name="currency_id"/>
+                                    <field name="note"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </group>
                 </page>
 
             </page>

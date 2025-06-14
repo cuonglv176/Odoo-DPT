@@ -37,6 +37,8 @@ class DPTService(models.Model):
     _description = 'DPT Service Management'
     _order = 'create_date DESC'
 
+    parent_id = fields.Many2one('dpt.service.management', string='Parent', index=True, tracking=True)
+    child_ids = fields.One2many('dpt.service.management', 'parent_id', string='Childs')
     code = fields.Char(string='Service Code', default='NEW', copy=False, index=True, tracking=True)
     name = fields.Char(string='Service Name', required=True, tracking=True)
     service_type_id = fields.Many2one('dpt.service.management.type', string='Service Type', index=True, tracking=True)
@@ -59,6 +61,10 @@ class DPTService(models.Model):
     auo_complete = fields.Boolean('Auto Complete', default=False)
     product_id = fields.Many2one('product.product', string='Product')
     # image = fields.Image("Image", required=True, tracking=True)
+    visible_to_sale_cs = fields.Boolean('Hiển thị với CS, Sale', default=True,
+                                        help='Khi tắt, dịch vụ này chỉ hiển thị cho vận hành và kế toán')
+    is_bao_giao = fields.Boolean(default=False, string='Bao giao')
+    is_allin = fields.Boolean(default=False, string='All In')
 
     _sql_constraints = [
         ('code_name_index', 'CREATE INDEX code_name_index ON dpt_service_management (code, name)',
@@ -167,8 +173,31 @@ class RequiredField(models.Model):
         ("options", "Options")
     ], string='Type Fields', default='options', tracking=True)
     service_id = fields.Many2one('dpt.service.management', string='Service', ondelete='cascade', tracking=True)
+    combo_id = fields.Many2one('dpt.service.combo', string='Combo', ondelete='cascade', tracking=True)
     using_calculation_price = fields.Boolean('Using Calculation Price', tracking=True)
-    uom_id = fields.Many2one('uom.uom', 'Unit', tracking=True)
+
+    # Trường đơn vị tính cũ (giữ lại để tương thích ngược)
+    uom_id = fields.Many2one('uom.uom', 'Đơn vị tính đơn', tracking=True,
+                             help='Đơn vị tính cũ (đã được thay thế bằng condition_uom_ids và pricing_uom_ids)')
+    uom_ids = fields.Many2many('uom.uom', string='Đơn vị tính',
+                               relation='dpt_required_fields_uom_rel',
+                               column1='required_field_id', column2='uom_id',
+                               tracking=True,
+                               help='Đơn vị tính cũ (đã được thay thế bằng condition_uom_ids và pricing_uom_ids)')
+
+    # Trường đơn vị tính mới (phân biệt mục đích)
+    condition_uom_ids = fields.Many2many('uom.uom', string='Đơn vị điều kiện',
+                                         relation='dpt_required_fields_condition_uom_rel',
+                                         column1='required_field_id', column2='uom_id',
+                                         tracking=True,
+                                         help='Đơn vị tính dùng làm điều kiện trong dịch vụ')
+
+    pricing_uom_ids = fields.Many2many('uom.uom', string='Đơn vị tính giá',
+                                       relation='dpt_required_fields_pricing_uom_rel',
+                                       column1='required_field_id', column2='uom_id',
+                                       tracking=True,
+                                       help='Đơn vị tính dùng để tính giá dịch vụ')
+
     default_compute_from = fields.Selection([
         ('weight_in_so', 'Weight in SO'),
         ('volume_in_so', 'Volume in SO'),
@@ -177,6 +206,21 @@ class RequiredField(models.Model):
     ], string='Default From', tracking=True)
     code = fields.Char(string='Mã')
     is_template = fields.Boolean(string='Sử dụng lại')
+
+    @api.onchange('uom_id', 'uom_ids')
+    def _onchange_legacy_uom_fields(self):
+        """Đồng bộ dữ liệu từ các trường đơn vị tính cũ sang trường mới khi có sự thay đổi"""
+        if self.uom_id and not self.condition_uom_ids and not self.pricing_uom_ids:
+            # Nếu chỉ có uom_id và các trường mới chưa được thiết lập, đồng bộ dữ liệu
+            self.condition_uom_ids = [(4, self.uom_id.id)]
+            if self.using_calculation_price:
+                self.pricing_uom_ids = [(4, self.uom_id.id)]
+
+        if self.uom_ids and not self.condition_uom_ids and not self.pricing_uom_ids:
+            # Nếu chỉ có uom_ids và các trường mới chưa được thiết lập, đồng bộ dữ liệu
+            self.condition_uom_ids = [(6, 0, self.uom_ids.ids)]
+            if self.using_calculation_price:
+                self.pricing_uom_ids = [(6, 0, self.uom_ids.ids)]
 
     def get_default_value(self, so):
         if not so:
@@ -208,8 +252,20 @@ class RequiredField(models.Model):
             else:
                 mapping_delete[item.service_id] = item
         for service_id, required_field_ids in mapping_delete.items():
-            service_id.message_post(
-                body=_("Delete Required field: %s") % ','.join(required_field_ids.mapped('uom_id').mapped('name')))
+            if service_id:
+                # Lấy tên đơn vị từ cả các trường đơn vị tính
+                uom_names = []
+                for field in required_field_ids:
+                    if field.uom_id:
+                        uom_names.append(field.uom_id.name)
+                    if field.uom_ids:
+                        uom_names.extend(field.uom_ids.mapped('name'))
+                    if field.condition_uom_ids:
+                        uom_names.extend(field.condition_uom_ids.mapped('name'))
+                    if field.pricing_uom_ids:
+                        uom_names.extend(field.pricing_uom_ids.mapped('name'))
+                service_id.message_post(
+                    body=_("Delete Required field: %s") % ','.join(set(uom_names)))
         return super(RequiredField, self).unlink()
 
 

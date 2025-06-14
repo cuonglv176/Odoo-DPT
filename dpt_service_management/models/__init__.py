@@ -3,4 +3,5 @@
 
 from . import product_template
 from . import service
+from . import service_combo
 from . import uom_uom_inherit
