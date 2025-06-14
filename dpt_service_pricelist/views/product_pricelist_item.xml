@@ -16,6 +16,7 @@
                                 <field name="service_id" invisible="context.get('from_services', False)"
                                        force_save="1" options="{'no_create': True}"/>
                                 <field name="service_uom_ids" invisible="1"/>
+                                <field name="combo_id" invisible="1"/>
                                 <field name="uom_id"
                                        domain="[('id','in', service_uom_ids)]" options="{'no_create': True}"/>
                                 <field name="compute_price" widget="radio" options="{'horizontal': true}"/>
@@ -50,12 +51,16 @@
                                         <field name="sequence" widget="handle"/>
                                         <field name="currency_id" column_invisible="1" force_save="1"/>
                                         <field name="condition_type" widget="selection"/>
-                                        <field name="uom_id" options="{'no_create': True}"
-                                               invisible="condition_type != 'simple'"
-                                               domain="[('id', 'in', parent.service_uom_ids)]"/>
-                                        <field name="uom_condition_ids" widget="many2many_tags"
-                                               options="{'no_create': True}" invisible="condition_type == 'simple'"
-                                               domain="[('id', 'in', parent.service_uom_ids)]"/>
+                                        <field name="field_ids" widget="many2many_tags"
+                                               domain="['|',('service_id', '=', parent.service_id),('combo_id', '=', parent.combo_id)]"/>
+                                        <field name="selection_ids" widget="many2many_tags"
+                                               domain="[('fields_id', 'in', field_ids)]"/>
+                                        <!--                                        <field name="uom_id" options="{'no_create': True}"-->
+                                        <!--                                               invisible="condition_type != 'simple'"-->
+                                        <!--                                               domain="[('id', 'in', parent.service_uom_ids)]"/>-->
+                                        <!--                                        <field name="uom_condition_ids" widget="many2many_tags"-->
+                                        <!--                                               options="{'no_create': True}" invisible="condition_type == 'simple'"-->
+                                        <!--                                               domain="[('id', 'in', parent.service_uom_ids)]"/>-->
                                         <field name="price_type"/>
                                         <field name="compute_uom_id" options="{'no_create': True}"/>
                                         <field name="description"/>
@@ -84,15 +89,20 @@
                                                 <group>
                                                     <field name="description"/>
                                                     <field name="amount" widget="monetary"
-                                                           string="Giá cố định" attrs="{'string': 'Đơn giá', 'invisible': [('price_type', '!=', 'unit_price')]}"/>
+                                                           string="Giá cố định"
+                                                           attrs="{'string': 'Đơn giá', 'invisible': [('price_type', '!=', 'unit_price')]}"/>
                                                     <field name="currency_id" invisible="1"/>
                                                 </group>
                                             </group>
                                             <div class="alert alert-info" role="alert" style="margin-top: 10px;"
                                                  invisible="price_type != 'unit_price'">
                                                 <strong>Hướng dẫn đơn giá:</strong>
-                                                <p>Đơn giá sẽ được tính với phần giá trị vượt quá mức thấp nhất (Min Value).</p>
-                                                <p>Ví dụ: Nếu Min Value = 20, Amount = 10,000 và giá trị là 25, giá sẽ là: (25-20) × 10,000 = 50,000</p>
+                                                <p>Đơn giá sẽ được tính với phần giá trị vượt quá mức thấp nhất (Min
+                                                    Value).
+                                                </p>
+                                                <p>Ví dụ: Nếu Min Value = 20, Amount = 10,000 và giá trị là 25, giá sẽ
+                                                    là: (25-20) × 10,000 = 50,000
+                                                </p>
                                             </div>
                                             <div class="alert alert-info" role="alert" style="margin-top: 10px;"
                                                  invisible="condition_type == 'simple'">
