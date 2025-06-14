@@ -644,9 +644,13 @@ class SaleOrder(models.Model):
                                     compute_value = compute_field_id.value_integer
                                 compute_uom_id = compute_field_id.uom_id.id
 
+
+                    val_selection = []
+                    for compute_and_field_id in compute_and_field_ids:
+                        val_selection.append(compute_and_field_id.selection_value_id.id)
+
                     detail_price_ids = service_price_id.pricelist_table_detail_ids.filtered(
-                        lambda ptd: bool(
-                            set(ptd.selection_ids.ids) & set(compute_and_field_ids.selection_value_id.ids)))
+                        lambda ptd: ptd.selection_ids.ids in val_selection)
                     _logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
                     _logger.info(sale_service_id.service_id.name)
                     _logger.info(detail_price_ids)
