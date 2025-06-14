@@ -750,7 +750,7 @@ class SaleOrder(models.Model):
 
             if service_model:
                 # Báo giá bao giao: bỏ qua các dịch vụ có is_bao_giao = True
-                if self.quote_type == 'dac_biet' and not service_model.is_bao_giao:
+                if self.quote_type == 'dac_biet' and service_model.is_bao_giao:
                     filtered_services |= service
 
                 # # Báo giá all in: bỏ qua các dịch vụ có is_allin = True
