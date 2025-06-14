@@ -470,7 +470,6 @@ class SaleOrder(models.Model):
         # Domain chung cho cả hai lần tìm kiếm
         base_domain = [
             ('service_id', '=', sale_service_id.service_id.id),
-            ('pricelist_id.state', '=', 'active'),
             '|', ('date_start', '<=', today), ('date_start', '=', False),
             '|', ('date_end', '>=', today), ('date_end', '=', False),
         ]
