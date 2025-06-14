@@ -491,13 +491,6 @@ class SaleOrder(models.Model):
         _logger.info(f"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
         _logger.info(service_ids)
         for sale_service_id in service_ids:
-            # Bỏ qua dịch vụ thuộc combo hoặc đã có giá và đã tính toán
-            if sale_service_id.combo_id and sale_service_id.price > 0 and sale_service_id.price_status == 'calculated':
-                continue
-            # Bỏ qua dịch vụ không có đơn vị
-            if not sale_service_id.uom_id:
-                continue
-            # Bỏ qua dịch vụ đã được phê duyệt
             approved = sale_service_id.approval_id.filtered(
                 lambda approval: approval.request_status in ('approved', 'refused'))
             if approved:
