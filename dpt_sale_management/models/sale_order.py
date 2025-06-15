@@ -363,9 +363,10 @@ class SaleOrder(models.Model):
             general_domain = base_domain + [('partner_id', '=', False)]
             combo_pricelist_id = self.env['product.pricelist.item'].search(general_domain, limit=1)
 
-        if not combo_pricelist_id:
-            raise ValidationError(
-                _("Combo chưa có bảng giá hoạt động hoặc không tìm thấy bảng giá phù hợp: %s!!!") % sale_combo_id.combo_id.name)
+        # Hà Quý Dũng
+        # if not combo_pricelist_id:
+        #     raise ValidationError(
+        #         _("Combo chưa có bảng giá hoạt động hoặc không tìm thấy bảng giá phù hợp: %s!!!") % sale_combo_id.combo_id.name)
 
         return combo_pricelist_id
 
@@ -480,9 +481,9 @@ class SaleOrder(models.Model):
         if not service_pricelist_id:
             general_domain = base_domain + [('partner_id', '=', False)]
             service_pricelist_id = self.env['product.pricelist.item'].search(general_domain, limit=1)
-        if not service_pricelist_id:
-            raise ValidationError(
-                _("Combo chưa có bảng giá hoạt động hoặc không tìm thấy bảng giá phù hợp: %s!!!") % sale_service_id.service_id.name)
+        # if not service_pricelist_id:
+        #     raise ValidationError(
+        #         _("Combo chưa có bảng giá hoạt động hoặc không tìm thấy bảng giá phù hợp: %s!!!") % sale_service_id.service_id.name)
         return service_pricelist_id
 
     def _compute_service_price(self, service_ids):
