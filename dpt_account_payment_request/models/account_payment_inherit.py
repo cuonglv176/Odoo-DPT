@@ -53,22 +53,11 @@ class AccountPaymentType(models.Model):
     _name = 'dpt.account.payment.type'
 
     name = fields.Char(string='Name')
-    code = fields.Char(string='Mã')
     is_bypass = fields.Boolean(string='Bỏ qua người quản lý', default=False)
     is_ke_toan_truong = fields.Boolean(string='Kế toán trưởng duyệt cuối', default=False)
     rule_ids = fields.One2many('dpt.account.payment.type.rule', 'type_id', string='Rules')
     default_partner_id = fields.Many2one('res.partner', "Default Partner")
     is_cn_payment = fields.Boolean('Là thanh toán phí nội địa TQ')
-    is_user_detail = fields.Boolean('Chi tiết User',default=False)
-    is_account_journal = fields.Boolean('Sổ nhật ký',default=False)
-    payment_user_type = fields.Selection([
-        ('customer', 'Khách hàng'),
-        ('company', 'Công ty'),
-    ], string='Bên thanh toán', default='customer')
-    payment_type = fields.Selection(selection=[
-        ('inbound', 'Nhận'),
-        ('outbound', 'Gửi')]
-        , required=True, default='inbound', string='Loại thanh toán')
 
 
 class AccountPaymentTypeRule(models.Model):
@@ -91,51 +80,42 @@ class AccountPayment(models.Model):
     code = fields.Char(string='Payment Code', default='NEW', copy=False, index=True, tracking=True)
     user_id = fields.Many2one('res.users', string='User Request', default=lambda self: self.env.user, tracking=True)
     department_id = fields.Many2one('hr.department', string='Department Request', tracking=True)
-    type_id = fields.Many2one('dpt.account.payment.type', string='Type Request', tracking=True)
-    purchase_id = fields.Many2one('purchase.order', string='Purchase', tracking=True)
-    approval_id = fields.Many2one('approval.request', string='Approval Payment Request', tracking=True)
+    type_id = fields.Many2one('dpt.account.payment.type', string='Type Request')
+    purchase_id = fields.Many2one('purchase.order', string='Purchase')
+    approval_id = fields.Many2one('approval.request', string='Approval Payment Request')
     request_status = fields.Selection([
         ('new', 'To Submit'),
         ('pending', 'Submitted'),
         ('approved', 'Approved'),
         ('refused', 'Refused'),
         ('cancel', 'Cancel'),
-    ], string='Status approval', default="new", related="approval_id.request_status", tracking=True)
-    service_sale_ids = fields.Many2many('dpt.sale.service.management', string='Sale lines', tracking=True)
-    service_sale_id = fields.Many2one('dpt.sale.service.management', string='Sale line', tracking=True)
-    from_po = fields.Boolean( tracking=True)
-    from_so = fields.Boolean( tracking=True)
+    ], string='Status approval', default="new", related="approval_id.request_status")
+    service_sale_ids = fields.Many2many('dpt.sale.service.management', string='Sale lines')
+    service_sale_id = fields.Many2one('dpt.sale.service.management', string='Sale line')
+    from_po = fields.Boolean()
+    from_so = fields.Boolean()
     payment_user_type = fields.Selection([
         ('customer', 'Khách hàng'),
         ('company', 'Công ty'),
-    ], string='Bên thanh toán', related="type_id.payment_user_type", store=True, tracking=True)
+    ], string='Bên thanh toán')
     payment_user = fields.Selection([
         ('ltv', 'LTV'),
         ('dpt', 'DPT'),
-    ], string='Pháp nhân thanh toán', tracking=True)
-    shipping_fee = fields.Float(string='Phí chuyển tiền', tracking=True)
-    type_id_name = fields.Char(related="type_id.name", tracking=True, store=True)
-    payment_type = fields.Selection(selection=[
-        ('inbound', 'Inbound'),
-        ('outbound', 'Outbound')]
-        , string='Loại thanh toán', related="type_id.payment_type", store=True, tracking=True)
-    active = fields.Boolean(default=True, tracking=True)
-    detail_ids = fields.One2many('dpt.account.payment.detail', 'payment_id', string='Chi tiết thanh toán Dịch vụ', tracking=True)
+    ], string='Pháp nhân thanh toán')
+    active = fields.Boolean(default=True)
+    detail_ids = fields.One2many('dpt.account.payment.detail', 'payment_id', string='Chi tiết thanh toán Dịch vụ')
     detail_product_ids = fields.One2many('dpt.account.payment.detail', 'payment_product_id',
-                                         string='Chi tiết thanh toán Sản phẩm', tracking=True)
-    last_rate_currency = fields.Float('Last Rate Currency', tracking=True)
-    acc_number = fields.Char(related="partner_bank_id.acc_number", tracking=True)
-    acc_holder_name = fields.Char(related="partner_bank_id.acc_holder_name", tracking=True)
-    is_cn_payment = fields.Boolean(related="type_id.is_cn_payment", tracking=True)
-    is_user_detail = fields.Boolean(related="type_id.is_user_detail", tracking=True)
-    is_account_journal = fields.Boolean(related="type_id.is_account_journal", tracking=True)
-    bank_id = fields.Many2one(related="partner_bank_id.bank_id", tracking=True)
-    amount_in_text = fields.Char('Amount in Text', compute="_compute_amount_in_text", tracking=True)
-    refund_date = fields.Date(string='Ngày hoàn ứng', tracking=True)
-    amount = fields.Monetary(currency_field='company_currency_id', tracking=True)
-    amount_request = fields.Monetary(string='Số tiền ngoại tệ', currency_field='currency_id', tracking=True)
-    user_view_ids = fields.Many2many('res.users', compute="get_list_users_view", store=True, tracking=True)
-    payment_due = fields.Datetime(string='Thời hạn thanh toán', tracking=True)
+                                         string='Chi tiết thanh toán Sản phẩm')
+    last_rate_currency = fields.Float('Last Rate Currency')
+    acc_number = fields.Char(related="partner_bank_id.acc_number")
+    acc_holder_name = fields.Char(related="partner_bank_id.acc_holder_name")
+    bank_id = fields.Many2one(related="partner_bank_id.bank_id")
+    amount_in_text = fields.Char('Amount in Text', compute="_compute_amount_in_text")
+    refund_date = fields.Date(string='Ngày hoàn ứng')
+    amount = fields.Monetary(currency_field='company_currency_id')
+    amount_request = fields.Monetary(string='Số tiền ngoại tệ', currency_field='currency_id')
+    user_view_ids = fields.Many2many('res.users', compute="get_list_users_view", store=True)
+    payment_due = fields.Datetime(string='Thời hạn thanh toán')
     journal_type = fields.Selection([
         ('sale', 'Sales'),
         ('purchase', 'Purchase'),
@@ -147,29 +127,21 @@ class AccountPayment(models.Model):
         help="Select 'Sale' for customer invoices journals.\n" \
              "Select 'Purchase' for vendor bills journals.\n" \
              "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n" \
-             "Select 'General' for miscellaneous operations journals.", related="journal_id.type", tracking=True)
+             "Select 'General' for miscellaneous operations journals.", related="journal_id.type")
     lock_status = fields.Selection([
         ('open', 'Open'),
         ('locked', 'Locked'),
     ], default='open', compute="_compute_look_status")
-    dpt_user_partner_id = fields.Many2one('res.partner', string='User Khách', domain=[('dpt_user_name', '!=', False)], tracking=True)
+    dpt_user_partner_id = fields.Many2one('res.partner', string='User Khách', domain=[('dpt_user_name', '!=', False)])
     # dpt_user_name = fields.Char(string='User Khách')
     dpt_type_of_partner = fields.Selection([('employee', 'Nhân viên'),
                                             ('customer', 'Khách hàng'),
                                             ('vendor', 'Nhà cung cấp'),
                                             ('shipping_address', 'Địa chỉ giao hàng'),
                                             ('payment_address', 'Địa chỉ thanh toán'),
-                                            ('other', 'Khác')], string='Loại liên hệ', tracking=True)
+                                            ('other', 'Khác')], string='Loại liên hệ')
 
-    hide_in_cn_payment = fields.Boolean('Ẩn với thanh toán phí nội địa TQ', compute="compute_hide_in_cn_payment", tracking=True)
-
-    @api.onchange('sale_id')
-    def onchange_sale_id(self):
-        for rec in self:
-            if not rec.sale_id or not rec.sale_id.purchase_ids:
-                rec.purchase_id = False
-                continue
-            rec.purchase_id = rec.sale_id.purchase_ids[0].id
+    hide_in_cn_payment = fields.Boolean('Ẩn với thanh toán phí nội địa TQ', compute="compute_hide_in_cn_payment")
 
     @api.depends('type_id', 'type_id.is_cn_payment')
     def compute_hide_in_cn_payment(self):
@@ -224,9 +196,9 @@ class AccountPayment(models.Model):
                 user_view_ids.append(approver_id.user_id.id)
             rec.user_view_ids = [(6, 0, user_view_ids)]
 
-    @api.onchange('last_rate_currency', 'amount_request', 'shipping_fee')
+    @api.onchange('last_rate_currency', 'amount_request')
     def onchange_update_amount(self):
-        self.amount = self.amount_request * self.last_rate_currency + self.shipping_fee
+        self.amount = self.amount_request * self.last_rate_currency
 
     @api.depends('amount')
     def _compute_amount_in_text(self):
