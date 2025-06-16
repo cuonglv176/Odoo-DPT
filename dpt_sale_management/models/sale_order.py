@@ -134,6 +134,7 @@ class SaleOrder(models.Model):
                         lambda f: f.fields_id.id == req_field.id and f.combo_id.id == model_item.id
                     )
                 if existing_field:
+                    existing_field = existing_field[0]
                     rec = {
                         'sequence': 1 if existing_field.fields_id.type == 'required' else 0,
                         'fields_id': req_field.id,
