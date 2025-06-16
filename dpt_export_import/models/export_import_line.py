@@ -282,60 +282,91 @@ class DptExportImportLine(models.Model):
 
     @api.depends('declaration_type', 'dpt_price_usd', 'dpt_price_cny_vnd', 'dpt_price_krw_vnd', 'dpt_tax_other',
                  'dpt_tax_import')
-    def _compute_dpt_price_unit(self):
-        for rec in self:
-            dpt_price = 0
-            company_rate = 1
-            if rec.declaration_type == 'usd':
-                dpt_price = rec.dpt_price_usd
-                company_rate = rec.currency_usd_id.rate_ids[:1].company_rate
-            elif rec.declaration_type == 'cny':
-                dpt_price = rec.dpt_price_cny_vnd
-                company_rate = rec.currency_cny_id.rate_ids[:1].company_rate
-            elif rec.declaration_type == 'krw':
-                dpt_price = rec.dpt_price_krw_vnd
-                company_rate = rec.currency_krw_id.rate_ids[:1].company_rate
-            rec.dpt_price_unit = ((dpt_price * 0.1) + rec.dpt_tax_import + rec.dpt_tax_other) * (company_rate or 1)
+    # def _compute_dpt_price_unit(self):
+    #     """
+    #     Logic tính giá XHĐ mong muốn từ giá khai báo:
+        
+    #     1. Xác định giá khai báo dựa trên loại tiền (USD, CNY, KRW)
+    #     2. Lấy tỷ giá công ty tương ứng
+    #     3. Công thức: dpt_price_unit = ((giá khai * 0.1) + thuế NK + thuế khác) * tỷ giá
+        
+    #     Lưu ý: Hệ số 0.1 là một hằng số được sử dụng trong công thức.
+    #     """
+    #     for rec in self:
+    #         dpt_price = 0
+    #         company_rate = 1
+            
+    #         # Xác định giá và tỷ giá theo loại tiền khai báo
+    #         if rec.declaration_type == 'usd':
+    #             dpt_price = rec.dpt_price_usd
+    #             company_rate = rec.currency_usd_id.rate_ids[:1].company_rate
+    #         elif rec.declaration_type == 'cny':
+    #             dpt_price = rec.dpt_price_cny_vnd
+    #             company_rate = rec.currency_cny_id.rate_ids[:1].company_rate
+    #         elif rec.declaration_type == 'krw':
+    #             dpt_price = rec.dpt_price_krw_vnd
+    #             company_rate = rec.currency_krw_id.rate_ids[:1].company_rate
+            
+    #         # Áp dụng công thức tính giá XHĐ mong muốn
+    #         rec.dpt_price_unit = ((dpt_price * 0.1) + rec.dpt_tax_import + rec.dpt_tax_other) * (company_rate or 1)
 
-    def _inverse_dpt_price_unit(self):
-        for rec in self:
-            dpt_price = 1
-            if rec.dpt_exchange_rate:
-                dpt_exchange_rate = 1
-                # Fix the typo: rec.rec.dpt_exchange_rate -> rec.dpt_exchange_rate
-                if rec.dpt_exchange_rate > 0:
-                    dpt_exchange_rate = rec.dpt_exchange_rate
-                # Add safety check to prevent division by zero
-                try:
-                    # Ensure we're not dividing by zero
-                    if dpt_exchange_rate != 0:
-                        base_calculation = ( rec.dpt_price_unit / dpt_exchange_rate) - rec.dpt_tax_import - rec.dpt_tax_other
-                        # Add check for the 0.1 division as well (though this shouldn't be zero)
-                        if base_calculation != 0:
-                            dpt_price = base_calculation / 0.1
-                        else:
-                            dpt_price = 0  # or handle this case as needed
-                    else:
-                        dpt_price = 0  # or handle this case as needed
-                except ZeroDivisionError:
-                    dpt_price = 0  # Fallback value
-
-            # Update the database based on declaration type
-            if rec.declaration_type == 'usd':
-                self.env.cr.execute(
-                    "UPDATE dpt_export_import_line SET dpt_price_usd = %s WHERE id = %s",
-                    (dpt_price, rec.id)
-                )
-            elif rec.declaration_type == 'cny':
-                self.env.cr.execute(
-                    "UPDATE dpt_export_import_line SET dpt_price_cny_vnd = %s WHERE id = %s",
-                    (dpt_price, rec.id)
-                )
-            elif rec.declaration_type == 'krw':
-                self.env.cr.execute(
-                    "UPDATE dpt_export_import_line SET dpt_price_krw_vnd = %s WHERE id = %s",
-                    (dpt_price, rec.id)
-                )
+    # def _inverse_dpt_price_unit(self):
+    #     """
+    #     Logic tính ngược từ giá XHĐ mong muốn sang giá khai báo:
+        
+    #     1. Bắt đầu từ giá XHĐ mong muốn
+    #     2. Chia cho tỷ giá để chuyển về ngoại tệ
+    #     3. Trừ đi các khoản thuế NK và thuế khác
+    #     4. Chia cho hệ số 0.1 để lấy giá khai báo gốc
+    #     5. Cập nhật trực tiếp vào DB theo loại tiền khai báo
+        
+    #     Các xử lý ngoại lệ:
+    #     - Kiểm tra tỷ giá > 0 để tránh chia cho 0
+    #     - Kiểm tra base_calculation để tránh chia cho 0
+    #     - Xử lý ngoại lệ ZeroDivisionError
+    #     """
+    #     for rec in self:
+    #         dpt_price = 1
+            
+    #         # Kiểm tra và xử lý tỷ giá
+    #         if rec.dpt_exchange_rate:
+    #             dpt_exchange_rate = 1
+    #             if rec.dpt_exchange_rate > 0:
+    #                 dpt_exchange_rate = rec.dpt_exchange_rate
+                    
+    #             # Tính toán giá khai từ giá XHĐ mong muốn với xử lý ngoại lệ
+    #             try:
+    #                 if dpt_exchange_rate != 0:
+    #                     # Bước 1: Chia giá XHĐ cho tỷ giá để chuyển về ngoại tệ
+    #                     # Bước 2: Trừ đi thuế NK và thuế khác
+    #                     base_calculation = (rec.dpt_price_unit / dpt_exchange_rate) - rec.dpt_tax_import - rec.dpt_tax_other
+                        
+    #                     # Bước 3: Chia cho hệ số 0.1 để lấy giá khai báo gốc
+    #                     if base_calculation != 0:
+    #                         dpt_price = base_calculation / 0.1
+    #                     else:
+    #                         dpt_price = 0  # Trường hợp base_calculation = 0
+    #                 else:
+    #                     dpt_price = 0  # Trường hợp tỷ giá = 0
+    #             except ZeroDivisionError:
+    #                 dpt_price = 0  # Xử lý ngoại lệ chia cho 0
+            
+    #         # Cập nhật giá khai báo theo loại tiền vào DB
+    #         if rec.declaration_type == 'usd':
+    #             self.env.cr.execute(
+    #                 "UPDATE dpt_export_import_line SET dpt_price_usd = %s WHERE id = %s",
+    #                 (dpt_price, rec.id)
+    #             )
+    #         elif rec.declaration_type == 'cny':
+    #             self.env.cr.execute(
+    #                 "UPDATE dpt_export_import_line SET dpt_price_cny_vnd = %s WHERE id = %s",
+    #                 (dpt_price, rec.id)
+    #             )
+    #         elif rec.declaration_type == 'krw':
+    #             self.env.cr.execute(
+    #                 "UPDATE dpt_export_import_line SET dpt_price_krw_vnd = %s WHERE id = %s",
+    #                 (dpt_price, rec.id)
+    #             )
 
     def action_check_lot_name(self):
         if not self.stock_picking_ids:
@@ -807,10 +838,11 @@ class DptExportImportLine(models.Model):
         for rec in self:
             rec.dpt_total_allocated_cost = rec.dpt_allocated_cost_general + rec.dpt_allocated_cost_specific
 
-    @api.depends('dpt_basic_value', 'dpt_total_tax_basic', 'dpt_total_allocated_cost')
+    @api.depends('dpt_basic_value', 'dpt_amount_tax_import_basic', 'dpt_amount_tax_other_basic', 'dpt_total_allocated_cost')
     def _compute_cost_of_goods(self):
         for rec in self:
-            rec.dpt_cost_of_goods = rec.dpt_basic_value + rec.dpt_total_tax_basic + rec.dpt_total_allocated_cost
+            # Sửa: Chỉ tính giá trị cơ bản + thuế NK + thuế Khác + chi phí phân bổ (không bao gồm VAT)
+            rec.dpt_cost_of_goods = rec.dpt_basic_value + rec.dpt_amount_tax_import_basic + rec.dpt_amount_tax_other_basic + rec.dpt_total_allocated_cost
 
     @api.depends('dpt_cost_of_goods', 'dpt_sl1')
     def _compute_unit_cost(self):
@@ -922,8 +954,6 @@ class DptExportImportLine(models.Model):
             'quantity': self.dpt_sl1,
             'amount': self.dpt_price_unit,
             'company_id': self.env.company.id,
-            'product_id': self.product_id.id if self.product_id else False,
-            'reference_currency_id': self.currency_id.id,
         }
         
         approval_request = self.env['approval.request'].create(request_vals)
