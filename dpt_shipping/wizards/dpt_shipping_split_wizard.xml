@@ -21,19 +21,7 @@
                         <page name="stock_picking" string="Pickings">
                             <field name="location_dest_id" invisible="1"/>
                             <field name="available_picking_ids" invisible="1"/>
-                            <field name="picking_ids" domain="[('id', 'in', available_picking_ids)]">
-                                <tree editable="bottom">
-                                    <field name="location_id" string="Vị trí" readonly="1"/>
-                                    <field name="sale_purchase_id" readonly="1"/>
-                                    <field name="picking_lot_name" readonly="1"/>
-                                    <field name="packing_lot_name" readonly="1"/>
-                                    <field name="customer_id" readonly="1"/>
-                                    <field name="employee_cs" readonly="1"/>
-                                    <field name="total_weight" readonly="1"/>
-                                    <field name="total_volume" readonly="1"/>
-                                    <field name="delivery_dest_location_id" options="{'no_create': True, 'no_open': True}"/>
-                                </tree>
-                            </field>
+                            <field name="picking_ids" domain="[('id', 'in', available_picking_ids)]"/>
                         </page>
                     </notebook>
                 </sheet>

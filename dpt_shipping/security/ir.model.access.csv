@@ -1,5 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_dpt_shipping_slip,access_dpt_shipping_slip,model_dpt_shipping_slip,base.group_user,1,1,1,0
+access_dpt_shipping_slip,access_dpt_shipping_slip,model_dpt_shipping_slip,base.group_user,1,1,1,1
 access_dpt_vehicle_stage,access_dpt_vehicle_stage,model_dpt_vehicle_stage,base.group_user,1,1,1,1
 access_dpt_vehicle_stage_log,access_dpt_vehicle_stage_log,model_dpt_vehicle_stage_log,base.group_user,1,1,1,1
 access_dpt_get_picking_so_wizard,access_dpt_get_picking_so_wizard,model_dpt_get_picking_so_wizard,base.group_user,1,1,1,1
@@ -7,4 +7,3 @@ access_dpt_shipping_split_wizard,access_dpt_shipping_split_wizard,model_dpt_ship
 access_dpt_picking_confirm_wizard,access_dpt_picking_confirm_wizard,model_dpt_picking_confirm_wizard,base.group_user,1,1,1,1
 access_stock_quant_separate,access_stock_quant_separate,model_stock_quant_separate,base.group_user,1,1,1,1
 access_stock_quant_separate_line,access_stock_quant_separate_line,model_stock_quant_separate_line,base.group_user,1,1,1,1
-access_stock_quant_export,access_stock_quant_export,model_stock_quant_export,base.group_user,1,1,1,1

@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from odoo import fields, models, api, _
-import logging
-
-_logger = logging.getLogger(__name__)
 
 
 class DPTShippingSplitWizard(models.TransientModel):
@@ -24,38 +21,25 @@ class DPTShippingSplitWizard(models.TransientModel):
     estimate_arrival_warehouse_vn = fields.Date('Estimate Arrival Warehouse VN')
 
     def create_shipping_receive(self):
-        to_container_vn_picking_ids = self.env['stock.picking']
-        to_vn_picking_ids = self.env['stock.picking']
         for picking_id in self.picking_ids:
             if picking_id.total_left_quantity:
-                transit_location_id = self.env['stock.location'].sudo().search(
-                    [('usage', '=', 'internal'), ('warehouse_id.is_tq_transit_warehouse', '=', True)], limit=1)
-                transit_location_dest_id = self.env['stock.location'].sudo().search(
-                    [('usage', '=', 'internal'), ('warehouse_id.is_vn_transit_warehouse', '=', True)], limit=1)
-                location_dest_id = self.env['stock.location'].sudo().search(
-                    [('usage', '=', 'internal'), ('warehouse_id.is_main_outgoing_warehouse', '=', True)], limit=1)
-                to_container_vn_picking_ids = to_container_vn_picking_ids | picking_id.with_context(
-                    confirm_immediately=True).create_in_transfer_picking(transit_location_id, transit_location_dest_id)
-
-                to_vn_picking_ids = to_vn_picking_ids | picking_id.create_in_transfer_picking(
-                    transit_location_id=transit_location_dest_id, location_dest_id=location_dest_id)
+                picking_id.create_in_transfer_picking(self.location_dest_id)
+        in_picking_ids = self.picking_ids.mapped('x_in_transfer_picking_id')
         if self.estimate_arrival_warehouse_vn:
-            to_vn_picking_ids.write({
+            in_picking_ids.write({
                 'estimate_arrival_warehouse_vn': self.estimate_arrival_warehouse_vn
             })
-        to_vn_picking_ids._compute_total_volume_weight()
+        in_picking_ids._compute_total_volume_weight()
         export_import_ids = self.env['dpt.export.import.line'].sudo().search(
-            [('sale_id', 'in', to_vn_picking_ids.mapped('sale_purchase_id').ids)]).mapped('export_import_id') | self.env[
+            [('sale_id', 'in', in_picking_ids.mapped('sale_purchase_id').ids)]).mapped('export_import_id') | self.env[
                                 'dpt.export.import'].sudo().search(
-            [('sale_id', 'in', to_vn_picking_ids.mapped('sale_purchase_id').ids)])
+            [('sale_id', 'in', in_picking_ids.mapped('sale_purchase_id').ids)])
         shipping_slip_receive_id = self.env['dpt.shipping.slip'].create({
             'send_shipping_id': self.shipping_id.id,
-            'sale_ids': to_vn_picking_ids.mapped('sale_purchase_id').ids,
-            'main_in_picking_ids': to_container_vn_picking_ids.ids,
-            'in_picking_ids': to_vn_picking_ids.ids,
+            'sale_ids': in_picking_ids.mapped('sale_purchase_id').ids,
+            'in_picking_ids': in_picking_ids.ids,
             'export_import_ids': export_import_ids.ids,
-            'estimate_arrival_warehouse_vn': self.estimate_arrival_warehouse_vn,
-            'delivery_slip_type': 'container_vn',
+            'estimate_arrival_warehouse_vn': self.estimate_arrival_warehouse_vn
         })
         return {
             'name': "Shipping Slip Receive",

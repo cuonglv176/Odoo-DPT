@@ -10,24 +10,9 @@
             <field name="location_id" position="attributes">
                 <attributes name="column_invisible">1</attributes>
             </field>
-            <field name="lot_id" position="before">
-                <field name="ticket_ids" context="{'show_in_quant': True}" widget="many2many_tags" readonly="1"/>
-            </field>
             <xpath expr="//header" position="inside">
-                <button name="action_stock_quant_separate" string="Tách" type="object"/>
-                <button name="action_stock_quant_export" string="Xuất kho" type="object"/>
+                <button name="action_stock_quant_separate" string="Separate" type="object"/>
             </xpath>
-        </field>
-    </record>
-
-    <record id="stock_quant_inherit_tree_view_shipping" model="ir.ui.view">
-        <field name="name">stock_quant_inherit_tree_view_shipping</field>
-        <field name="model">stock.quant</field>
-        <field name="inherit_id" ref="dpt_stock_management.stock_quant_inherit_tree_view"/>
-        <field name="arch" type="xml">
-            <field name="location_id" position="before">
-                <field name="shipping_slip_name"/>
-            </field>
         </field>
     </record>
 

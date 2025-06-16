@@ -33,4 +33,4 @@ class StockQuantSeparate(models.TransientModel):
                     })
                     new_quant_ids |= new_quant_id
 
-        new_quant_ids.action_apply_inventory()
+        # new_quant_ids.action_apply_inventory()

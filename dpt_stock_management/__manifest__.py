@@ -13,6 +13,5 @@
         'views/stock_picking.xml',
         'views/stock_warehouse.xml',
         'views/uom_uom.xml',
-        'views/stock_quant.xml'
     ],
 }

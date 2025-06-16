@@ -12,4 +12,3 @@ from . import export_import
 from . import helpdesk_ticket
 from . import purchase_order_line_package
 from . import stock_quant
-from . import stock_warehouse
