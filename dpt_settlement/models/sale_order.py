@@ -56,9 +56,10 @@ def _create_invoices(self, grouped=False, final=False, date=None):
                 [('vn_vehicle_stage_id', 'in', vehicle_stage_ids.ids), ('export_import_ids.sale_ids', 'in', order.ids)])
             shipping_tq_ids = self.env['dpt.shipping.slip'].search(
                 [('cn_vehicle_stage_id', 'in', vehicle_stage_ids.ids), ('export_import_ids.sale_ids', 'in', order.ids)])
-            shipping_last_vn_ids = self.env['dpt.shipping.slip'].search(
-                [('last_vn_vehicle_stage_id', 'in', vehicle_stage_ids.ids), ('export_import_ids.sale_ids', 'in', order.ids)])
-            if not shipping_ids and not shipping_tq_ids and not shipping_last_vn_ids:
+            # shipping_last_vn_ids = self.env['dpt.shipping.slip'].search(
+            #     [('last_vn_vehicle_stage_id', 'in', vehicle_stage_ids.ids), ('export_import_ids.sale_ids', 'in', order.ids)])
+            # if not shipping_ids and not shipping_tq_ids and not shipping_last_vn_ids:
+            if not shipping_ids and not shipping_tq_ids:
                 raise UserError(f"Vận chuyển chưa được hoàn thành, vui lòng kiểm tra lại!!!")
 
         # picking_ids = self.env['stock.picking'].search(
