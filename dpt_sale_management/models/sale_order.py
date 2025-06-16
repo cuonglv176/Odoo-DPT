@@ -305,8 +305,8 @@ class SaleOrder(models.Model):
     def write(self, vals):
         res = super(SaleOrder, self).write(vals)
         self.check_required_fields()
-        if self.state != 'sale':
-            self.onchange_calculation_tax()
+        # if self.state != 'sale':
+        #     self.onchange_calculation_tax()
         if vals.get('state') == 'sale':
             self.action_update_fields()
         # if 'sale_service_ids' in vals or 'planned_sale_service_ids' in vals or 'service_combo_ids' in vals or 'planned_service_combo_ids' in vals:
