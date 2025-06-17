@@ -8,15 +8,15 @@ class ResConfigSettings(models.TransientModel):
     """
     _inherit = 'res.config.settings'
 
-    # dpt_min_profit_margin = fields.Float(
-    #     related='company_id.dpt_min_profit_margin',
-    #     readonly=False,
-    #     string="Tỷ lệ lợi nhuận tối thiểu (Giá XHĐ)",
-    #     help="Hệ số nhân với giá vốn để tính giá bán tối thiểu"
-    # )
-    # dpt_max_profit_margin = fields.Float(
-    #     related='company_id.dpt_max_profit_margin',
-    #     readonly=False,
-    #     string="Tỷ lệ lợi nhuận tối đa (Giá XHĐ)",
-    #     help="Hệ số nhân với giá vốn để tính giá bán tối đa"
-    # )
+    dpt_min_profit_margin = fields.Float(
+        related='company_id.dpt_min_profit_margin',
+        readonly=False,
+        string="Tỷ lệ lợi nhuận tối thiểu (Giá XHĐ)",
+        help="Hệ số nhân với giá vốn để tính giá bán tối thiểu"
+    )
+    dpt_max_profit_margin = fields.Float(
+        related='company_id.dpt_max_profit_margin',
+        readonly=False,
+        string="Tỷ lệ lợi nhuận tối đa (Giá XHĐ)",
+        help="Hệ số nhân với giá vốn để tính giá bán tối đa"
+    )

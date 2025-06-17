@@ -857,10 +857,8 @@ class DptExportImportLine(models.Model):
         """Tính toán khoảng giá cho phép dựa trên giá vốn và tỷ lệ lợi nhuận"""
         for rec in self:
             company = self.env.company
-            # min_margin = company.dpt_min_profit_margin or 1.01
-            # max_margin = company.dpt_max_profit_margin or 1.03
-            min_margin = 1.01
-            max_margin = 1.03
+            min_margin = company.dpt_min_profit_margin or 1.01
+            max_margin = company.dpt_max_profit_margin or 1.03
 
             if rec.dpt_unit_cost > 0:
                 rec.dpt_price_min_allowed = rec.dpt_unit_cost * min_margin
