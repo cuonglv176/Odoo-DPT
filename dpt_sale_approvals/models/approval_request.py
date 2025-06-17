@@ -10,6 +10,7 @@ class ApprovalRequest(models.Model):
 
     sale_id = fields.Many2one('sale.order', string='Sale Order')
     sale_service_ids = fields.One2many('dpt.sale.service.management', 'approval_id', string='Sale Service')
+    sale_combo_ids = fields.One2many('dpt.sale.order.service.combo', 'approval_id', string='Sale Combo')
     sale_fields_ids = fields.One2many('dpt.sale.order.fields', 'approval_id', string='Sale Order Fields')
     order_line_ids = fields.One2many('sale.order.line', 'approval_id', string='Sale Order Line')
     history_ids = fields.One2many('dpt.approval.request.sale.line.history', 'approval_id', string='Lịch sử')
@@ -122,6 +123,10 @@ class ApprovalRequest(models.Model):
                 for sale_service_id in self.sale_id.sale_service_ids:
                     if sale_service_id.price_status in ('quoted', 'calculated'):
                         sale_service_id.price_status = 'approved'
+                self = self.with_context({'final_approved': True})
+                for sale_combo_id in self.sale_combo_ids:
+                    sale_combo_id.price = sale_combo_id.new_price
+                    sale_combo_id.price_status = 'approved'
                 a = 1
                 for sale_service_id in self.sale_id.sale_service_ids:
                     if sale_service_id.price_status != 'approved':

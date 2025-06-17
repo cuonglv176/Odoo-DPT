@@ -56,26 +56,6 @@ class SaleServiceManagement(models.Model):
                 'views': [(view_form_id, 'form')],
                 'res_id': account_payment_id.id,
             }
-        service_id = self.service_id
-        sale_id = self.sale_id
-        default_amount_request = 0
-        default_account_payment_type_id = service_id.account_payment_type_id
-        match default_account_payment_type_id.code:
-            case '2' | '3':
-                field_data = sale_id.mapped('fields_ids').filtered(
-                    lambda f: f.fields_id.code == 'amount_tax_refund_cny'
-                )
-                if field_data:
-                    default_amount_request = sum(field_data.mapped('value_integer'))
-            case '4':
-                field_data = sale_id.mapped('fields_ids').filtered(
-                    lambda f: f.fields_id.code == 'amount_total_tax_refund_cny'
-                )
-                if field_data:
-                    default_amount_request = sum(field_data.mapped('value_integer'))
-            case '5':
-                default_amount_request = self.price_cny
-
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'account.payment',
@@ -102,7 +82,5 @@ class SaleServiceManagement(models.Model):
                 'default_ref': _(f'Thanh toán cho {self.sale_id.name}'),
                 'default_last_rate_currency': self.currency_cny_id.rate,
                 'default_partner_bank_id': self.sale_id.partner_id.bank_ids[:1] if self.sale_id.partner_id.bank_ids else None,
-                'default_amount_request': default_amount_request,
-                'default_type_id': default_account_payment_type_id.id,
             },
         }

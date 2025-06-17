@@ -17,4 +17,4 @@ class ResCompany(models.Model):
         string="Tỷ lệ lợi nhuận tối đa (Giá XHĐ)",
         default=1.03,
         help="Hệ số nhân với giá vốn để tính giá bán tối đa. Ví dụ: 1.03 tương đương lợi nhuận 3%."
-    ) 
+    )

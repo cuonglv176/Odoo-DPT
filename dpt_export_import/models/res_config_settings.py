@@ -19,4 +19,4 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         string="Tỷ lệ lợi nhuận tối đa (Giá XHĐ)",
         help="Hệ số nhân với giá vốn để tính giá bán tối đa"
-    ) 
+    )

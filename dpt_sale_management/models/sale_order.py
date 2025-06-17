@@ -75,10 +75,8 @@ class SaleOrder(models.Model):
                                             help='Đánh dấu để tạo ticket cho tất cả dịch vụ')
     quote_type = fields.Selection([
         ('thuong', 'Báo giá thường'),
-        ('bao_giao', 'Báo giá bao giao'),
-        ('all_in', 'Báo giá all in')
-    ], string='Loại báo giá', default='thuong', tracking=True,
-        help="Bao giao là bao vận chuyển, all in là tất cả giá")
+        ('dac_biet', 'Báo giá đặc biệt')
+    ], string='Loại báo giá', default='thuong', tracking=True)
 
     @api.depends('planned_sale_service_ids.amount_total')
     def _compute_planned_service_amount(self):
@@ -136,6 +134,7 @@ class SaleOrder(models.Model):
                         lambda f: f.fields_id.id == req_field.id and f.combo_id.id == model_item.id
                     )
                 if existing_field:
+                    existing_field = existing_field[0]
                     rec = {
                         'sequence': 1 if existing_field.fields_id.type == 'required' else 0,
                         'fields_id': req_field.id,
@@ -365,8 +364,10 @@ class SaleOrder(models.Model):
             general_domain = base_domain + [('partner_id', '=', False)]
             combo_pricelist_id = self.env['product.pricelist.item'].search(general_domain, limit=1)
 
-        if not combo_pricelist_id:
-            raise ValidationError(_("Combo chưa có bảng giá hoạt động hoặc không tìm thấy bảng giá phù hợp: %s!!!") % sale_combo_id.combo_id.name)
+        # Hà Quý Dũng
+        # if not combo_pricelist_id:
+        #     raise ValidationError(
+        #         _("Combo chưa có bảng giá hoạt động hoặc không tìm thấy bảng giá phù hợp: %s!!!") % sale_combo_id.combo_id.name)
 
         return combo_pricelist_id
 
@@ -402,27 +403,35 @@ class SaleOrder(models.Model):
                 compute_field_ids = self.fields_ids.filtered(
                     lambda f: f.using_calculation_price and f.combo_id.id == combo.combo_id.id)
                 price = 0
+                total_amount = 0
                 for compute_field_id in compute_field_ids:
+                    value_integer = compute_field_id.value_integer
                     if not compute_field_id.value_integer:
                         continue
                     detail_price_ids = combo_pricelist_id.pricelist_table_detail_ids.filtered(
                         lambda ptd: ptd.compute_uom_id.id == compute_field_id.uom_id.id)
-                    _logger.info(detail_price_ids)
                     for detail_price_id in detail_price_ids:
-                        if detail_price_id.min_value <= compute_field_id.value_integer <= detail_price_id.max_value:
-                            _logger.info(detail_price_id.max_value)
-                            if detail_price_id.price_type == 'unit_price':
-                                if detail_price_id.amount > price:
-                                    price = detail_price_id.amount
-                                    compute_uom_id = detail_price_id.compute_uom_id.id
-                            else:
-                                if detail_price_id.amount > price:
-                                    price = detail_price_id.amount
-                                    compute_uom_id = detail_price_id.compute_uom_id.id
-                            if price < combo_pricelist_id.min_amount:
-                                price = combo_pricelist_id.min_amount
-                                compute_uom_id = compute_field_id.uom_id.id
-                    compute_value = compute_field_id.value_integer
+                        if detail_price_id.condition_type in ('simple', 'or'):
+                            if detail_price_id.min_value <= compute_field_id.value_integer <= detail_price_id.max_value:
+                                if detail_price_id.price_type == 'unit_price':
+                                    if (detail_price_id.amount * value_integer) > total_amount:
+                                        price = detail_price_id.amount
+                                        total_amount = detail_price_id.amount * compute_field_id.value_integer
+                                        compute_uom_id = detail_price_id.compute_uom_id.id
+                                        compute_value = compute_field_id.value_integer
+                                else:
+                                    if (detail_price_id.amount * value_integer) > total_amount:
+                                        price = detail_price_id.amount
+                                        total_amount = detail_price_id.amount * compute_field_id.value_integer
+                                        compute_uom_id = detail_price_id.compute_uom_id.id
+                                        compute_value = compute_field_id.value_integer
+                                if price < combo_pricelist_id.min_amount:
+                                    price = combo_pricelist_id.min_amount
+                                    compute_uom_id = compute_field_id.uom_id.id
+                                    compute_value = compute_field_id.value_integer
+                            # else:
+                            #     raise ValidationError(_("Báo giá đã vượt ngưỡng trong bảng giá vui lòng check lại"))
+
                 combo.price = price
                 combo.qty = compute_value
             amount_total, amount_planned_total = self._get_service_allin_baogiao()
@@ -435,52 +444,84 @@ class SaleOrder(models.Model):
     def _get_service_allin_baogiao(self):
         amount_total = 0
         amount_planned_total = 0
-        if self.quote_type == 'bao_giao':
+        if self.quote_type == 'dac_biet':
             sale_service_ids = self.sale_service_ids.filtered(lambda sale_service: sale_service.is_bao_giao)
             for sale_service_id in sale_service_ids:
                 amount_total += sale_service_id.amount_total
-            planned_sale_service_ids = self.planned_sale_service_ids.filtered(lambda sale_service: sale_service.is_bao_giao)
+            planned_sale_service_ids = self.planned_sale_service_ids.filtered(
+                lambda sale_service: sale_service.is_bao_giao)
             for planned_sale_service_id in planned_sale_service_ids:
                 amount_planned_total += planned_sale_service_id.amount_total
-        elif self.quote_type == 'all_in':
-            sale_service_ids = self.sale_service_ids.filtered(lambda sale_service: sale_service.is_allin)
-            for sale_service_id in sale_service_ids:
-                amount_total += sale_service_id.amount_total
-            planned_sale_service_ids = self.planned_sale_service_ids.filtered(lambda planned_sale_service: planned_sale_service.is_allin)
-            for planned_sale_service_id in planned_sale_service_ids:
-                amount_planned_total += planned_sale_service_id.amount_total
+        # elif self.quote_type == 'all_in':
+        #     sale_service_ids = self.sale_service_ids.filtered(lambda sale_service: sale_service.is_allin)
+        #     for sale_service_id in sale_service_ids:
+        #         amount_total += sale_service_id.amount_total
+        #     planned_sale_service_ids = self.planned_sale_service_ids.filtered(
+        #         lambda planned_sale_service: planned_sale_service.is_allin)
+        #     for planned_sale_service_id in planned_sale_service_ids:
+        #         amount_planned_total += planned_sale_service_id.amount_total
         return amount_total, amount_planned_total
 
+
+    def get_service_price_from_pricelist(self, sale_service_id):
+        """Lấy giá combo từ bảng giá"""
+        self.ensure_one()
+        if not sale_service_id or not self.partner_id:
+            return False
+        today = fields.Date.today()
+        # Domain chung cho cả hai lần tìm kiếm
+        base_domain = [
+            ('service_id', '=', sale_service_id.service_id.id),
+            '|', ('date_start', '<=', today), ('date_start', '=', False),
+            '|', ('date_end', '>=', today), ('date_end', '=', False),
+        ]
+        # 1. Ưu tiên tìm bảng giá theo khách hàng cụ thể
+        partner_domain = base_domain + [('partner_id', '=', self.partner_id.id)]
+        service_pricelist_id = self.env['product.pricelist.item'].search(partner_domain, limit=1)
+        # 2. Nếu không có, tìm bảng giá chung (không gán cho khách hàng nào)
+        if not service_pricelist_id:
+            general_domain = base_domain + [('partner_id', '=', False)]
+            service_pricelist_id = self.env['product.pricelist.item'].search(general_domain, limit=1)
+        # if not service_pricelist_id:
+        #     raise ValidationError(
+        #         _("Combo chưa có bảng giá hoạt động hoặc không tìm thấy bảng giá phù hợp: %s!!!") % sale_service_id.service_id.name)
+        return service_pricelist_id
+
     def _compute_service_price(self, service_ids):
+        """Tính toán giá dịch vụ dựa trên bảng giá"""
+        _logger.info(f"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+        _logger.info(service_ids)
         for sale_service_id in service_ids:
-            if sale_service_id.combo_id and sale_service_id.price > 0 and sale_service_id.price_status == 'calculated':
-                continue
-            if not sale_service_id.uom_id:
-                continue
             approved = sale_service_id.approval_id.filtered(
                 lambda approval: approval.request_status in ('approved', 'refused'))
             if approved:
                 continue
+            # Lấy bảng giá phù hợp
             current_uom_id = sale_service_id.uom_id
             selected_uoms = self.env['uom.uom'].browse([current_uom_id.id]) if current_uom_id else self.env['uom.uom']
-            service_price_ids = sale_service_id.service_id.get_active_pricelist(
-                partner_id=self.partner_id,
-                selected_uoms=selected_uoms
-            )
+
+            service_price_ids = self.get_service_price_from_pricelist(sale_service_id)
+            _logger.info(f"service_price_ids --------------: {service_price_ids}")
+
+            # Lọc theo đơn vị và khách hàng nếu có
             if current_uom_id:
                 service_price_ids = service_price_ids.filtered(
                     lambda sp: sp.uom_id.id == current_uom_id.id and (
                             sp.partner_id and sp.partner_id.id == self.partner_id.id or not sp.partner_id
                     )
                 )
+
             if not service_price_ids:
                 continue
+
+            # Khởi tạo các giá trị
             max_price = 0
             price_list_item_id = None
             compute_value = 1
             compute_uom_id = None
+
             for service_price_id in service_price_ids:
-                # Giá cố định
+                # 1. Giá cố định
                 if service_price_id.compute_price == 'fixed':
                     price = max(service_price_id.currency_id.rate * service_price_id.fixed_price,
                                 service_price_id.min_amount)
@@ -488,46 +529,43 @@ class SaleOrder(models.Model):
                         max_price = price
                         price_list_item_id = service_price_id
 
-                # Giá theo phần trăm
+                # 2. Giá theo phần trăm
                 elif service_price_id.compute_price == 'percentage':
                     price_base = 0
 
-                    # Xác định giá trị cơ sở để tính phần trăm
+                    # Xác định giá trị để tính phần trăm
                     if service_price_id.percent_based_on == 'product_total_amount':
                         price_base = sum(self.order_line.mapped('price_subtotal'))
                     elif service_price_id.percent_based_on == 'declaration_total_amount':
                         price_base = sum(self.order_line.mapped('declared_unit_total'))
                     elif service_price_id.percent_based_on == 'purchase_total_amount':
                         purchase_ids = self.purchase_ids.filtered(lambda po: po.purchase_type == 'external')
-                        price_base = 0
                         for order_line in purchase_ids.mapped('order_line'):
                             price_base += order_line.price_subtotal * order_line.order_id.last_rate_currency
-                    elif service_price_id.percent_based_on == 'invoice_total_amount':
-                        # Tổng giá trị xuất hoá đơn - thêm xử lý ở đây nếu có
-                        pass
 
-                    # Tính giá từ phần trăm
+                    # Tính giá từ phần trăm nếu có price_base
                     if price_base:
                         price = max(
                             service_price_id.currency_id.rate * (price_base * service_price_id.percent_price / 100),
                             service_price_id.min_amount)
-                        if price and price > max_price:
+                        if price > max_price:
                             max_price = price
                             price_list_item_id = service_price_id
 
-                # Giá theo bảng
+                # 3. Giá theo bảng
                 elif service_price_id.compute_price == 'table':
                     # Tìm các trường để tính giá
                     compute_field_ids = self.fields_ids.filtered(
                         lambda f: f.using_calculation_price and
                                   f.service_id.id == sale_service_id.service_id.id)
-
+                    compute_and_field_ids = self.fields_ids.filtered(
+                        lambda f: f.using_calculation_price and
+                                  f.service_id.id == sale_service_id.service_id.id)
                     for compute_field_id in compute_field_ids:
-                        # Kiểm tra nếu compute_field_id không có giá trị
+                        # Bỏ qua nếu không có giá trị
                         if not compute_field_id.value_integer:
                             continue
-
-                        # Xử lý giá không tích lũy
+                        # 3.1 Xử lý giá không tích lũy
                         if not service_price_id.is_accumulated:
                             detail_price_ids = service_price_id.pricelist_table_detail_ids.filtered(
                                 lambda ptd: ptd.uom_id.id == compute_field_id.uom_id.id and
@@ -536,13 +574,12 @@ class SaleOrder(models.Model):
                             )
 
                             for detail_price_id in detail_price_ids:
-                                # Tính giá dựa trên kiểu giá (đơn giá hoặc khoảng giá)
                                 if detail_price_id.price_type == 'unit_price':
                                     price = compute_field_id.value_integer * detail_price_id.amount
                                 else:  # fixed_range
                                     price = detail_price_id.amount
 
-                                # Áp dụng is_price nếu cần
+                                # Điều chỉnh theo is_price nếu cần
                                 if not service_price_id.is_price:
                                     price = detail_price_id.amount
 
@@ -551,20 +588,16 @@ class SaleOrder(models.Model):
                                 if price > max_price:
                                     max_price = price
                                     price_list_item_id = service_price_id
-                                    # Check if the unit is m3 or kg and use the corresponding field from the sale order
+                                    # Kiểm tra đơn vị là m3 hoặc kg để sử dụng giá trị từ sale order
                                     uom = self.env['uom.uom'].browse(compute_field_id.uom_id.id)
                                     if uom.name == 'm3' and self.volume:
-                                        # Use volume field from sale order
                                         compute_value = self.volume
                                     elif uom.name == 'kg' and self.weight:
-                                        # Use weight field from sale order
                                         compute_value = self.weight
                                     else:
-                                        # Use the field value as before
                                         compute_value = compute_field_id.value_integer
                                     compute_uom_id = compute_field_id.uom_id.id
-
-                        # Xử lý giá tích lũy
+                        # 3.2 Xử lý giá tích lũy
                         else:
                             detail_price_ids = service_price_id.pricelist_table_detail_ids.filtered(
                                 lambda ptd: ptd.uom_id.id == compute_field_id.uom_id.id
@@ -580,14 +613,14 @@ class SaleOrder(models.Model):
 
                                 has_applicable = True
 
-                                # Tính giá theo khoảng
+                                # Tính giá trị áp dụng
                                 if detail_price_id.max_value:
                                     applicable_value = min(compute_field_id.value_integer,
                                                            detail_price_id.max_value) - detail_price_id.min_value + 1
                                 else:
                                     applicable_value = compute_field_id.value_integer - detail_price_id.min_value + 1
 
-                                # Áp dụng giá theo kiểu
+                                # Tính giá theo kiểu
                                 if detail_price_id.price_type == 'unit_price':
                                     price = applicable_value * detail_price_id.amount
                                 else:  # fixed_range
@@ -599,22 +632,40 @@ class SaleOrder(models.Model):
 
                                 total_price += service_price_id.currency_id.rate * price
 
-                            # Chỉ cập nhật nếu có mức giá áp dụng được
+                            # Cập nhật nếu có mức giá áp dụng
                             if has_applicable and max(total_price, service_price_id.min_amount) > max_price:
                                 max_price = max(total_price, service_price_id.min_amount)
                                 price_list_item_id = service_price_id
-                                # Check if the unit is m3 or kg and use the corresponding field from the sale order
                                 uom = self.env['uom.uom'].browse(compute_field_id.uom_id.id)
                                 if uom.name == 'm3' and self.volume:
-                                    # Use volume field from sale order
                                     compute_value = self.volume
                                 elif uom.name == 'kg' and self.weight:
-                                    # Use weight field from sale order
                                     compute_value = self.weight
                                 else:
-                                    # Use the field value as before
                                     compute_value = compute_field_id.value_integer
                                 compute_uom_id = compute_field_id.uom_id.id
+
+
+                    val_selection = []
+                    for compute_and_field_id in compute_and_field_ids:
+                        val_selection.append(compute_and_field_id.selection_value_id.id)
+
+                    detail_price_ids = service_price_id.pricelist_table_detail_ids.filtered(
+                        lambda ptd: set(ptd.selection_ids.ids) == set(val_selection))
+                    _logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+                    _logger.info(service_price_id)
+                    _logger.info(val_selection)
+                    _logger.info(detail_price_ids)
+                    for detail_price_id in detail_price_ids:
+                        if detail_price_id.price_type == 'unit_price':
+                            price = detail_price_id.amount * compute_value
+                        else:
+                            price = detail_price_id.amount
+                        if price > max_price:
+                            max_price = price
+                            price_list_item_id = service_price_id
+                            compute_uom_id = detail_price_id.compute_uom_id.id
+
 
             # Cập nhật trạng thái giá
             price_status = sale_service_id.price_status or 'no_price'
@@ -627,14 +678,13 @@ class SaleOrder(models.Model):
                     service_price_ids[:1].uom_id.id if service_price_ids and service_price_ids[
                                                                              :1].uom_id else current_uom_id.id
                 )
-                # Tính giá đơn vị nếu có compute_value
+
+                # Tính giá đơn vị
                 unit_price = max_price
                 if price_list_item_id and price_list_item_id.is_price and compute_value > 0:
-                    # Kiểm tra nếu đơn vị là m3 hoặc kg
                     if compute_uom_id:
                         uom = self.env['uom.uom'].browse(compute_uom_id)
                         if uom.name not in ['m3', 'kg']:
-                            # Đối với các đơn vị khác, vẫn chia như cũ
                             unit_price = max_price / compute_value
                     else:
                         unit_price = max_price / compute_value
@@ -661,8 +711,8 @@ class SaleOrder(models.Model):
         planned_service_ids = self._filter_services_by_quote_type(self.planned_sale_service_ids)
 
         # Tính giá cho các dịch vụ đã lọc
-        self._compute_combo_price(combo_ids,'combo')
-        self._compute_combo_price(planned_combo_ids,'planned_combo')
+        self._compute_combo_price(combo_ids, 'combo')
+        self._compute_combo_price(planned_combo_ids, 'planned_combo')
         self._compute_service_price(service_ids)
         self._compute_service_price(planned_service_ids)
         self.onchange_calculation_tax()
@@ -699,12 +749,12 @@ class SaleOrder(models.Model):
 
             if service_model:
                 # Báo giá bao giao: bỏ qua các dịch vụ có is_bao_giao = True
-                if self.quote_type == 'bao_giao' and not service_model.is_bao_giao:
+                if self.quote_type == 'dac_biet' and not service_model.is_bao_giao:
                     filtered_services |= service
 
-                # Báo giá all in: bỏ qua các dịch vụ có is_allin = True
-                elif self.quote_type == 'all_in' and not service_model.is_allin:
-                    filtered_services |= service
+                # # Báo giá all in: bỏ qua các dịch vụ có is_allin = True
+                # elif self.quote_type == 'all_in' and not service_model.is_allin:
+                #     filtered_services |= service
 
         return filtered_services
 
@@ -847,78 +897,56 @@ class SaleOrder(models.Model):
         # [Hàng hóa] title cột
         worksheet.write('C10', 'Tên hàng hóa', bold_format)
         worksheet.write('D10', 'Số lượng', bold_format)
-        worksheet.write('E10', 'Chi phí (VND)', bold_format)
-        worksheet.write('F10', 'Note', bold_format)
+        worksheet.write('E10', 'Đơn giá', bold_format)
+        worksheet.write('F10', 'Thành tiền', bold_format)
+        worksheet.write('G10', 'Note', bold_format)
 
         # [Hàng hóa] data
         data = []
         for r in self.order_line:
-            data.append((r.product_id.name, r.product_uom_qty, r.price_subtotal, ''))
-        data.append(('Cước vận chuyển nội địa TQ', '', '', ''))
-        data.append(('Tổng tiền hàng + cước nội địa TQ', '', '', ''))
-        data.append(('Thể tích (m3)', self.volume, '', ''))
-        data.append(('Khối lượng (kg)', self.weight, '', ''))
-        data.append(('Phí vận chuyển/ m3', '', '', ''))
-        data.append(('Phí vận chuyển/ kg', '', '', ''))
+            data.append((r.product_id.name, r.product_uom_qty, f"{int(r.price_unit):,}", f"{int(r.price_subtotal):,}", ''))
+        data.append(('Thể tích (m3)', "{:,}".format(self.volume),
+                     f"{int(sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'm3').mapped('price'))):,}",
+                     f"{int(sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'm3').mapped('amount_total'))):,}",
+                     ''))
+        data.append(('Khối lượng (kg)', "{:,}".format(self.weight),
+                     f"{int(sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'kg').mapped('price'))):,}",
+                     f"{int(sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'kg').mapped('amount_total'))):,}",
+                     ''))
 
         # Bắt đầu từ hàng thứ hai, viết dữ liệu vào worksheet
         row = 10
-        for item, quantity, cost, note in data:
+        for item, quantity, cost, amount_total, note in data:
             format = None
             if item == 'Tổng tiền hàng + cước nội địa TQ':
                 format = special_format
             worksheet.write(row, 2, item, format)
             worksheet.write(row, 3, quantity, format)
             worksheet.write(row, 4, cost, format)
-            worksheet.write(row, 5, note, format)
+            worksheet.write(row, 5, amount_total, format)
+            worksheet.write(row, 6, note, format)
             row += 1
 
         # [Hàng hóa] Merge cells cho cột 'Tên hàng hóa'
         worksheet.merge_range(f'B10:B{row}', 'Hàng hóa', merge_format)
         # worksheet.add_table('B11:F42')
-
-        # [Thuế]
-        # [Thuế] Title data
         data = []
-        nk_tax_amount = 0
-        for r in self.order_line:
-            data.append((f'NK CO Form E_{r.product_id.name}', r.import_tax_rate, r.import_tax_amount, ''))
-            nk_tax_amount += r.import_tax_amount
-        vat_tax_amount = 0
-        for r in self.order_line:
-            data.append((f'VAT_{r.product_id.name}', r.vat_tax_rate, r.vat_tax_amount, ''))
-            vat_tax_amount += r.vat_tax_amount
         start = row
-        for item, quantity, cost, note in data:
-            worksheet.write(row, 2, item)
-            worksheet.write(row, 3, quantity)
-            worksheet.write(row, 4, cost)
-            worksheet.write(row, 5, note)
-            row += 1
-        worksheet.merge_range(f'B{start + 1}:B{row}', 'Thuế', merge_format)
-
-        # [Báo giá chi tiết]
-        # [Báo giá chi tiết] Data
-        # data = []
-        # for r in self.sale_service_ids:
-        #     data.append((r.service_id.name, r.compute_value, r.price, ''))
-        start = row
-        data.append(('Tổng chi phí vận chuyển theo kg', 'VND/lô', '', ''))
-        data.append(('Tổng chi phí vận chuyển theo m3', 'VND/lô', '', ''))
-        data.append(('Chi phí theo kg', 'VND/kg', '', ''))
-        data.append(('Chi phí theo m3', 'VND/m3', '', ''))
-        for r in self.order_line:
-            data.append((f'Tổng chi phí/{r.product_id.name}', 'VND/sản phẩm', '', ''))
-        for item, quantity, cost, note in data:
+        data.append(('Tổng chi phí vận chuyển theo kg', 'VND/lô', '',
+                     f"{int(sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'kg').mapped('amount_total'))):,}", ''))
+        data.append(('Tổng chi phí vận chuyển theo m3', 'VND/lô', '',
+                     f"{int(sum(self.planned_service_combo_ids.filtered(lambda p: p.compute_uom_id.name == 'm3').mapped('amount_total'))):,}", ''))
+        for item, quantity, cost, amount_total, note in data:
             format = None
             if item in ('Tổng chi phí vận chuyển theo kg', 'Tổng chi phí vận chuyển theo m3'):
                 format = special_format
             worksheet.write(row, 2, item, format)
             worksheet.write(row, 3, quantity, format)
             worksheet.write(row, 4, cost, format)
-            worksheet.write(row, 5, note, format)
+            worksheet.write(row, 5, amount_total, format)
+            worksheet.write(row, 6, note, format)
             row += 1
-        worksheet.merge_range(f'B{start + 1}:B{row}', 'Báo giá chi tiết', merge_format)
+        worksheet.merge_range(f'B{start + 1}:B{row}', 'Cước vận chuyển', merge_format)
 
         worksheet.write(f'B{row + 2}', 'Liên hệ:', employee_contact_format)
         worksheet.write(f'C{row + 2}', f'Chuyên viên: {self.employee_sale.name or ""}')
@@ -932,7 +960,6 @@ class SaleOrder(models.Model):
         vals = {
             'name': f'Bao_gia_{self.name}' + '.xls',
             'datas': base64.b64encode(xls),
-            # 'datas_fname': 'Template_ngan_sach.xls',
             'type': 'binary',
             'res_model': 'sale.order',
             'res_id': self.id,
@@ -988,7 +1015,9 @@ class SaleOrder(models.Model):
         # Title
         worksheet.merge_range('A5:F5', 'BÁO GIÁ DỊCH VỤ', merge_format)
         worksheet.write('B7', 'Khách hàng:', bold_format)
+        worksheet.write('C7', self.partner_id.name or '', bold_format)
         worksheet.write('D7', 'Địa chỉ:', bold_format)
+        worksheet.write('E7', self.partner_id.street or '', bold_format)
         worksheet.write('B8', 'Mặt hàng:', bold_format)
         worksheet.merge_range('B9:F9', 'Cám ơn quý khách đã quan tâm tới dịch vụ của Kỳ Tốc Logistics.'
                                        ' Chúng tôi xin được gửi tới quý khách giá cước cho hàng nhập của quý khách như sau',
@@ -996,78 +1025,51 @@ class SaleOrder(models.Model):
         # [Hàng hóa] title cột
         worksheet.write('C10', 'Tên hàng hóa', bold_format)
         worksheet.write('D10', 'Số lượng', bold_format)
-        worksheet.write('E10', 'Chi phí (VND)', bold_format)
-        worksheet.write('F10', 'Note', bold_format)
+        worksheet.write('E10', 'Đơn giá', bold_format)
+        worksheet.write('F10', 'Thành tiền', bold_format)
+        worksheet.write('G10', 'Note', bold_format)
 
         # [Hàng hóa] data
         data = []
-        for r in self.order_line:
-            data.append((r.product_id.name, r.product_uom_qty, r.price_subtotal, ''))
-        data.append(('Cước vận chuyển nội địa TQ', '', '', ''))
-        data.append(('Tổng tiền hàng + cước nội địa TQ', '', '', ''))
-        data.append(('Thể tích (m3)', self.volume, '', ''))
-        data.append(('Khối lượng (kg)', self.weight, '', ''))
-        data.append(('Phí vận chuyển/ m3', '', '', ''))
-        data.append(('Phí vận chuyển/ kg', '', '', ''))
-
-        # Bắt đầu từ hàng thứ hai, viết dữ liệu vào worksheet
         row = 10
-        for item, quantity, cost, note in data:
+        start = row
+        for r in self.order_line:
+            data.append((r.product_id.name, r.product_uom_qty, f"{int(r.price_unit):,}", f"{int(r.price_subtotal):,}", ''))
+        for item, quantity, cost, amount_total, note in data:
             format = None
-            if item == 'Tổng tiền hàng + cước nội địa TQ':
-                format = special_format
             worksheet.write(row, 2, item, format)
             worksheet.write(row, 3, quantity, format)
             worksheet.write(row, 4, cost, format)
-            worksheet.write(row, 5, note, format)
+            worksheet.write(row, 5, amount_total, format)
+            worksheet.write(row, 6, note, format)
             row += 1
-
-        # [Hàng hóa] Merge cells cho cột 'Tên hàng hóa'
-        worksheet.merge_range(f'B10:B{row}', 'Hàng hóa', merge_format)
-        # worksheet.add_table('B11:F42')
-
-        # [Thuế]
-        # [Thuế] Title data
-        data = []
-        nk_tax_amount = 0
-        for r in self.order_line:
-            data.append((f'NK CO Form E_{r.product_id.name}', r.import_tax_rate, r.import_tax_amount, ''))
-            nk_tax_amount += r.import_tax_amount
-        vat_tax_amount = 0
-        for r in self.order_line:
-            data.append((f'VAT_{r.product_id.name}', r.vat_tax_rate, r.vat_tax_amount, ''))
-            vat_tax_amount += r.vat_tax_amount
-        start = row
-        for item, quantity, cost, note in data:
-            worksheet.write(row, 2, item)
-            worksheet.write(row, 3, quantity)
-            worksheet.write(row, 4, cost)
-            worksheet.write(row, 5, note)
-            row += 1
-        worksheet.merge_range(f'B{start + 1}:B{row}', 'Thuế', merge_format)
+        worksheet.merge_range(f'B{start + 1}:B{row}', 'Hàng hóa', merge_format)
 
         # [Báo giá chi tiết]
         # [Báo giá chi tiết] Data
         data = []
         total = 0
         for r in self.sale_service_ids:
-            data.append((r.service_id.name, r.compute_value, r.price, ''))
-            total += r.price
+            if r.service_id:
+                data.append(
+                    (r.service_id.name, r.compute_value, f"{int(r.price):,}", f"{int(r.amount_total):,}", ''))
+                total += r.amount_total
+        for r in self.service_combo_ids:
+            if r.combo_id:
+                data.append(
+                    (f"{r.combo_id.name}({r.code if r.code else '' })", r.qty, f"{int(r.price):,}", f"{int(r.amount_total):,}", ''))
+                total += r.amount_total
         start = row
-        data.append(('Tổng chi phí vận chuyển theo kg', 'VND/lô', total, ''))
-        data.append(('Tổng chi phí vận chuyển theo m3', 'VND/lô', total, ''))
-        data.append(('Chi phí theo kg', 'VND/kg', round(total/self.weight, 2) if self.weight else '', ''))
-        data.append(('Chi phí theo m3', 'VND/m3', round(total/self.volume, 2) if self.volume else '', ''))
-        for r in self.order_line:
-            data.append((f'Tổng chi phí/{r.product_id.name}', 'VND/sản phẩm', round(total/len(self.order_line), 2) if len(self.order_line) else '', ''))
-        for item, quantity, cost, note in data:
+        data.append(('Tổng chi phí vận chuyển', '', '', f"{int(self.service_total_amount):,}", ''))
+        for item, quantity, cost, amount_total, note in data:
             format = None
-            if item in ('Tổng chi phí vận chuyển theo kg', 'Tổng chi phí vận chuyển theo m3'):
+            if str(item) in ('Tổng chi phí vận chuyển'):
                 format = special_format
             worksheet.write(row, 2, item, format)
             worksheet.write(row, 3, quantity, format)
             worksheet.write(row, 4, cost, format)
-            worksheet.write(row, 5, note, format)
+            worksheet.write(row, 5, amount_total, format)
+            worksheet.write(row, 6, note, format)
             row += 1
         worksheet.merge_range(f'B{start + 1}:B{row}', 'Báo giá chi tiết', merge_format)
 
@@ -1139,84 +1141,55 @@ class SaleOrder(models.Model):
         # Title
         worksheet.merge_range('A5:F5', 'BÁO GIÁ DỊCH VỤ', merge_format)
         worksheet.write('B7', 'Khách hàng:', bold_format)
+        worksheet.write('C7', self.partner_id.name or '', bold_format)
         worksheet.write('D7', 'Địa chỉ:', bold_format)
+        worksheet.write('E7', self.partner_id.street or '', bold_format)
         worksheet.write('B8', 'Mặt hàng:', bold_format)
         worksheet.merge_range('B9:F9', 'Cám ơn quý khách đã quan tâm tới dịch vụ của Kỳ Tốc Logistics.'
                                        ' Chúng tôi xin được gửi tới quý khách giá cước cho hàng nhập của quý khách như sau',
                               )
         # [Hàng hóa] title cột
+        worksheet.write('B10', 'Mã HS', bold_format)
         worksheet.write('C10', 'Tên hàng hóa', bold_format)
         worksheet.write('D10', 'Số lượng', bold_format)
-        worksheet.write('E10', 'Chi phí (VND)', bold_format)
-        worksheet.write('F10', 'Note', bold_format)
+        worksheet.write('E10', 'Đơn giá', bold_format)
+        worksheet.write('F10', 'Thành tiền', bold_format)
+        worksheet.write('G10', 'Note', bold_format)
 
         # [Hàng hóa] data
         data = []
-        for r in self.order_line:
-            data.append((r.product_id.name, r.product_uom_qty, r.price_subtotal, ''))
-        data.append(('Cước vận chuyển nội địa TQ', '', '', ''))
-        data.append(('Tổng tiền hàng + cước nội địa TQ', '', '', ''))
-        data.append(('Thể tích (m3)', self.volume, '', ''))
-        data.append(('Khối lượng (kg)', self.weight, '', ''))
-        data.append(('Phí vận chuyển/ m3', '', '', ''))
-        data.append(('Phí vận chuyển/ kg', '', '', ''))
+        data.append(('Thể tích (m3)', "{:,}".format(self.volume), "", "", ''))
+        data.append(('Khối lượng (kg)', "{:,}".format(self.weight), "", "", ''))
 
         # Bắt đầu từ hàng thứ hai, viết dữ liệu vào worksheet
         row = 10
-        for item, quantity, cost, note in data:
-            format = None
-            if item == 'Tổng tiền hàng + cước nội địa TQ':
-                format = special_format
-            worksheet.write(row, 2, item, format)
-            worksheet.write(row, 3, quantity, format)
-            worksheet.write(row, 4, cost, format)
-            worksheet.write(row, 5, note, format)
+        for item, quantity, cost, amount_total, note in data:
+            worksheet.write(row, 2, item, None)
+            worksheet.write(row, 3, quantity, None)
+            worksheet.write(row, 4, cost, None)
+            worksheet.write(row, 5, amount_total, None)
+            worksheet.write(row, 6, note, None)
             row += 1
 
         # [Hàng hóa] Merge cells cho cột 'Tên hàng hóa'
-        worksheet.merge_range(f'B10:B{row}', 'Hàng hóa', merge_format)
-        # worksheet.add_table('B11:F42')
-
-        # [Thuế]
-        # [Thuế] Title data
-        data = []
-        nk_tax_amount = 0
-        for r in self.order_line:
-            data.append((f'NK CO Form E_{r.product_id.name}', r.import_tax_rate, r.import_tax_amount, ''))
-            nk_tax_amount += r.import_tax_amount
-        vat_tax_amount = 0
-        for r in self.order_line:
-            data.append((f'VAT_{r.product_id.name}', r.vat_tax_rate, r.vat_tax_amount, ''))
-            vat_tax_amount += r.vat_tax_amount
-        start = row
-        for item, quantity, cost, note in data:
-            worksheet.write(row, 2, item)
-            worksheet.write(row, 3, quantity)
-            worksheet.write(row, 4, cost)
-            worksheet.write(row, 5, note)
-            row += 1
-        worksheet.merge_range(f'B{start + 1}:B{row}', 'Thuế', merge_format)
+        worksheet.merge_range(f'B11:B{row}', 'Hàng hóa', merge_format)
 
         # [Báo giá chi tiết]
         # [Báo giá chi tiết] Data
         data = []
-        for r in self.sale_service_ids:
-            data.append((r.service_id.name, r.compute_value, r.price, ''))
-        start = row
-        data.append(('Tổng chi phí vận chuyển theo kg', 'VND/lô', '', ''))
-        data.append(('Tổng chi phí vận chuyển theo m3', 'VND/lô', '', ''))
-        data.append(('Chi phí theo kg', 'VND/kg', '', ''))
-        data.append(('Chi phí theo m3', 'VND/m3', '', ''))
         for r in self.order_line:
-            data.append((f'Tổng chi phí/{r.product_id.name}', 'VND/sản phẩm', '', ''))
-        for item, quantity, cost, note in data:
+            data.append((r.product_id.name, r.product_uom_qty, f"{int(r.price_unit):,}",
+                         f"{int(r.price_subtotal):,}", ''))
+        start = row
+        for item, quantity, cost, amount_total, note in data:
             format = None
             if item in ('Tổng chi phí vận chuyển theo kg', 'Tổng chi phí vận chuyển theo m3'):
                 format = special_format
             worksheet.write(row, 2, item, format)
             worksheet.write(row, 3, quantity, format)
             worksheet.write(row, 4, cost, format)
-            worksheet.write(row, 5, note, format)
+            worksheet.write(row, 5, amount_total, format)
+            worksheet.write(row, 6, note, format)
             row += 1
         worksheet.merge_range(f'B{start + 1}:B{row}', 'Báo giá chi tiết', merge_format)
 
@@ -1227,21 +1200,6 @@ class SaleOrder(models.Model):
         worksheet.write(f'E{row + 2}', 'CÔNG TY TNHH DPT VINA HOLDINGS')
         worksheet.write(f'H7', f"Tỷ giá tệ từ hệ thống: {self.currency_id.search([('name', '=', 'CNY')]).rate}")
         worksheet.write(f'H8', f"Tỷ giá USD từ hệ thống: {self.currency_id.search([('name', '=', 'USD')]).rate}")
-        # update money by product
-        alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        col = 7
-        for order_line in self.order_line:
-            worksheet.write(f'{alphabet[col]}19', order_line.product_id.name, special_format)
-            col += 1
-
-        row = 20
-        for sale_service_id in self.sale_service_ids:
-            col = 7
-            for order_line in self.order_line:
-                amount = (sale_service_id.amount_total / self.service_total_amount) * order_line.price_subtotal if self.service_total_amount else 0
-                worksheet.write(f'{alphabet[col]}{row}', amount, None)
-                col += 1
-            row += 1
 
         workbook.close()
         xls = output.getvalue()

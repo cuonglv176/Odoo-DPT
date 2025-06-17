@@ -859,7 +859,7 @@ class DptExportImportLine(models.Model):
             company = self.env.company
             min_margin = company.dpt_min_profit_margin or 1.01
             max_margin = company.dpt_max_profit_margin or 1.03
-            
+
             if rec.dpt_unit_cost > 0:
                 rec.dpt_price_min_allowed = rec.dpt_unit_cost * min_margin
                 rec.dpt_price_max_allowed = rec.dpt_unit_cost * max_margin

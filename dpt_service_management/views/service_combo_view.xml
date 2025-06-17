@@ -112,13 +112,21 @@
                             <button name="sync_required_fields_from_services" string="Đồng bộ từ dịch vụ"
                                     type="object" class="btn-secondary mb-2"/>
                             <field name="required_fields_ids">
-                                <tree>
-                                    <field name="name"/>
-                                    <field name="fields_type"/>
-                                    <field name="type"/>
+                                 <tree editable="bottom">
+                                    <field name="code" required="is_template == True"/>
+                                    <field name="is_template" widget="boolean_toggle"/>
+                                    <field name="fields_id" domain="[('relation','=','sale.order')]" columnInvisible="1"/>
+                                    <field name="name" required="1"/>
+                                    <field name="field" required="1"/>
+                                    <field name="fields_type" required="1"/>
                                     <field name="description"/>
-                                    <field name="uom_id"/>
-                                    <field name="using_calculation_price"/>
+                                    <field name="selection_value_ids" widget="many2many_tags"/>
+                                    <field name="type" widget="radio"/>
+                                    <!--                                    <field name="uom_id" invisible="not using_calculation_price"-->
+                                    <!--                                           options="{'no_create': True, 'no_create_edit': True}"/>-->
+                                    <field name="condition_uom_ids" widget="many2many_tags" options="{'no_create': True, 'no_create_edit': True}"/>
+                                    <field name="pricing_uom_ids" widget="many2many_tags" invisible="not using_calculation_price" options="{'no_create': True, 'no_create_edit': True}"/>
+                                    <field name="using_calculation_price" widget="boolean_toggle"/>
                                     <field name="default_compute_from"/>
                                 </tree>
                                 <form>

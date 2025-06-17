@@ -27,8 +27,6 @@
                 <attribute name="invisible">1</attribute>
             </page>
             <field name="sale_order_template_id" position="after">
-                <field name="type_so_route"/>
-                <field name="line_transfer"/>
                 <field name="employee_sale"/>
                 <field name="employee_cs"/>
                 <field name="times_of_quotation" readonly="1"/>
@@ -64,7 +62,7 @@
                             <field name="sequence" widget="handle"/>
                             <field name="currency_id" column_invisible="1" force_save="1"/>
                             <field name="currency_cny_id" optional="hide"/>
-                            <field name="service_id" domain="[('child_ids', '=', False)]"/>
+                            <field name="service_id"/>
                             <field name="uom_id" column_invisible="1"/>
                             <field name="compute_value" readonly="1" force_save="1"/>
                             <field name="compute_uom_id" force_save="1"/>
@@ -78,7 +76,7 @@
                             <field name="note"/>
                             <field name="is_price_fixed" widget="boolean_toggle"/>
                             <field name="is_bao_giao" widget="boolean_toggle"/>
-                            <field name="is_allin" widget="boolean_toggle"/>
+<!--                            <field name="is_allin" widget="boolean_toggle"/>-->
 
                         </tree>
                     </field>
@@ -111,7 +109,7 @@
                             <field name="sequence" widget="handle"/>
                             <field name="currency_id" column_invisible="1" force_save="1"/>
                             <field name="currency_cny_id" optional="hide"/>
-                            <field name="service_id" domain="[('child_ids', '=', False)]"/>
+                            <field name="service_id"/>
                             <field name="uom_id" column_invisible="1"/>
                             <field name="compute_value" readonly="1" force_save="1"/>
                             <field name="compute_uom_id" force_save="1"/>
@@ -123,7 +121,7 @@
                             <field name="amount_total" readonly="1" force_save="1"/>
                             <field name="department_id" context="{'dpt_sale_management': 1}"/>
                             <field name="is_bao_giao" widget="boolean_toggle"/>
-                            <field name="is_allin" widget="boolean_toggle"/>
+<!--                            <field name="is_allin" widget="boolean_toggle"/>-->
                             <field name="note"/>
                         </tree>
                     </field>
