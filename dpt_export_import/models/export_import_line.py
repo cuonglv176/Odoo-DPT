@@ -91,7 +91,7 @@ class DptExportImportLine(models.Model):
     hs_code_id = fields.Many2one('dpt.export.import.acfta', string='HS Code', tracking=True)
     dpt_code_hs = fields.Char(string='H')
     dpt_sl1 = fields.Float(string='SL1', tracking=True, digits=(12, 4))
-    dpt_price_unit = fields.Monetary(string='Đơn giá xuất hoá đơn', tracking=True, currency_field='currency_id',
+    dpt_price_unit = fields.Monetary(string='Giá XHĐ mong muốn', tracking=True, currency_field='currency_id',
                                      compute="_compute_dpt_price_unit", inverse="_inverse_dpt_price_unit", store=True)
     dpt_uom1_id = fields.Many2one('uom.uom', string='ĐVT 1', tracking=True)
     dpt_sl2 = fields.Float(string='SL2', tracking=True, digits=(12, 4))
@@ -167,6 +167,100 @@ class DptExportImportLine(models.Model):
     is_history = fields.Boolean(string='History', default=False, tracking=True)
     active = fields.Boolean('Active', default=True)
 
+    # Allocated Cost Fields
+    dpt_allocated_cost_general = fields.Monetary(
+        string='Chi phí phân bổ chung',
+        currency_field='currency_id',
+        tracking=True
+    )
+    dpt_allocated_cost_specific = fields.Monetary(
+        string='Chi phí phân bổ riêng',
+        currency_field='currency_id',
+        tracking=True
+    )
+    dpt_total_allocated_cost = fields.Monetary(
+        string='Tổng chi phí phân bổ',
+        currency_field='currency_id',
+        compute='_compute_total_allocated_cost',
+        store=True,
+        tracking=True
+    )
+
+    # Cost Fields
+    dpt_cost_of_goods = fields.Monetary(
+        string='Giá vốn hàng hóa',
+        currency_field='currency_id',
+        compute='_compute_cost_of_goods',
+        store=True,
+        tracking=True
+    )
+    dpt_unit_cost = fields.Monetary(
+        string='Đơn giá vốn',
+        currency_field='currency_id',
+        compute='_compute_unit_cost',
+        store=True,
+        tracking=True
+    )
+
+    # Price Approval Fields
+    can_request_price_approval = fields.Boolean(
+        string="Có thể yêu cầu phê duyệt giá",
+        compute='_compute_can_request_price_approval'
+    )
+    dpt_price_min_allowed = fields.Monetary(
+        string="Giá bán min cho phép",
+        currency_field='currency_id',
+        compute='_compute_allowed_prices',
+        store=True,
+        tracking=True
+    )
+    dpt_price_max_allowed = fields.Monetary(
+        string="Giá bán max cho phép",
+        currency_field='currency_id',
+        compute='_compute_allowed_prices',
+        store=True,
+        tracking=True
+    )
+    dpt_system_price = fields.Monetary(
+        string="Giá XHĐ hệ thống",
+        currency_field='currency_id',
+        compute='_compute_allowed_prices',
+        store=True,
+        tracking=True
+    )
+    dpt_actual_price = fields.Monetary(
+        string="Giá XHĐ thực tế",
+        currency_field='currency_id',
+        tracking=True
+    )
+    approval_request_id = fields.Many2one(
+        'approval.request',
+        string="Yêu cầu phê duyệt",
+        copy=False
+    )
+    approval_status = fields.Selection(
+        related='approval_request_id.request_status',
+        string="Trạng thái phê duyệt"
+    )
+    price_revalidation_required = fields.Boolean(
+        string="Cần định giá lại",
+        default=False,
+        copy=False
+    )
+
+    # Thêm các trường để hỗ trợ tính năng kiểm tra giá
+    price_outside_range = fields.Boolean(string='Giá ngoài khoảng cho phép', default=False)
+    price_temp = fields.Monetary(string='Giá tạm thời', currency_field='currency_id', store=False)
+
+    @api.depends('dpt_price_unit', 'dpt_price_min_allowed', 'dpt_price_max_allowed')
+    def _compute_can_request_price_approval(self):
+        for line in self:
+            is_in_range = (line.dpt_price_min_allowed <= line.dpt_price_unit <= line.dpt_price_max_allowed)
+            if not line.dpt_price_unit or is_in_range:
+                line.can_request_price_approval = False
+            else:
+                line.can_request_price_approval = True
+
     @api.depends('declaration_type', 'dpt_price_usd', 'dpt_price_cny_vnd', 'dpt_price_krw_vnd',
                  'dpt_exchange_rate_basic_final', 'dpt_sl1')
     def _compute_dpt_basic_value(self):
@@ -186,38 +280,23 @@ class DptExportImportLine(models.Model):
         for rec in self:
             rec.dpt_total_krw_vnd = rec.dpt_price_krw_vnd * rec.currency_krw_id.rate_ids[:1].company_rate * rec.dpt_sl1
 
-    # @api.onchange('declaration_type', 'dpt_price_unit', 'dpt_tax_other', 'dpt_tax_import')
-    # def onchange_dpt_price(self):
-    #     for rec in self:
-    #         company_rate = 1
-    #
-    #         if rec.declaration_type == 'usd':
-    #             company_rate = rec.currency_usd_id.rate_ids[:1].company_rate or 1
-    #         elif rec.declaration_type == 'cny':
-    #             company_rate = rec.currency_cny_id.rate_ids[:1].company_rate or 1
-    #         elif rec.declaration_type == 'krw':
-    #             company_rate = rec.currency_krw_id.rate_ids[:1].company_rate or 1
-    #         else:
-    #             continue  # Nếu không có declaration_type hợp lệ, bỏ qua
-    #         # Đảm bảo company_rate không bị 0
-    #         company_rate = 1 / company_rate if company_rate else 1
-    #         # Tính giá trị chia
-    #         divisor = 0.1 * (1 + (rec.dpt_tax_import or 0) + (rec.dpt_tax_other or 0))
-    #         dpt_price = (rec.dpt_price_unit * company_rate) / divisor if divisor else 0
-    #         # Gán giá trị vào đúng trường
-    #         if rec.declaration_type == 'usd':
-    #             rec.dpt_price_usd = dpt_price
-    #         elif rec.declaration_type == 'cny':
-    #             rec.dpt_price_cny_vnd = dpt_price
-    #         elif rec.declaration_type == 'krw':
-    #             rec.dpt_price_krw_vnd = dpt_price
-    #
-    # @api.onchange('declaration_type', 'dpt_price_usd', 'dpt_price_cny_vnd', 'dpt_price_krw_vnd', 'dpt_tax_other',
-    #               'dpt_tax_import')
-    # def onchange_dpt_price_unit(self):
+    @api.depends('declaration_type', 'dpt_price_usd', 'dpt_price_cny_vnd', 'dpt_price_krw_vnd', 'dpt_tax_other',
+                 'dpt_tax_import')
+    # def _compute_dpt_price_unit(self):
+    #     """
+    #     Logic tính giá XHĐ mong muốn từ giá khai báo:
+        
+    #     1. Xác định giá khai báo dựa trên loại tiền (USD, CNY, KRW)
+    #     2. Lấy tỷ giá công ty tương ứng
+    #     3. Công thức: dpt_price_unit = ((giá khai * 0.1) + thuế NK + thuế khác) * tỷ giá
+        
+    #     Lưu ý: Hệ số 0.1 là một hằng số được sử dụng trong công thức.
+    #     """
     #     for rec in self:
     #         dpt_price = 0
     #         company_rate = 1
+            
+    #         # Xác định giá và tỷ giá theo loại tiền khai báo
     #         if rec.declaration_type == 'usd':
     #             dpt_price = rec.dpt_price_usd
     #             company_rate = rec.currency_usd_id.rate_ids[:1].company_rate
@@ -227,64 +306,67 @@ class DptExportImportLine(models.Model):
     #         elif rec.declaration_type == 'krw':
     #             dpt_price = rec.dpt_price_krw_vnd
     #             company_rate = rec.currency_krw_id.rate_ids[:1].company_rate
-    #         rec.dpt_price_unit = (dpt_price * 0.1) * (1 + rec.dpt_tax_import + rec.dpt_tax_other) * (1 / company_rate)
+            
+    #         # Áp dụng công thức tính giá XHĐ mong muốn
+    #         rec.dpt_price_unit = ((dpt_price * 0.1) + rec.dpt_tax_import + rec.dpt_tax_other) * (company_rate or 1)
 
-    @api.depends('declaration_type', 'dpt_price_usd', 'dpt_price_cny_vnd', 'dpt_price_krw_vnd', 'dpt_tax_other',
-                 'dpt_tax_import')
-    def _compute_dpt_price_unit(self):
-        for rec in self:
-            dpt_price = 0
-            company_rate = 1
-            if rec.declaration_type == 'usd':
-                dpt_price = rec.dpt_price_usd
-                company_rate = rec.currency_usd_id.rate_ids[:1].company_rate
-            elif rec.declaration_type == 'cny':
-                dpt_price = rec.dpt_price_cny_vnd
-                company_rate = rec.currency_cny_id.rate_ids[:1].company_rate
-            elif rec.declaration_type == 'krw':
-                dpt_price = rec.dpt_price_krw_vnd
-                company_rate = rec.currency_krw_id.rate_ids[:1].company_rate
-            rec.dpt_price_unit = ((dpt_price * 0.1) + rec.dpt_tax_import + rec.dpt_tax_other) * (company_rate or 1)
-
-    def _inverse_dpt_price_unit(self):
-        for rec in self:
-            dpt_price = 1
-            if rec.dpt_exchange_rate:
-                dpt_exchange_rate = 1
-                # Fix the typo: rec.rec.dpt_exchange_rate -> rec.dpt_exchange_rate
-                if rec.dpt_exchange_rate > 0:
-                    dpt_exchange_rate = rec.dpt_exchange_rate
-                # Add safety check to prevent division by zero
-                try:
-                    # Ensure we're not dividing by zero
-                    if dpt_exchange_rate != 0:
-                        base_calculation = ( rec.dpt_price_unit / dpt_exchange_rate) - rec.dpt_tax_import - rec.dpt_tax_other
-                        # Add check for the 0.1 division as well (though this shouldn't be zero)
-                        if base_calculation != 0:
-                            dpt_price = base_calculation / 0.1
-                        else:
-                            dpt_price = 0  # or handle this case as needed
-                    else:
-                        dpt_price = 0  # or handle this case as needed
-                except ZeroDivisionError:
-                    dpt_price = 0  # Fallback value
-
-            # Update the database based on declaration type
-            if rec.declaration_type == 'usd':
-                self.env.cr.execute(
-                    "UPDATE dpt_export_import_line SET dpt_price_usd = %s WHERE id = %s",
-                    (dpt_price, rec.id)
-                )
-            elif rec.declaration_type == 'cny':
-                self.env.cr.execute(
-                    "UPDATE dpt_export_import_line SET dpt_price_cny_vnd = %s WHERE id = %s",
-                    (dpt_price, rec.id)
-                )
-            elif rec.declaration_type == 'krw':
-                self.env.cr.execute(
-                    "UPDATE dpt_export_import_line SET dpt_price_krw_vnd = %s WHERE id = %s",
-                    (dpt_price, rec.id)
-                )
+    # def _inverse_dpt_price_unit(self):
+    #     """
+    #     Logic tính ngược từ giá XHĐ mong muốn sang giá khai báo:
+        
+    #     1. Bắt đầu từ giá XHĐ mong muốn
+    #     2. Chia cho tỷ giá để chuyển về ngoại tệ
+    #     3. Trừ đi các khoản thuế NK và thuế khác
+    #     4. Chia cho hệ số 0.1 để lấy giá khai báo gốc
+    #     5. Cập nhật trực tiếp vào DB theo loại tiền khai báo
+        
+    #     Các xử lý ngoại lệ:
+    #     - Kiểm tra tỷ giá > 0 để tránh chia cho 0
+    #     - Kiểm tra base_calculation để tránh chia cho 0
+    #     - Xử lý ngoại lệ ZeroDivisionError
+    #     """
+    #     for rec in self:
+    #         dpt_price = 1
+            
+    #         # Kiểm tra và xử lý tỷ giá
+    #         if rec.dpt_exchange_rate:
+    #             dpt_exchange_rate = 1
+    #             if rec.dpt_exchange_rate > 0:
+    #                 dpt_exchange_rate = rec.dpt_exchange_rate
+                    
+    #             # Tính toán giá khai từ giá XHĐ mong muốn với xử lý ngoại lệ
+    #             try:
+    #                 if dpt_exchange_rate != 0:
+    #                     # Bước 1: Chia giá XHĐ cho tỷ giá để chuyển về ngoại tệ
+    #                     # Bước 2: Trừ đi thuế NK và thuế khác
+    #                     base_calculation = (rec.dpt_price_unit / dpt_exchange_rate) - rec.dpt_tax_import - rec.dpt_tax_other
+                        
+    #                     # Bước 3: Chia cho hệ số 0.1 để lấy giá khai báo gốc
+    #                     if base_calculation != 0:
+    #                         dpt_price = base_calculation / 0.1
+    #                     else:
+    #                         dpt_price = 0  # Trường hợp base_calculation = 0
+    #                 else:
+    #                     dpt_price = 0  # Trường hợp tỷ giá = 0
+    #             except ZeroDivisionError:
+    #                 dpt_price = 0  # Xử lý ngoại lệ chia cho 0
+            
+    #         # Cập nhật giá khai báo theo loại tiền vào DB
+    #         if rec.declaration_type == 'usd':
+    #             self.env.cr.execute(
+    #                 "UPDATE dpt_export_import_line SET dpt_price_usd = %s WHERE id = %s",
+    #                 (dpt_price, rec.id)
+    #             )
+    #         elif rec.declaration_type == 'cny':
+    #             self.env.cr.execute(
+    #                 "UPDATE dpt_export_import_line SET dpt_price_cny_vnd = %s WHERE id = %s",
+    #                 (dpt_price, rec.id)
+    #             )
+    #         elif rec.declaration_type == 'krw':
+    #             self.env.cr.execute(
+    #                 "UPDATE dpt_export_import_line SET dpt_price_krw_vnd = %s WHERE id = %s",
+    #                 (dpt_price, rec.id)
+    #             )
 
     def action_check_lot_name(self):
         if not self.stock_picking_ids:
@@ -514,6 +596,7 @@ class DptExportImportLine(models.Model):
         for rec in self:
             if 'stock_picking_ids' in vals and rec.stock_picking_ids:
                 rec.stock_picking_ids._compute_valid_cutlist()
+            
             val_update_sale_line = {}
             val_update_sale_line.update({
                 'payment_exchange_rate': rec.dpt_exchange_rate,
@@ -525,11 +608,14 @@ class DptExportImportLine(models.Model):
                 'import_tax_amount': rec.dpt_amount_tax_import,
                 'vat_tax_amount': rec.dpt_amount_tax,
                 'other_tax_amount': rec.dpt_amount_tax_other,
-
             })
-            rec.sale_line_id.write(val_update_sale_line)
+            
+            if rec.sale_line_id:
+                rec.sale_line_id.write(val_update_sale_line)
+            
             if 'dpt_price_unit' in vals and 'dpt_price_usd' not in vals and 'dpt_price_krw_vnd' not in vals and 'dpt_price_cny_vnd' not in vals:
                 self._inverse_dpt_price_unit()
+            
             if rec.sale_line_id.id:
                 if 'dpt_uom1_id' in vals or 'dpt_sl1' in vals or 'dpt_price_unit' in vals:
                     update_query = """
@@ -540,15 +626,47 @@ class DptExportImportLine(models.Model):
                     self.env.cr.execute(update_query,
                                         (rec.dpt_uom1_id.id, rec.dpt_sl1, rec.dpt_price_unit,
                                          rec.dpt_sl1 * rec.dpt_price_unit, rec.sale_line_id.id))
-        return res
+            
+            # === XỬ LÝ CÁC TRƯỜNG HỢP NGOẠI LỆ ===
+            
+            # Trường hợp ngoại lệ 1: Giá vốn thay đổi
+            if 'dpt_cost_of_goods' in vals or 'dpt_unit_cost' in vals:
+                # Hủy yêu cầu phê duyệt nếu có
+                if rec.approval_request_id and rec.approval_request_id.request_status in ['pending', 'approved']:
+                    rec.approval_request_id.action_cancel()
+                # Cập nhật giá thực tế bằng giá hệ thống mới
+                rec.dpt_actual_price = rec.dpt_system_price
+                # Đánh dấu cần định giá lại
+                rec.price_revalidation_required = True
+            
+            # Xử lý khi giá XHĐ mong muốn thay đổi
+            if 'dpt_price_unit' in vals:
+                price = rec.dpt_price_unit
+                
+                # Trường hợp ngoại lệ 3: Bỏ qua nếu giá mong muốn là 0 hoặc trống
+                if not price:
+                    rec.dpt_actual_price = rec.dpt_system_price
+                    rec.price_revalidation_required = False
+                    if rec.approval_request_id and rec.approval_request_id.request_status == 'pending':
+                        rec.approval_request_id.action_cancel()
+                    continue
 
-    # def write(self, vals):
-    #     res = super(SaleOrderLine, self).write(vals)
-    #     if 'product_uom' in vals or 'product_uom_qty' in vals:
-    #         for dpt_export_import_line_id in self.dpt_export_import_line_ids:
-    #             dpt_export_import_line_id.dpt_uom1_id = self.product_uom
-    #             dpt_export_import_line_id.dpt_sl1 = self.product_uom_qty
-    #     return res
+                # Nếu giá trong khoảng cho phép
+                if rec.dpt_price_min_allowed <= price <= rec.dpt_price_max_allowed:
+                    rec.dpt_actual_price = price
+                    rec.price_revalidation_required = False
+                    
+                    # Hủy yêu cầu phê duyệt nếu có
+                    if rec.approval_request_id and rec.approval_request_id.request_status == 'pending':
+                        rec.approval_request_id.action_cancel()
+                
+                # Nếu giá ngoài khoảng cho phép
+                # Không tự động tạo yêu cầu phê duyệt, chỉ sử dụng giá hệ thống
+                else:
+                    rec.dpt_actual_price = rec.dpt_system_price
+                    # Không tự động tạo yêu cầu phê duyệt - người dùng sẽ bấm nút
+
+        return res
 
     @api.onchange('sale_line_id')
     def onchange_sale_order_line(self):
@@ -714,4 +832,141 @@ class DptExportImportLine(models.Model):
             rec.dpt_amount_tax_other_basic = amount_tax_other_basic
             rec.dpt_amount_tax_vat_basic = amount_tax_vat_basic
             rec.dpt_total_tax_basic = total_tax_basic
+
+    @api.depends('dpt_allocated_cost_general', 'dpt_allocated_cost_specific')
+    def _compute_total_allocated_cost(self):
+        for rec in self:
+            rec.dpt_total_allocated_cost = rec.dpt_allocated_cost_general + rec.dpt_allocated_cost_specific
+
+    @api.depends('dpt_basic_value', 'dpt_amount_tax_import_basic', 'dpt_amount_tax_other_basic', 'dpt_total_allocated_cost')
+    def _compute_cost_of_goods(self):
+        for rec in self:
+            # Sửa: Chỉ tính giá trị cơ bản + thuế NK + thuế Khác + chi phí phân bổ (không bao gồm VAT)
+            rec.dpt_cost_of_goods = rec.dpt_basic_value + rec.dpt_amount_tax_import_basic + rec.dpt_amount_tax_other_basic + rec.dpt_total_allocated_cost
+
+    @api.depends('dpt_cost_of_goods', 'dpt_sl1')
+    def _compute_unit_cost(self):
+        for rec in self:
+            if rec.dpt_sl1 and rec.dpt_sl1 != 0:
+                rec.dpt_unit_cost = rec.dpt_cost_of_goods / rec.dpt_sl1
+            else:
+                rec.dpt_unit_cost = 0.0
+
+    @api.depends('dpt_unit_cost')
+    def _compute_allowed_prices(self):
+        """Tính toán khoảng giá cho phép dựa trên giá vốn và tỷ lệ lợi nhuận"""
+        for rec in self:
+            company = self.env.company
+            min_margin = company.dpt_min_profit_margin or 1.01
+            max_margin = company.dpt_max_profit_margin or 1.03
+            
+            if rec.dpt_unit_cost > 0:
+                rec.dpt_price_min_allowed = rec.dpt_unit_cost * min_margin
+                rec.dpt_price_max_allowed = rec.dpt_unit_cost * max_margin
+                rec.dpt_system_price = rec.dpt_price_min_allowed
+                
+                # Gán giá trị ban đầu cho dpt_actual_price nếu chưa có
+                if not rec.dpt_actual_price:
+                    rec.dpt_actual_price = rec.dpt_system_price
+            else:
+                rec.dpt_price_min_allowed = 0
+                rec.dpt_price_max_allowed = 0
+                rec.dpt_system_price = 0
+                if not rec.dpt_actual_price:
+                    rec.dpt_actual_price = 0
+
+    @api.onchange('dpt_price_unit')
+    def _onchange_price_unit(self):
+        """Kiểm tra giá và hiển thị cảnh báo nếu giá nằm ngoài khoảng cho phép"""
+        for rec in self:
+            # Bỏ qua khi giá trống hoặc bằng 0
+            if not rec.dpt_price_unit:
+                rec.price_outside_range = False
+                continue
+                
+            # Kiểm tra nếu giá nằm ngoài khoảng cho phép
+            if rec.dpt_price_unit < rec.dpt_price_min_allowed or rec.dpt_price_unit > rec.dpt_price_max_allowed:
+                # Đánh dấu là giá nằm ngoài khoảng cho phép
+                rec.price_outside_range = True
+                rec.price_temp = rec.dpt_price_unit
+                
+                # Hiển thị thông báo cảnh báo
+                return {
+                    'warning': {
+                        'title': _('Giá nằm ngoài khoảng cho phép'),
+                        'message': _(
+                            'Giá XHĐ mong muốn ({:,.2f} {}) nằm ngoài khoảng giá cho phép: {:,.2f} - {:,.2f} {}.\n\n'
+                            'Hãy sử dụng nút "Xác nhận phê duyệt" để xem các lựa chọn phê duyệt hoặc đặt lại giá.'
+                        ).format(
+                            rec.dpt_price_unit, rec.currency_id.symbol,
+                            rec.dpt_price_min_allowed, rec.dpt_price_max_allowed, rec.currency_id.symbol
+                        )
+                    }
+                }
+            else:
+                rec.price_outside_range = False
+    
+    def action_open_price_approval_wizard(self):
+        """Mở wizard xác nhận phê duyệt giá"""
+        self.ensure_one()
+        
+        # Thiết lập wizard với giá trị đầu vào
+        return {
+            'name': _('Giá nằm ngoài khoảng cho phép'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'dpt.price.approval.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_export_import_line_id': self.id,
+                'default_current_price': self.dpt_price_unit,
+                'default_min_price': self.dpt_price_min_allowed,
+                'default_max_price': self.dpt_price_max_allowed,
+                'default_system_price': self.dpt_system_price,
+                'default_currency_id': self.currency_id.id,
+            }
+        }
+
+    def _create_price_approval_request(self):
+        """Tạo yêu cầu phê duyệt giá"""
+        self.ensure_one()
+        approval_category = self.env.ref('dpt_export_import.approval_category_dpt_price_approval')
+        
+        if not approval_category:
+            raise UserError(_("Chưa cấu hình loại phê duyệt 'Phê duyệt giá xuất hoá đơn'"))
+        
+        # Nếu đã có yêu cầu phê duyệt cũ, hủy nó
+        if self.approval_request_id and self.approval_request_id.request_status == 'pending':
+            self.approval_request_id.action_cancel()
+        
+        # Nếu giá bằng 0, không tạo yêu cầu phê duyệt
+        if not self.dpt_price_unit:
+            return False
+        
+        # Tạo yêu cầu phê duyệt mới
+        request_vals = {
+            'name': _('Phê duyệt giá cho %s') % self.name,
+            'category_id': approval_category.id,
+            'request_owner_id': self.env.user.id,
+            'reference': _('Dòng tờ khai: %s - Sản phẩm: %s') % (self.name, self.product_id.name),
+            'date': fields.Date.today(),
+            'export_import_line_id': self.id,
+            'quantity': self.dpt_sl1,
+            'amount': self.dpt_price_unit,
+            'company_id': self.env.company.id,
+        }
+        
+        approval_request = self.env['approval.request'].create(request_vals)
+        self.write({
+            'approval_request_id': approval_request.id
+        })
+        return approval_request
+
+    def action_approve_price(self):
+        """Xử lý sau khi phê duyệt - Cập nhật giá thực tế và xóa cờ cảnh báo"""
+        self.ensure_one()
+        self.write({
+            'dpt_actual_price': self.dpt_price_unit,
+            'price_revalidation_required': False
+        })
 

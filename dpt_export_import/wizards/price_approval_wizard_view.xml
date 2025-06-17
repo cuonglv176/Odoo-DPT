@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_price_approval_wizard_form" model="ir.ui.view">
+        <field name="name">dpt.price.approval.wizard.form</field>
+        <field name="model">dpt.price.approval.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Xác nhận phê duyệt giá">
+                <sheet>
+                    <div class="alert alert-warning" role="alert">
+                        <strong>Cảnh báo!</strong> Giá XHĐ mong muốn nằm ngoài khoảng giá cho phép!
+                    </div>
+                    <group>
+                        <group>
+                            <field name="product_id"/>
+                            <field name="current_price"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="min_price"/>
+                            <field name="max_price"/>
+                            <field name="system_price"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Gửi yêu cầu phê duyệt" name="action_send_approval" type="object" class="btn-primary"/>
+                    <button string="Quay lại giá hệ thống" name="action_cancel" type="object" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_price_approval_wizard" model="ir.actions.act_window">
+        <field name="name">Xác nhận phê duyệt giá</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">dpt.price.approval.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo> 
