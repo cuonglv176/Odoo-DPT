@@ -14,14 +14,14 @@
                             Cấu hình tỷ lệ lợi nhuận cho phép khi xuất hóa đơn
                         </div>
                         <div class="content-group">
-                            <div class="row mt16">
-                                <label for="dpt_min_profit_margin" class="col-lg-4 o_light_label"/>
-                                <field name="dpt_min_profit_margin"/>
-                            </div>
-                            <div class="row">
-                                <label for="dpt_max_profit_margin" class="col-lg-4 o_light_label"/>
-                                <field name="dpt_max_profit_margin"/>
-                            </div>
+<!--                            <div class="row mt16">-->
+<!--                                <label for="dpt_min_profit_margin" class="col-lg-4 o_light_label"/>-->
+<!--                                <field name="dpt_min_profit_margin"/>-->
+<!--                            </div>-->
+<!--                            <div class="row">-->
+<!--                                <label for="dpt_max_profit_margin" class="col-lg-4 o_light_label"/>-->
+<!--                                <field name="dpt_max_profit_margin"/>-->
+<!--                            </div>-->
                         </div>
                     </div>
                 </div>
