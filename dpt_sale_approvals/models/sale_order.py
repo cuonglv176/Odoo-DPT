@@ -103,7 +103,11 @@ class SaleOrder(models.Model):
 
         list_service = []
         history = []
+        for service_combo_id in self.service_combo_ids:
+            service_combo_id.approval_id = approval_id
+
         for sale_service_id in self.sale_service_ids:
+            sale_service_id.approval_id = approval_id
             # if sale_service_id.department_id == department and not sale_service_id.service_id.zezo_price:
             if not sale_service_id.service_id.zezo_price:
                 if sale_service_id.new_price != 0 and sale_service_id.new_price != sale_service_id.price:
