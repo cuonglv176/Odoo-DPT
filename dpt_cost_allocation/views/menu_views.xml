@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- App root menu -->
+        <menuitem id="menu_dpt_cost_allocation_root"
+                  name="Phân bổ chi phí"
+                  web_icon="dpt_cost_allocation,static/description/icon.png"
+                  sequence="100"/>
+
+        <!-- Main menu items -->
+        <menuitem id="menu_dpt_cost_allocation_main" 
+                  name="Phân bổ chi phí"
+                  parent="menu_dpt_cost_allocation_root" 
+                  sequence="10"/>
+        
+        <menuitem id="menu_dpt_cost_allocation_management"
+                  name="Quản lý phân bổ"
+                  parent="menu_dpt_cost_allocation_root"
+                  sequence="100"/>
+
+        <!-- Sub-menu items -->
+        <menuitem id="menu_dpt_cost_allocation_list"
+                  name="Danh sách phân bổ"
+                  parent="menu_dpt_cost_allocation_main"
+                  action="action_dpt_cost_allocation"
+                  sequence="10"/>
+
+        <menuitem id="menu_dpt_cost_allocation_po_list"
+                  name="Đơn mua hàng"
+                  parent="menu_dpt_cost_allocation_main"
+                  sequence="20"/>
+        
+        <menuitem id="menu_dpt_cost_allocation_decl_list"
+                  name="Tờ khai"
+                  parent="menu_dpt_cost_allocation_main"
+                  sequence="30"/>
+    </data>
+</odoo> 

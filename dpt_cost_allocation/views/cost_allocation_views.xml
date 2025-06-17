@@ -1,0 +1,116 @@
+<odoo>
+    <data>
+        <record id="dpt_cost_allocation_view_tree" model="ir.ui.view">
+            <field name="name">dpt.cost.allocation.view.tree</field>
+            <field name="model">dpt.cost.allocation</field>
+            <field name="arch" type="xml">
+                <tree string="Phân bổ chi phí" decoration-success="state == 'allocated'" decoration-danger="state == 'cancelled'">
+                    <field name="purchase_order_id"/>
+                    <field name="export_import_id"/>
+                    <field name="allocation_date"/>
+                    <field name="total_allocated_from_po" sum="Tổng phân bổ"/>
+                    <field name="currency_id" optional="hide"/>
+                    <field name="state" widget="badge"
+                           decoration-success="state == 'allocated'"
+                           decoration-danger="state == 'cancelled'"/>
+                    <field name="create_uid" string="Người tạo" optional="hide"/>
+                    <field name="create_date" string="Ngày tạo" optional="hide"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="dpt_cost_allocation_view_form" model="ir.ui.view">
+            <field name="name">dpt.cost.allocation.view.form</field>
+            <field name="model">dpt.cost.allocation</field>
+            <field name="arch" type="xml">
+                <form string="Phân bổ chi phí">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="allocated,cancelled"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_purchase_order" type="object" 
+                                    class="oe_stat_button" icon="fa-shopping-cart">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_text">Đơn mua hàng</span>
+                                </div>
+                            </button>
+                            <button name="action_view_export_import" type="object" 
+                                    class="oe_stat_button" icon="fa-file-text">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_text">Tờ khai</span>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="purchase_order_id" readonly="context.get('from_purchase', False)"/>
+                                <field name="export_import_id"/>
+                                <field name="note" placeholder="Ghi chú về việc phân bổ..."/>
+                            </group>
+                            <group>
+                                <field name="allocation_date"/>
+                                <field name="total_allocated_from_po"/>
+                                <field name="currency_id" readonly="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Chi tiết phân bổ">
+                                <field name="line_ids">
+                                    <tree>
+                                        <field name="export_import_line_id"/>
+                                        <field name="ratio" widget="percentage"/>
+                                        <field name="allocated_amount" sum="Tổng phân bổ"/>
+                                        <field name="currency_id" invisible="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="dpt_cost_allocation_view_search" model="ir.ui.view">
+            <field name="name">dpt.cost.allocation.view.search</field>
+            <field name="model">dpt.cost.allocation</field>
+            <field name="arch" type="xml">
+                <search string="Tìm kiếm phân bổ chi phí">
+                    <field name="purchase_order_id"/>
+                    <field name="export_import_id"/>
+                    <filter string="Đã phân bổ" name="allocated" domain="[('state', '=', 'allocated')]"/>
+                    <filter string="Đã hủy" name="cancelled" domain="[('state', '=', 'cancelled')]"/>
+                    <separator/>
+                    <filter string="Ngày phân bổ" name="group_allocation_date" context="{'group_by': 'allocation_date'}"/>
+                    <filter string="Đơn mua hàng" name="group_purchase" context="{'group_by': 'purchase_order_id'}"/>
+                    <filter string="Tờ khai" name="group_export_import" context="{'group_by': 'export_import_id'}"/>
+                    <filter string="Trạng thái" name="group_state" context="{'group_by': 'state'}"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_dpt_cost_allocation" model="ir.actions.act_window">
+            <field name="name">Phân bổ chi phí</field>
+            <field name="res_model">dpt.cost.allocation</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="dpt_cost_allocation_view_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Tạo phân bổ chi phí đầu tiên
+                </p>
+                <p>
+                    Phân bổ chi phí từ Đơn mua hàng (PO) vào các dòng tờ khai xuất nhập khẩu.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo> 

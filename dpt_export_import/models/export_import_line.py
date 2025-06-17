@@ -91,8 +91,7 @@ class DptExportImportLine(models.Model):
     hs_code_id = fields.Many2one('dpt.export.import.acfta', string='HS Code', tracking=True)
     dpt_code_hs = fields.Char(string='H')
     dpt_sl1 = fields.Float(string='SL1', tracking=True, digits=(12, 4))
-    dpt_price_unit = fields.Monetary(string='Giá XHĐ mong muốn', tracking=True, currency_field='currency_id',
-                                     compute="_compute_dpt_price_unit", inverse="_inverse_dpt_price_unit", store=True)
+    dpt_price_unit = fields.Monetary(string='Giá XHĐ mong muốn', tracking=True, currency_field='currency_id', store=True)
     dpt_uom1_id = fields.Many2one('uom.uom', string='ĐVT 1', tracking=True)
     dpt_sl2 = fields.Float(string='SL2', tracking=True, digits=(12, 4))
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
@@ -613,8 +612,6 @@ class DptExportImportLine(models.Model):
             if rec.sale_line_id:
                 rec.sale_line_id.write(val_update_sale_line)
             
-            if 'dpt_price_unit' in vals and 'dpt_price_usd' not in vals and 'dpt_price_krw_vnd' not in vals and 'dpt_price_cny_vnd' not in vals:
-                self._inverse_dpt_price_unit()
             
             if rec.sale_line_id.id:
                 if 'dpt_uom1_id' in vals or 'dpt_sl1' in vals or 'dpt_price_unit' in vals:
