@@ -11,7 +11,7 @@ class HrJoB(models.Model):
     parent_department_id = fields.Many2one('hr.department', string='Phòng')
     center_id = fields.Many2one('hr.department', string='Trung tâm')
     bod_code = fields.Char(string='Mã BOD')
-
+    manager_id = fields.Many2one('hr.employee', string='Quản lý')
     @api.onchange('department_id')
     def onchange_department_id(self):
         self.parent_department_id = self.department_id.parent_id
