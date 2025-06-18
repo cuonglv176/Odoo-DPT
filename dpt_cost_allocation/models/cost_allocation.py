@@ -62,11 +62,12 @@ class CostAllocation(models.Model):
 
     state = fields.Selection(
         [
+            ('draft', 'Nháp'),
             ('allocated', 'Đã phân bổ'),
             ('cancelled', 'Đã hủy'),
         ],
         string='Trạng thái',
-        default='allocated',
+        default='draft',
         required=True,
         tracking=True,
     )
@@ -152,7 +153,7 @@ class CostAllocation(models.Model):
 
     def write(self, vals):
         for record in self:
-            if record.state == 'allocated':
+            if record.state == 'allocated' and 'state' not in vals:
                 raise UserError(_("Không thể chỉnh sửa phiếu phân bổ đã được xác nhận!"))
         return super().write(vals)
         
