@@ -109,6 +109,18 @@ class CostAllocation(models.Model):
             'target': 'current',
         }
 
+    def write(self, vals):
+        for record in self:
+            if record.state == 'allocated':
+                raise UserError(_("Không thể chỉnh sửa phiếu phân bổ đã được xác nhận!"))
+        return super().write(vals)
+        
+    def unlink(self):
+        for record in self:
+            if record.state == 'allocated':
+                raise UserError(_("Không thể xóa phiếu phân bổ đã được xác nhận!"))
+        return super().unlink()
+
 
 class CostAllocationLine(models.Model):
     """
@@ -139,4 +151,24 @@ class CostAllocationLine(models.Model):
         store=True,
     )
 
-    ratio = fields.Float(string="Tỷ lệ", digits='Account') 
+    ratio = fields.Float(string="Tỷ lệ", digits='Account')
+
+    @api.model
+    def create(self, vals):
+        if vals.get('cost_allocation_id'):
+            allocation = self.env['dpt.cost.allocation'].browse(vals['cost_allocation_id'])
+            if allocation.state == 'allocated':
+                raise UserError(_("Không thể thêm dòng phân bổ chi phí vào phiếu đã được xác nhận!"))
+        return super().create(vals)
+        
+    def write(self, vals):
+        for record in self:
+            if record.cost_allocation_id.state == 'allocated':
+                raise UserError(_("Không thể chỉnh sửa dòng phân bổ chi phí thuộc phiếu đã được xác nhận!"))
+        return super().write(vals)
+        
+    def unlink(self):
+        for record in self:
+            if record.cost_allocation_id.state == 'allocated':
+                raise UserError(_("Không thể xóa dòng phân bổ chi phí thuộc phiếu đã được xác nhận!"))
+        return super().unlink() 
