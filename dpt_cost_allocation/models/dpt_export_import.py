@@ -55,6 +55,16 @@ class DptExportImportLine(models.Model):
         currency_field='currency_id',
         compute='_compute_dpt_invoice_base_value',
         store=True,
+        help="""
+        Trị giá dùng để tính tỉ lệ phân bổ chi phí từ đơn mua hàng vào tờ khai.
+
+        Công thức tính: Giá trị cơ bản + Thuế NK (XHĐ) + Thuế khác (XHĐ)
+
+        Cách sử dụng:
+        - Trường này được hệ thống tự động tính toán
+        - Giá trị này quyết định tỉ lệ phân bổ chi phí của dòng tờ khai
+        - Nếu thay đổi các trường thành phần sau khi đã phân bổ chi phí, hệ thống sẽ cảnh báo và yêu cầu tính lại
+        """
     )
 
     # Chi phí phân bổ chung đã nhận
@@ -63,6 +73,14 @@ class DptExportImportLine(models.Model):
         currency_field='currency_id',
         compute='_compute_dpt_allocated_cost_general',
         store=True,
+        help="""
+        Tổng chi phí phân bổ chung đã nhận từ các đơn mua hàng liên quan.
+
+        Cách sử dụng:
+        - Trường được tính tự động từ các phân bổ chi phí hiện có
+        - Chỉ tính tổng từ các phân bổ có trạng thái 'Đã phân bổ'
+        - Khi một phân bổ bị hủy, giá trị này sẽ tự động cập nhật lại
+        """
     )
 
     # ---------------------------------------------------------------------

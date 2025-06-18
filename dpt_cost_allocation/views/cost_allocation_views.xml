@@ -70,6 +70,7 @@
                                     <tree>
                                         <field name="export_import_line_id"/>
                                         <field name="ratio" widget="percentage"/>
+                                        <field name="line_invoice_base_value"/>
                                         <field name="allocated_amount" sum="Tổng phân bổ"/>
                                         <field name="currency_id" invisible="1"/>
                                     </tree>

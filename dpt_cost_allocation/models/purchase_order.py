@@ -13,7 +13,14 @@ class PurchaseOrder(models.Model):
         'dpt.export.import',
         string="Tờ khai",
         tracking=True,
-        help="Tờ khai để phân bổ chi phí từ PO này.",
+        help="""
+        Chọn tờ khai để phân bổ chi phí từ đơn mua hàng này.
+
+        Cách sử dụng:
+        - Chọn tờ khai trước khi thực hiện tính phân bổ chi phí
+        - Nút 'Tính phân bổ chi phí' sẽ xuất hiện sau khi đơn hàng hoàn thành và tờ khai được chọn
+        - Chi phí sẽ được phân bổ cho các dòng tờ khai theo tỷ lệ của 'Trị giá tính phân bổ'
+        """
     )
 
     # Placeholder cho các tính năng tương lai (Release 03+)
@@ -166,7 +173,14 @@ class PurchaseOrderLine(models.Model):
         string="Tính giá XHĐ",
         default=False,
         copy=False,
-        help="Tích vào để tính chi phí này vào giá trị phân bổ.",
+        help="""
+        Đánh dấu dòng đơn mua hàng có được tính vào giá trị xuất hóa đơn hay không.
+
+        Cách sử dụng:
+        - Đánh dấu các dòng cần tính vào chi phí phân bổ
+        - Chỉ các dòng được đánh dấu mới được tính vào tổng chi phí phân bổ
+        - Không thể thay đổi sau khi đã phân bổ - cần hủy phân bổ cũ trước khi thay đổi
+        """
     )
 
     def write(self, vals):

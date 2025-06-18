@@ -44,6 +44,14 @@ class CostAllocation(models.Model):
         string="Tổng chi phí đã phân bổ",
         currency_field='currency_id',
         tracking=True,
+        help="""
+        Tổng chi phí từ đơn mua hàng sẽ được phân bổ cho tờ khai.
+
+        Cách sử dụng:
+        - Giá trị này được tính từ tổng các dòng đơn mua hàng có đánh dấu 'Tính giá XHĐ'
+        - Đây là tổng số tiền sẽ được phân bổ cho các dòng tờ khai
+        - Dùng để kiểm tra tổng giá trị phân bổ
+        """
     )
 
     currency_id = fields.Many2one(
@@ -70,6 +78,19 @@ class CostAllocation(models.Model):
         default='draft',
         required=True,
         tracking=True,
+        help="""
+        Trạng thái của phiếu phân bổ chi phí.
+
+        Các trạng thái:
+        - Nháp: Phiếu mới tạo, chưa áp dụng phân bổ chi phí
+        - Đã phân bổ: Phân bổ chi phí đã được áp dụng cho tờ khai
+        - Đã hủy: Phân bổ chi phí đã được hủy, không còn hiệu lực
+
+        Cách sử dụng:
+        - Chỉ phiếu ở trạng thái 'Đã phân bổ' mới được tính vào chi phí phân bổ chung
+        - Phiếu 'Đã phân bổ' không thể chỉnh sửa, chỉ có thể hủy
+        - Khi hủy phân bổ, trường 'Chi phí phân bổ chung' trên dòng tờ khai sẽ tự động cập nhật
+        """
     )
 
     line_ids = fields.One2many(
@@ -186,14 +207,55 @@ class CostAllocationLine(models.Model):
         required=True,
     )
 
-    allocated_amount = fields.Monetary(string="Số tiền phân bổ")
+    allocated_amount = fields.Monetary(
+        string="Số tiền phân bổ",
+        help="""
+        Số tiền được phân bổ từ đơn mua hàng cho dòng tờ khai này.
+
+        Cách tính:
+        - Tổng chi phí phân bổ * Tỷ lệ phân bổ của dòng
+
+        Cách sử dụng:
+        - Trường này được hệ thống tự động tính toán khi phân bổ
+        - Dùng để cập nhật giá trị chi phí phân bổ trên dòng tờ khai
+        """
+    )
 
     currency_id = fields.Many2one(
         related='cost_allocation_id.currency_id',
         store=True,
     )
 
-    ratio = fields.Float(string="Tỷ lệ", digits='Account')
+    ratio = fields.Float(
+        string="Tỷ lệ", 
+        digits='Account',
+        help="""
+        Tỷ lệ phân bổ chi phí cho dòng tờ khai này.
+
+        Cách tính:
+        - Tỷ lệ = Trị giá tính phân bổ của dòng / Tổng trị giá tính phân bổ của tất cả các dòng
+        - Giá trị hiển thị dạng phần trăm (%)
+
+        Cách sử dụng:
+        - Hệ thống tự động tính toán tỷ lệ này khi thực hiện phân bổ
+        - Dùng để kiểm tra tính hợp lý của việc phân bổ chi phí
+        """
+    )
+    
+    line_invoice_base_value = fields.Monetary(
+        string="Trị giá tính phân bổ",
+        related='export_import_line_id.dpt_invoice_base_value',
+        readonly=True,
+        store=False,
+        help="""
+        Giá trị cơ bản để tính phân bổ chi phí từ dòng tờ khai liên kết.
+
+        Cách sử dụng:
+        - Giá trị này được lấy từ trường 'Trị giá tính phân bổ' của dòng tờ khai tương ứng
+        - Dùng để xem nhanh cơ sở tính toán tỷ lệ phân bổ
+        - Giá trị này chỉ để tham khảo và không thể sửa đổi trực tiếp trong form phân bổ
+        """
+    )
 
     @api.model
     def create(self, vals):
