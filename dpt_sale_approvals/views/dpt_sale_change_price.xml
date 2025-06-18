@@ -18,6 +18,7 @@
                                 <field name="price" sum="Đơn giá"/>
                                 <field name="amount_discount" string="Khuyến mãi"/>
                                 <field name="amount_total" sum="Thành tiền"/>
+                                <field name="currency_id" column_invisible="1" force_save="1"/>
                                 <field name="new_price"/>
                                 <field name="is_zero_price" widget="boolean_toggle"/>
                                 <field name="amount_total" readonly="1" force_save="1"/>

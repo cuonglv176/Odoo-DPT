@@ -20,6 +20,7 @@ class DPTSaleServiceManagement(models.Model):
         ('ticket_status', 'Ticket Status'),  # Thực hiện dịch vụ
 
     ], string='Status', default='no_price', store=True)
+    currency_id = fields.Many2one('res.currency')
     new_price = fields.Monetary(currency_field='currency_id', string='New Price')
     new_amount_total = fields.Monetary(currency_field='currency_id', string="New Amount Total",
                                        compute="_compute_new_amount_total")
