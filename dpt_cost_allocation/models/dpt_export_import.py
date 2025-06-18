@@ -106,6 +106,22 @@ class DptExportImportLine(models.Model):
         """
     )
 
+    # Chi phí phân bổ riêng đã nhận
+    dpt_allocated_cost_specific = fields.Monetary(
+        string='Chi phí phân bổ riêng',
+        currency_field='currency_id',
+        compute='_compute_dpt_allocated_cost_specific',
+        store=True,
+        help="""
+        Tổng chi phí phân bổ riêng đã nhận từ các đơn mua hàng liên quan.
+
+        Cách sử dụng:
+        - Trường được tính tự động từ các phân bổ chi phí riêng hiện có
+        - Chỉ tính tổng từ các phân bổ có trạng thái 'Đã phân bổ' và loại 'specific'
+        - Khi một phân bổ bị hủy, giá trị này sẽ tự động cập nhật lại
+        """
+    )
+
     # ---------------------------------------------------------------------
     # COMPUTE METHODS
     # ---------------------------------------------------------------------
@@ -125,19 +141,35 @@ class DptExportImportLine(models.Model):
             tax_other = rec.dpt_amount_tax_other_basic or 0.0
             rec.dpt_invoice_base_value = base + tax_import + tax_other
 
-    @api.depends('cost_allocation_line_ids.allocated_amount', 'cost_allocation_line_ids.cost_allocation_id.state')
+    @api.depends('cost_allocation_line_ids.allocated_amount', 'cost_allocation_line_ids.cost_allocation_id.state', 'cost_allocation_line_ids.cost_allocation_id.allocation_type')
     def _compute_dpt_allocated_cost_general(self):
         """
-        Tính tổng chi phí phân bổ đã nhận cho dòng tờ khai.
+        Tính tổng chi phí phân bổ chung đã nhận cho dòng tờ khai.
         
-        Chỉ tính các dòng phân bổ có trạng thái 'allocated'.
+        Chỉ tính các dòng phân bổ có trạng thái 'allocated' và loại 'general'.
         Khi một phân bổ bị hủy (state = 'cancelled'), giá trị sẽ tự động cập nhật lại.
         """
         for line in self:
-            allocated_lines = line.cost_allocation_line_ids.filtered(
-                lambda l: l.cost_allocation_id.state == 'allocated'
+            general_allocated_lines = line.cost_allocation_line_ids.filtered(
+                lambda l: l.cost_allocation_id.state == 'allocated' and 
+                         (l.cost_allocation_id.allocation_type == 'general' or 
+                          not l.cost_allocation_id.allocation_type)  # Hỗ trợ dữ liệu cũ
             )
-            line.dpt_allocated_cost_general = sum(allocated_lines.mapped('allocated_amount'))
+            line.dpt_allocated_cost_general = sum(general_allocated_lines.mapped('allocated_amount'))
+
+    @api.depends('cost_allocation_line_ids.allocated_amount', 'cost_allocation_line_ids.cost_allocation_id.state', 'cost_allocation_line_ids.cost_allocation_id.allocation_type')
+    def _compute_dpt_allocated_cost_specific(self):
+        """
+        Tính tổng chi phí phân bổ riêng đã nhận cho dòng tờ khai.
+        
+        Chỉ tính các dòng phân bổ có trạng thái 'allocated' và loại 'specific'.
+        Khi một phân bổ bị hủy (state = 'cancelled'), giá trị sẽ tự động cập nhật lại.
+        """
+        for line in self:
+            specific_lines = line.cost_allocation_line_ids.filtered(
+                lambda l: l.cost_allocation_id.state == 'allocated' and l.cost_allocation_id.allocation_type == 'specific'
+            )
+            line.dpt_allocated_cost_specific = sum(specific_lines.mapped('allocated_amount'))
 
     # ---------------------------------------------------------------------
     # ONCHANGE METHODS
@@ -174,11 +206,14 @@ class DptExportImportLine(models.Model):
             bool: Kết quả từ phương thức unlink gốc
         """
         for line in self:
-            if line.dpt_allocated_cost_general > 0 and line.export_import_id:
-                related_allocations = self.env['dpt.cost.allocation'].search([
-                    ('export_import_id', '=', line.export_import_id.id),
-                    ('state', '=', 'allocated')
-                ])
+            # Nếu dòng có chi phí phân bổ (chung hoặc riêng) và thuộc một tờ khai
+            if (line.dpt_allocated_cost_general > 0 or line.dpt_allocated_cost_specific > 0) and line.export_import_id:
+                # Tìm các phân bổ liên quan đến dòng tờ khai này
+                related_allocations = self.env['dpt.cost.allocation.line'].search([
+                    ('export_import_line_id', '=', line.id),
+                    ('cost_allocation_id.state', '=', 'allocated')
+                ]).mapped('cost_allocation_id')
+                
                 if related_allocations:
                     related_allocations.write({'state': 'cancelled'})
                     line.export_import_id.message_post(

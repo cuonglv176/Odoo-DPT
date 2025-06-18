@@ -33,6 +33,16 @@ class CostAllocation(models.Model):
         """
     )
     
+    allocation_type = fields.Selection([
+        ('general', 'Chi phí phân bổ chung'),
+        ('specific', 'Chi phí phân bổ riêng')
+    ], string='Loại phân bổ', default='general', required=True, tracking=True,
+    help="""
+    Xác định loại phân bổ chi phí:
+    - Chi phí phân bổ chung: phân bổ vào trường chi phí phân bổ chung của dòng tờ khai
+    - Chi phí phân bổ riêng: phân bổ vào trường chi phí phân bổ riêng của dòng tờ khai
+    """)
+    
     purchase_order_id = fields.Many2one(
         'purchase.order',
         string="Đơn mua hàng",

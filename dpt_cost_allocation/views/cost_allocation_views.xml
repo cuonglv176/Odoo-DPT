@@ -7,6 +7,7 @@
                 <tree string="Phân bổ chi phí" decoration-success="state == 'allocated'" decoration-danger="state == 'cancelled'">
                     <field name="purchase_order_id"/>
                     <field name="export_import_id"/>
+                    <field name="allocation_type"/>
                     <field name="allocation_date"/>
                     <field name="total_allocated_from_po" sum="Tổng phân bổ"/>
                     <field name="currency_id" optional="hide"/>
@@ -58,6 +59,7 @@
                             <group>
                                 <field name="purchase_order_id" readonly="context.get('from_purchase', False)"/>
                                 <field name="export_import_id"/>
+                                <field name="allocation_type" widget="radio" options="{'horizontal': true}"/>
                                 <field name="note" placeholder="Ghi chú về việc phân bổ..."/>
                             </group>
                             <group>
