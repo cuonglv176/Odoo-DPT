@@ -35,6 +35,24 @@
                 <field name="payment_due" invisible="sequence_code != 'DNTT'" readonly="1"/>
             </field>
             <page name="approvers" position="before">
+                <page name="sale_combo" string="Combo" invisible="sequence_code != 'BAOGIA'">
+                    <field name="sale_combo_ids">
+                        <tree editable="bottom" create="0">
+                            <field name="combo_id"/>
+                            <field name="code"/>
+                            <field name="description"/>
+                            <field name="qty"/>
+                            <field name="price" sum="Đơn giá"/>
+                            <field name="amount_discount" string="Khuyến mãi"/>
+                            <field name="amount_total" sum="Thành tiền"/>
+                            <field name="new_price"/>
+                            <field name="is_zero_price" widget="boolean_toggle"/>
+                            <field name="amount_total" readonly="1" force_save="1"/>
+                            <field name="new_amount_total" readonly="1" force_save="1"/>
+                            <field name="price_status" readonly="1" force_save="1" column_invisible="1"/>
+                        </tree>
+                    </field>
+                </page>
                 <page name="sale_service" string="Service" invisible="sequence_code != 'BAOGIA'">
                     <field name="sale_service_ids">
                         <tree editable="bottom" create="0">

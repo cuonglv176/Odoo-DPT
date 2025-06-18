@@ -373,73 +373,74 @@ class SaleOrder(models.Model):
 
     def _compute_combo_price(self, sale_combo_combo_ids, type='combo'):
         for combo in sale_combo_combo_ids:
-            combo_pricelist_id = self.get_combo_price_from_pricelist(combo)
-            compute_value = 1
-            compute_uom_id = combo_pricelist_id.uom_id
-            if not combo_pricelist_id:
-                continue
-            compute_field_qty_id = self.fields_ids.filtered(
-                lambda f: f.using_calculation_price and f.combo_id.id == combo.combo_id.id
-                          and f.uom_id.id == combo_pricelist_id.uom_id.id)[:1]
-            compute_value = compute_field_qty_id.value_integer
+            if combo.price_status == 'no_price':
+                combo_pricelist_id = self.get_combo_price_from_pricelist(combo)
+                compute_value = 1
+                compute_uom_id = combo_pricelist_id.uom_id
+                if not combo_pricelist_id:
+                    continue
+                compute_field_qty_id = self.fields_ids.filtered(
+                    lambda f: f.using_calculation_price and f.combo_id.id == combo.combo_id.id
+                              and f.uom_id.id == combo_pricelist_id.uom_id.id)[:1]
+                compute_value = compute_field_qty_id.value_integer
 
-            if combo_pricelist_id.compute_price == 'fixed':
-                combo.price = combo_pricelist_id.fixed_price
+                if combo_pricelist_id.compute_price == 'fixed':
+                    combo.price = combo_pricelist_id.fixed_price
 
-            elif combo_pricelist_id.compute_price == 'percentage':
-                price_base = 0
-                if combo_pricelist_id.percent_based_on == 'product_total_amount':
-                    price_base = sum(self.order_line.mapped('price_subtotal'))
-                elif combo_pricelist_id.percent_based_on == 'declaration_total_amount':
-                    price_base = sum(self.order_line.mapped('declared_unit_total'))
-                elif combo_pricelist_id.percent_based_on == 'purchase_total_amount':
-                    purchase_ids = self.purchase_ids.filtered(lambda po: po.purchase_type == 'external')
-                    for order_line in purchase_ids.mapped('order_line'):
-                        price_base += order_line.price_subtotal * order_line.order_id.last_rate_currency
-                elif combo_pricelist_id.percent_based_on == 'invoice_total_amount':
-                    pass
-                combo.price = combo_pricelist_id.percent_price * price_base
-            elif combo_pricelist_id.compute_price == 'table':
-                compute_field_ids = self.fields_ids.filtered(
-                    lambda f: f.using_calculation_price and f.combo_id.id == combo.combo_id.id)
-                price = 0
-                total_amount = 0
-                for compute_field_id in compute_field_ids:
-                    value_integer = compute_field_id.value_integer
-                    if not compute_field_id.value_integer:
-                        continue
-                    detail_price_ids = combo_pricelist_id.pricelist_table_detail_ids.filtered(
-                        lambda ptd: ptd.compute_uom_id.id == compute_field_id.uom_id.id)
-                    for detail_price_id in detail_price_ids:
-                        if detail_price_id.condition_type in ('simple', 'or'):
-                            if detail_price_id.min_value <= compute_field_id.value_integer <= detail_price_id.max_value:
-                                if detail_price_id.price_type == 'unit_price':
-                                    if (detail_price_id.amount * value_integer) > total_amount:
-                                        price = detail_price_id.amount
-                                        total_amount = detail_price_id.amount * compute_field_id.value_integer
-                                        compute_uom_id = detail_price_id.compute_uom_id.id
+                elif combo_pricelist_id.compute_price == 'percentage':
+                    price_base = 0
+                    if combo_pricelist_id.percent_based_on == 'product_total_amount':
+                        price_base = sum(self.order_line.mapped('price_subtotal'))
+                    elif combo_pricelist_id.percent_based_on == 'declaration_total_amount':
+                        price_base = sum(self.order_line.mapped('declared_unit_total'))
+                    elif combo_pricelist_id.percent_based_on == 'purchase_total_amount':
+                        purchase_ids = self.purchase_ids.filtered(lambda po: po.purchase_type == 'external')
+                        for order_line in purchase_ids.mapped('order_line'):
+                            price_base += order_line.price_subtotal * order_line.order_id.last_rate_currency
+                    elif combo_pricelist_id.percent_based_on == 'invoice_total_amount':
+                        pass
+                    combo.price = combo_pricelist_id.percent_price * price_base
+                elif combo_pricelist_id.compute_price == 'table':
+                    compute_field_ids = self.fields_ids.filtered(
+                        lambda f: f.using_calculation_price and f.combo_id.id == combo.combo_id.id)
+                    price = 0
+                    total_amount = 0
+                    for compute_field_id in compute_field_ids:
+                        value_integer = compute_field_id.value_integer
+                        if not compute_field_id.value_integer:
+                            continue
+                        detail_price_ids = combo_pricelist_id.pricelist_table_detail_ids.filtered(
+                            lambda ptd: ptd.compute_uom_id.id == compute_field_id.uom_id.id)
+                        for detail_price_id in detail_price_ids:
+                            if detail_price_id.condition_type in ('simple', 'or'):
+                                if detail_price_id.min_value <= compute_field_id.value_integer <= detail_price_id.max_value:
+                                    if detail_price_id.price_type == 'unit_price':
+                                        if (detail_price_id.amount * value_integer) > total_amount:
+                                            price = detail_price_id.amount
+                                            total_amount = detail_price_id.amount * compute_field_id.value_integer
+                                            compute_uom_id = detail_price_id.compute_uom_id.id
+                                            compute_value = compute_field_id.value_integer
+                                    else:
+                                        if (detail_price_id.amount * value_integer) > total_amount:
+                                            price = detail_price_id.amount
+                                            total_amount = detail_price_id.amount * compute_field_id.value_integer
+                                            compute_uom_id = detail_price_id.compute_uom_id.id
+                                            compute_value = compute_field_id.value_integer
+                                    if price < combo_pricelist_id.min_amount:
+                                        price = combo_pricelist_id.min_amount
+                                        compute_uom_id = compute_field_id.uom_id.id
                                         compute_value = compute_field_id.value_integer
-                                else:
-                                    if (detail_price_id.amount * value_integer) > total_amount:
-                                        price = detail_price_id.amount
-                                        total_amount = detail_price_id.amount * compute_field_id.value_integer
-                                        compute_uom_id = detail_price_id.compute_uom_id.id
-                                        compute_value = compute_field_id.value_integer
-                                if price < combo_pricelist_id.min_amount:
-                                    price = combo_pricelist_id.min_amount
-                                    compute_uom_id = compute_field_id.uom_id.id
-                                    compute_value = compute_field_id.value_integer
-                            # else:
-                            #     raise ValidationError(_("Báo giá đã vượt ngưỡng trong bảng giá vui lòng check lại"))
+                                # else:
+                                #     raise ValidationError(_("Báo giá đã vượt ngưỡng trong bảng giá vui lòng check lại"))
 
-                combo.price = price
-                combo.qty = compute_value
-            amount_total, amount_planned_total = self._get_service_allin_baogiao()
-            if type == 'combo':
-                combo.price = combo.price - ((amount_total / combo.qty) if combo.qty else 0)
-            if type == 'planned_combo':
-                combo.price = combo.price - ((amount_planned_total / combo.qty) if combo.qty else 0)
-            combo.compute_uom_id = compute_uom_id
+                    combo.price = price
+                    combo.qty = compute_value
+                amount_total, amount_planned_total = self._get_service_allin_baogiao()
+                if type == 'combo':
+                    combo.price = combo.price - ((amount_total / combo.qty) if combo.qty else 0)
+                if type == 'planned_combo':
+                    combo.price = combo.price - ((amount_planned_total / combo.qty) if combo.qty else 0)
+                combo.compute_uom_id = compute_uom_id
 
     def _get_service_allin_baogiao(self):
         amount_total = 0
@@ -705,6 +706,7 @@ class SaleOrder(models.Model):
     def action_calculation(self):
         """Tính toán giá dịch vụ dựa trên loại báo giá"""
         # Lọc dịch vụ theo loại báo giá
+
         combo_ids = self._filter_services_by_quote_type(self.service_combo_ids)
         planned_combo_ids = self._filter_services_by_quote_type(self.planned_service_combo_ids)
         service_ids = self._filter_services_by_quote_type(self.sale_service_ids)
