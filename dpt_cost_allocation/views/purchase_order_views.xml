@@ -1,0 +1,41 @@
+<odoo>
+    <data>
+        <!-- Purchase Order views will be defined in later releases. -->
+        <record id="purchase_order_form_inherit_cost_allocation" model="ir.ui.view">
+            <field name="name">purchase.order.form.inherit.cost.allocation</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <!-- Thêm trường Tờ khai sau field partner_ref -->
+                <xpath expr="//field[@name='partner_ref']" position="after">
+                    <field name="export_import_id" options="{'no_create': True, 'no_open': True}"/>
+                </xpath>
+
+                <!-- Thêm nút hành động trên header -->
+                <xpath expr="//header" position="inside">
+                    <button name="action_calculate_allocated_cost"
+                            type="object"
+                            string="Tính phân bổ chi phí"
+                            class="oe_highlight"
+                            invisible="state != 'done' or not export_import_id"/>
+                </xpath>
+
+                <!-- Bổ sung cột đánh dấu tính giá XHĐ trên tree view của order_line -->
+                <xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal']" position="after">
+                    <field name="include_in_invoice_cost" optional="show"/>
+                </xpath>
+
+                <!-- Smart button hiển thị số lần phân bổ -->
+                <div name="button_box" position="inside">
+                    <button type="object"
+                            name="action_view_cost_allocations"
+                            class="oe_stat_button"
+                            icon="fa-cogs"
+                            invisible="cost_allocation_count == 0">
+                        <field name="cost_allocation_count" widget="statinfo" string="Phân bổ"/>
+                    </button>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo> 
