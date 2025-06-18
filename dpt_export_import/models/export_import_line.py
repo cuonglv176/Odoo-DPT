@@ -613,9 +613,9 @@ class DptExportImportLine(models.Model):
             if rec.sale_line_id:
                 rec.sale_line_id.write(val_update_sale_line)
             
-            if 'dpt_price_unit' in vals and 'dpt_price_usd' not in vals and 'dpt_price_krw_vnd' not in vals and 'dpt_price_cny_vnd' not in vals:
-                self._inverse_dpt_price_unit()
-            
+            # if 'dpt_price_unit' in vals and 'dpt_price_usd' not in vals and 'dpt_price_krw_vnd' not in vals and 'dpt_price_cny_vnd' not in vals:
+            #     self._inverse_dpt_price_unit()
+            #
             if rec.sale_line_id.id:
                 if 'dpt_uom1_id' in vals or 'dpt_sl1' in vals or 'dpt_price_unit' in vals:
                     update_query = """
