@@ -25,6 +25,11 @@
             <field name="arch" type="xml">
                 <form string="Phân bổ chi phí">
                     <header>
+                        <button name="action_cancel" string="Huỷ phân bổ"
+                                type="object" class="oe_highlight"
+                                invisible_if="state != 'allocated'"
+                                confirm="Bạn có chắc chắn muốn huỷ phiếu phân bổ này không? Hành động này sẽ không thể hoàn tác."
+                                help="Huỷ phiếu phân bổ chi phí này"/>
                         <field name="state" widget="statusbar" statusbar_visible="allocated,cancelled"/>
                     </header>
                     <sheet>

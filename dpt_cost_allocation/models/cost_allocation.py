@@ -108,6 +108,47 @@ class CostAllocation(models.Model):
             'res_id': self.export_import_id.id,
             'target': 'current',
         }
+        
+    def action_cancel(self):
+        """
+        Huỷ phân bổ chi phí, thay đổi trạng thái từ 'allocated' thành 'cancelled'.
+        - Chỉ có thể huỷ các phiếu phân bổ đang ở trạng thái 'Đã phân bổ'.
+        - Ghi log cho các bản ghi liên quan.
+        """
+        for record in self:
+            # Kiểm tra điều kiện
+            if record.state != 'allocated':
+                raise UserError(_("Chỉ được phép huỷ những phiếu phân bổ ở trạng thái 'Đã phân bổ'."))
+                
+            # Chuyển trạng thái
+            record.write({'state': 'cancelled'})
+            
+            # Ghi log cho phiếu phân bổ
+            record.message_post(body=_("Phiếu phân bổ chi phí đã được chuyển sang trạng thái 'Đã huỷ'."))
+            
+            # Ghi log cho đơn mua hàng
+            if record.purchase_order_id:
+                record.purchase_order_id.message_post(body=_(
+                    "Phiếu phân bổ chi phí <b>%s</b> đã bị huỷ." % record.name
+                ))
+                
+            # Ghi log cho tờ khai
+            if record.export_import_id:
+                record.export_import_id.message_post(body=_(
+                    "Phiếu phân bổ chi phí <b>%s</b> từ đơn mua hàng <b>%s</b> đã bị huỷ." % (
+                        record.name, record.purchase_order_id.name)
+                ))
+                
+            # Ghi log cho từng dòng tờ khai
+            for line in record.line_ids:
+                if line.export_import_line_id:
+                    line.export_import_line_id.message_post(body=_(
+                        "Chi phí đã phân bổ (<b>%s</b>) từ PO <b>%s</b> đã bị huỷ." % (
+                            record.currency_id.round(line.allocated_amount),
+                            record.purchase_order_id.name)
+                    ))
+            
+        return True
 
     def write(self, vals):
         for record in self:
