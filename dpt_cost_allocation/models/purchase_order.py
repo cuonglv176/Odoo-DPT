@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# Placeholder for future extensions on purchase order model.
 from odoo import models, fields, api
 from odoo.exceptions import UserError
 from odoo.tools.translate import _
@@ -7,8 +6,6 @@ from odoo.tools.translate import _
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
-    # Trường tờ khai (được mở rộng đầy đủ ở Release 03).
-    # Tạm thời thêm để phục vụ liên kết related trong dpt.cost.allocation.
     export_import_id = fields.Many2one(
         'dpt.export.import',
         string="Tờ khai",
@@ -23,19 +20,31 @@ class PurchaseOrder(models.Model):
         """
     )
 
-    # Placeholder cho các tính năng tương lai (Release 03+)
-    # Các trường, phương thức khác sẽ được bổ sung sau.
-
-    # Fields and methods will be added in future releases.
     cost_allocation_ids = fields.One2many(
         'dpt.cost.allocation',
         'purchase_order_id',
-        string="Lịch sử phân bổ"
+        string="Lịch sử phân bổ",
+        help="""
+        Danh sách các lần phân bổ chi phí từ đơn mua hàng này.
+        
+        Cách sử dụng:
+        - Hiển thị tất cả các phiếu phân bổ liên quan đến đơn mua hàng
+        - Bao gồm cả các phân bổ đã hủy và đang có hiệu lực
+        - Dùng để theo dõi lịch sử phân bổ chi phí
+        """
     )
 
     cost_allocation_count = fields.Integer(
         compute='_compute_cost_allocation_count',
-        string="Số lần phân bổ"
+        string="Số lần phân bổ",
+        help="""
+        Tổng số lần phân bổ chi phí từ đơn mua hàng này.
+        
+        Cách sử dụng:
+        - Hiển thị tổng số phiếu phân bổ liên quan đến đơn mua hàng
+        - Bao gồm cả các phân bổ đã hủy và đang có hiệu lực
+        - Dùng để nhanh chóng biết đơn mua hàng đã từng được phân bổ hay chưa
+        """
     )
 
     @api.depends('cost_allocation_ids')
@@ -44,7 +53,22 @@ class PurchaseOrder(models.Model):
             record.cost_allocation_count = len(record.cost_allocation_ids)
 
     def action_calculate_allocated_cost(self):
-        """Tính và phân bổ chi phí từ PO vào các dòng tờ khai liên quan."""
+        """
+        Tính và phân bổ chi phí từ PO vào các dòng tờ khai liên quan.
+        
+        Quy trình thực hiện:
+        1. Kiểm tra điều kiện: đơn hàng đã khóa và có chọn tờ khai
+        2. Hủy các phân bổ cũ nếu có
+        3. Tính tổng chi phí từ các dòng đánh dấu 'Tính giá XHĐ'
+        4. Tính tỷ lệ phân bổ dựa trên 'Trị giá tính phân bổ' của các dòng tờ khai
+        5. Tạo phiếu phân bổ mới và các dòng chi tiết
+        
+        Raises:
+            UserError: Nếu không thỏa mãn điều kiện để phân bổ
+            
+        Returns:
+            bool: True nếu phân bổ thành công
+        """
         self.ensure_one()
         
         # Đảm bảo PO ở trạng thái done
@@ -121,6 +145,12 @@ class PurchaseOrder(models.Model):
         return True
 
     def action_view_cost_allocations(self):
+        """
+        Mở danh sách các phiếu phân bổ chi phí liên quan đến đơn mua hàng.
+        
+        Returns:
+            dict: Thông tin action mở danh sách phân bổ chi phí
+        """
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
@@ -157,6 +187,15 @@ class PurchaseOrder(models.Model):
         return super(PurchaseOrder, self).write(vals)
     
     def unlink(self):
+        """
+        Xử lý khi xóa đơn mua hàng có phân bổ chi phí.
+        
+        - Tự động hủy các phiếu phân bổ liên quan
+        - Ghi log vào tờ khai
+        
+        Returns:
+            bool: Kết quả từ phương thức unlink gốc
+        """
         for po in self:
             if po.cost_allocation_ids:
                 po.cost_allocation_ids.filtered(lambda a: a.state == 'allocated').write({'state': 'cancelled'})
@@ -184,8 +223,19 @@ class PurchaseOrderLine(models.Model):
     )
 
     def write(self, vals):
-        """Prevent editing critical fields when allocations exist on parent PO.
-        Fields guarded: price_unit, product_qty, include_in_invoice_cost, taxes_id
+        """
+        Ngăn chặn việc chỉnh sửa các trường quan trọng khi đơn mua hàng đã có phân bổ chi phí.
+        
+        Các trường được bảo vệ: price_unit, product_qty, include_in_invoice_cost, taxes_id
+        
+        Args:
+            vals (dict): Giá trị cần cập nhật
+            
+        Raises:
+            UserError: Khi cố gắng sửa trường được bảo vệ và đơn hàng đã phân bổ
+            
+        Returns:
+            bool: Kết quả từ phương thức write gốc
         """
         guarded_fields = {'price_unit', 'product_qty', 'include_in_invoice_cost', 'taxes_id'}
         if guarded_fields.intersection(vals.keys()):

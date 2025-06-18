@@ -2,7 +2,6 @@
 # Placeholder for future extensions on dpt.export.import model.
 from odoo import models, fields, api, _
 
-# Release 04: Logic tính toán cho các trường mới
 # ------------------------------------------------
 # Bổ sung các hàm compute và logic trên model dpt.export.import và dpt.export.import.line
 
@@ -18,12 +17,28 @@ class DptExportImport(models.Model):
         'dpt.cost.allocation',
         'export_import_id',
         string='Phân bổ chi phí',
+        help="""
+        Danh sách các phiếu phân bổ chi phí liên quan đến tờ khai này.
+        
+        Cách sử dụng:
+        - Hiển thị tất cả các phân bổ chi phí từ các đơn mua hàng khác nhau
+        - Dùng để theo dõi chi tiết các nguồn chi phí đã được phân bổ
+        - Khi tờ khai bị xóa, tất cả các phân bổ sẽ bị hủy tự động
+        """
     )
 
     cost_allocation_count = fields.Integer(
         string='Số lượt phân bổ',
         compute='_compute_cost_allocation_count',
         store=True,
+        help="""
+        Tổng số lượt phân bổ chi phí đến tờ khai này.
+        
+        Cách sử dụng:
+        - Hiển thị số lượng phiếu phân bổ chi phí liên quan đến tờ khai
+        - Dùng để nhanh chóng biết tờ khai đã nhận bao nhiêu lần phân bổ
+        - Bao gồm cả các phân bổ đã hủy và đang có hiệu lực
+        """
     )
 
     # ---------------------------------------------------------------------
@@ -47,6 +62,14 @@ class DptExportImportLine(models.Model):
         'dpt.cost.allocation.line',
         'export_import_line_id',
         string='Chi tiết phân bổ',
+        help="""
+        Danh sách chi tiết các phân bổ chi phí cho dòng tờ khai này.
+        
+        Cách sử dụng:
+        - Hiển thị tất cả các dòng chi tiết phân bổ từ các đơn mua hàng khác nhau
+        - Dùng để theo dõi các nguồn chi phí đã được phân bổ cho dòng này
+        - Khi dòng tờ khai bị xóa, tất cả các phân bổ liên quan sẽ bị hủy
+        """
     )
 
     # Trị giá dùng để tính tỉ lệ phân bổ
@@ -89,7 +112,13 @@ class DptExportImportLine(models.Model):
 
     @api.depends('dpt_basic_value', 'dpt_amount_tax_import_basic', 'dpt_amount_tax_other_basic')
     def _compute_dpt_invoice_base_value(self):
-        """Trị giá tính phân bổ = Giá trị cơ bản + Thuế NK (XHĐ) + Thuế khác (XHĐ)"""
+        """
+        Tính toán trị giá dùng để phân bổ chi phí cho dòng tờ khai.
+        
+        Công thức: Giá trị cơ bản + Thuế NK (XHĐ) + Thuế khác (XHĐ)
+        
+        Trường này được sử dụng làm cơ sở để tính tỷ lệ phân bổ chi phí từ đơn mua hàng.
+        """
         for rec in self:
             base = rec.dpt_basic_value or 0.0
             tax_import = rec.dpt_amount_tax_import_basic or 0.0
@@ -98,7 +127,12 @@ class DptExportImportLine(models.Model):
 
     @api.depends('cost_allocation_line_ids.allocated_amount', 'cost_allocation_line_ids.cost_allocation_id.state')
     def _compute_dpt_allocated_cost_general(self):
-        """Tổng hợp chi phí phân bổ chung còn hiệu lực (state == 'allocated')."""
+        """
+        Tính tổng chi phí phân bổ đã nhận cho dòng tờ khai.
+        
+        Chỉ tính các dòng phân bổ có trạng thái 'allocated'.
+        Khi một phân bổ bị hủy (state = 'cancelled'), giá trị sẽ tự động cập nhật lại.
+        """
         for line in self:
             allocated_lines = line.cost_allocation_line_ids.filtered(
                 lambda l: l.cost_allocation_id.state == 'allocated'
@@ -111,7 +145,12 @@ class DptExportImportLine(models.Model):
 
     @api.onchange('dpt_basic_value', 'dpt_amount_tax_import_basic', 'dpt_amount_tax_other_basic')
     def _onchange_dpt_basic_value(self):
-        """Cảnh báo khi trị giá tờ khai thay đổi sau khi đã có chi phí phân bổ."""
+        """
+        Hiển thị cảnh báo khi thay đổi giá trị thành phần của trị giá tính phân bổ sau khi đã phân bổ chi phí.
+        
+        Returns:
+            dict: Cảnh báo cho người dùng nếu cần thiết
+        """
         if self.state == 'eligible' and self.dpt_allocated_cost_general > 0:
             return {
                 'warning': {
@@ -125,7 +164,15 @@ class DptExportImportLine(models.Model):
     # ---------------------------------------------------------------------
 
     def unlink(self):
-        """Tự động hủy phân bổ khi dòng tờ khai bị xóa."""
+        """
+        Ghi đè phương thức xóa để tự động hủy phân bổ khi dòng tờ khai bị xóa.
+        
+        Khi dòng tờ khai bị xóa và có chi phí phân bổ, các phân bổ liên quan sẽ bị hủy
+        và ghi log vào tờ khai để theo dõi.
+        
+        Returns:
+            bool: Kết quả từ phương thức unlink gốc
+        """
         for line in self:
             if line.dpt_allocated_cost_general > 0 and line.export_import_id:
                 related_allocations = self.env['dpt.cost.allocation'].search([
@@ -139,4 +186,3 @@ class DptExportImportLine(models.Model):
                     )
         return super(DptExportImportLine, self).unlink()
 
-# end of file 

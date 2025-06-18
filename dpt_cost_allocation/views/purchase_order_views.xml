@@ -17,7 +17,8 @@
                             type="object"
                             string="Tính phân bổ chi phí"
                             class="oe_highlight"
-                            invisible="state != 'done' or not export_import_id"/>
+                            invisible="state != 'done' or not export_import_id"
+                            help="Tính toán và thực hiện phân bổ chi phí từ đơn mua hàng cho các dòng tờ khai đã chọn. Chi phí sẽ được phân bổ theo tỷ lệ của trị giá tính phân bổ từng dòng."/>
                 </xpath>
 
                 <!-- Bổ sung cột đánh dấu tính giá XHĐ trên tree view của order_line -->
@@ -31,7 +32,8 @@
                             name="action_view_cost_allocations"
                             class="oe_stat_button"
                             icon="fa-cogs"
-                            invisible="cost_allocation_count == 0">
+                            invisible="cost_allocation_count == 0"
+                            help="Xem danh sách các lần phân bổ chi phí từ đơn mua hàng này">
                         <field name="cost_allocation_count" widget="statinfo" string="Phân bổ"/>
                     </button>
                 </div>

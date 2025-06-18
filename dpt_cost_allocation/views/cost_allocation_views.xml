@@ -35,13 +35,15 @@
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_view_purchase_order" type="object" 
-                                    class="oe_stat_button" icon="fa-shopping-cart">
+                                    class="oe_stat_button" icon="fa-shopping-cart"
+                                    help="Xem chi tiết đơn mua hàng liên quan đến phân bổ này">
                                 <div class="o_stat_info">
                                     <span class="o_stat_text">Đơn mua hàng</span>
                                 </div>
                             </button>
                             <button name="action_view_export_import" type="object" 
-                                    class="oe_stat_button" icon="fa-file-text">
+                                    class="oe_stat_button" icon="fa-file-text"
+                                    help="Xem chi tiết tờ khai nhận phân bổ chi phí">
                                 <div class="o_stat_info">
                                     <span class="o_stat_text">Tờ khai</span>
                                 </div>
