@@ -73,11 +73,12 @@ class PurchaseOrder(models.Model):
         if total_base_value <= 0:
             raise UserError(_("Tổng 'Trị giá tính phân bổ' của các dòng tờ khai phải > 0. Không thể phân bổ."))
             
-        # 3. Tạo bản ghi phân bổ mới
+        # 3. Tạo bản ghi phân bổ mới ở trạng thái nháp
         new_allocation = self.env['dpt.cost.allocation'].create({
             'purchase_order_id': self.id,
             'total_allocated_from_po': total_cost,
             'currency_id': self.currency_id.id,
+            'state': 'draft',  # Đảm bảo state là draft
         })
         
         # 4. Tạo các dòng chi tiết
@@ -92,6 +93,9 @@ class PurchaseOrder(models.Model):
                 'ratio': ratio,
             })
         created_lines = self.env['dpt.cost.allocation.line'].create(alloc_line_vals)
+        
+        # 5. Cập nhật trạng thái thành 'allocated' sau khi đã tạo các dòng chi tiết
+        new_allocation.write({'state': 'allocated'})
         
         # Ghi log cho PO, Tờ khai và từng dòng tờ khai
         self.message_post(body=_(
