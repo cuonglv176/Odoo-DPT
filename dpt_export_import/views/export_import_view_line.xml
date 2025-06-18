@@ -43,6 +43,7 @@
                 <field name="dpt_amount_tax_other"/>
                 <field name="dpt_exchange_rate"/>
                 <field name="dpt_exchange_rate_basic"/>
+                <field name="customs_price_type"/>
                 <field name="dpt_total_vat"/>
                 <field name="dpt_total_usd_vnd"/>
                 <field name="dpt_total_cny_vnd"/>
@@ -255,7 +256,6 @@
                 <field name="dpt_amount_tax_other"/>
                 <field name="dpt_exchange_rate"/>
                 <field name="dpt_exchange_rate_basic"/>
-                <!-- dunghq: Thêm trường customs_price_type vào tree view -->
                 <field name="customs_price_type"/>
                 <field name="dpt_total_vat"/>
                 <field name="dpt_total_usd_vnd"/>

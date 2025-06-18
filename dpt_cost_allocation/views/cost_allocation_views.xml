@@ -118,4 +118,39 @@
             </field>
         </record>
     </data>
+
+    <!-- Kế thừa view export_import_line từ module dpt_export_import để thêm trường dpt_invoice_base_value -->
+    <record id="dpt_cost_allocation_export_import_line_form_inherit" model="ir.ui.view">
+        <field name="name">dpt.export.import.line.form.inherit.cost.allocation</field>
+        <field name="model">dpt.export.import.line</field>
+        <field name="inherit_id" ref="dpt_export_import.view_dpt_export_import_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='dpt_basic_value']" position="after">
+                <field name="dpt_invoice_base_value" string="Trị giá tính phân bổ"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="dpt_cost_allocation_export_import_line_tree_inherit" model="ir.ui.view">
+        <field name="name">dpt.export.import.line.tree.inherit.cost.allocation</field>
+        <field name="model">dpt.export.import.line</field>
+        <field name="inherit_id" ref="dpt_export_import.view_dpt_export_import_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='customs_price_type']" position="after">
+                <field name="dpt_invoice_base_value"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Kế thừa tree view search -->
+    <record id="dpt_cost_allocation_export_import_line_tree_search_inherit" model="ir.ui.view">
+        <field name="name">dpt.export.import.line.tree.search.inherit.cost.allocation</field>
+        <field name="model">dpt.export.import.line</field>
+        <field name="inherit_id" ref="dpt_export_import.view_dpt_export_import_line_tree_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='customs_price_type']" position="after">
+                <field name="dpt_invoice_base_value"/>
+            </xpath>
+        </field>
+    </record>
 </odoo> 
