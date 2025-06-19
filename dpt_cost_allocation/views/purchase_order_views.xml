@@ -8,7 +8,16 @@
             <field name="arch" type="xml">
                 <!-- Thêm trường Tờ khai sau field partner_ref -->
                 <xpath expr="//field[@name='partner_ref']" position="after">
-                    <field name="export_import_id" options="{'no_create': True, 'no_open': True}"/>
+                    <field name="allocation_target_type" widget="radio" options="{'horizontal': true}"/>
+                    <field name="export_import_id" 
+                           invisible="allocation_target_type != 'declaration'"
+                           options="{'no_create': True, 'no_open': True}"/>
+                    <field name="sale_order_id"
+                           invisible="allocation_target_type != 'sale_order' and allocation_target_type != 'declaration_line'"
+                           options="{'no_create': True}"/>
+                    <field name="export_import_line_id"
+                           invisible="allocation_target_type != 'declaration_line'"
+                           options="{'no_create': True}"/>
                 </xpath>
 
                 <!-- Thêm nút hành động trên header -->
@@ -17,7 +26,8 @@
                             type="object"
                             string="Tính phân bổ chi phí"
                             class="oe_highlight"
-                            invisible="state != 'done' or not export_import_id"/>
+                            invisible="state != 'done' or (allocation_target_type == 'declaration' and not export_import_id) or (allocation_target_type == 'sale_order' and not sale_order_id) or (allocation_target_type == 'declaration_line' and (not sale_order_id or not export_import_line_id))"
+                            help="Tính toán và thực hiện phân bổ chi phí từ đơn mua hàng cho đối tượng đã chọn. Chi phí sẽ được phân bổ theo tỷ lệ của trị giá tính phân bổ."/>
                 </xpath>
 
                 <!-- Bổ sung cột đánh dấu tính giá XHĐ trên tree view của order_line -->
@@ -31,7 +41,8 @@
                             name="action_view_cost_allocations"
                             class="oe_stat_button"
                             icon="fa-cogs"
-                            invisible="cost_allocation_count == 0">
+                            invisible="cost_allocation_count == 0"
+                            help="Xem danh sách các lần phân bổ chi phí từ đơn mua hàng này">
                         <field name="cost_allocation_count" widget="statinfo" string="Phân bổ"/>
                     </button>
                 </div>

@@ -251,6 +251,22 @@ class DptExportImportLine(models.Model):
     price_outside_range = fields.Boolean(string='Giá ngoài khoảng cho phép', default=False)
     price_temp = fields.Monetary(string='Giá tạm thời', currency_field='currency_id', store=False)
 
+    # Thêm hai trường mới
+    dpt_amount_tax_vat_customs = fields.Monetary(
+        string='Tiền thuế VAT (HQ)',
+        currency_field='currency_id',
+        compute='_compute_tax_vat_customs', 
+        store=True, 
+        tracking=True
+    )
+    dpt_amount_tax_vat_customer = fields.Monetary(
+        string='Tiền VAT (Thu khách)',
+        currency_field='currency_id',
+        compute='_compute_tax_vat_customer', 
+        store=True, 
+        tracking=True
+    )
+
     @api.depends('dpt_price_unit', 'dpt_price_min_allowed', 'dpt_price_max_allowed')
     def _compute_can_request_price_approval(self):
         for line in self:
@@ -834,7 +850,7 @@ class DptExportImportLine(models.Model):
         for rec in self:
             rec.dpt_total_allocated_cost = rec.dpt_allocated_cost_general + rec.dpt_allocated_cost_specific
 
-    @api.depends('dpt_basic_value', 'dpt_amount_tax_import_basic', 'dpt_amount_tax_other_basic', 'dpt_total_allocated_cost')
+    @api.depends('dpt_basic_value', 'dpt_amount_tax_import_basic', 'dpt_amount_tax_other_basic')
     def _compute_cost_of_goods(self):
         for rec in self:
             # Sửa: Chỉ tính giá trị cơ bản + thuế NK + thuế Khác + chi phí phân bổ (không bao gồm VAT)
@@ -965,4 +981,27 @@ class DptExportImportLine(models.Model):
             'dpt_actual_price': self.dpt_price_unit,
             'price_revalidation_required': False
         })
+
+    @api.depends('declaration_type', 'dpt_price_usd', 'dpt_price_cny_vnd', 'dpt_price_krw_vnd',
+             'dpt_exchange_rate', 'dpt_amount_tax_import', 'dpt_amount_tax_other', 'dpt_tax')
+    def _compute_tax_vat_customs(self):
+        for rec in self:
+            # Xác định giá khai báo dựa trên loại tiền
+            price = 0
+            if rec.declaration_type == 'usd':
+                price = rec.dpt_price_usd
+            elif rec.declaration_type == 'cny':
+                price = rec.dpt_price_cny_vnd
+            elif rec.declaration_type == 'krw':
+                price = rec.dpt_price_krw_vnd
+            
+            # Tiền thuế VAT (HQ) = (Giá khai + Tiền thuế NK + Tiền thuế Khác) * Tỉ giá HQ * VAT(%)
+            base_amount = (price + rec.dpt_amount_tax_import + rec.dpt_amount_tax_other) * rec.dpt_exchange_rate
+            rec.dpt_amount_tax_vat_customs = base_amount * rec.dpt_tax
+
+    @api.depends('dpt_actual_price', 'dpt_sl1', 'dpt_tax')
+    def _compute_tax_vat_customer(self):
+        for rec in self:
+            # Tiền VAT (Thu khách) = Giá XHĐ thực tế * số lượng 1 * VAT(%)
+            rec.dpt_amount_tax_vat_customer = rec.dpt_actual_price * rec.dpt_sl1 * rec.dpt_tax
 

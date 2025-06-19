@@ -43,6 +43,7 @@
                 <field name="dpt_amount_tax_other"/>
                 <field name="dpt_exchange_rate"/>
                 <field name="dpt_exchange_rate_basic"/>
+                <field name="customs_price_type"/>
                 <field name="dpt_total_vat"/>
                 <field name="dpt_total_usd_vnd"/>
                 <field name="dpt_total_cny_vnd"/>
@@ -163,6 +164,8 @@
                             <field name="dpt_amount_tax_import_basic"/>
                             <field name="dpt_amount_tax_other_basic"/>
                             <field name="dpt_amount_tax_vat_basic"/>
+                            <field name="dpt_amount_tax_vat_customs" string="Tiền thuế VAT (HQ)"/>
+                            <field name="dpt_amount_tax_vat_customer" string="Tiền VAT (Thu khách)"/>
                             <field name="dpt_total_tax_basic" class="oe_subtotal_footer_separator"/>
                             <!-- Thêm các trường chi phí phân bổ và giá vốn -->
                             <field name="dpt_allocated_cost_general"/>
@@ -255,7 +258,6 @@
                 <field name="dpt_amount_tax_other"/>
                 <field name="dpt_exchange_rate"/>
                 <field name="dpt_exchange_rate_basic"/>
-                <!-- dunghq: Thêm trường customs_price_type vào tree view -->
                 <field name="customs_price_type"/>
                 <field name="dpt_total_vat"/>
                 <field name="dpt_total_usd_vnd"/>

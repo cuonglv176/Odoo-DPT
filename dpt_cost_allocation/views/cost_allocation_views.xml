@@ -7,6 +7,7 @@
                 <tree string="Phân bổ chi phí" decoration-success="state == 'allocated'" decoration-danger="state == 'cancelled'">
                     <field name="purchase_order_id"/>
                     <field name="export_import_id"/>
+                    <field name="allocation_type"/>
                     <field name="allocation_date"/>
                     <field name="total_allocated_from_po" sum="Tổng phân bổ"/>
                     <field name="currency_id" optional="hide"/>
@@ -35,13 +36,15 @@
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_view_purchase_order" type="object" 
-                                    class="oe_stat_button" icon="fa-shopping-cart">
+                                    class="oe_stat_button" icon="fa-shopping-cart"
+                                    help="Xem chi tiết đơn mua hàng liên quan đến phân bổ này">
                                 <div class="o_stat_info">
                                     <span class="o_stat_text">Đơn mua hàng</span>
                                 </div>
                             </button>
                             <button name="action_view_export_import" type="object" 
-                                    class="oe_stat_button" icon="fa-file-text">
+                                    class="oe_stat_button" icon="fa-file-text"
+                                    help="Xem chi tiết tờ khai nhận phân bổ chi phí">
                                 <div class="o_stat_info">
                                     <span class="o_stat_text">Tờ khai</span>
                                 </div>
@@ -56,6 +59,7 @@
                             <group>
                                 <field name="purchase_order_id" readonly="context.get('from_purchase', False)"/>
                                 <field name="export_import_id"/>
+                                <field name="allocation_type" widget="radio" options="{'horizontal': true}"/>
                                 <field name="note" placeholder="Ghi chú về việc phân bổ..."/>
                             </group>
                             <group>
@@ -70,6 +74,7 @@
                                     <tree>
                                         <field name="export_import_line_id"/>
                                         <field name="ratio" widget="percentage"/>
+                                        <field name="line_invoice_base_value"/>
                                         <field name="allocated_amount" sum="Tổng phân bổ"/>
                                         <field name="currency_id" invisible="1"/>
                                     </tree>
@@ -118,4 +123,39 @@
             </field>
         </record>
     </data>
+
+    <!-- Kế thừa view export_import_line từ module dpt_export_import để thêm trường dpt_invoice_base_value -->
+    <record id="dpt_cost_allocation_export_import_line_form_inherit" model="ir.ui.view">
+        <field name="name">dpt.export.import.line.form.inherit.cost.allocation</field>
+        <field name="model">dpt.export.import.line</field>
+        <field name="inherit_id" ref="dpt_export_import.view_dpt_export_import_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='dpt_basic_value']" position="after">
+                <field name="dpt_invoice_base_value" string="Trị giá tính phân bổ"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="dpt_cost_allocation_export_import_line_tree_inherit" model="ir.ui.view">
+        <field name="name">dpt.export.import.line.tree.inherit.cost.allocation</field>
+        <field name="model">dpt.export.import.line</field>
+        <field name="inherit_id" ref="dpt_export_import.view_dpt_export_import_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='customs_price_type']" position="after">
+                <field name="dpt_invoice_base_value"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Kế thừa tree view search -->
+    <record id="dpt_cost_allocation_export_import_line_tree_search_inherit" model="ir.ui.view">
+        <field name="name">dpt.export.import.line.tree.search.inherit.cost.allocation</field>
+        <field name="model">dpt.export.import.line</field>
+        <field name="inherit_id" ref="dpt_export_import.view_dpt_export_import_line_tree_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='customs_price_type']" position="after">
+                <field name="dpt_invoice_base_value"/>
+            </xpath>
+        </field>
+    </record>
 </odoo> 
