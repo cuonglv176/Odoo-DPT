@@ -65,6 +65,11 @@ class DPTService(models.Model):
                                         help='Khi tắt, dịch vụ này chỉ hiển thị cho vận hành và kế toán')
     is_bao_giao = fields.Boolean(default=False, string='Bao giao')
     is_allin = fields.Boolean(default=False, string='All In')
+    
+    # Các trường đánh dấu dịch vụ thuế
+    is_vat_service = fields.Boolean(string='Dịch vụ thuế VAT', default=False, tracking=True)
+    is_import_tax_service = fields.Boolean(string='Dịch vụ thuế NK', default=False, tracking=True) 
+    is_other_tax_service = fields.Boolean(string='Dịch vụ thuế khác', default=False, tracking=True)
 
     _sql_constraints = [
         ('code_name_index', 'CREATE INDEX code_name_index ON dpt_service_management (code, name)',
@@ -103,6 +108,22 @@ class DPTService(models.Model):
         for item in self:
             if 'name' in vals:
                 item.action_create_product_id()
+                
+            # Ghi log khi các trường đánh dấu dịch vụ thuế thay đổi
+            tax_fields = {
+                'is_vat_service': 'Dịch vụ thuế VAT',
+                'is_import_tax_service': 'Dịch vụ thuế NK',
+                'is_other_tax_service': 'Dịch vụ thuế khác'
+            }
+            
+            for field, label in tax_fields.items():
+                if field in vals:
+                    new_value = vals[field]
+                    message = _("Cập nhật cấu hình dịch vụ: %s - %s") % (
+                        label, 
+                        _("Kích hoạt") if new_value else _("Hủy kích hoạt")
+                    )
+                    item.message_post(body=message)
         return res
 
     @api.model
