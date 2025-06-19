@@ -15,7 +15,7 @@ class DPTExpenseAllocation(models.Model):
     name = fields.Char("Name", reuqired=1)
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
     main_currency_id = fields.Many2one('res.currency', string='Main Currency', compute="_compute_main_expense")
-    total_expense = fields.Monetary(string='Total Expense', currency_field='currency_id')
+    total_expense = fields.Monetary(string='Total Expense', currency_field='currency_id', compute="compute_total_expense")
     purchase_order_ids = fields.Many2many('purchase.order', string='Purchase Orders')
     shipping_ids = fields.Many2many('dpt.shipping.slip', string='Shipping', compute="_compute_order_shipping")
     sale_ids = fields.Many2many('sale.order', string='Orders', compute="_compute_order_shipping")
@@ -28,7 +28,7 @@ class DPTExpenseAllocation(models.Model):
             item.sale_ids = item.purchase_order_ids.mapped('total_order_expense_ids')
             item.shipping_ids = item.purchase_order_ids.mapped('shipping_slip_ids')
 
-    @api.depends('purchase_order_ids', 'total_expense')
+    # @api.depends('purchase_order_ids', 'total_expense')
     def _compute_main_expense(self):
         for item in self:
             item.main_currency_id = self.env.company.currency_id
@@ -39,7 +39,12 @@ class DPTExpenseAllocation(models.Model):
             return
         self.currency_id = self.purchase_order_ids[0].currency_id if self.purchase_order_ids[
             0].currency_id else self.env.company.currency_id
-        self.total_expense = sum(self.purchase_order_ids.mapped('amount_total'))
+
+    @api.depends('purchase_order_ids')
+    def compute_total_expense(self):
+        if not self.purchase_order_ids:
+            return
+        self.total_expense = sum(self.purchase_order_ids.mapped('service_total_amount'))
 
     def action_allocate(self):
         self.state = 'allocated'
