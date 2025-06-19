@@ -398,7 +398,10 @@ class SaleOrder(models.Model):
                         for order_line in purchase_ids.mapped('order_line'):
                             price_base += order_line.price_subtotal * order_line.order_id.last_rate_currency
                     elif combo_pricelist_id.percent_based_on == 'invoice_total_amount':
-                        pass
+                        # Tính tổng giá trị xuất hoá đơn từ các dòng tờ khai
+                        # Sử dụng công thức: Tổng (dpt_actual_price * dpt_sl1 * dpt_tax) cho tất cả các dòng tờ khai
+                        export_import_lines = self.env['dpt.export.import.line'].search([('sale_id', '=', self.id)])
+                        price_base = sum(line.dpt_actual_price * line.dpt_sl1 * line.dpt_tax for line in export_import_lines) if export_import_lines else 0
                     elif combo_pricelist_id.percent_based_on == 'vat_service_amount':
                         # Tính tổng giá trị của các dịch vụ VAT trong đơn hàng
                         vat_services = self.sale_service_ids.filtered(lambda s: s.service_id.is_vat_service)
@@ -549,7 +552,10 @@ class SaleOrder(models.Model):
                         for order_line in purchase_ids.mapped('order_line'):
                             price_base += order_line.price_subtotal * order_line.order_id.last_rate_currency
                     elif service_price_id.percent_based_on == 'invoice_total_amount':
-                        pass
+                        # Tính tổng giá trị xuất hoá đơn từ các dòng tờ khai
+                        # Sử dụng công thức: Tổng (dpt_actual_price * dpt_sl1 * dpt_tax) cho tất cả các dòng tờ khai
+                        export_import_lines = self.env['dpt.export.import.line'].search([('sale_id', '=', self.id)])
+                        price_base = sum(line.dpt_actual_price * line.dpt_sl1 * line.dpt_tax for line in export_import_lines) if export_import_lines else 0
                     elif service_price_id.percent_based_on == 'vat_service_amount':
                         # Tính tổng giá trị của các dịch vụ VAT trong đơn hàng
                         vat_services = self.sale_service_ids.filtered(lambda s: s.service_id.is_vat_service)
