@@ -15,7 +15,7 @@ class DPTExpenseAllocation(models.Model):
     name = fields.Char("Name", reuqired=1)
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
     main_currency_id = fields.Many2one('res.currency', string='Main Currency', compute="_compute_main_expense")
-    total_expense = fields.Monetary(string='Total Expense', currency_field='currency_id', compute="compute_total_expense")
+    total_expense = fields.Monetary(string='Total Expense', currency_field='currency_id', compute="compute_total_expense", store=False)
     purchase_order_ids = fields.Many2many('purchase.order', string='Purchase Orders')
     shipping_ids = fields.Many2many('dpt.shipping.slip', string='Shipping', compute="_compute_order_shipping")
     sale_ids = fields.Many2many('sale.order', string='Orders', compute="_compute_order_shipping")
