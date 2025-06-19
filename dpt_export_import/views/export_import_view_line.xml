@@ -164,6 +164,8 @@
                             <field name="dpt_amount_tax_import_basic"/>
                             <field name="dpt_amount_tax_other_basic"/>
                             <field name="dpt_amount_tax_vat_basic"/>
+                            <field name="dpt_amount_tax_vat_customs" string="Tiền thuế VAT (HQ)"/>
+                            <field name="dpt_amount_tax_vat_customer" string="Tiền VAT (Thu khách)"/>
                             <field name="dpt_total_tax_basic" class="oe_subtotal_footer_separator"/>
                             <!-- Thêm các trường chi phí phân bổ và giá vốn -->
                             <field name="dpt_allocated_cost_general"/>
