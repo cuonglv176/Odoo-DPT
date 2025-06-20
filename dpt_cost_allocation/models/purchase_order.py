@@ -31,7 +31,6 @@ class PurchaseOrder(models.Model):
         'sale.order',
         string="Đơn bán hàng nhận phân bổ",
         tracking=True,
-        domain="[('state', 'in', ['sale', 'done'])]",
         help="Đơn bán hàng nhận phân bổ chi phí riêng từ đơn mua hàng này"
     )
 
