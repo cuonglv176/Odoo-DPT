@@ -14,5 +14,7 @@ class SaleOrder(models.Model):
     @api.depends('sale_service_ids')
     def compute_expense_amount_total(self):
         for order in self:
-            order.expense_amount_total = sum(order.sale_service_ids.filtered(
-                lambda x: x.compute_uom_id and x.compute_uom_id.use_for_allocate_expense).mapped('amount_total'))
+            order.expense_amount_total = sum(order.service_combo_ids.filtered(
+                lambda
+                    x: x.compute_uom_id and x.compute_uom_id.use_for_allocate_expense and x.combo_id and x.combo_id.use_for_allocate_expense).mapped(
+                'amount_total'))

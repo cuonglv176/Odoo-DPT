@@ -103,7 +103,11 @@ class SaleOrder(models.Model):
 
         list_service = []
         history = []
+        for service_combo_id in self.service_combo_ids:
+            service_combo_id.approval_id = approval_id
+
         for sale_service_id in self.sale_service_ids:
+            sale_service_id.approval_id = approval_id
             # if sale_service_id.department_id == department and not sale_service_id.service_id.zezo_price:
             if not sale_service_id.service_id.zezo_price:
                 if sale_service_id.new_price != 0 and sale_service_id.new_price != sale_service_id.price:
@@ -128,6 +132,32 @@ class SaleOrder(models.Model):
                         'price': sale_service_id.price,
                         'new_price': sale_service_id.new_price,
                     })
+        # for sale_service_id in self.sale_service_ids:
+        #     # if sale_service_id.department_id == department and not sale_service_id.service_id.zezo_price:
+        #     if not sale_service_id.service_id.zezo_price:
+        #         if sale_service_id.new_price != 0 and sale_service_id.new_price != sale_service_id.price:
+        #             sale_service_id.approval_id = approval_id
+        #             sale_service_id.price_status = 'wait_approve'
+        #             list_service.append(sale_service_id)
+        #             history.append({
+        #                 'service_management_id': sale_service_id.id,
+        #                 'service_id': sale_service_id.service_id.id,
+        #                 'approval_id': approval_id.id,
+        #                 'price': sale_service_id.price,
+        #                 'new_price': sale_service_id.new_price,
+        #             })
+        #         if sale_service_id.is_zero_price and sale_service_id.new_price != sale_service_id.price:
+        #             sale_service_id.approval_id = approval_id
+        #             sale_service_id.price_status = 'wait_approve'
+        #             list_service.append(sale_service_id)
+        #             history.append({
+        #                 'service_management_id': sale_service_id.id,
+        #                 'service_id': sale_service_id.service_id.id,
+        #                 'approval_id': approval_id.id,
+        #                 'price': sale_service_id.price,
+        #                 'new_price': sale_service_id.new_price,
+        #             })
+
         for line in self.order_line:
             # if line.new_price_unit != 0 and line.new_price_unit != line.price_unit:
             line.approval_id = approval_id

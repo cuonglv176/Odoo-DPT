@@ -18,7 +18,7 @@ class ResCurrency(models.Model):
                 line_xnk_ids = self.env['dpt.export.import.line'].search(
                     [('state', 'not in', ('eligible', 'cancelled'))])
                 for line_xnk_id in line_xnk_ids:
-                    line_xnk_id.compute_dpt_exchange_rate()
+                    line_xnk_id._compute_dpt_exchange_rate()
             if currency_rate.category == 'basic':
                 line_xhd_ids = self.env['dpt.export.import.line'].search(
                     ['|', ('export_import_id', '=', False), ('export_import_id.state', '!=', 'cleared')])

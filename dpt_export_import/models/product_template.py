@@ -26,6 +26,7 @@ class ProductTemplate(models.Model):
     dpt_tax_ecus5 = fields.Float(string='VAT ECUS5', tracking=True)
     dpt_tax = fields.Float(string='VAT(%)', tracking=True)
     dpt_exchange_rate = fields.Monetary(string='Exchange rate', tracking=True)
+    dpt_exchange_rate_base = fields.Monetary(string='Tỉ giá XHĐ', tracking=True)
     hs_code_id = fields.Many2one('dpt.export.import.acfta', string='HS Code')
     dpt_code_hs = fields.Char(string='H')
     dpt_sl1 = fields.Integer(string='SL1', tracking=True)

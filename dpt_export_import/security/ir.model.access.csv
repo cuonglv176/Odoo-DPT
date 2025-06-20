@@ -5,3 +5,4 @@ dpt.export.import.line,dpt.export.import.line.user,model_dpt_export_import_line,
 dpt.export.import.acfta,dpt.export.import.acfta,model_dpt_export_import_acfta,,1,1,1,1
 dpt.product.brand,dpt.product.brand.user,model_dpt_product_brand,,1,1,1,1
 dpt.product.model,dpt.product.model.user,model_dpt_product_model,,1,1,1,1
+dpt.price.approval.wizard,dpt.price.approval.wizard,model_dpt_price_approval_wizard,,1,1,1,1

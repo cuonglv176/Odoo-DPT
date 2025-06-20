@@ -32,6 +32,8 @@
                             <field name="steps_count"/>
                             <field name="zezo_price" widget="boolean_toggle"/>
                             <field name="auo_complete" widget="boolean_toggle"/>
+                            <field name="is_bao_giao" widget="boolean_toggle"/>
+                            <field name="is_allin" widget="boolean_toggle"/>
                             <field name="active" widget="boolean_toggle"/>
                             <!--                            <field name="image"/>-->
                         </group>
@@ -100,6 +102,15 @@
                                 </tree>
                             </field>
                         </page>
+                        <page string="Cấu hình thuế" name="tax_config">
+                            <group>
+                                <group>
+                                    <field name="is_vat_service"/>
+                                    <field name="is_import_tax_service"/>
+                                    <field name="is_other_tax_service"/>
+                                </group>
+                            </group>
+                        </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
@@ -123,6 +134,8 @@
                 <field name="cost_account_id"/>
                 <field name="revenue_account_id"/>
                 <field name="steps_count"/>
+                <field name="is_bao_giao" widget="boolean_toggle"/>
+                <field name="is_allin" widget="boolean_toggle"/>
             </tree>
         </field>
     </record>

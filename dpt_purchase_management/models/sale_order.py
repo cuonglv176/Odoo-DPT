@@ -47,7 +47,7 @@ class SaleOrder(models.Model):
                 'name': order_line.name,
                 'product_qty': order_line.product_uom_qty,
                 'product_uom': order_line.product_uom.id,
-                'price_unit': order_line.price_unit,
+                'price_unit': order_line.price_unit_cny,
                 'date_planned': fields.Datetime.now(),
             }))
         # po_id = self.env['purchase.order'].create({

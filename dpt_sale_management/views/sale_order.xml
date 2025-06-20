@@ -15,7 +15,7 @@
                 <field name="is_quotation" invisible="1"/>
                 <field name="show_action_calculation" invisible="1"/>
                 <field name="active" invisible="1"/>
-                <button string="Export Quotation" name="export_excel_quotation" type="object"/>
+                <button string="Export Quotation" name="export_excel_quotation_popup" type="object"/>
             </button>
             <button name="action_quotation_send" position="attributes">
                 <attribute name="invisible">1</attribute>
@@ -31,6 +31,7 @@
                 <field name="employee_cs"/>
                 <field name="times_of_quotation" readonly="1"/>
                 <field name="settle_by" widget="radio" options="{'horizontal': True}"/>
+                <field name="quote_type" widget="radio" options="{'horizontal': True}"/>
             </field>
             <xpath expr="//page[@name='order_lines']/field[@name='order_line']/tree/field[@name='product_template_id']"
                    position="before">
@@ -54,18 +55,17 @@
                             <field name="is_price_fixed" widget="boolean_toggle"/>
                         </tree>
                     </field>
-                    <separator string="DỊCH VỤ CHI TIẾT"/>
+                    <separator string="DỊCH VỤ"/>
                     <field name="planned_sale_service_ids" readonly="state == 'cancel' or locked">
                         <tree editable="bottom">
-                            <field name="combo_id"/> <!-- Thêm trường combo_id -->
                             <field name="id" string="ID"/>
                             <field name="sequence" widget="handle"/>
                             <field name="currency_id" column_invisible="1" force_save="1"/>
                             <field name="currency_cny_id" optional="hide"/>
-                            <field name="service_id" domain="[('child_ids', '=', False)]"/>
+                            <field name="service_id"/>
                             <field name="uom_id" column_invisible="1"/>
                             <field name="compute_value" readonly="1" force_save="1"/>
-                            <field name="compute_uom_id" readonly="1" force_save="1"/>
+                            <field name="compute_uom_id" force_save="1"/>
                             <field name="qty" column_invisible="1" force_save="1"/>
                             <field name="uom_ids" column_invisible="1"/>
                             <field name="price" readonly="0" force_save="1" context="{'check_price': True}"/>
@@ -75,6 +75,8 @@
                             <field name="department_id" context="{'dpt_sale_management': 1}"/>
                             <field name="note"/>
                             <field name="is_price_fixed" widget="boolean_toggle"/>
+                            <field name="is_bao_giao" widget="boolean_toggle"/>
+<!--                            <field name="is_allin" widget="boolean_toggle"/>-->
 
                         </tree>
                     </field>
@@ -103,15 +105,14 @@
                     <separator string="DỊCH VỤ CHI TIẾT"/>
                     <field name="sale_service_ids" readonly="state == 'cancel' or locked">
                         <tree editable="bottom">
-                            <field name="combo_id"/> <!-- Thêm trường combo_id -->
                             <field name="id" string="ID"/>
                             <field name="sequence" widget="handle"/>
                             <field name="currency_id" column_invisible="1" force_save="1"/>
                             <field name="currency_cny_id" optional="hide"/>
-                            <field name="service_id" domain="[('child_ids', '=', False)]"/>
+                            <field name="service_id"/>
                             <field name="uom_id" column_invisible="1"/>
                             <field name="compute_value" readonly="1" force_save="1"/>
-                            <field name="compute_uom_id" readonly="1" force_save="1"/>
+                            <field name="compute_uom_id" force_save="1"/>
                             <field name="qty" column_invisible="1" force_save="1"/>
                             <field name="uom_ids" column_invisible="1"/>
                             <field name="price" readonly="0" force_save="1" context="{'check_price': True}"/>
@@ -119,6 +120,8 @@
                             <field name="old_price" column_invisible="0" force_save="1"/>
                             <field name="amount_total" readonly="1" force_save="1"/>
                             <field name="department_id" context="{'dpt_sale_management': 1}"/>
+                            <field name="is_bao_giao" widget="boolean_toggle"/>
+<!--                            <field name="is_allin" widget="boolean_toggle"/>-->
                             <field name="note"/>
                         </tree>
                     </field>
@@ -137,6 +140,8 @@
                             <field name="using_calculation_price" column_invisible="1"/>
                             <field name="sale_service_id" column_invisible="1"/>
                             <field name="sequence" widget="handle"/>
+                            <field name="sale_combo_id_key" string="ID Combo"/>
+                            <field name="combo_id"/>
                             <field name="sale_service_id_key" string="ID Dịch vụ"/>
                             <field name="service_id"/>
                             <field name="fields_id"/>

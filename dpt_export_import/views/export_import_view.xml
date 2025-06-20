@@ -39,6 +39,9 @@
                     <button string="Sửa AMA" type="object" name="action_edit_ama" class="btn-primary"
                             invisible="state != 'cleared'"/>
 
+                    <button string="Cập nhật tiền thuế vào đơn hàng" name="update_tax_to_sale_order" 
+                            type="object" class="btn-primary"
+                            confirm="Bạn có chắc chắn muốn cập nhật tiền thuế từ tờ khai này vào các dịch vụ thuế trong đơn hàng không?"/>
 
                     <!--                    <button string="Released" type="object" name="action_released" class="btn-primary"-->
                     <!--                            invisible="state == 'released'"/>-->
@@ -148,6 +151,7 @@
                                     <field name="dpt_tax_ecus5"/>
                                     <field name="dpt_tax"/>
                                     <field name="dpt_exchange_rate" force_save="1"/>
+                                    <field name="dpt_exchange_rate_basic" force_save="1"/>
                                     <field name="dpt_total_usd_vnd"/>
                                     <field name="dpt_total_cny_vnd"/>
                                     <field name="dpt_is_new" widget="boolean_toggle"/>

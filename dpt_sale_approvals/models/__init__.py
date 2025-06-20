@@ -9,3 +9,4 @@ from . import dpt_approval_sale_price
 from . import dpt_service_management
 from . import dpt_sale_order_fields
 from . import approval_request_sale_line_history
+from . import dpt_sale_order_service_combo

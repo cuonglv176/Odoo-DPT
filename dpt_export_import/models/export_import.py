@@ -345,3 +345,221 @@ class DptExportImport(models.Model):
         if self.select_line_ids:
             for select_line_id in self.select_line_ids:
                 select_line_id.export_import_id = self.id
+                
+    def update_tax_to_sale_order(self):
+        self.ensure_one()
+        
+        # Kiểm tra liệu tờ khai có liên kết với đơn hàng không
+        if not self.sale_id:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('Cảnh báo'),
+                    'message': _('Tờ khai này không liên kết với đơn bán hàng.'),
+                    'type': 'warning',
+                    'sticky': False,
+                }
+            }
+        
+        # Kiểm tra các dòng tờ khai không ở trạng thái eligible
+        non_eligible_lines = self.line_ids.filtered(lambda l: l.state != 'eligible')
+        
+        # Nếu có dòng tờ khai không ở trạng thái eligible, hiển thị cảnh báo chi tiết
+        if non_eligible_lines:
+            warning_messages = []
+            for line in non_eligible_lines:
+                sale_name = line.sale_id.name if line.sale_id else 'Không có đơn hàng'
+                description = line.dpt_description or 'Không có mô tả'
+                state_display = dict(line._fields['state'].selection).get(line.state, line.state)
+                warning_messages.append(_(
+                    "Dòng tờ khai '%s' thuộc đơn hàng '%s' đang ở trạng thái '%s', cần ở trạng thái 'Đủ điều kiện khai báo'"
+                ) % (description, sale_name, state_display))
+            
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('Cảnh báo: Dòng tờ khai không hợp lệ'),
+                    'message': '\n\n'.join(warning_messages),
+                    'type': 'warning',
+                    'sticky': True,
+                }
+            }
+        
+        # Nếu không có dòng tờ khai nào
+        if not self.line_ids:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('Cảnh báo'),
+                    'message': _('Không có dòng tờ khai nào trong tờ khai này.'),
+                    'type': 'warning',
+                    'sticky': False,
+                }
+            }
+        
+        # Lấy danh sách các đơn hàng có dòng tờ khai hợp lệ
+        sale_orders = self.line_ids.filtered(lambda l: l.state == 'eligible' and l.sale_id).mapped('sale_id')
+        
+        if not sale_orders:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('Cảnh báo'),
+                    'message': _('Không có đơn hàng nào liên kết với các dòng tờ khai hợp lệ.'),
+                    'type': 'warning',
+                    'sticky': False,
+                }
+            }
+        
+        # Biến để theo dõi các dịch vụ đã cập nhật
+        updated_services = []
+        
+        # Xử lý cho từng đơn hàng
+        for sale_order in sale_orders:
+            # Tìm các dịch vụ thuế trong đơn hàng
+            vat_services = sale_order.sale_service_ids.filtered(
+                lambda s: s.service_id.is_vat_service)
+            import_tax_services = sale_order.sale_service_ids.filtered(
+                lambda s: s.service_id.is_import_tax_service)
+            other_tax_services = sale_order.sale_service_ids.filtered(
+                lambda s: s.service_id.is_other_tax_service)
+            
+            # Kiểm tra trường hợp nhiều dịch vụ thuế cùng loại
+            warning_messages = []
+            
+            if len(vat_services) > 1:
+                warning_messages.append(_("Đơn hàng %s có %s dịch vụ thuế VAT") % 
+                                      (sale_order.name, len(vat_services)))
+                                      
+            if len(import_tax_services) > 1:
+                warning_messages.append(_("Đơn hàng %s có %s dịch vụ thuế NK") % 
+                                      (sale_order.name, len(import_tax_services)))
+                                      
+            if len(other_tax_services) > 1:
+                warning_messages.append(_("Đơn hàng %s có %s dịch vụ thuế Khác") % 
+                                      (sale_order.name, len(other_tax_services)))
+            
+            # Kiểm tra trường hợp không có dịch vụ thuế
+            if not vat_services:
+                warning_messages.append(_("Đơn hàng %s không có dịch vụ thuế VAT") % 
+                                      sale_order.name)
+                                      
+            if not import_tax_services:
+                warning_messages.append(_("Đơn hàng %s không có dịch vụ thuế NK") % 
+                                      sale_order.name)
+                                      
+            if not other_tax_services:
+                warning_messages.append(_("Đơn hàng %s không có dịch vụ thuế Khác") % 
+                                      sale_order.name)
+            
+            # Hiển thị cảnh báo nếu có
+            if warning_messages:
+                return {
+                    'type': 'ir.actions.client',
+                    'tag': 'display_notification',
+                    'params': {
+                        'title': _('Cảnh báo'),
+                        'message': '\n'.join(warning_messages),
+                        'type': 'warning',
+                        'sticky': True,
+                    }
+                }
+            
+            # Lấy các dòng tờ khai hợp lệ thuộc đơn hàng này
+            eligible_lines = self.line_ids.filtered(lambda l: l.state == 'eligible' and l.sale_id.id == sale_order.id)
+            
+            # Tính tổng tiền thuế từ các dòng tờ khai thuộc đơn hàng này
+            total_vat = sum(eligible_lines.mapped('dpt_amount_tax_vat_customer'))
+            total_import_tax = sum(eligible_lines.mapped('dpt_amount_tax_import_basic'))
+            total_other_tax = sum(eligible_lines.mapped('dpt_amount_tax_other_basic'))
+            
+            # Cập nhật dịch vụ thuế VAT
+            if vat_services and total_vat > 0:
+                vat_service = vat_services[0]
+                old_price = vat_service.price
+                vat_service.write({
+                    'price': total_vat,
+                    'compute_value': 1.0
+                })
+                updated_services.append({
+                    'sale_order': sale_order.name,
+                    'name': _('Thuế VAT'),
+                    'old_price': old_price,
+                    'new_price': total_vat
+                })
+            
+            # Cập nhật dịch vụ thuế NK
+            if import_tax_services and total_import_tax > 0:
+                import_tax_service = import_tax_services[0]
+                old_price = import_tax_service.price
+                import_tax_service.write({
+                    'price': total_import_tax,
+                    'compute_value': 1.0
+                })
+                updated_services.append({
+                    'sale_order': sale_order.name,
+                    'name': _('Thuế NK'),
+                    'old_price': old_price,
+                    'new_price': total_import_tax
+                })
+            
+            # Cập nhật dịch vụ thuế Khác
+            if other_tax_services and total_other_tax > 0:
+                other_tax_service = other_tax_services[0]
+                old_price = other_tax_service.price
+                other_tax_service.write({
+                    'price': total_other_tax,
+                    'compute_value': 1.0
+                })
+                updated_services.append({
+                    'sale_order': sale_order.name,
+                    'name': _('Thuế Khác'),
+                    'old_price': old_price,
+                    'new_price': total_other_tax
+                })
+        
+        # Log thông báo chi tiết về cập nhật
+        if updated_services:
+            for sale_order in sale_orders:
+                # Lọc các dịch vụ đã cập nhật cho đơn hàng này
+                order_services = [s for s in updated_services if s['sale_order'] == sale_order.name]
+                
+                if order_services:
+                    message_parts = [_("Đã cập nhật tiền thuế từ tờ khai %s:") % self.name]
+                    for service in order_services:
+                        message_parts.append(
+                            _("- %s: %s → %s") % (
+                                service['name'], 
+                                format(service['old_price'], '.2f'),
+                                format(service['new_price'], '.2f')
+                            )
+                        )
+                    
+                    message = "\n".join(message_parts)
+                    sale_order.message_post(body=message)
+            
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('Thành công'),
+                    'message': _('Đã cập nhật tiền thuế từ tờ khai vào các dịch vụ thuế trong đơn hàng.'),
+                    'type': 'success',
+                    'sticky': False,
+                }
+            }
+        else:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('Thông báo'),
+                    'message': _('Không có dịch vụ thuế nào được cập nhật.'),
+                    'type': 'info',
+                    'sticky': False,
+                }
+            }

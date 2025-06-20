@@ -22,7 +22,6 @@
         'views/account_payment_request_type.xml',
         'views/purchase_order.xml',
         'views/sale_order.xml',
-        'views/dpt_service_management.xml',
         'views/menu.xml',
     ],
 }
