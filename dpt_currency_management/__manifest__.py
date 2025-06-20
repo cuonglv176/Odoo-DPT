@@ -10,8 +10,9 @@
         - Easy rate updates
         - Historical tracking
         - Rate change notifications
+        - Change history logging
     """,
-    'depends': ['base', 'account'],
+    'depends': ['base', 'account', 'mail'],
     'data': [
         'security/ir.model.access.csv',
         'security/security_rules.xml',

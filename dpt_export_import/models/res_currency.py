@@ -19,9 +19,10 @@ class ResCurrency(models.Model):
                     [('state', 'not in', ('eligible', 'cancelled'))])
                 for line_xnk_id in line_xnk_ids:
                     line_xnk_id._compute_dpt_exchange_rate()
-            if currency_rate.category == 'basic':
-                line_xhd_ids = self.env['dpt.export.import.line'].search(
-                    ['|', ('export_import_id', '=', False), ('export_import_id.state', '!=', 'cleared')])
-                for line_xhd_id in line_xhd_ids:
-                    line_xhd_id._compute_dpt_price_unit()
+            # Bỏ qua việc gọi _compute_dpt_price_unit vì nó đã bị comment
+            # if currency_rate.category == 'basic':
+            #     line_xhd_ids = self.env['dpt.export.import.line'].search(
+            #         ['|', ('export_import_id', '=', False), ('export_import_id.state', '!=', 'cleared')])
+            #     for line_xhd_id in line_xhd_ids:
+            #         line_xhd_id._compute_dpt_price_unit()
         return res
