@@ -16,6 +16,6 @@ class DPTCreateAccountExpenseWizard(models.TransientModel):
         for invoice_id in self.po_id.invoice_ids:
             invoice_id.action_cancel()
         if self.type == 'expense_allocation':
-            self.po_id.action_allocate()
+            return self.po_id.action_create_expense_allocation()
         if self.type == 'expense_invoice':
-            self.po_id.action_create_invoice()
+            return self.po_id.action_create_invoice()
