@@ -349,8 +349,8 @@ class DptExportImport(models.Model):
     def update_tax_to_sale_order(self):
         self.ensure_one()
         
-        # Kiểm tra liệu tờ khai có liên kết với đơn hàng không
-        if not self.sale_id:
+        # 1. Kiểm tra xem tờ khai có liên kết với đơn bán hàng nào không
+        if not self.sale_ids:  # THAY ĐỔI: Kiểm tra sale_ids thay vì sale_id
             return {
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
@@ -361,20 +361,47 @@ class DptExportImport(models.Model):
                     'sticky': False,
                 }
             }
+            
+        # 1.1 Kiểm tra xem các đơn bán hàng trong tờ khai có gắn với phiếu hạch toán nào không
+        sale_orders_with_invoices = self.sale_ids.filtered(lambda so: so.invoice_ids)
+        if sale_orders_with_invoices:
+            so_names = ', '.join(sale_orders_with_invoices.mapped('name'))
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('Cảnh báo'),
+                    'message': _('Không thể cập nhật thuế cho đơn hàng đã có phiếu hạch toán: %s') % so_names,
+                    'type': 'warning',
+                    'sticky': True,
+                }
+            }
         
-        # Kiểm tra các dòng tờ khai không ở trạng thái eligible
-        non_eligible_lines = self.line_ids.filtered(lambda l: l.state != 'eligible')
+        # 2. Kiểm tra các dòng tờ khai không ở trạng thái eligible hoặc không thuộc sale_ids
+        valid_lines = self.line_ids.filtered(lambda l: l.state == 'eligible' and l.sale_id and l.sale_id in self.sale_ids)
+        invalid_lines = self.line_ids.filtered(lambda l: l.sale_id in self.sale_ids) - valid_lines
         
-        # Nếu có dòng tờ khai không ở trạng thái eligible, hiển thị cảnh báo chi tiết
-        if non_eligible_lines:
+        # 3. Hiển thị cảnh báo chi tiết nếu có dòng tờ khai không hợp lệ
+        if invalid_lines:
             warning_messages = []
-            for line in non_eligible_lines:
+            for line in invalid_lines:
                 sale_name = line.sale_id.name if line.sale_id else 'Không có đơn hàng'
                 description = line.dpt_description or 'Không có mô tả'
                 state_display = dict(line._fields['state'].selection).get(line.state, line.state)
-                warning_messages.append(_(
-                    "Dòng tờ khai '%s' thuộc đơn hàng '%s' đang ở trạng thái '%s', cần ở trạng thái 'Đủ điều kiện khai báo'"
-                ) % (description, sale_name, state_display))
+                
+                # Thông báo cụ thể hơn
+                if line.state != 'eligible':
+                    warning_messages.append(_(
+                        "Dòng tờ khai '%s' thuộc đơn hàng '%s' đang ở trạng thái '%s', cần ở trạng thái 'Đủ điều kiện khai báo'"
+                    ) % (description, sale_name, state_display))
+                elif not line.sale_id:
+                    warning_messages.append(_(
+                        "Dòng tờ khai '%s' không được gán với bất kỳ đơn bán hàng nào"
+                    ) % description)
+                elif line.sale_id not in self.sale_ids:
+                    warning_messages.append(_(
+                        "Dòng tờ khai '%s' được gán với đơn hàng '%s' không thuộc danh sách đơn hàng của tờ khai này"
+                    ) % (description, sale_name))
             
             return {
                 'type': 'ir.actions.client',
@@ -387,39 +414,36 @@ class DptExportImport(models.Model):
                 }
             }
         
-        # Nếu không có dòng tờ khai nào
-        if not self.line_ids:
+        # 4. Nếu không có dòng tờ khai nào thuộc các đơn hàng trong sale_ids
+        if not valid_lines:
             return {
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
                 'params': {
                     'title': _('Cảnh báo'),
-                    'message': _('Không có dòng tờ khai nào trong tờ khai này.'),
+                    'message': _('Không có dòng tờ khai hợp lệ nào thuộc các đơn hàng được chọn.'),
                     'type': 'warning',
                     'sticky': False,
                 }
             }
         
-        # Lấy danh sách các đơn hàng có dòng tờ khai hợp lệ
-        sale_orders = self.line_ids.filtered(lambda l: l.state == 'eligible' and l.sale_id).mapped('sale_id')
-        
-        if not sale_orders:
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {
-                    'title': _('Cảnh báo'),
-                    'message': _('Không có đơn hàng nào liên kết với các dòng tờ khai hợp lệ.'),
-                    'type': 'warning',
-                    'sticky': False,
-                }
-            }
+        # 5. Lấy danh sách các đơn hàng có dòng tờ khai hợp lệ (đã được lọc đúng)
+        sale_orders = valid_lines.mapped('sale_id')
         
         # Biến để theo dõi các dịch vụ đã cập nhật
         updated_services = []
         
+        # Lưu trạng thái khóa ban đầu của đơn hàng
+        locked_orders = {}
+        
         # Xử lý cho từng đơn hàng
         for sale_order in sale_orders:
+            # Kiểm tra xem đơn hàng có bị khóa không và mở khóa nếu cần
+            if sale_order.locked:
+                locked_orders[sale_order.id] = True
+                sale_order.action_unlock()
+            else:
+                locked_orders[sale_order.id] = False
             # Tìm các dịch vụ thuế trong đơn hàng
             vat_services = sale_order.sale_service_ids.filtered(
                 lambda s: s.service_id.is_vat_service)
@@ -541,7 +565,12 @@ class DptExportImport(models.Model):
                     
                     message = "\n".join(message_parts)
                     sale_order.message_post(body=message)
+                    
             
+            # Khóa lại đơn hàng nếu trước đó đã bị khóa
+            for sale_order in sale_orders:
+                if locked_orders.get(sale_order.id):
+                    sale_order.action_lock()
             return {
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
