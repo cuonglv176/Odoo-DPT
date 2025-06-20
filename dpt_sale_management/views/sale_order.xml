@@ -26,6 +26,9 @@
             <page name="optional_products" position="attributes">
                 <attribute name="invisible">1</attribute>
             </page>
+            <page name="order_lines" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </page>
             <field name="sale_order_template_id" position="after">
                 <field name="employee_sale"/>
                 <field name="employee_cs"/>

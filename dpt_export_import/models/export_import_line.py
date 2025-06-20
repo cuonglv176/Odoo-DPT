@@ -850,7 +850,7 @@ class DptExportImportLine(models.Model):
         for rec in self:
             rec.dpt_total_allocated_cost = rec.dpt_allocated_cost_general + rec.dpt_allocated_cost_specific
 
-    @api.depends('dpt_basic_value', 'dpt_amount_tax_import_basic', 'dpt_amount_tax_other_basic')
+    @api.depends('dpt_basic_value', 'dpt_amount_tax_import_basic', 'dpt_amount_tax_other_basic', 'dpt_total_allocated_cost')
     def _compute_cost_of_goods(self):
         for rec in self:
             # Sửa: Chỉ tính giá trị cơ bản + thuế NK + thuế Khác + chi phí phân bổ (không bao gồm VAT)

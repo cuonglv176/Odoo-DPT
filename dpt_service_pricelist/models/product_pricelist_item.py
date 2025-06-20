@@ -29,6 +29,7 @@ class ProductPricelistItem(models.Model):
         ('declaration_total_amount', 'Declaration Total Amount'),
         ('purchase_total_amount', 'Purchase Total Amount'),
         ('invoice_total_amount', 'Tổng giá trị xuất hoá đơn'),
+        ('vat_service_amount', 'Giá trị dịch vụ thuế VAT'),
     ], 'Based On', tracking=True, copy=True)
     min_amount = fields.Float(string="Min Amount", digits='Product Price', tracking=True, copy=True)
     # re define

@@ -178,7 +178,7 @@ class SaleOrder(models.Model):
                                     'combo_id': model_item.id,
                                 })
                             break
-                # Nếu không có trong sale order, kiểm tra từ dữ liệu của record hiện tại
+                # Nếu không có dữ liệu từ các nguồn trên, kiểm tra từ dữ liệu của record hiện tại
                 elif req_field.id in list_onchange:
                     for field_data in self.fields_ids:
                         if field_data.fields_id.id == req_field.id:
@@ -398,7 +398,15 @@ class SaleOrder(models.Model):
                         for order_line in purchase_ids.mapped('order_line'):
                             price_base += order_line.price_subtotal * order_line.order_id.last_rate_currency
                     elif combo_pricelist_id.percent_based_on == 'invoice_total_amount':
-                        pass
+                        # Tính tổng giá trị xuất hoá đơn từ các dòng tờ khai
+                        # Sử dụng công thức: Tổng (dpt_actual_price * dpt_sl1 * dpt_tax) cho tất cả các dòng tờ khai
+                        export_import_lines = self.env['dpt.export.import.line'].search([('sale_id', '=', self.id)])
+                        price_base = sum(line.dpt_actual_price * line.dpt_sl1 * line.dpt_tax for line in export_import_lines) if export_import_lines else 0
+                    elif combo_pricelist_id.percent_based_on == 'vat_service_amount':
+                        # Tính tổng giá trị của các dịch vụ VAT trong đơn hàng
+                        vat_services = self.sale_service_ids.filtered(lambda s: s.service_id.is_vat_service)
+                        price_base = sum(vat_services.mapped('amount_total')) if vat_services else 0
+
                     combo.price = combo_pricelist_id.percent_price * price_base
                 elif combo_pricelist_id.compute_price == 'table':
                     compute_field_ids = self.fields_ids.filtered(
@@ -543,6 +551,15 @@ class SaleOrder(models.Model):
                         purchase_ids = self.purchase_ids.filtered(lambda po: po.purchase_type == 'external')
                         for order_line in purchase_ids.mapped('order_line'):
                             price_base += order_line.price_subtotal * order_line.order_id.last_rate_currency
+                    elif service_price_id.percent_based_on == 'invoice_total_amount':
+                        # Tính tổng giá trị xuất hoá đơn từ các dòng tờ khai
+                        # Sử dụng công thức: Tổng (dpt_actual_price * dpt_sl1 * dpt_tax) cho tất cả các dòng tờ khai
+                        export_import_lines = self.env['dpt.export.import.line'].search([('sale_id', '=', self.id)])
+                        price_base = sum(line.dpt_actual_price * line.dpt_sl1 * line.dpt_tax for line in export_import_lines) if export_import_lines else 0
+                    elif service_price_id.percent_based_on == 'vat_service_amount':
+                        # Tính tổng giá trị của các dịch vụ VAT trong đơn hàng
+                        vat_services = self.sale_service_ids.filtered(lambda s: s.service_id.is_vat_service)
+                        price_base = sum(vat_services.mapped('amount_total')) if vat_services else 0
 
                     # Tính giá từ phần trăm nếu có price_base
                     if price_base:
