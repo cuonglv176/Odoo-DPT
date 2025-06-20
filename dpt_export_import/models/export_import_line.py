@@ -850,7 +850,7 @@ class DptExportImportLine(models.Model):
         for rec in self:
             rec.dpt_total_allocated_cost = rec.dpt_allocated_cost_general + rec.dpt_allocated_cost_specific
 
-    @api.depends('dpt_basic_value', 'dpt_amount_tax_import_basic', 'dpt_amount_tax_other_basic', 'dpt_total_allocated_cost')
+    @api.depends('dpt_basic_value', 'dpt_amount_tax_import_basic', 'dpt_amount_tax_other_basic')
     def _compute_cost_of_goods(self):
         for rec in self:
             # Sửa: Chỉ tính giá trị cơ bản + thuế NK + thuế Khác + chi phí phân bổ (không bao gồm VAT)
@@ -886,6 +886,11 @@ class DptExportImportLine(models.Model):
                 rec.dpt_system_price = 0
                 if not rec.dpt_actual_price:
                     rec.dpt_actual_price = 0
+                    
+    @api.onchange('dpt_exchange_rate_basic')
+    def onchange_dpt_exchange_rate_basic_final(self):
+        for rec in self:
+            rec.dpt_exchange_rate_basic_final = rec.dpt_exchange_rate_basic
 
     @api.onchange('dpt_price_unit')
     def _onchange_price_unit(self):
