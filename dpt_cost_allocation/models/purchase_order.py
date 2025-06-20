@@ -166,11 +166,16 @@ class PurchaseOrder(models.Model):
             if not self.export_import_line_id:
                 raise UserError(_("Vui lòng chọn dòng Tờ khai để phân bổ chi phí."))
             
-            # Kiểm tra dòng tờ khai có thuộc đơn bán hàng không
-            if self.export_import_line_id.sale_id.id != self.sale_order_id.id:
-                raise UserError(_("Dòng tờ khai phải thuộc đơn bán hàng đã chọn."))
-                
-            target_declaration_lines = self.export_import_line_id
+            # Tìm kiếm dòng tờ khai dựa vào sale_id
+            target_declaration_lines = self.env['dpt.export.import.line'].search([
+                ('id', '=', self.export_import_line_id.id),
+                ('sale_id', '=', self.sale_order_id.id),
+                ('state', '=', 'eligible')
+            ])
+            
+            if not target_declaration_lines:
+                raise UserError(_("Dòng tờ khai đã chọn không liên kết với đơn bán hàng này hoặc không ở trạng thái phù hợp."))
+            
             allocation_type = 'specific'
         
         if not target_declaration_lines:
