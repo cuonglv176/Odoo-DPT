@@ -19,7 +19,11 @@ class DPTSaleServiceManagement(models.Model):
             params = []
             if 'uom_id' in vals:
                 updates.append("uom_id = %s")
-                params.append(vals.get('uom_id'))
+                uom_value = vals.get('uom_id')
+                if uom_value is False:
+                    params.append(None)
+                else:
+                    params.append(uom_value)
             if 'price' in vals:
                 updates.append("price = %s")
                 params.append(vals.get('price'))
