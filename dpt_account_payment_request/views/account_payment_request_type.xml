@@ -21,7 +21,11 @@
                     <group>
                         <field name="name"/>
                         <field name="default_partner_id"/>
-                        <field name="is_cn_payment"/>
+                        <field name="is_cn_payment" widget="boolean_toggle"/>
+                        <field name="show_transfer_money" widget="boolean_toggle"/>
+                        <field name="show_refund_date" widget="boolean_toggle"/>
+                        <field name="show_user_detail" widget="boolean_toggle"/>
+                        <field name="show_journal" widget="boolean_toggle"/>
                         <field name="is_bypass" widget="boolean_toggle"/>
                         <field name="is_ke_toan_truong" widget="boolean_toggle"/>
                     </group>
