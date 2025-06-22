@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Service Combo Discount Line Form View -->
+    <record id="view_service_combo_discount_line_form" model="ir.ui.view">
+        <field name="name">dpt.service.combo.discount.line.form</field>
+        <field name="model">dpt.service.combo.discount.line</field>
+        <field name="arch" type="xml">
+            <form string="Service Combo Discount Line">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="policy_id" placeholder="Chọn chính sách chiết khấu..." readonly="context.get('default_policy_id')"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group name="basic_info">
+                            <field name="service_combo_id" options="{'no_create': True, 'no_create_edit': True}"/>
+                            <field name="sequence"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                        <group name="discount_config">
+                            <field name="discount_type" widget="radio" options="{'horizontal': true}"/>
+                            <field name="discount_value"/>
+                            <field name="max_discount_amount"
+                                   invisible="discount_type == 'tiered'"
+                                   placeholder="Để trống nếu không giới hạn"/>
+                            <field name="min_quantity"/>
+                        </group>
+                    </group>
+
+                    <group name="usage_stats" string="Thống kê sử dụng">
+                        <group>
+                            <field name="usage_count" readonly="1"/>
+                            <field name="total_discount_amount" readonly="1" widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="last_used_date" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <div class="alert alert-info" role="alert" invisible="usage_count == 0">
+                                <i class="fa fa-info-circle"/>
+                                <strong>Thông tin:</strong> Dòng chiết khấu này đã được sử dụng
+                                <field name="usage_count" readonly="1"/> lần với tổng chiết khấu
+                                <field name="total_discount_amount" readonly="1" widget="monetary"
+                                       options="{'currency_field': 'currency_id'}"/>.
+                            </div>
+                            <div class="alert alert-warning" role="alert" invisible="usage_count > 0">
+                                <i class="fa fa-exclamation-triangle"/>
+                                <strong>Chú ý:</strong> Dòng chiết khấu này chưa được sử dụng lần nào.
+                            </div>
+                        </group>
+                    </group>
+
+                    <separator string="Mô tả"/>
+                    <field name="description" placeholder="Mô tả chi tiết về chiết khấu combo..." nolabel="1"/>
+
+                    <notebook invisible="discount_type != 'tiered'">
+                        <page string="Bậc thang chiết khấu combo" name="tier_config">
+                            <div class="alert alert-info" role="alert">
+                                <strong>Hướng dẫn:</strong> Thiết lập các bậc thang chiết khấu dựa trên số lượng combo.
+                                Bậc thang có số lượng cao hơn sẽ được ưu tiên áp dụng.
+                            </div>
+
+                            <field name="tier_ids">
+                                <tree editable="bottom" decoration-success="discount_value > 0">
+                                    <field name="name" required="1"/>
+                                    <field name="min_quantity" required="1"/>
+                                    <field name="max_quantity"/>
+                                    <field name="discount_type" required="1"/>
+                                    <field name="discount_value" required="1"/>
+                                    <button name="action_preview_tier"
+                                            string="Xem trước"
+                                            type="object"
+                                            icon="fa-eye"
+                                            class="btn-link"/>
+                                </tree>
+                                <form>
+                                    <sheet>
+                                        <div class="oe_title">
+                                            <h1>
+                                                <field name="name" placeholder="Tên bậc thang..." required="1"/>
+                                            </h1>
+                                        </div>
+
+                                        <group>
+                                            <group name="quantity_range">
+                                                <label for="min_quantity" string="Khoảng số lượng"/>
+                                                <div class="o_row">
+                                                    <field name="min_quantity" required="1"/>
+                                                    <span> đến </span>
+                                                    <field name="max_quantity" placeholder="Không giới hạn"/>
+                                                </div>
+                                            </group>
+                                            <group name="discount_config">
+                                                <field name="discount_type" required="1"/>
+                                                <field name="discount_value" required="1"/>
+                                            </group>
+                                        </group>
+
+                                        <div class="alert alert-info" role="alert">
+                                            <strong>Ví dụ:</strong>
+                                            <ul>
+                                                <li>Từ 1-5 combo: Chiết khấu 5%</li>
+                                                <li>Từ 6-10 combo: Chiết khấu 10%</li>
+                                                <li>Từ 11 combo trở lên: Chiết khấu 15%</li>
+                                            </ul>
+                                        </div>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+
+                        <page string="Xem trước bậc thang" name="tier_preview">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h4>Mô phỏng chiết khấu theo số lượng</h4>
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Số lượng combo</th>
+                                                <th>Bậc thang áp dụng</th>
+                                                <th>Mức chiết khấu</th>
+                                                <th>Ví dụ (1,000,000 VND/combo)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- This would be populated by a computed field or JS -->
+                                            <tr>
+                                                <td>1-5</td>
+                                                <td>Bậc cơ bản</td>
+                                                <td>5%</td>
+                                                <td>50,000 VND</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Service Combo Discount Line Tree View -->
+    <record id="view_service_combo_discount_line_tree" model="ir.ui.view">
+        <field name="name">dpt.service.combo.discount.line.tree</field>
+        <field name="model">dpt.service.combo.discount.line</field>
+        <field name="arch" type="xml">
+            <tree string="Service Combo Discount Lines"
+                  editable="bottom"
+                  decoration-success="active == True and usage_count > 0"
+                  decoration-warning="active == True and usage_count == 0"
+                  decoration-muted="active == False"
+                  default_order="sequence, policy_id">
+                <field name="sequence" widget="handle"/>
+                <field name="policy_id" readonly="1"/>
+                <field name="service_combo_id" options="{'no_create': True}"/>
+                <field name="discount_type" widget="badge"/>
+                <field name="discount_value"/>
+                <field name="max_discount_amount" optional="hide" widget="monetary"
+                       options="{'currency_field': 'currency_id'}"/>
+                <field name="min_quantity"/>
+                <field name="usage_count" readonly="1" widget="integer"/>
+                <field name="total_discount_amount" readonly="1" widget="monetary"
+                       options="{'currency_field': 'currency_id'}"/>
+                <field name="last_used_date" readonly="1" optional="hide" widget="date"/>
+                <field name="active" widget="boolean_toggle"/>
+                <field name="currency_id" invisible="1"/>
+
+                <!-- Action buttons -->
+                <button name="action_view_usage_history"
+                        string="Lịch sử sử dụng"
+                        type="object"
+                        icon="fa-history"
+                        invisible="usage_count == 0"/>
+                <button name="action_duplicate_line"
+                        string="Sao chép"
+                        type="object"
+                        icon="fa-copy"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Service Combo Discount Line Kanban View -->
+    <record id="view_service_combo_discount_line_kanban" model="ir.ui.view">
+        <field name="name">dpt.service.combo.discount.line.kanban</field>
+        <field name="model">dpt.service.combo.discount.line</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="discount_type" class="o_kanban_small_column">
+                <field name="id"/>
+                <field name="policy_id"/>
+                <field name="service_combo_id"/>
+                <field name="discount_type"/>
+                <field name="discount_value"/>
+                <field name="usage_count"/>
+                <field name="active"/>
+                <field name="currency_id"/>
+
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click #{!record.active.raw_value ? 'o_kanban_color_2' : ''}">
+                            <div class="o_kanban_content">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="service_combo_id"/>
+                                        </strong>
+                                        <small class="o_kanban_record_subtitle text-muted">
+                                            <field name="policy_id"/>
+                                        </small>
+                                    </div>
+                                    <div class="o_kanban_manage_button_section">
+                                        <a class="o_kanban_manage_toggle_button" href="#">
+                                            <i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="o_kanban_record_body">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <span class="badge badge-pill badge-info">
+                                                <field name="discount_value"/>
+                                                <t t-if="record.discount_type.raw_value == 'percentage'">%</t>
+                                                <t t-if="record.discount_type.raw_value == 'fixed_amount'">VND</t>
+                                            </span>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <span t-if="record.usage_count.raw_value > 0"
+                                                  class="badge badge-success">
+                                                Đã dùng <field name="usage_count"/>
+                                            </span>
+                                            <span t-if="record.usage_count.raw_value == 0"
+                                                  class="badge badge-warning">
+                                                Chưa dùng
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="o_kanban_manage_button_section o_kanban_manage_view">
+                                    <a type="edit" class="btn btn-primary btn-sm">Chỉnh sửa</a>
+                                    <a name="action_view_usage_history" type="object"
+                                       class="btn btn-secondary btn-sm"
+                                       invisible="usage_count == 0">Lịch sử</a>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Service Combo Discount Line Search View -->
+    <record id="view_service_combo_discount_line_search" model="ir.ui.view">
+        <field name="name">dpt.service.combo.discount.line.search</field>
+        <field name="model">dpt.service.combo.discount.line</field>
+        <field name="arch" type="xml">
+            <search string="Search Combo Discount Lines">
+                <field name="policy_id" filter_domain="[('policy_id', 'ilike', self)]"/>
+                <field name="service_combo_id" filter_domain="[('service_combo_id', 'ilike', self)]"/>
+                <field name="discount_type"/>
+
+                <separator/>
+                <filter string="Hoạt động" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Không hoạt động" name="inactive" domain="[('active', '=', False)]"/>
+
+                <separator/>
+                <filter string="Đã sử dụng" name="used" domain="[('usage_count', '>', 0)]"/>
+                <filter string="Chưa sử dụng" name="unused" domain="[('usage_count', '=', 0)]"/>
+                <filter string="Sử dụng nhiều" name="frequently_used" domain="[('usage_count', '>=', 10)]"/>
+
+                <separator/>
+                <filter string="Chiết khấu %" name="percentage" domain="[('discount_type', '=', 'percentage')]"/>
+                <filter string="Số tiền cố định" name="fixed_amount" domain="[('discount_type', '=', 'fixed_amount')]"/>
+                <filter string="Bậc thang" name="tiered" domain="[('discount_type', '=', 'tiered')]"/>
+
+                <separator/>
+                <filter string="Chiết khấu cao" name="high_discount"
+                        domain="['|', ('discount_value', '>=', 20), ('max_discount_amount', '>=', 1000000)]"/>
+                <filter string="Sử dụng gần đây" name="recently_used"
+                        domain="[('last_used_date', '>=', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+
+                <group expand="0" string="Nhóm theo">
+                    <filter string="Chính sách" name="group_policy" context="{'group_by': 'policy_id'}"/>
+                    <filter string="Combo dịch vụ" name="group_combo" context="{'group_by': 'service_combo_id'}"/>
+                    <filter string="Loại chiết khấu" name="group_discount_type" context="{'group_by': 'discount_type'}"/>
+                    <filter string="Trạng thái" name="group_active" context="{'group_by': 'active'}"/>
+                    <filter string="Tháng sử dụng cuối" name="group_last_used" context="{'group_by': 'last_used_date:month'}"/>
+                </group>
+
+                <searchpanel>
+                    <field name="policy_id" icon="fa-tags" select="multi" enable_counters="1"/>
+                    <field name="discount_type" icon="fa-percent" select="multi" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <!-- Service Combo Discount Line Action -->
+    <record id="action_service_combo_discount_line" model="ir.actions.act_window">
+        <field name="name">Service Combo Discount Lines</field>
+        <field name="res_model">dpt.service.combo.discount.line</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="view_service_combo_discount_line_search"/>
+        <field name="context">{
+            'search_default_active': 1,
+            'search_default_group_discount_type': 1
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo dòng chiết khấu combo đầu tiên!
+            </p>
+            <p>
+                Dòng chiết khấu combo định nghĩa mức chiết khấu cụ thể
+                cho từng combo dịch vụ trong chính sách.
+            </p>
+            <p>
+                <strong>Các loại chiết khấu:</strong>
+            </p>
+            <ul>
+                <li><strong>Phần trăm:</strong> Chiết khấu theo tỷ lệ % của giá trị combo</li>
+                <li><strong>Số tiền cố định:</strong> Chiết khấu một số tiền nhất định</li>
+                <li><strong>Bậc thang:</strong> Chiết khấu khác nhau theo số lượng combo</li>
+            </ul>
+        </field>
+    </record>
+
+    <!-- Service Combo Discount Tier Form View -->
+    <record id="view_service_combo_discount_tier_form" model="ir.ui.view">
+        <field name="name">dpt.service.combo.discount.tier.form</field>
+        <field name="model">dpt.service.combo.discount.tier</field>
+        <field name="arch" type="xml">
+            <form string="Service Combo Discount Tier">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Tên bậc thang chiết khấu..." required="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group name="basic_info">
+                            <field name="line_id" readonly="context.get('default_line_id')"/>
+                        </group>
+                        <group name="discount_info">
+                            <field name="discount_type" required="1"/>
+                            <field name="discount_value" required="1"/>
+                        </group>
+                    </group>
+
+                    <group name="quantity_range" string="Khoảng số lượng áp dụng">
+                        <group>
+                            <field name="min_quantity" required="1"/>
+                            <field name="max_quantity" placeholder="Để trống = không giới hạn"/>
+                        </group>
+                        <group>
+                            <div class="alert alert-info" role="alert">
+                                <strong>Lưu ý:</strong>
+                                <ul>
+                                    <li>Số lượng tối thiểu phải lớn hơn 0</li>
+                                    <li>Số lượng tối đa phải lớn hơn số lượng tối thiểu (nếu có)</li>
+                                    <li>Các bậc thang không được chồng lấn</li>
+                                </ul>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Service Combo Discount Tier Tree View -->
+    <record id="view_service_combo_discount_tier_tree" model="ir.ui.view">
+        <field name="name">dpt.service.combo.discount.tier.tree</field>
+        <field name="model">dpt.service.combo.discount.tier</field>
+        <field name="arch" type="xml">
+            <tree string="Service Combo Discount Tiers"
+                  editable="bottom"
+                  decoration-success="discount_value > 0"
+                  default_order="line_id, min_quantity">
+                <field name="line_id" readonly="1"/>
+                <field name="name" required="1"/>
+                <field name="min_quantity" required="1"/>
+                <field name="max_quantity"/>
+                <field name="discount_type" required="1" widget="selection"/>
+                <field name="discount_value" required="1"/>
+
+                <!-- Preview column -->
+                <button name="action_preview_tier"
+                        string="Xem trước"
+                        type="object"
+                        icon="fa-eye"
+                        class="btn-link"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Service Combo Discount Tier Action -->
+    <record id="action_service_combo_discount_tier" model="ir.actions.act_window">
+        <field name="name">Service Combo Discount Tiers</field>
+        <field name="res_model">dpt.service.combo.discount.tier</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo bậc thang chiết khấu combo đầu tiên!
+            </p>
+            <p>
+                Bậc thang chiết khấu cho phép áp dụng mức chiết khấu
+                khác nhau dựa trên số lượng combo được đặt.
+            </p>
+            <p>
+                <strong>Ví dụ thiết lập bậc thang:</strong>
+            </p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Từ</th>
+                        <th>Đến</th>
+                        <th>Chiết khấu</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>5</td>
+                        <td>5%</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>10</td>
+                        <td>10%</td>
+                    </tr>
+                    <tr>
+                        <td>11</td>
+                        <td>-</td>
+                        <td>15%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </field>
+    </record>
+
+    <!-- Menu Items for Combo Discount -->
+    <menuitem id="menu_service_combo_discount_lines"
+              name="Combo Discount Lines"
+              parent="menu_service_discount_config"
+              action="action_service_combo_discount_line"
+              sequence="20"/>
+
+    <menuitem id="menu_service_combo_discount_tiers"
+              name="Combo Discount Tiers"
+              parent="menu_service_discount_config"
+              action="action_service_combo_discount_tier"
+              sequence="30"/>
+
+</odoo>

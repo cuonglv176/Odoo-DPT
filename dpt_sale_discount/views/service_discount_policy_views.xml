@@ -1,0 +1,821 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Service Discount Policy Form View -->
+    <record id="view_service_discount_policy_form" model="ir.ui.view">
+        <field name="name">dpt.service.discount.policy.form</field>
+        <field name="model">dpt.service.discount.policy</field>
+        <field name="arch" type="xml">
+            <form string="Service Discount Policy">
+                <header>
+                    <button name="action_submit_for_approval"
+                            string="Gửi phê duyệt"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+
+                    <button name="action_view_approval_request"
+                            string="Xem phê duyệt"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="not approval_request_id"/>
+
+                    <button name="action_cancel_approval"
+                            string="Hủy phê duyệt"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="state != 'submitted' or approval_state not in ['new', 'pending']"/>
+
+                    <button name="action_pause"
+                            string="Tạm dừng"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="state != 'approved'"/>
+
+                    <button name="action_resume"
+                            string="Kích hoạt"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'paused'"/>
+
+                    <button name="action_duplicate_policy"
+                            string="Sao chép"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="state == 'draft'"/>
+
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,submitted,approved,paused"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_approval_request"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-check-circle"
+                                invisible="not approval_request_id">
+                            <field name="approval_state" widget="label"/>
+                            <div>Phê duyệt</div>
+                        </button>
+
+                        <button name="%(action_service_discount_usage_report)d"
+                                type="action"
+                                class="oe_stat_button"
+                                icon="fa-line-chart"
+                                invisible="usage_count == 0">
+                            <field name="usage_count" widget="statinfo" string="Lần sử dụng"/>
+                        </button>
+
+                        <button name="%(action_service_discount_amount_report)d"
+                                type="action"
+                                class="oe_stat_button"
+                                icon="fa-money"
+                                invisible="total_discount_amount == 0">
+                            <field name="total_discount_amount" widget="monetary"
+                                   options="{'currency_field': 'currency_id'}" string="Tổng chiết khấu"/>
+                        </button>
+
+                        <button name="action_view_applied_orders"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-shopping-cart"
+                                invisible="usage_count == 0">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="applied_order_count"/>
+                                </span>
+                                <span class="o_stat_text">Đơn hàng</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Tên chính sách chiết khấu..." required="1"/>
+                        </h1>
+                        <label for="code" class="oe_edit_only"/>
+                        <h2>
+                            <field name="code" placeholder="Mã chính sách..." required="1"/>
+                        </h2>
+                    </div>
+
+                    <!-- Status alerts -->
+                    <div class="alert alert-info" role="alert" invisible="state != 'draft'">
+                        <i class="fa fa-info-circle"/>
+                        <strong>Nháp:</strong> Chính sách đang được soạn thảo và chưa thể sử dụng.
+                    </div>
+                    <div class="alert alert-warning" role="alert" invisible="state != 'submitted'">
+                        <i class="fa fa-clock-o"/>
+                        <strong>Chờ phê duyệt:</strong> Chính sách đã được gửi và đang chờ phê duyệt.
+                    </div>
+                    <div class="alert alert-success" role="alert" invisible="state != 'approved'">
+                        <i class="fa fa-check-circle"/>
+                        <strong>Đã phê duyệt:</strong> Chính sách đã được phê duyệt và có thể sử dụng.
+                    </div>
+                    <div class="alert alert-warning" role="alert" invisible="state != 'paused'">
+                        <i class="fa fa-pause"/>
+                        <strong>Tạm dừng:</strong> Chính sách đang tạm dừng và không thể áp dụng.
+                    </div>
+
+                    <group>
+                        <group name="basic_info">
+                            <field name="policy_type" required="1" widget="radio" options="{'horizontal': true}"/>
+                            <field name="priority" widget="priority"/>
+                            <field name="currency_id" groups="base.group_multi_currency"
+                                   options="{'no_create': True, 'no_create_edit': True}"/>
+                            <field name="active" widget="boolean_toggle"/>
+                            <field name="auto_apply" widget="boolean_toggle"/>
+                        </group>
+                        <group name="approval_info">
+                            <field name="approval_request_id" readonly="1"
+                                   invisible="not approval_request_id"/>
+                            <field name="approval_state" readonly="1"
+                                   invisible="not approval_request_id"
+                                   widget="badge"/>
+                            <field name="require_approval_amount" widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="created_by" readonly="1"/>
+                            <field name="approved_by" readonly="1" invisible="state != 'approved'"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Cấu hình chiết khấu" name="discount_config">
+                            <group>
+                                <group name="discount_basic">
+                                    <field name="discount_type" required="1" widget="radio"/>
+                                    <field name="discount_value" required="1"
+                                           invisible="discount_type == 'tiered'"/>
+                                    <field name="max_discount_amount" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="min_order_amount" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="min_service_quantity"/>
+                                </group>
+                                <group name="validity">
+                                    <field name="date_start" required="1"/>
+                                    <field name="is_permanent" widget="boolean_toggle"/>
+                                    <field name="date_end" required="is_permanent == False"
+                                           invisible="is_permanent == True"/>
+                                    <field name="last_used_date" readonly="1"
+                                           invisible="not last_used_date"/>
+                                    <field name="days_until_expiry" readonly="1"
+                                           invisible="is_permanent == True or not date_end"/>
+                                </group>
+                            </group>
+
+                            <!-- Discount preview -->
+                            <group name="discount_preview" string="Xem trước chiết khấu"
+                                   invisible="discount_type == 'tiered'">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Giá trị đơn hàng</th>
+                                                    <th>Chiết khấu</th>
+                                                    <th>Sau chiết khấu</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1,000,000 VND</td>
+                                                    <td class="text-success">
+                                                        <span invisible="discount_type != 'percentage'">
+                                                            <field name="discount_value" readonly="1"/>%
+                                                        </span>
+                                                        <span invisible="discount_type != 'fixed_amount'">
+                                                            <field name="discount_value" readonly="1"
+                                                                   widget="monetary"/>
+                                                        </span>
+                                                    </td>
+                                                    <td class="text-primary font-weight-bold">
+                                                        <!-- This would be computed -->
+                                                        950,000 VND
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </group>
+
+                            <group name="tiered_config" string="Cấu hình bậc thang chiết khấu"
+                                   invisible="discount_type != 'tiered'">
+                                <div class="alert alert-info" role="alert">
+                                    <strong>Hướng dẫn:</strong>
+                                    Thiết lập các bậc thang chiết khấu theo số lượng.
+                                    Hệ thống sẽ tự động áp dụng bậc thang phù hợp nhất.
+                                </div>
+
+                                <field name="discount_tier_ids" nolabel="1">
+                                    <tree editable="bottom" decoration-success="discount_value > 0">
+                                        <field name="name" required="1"/>
+                                        <field name="min_quantity" required="1"/>
+                                        <field name="max_quantity"/>
+                                        <field name="discount_type" required="1"/>
+                                        <field name="discount_value" required="1"/>
+                                        <field name="description" optional="hide"/>
+                                        <button name="action_preview_tier"
+                                                string="Xem trước"
+                                                type="object"
+                                                icon="fa-eye"
+                                                class="btn-link"/>
+                                    </tree>
+                                    <form>
+                                        <group>
+                                            <group>
+                                                <field name="name" required="1"/>
+                                                <field name="min_quantity" required="1"/>
+                                                <field name="max_quantity"/>
+                                            </group>
+                                            <group>
+                                                <field name="discount_type" required="1"/>
+                                                <field name="discount_value" required="1"/>
+                                            </group>
+                                        </group>
+                                        <field name="description" placeholder="Mô tả bậc thang..."/>
+                                    </form>
+                                </field>
+                            </group>
+                        </page>
+
+                        <page string="Dịch vụ áp dụng" name="services"
+                              invisible="policy_type == 'combo'">
+                            <group>
+                                <field name="service_management_ids" widget="many2many_tags"
+                                       placeholder="Chọn dịch vụ áp dụng..."/>
+                            </group>
+
+                            <separator string="Chi tiết chiết khấu theo dịch vụ"/>
+                            <field name="service_line_ids">
+                                <tree editable="bottom"
+                                      decoration-success="active == True and usage_count > 0"
+                                      decoration-warning="active == True and usage_count == 0"
+                                      decoration-muted="active == False">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="service_management_id" required="1"/>
+                                    <field name="discount_type" required="1" widget="selection"/>
+                                    <field name="discount_value" required="1"/>
+                                    <field name="max_discount_amount" optional="hide" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="min_quantity"/>
+                                    <field name="usage_count" readonly="1" widget="integer"/>
+                                    <field name="total_discount_amount" readonly="1" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="active" widget="boolean_toggle"/>
+                                    <field name="currency_id" invisible="1"/>
+
+                                    <button name="action_view_service_usage"
+                                            string="Chi tiết"
+                                            type="object"
+                                            icon="fa-list"
+                                            invisible="usage_count == 0"/>
+                                </tree>
+                                <form>
+                                    <sheet>
+                                        <div class="oe_title">
+                                            <h1>
+                                                <field name="service_management_id" required="1"/>
+                                            </h1>
+                                        </div>
+
+                                        <group>
+                                            <group name="discount_config">
+                                                <field name="discount_type" required="1"/>
+                                                <field name="discount_value" required="1"/>
+                                                <field name="max_discount_amount" widget="monetary"
+                                                       options="{'currency_field': 'currency_id'}"/>
+                                                <field name="min_quantity"/>
+                                            </group>
+                                            <group name="usage_stats">
+                                                <field name="usage_count" readonly="1"/>
+                                                <field name="total_discount_amount" readonly="1" widget="monetary"
+                                                       options="{'currency_field': 'currency_id'}"/>
+                                                <field name="last_used_date" readonly="1"/>
+                                                <field name="active" widget="boolean_toggle"/>
+                                                <field name="currency_id" invisible="1"/>
+                                            </group>
+                                        </group>
+
+                                        <separator string="Mô tả"/>
+                                        <field name="description" nolabel="1" placeholder="Mô tả chi tiết..."/>
+
+                                        <notebook invisible="discount_type != 'tiered'">
+                                            <page string="Bậc thang chiết khấu" name="service_tiers">
+                                                <field name="tier_ids">
+                                                    <tree editable="bottom">
+                                                        <field name="name" required="1"/>
+                                                        <field name="min_quantity" required="1"/>
+                                                        <field name="max_quantity"/>
+                                                        <field name="discount_type" required="1"/>
+                                                        <field name="discount_value" required="1"/>
+                                                    </tree>
+                                                </field>
+                                            </page>
+                                        </notebook>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+
+                        <page string="Combo áp dụng" name="combos"
+                              invisible="policy_type == 'service'">
+                            <group>
+                                <field name="service_combo_ids" widget="many2many_tags"
+                                       placeholder="Chọn combo áp dụng..."/>
+                            </group>
+
+                            <separator string="Chi tiết chiết khấu theo combo"/>
+                            <field name="combo_line_ids">
+                                <tree editable="bottom"
+                                      decoration-success="active == True and usage_count > 0"
+                                      decoration-warning="active == True and usage_count == 0"
+                                      decoration-muted="active == False">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="service_combo_id" required="1"/>
+                                    <field name="discount_type" required="1" widget="selection"/>
+                                    <field name="discount_value" required="1"/>
+                                    <field name="max_discount_amount" optional="hide" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="min_quantity"/>
+                                    <field name="usage_count" readonly="1" widget="integer"/>
+                                    <field name="total_discount_amount" readonly="1" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="active" widget="boolean_toggle"/>
+                                    <field name="currency_id" invisible="1"/>
+
+                                    <button name="action_view_combo_usage"
+                                            string="Chi tiết"
+                                            type="object"
+                                            icon="fa-list"
+                                            invisible="usage_count == 0"/>
+                                </tree>
+                                <form>
+                                    <sheet>
+                                        <div class="oe_title">
+                                            <h1>
+                                                <field name="service_combo_id" required="1"/>
+                                            </h1>
+                                        </div>
+
+                                        <group>
+                                            <group name="discount_config">
+                                                <field name="discount_type" required="1"/>
+                                                <field name="discount_value" required="1"/>
+                                                <field name="max_discount_amount" widget="monetary"
+                                                       options="{'currency_field': 'currency_id'}"/>
+                                                <field name="min_quantity"/>
+                                            </group>
+                                            <group name="usage_stats">
+                                                <field name="usage_count" readonly="1"/>
+                                                <field name="total_discount_amount" readonly="1" widget="monetary"
+                                                       options="{'currency_field': 'currency_id'}"/>
+                                                <field name="last_used_date" readonly="1"/>
+                                                <field name="active" widget="boolean_toggle"/>
+                                                <field name="currency_id" invisible="1"/>
+                                            </group>
+                                        </group>
+
+                                        <separator string="Mô tả"/>
+                                        <field name="description" nolabel="1" placeholder="Mô tả chi tiết..."/>
+
+                                        <notebook invisible="discount_type != 'tiered'">
+                                            <page string="Bậc thang chiết khấu combo" name="combo_tiers">
+                                                <field name="tier_ids">
+                                                    <tree editable="bottom">
+                                                        <field name="name" required="1"/>
+                                                        <field name="min_quantity" required="1"/>
+                                                        <field name="max_quantity"/>
+                                                        <field name="discount_type" required="1"/>
+                                                        <field name="discount_value" required="1"/>
+                                                    </tree>
+                                                </field>
+                                            </page>
+                                        </notebook>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+
+                        <page string="Khách hàng" name="customers">
+                            <group>
+                                <group name="customer_selection">
+                                    <field name="partner_ids" widget="many2many_tags"
+                                           placeholder="Chọn khách hàng cụ thể..."/>
+                                </group>
+                                <group name="customer_categories">
+                                    <field name="partner_category_ids" widget="many2many_tags"
+                                           placeholder="Chọn nhóm khách hàng..."/>
+                                </group>
+                            </group>
+
+                            <div class="alert alert-info" role="alert"
+                                 invisible="partner_ids or partner_category_ids">
+                                <i class="fa fa-info-circle"/>
+                                <strong>Lưu ý:</strong>
+                                Nếu không chọn khách hàng cụ thể,
+                                chính sách sẽ áp dụng cho tất cả khách hàng.
+                            </div>
+
+                            <div class="alert alert-success" role="alert"
+                                 invisible="not partner_ids and not partner_category_ids">
+                                <i class="fa fa-check-circle"/>
+                                <strong>Đã cấu hình:</strong>
+                                Chính sách chỉ áp dụng cho khách hàng được chọn.
+                            </div>
+                        </page>
+
+                        <page string="Thống kê sử dụng" name="statistics">
+                            <group>
+                                <group name="usage_stats">
+                                    <field name="usage_count" readonly="1"/>
+                                    <field name="total_discount_amount" readonly="1" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="last_used_date" readonly="1"/>
+                                    <field name="average_discount_per_use" readonly="1" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                </group>
+                                <group name="performance_stats">
+                                    <field name="applied_order_count" readonly="1"/>
+                                    <field name="success_rate" readonly="1" widget="percentage"/>
+                                    <field name="most_used_service" readonly="1"/>
+                                    <field name="most_used_combo" readonly="1"/>
+                                </group>
+                            </group>
+
+                            <!-- Usage chart placeholder -->
+                            <div class="row" invisible="usage_count == 0">
+                                <div class="col-12">
+                                    <h4>Biểu đồ sử dụng theo thời gian</h4>
+                                    <div class="alert alert-info">
+                                        <i class="fa fa-chart-line"/>
+                                        Biểu đồ thống kê sẽ được hiển thị ở đây
+                                    </div>
+                                </div>
+                            </div>
+                        </page>
+
+                        <page string="Ghi chú" name="notes">
+                            <group>
+                                <separator string="Mô tả chính sách"/>
+                                <field name="description" nolabel="1"
+                                       placeholder="Mô tả chi tiết về chính sách chiết khấu..."/>
+                            </group>
+                            <group>
+                                <separator string="Ghi chú nội bộ"/>
+                                <field name="internal_notes" nolabel="1"
+                                       placeholder="Ghi chú nội bộ cho team quản lý..."/>
+                            </group>
+
+                            <group name="audit_info" string="Thông tin kiểm toán">
+                                <group>
+                                    <field name="create_date" readonly="1"/>
+                                    <field name="create_uid" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="write_date" readonly="1"/>
+                                    <field name="write_uid" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Service Discount Policy Tree View -->
+    <record id="view_service_discount_policy_tree" model="ir.ui.view">
+        <field name="name">dpt.service.discount.policy.tree</field>
+        <field name="model">dpt.service.discount.policy</field>
+        <field name="arch" type="xml">
+            <tree string="Service Discount Policies"
+                  decoration-success="state=='approved' and active==True"
+                  decoration-warning="state=='paused'"
+                  decoration-muted="state in ['expired','cancelled','rejected'] or active==False"
+                  decoration-info="state=='submitted'"
+                  default_order="priority desc, create_date desc">
+                <field name="sequence" widget="handle" optional="hide"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="policy_type" widget="badge"/>
+                <field name="discount_type" widget="badge"/>
+                <field name="discount_value"/>
+                <field name="state" widget="badge"
+                       decoration-success="state=='approved'"
+                       decoration-warning="state=='paused'"
+                       decoration-danger="state in ['rejected','cancelled']"
+                       decoration-info="state=='submitted'"/>
+                <field name="approval_state"
+                       invisible="not approval_request_id"
+                       widget="badge" optional="hide"/>
+                <field name="date_start" optional="show"/>
+                <field name="date_end" optional="show"/>
+                <field name="usage_count" optional="show"/>
+                <field name="total_discount_amount" widget="monetary"
+                       options="{'currency_field': 'currency_id'}" optional="show"/>
+                <field name="priority" widget="priority" optional="hide"/>
+                <field name="active" widget="boolean_toggle"/>
+                <field name="approval_request_id" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+
+                <!-- Action buttons -->
+                <button name="action_submit_for_approval"
+                        string="Gửi phê duyệt"
+                        type="object"
+                        icon="fa-paper-plane"
+                        invisible="state != 'draft'"/>
+                <button name="action_pause"
+                        string="Tạm dừng"
+                        type="object"
+                        icon="fa-pause"
+                        invisible="state != 'approved'"/>
+                <button name="action_resume"
+                        string="Kích hoạt"
+                        type="object"
+                        icon="fa-play"
+                        invisible="state != 'paused'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Service Discount Policy Kanban View -->
+    <record id="view_service_discount_policy_kanban" model="ir.ui.view">
+        <field name="name">dpt.service.discount.policy.kanban</field>
+        <field name="model">dpt.service.discount.policy</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_small_column">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="state"/>
+                <field name="policy_type"/>
+                <field name="discount_type"/>
+                <field name="discount_value"/>
+                <field name="usage_count"/>
+                <field name="total_discount_amount"/>
+                <field name="active"/>
+                <field name="currency_id"/>
+
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click #{!record.active.raw_value ? 'o_kanban_color_2' : ''}">
+                            <div class="o_kanban_content">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="name"/>
+                                        </strong>
+                                        <small class="o_kanban_record_subtitle text-muted">
+                                            <field name="code"/>
+                                        </small>
+                                    </div>
+                                    <div class="o_kanban_manage_button_section">
+                                        <a class="o_kanban_manage_toggle_button" href="#">
+                                            <i class="fa fa-ellipsis-v"/>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="o_kanban_record_body">
+                                    <div class="row mb-2">
+                                        <div class="col-6">
+                                            <span class="badge badge-pill badge-info">
+                                                <field name="policy_type"/>
+                                            </span>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <span class="badge badge-pill badge-success">
+                                                <field name="discount_value"/>
+                                                <t t-if="record.discount_type.raw_value == 'percentage'">%</t>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <small class="text-muted">Sử dụng:</small>
+                                            <br/>
+                                            <strong>
+                                                <field name="usage_count"/>
+                                            </strong>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <small class="text-muted">Tổng CK:</small>
+                                            <br/>
+                                            <strong>
+                                                <field name="total_discount_amount" widget="monetary"/>
+                                            </strong>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="o_kanban_manage_button_section o_kanban_manage_view">
+                                    <a type="edit" class="btn btn-primary btn-sm">Chỉnh sửa</a>
+                                    <a name="action_submit_for_approval" type="object"
+                                       class="btn btn-success btn-sm"
+                                       invisible="state != 'draft'">Gửi duyệt
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Service Discount Policy Search View -->
+    <record id="view_service_discount_policy_search" model="ir.ui.view">
+        <field name="model">dpt.service.discount.policy</field>
+        <field name="arch" type="xml">
+            <search string="Search Service Discount Policies">
+                <field name="name" string="Tên hoặc mã"
+                       filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+                <field name="policy_type"/>
+                <field name="state"/>
+                <field name="service_management_ids"/>
+                <field name="service_combo_ids"/>
+                <field name="partner_ids"/>
+
+                <separator/>
+                <filter string="Hoạt động" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Không hoạt động" name="inactive" domain="[('active', '=', False)]"/>
+
+                <separator/>
+                <filter string="Nháp" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Chờ phê duyệt" name="submitted" domain="[('state', '=', 'submitted')]"/>
+                <filter string="Đã phê duyệt" name="approved" domain="[('state', '=', 'approved')]"/>
+                <filter string="Tạm dừng" name="paused" domain="[('state', '=', 'paused')]"/>
+                <filter string="Hết hạn" name="expired" domain="[('state', '=', 'expired')]"/>
+                <filter string="Bị từ chối" name="rejected" domain="[('state', '=', 'rejected')]"/>
+
+                <separator/>
+                <filter string="Tự động áp dụng" name="auto_apply" domain="[('auto_apply', '=', True)]"/>
+                <filter string="Yêu cầu phê duyệt" name="needs_approval"
+                        domain="[('require_approval_amount', '>', 0)]"/>
+                <filter string="Ưu tiên cao" name="high_priority" domain="[('priority', '>=', 3)]"/>
+
+                <separator/>
+                <filter string="Dịch vụ đơn lẻ" name="service" domain="[('policy_type', '=', 'service')]"/>
+                <filter string="Combo dịch vụ" name="combo" domain="[('policy_type', '=', 'combo')]"/>
+                <filter string="Hỗn hợp" name="mixed" domain="[('policy_type', '=', 'mixed')]"/>
+
+                <separator/>
+                <filter string="Chiết khấu %" name="percentage" domain="[('discount_type', '=', 'percentage')]"/>
+                <filter string="Số tiền cố định" name="fixed_amount" domain="[('discount_type', '=', 'fixed_amount')]"/>
+                <filter string="Bậc thang" name="tiered" domain="[('discount_type', '=', 'tiered')]"/>
+
+                <separator/>
+                <filter string="Đã sử dụng" name="used" domain="[('usage_count', '>', 0)]"/>
+                <filter string="Chưa sử dụng" name="unused" domain="[('usage_count', '=', 0)]"/>
+                <filter string="Sử dụng nhiều" name="frequently_used" domain="[('usage_count', '>=', 10)]"/>
+
+                <separator/>
+                <filter string="Hiệu lực hôm nay" name="valid_today"
+                        domain="[('date_start', '&lt;=', context_today()), '|', ('date_end', '&gt;=', context_today()), ('is_permanent', '=', True)]"/>
+                <filter string="Sắp hết hạn" name="expiring_soon"
+                        domain="[('date_end', '&gt;=', context_today()), ('date_end', '&lt;=', (context_today() + datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Đã hết hạn" name="expired_filter"
+                        domain="[('date_end', '&lt;', context_today()), ('is_permanent', '=', False)]"/>
+
+                <group expand="0" string="Nhóm theo">
+                    <filter string="Trạng thái" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Loại chính sách" name="group_policy_type" context="{'group_by': 'policy_type'}"/>
+                    <filter string="Loại chiết khấu" name="group_discount_type"
+                            context="{'group_by': 'discount_type'}"/>
+                    <filter string="Mức ưu tiên" name="group_priority" context="{'group_by': 'priority'}"/>
+                    <filter string="Người tạo" name="group_creator" context="{'group_by': 'create_uid'}"/>
+                    <filter string="Tháng tạo" name="group_create_month" context="{'group_by': 'create_date:month'}"/>
+                    <filter string="Tháng bắt đầu" name="group_start_month" context="{'group_by': 'date_start:month'}"/>
+                </group>
+
+                <searchpanel>
+                    <field name="state" icon="fa-flag" select="multi" enable_counters="1"/>
+                    <field name="policy_type" icon="fa-tags" select="multi" enable_counters="1"/>
+                    <field name="discount_type" icon="fa-percent" select="multi" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <!-- Service Discount Policy Action -->
+    <record id="action_service_discount_policy" model="ir.actions.act_window">
+        <field name="name">Service Discount Policies</field>
+        <field name="res_model">dpt.service.discount.policy</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="view_service_discount_policy_search"/>
+        <field name="context">{
+            'search_default_active': 1,
+            'search_default_group_state': 1
+            }
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo chính sách chiết khấu dịch vụ đầu tiên!
+            </p>
+            <p>
+                Chính sách chiết khấu giúp bạn quản lý và áp dụng các mức chiết khấu
+                khác nhau cho dịch vụ và combo dịch vụ của công ty.
+            </p>
+            <p>
+                <strong>Các loại chính sách:</strong>
+            </p>
+            <ul>
+                <li>
+                    <strong>Dịch vụ đơn lẻ:</strong>
+                    Áp dụng cho từng dịch vụ riêng biệt
+                </li>
+                <li>
+                    <strong>Combo dịch vụ:</strong>
+                    Áp dụng cho gói combo dịch vụ
+                </li>
+                <li>
+                    <strong>Hỗn hợp:</strong>
+                    Áp dụng cho cả dịch vụ đơn lẻ và combo
+                </li>
+            </ul>
+            <p>
+                <strong>Quy trình phê duyệt:</strong>
+            </p>
+            <ol>
+                <li>Tạo chính sách ở trạng thái
+                    <em>Nháp</em>
+                </li>
+                <li>Gửi <em>Phê duyệt</em> khi hoàn thành
+                </li>
+                <li>Chờ phê duyệt từ người có thẩm quyền</li>
+                <li>Kích hoạt và sử dụng khi được
+                    <em>Phê duyệt</em>
+                </li>
+            </ol>
+        </field>
+    </record>
+
+    <!-- Dashboard Action for Discount Policies -->
+    <record id="action_service_discount_policy_dashboard" model="ir.actions.act_window">
+        <field name="name">Discount Policy Dashboard</field>
+        <field name="res_model">dpt.service.discount.policy</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="view_service_discount_policy_search"/>
+        <field name="context">{
+            'search_default_active': 1,
+            'search_default_approved': 1,
+            'search_default_group_policy_type': 1
+            }
+        </field>
+        <field name="domain">[('state', 'in', ['approved', 'paused'])]</field>
+    </record>
+
+    <!-- Quick Actions -->
+    <record id="action_create_service_discount_policy" model="ir.actions.act_window">
+        <field name="name">Tạo chính sách dịch vụ</field>
+        <field name="res_model">dpt.service.discount.policy</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_policy_type': 'service'}</field>
+    </record>
+
+    <record id="action_create_combo_discount_policy" model="ir.actions.act_window">
+        <field name="name">Tạo chính sách combo</field>
+        <field name="res_model">dpt.service.discount.policy</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_policy_type': 'combo'}</field>
+    </record>
+
+    <!-- Scheduled Actions for Policy Management -->
+    <record id="ir_cron_check_expired_policies" model="ir.cron">
+        <field name="name">Check Expired Discount Policies</field>
+        <field name="model_id" ref="model_dpt_service_discount_policy"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_check_expired_policies()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="ir_cron_send_expiry_notifications" model="ir.cron">
+        <field name="name">Send Policy Expiry Notifications</field>
+        <field name="model_id" ref="model_dpt_service_discount_policy"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_send_expiry_notifications()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+    </record>
+
+</odoo>
+
+
