@@ -19,6 +19,8 @@
                             <field name="min_price"/>
                             <field name="max_price"/>
                             <field name="system_price"/>
+                            <field name="corporate_income_tax"/>
+                            <field name="additional_vat_tax"/>
                         </group>
                     </group>
                 </sheet>

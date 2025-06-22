@@ -13,6 +13,36 @@ class PriceApprovalWizard(models.TransientModel):
     system_price = fields.Monetary(string='Giá hệ thống', currency_field='currency_id', readonly=True)
     currency_id = fields.Many2one('res.currency', string='Tiền tệ', readonly=True)
     
+    # Thêm hai trường tính thuế mới
+    corporate_income_tax = fields.Monetary(
+        string='Thuế TNDN 20%',
+        currency_field='currency_id',
+        compute='_compute_tax_amounts',
+        readonly=True
+    )
+    additional_vat_tax = fields.Monetary(
+        string='Thuế VAT thu thêm',
+        currency_field='currency_id',
+        compute='_compute_tax_amounts',
+        readonly=True
+    )
+    
+    @api.depends('current_price', 'max_price', 'export_import_line_id')
+    def _compute_tax_amounts(self):
+        for record in self:
+            line = record.export_import_line_id
+            price_diff = record.current_price - record.max_price
+            
+            if line and price_diff > 0:
+                # Tính thuế TNDN 20%
+                record.corporate_income_tax = price_diff * line.dpt_exchange_rate_basic_final * line.dpt_sl1 * 0.2
+                
+                # Tính thuế VAT thu thêm
+                record.additional_vat_tax = price_diff * line.dpt_exchange_rate_basic_final * line.dpt_sl1 * (line.dpt_tax or 0)
+            else:
+                record.corporate_income_tax = 0
+                record.additional_vat_tax = 0
+    
     def action_send_approval(self):
         """Gửi yêu cầu phê duyệt giá"""
         self.ensure_one()

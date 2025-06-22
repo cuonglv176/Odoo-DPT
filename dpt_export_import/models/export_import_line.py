@@ -1135,7 +1135,7 @@ class DptExportImportLine(models.Model):
                         (format(rounded_system_price, '.2f'), self.currency_id.symbol))
 
     @api.depends('declaration_type', 'dpt_price_usd', 'dpt_price_cny_vnd', 'dpt_price_krw_vnd',
-             'dpt_exchange_rate', 'dpt_amount_tax_import', 'dpt_amount_tax_other', 'dpt_tax')
+             'dpt_exchange_rate', 'dpt_amount_tax_import', 'dpt_amount_tax_other', 'dpt_tax', 'dpt_sl1')
     def _compute_tax_vat_customs(self):
         for rec in self:
             # Xác định giá khai báo dựa trên loại tiền
@@ -1147,8 +1147,9 @@ class DptExportImportLine(models.Model):
             elif rec.declaration_type == 'krw':
                 price = rec.dpt_price_krw_vnd
             
-            # Tiền thuế VAT (HQ) = (Giá khai + Tiền thuế NK + Tiền thuế Khác) * Tỉ giá HQ * VAT(%)
-            base_amount = (price + rec.dpt_amount_tax_import + rec.dpt_amount_tax_other) * rec.dpt_exchange_rate
+            # Tiền thuế VAT (HQ) = (Giá khai * Tỉ giá HQ * Số lượng + Tiền thuế NK + Tiền thuế Khác) * VAT(%)
+            price_vnd = price * rec.dpt_exchange_rate * rec.dpt_sl1
+            base_amount = price_vnd + rec.dpt_amount_tax_import + rec.dpt_amount_tax_other
             rec.dpt_amount_tax_vat_customs = base_amount * rec.dpt_tax
 
     @api.depends('dpt_actual_price', 'dpt_sl1', 'dpt_tax')
