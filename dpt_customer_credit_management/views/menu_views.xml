@@ -23,6 +23,24 @@
               action="action_credit_history"
               sequence="20"/>
 
+     <!-- Interest Calculation Menu -->
+    <menuitem id="menu_interest_calculation"
+              name="Interest Calculation"
+              parent="menu_credit_management_root"
+              sequence="15"/>
+
+    <menuitem id="menu_interest_calculations"
+              name="Interest Calculations"
+              parent="menu_interest_calculation"
+              action="action_interest_calculation"
+              sequence="10"/>
+
+    <menuitem id="menu_create_interest_calculation"
+              name="Create Calculation"
+              parent="menu_interest_calculation"
+              action="action_create_interest_calculation_wizard"
+              sequence="20"/>
+
     <!-- Reports Menu -->
     <menuitem id="menu_credit_reports"
               name="Reports"

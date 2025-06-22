@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Interest Calculation Tree View -->
+    <record id="view_interest_calculation_tree" model="ir.ui.view">
+        <field name="name">interest.calculation.tree</field>
+        <field name="model">interest.calculation</field>
+        <field name="arch" type="xml">
+            <tree decoration-info="state == 'draft'"
+                  decoration-success="state == 'paid'"
+                  decoration-warning="state == 'calculated'"
+                  decoration-primary="state == 'posted'"
+                  sample="1">
+                <field name="partner_id"/>
+                <field name="calculation_date"/>
+                <field name="opening_balance" widget="monetary" sum="Total Opening"/>
+                <field name="period_increase" widget="monetary" sum="Total Increase"/>
+                <field name="payment_amount" widget="monetary" sum="Total Payment"/>
+                <field name="outstanding_balance" widget="monetary" sum="Total Outstanding"/>
+                <field name="interest_start_date"/>
+                <field name="due_date"/>
+                <field name="payment_date"/>
+                <field name="interest_days"/>
+                <field name="monthly_interest_rate" widget="percentage"/>
+                <field name="interest_amount" widget="monetary" sum="Total Interest"/>
+                <field name="state" widget="badge"/>
+                <field name="notes"/>
+                <field name="currency_id" column_invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Interest Calculation Form View -->
+    <record id="view_interest_calculation_form" model="ir.ui.view">
+        <field name="name">interest.calculation.form</field>
+        <field name="model">interest.calculation</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_calculate_interest"
+                            string="Calculate Interest"
+                            type="object"
+                            class="oe_highlight"
+                            invisible="state != 'draft'"/>
+                    <button name="action_post_interest"
+                            string="Post Interest"
+                            type="object"
+                            class="oe_highlight"
+                            invisible="state != 'calculated'"/>
+                    <button name="action_mark_paid"
+                            string="Mark as Paid"
+                            type="object"
+                            invisible="state != 'posted'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,calculated,posted,paid"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="display_name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group name="customer_info" string="Customer Information">
+                            <field name="partner_id"
+                                   domain="[('is_company', '=', True)]"
+                                   readonly="state != 'draft'"/>
+                            <field name="calculation_date" readonly="state != 'draft'"/>
+                            <field name="period_start" readonly="state != 'draft'"/>
+                            <field name="period_end" readonly="state != 'draft'"/>
+                        </group>
+                        <group name="amounts" string="Amount Information">
+                            <field name="opening_balance" widget="monetary" readonly="1"/>
+                            <field name="period_increase" widget="monetary" readonly="1"/>
+                            <field name="payment_amount" widget="monetary" readonly="1"/>
+                            <field name="outstanding_balance" widget="monetary" readonly="1"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group name="dates" string="Date Information">
+                            <field name="interest_start_date" readonly="1"/>
+                            <field name="due_date" readonly="1"/>
+                            <field name="payment_date" readonly="1"/>
+                        </group>
+                        <group name="interest_calc" string="Interest Calculation">
+                            <field name="interest_days" readonly="1"/>
+                            <field name="monthly_interest_rate" widget="percentage" readonly="1"/>
+                            <field name="daily_interest_rate" widget="percentage" readonly="1"/>
+                            <field name="interest_amount" widget="monetary" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Invoice Details" name="invoice_details">
+                            <field name="invoice_line_ids" readonly="state == 'posted'">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="invoice_id" readonly="1"/>
+                                    <field name="invoice_date" readonly="1"/>
+                                    <field name="due_date" readonly="1"/>
+                                    <field name="description"/>
+                                    <field name="principal_amount" widget="monetary" readonly="1"/>
+                                    <field name="overdue_days" readonly="1"/>
+                                    <field name="daily_interest_rate" widget="percentage" readonly="1"/>
+                                    <field name="interest_amount" widget="monetary" readonly="1"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Additional Information" name="additional_info">
+                            <group>
+                                <field name="move_id" readonly="1" invisible="not move_id"/>
+                                <field name="notes" nolabel="1" placeholder="Additional notes..."/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Interest Calculation Search View -->
+    <record id="view_interest_calculation_search" model="ir.ui.view">
+        <field name="name">interest.calculation.search</field>
+        <field name="model">interest.calculation</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="partner_id"/>
+                <field name="calculation_date"/>
+                <field name="state"/>
+                <field name="notes"/>
+                <separator/>
+                <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="calculated" string="Calculated" domain="[('state', '=', 'calculated')]"/>
+                <filter name="posted" string="Posted" domain="[('state', '=', 'posted')]"/>
+                <filter name="paid" string="Paid" domain="[('state', '=', 'paid')]"/>
+                <separator/>
+                <filter name="has_interest" string="Has Interest" domain="[('interest_amount', '>', 0)]"/>
+                <filter name="no_interest" string="No Interest" domain="[('interest_amount', '=', 0)]"/>
+                <separator/>
+                <filter name="this_month" string="This Month"
+                        domain="[('calculation_date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-01'))]"/>
+                <filter name="last_month" string="Last Month"
+                        domain="[('calculation_date', '&gt;=', (datetime.datetime.now().replace(day=1) - datetime.timedelta(days=1)).strftime('%Y-%m-01')),
+                                ('calculation_date', '&lt;', datetime.datetime.now().strftime('%Y-%m-01'))]"/>
+                <filter name="this_year" string="This Year"
+                        domain="[('calculation_date', '&gt;=', datetime.datetime.now().strftime('%Y-01-01'))]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Customer" name="group_partner" domain="[]" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Status" name="group_state" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter string="Calculation Date" name="group_date" domain="[]" context="{'group_by': 'calculation_date:month'}"/>
+                    <filter string="Period" name="group_period" domain="[]" context="{'group_by': 'period_start:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Interest Calculation Kanban View -->
+    <record id="view_interest_calculation_kanban" model="ir.ui.view">
+        <field name="name">interest.calculation.kanban</field>
+        <field name="model">interest.calculation</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_small_column">
+                <field name="partner_id"/>
+                <field name="calculation_date"/>
+                <field name="outstanding_balance"/>
+                <field name="interest_amount"/>
+                <field name="interest_days"/>
+                <field name="state"/>
+                <field name="currency_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="partner_id"/>
+                                    </strong>
+                                </div>
+                                <span class="o_kanban_record_subtitle">
+                                    <field name="calculation_date"/>
+                                </span>
+                            </div>
+                            <div class="o_kanban_record_body">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <span>Outstanding:</span><br/>
+                                        <strong>
+                                            <field name="outstanding_balance" widget="monetary"/>
+                                        </strong>
+                                    </div>
+                                    <div class="col-6">
+                                        <span>Interest:</span><br/>
+                                        <strong class="text-danger">
+                                            <field name="interest_amount" widget="monetary"/>
+                                        </strong>
+                                    </div>
+                                </div>
+                                <div class="row mt-2" invisible="interest_days == 0">
+                                    <div class="col-12">
+                                        <span class="badge badge-warning">
+                                            <field name="interest_days"/> days overdue
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Interest Calculation Pivot View -->
+    <record id="view_interest_calculation_pivot" model="ir.ui.view">
+        <field name="name">interest.calculation.pivot</field>
+        <field name="model">interest.calculation</field>
+        <field name="arch" type="xml">
+            <pivot string="Interest Analysis" sample="1">
+                <field name="partner_id" type="row"/>
+                <field name="calculation_date" type="col" interval="month"/>
+                <field name="opening_balance" type="measure"/>
+                <field name="outstanding_balance" type="measure"/>
+                <field name="interest_amount" type="measure"/>
+                <field name="interest_days" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Interest Calculation Graph View -->
+    <record id="view_interest_calculation_graph" model="ir.ui.view">
+        <field name="name">interest.calculation.graph</field>
+        <field name="model">interest.calculation</field>
+        <field name="arch" type="xml">
+            <graph string="Interest Trend" sample="1">
+                <field name="calculation_date" type="col" interval="month"/>
+                <field name="interest_amount" type="measure"/>
+                <field name="outstanding_balance" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Interest Calculation Action -->
+    <record id="action_interest_calculation" model="ir.actions.act_window">
+        <field name="name">Interest Calculation</field>
+        <field name="res_model">interest.calculation</field>
+        <field name="view_mode">tree,kanban,form,pivot,graph</field>
+        <field name="search_view_id" ref="view_interest_calculation_search"/>
+        <field name="context">{'search_default_this_month': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No interest calculations found!
+            </p>
+            <p>
+                Create interest calculations for overdue payments to track penalty charges.
+                You can also auto-generate calculations from overdue invoices.
+            </p>
+        </field>
+    </record>
+</odoo>
