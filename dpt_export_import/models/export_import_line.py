@@ -3,6 +3,7 @@
 from ast import literal_eval
 from odoo import fields, models, _, api
 import logging
+import math
 from odoo.exceptions import AccessError, UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -970,12 +971,21 @@ class DptExportImportLine(models.Model):
 
     @api.onchange('dpt_price_unit')
     def _onchange_price_unit(self):
-        """Kiểm tra giá và hiển thị cảnh báo nếu giá nằm ngoài khoảng cho phép"""
+        """Kiểm tra giá và hiển thị cảnh báo"""
         for rec in self:
             # Bỏ qua khi giá trống hoặc bằng 0
             if not rec.dpt_price_unit:
                 rec.price_outside_range = False
                 continue
+            
+            # Kiểm tra nếu giá không phải số chẵn chục
+            if rec.dpt_price_unit % 10 != 0:
+                return {
+                    'warning': {
+                        'title': _('Cảnh báo về giá xuất hóa đơn'),
+                        'message': _('Giá xuất hóa đơn mong muốn phải là số chẵn chục đồng! Vui lòng điều chỉnh.')
+                    }
+                }
                 
             # Kiểm tra nếu giá nằm ngoài khoảng cho phép
             if rec.dpt_price_unit < rec.dpt_price_min_allowed or rec.dpt_price_unit > rec.dpt_price_max_allowed:
@@ -1164,10 +1174,17 @@ class DptExportImportLine(models.Model):
             # Việc xử lý trạng thái đã được thực hiện trong ApprovalRequest.write()
             pass
 
-    # Thêm phương thức làm tròn lên đến chục đồng
+    @api.constrains('dpt_price_unit')
+    def _check_price_unit_multiple_of_ten(self):
+        """Kiểm tra giá xuất hóa đơn mong muốn phải là số chẵn chục"""
+        for rec in self:
+            if rec.dpt_price_unit and rec.dpt_price_unit % 10 != 0:
+                raise ValidationError(_("Giá xuất hóa đơn mong muốn phải là số chẵn chục đồng!"))
+
+    # Sửa phương thức làm tròn để làm tròn lên đến chục đồng gần nhất
     def _round_up_to_ten(self, value):
         """Làm tròn giá trị lên đến chục đồng gần nhất
-        Ví dụ: 20091 -> 20100, 20011 -> 20020
+        Ví dụ: 20091 -> 20100, 20011 -> 20020, 284672 -> 284680
         """
         if not value:
             return 0
