@@ -46,10 +46,8 @@
                             <field name="line_ids">
                                 <tree editable="bottom" decoration-success="apply_discount == True">
                                     <field name="order_line_id" readonly="1"/>
-                                    <field name="service_management_id" readonly="1"
-                                           attrs="{'column_invisible': [('parent.line_ids', '=', [])]}"/>
-                                    <field name="service_combo_id" readonly="1"
-                                           attrs="{'column_invisible': [('parent.line_ids', '=', [])]}"/>
+                                    <field name="service_management_id" readonly="1" invisible="parent.line_ids == []"/>
+                                    <field name="service_combo_id" readonly="1" invisible="parent.line_ids == []"/>
                                     <field name="quantity" readonly="1"/>
                                     <field name="price_subtotal" readonly="1" widget="monetary"
                                            options="{'currency_field': 'currency_id'}"/>
@@ -84,12 +82,14 @@
                                 <div class="alert alert-info" role="alert">
                                     <strong>Thông tin chiết khấu:</strong>
                                     <ul>
-                                        <li>Số dòng được áp dụng: <field name="line_ids" readonly="1"
-                                            widget="statinfo" string="dòng"
-                                            domain="[('apply_discount', '=', True)]"/></li>
-                                        <li>Tổng chiết khấu ước tính: <field name="total_estimated_discount"
-                                            readonly="1" widget="monetary"
-                                            options="{'currency_field': 'currency_id'}"/></li>
+                                        <li>Số dòng được áp dụng:
+                                            <field name="line_ids" readonly="1" widget="statinfo" string="dòng"
+                                                domain="[('apply_discount', '=', True)]"/>
+                                        </li>
+                                        <li>Tổng chiết khấu ước tính:
+                                            <field name="total_estimated_discount" readonly="1" widget="monetary"
+                                                options="{'currency_field': 'currency_id'}"/>
+                                        </li>
                                     </ul>
                                 </div>
                             </group>
@@ -102,7 +102,7 @@
                             string="Áp dụng chiết khấu"
                             type="object"
                             class="btn-primary"
-                            attrs="{'invisible': [('total_estimated_discount', '=', 0)]}"/>
+                            invisible="total_estimated_discount == 0"/>
                     <button name="action_preview_discounts"
                             string="Xem trước"
                             type="object"
