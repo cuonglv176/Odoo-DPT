@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Credit History Tree View -->
+    <record id="view_credit_history_tree" model="ir.ui.view">
+        <field name="name">dpt.credit.history.tree</field>
+        <field name="model">dpt.credit.history</field>
+        <field name="arch" type="xml">
+            <tree create="false" edit="false" delete="false">
+                <field name="date"/>
+                <field name="partner_id"/>
+                <field name="action" widget="badge"/>
+                <field name="old_credit_limit" widget="monetary"/>
+                <field name="new_credit_limit" widget="monetary"/>
+                <field name="user_id"/>
+                <field name="notes"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Credit History Form View -->
+    <record id="view_credit_history_form" model="ir.ui.view">
+        <field name="name">dpt.credit.history.form</field>
+        <field name="model">dpt.credit.history</field>
+        <field name="arch" type="xml">
+            <form create="false" edit="false" delete="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="date"/>
+                            <field name="action"/>
+                            <field name="user_id"/>
+                        </group>
+                        <group>
+                            <field name="old_credit_limit" widget="monetary"/>
+                            <field name="new_credit_limit" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="approval_request_id" invisible="approval_request_id == False"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="notes" nolabel="1" placeholder="Notes about this credit history entry..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Credit History Search View -->
+    <record id="view_credit_history_search" model="ir.ui.view">
+        <field name="name">dpt.credit.history.search</field>
+        <field name="model">dpt.credit.history</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="partner_id"/>
+                <field name="user_id"/>
+                <field name="action"/>
+                <separator/>
+                <filter name="today" string="Today" domain="[('date', '&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]"/>
+                <filter name="this_week" string="This Week" domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=context_today().weekday())).strftime('%Y-%m-%d'))]"/>
+                <filter name="this_month" string="This Month" domain="[('date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-01'))]"/>
+                <separator/>
+                <filter name="created" string="Created" domain="[('action', '=', 'created')]"/>
+                <filter name="updated" string="Updated" domain="[('action', '=', 'updated')]"/>
+                <filter name="approved" string="Approved" domain="[('action', '=', 'approved')]"/>
+                <filter name="rejected" string="Rejected" domain="[('action', '=', 'rejected')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Customer" name="group_partner" domain="[]" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Action" name="group_action" domain="[]" context="{'group_by': 'action'}"/>
+                    <filter string="User" name="group_user" domain="[]" context="{'group_by': 'user_id'}"/>
+                    <filter string="Date" name="group_date" domain="[]" context="{'group_by': 'date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Credit History Action -->
+    <record id="action_credit_history" model="ir.actions.act_window">
+        <field name="name">Credit History</field>
+        <field name="res_model">dpt.credit.history</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_credit_history_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No credit history records found!
+            </p>
+            <p>
+                Credit history will be automatically created when credit limits are modified.
+            </p>
+        </field>
+    </record>
+</odoo>

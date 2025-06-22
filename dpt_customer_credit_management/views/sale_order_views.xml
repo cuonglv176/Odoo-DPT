@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sale Order Form View - Credit Check -->
+    <record id="view_sale_order_form_credit" model="ir.ui.view">
+        <field name="name">sale.order.form.credit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="credit_check_status" widget="badge" readonly="1"
+                       decoration-success="credit_check_status == 'passed'"
+                       decoration-warning="credit_check_status == 'warning'"
+                       decoration-danger="credit_check_status == 'blocked'"
+                       invisible="credit_check_status == 'not_checked'"/>
+            </field>
+
+            <xpath expr="//page[@name='other_information']" position="inside">
+                <group name="credit_info" string="Credit Information" invisible="not partner_id">
+                    <field name="credit_check_message" readonly="1" invisible="not credit_check_message"/>
+                    <field name="credit_override" invisible="credit_check_status != 'blocked'"/>
+                    <field name="credit_override_reason" invisible="not credit_override"/>
+                    <field name="credit_override_user_id" readonly="1" invisible="not credit_override"/>
+                </group>
+            </xpath>
+
+            <!-- Credit Override Button -->
+            <div name="button_box" position="inside">
+                <button name="action_credit_override"
+                        type="object"
+                        class="oe_stat_button btn-danger"
+                        icon="fa-exclamation-triangle"
+                        invisible="credit_check_status != 'blocked' or credit_override"
+                        groups="dpt_customer_credit_management.group_credit_manager">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Credit</span>
+                        <span class="o_stat_text">Override</span>
+                    </div>
+                </button>
+            </div>
+        </field>
+    </record>
+
+    <!-- Sale Order Tree View -->
+    <record id="view_sale_order_tree_credit" model="ir.ui.view">
+        <field name="name">sale.order.tree.credit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree"/>
+        <field name="arch" type="xml">
+            <field name="amount_total" position="after">
+                <field name="credit_check_status" widget="badge" optional="hide"
+                       decoration-success="credit_check_status == 'passed'"
+                       decoration-warning="credit_check_status == 'warning'"
+                       decoration-danger="credit_check_status == 'blocked'"/>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Credit Summary Report -->
+    <record id="view_credit_summary_report_tree" model="ir.ui.view">
+        <field name="name">credit.summary.report.tree</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <tree create="false" edit="false" delete="false" default_order="credit_utilization desc">
+                <field name="name"/>
+                <field name="credit_limit" widget="monetary" sum="Total Credit Limit"/>
+                <field name="current_debt" widget="monetary" sum="Total Current Debt"/>
+                <field name="available_credit" widget="monetary" sum="Total Available Credit"/>
+                <field name="credit_utilization" widget="percentage" avg="Average Utilization"/>
+                <field name="overdue_amount" widget="monetary" sum="Total Overdue"/>
+                <field name="days_overdue"/>
+                <field name="credit_status" widget="badge"
+                       decoration-success="credit_status == 'good'"
+                       decoration-warning="credit_status == 'warning'"
+                       decoration-danger="credit_status in ['blocked', 'suspended']"/>
+                <field name="payment_term_id"/>
+                <field name="interest_rate" widget="percentage"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_credit_summary_report_search" model="ir.ui.view">
+        <field name="name">credit.summary.report.search</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="credit_status"/>
+                <separator/>
+                <filter name="has_credit_limit" string="Has Credit Limit" domain="[('credit_limit', '>', 0)]"/>
+                <filter name="high_utilization" string="High Utilization (>80%)" domain="[('credit_utilization', '>', 80)]"/>
+                <filter name="over_limit" string="Over Credit Limit" domain="[('current_debt', '>', 'credit_limit')]"/>
+                <filter name="has_overdue" string="Has Overdue" domain="[('overdue_amount', '>', 0)]"/>
+                <separator/>
+                <filter name="credit_good" string="Good Credit" domain="[('credit_status', '=', 'good')]"/>
+                <filter name="credit_warning" string="Credit Warning" domain="[('credit_status', '=', 'warning')]"/>
+                <filter name="credit_blocked" string="Credit Blocked" domain="[('credit_status', '=', 'blocked')]"/>
+                <filter name="credit_suspended" string="Credit Suspended" domain="[('credit_status', '=', 'suspended')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Credit Status" name="group_credit_status" domain="[]" context="{'group_by': 'credit_status'}"/>
+                    <filter string="Payment Terms" name="group_payment_terms" domain="[]" context="{'group_by': 'payment_term_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_credit_summary_report" model="ir.actions.act_window">
+        <field name="name">Credit Summary Report</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_credit_summary_report_tree"/>
+        <field name="search_view_id" ref="view_credit_summary_report_search"/>
+        <field name="domain">[('is_company', '=', True), ('credit_limit', '>', 0)]</field>
+        <field name="context">{'search_default_has_credit_limit': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No customers with credit limits found!
+            </p>
+            <p>
+                This report shows all customers with their credit information.
+                Set up credit limits for your customers to see them here.
+            </p>
+        </field>
+    </record>
+
+    <!-- Overdue Analysis Report -->
+    <record id="view_overdue_analysis_tree" model="ir.ui.view">
+        <field name="name">overdue.analysis.tree</field>
+        <field name="model">account.move.line</field>
+        <field name="arch" type="xml">
+            <tree create="false" edit="false" delete="false" default_order="date_maturity asc">
+                <field name="partner_id"/>
+                <field name="move_id"/>
+                <field name="date"/>
+                <field name="date_maturity"/>
+                <field name="days_overdue" widget="badge"
+                       decoration-warning="days_overdue > 0 and days_overdue <= 30"
+                       decoration-danger="days_overdue > 30"/>
+                <field name="amount_residual" widget="monetary" sum="Total Overdue Amount"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="account_id"/>
+                <field name="interest_calculated" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_overdue_analysis_search" model="ir.ui.view">
+        <field name="name">overdue.analysis.search</field>
+        <field name="model">account.move.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="partner_id"/>
+                <field name="move_id"/>
+                <field name="account_id"/>
+                <separator/>
+                <filter name="overdue" string="Overdue" domain="[('date_maturity', '&lt;', context_today()), ('amount_residual', '>', 0)]"/>
+                <filter name="overdue_30" string="Overdue > 30 days" domain="[('days_overdue', '>', 30)]"/>
+                <filter name="overdue_60" string="Overdue > 60 days" domain="[('days_overdue', '>', 60)]"/>
+                <filter name="overdue_90" string="Overdue > 90 days" domain="[('days_overdue', '>', 90)]"/>
+                <separator/>
+                <filter name="interest_not_calculated" string="Interest Not Calculated" domain="[('interest_calculated', '=', False)]"/>
+                <filter name="interest_calculated" string="Interest Calculated" domain="[('interest_calculated', '=', True)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Customer" name="group_partner" domain="[]" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Invoice" name="group_move" domain="[]" context="{'group_by': 'move_id'}"/>
+                    <filter string="Account" name="group_account" domain="[]" context="{'group_by': 'account_id'}"/>
+                    <filter string="Maturity Date" name="group_maturity" domain="[]" context="{'group_by': 'date_maturity:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_overdue_analysis_report" model="ir.actions.act_window">
+        <field name="name">Overdue Analysis Report</field>
+        <field name="res_model">account.move.line</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_overdue_analysis_tree"/>
+        <field name="search_view_id" ref="view_overdue_analysis_search"/>
+        <field name="domain">[('account_id.account_type', '=', 'asset_receivable'), ('reconciled', '=', False), ('parent_state', '=', 'posted')]</field>
+        <field name="context">{'search_default_overdue': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No overdue receivables found!
+            </p>
+            <p>
+                This report shows all overdue customer receivables.
+                Great job on collecting payments on time!
+            </p>
+        </field>
+    </record>
+
+    <!-- Blocked Customers Report -->
+    <record id="view_blocked_customers_tree" model="ir.ui.view">
+        <field name="name">blocked.customers.tree</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <tree create="false" edit="false" delete="false">
+                <field name="name"/>
+                <field name="credit_limit" widget="monetary"/>
+                <field name="current_debt" widget="monetary"/>
+                <field name="available_credit" widget="monetary"/>
+                <field name="overdue_amount" widget="monetary"/>
+                <field name="days_overdue"/>
+                <field name="credit_status" widget="badge"
+                       decoration-danger="credit_status in ['blocked', 'suspended']"/>
+                <field name="credit_notes"/>
+                <button name="action_request_credit_approval"
+                        type="object"
+                        string="Request Approval"
+                        class="oe_link"
+                        icon="fa-check-circle"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_blocked_customers_report" model="ir.actions.act_window">
+        <field name="name">Blocked Customers Report</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_blocked_customers_tree"/>
+        <field name="domain">[('credit_status', 'in', ['blocked', 'suspended'])]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No blocked customers found!
+            </p>
+            <p>
+                This report shows customers who are currently blocked or suspended due to credit issues.
+            </p>
+        </field>
+    </record>
+</odoo>
