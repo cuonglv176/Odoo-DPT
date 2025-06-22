@@ -42,12 +42,12 @@ class DPTSaleServiceManagement(models.Model):
     is_price_fixed = fields.Boolean(string='Đã chốt giá', copy=False, tracking=True,
                                     help='Đánh dấu dịch vụ đã được chốt giá với khách')
     is_confirmed_for_ticket = fields.Boolean(string='Xác nhận tạo ticket', copy=False, tracking=True,
-                                    help='Đánh dấu dịch vụ đã được xác nhận tạo ticket')
-    payment_amount = fields.Monetary(currency_field='currency_id', string='Số tiền cần thanh toán', 
-                                    help='Số tiền cần thanh toán của dịch vụ Thanh toán quốc tế')
+                                             help='Đánh dấu dịch vụ đã được xác nhận tạo ticket')
+    payment_amount = fields.Monetary(currency_field='currency_id', string='Số tiền cần thanh toán',
+                                     help='Số tiền cần thanh toán của dịch vụ Thanh toán quốc tế')
     is_bao_giao = fields.Boolean(default=False, string='Đặc biệt')
-    # is_allin = fields.Boolean(default=False, string='All In')
 
+    # is_allin = fields.Boolean(default=False, string='All In')
 
     @api.onchange('service_id')
     def onchange_update_bao_giao_all_in(self):
@@ -74,6 +74,18 @@ class DPTSaleServiceManagement(models.Model):
         res = super(DPTSaleServiceManagement, self).write(vals)
         self.action_confirm_quote()
         self.action_check_status_sale_order()
+
+        # Trigger price recalculation if is_bao_giao flag is changed
+        if 'is_bao_giao' in vals:
+            for rec in self:
+                if rec.sale_id:
+                    combo_ids = rec.sale_id._filter_services_by_quote_type(rec.sale_id.service_combo_ids)
+                    planned_combo_ids = rec.sale_id._filter_services_by_quote_type(
+                        rec.sale_id.planned_service_combo_ids)
+                    rec.sale_id._compute_combo_price(combo_ids, 'combo')
+                    rec.sale_id._compute_combo_price(planned_combo_ids, 'planned_combo')
+                    rec.sale_id.onchange_get_fields_form_combo_service()
+
         for rec in self:
             if rec.sale_id and rec.sale_id.exists():
                 changes = []
