@@ -85,7 +85,7 @@ class ResPartner(models.Model):
 
     # History
     credit_history_ids = fields.One2many(
-        'credit.history',
+        'dpt.credit.history',
         'partner_id',
         string='Credit History'
     )
@@ -185,7 +185,7 @@ class ResPartner(models.Model):
 
     def _create_credit_history(self, action, new_limit, old_limit=0):
         """Tạo bản ghi lịch sử tín dụng"""
-        self.env['credit.history'].create({
+        self.env['dpt.credit.history'].create({
             'partner_id': self.id,
             'action': action,
             'old_credit_limit': old_limit,
