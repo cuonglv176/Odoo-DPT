@@ -59,19 +59,45 @@ class SaleOrder(models.Model):
         view_id = self.env.ref('approvals.approval_request_view_kanban').id
         view_tree_id = self.env.ref('approvals.approval_request_view_tree').id
         view_form_id = self.env.ref('approvals.approval_request_view_form').id
+        
+        # Lấy tất cả các phê duyệt trực tiếp trên đơn hàng
+        domain = [('sale_id', '=', self.id)]
+        
+        # Thêm các phê duyệt từ các dòng tờ khai
+        export_import_lines = self.env['dpt.export.import.line'].search([
+            ('sale_id', '=', self.id),
+            ('approval_request_id', '!=', False)
+        ])
+        
+        if export_import_lines:
+            approval_ids = export_import_lines.mapped('approval_request_id.id')
+            if approval_ids:
+                domain = ['|', ('sale_id', '=', self.id), ('id', 'in', approval_ids)]
+        
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'approval.request',
             'name': _('Approval request'),
             'view_mode': 'kanban,tree,form',
-            'domain': [('sale_id', '=', self.id)],
+            'domain': domain,
             'views': [[view_id, 'kanban'], [view_tree_id, 'tree'], [view_form_id, 'form']],
         }
 
     @api.depends('approval_ids')
     def _compute_approval_count(self):
         for rec in self:
-            rec.approval_count = len(rec.approval_ids)
+            # Đếm phiếu phê duyệt trực tiếp
+            direct_count = len(rec.approval_ids)
+            
+            # Đếm phiếu phê duyệt từ dòng tờ khai
+            export_import_lines = self.env['dpt.export.import.line'].search([
+                ('sale_id', '=', rec.id),
+                ('approval_request_id', '!=', False)
+            ])
+            indirect_count = len(export_import_lines.mapped('approval_request_id'))
+            
+            # Tổng số phiếu phê duyệt
+            rec.approval_count = direct_count + indirect_count
 
     def action_change_price(self):
         view_id = self.env.ref('dpt_sale_approvals.view_sale_change_price_form').id

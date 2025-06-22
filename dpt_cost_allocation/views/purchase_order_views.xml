@@ -24,7 +24,7 @@
                 <xpath expr="//header" position="inside">
                     <button name="action_calculate_allocated_cost"
                             type="object"
-                            string="Tính phân bổ chi phí"
+                            string="Tính phân bổ chi phí (XHĐ)"
                             class="oe_highlight"
                             invisible="state != 'done' or (allocation_target_type == 'declaration' and not export_import_id) or (allocation_target_type == 'sale_order' and not sale_order_id) or (allocation_target_type == 'declaration_line' and (not sale_order_id or not export_import_line_id))"
                             help="Tính toán và thực hiện phân bổ chi phí từ đơn mua hàng cho đối tượng đã chọn. Chi phí sẽ được phân bổ theo tỷ lệ của trị giá tính phân bổ."/>

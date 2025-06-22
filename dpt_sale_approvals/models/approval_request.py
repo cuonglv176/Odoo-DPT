@@ -22,6 +22,7 @@ class ApprovalRequest(models.Model):
     approver_ids = fields.One2many('approval.approver', 'request_id', string="Approvers", check_company=True,
                                    compute='_compute_approver_ids', store=True, readonly=False)
     pricelist_id = fields.Many2one('product.pricelist',string="Pricelist")
+    export_import_line_id = fields.Many2one('dpt.export.import.line', string='Dòng tờ khai', ondelete='cascade')
 
     @api.depends('category_id', 'request_owner_id')
     def _compute_approver_ids(self):
