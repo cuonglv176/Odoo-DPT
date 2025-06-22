@@ -25,12 +25,17 @@
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object" name="action_view_invoice" class="oe_stat_button"
+                                icon="fa-pencil-square-o"
+                                invisible="allocation_move_count == 0 or state in ('allocated')">
+                            <field name="allocation_move_count" widget="statinfo" string="Hóa đơn phân bổ"/>
+                            <field name="allocation_move_ids" invisible="1"/>
+                        </button>
+                    </div>
                     <group>
                         <group>
                             <field name="name" required="1"/>
-                            <field name="purchase_order_ids" options="{'no_create': True, 'no_open': True}"
-                                   required="1"/>
-                            <field name="shipping_ids"/>
                         </group>
                         <group>
                             <field name="total_expense"/>
@@ -38,7 +43,20 @@
                         </group>
                     </group>
                     <notebook>
-                        <page name="sale_order" string="Đơn hàng">
+                        <page name="purchase_order" string="Đơn mua hàng">
+                            <field name="purchase_order_ids" options="{'no_create': True, 'no_open': True}"
+                                   required="1">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="partner_id"/>
+                                    <field name="service_total_amount"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="shipping" string="Phiếu vận chuyển">
+                            <field name="shipping_ids"/>
+                        </page>
+                        <page name="sale_order" string="Đơn bán hàng">
                             <field name="sale_ids" readonly="1" force_save="1">
                                 <tree>
                                     <field name="name"/>

@@ -15,12 +15,18 @@ class DPTExpenseAllocation(models.Model):
     name = fields.Char("Name", reuqired=1)
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
     main_currency_id = fields.Many2one('res.currency', string='Main Currency', compute="_compute_main_expense")
-    total_expense = fields.Monetary(string='Total Expense', currency_field='currency_id', compute="compute_total_expense", store=False)
+    total_expense = fields.Monetary(string='Total Expense', currency_field='currency_id',
+                                    compute="compute_total_expense", store=False)
     purchase_order_ids = fields.Many2many('purchase.order', string='Purchase Orders')
     shipping_ids = fields.Many2many('dpt.shipping.slip', string='Shipping', compute="_compute_order_shipping")
     sale_ids = fields.Many2many('sale.order', string='Orders', compute="_compute_order_shipping")
     state = fields.Selection([('draft', 'Draft'), ('allocated', 'Allocated')], string='State', default='draft')
     allocation_move_ids = fields.One2many('account.move', 'expense_allocation_id', string='Allocation Moves')
+    allocation_move_count = fields.Integer(string='Allocation Moves Count', compute="_compute_allocation_move_count")
+
+    def _compute_allocation_move_count(self):
+        for item in self:
+            item.allocation_move_count = len(item.allocation_move_ids)
 
     @api.depends('purchase_order_ids')
     def _compute_order_shipping(self):
@@ -90,17 +96,17 @@ class DPTExpenseAllocation(models.Model):
                 total_revenue += service_combo_id.amount_total
                 if revenue_group_by_uom.get(service_combo_id.compute_uom_id):
                     revenue_group_by_uom[service_combo_id.compute_uom_id] = revenue_group_by_uom[
-                                                                               service_combo_id.compute_uom_id] + service_combo_id.amount_total
+                                                                                service_combo_id.compute_uom_id] + service_combo_id.amount_total
                 else:
                     revenue_group_by_uom[service_combo_id.compute_uom_id] = service_combo_id.amount_total
                 if quantity_group_by_uom.get(service_combo_id.compute_uom_id):
                     quantity_group_by_uom[service_combo_id.compute_uom_id] = quantity_group_by_uom[
-                                                                                service_combo_id.compute_uom_id] + service_combo_id.compute_value
+                                                                                 service_combo_id.compute_uom_id] + service_combo_id.compute_value
                 else:
                     quantity_group_by_uom[service_combo_id.compute_uom_id] = service_combo_id.compute_value
                 if uom_quantity.get(service_combo_id.compute_uom_id):
                     uom_quantity[service_combo_id.compute_uom_id] = uom_quantity[
-                                                                       service_combo_id.compute_uom_id] + service_combo_id.compute_value
+                                                                        service_combo_id.compute_uom_id] + service_combo_id.compute_value
                 else:
                     uom_quantity[service_combo_id.compute_uom_id] = service_combo_id.compute_value
             if uom_quantity:
@@ -176,3 +182,8 @@ class DPTExpenseAllocation(models.Model):
             'line_ids': move_line_vals
         })
         move_id.action_post()
+
+    def action_view_invoice(self):
+        action = self.env.ref('account.action_move_in_invoice_type').sudo().read()[0]
+        action['domain'] = [('expense_allocation_id', '=', self.id)]
+        return action
