@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Create Interest Calculation Wizard -->
+    <record id="view_create_interest_calculation_wizard" model="ir.ui.view">
+        <field name="name">create.interest.calculation.wizard.form</field>
+        <field name="model">create.interest.calculation.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Create Interest Calculation">
+                <group>
+                    <group string="Period">
+                        <field name="period_start"/>
+                        <field name="period_end"/>
+                        <field name="calculation_date"/>
+                    </group>
+                    <group string="Options">
+                        <field name="auto_calculate"/>
+                        <field name="only_overdue"/>
+                    </group>
+                </group>
+
+                <group string="Customers">
+                    <field name="partner_ids" nolabel="1"
+                           placeholder="Leave empty to include all customers with overdue amounts">
+                        <tree>
+                            <field name="name"/>
+                            <field name="credit_limit" widget="monetary"/>
+                            <field name="current_debt" widget="monetary"/>
+                            <field name="overdue_amount" widget="monetary"/>
+                        </tree>
+                    </field>
+                </group>
+
+                <footer>
+                    <button name="action_create_calculations"
+                            string="Create Calculations"
+                            type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_create_interest_calculation_wizard" model="ir.actions.act_window">
+        <field name="name">Create Interest Calculation</field>
+        <field name="res_model">create.interest.calculation.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

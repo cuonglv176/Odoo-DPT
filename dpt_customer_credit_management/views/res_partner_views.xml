@@ -1,111 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Partner Form View - Credit Tab -->
-    <record id="view_partner_form_credit" model="ir.ui.view">
+    <!-- Partner Form View Extension -->
+    <record id="view_partner_form_credit_management" model="ir.ui.view">
         <field name="name">res.partner.form.credit</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
-            <notebook position="inside">
-                <page name="credit_management" string="Credit Management" invisible="not is_company and not parent_id">
+            <!-- Add Credit Management tab -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Credit Management" name="credit_management"
+                      invisible="not is_company or not customer_rank">
                     <group>
-                        <group name="credit_limits" string="Credit Limits">
+                        <group string="Credit Limits">
                             <field name="credit_limit" widget="monetary"/>
                             <field name="current_debt" widget="monetary" readonly="1"/>
                             <field name="available_credit" widget="monetary" readonly="1"/>
                             <field name="credit_utilization" widget="percentage" readonly="1"/>
-                            <field name="credit_status" widget="badge"
-                                   decoration-success="credit_status == 'good'"
-                                   decoration-warning="credit_status == 'warning'"
-                                   decoration-danger="credit_status in ['blocked', 'suspended']"/>
                         </group>
-                        <group name="credit_terms" string="Credit Terms">
-                            <field name="payment_term_id"/>
-                            <field name="interest_rate" widget="percentage"/>
-                            <field name="credit_approval_date" readonly="1"/>
-                            <field name="credit_approved_by" readonly="1"/>
+                        <group string="Credit Status">
+                            <field name="credit_status" widget="badge"/>
+                            <field name="overdue_amount" widget="monetary" readonly="1"/>
+                            <field name="days_overdue" readonly="1"/>
+                            <field name="last_payment_date" readonly="1"/>
                         </group>
                     </group>
 
                     <group>
-                        <group name="overdue_info" string="Overdue Information">
-                            <field name="overdue_amount" widget="monetary" readonly="1"/>
-                            <field name="days_overdue" readonly="1"/>
-                        </group>
-                        <group name="credit_settings" string="Credit Settings">
-                            <field name="block_sales_on_credit_limit"/>
+                        <group string="Interest Settings">
+                            <field name="interest_rate" widget="percentage"/>
                             <field name="auto_calculate_interest"/>
                         </group>
+                        <group string="Credit Control">
+                            <field name="block_sales_on_credit_limit"/>
+                            <field name="require_approval_over_limit"/>
+                        </group>
                     </group>
 
-                    <group name="credit_notes" string="Credit Notes">
-                        <field name="credit_notes" nolabel="1" placeholder="Internal notes about customer credit..."/>
+                    <group string="Notes">
+                        <field name="credit_notes" nolabel="1" placeholder="Credit management notes..."/>
                     </group>
-
-                    <div class="oe_button_box" name="button_box">
-                        <button name="action_request_credit_approval"
-                                type="object"
-                                class="oe_stat_button"
-                                icon="fa-check-circle"
-                                invisible="credit_limit == 0">
-                            <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_text">Request</span>
-                                <span class="o_stat_text">Approval</span>
-                            </div>
-                        </button>
-                    </div>
 
                     <!-- Credit History -->
-                    <separator string="Credit History"/>
-                    <field name="credit_history_ids" readonly="1">
-                        <tree>
-                            <field name="date"/>
-                            <field name="action"/>
-                            <field name="old_credit_limit" widget="monetary"/>
-                            <field name="new_credit_limit" widget="monetary"/>
-                            <field name="user_id"/>
-                            <field name="notes"/>
-                        </tree>
-                    </field>
+                    <group string="Credit History">
+                        <field name="credit_history_ids" nolabel="1" readonly="1">
+                            <tree>
+                                <field name="date"/>
+                                <field name="action"/>
+                                <field name="old_credit_limit" widget="monetary"/>
+                                <field name="new_credit_limit" widget="monetary"/>
+                                <field name="user_id"/>
+                                <field name="notes"/>
+                            </tree>
+                        </field>
+                    </group>
+
+                    <!-- Interest Calculations -->
+                    <group string="Interest Calculations">
+                        <field name="interest_calculation_ids" nolabel="1" readonly="1">
+                            <tree>
+                                <field name="calculation_date"/>
+                                <field name="period_start"/>
+                                <field name="period_end"/>
+                                <field name="outstanding_balance" widget="monetary"/>
+                                <field name="interest_days"/>
+                                <field name="interest_amount" widget="monetary"/>
+                                <field name="state" widget="badge"/>
+                            </tree>
+                        </field>
+                    </group>
                 </page>
-            </notebook>
+            </xpath>
+
+            <!-- Add smart buttons -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_credit_history"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-history"
+                        invisible="not is_company or not customer_rank">
+                    <field name="credit_history_count" widget="statinfo" string="Credit History"/>
+                </button>
+
+                <button name="action_view_interest_calculations"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-calculator"
+                        invisible="not is_company or not customer_rank">
+                    <field name="interest_calculation_count" widget="statinfo" string="Interest Calc"/>
+                </button>
+
+                <button name="action_request_credit_approval"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-check-circle"
+                        invisible="credit_status != 'blocked'">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Request</span>
+                        <span class="o_stat_text">Approval</span>
+                    </div>
+                </button>
+            </xpath>
         </field>
     </record>
 
-    <!-- Partner Tree View with Credit Info -->
+    <!-- Partner Tree View Extension -->
     <record id="view_partner_tree_credit" model="ir.ui.view">
         <field name="name">res.partner.tree.credit</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_tree"/>
         <field name="arch" type="xml">
-            <field name="phone" position="after">
+            <xpath expr="//field[@name='display_name']" position="after">
                 <field name="credit_limit" widget="monetary" optional="hide"/>
                 <field name="current_debt" widget="monetary" optional="hide"/>
-                <field name="available_credit" widget="monetary" optional="hide"/>
-                <field name="credit_status" widget="badge" optional="show"
-                       decoration-success="credit_status == 'good'"
-                       decoration-warning="credit_status == 'warning'"
-                       decoration-danger="credit_status in ['blocked', 'suspended']"/>
-            </field>
-        </field>
-    </record>
-
-    <!-- Partner Search View with Credit Filters -->
-    <record id="view_partner_search_credit" model="ir.ui.view">
-        <field name="name">res.partner.search.credit</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_res_partner_filter"/>
-        <field name="arch" type="xml">
-            <filter name="supplier" position="after">
-                <separator/>
-                <filter name="credit_good" string="Good Credit" domain="[('credit_status', '=', 'good')]"/>
-                <filter name="credit_warning" string="Credit Warning" domain="[('credit_status', '=', 'warning')]"/>
-                <filter name="credit_blocked" string="Credit Blocked" domain="[('credit_status', '=', 'blocked')]"/>
-                <filter name="credit_suspended" string="Credit Suspended" domain="[('credit_status', '=', 'suspended')]"/>
-                <separator/>
-                <filter name="has_overdue" string="Has Overdue" domain="[('overdue_amount', '>', 0)]"/>
-                <filter name="over_credit_limit" string="Over Credit Limit" domain="[('current_debt', '>', 'credit_limit')]"/>
-            </filter>
+                <field name="credit_status" widget="badge" optional="show"/>
+                <field name="overdue_amount" widget="monetary" optional="hide"/>
+            </xpath>
         </field>
     </record>
 </odoo>

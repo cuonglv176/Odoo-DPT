@@ -36,9 +36,11 @@
         'views/credit_config_views.xml',
         'views/sale_order_views.xml',
         'views/account_move_views.xml',
+        'views/interest_calculation_views.xml',
         'views/menu_views.xml',
         'reports/credit_report_views.xml',
         'wizards/credit_approval_wizard_views.xml',
+        'wizards/swizard_views.xml',
     ],
     'demo': [
         'demo/demo_data.xml',
