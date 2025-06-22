@@ -58,7 +58,7 @@ class CreditApprovalWizard(models.TransientModel):
         })
 
         # Tạo credit history
-        self.env['credit.history'].create({
+        self.env['dpt.credit.history'].create({
             'partner_id': self.partner_id.id,
             'action': 'approval_requested',
             'old_credit_limit': self.current_credit_limit,
@@ -146,7 +146,7 @@ class CreditOverrideWizard(models.TransientModel):
         })
 
         # Ghi log
-        self.env['credit.history'].create({
+        self.env['dpt.credit.history'].create({
             'partner_id': self.partner_id.id,
             'action': 'override',
             'old_credit_limit': self.credit_limit,
