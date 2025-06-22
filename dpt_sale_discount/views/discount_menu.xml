@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Main Discount Menu -->
+    <menuitem id="menu_service_discount_root"
+              name="Service Discounts"
+              parent="sale.sale_menu_root"
+              sequence="50"/>
+
+    <!-- Discount Policies Menu -->
+    <menuitem id="menu_service_discount_policies"
+              name="Discount Policies"
+              parent="menu_service_discount_root"
+              action="action_service_discount_policy"
+              sequence="10"/>
+
+    <!-- Configuration Menu -->
+    <menuitem id="menu_service_discount_config"
+              name="Configuration"
+              parent="menu_service_discount_root"
+              sequence="90"/>
+
+    <!-- Approval Categories Menu -->
+    <menuitem id="menu_discount_approval_categories"
+              name="Approval Categories"
+              parent="menu_service_discount_config"
+              action="approvals.approval_category_action"
+              sequence="10"/>
+
+    <!-- Reports Menu -->
+    <menuitem id="menu_service_discount_reports"
+              name="Reports"
+              parent="menu_service_discount_root"
+              sequence="80"/>
+
+    <!-- Discount Usage Report -->
+    <record id="action_service_discount_usage_report" model="ir.actions.act_window">
+        <field name="name">Discount Usage Report</field>
+        <field name="res_model">dpt.service.discount.policy</field>
+        <field name="view_mode">graph,pivot,tree</field>
+        <field name="domain">[('usage_count', '>', 0)]</field>
+        <field name="context">{
+            'search_default_group_policy_type': 1,
+            'search_default_approved': 1
+        }</field>
+    </record>
+
+    <menuitem id="menu_discount_usage_report"
+              name="Usage Report"
+              parent="menu_service_discount_reports"
+              action="action_service_discount_usage_report"
+              sequence="10"/>
+
+</odoo>

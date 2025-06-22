@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Cron job to sync approval status -->
+        <record id="cron_sync_discount_approval_status" model="ir.cron">
+            <field name="name">Sync Service Discount Approval Status</field>
+            <field name="model_id" ref="model_dpt_service_discount_policy"/>
+            <field name="state">code</field>
+            <field name="code">model._check_approval_status()</field>
+            <field name="interval_number">5</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Order Discount Approval Category -->
+        <record id="approval_category_order_discount" model="approval.category">
+            <field name="name">Order Service Discount</field>
+            <field name="sequence">40</field>
+            <field name="description">Approval for high-value service discounts in orders</field>
+            <field name="automated_sequence">True</field>
+            <field name="approval_minimum">1</field>
+            <field name="approval_type">manager</field>
+            <field name="has_date">True</field>
+            <field name="has_period">False</field>
+            <field name="has_item_description">True</field>
+            <field name="has_quantity">False</field>
+            <field name="has_amount">True</field>
+            <field name="has_reference">True</field>
+            <field name="has_partner">True</field>
+            <field name="has_payment_method">False</field>
+            <field name="has_location">False</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <!-- Configuration Parameters -->
+        <record id="config_order_approval_threshold" model="ir.config_parameter">
+            <field name="key">dpt_sale_discount.order_approval_threshold</field>
+            <field name="value">5000000</field>
+        </record>
+
+    </data>
+</odoo>
