@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Approval Category for Credit Limit -->
+    <record id="approval_category_credit_limit" model="approval.category">
+        <field name="name">Credit Limit Approval</field>
+        <field name="description">Approval workflow for customer credit limit changes</field>
+        <field name="sequence">10</field>
+        <field name="automated_sequence" eval="True"/>
+        <field name="manager_approval">both</field>
+        <field name="line_manager_approval">both</field>
+        <field name="has_partner">required</field>
+        <field name="has_amount">required</field>
+        <field name="has_reason">required</field>
+    </record>
+</odoo>
