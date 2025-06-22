@@ -127,6 +127,9 @@ class DPTExpenseAllocation(models.Model):
 
         if not expense_by_value:
             raise ValidationError("Không có chi phí nào để phân bổ!!")
+        _logger.info('revenue_group_by_uom: %s' % revenue_group_by_uom)
+        _logger.info('quantity_group_by_uom: %s' % quantity_group_by_uom)
+        _logger.info('expense_by_value: %s' % expense_by_value)
         move_line_vals = []
         for partner_expense, total_expense in expense_by_value.items():
             expense_allocated = 0
@@ -152,6 +155,7 @@ class DPTExpenseAllocation(models.Model):
                             expense = total_expense - expense_allocated
                         expense_by_order[sale_id] = expense
                         index += 1
+                    _logger.info('expense_by_order: %s' % expense_by_order)
                     if expense_by_order:
                         for sale_id, expense in expense_by_order.items():
                             move_line_vals.append((0, 0, {
