@@ -126,6 +126,7 @@ class DPTExpenseAllocation(models.Model):
 
         if not expense_by_value:
             raise ValidationError("Không có chi phí nào để phân bổ!!")
+        _logger.info('uom_by_order: %s' % uom_by_order)
         _logger.info('revenue_group_by_uom: %s' % revenue_group_by_uom)
         _logger.info('quantity_group_by_uom: %s' % quantity_group_by_uom)
         _logger.info('expense_by_value: %s' % expense_by_value)
