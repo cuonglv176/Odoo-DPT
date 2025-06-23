@@ -13,16 +13,6 @@ class ResCurrency(models.Model):
 
     def write(self, vals):
         res = super(ResCurrency, self).write(vals)
-        for currency_rate in self:
-            if currency_rate.category == 'import_export':
-                line_xnk_ids = self.env['dpt.export.import.line'].search(
-                    [('state', 'not in', ('eligible', 'cancelled'))])
-                for line_xnk_id in line_xnk_ids:
-                    line_xnk_id._compute_dpt_exchange_rate()
-            # Bỏ qua việc gọi _compute_dpt_price_unit vì nó đã bị comment
-            # if currency_rate.category == 'basic':
-            #     line_xhd_ids = self.env['dpt.export.import.line'].search(
-            #         ['|', ('export_import_id', '=', False), ('export_import_id.state', '!=', 'cleared')])
-            #     for line_xhd_id in line_xhd_ids:
-            #         line_xhd_id._compute_dpt_price_unit()
+        # Đã loại bỏ logic cập nhật tự động tỷ giá hải quan cho các bản ghi dpt.export.import.line
+        # khi tỷ giá thuộc danh mục import_export thay đổi
         return res
