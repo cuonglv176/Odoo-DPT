@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+     <record id="view_account_asset_form_extension" model="ir.ui.view">
+        <field name="name">account.asset.form.extension</field>
+        <field name="model">account.asset</field>
+        <field name="inherit_id" ref="account_asset.view_account_asset_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='main_page']/group" position="inside">
+                <group string="Bộ phận phân bổ" name="department_info">
+                    <field name="department_id"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_account_asset_tree_extension" model="ir.ui.view">
+        <field name="name">account.asset.tree.extension</field>
+        <field name="model">account.asset</field>
+        <field name="inherit_id" ref="account_asset.view_account_asset_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="department_id" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
