@@ -13,14 +13,14 @@ class DPTExpenseAllocation(models.Model):
     _order = 'id desc'
 
     name = fields.Char("Name", reuqired=1)
-    currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
-    main_currency_id = fields.Many2one('res.currency', string='Main Currency', compute="_compute_main_expense")
-    total_expense = fields.Monetary(string='Total Expense', currency_field='currency_id', compute="compute_total_expense", store=False)
-    purchase_order_ids = fields.Many2many('purchase.order', string='Purchase Orders')
-    shipping_ids = fields.Many2many('dpt.shipping.slip', string='Shipping', compute="_compute_order_shipping")
-    sale_ids = fields.Many2many('sale.order', string='Orders', compute="_compute_order_shipping")
-    state = fields.Selection([('draft', 'Draft'), ('allocated', 'Allocated')], string='State', default='draft')
-    allocation_move_ids = fields.One2many('account.move', 'expense_allocation_id', string='Allocation Moves')
+    currency_id = fields.Many2one('res.currency', string='Tiền tệ', default=lambda self: self.env.company.currency_id)
+    main_currency_id = fields.Many2one('res.currency', string='Tiền tệ chính', compute="_compute_main_expense")
+    total_expense = fields.Monetary(string='Giá trị phân bổ', currency_field='currency_id', compute="compute_total_expense", store=False)
+    purchase_order_ids = fields.Many2many('purchase.order', string='Đơn mua hàng')
+    shipping_ids = fields.Many2many('dpt.shipping.slip', string='PVC', compute="_compute_order_shipping")
+    sale_ids = fields.Many2many('sale.order', string='Đơn bán hàng', compute="_compute_order_shipping")
+    state = fields.Selection([('draft', 'Draft'), ('allocated', 'Allocated')], string='Trạng thái', default='draft')
+    allocation_move_ids = fields.One2many('account.move', 'expense_allocation_id', string='Hóa đơn phân bổ')
 
     @api.depends('purchase_order_ids')
     def _compute_order_shipping(self):
@@ -44,7 +44,7 @@ class DPTExpenseAllocation(models.Model):
     def compute_total_expense(self):
         if not self.purchase_order_ids:
             return
-        self.total_expense = sum(self.purchase_order_ids.mapped('service_total_amount'))
+        self.total_expense = sum(self.purchase_order_ids.mapped('order_line.price_subtotal3'))
 
     def action_allocate(self):
         self.state = 'allocated'
