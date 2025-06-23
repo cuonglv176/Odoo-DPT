@@ -89,7 +89,7 @@ class DPTExpenseAllocation(models.Model):
             # combo
             for service_combo_id in sale_id.service_combo_ids:
                 if not service_combo_id.compute_uom_id or (
-                        service_combo_id.compute_uom_id and not service_combo_id.compute_uom_id.use_for_allocate_expense) or service_combo_id.combo_id or (
+                        service_combo_id.compute_uom_id and not service_combo_id.compute_uom_id.use_for_allocate_expense) or not service_combo_id.combo_id or (
                         service_combo_id.combo_id and not service_combo_id.combo_id.use_for_allocate_expense):
                     continue
                 total_revenue += service_combo_id.amount_total
@@ -108,6 +108,7 @@ class DPTExpenseAllocation(models.Model):
                                                                         service_combo_id.compute_uom_id] + service_combo_id.compute_value
                 else:
                     uom_quantity[service_combo_id.compute_uom_id] = service_combo_id.compute_value
+
             if uom_quantity:
                 uom_by_order.update({
                     sale_id: uom_quantity
