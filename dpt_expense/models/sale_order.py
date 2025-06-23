@@ -22,5 +22,6 @@ class SaleOrder(models.Model):
 
     def compute_allocated_amount_total(self):
         for order in self:
-            move_line_ids = self.env['account.move.line'].sudo().search([('sale_order_id', '=', order.id)])
+            move_line_ids = self.env['account.move.line'].sudo().search(
+                [('sale_order_id', '=', order.id), ('move_id.state', '=', 'posted')])
             order.allocated_amount_total = sum(move_line_ids.mapped('debit'))

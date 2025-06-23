@@ -52,6 +52,13 @@ class DPTExpenseAllocation(models.Model):
         self.total_expense = sum(self.purchase_order_ids.mapped('order_line.price_subtotal3'))
 
     def action_allocate(self):
+        # xóa phiếu phân bổ cũ
+        other_allocation_ids = self.env['dpt.expense.allocation'].sudo().search([('purchase_order_ids', 'in', self.ids)])
+        if other_allocation_ids:
+            other_allocation_move_ids = other_allocation_ids.mapped('allocation_move_ids')
+            other_allocation_move_ids.button_cancel()
+            other_allocation_move_ids.unlink()
+            other_allocation_ids.unlink()
         self.state = 'allocated'
         total_revenue = 0
         revenue_group_by_uom = {}
