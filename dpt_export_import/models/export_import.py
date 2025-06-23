@@ -61,6 +61,7 @@ class DptExportImport(models.Model):
     date = fields.Date(required=True, default=lambda self: fields.Date.context_today(self))
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
     consultation_date = fields.Date(string='Consultation date')
+    clearance_date = fields.Date(string='Ngày thông quan', tracking=True)
     line_ids = fields.One2many('dpt.export.import.line', 'export_import_id', string='Export/Import Line')
     select_line_ids = fields.Many2many('dpt.export.import.line', string='Export/Import Line',
                                        domain=[('export_import_id', '=', False), ('state', '!=', 'draft')])
@@ -188,6 +189,9 @@ class DptExportImport(models.Model):
     def action_cleared(self):
         self.action_check_lot_name()
         self.state = 'cleared'
+        # Tự động cập nhật ngày thông quan thành ngày hiện tại nếu chưa có
+        if not self.clearance_date:
+            self.clearance_date = fields.Date.context_today(self)
         # for line_id in self.line_ids:
         #     line_id.state = 'consulted'
 
@@ -589,6 +593,97 @@ class DptExportImport(models.Model):
                     'title': _('Thông báo'),
                     'message': _('Không có dịch vụ thuế nào được cập nhật.'),
                     'type': 'info',
+                    'sticky': False,
+                }
+            }
+
+    def action_update_exchange_rates(self):
+        """
+        Cập nhật tỉ giá tờ khai và tỉ giá ngân hàng (XHĐ) dựa trên ngày thông quan.
+        - Tỉ giá tờ khai: Lấy từ nhóm tiền tệ import_export
+        - Tỉ giá ngân hàng (XHĐ): Lấy từ nhóm tiền tệ basic
+        """
+        self.ensure_one()
+        if not self.clearance_date:
+            raise UserError(_("Vui lòng thiết lập ngày thông quan trước khi cập nhật tỷ giá."))
+        
+        # Khởi tạo biến để theo dõi số dòng được cập nhật
+        updated_lines = 0
+        
+        # Xử lý từng dòng tờ khai
+        for line in self.line_ids:
+            declaration_type = line.declaration_type
+            if not declaration_type:
+                continue
+                
+            # Lấy tiền tệ tương ứng theo loại khai báo
+            currency_code = {
+                'usd': 'USD',
+                'cny': 'CNY',
+                'krw': 'KRW',
+            }.get(declaration_type)
+            
+            if not currency_code:
+                continue
+                
+            # Tìm tỉ giá nhóm import_export (hải quan) gần nhất trước ngày thông quan
+            customs_currency = self.env['res.currency'].search([
+                ('category', '=', 'import_export'), 
+                ('category_code', '=', currency_code)
+            ], limit=1)
+            
+            if customs_currency:
+                customs_rate_record = self.env['res.currency.rate'].search([
+                    ('currency_id', '=', customs_currency.id),
+                    ('name', '<=', self.clearance_date)
+                ], order='name desc', limit=1)
+                
+                if customs_rate_record:
+                    line.dpt_exchange_rate = customs_rate_record.company_rate
+            
+            # Tìm tỉ giá nhóm basic (ngân hàng - XHĐ) gần nhất trước ngày thông quan
+            basic_currency = self.env['res.currency'].search([
+                ('category', '=', 'basic'), 
+                ('category_code', '=', currency_code)
+            ], limit=1)
+            
+            if basic_currency:
+                basic_rate_record = self.env['res.currency.rate'].search([
+                    ('currency_id', '=', basic_currency.id),
+                    ('name', '<=', self.clearance_date)
+                ], order='name desc', limit=1)
+                
+                if basic_rate_record:
+                    line.dpt_exchange_rate_basic = basic_rate_record.company_rate
+                    line.dpt_exchange_rate_basic_final = basic_rate_record.company_rate
+            
+            updated_lines += 1
+        
+        # Hiển thị thông báo xác nhận
+        if updated_lines > 0:
+            msg = _("Đã cập nhật tỷ giá cho %s dòng tờ khai theo ngày thông quan: %s") % (
+                updated_lines, 
+                fields.Date.to_string(self.clearance_date)
+            )
+            self.message_post(body=msg)
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('Thành công'),
+                    'message': msg,
+                    'type': 'success',
+                    'sticky': False,
+                }
+            }
+        else:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('Cảnh báo'),
+                    'message': _('Không có dòng tờ khai nào được cập nhật.'),
+                    'type': 'warning',
                     'sticky': False,
                 }
             }

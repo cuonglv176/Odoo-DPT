@@ -52,6 +52,11 @@
 
                     <button string="Quay về nháp" type="object" name="action_back_to_draft" class="btn-primary"
                             invisible="state != 'cancelled'"/>
+                            
+                    <button string="Cập nhật tỷ giá theo ngày thông quan" 
+                            type="object" 
+                            name="action_update_exchange_rates" 
+                            class="btn-primary"/>
                 </header>
                 <sheet>
                     <div name="button_box" class="oe_button_box">
@@ -85,6 +90,7 @@
                             <field name="date"/>
                             <field name="dpt_tax_ecus5"/>
                             <field name="consultation_date"/>
+                            <field name="clearance_date"/>
                             <field name="dpt_n_w_kg"/>
                             <field name="dpt_g_w_kg"/>
                             <field name="total_cubic_meters"/>
