@@ -3,6 +3,7 @@
 from ast import literal_eval
 from odoo import fields, models, _, api
 import logging
+import math
 from odoo.exceptions import AccessError, UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -239,7 +240,8 @@ class DptExportImportLine(models.Model):
     )
     approval_status = fields.Selection(
         related='approval_request_id.request_status',
-        string="Trạng thái phê duyệt"
+        string="Trạng thái phê duyệt",
+        store=True
     )
     price_revalidation_required = fields.Boolean(
         string="Cần định giá lại",
@@ -266,6 +268,17 @@ class DptExportImportLine(models.Model):
         store=True, 
         tracking=True
     )
+
+    # Thêm trường quản lý trạng thái giá
+    price_status = fields.Selection([
+        ('new', 'Mới tạo'),
+        ('calculated', 'Đã tính giá'),
+        ('proposed', 'Đề xuất'),
+        ('auto_approved', 'Đã phê duyệt tự động'),
+        ('pending_approval', 'Chờ phê duyệt'),
+        ('approved', 'Đã phê duyệt'),
+        ('rejected', 'Đã từ chối')
+    ], string='Trạng thái giá', default='new', tracking=True)
 
     @api.depends('dpt_price_unit', 'dpt_price_min_allowed', 'dpt_price_max_allowed')
     def _compute_can_request_price_approval(self):
@@ -588,7 +601,7 @@ class DptExportImportLine(models.Model):
     @api.model
     def create(self, vals_list):
         res = super(DptExportImportLine, self).create(vals_list)
-        for rec in self:
+        for rec in res:
             val_update_sale_line = {}
             val_update_sale_line.update({
                 'payment_exchange_rate': rec.dpt_exchange_rate,
@@ -603,9 +616,37 @@ class DptExportImportLine(models.Model):
 
             })
             rec.sale_line_id.write(val_update_sale_line)
+            
+            # Thiết lập trạng thái giá ban đầu
+            if not rec.price_status:
+                rec.price_status = 'new'
+            # Tính toán giá hệ thống và giá thực tế ban đầu
+            rec._compute_allowed_prices()
+            
         return res
 
     def write(self, vals):
+        # Kiểm tra trước khi ghi để đảm bảo tính nhất quán
+        for rec in self:
+            # Xử lý khi đã phê duyệt - không cho thay đổi giá
+            if rec.approval_request_id and rec.approval_request_id.request_status == 'approved':
+                if 'dpt_price_unit' in vals:
+                    raise UserError(_("Giá XHĐ đã được phê duyệt và không thể thay đổi"))
+                
+                # Ngay cả khi chi phí thay đổi cũng không thay đổi giá thực tế
+                if any(field in vals for field in ['dpt_cost_of_goods', 'dpt_unit_cost', 
+                                                 'dpt_allocated_cost_general', 'dpt_allocated_cost_specific']):
+                    # Thông báo nhưng vẫn cho phép thay đổi chi phí
+                    self.env.user.notify_warning(
+                        title=_('Cảnh báo'),
+                        message=_('Giá XHĐ đã được phê duyệt và sẽ không thay đổi ngay cả khi chi phí thay đổi')
+                    )
+            
+            # Xử lý khi đang chờ phê duyệt - không cho thay đổi giá
+            elif rec.approval_request_id and rec.approval_request_id.request_status == 'pending':
+                if 'dpt_price_unit' in vals:
+                    raise UserError(_("Không thể thay đổi giá khi đang chờ phê duyệt"))
+
         res = super(DptExportImportLine, self).write(vals)
 
         for rec in self:
@@ -639,44 +680,77 @@ class DptExportImportLine(models.Model):
                                         (rec.dpt_uom1_id.id, rec.dpt_sl1, rec.dpt_price_unit,
                                          rec.dpt_sl1 * rec.dpt_price_unit, rec.sale_line_id.id))
             
-            # === XỬ LÝ CÁC TRƯỜNG HỢP NGOẠI LỆ ===
+            # === XỬ LÝ CẬP NHẬT GIÁ XHĐ THỰC TẾ ===
             
-            # Trường hợp ngoại lệ 1: Giá vốn thay đổi
+            # 1. XỬ LÝ CHI PHÍ THAY ĐỔI
             if 'dpt_cost_of_goods' in vals or 'dpt_unit_cost' in vals:
-                # Hủy yêu cầu phê duyệt nếu có
-                if rec.approval_request_id and rec.approval_request_id.request_status in ['pending', 'approved']:
-                    rec.approval_request_id.action_cancel()
-                # Cập nhật giá thực tế bằng giá hệ thống mới
-                rec.dpt_actual_price = rec.dpt_system_price
-                # Đánh dấu cần định giá lại
-                rec.price_revalidation_required = True
+                # Nếu đã có yêu cầu phê duyệt được duyệt, không thay đổi giá thực tế
+                if rec.approval_request_id and rec.approval_request_id.request_status == 'approved':
+                    # Không thay đổi dpt_actual_price - giá đã được phê duyệt
+                    rec.message_post(
+                        body=_("Chi phí đã thay đổi nhưng giá XHĐ thực tế đã được phê duyệt nên không thay đổi.")
+                    )
+                # Nếu có yêu cầu phê duyệt đang chờ, hủy và quay về giá hệ thống
+                elif rec.approval_request_id and rec.approval_request_id.request_status == 'pending':
+                    old_request = rec.approval_request_id
+                    old_request.action_cancel()
+                    # Làm tròn giá thực tế lên đến chục đồng
+                    rec.dpt_actual_price = self._round_up_to_ten(rec.dpt_system_price)
+                    rec.price_status = 'calculated'
+                    rec.price_revalidation_required = True
+                    
+                    # Thông báo
+                    rec.message_post(
+                        body=_("Chi phí đã thay đổi. Yêu cầu phê duyệt giá đã bị hủy. "
+                              "Giá XHĐ thực tế đã cập nhật về giá hệ thống.")
+                    )
+                # Trường hợp không có phê duyệt
+                else:
+                    # Cập nhật giá thực tế theo giá hệ thống mới và làm tròn lên đến chục đồng
+                    rec.dpt_actual_price = self._round_up_to_ten(rec.dpt_system_price)
+                    rec.price_status = 'calculated'
+                    rec.message_post(
+                        body=_("Chi phí đã thay đổi. Giá XHĐ thực tế đã được cập nhật về giá hệ thống %s %s.") %
+                        (format(rec.dpt_actual_price, '.2f'), rec.currency_id.symbol)
+                    )
             
-            # Xử lý khi giá XHĐ mong muốn thay đổi
+            # 2. XỬ LÝ THAY ĐỔI GIÁ XHĐ MONG MUỐN
             if 'dpt_price_unit' in vals:
                 price = rec.dpt_price_unit
                 
-                # Trường hợp ngoại lệ 3: Bỏ qua nếu giá mong muốn là 0 hoặc trống
+                # Bỏ qua nếu giá không hợp lệ
                 if not price:
-                    rec.dpt_actual_price = rec.dpt_system_price
-                    rec.price_revalidation_required = False
-                    if rec.approval_request_id and rec.approval_request_id.request_status == 'pending':
-                        rec.approval_request_id.action_cancel()
+                    # Làm tròn giá thực tế lên đến chục đồng
+                    rec.dpt_actual_price = self._round_up_to_ten(rec.dpt_system_price)
+                    rec.price_status = 'calculated'
+                    rec.message_post(
+                        body=_("Giá XHĐ mong muốn không hợp lệ. Giá XHĐ thực tế đã được đặt về giá hệ thống %s %s.") %
+                        (format(rec.dpt_actual_price, '.2f'), rec.currency_id.symbol)
+                    )
                     continue
-
-                # Nếu giá trong khoảng cho phép
+                    
+                # Kiểm tra giá trong/ngoài khoảng
                 if rec.dpt_price_min_allowed <= price <= rec.dpt_price_max_allowed:
-                    rec.dpt_actual_price = price
-                    rec.price_revalidation_required = False
+                    # Giá trong khoảng - tự động chấp nhận và làm tròn lên đến chục đồng
+                    rec.dpt_actual_price = self._round_up_to_ten(price)
+                    rec.price_status = 'auto_approved'
+                    rec.message_post(
+                        body=_("Giá XHĐ mong muốn %s %s nằm trong khoảng cho phép và đã được tự động phê duyệt.") %
+                        (format(rec.dpt_actual_price, '.2f'), rec.currency_id.symbol)
+                    )
                     
                     # Hủy yêu cầu phê duyệt nếu có
                     if rec.approval_request_id and rec.approval_request_id.request_status == 'pending':
                         rec.approval_request_id.action_cancel()
-                
-                # Nếu giá ngoài khoảng cho phép
-                # Không tự động tạo yêu cầu phê duyệt, chỉ sử dụng giá hệ thống
+                        rec.message_post(body=_("Giá đã nằm trong khoảng cho phép. Yêu cầu phê duyệt đã bị hủy."))
                 else:
-                    rec.dpt_actual_price = rec.dpt_system_price
-                    # Không tự động tạo yêu cầu phê duyệt - người dùng sẽ bấm nút
+                    # Giá ngoài khoảng - cần phê duyệt
+                    rec.dpt_actual_price = self._round_up_to_ten(rec.dpt_system_price)  # Sử dụng giá hệ thống và làm tròn
+                    rec.price_status = 'proposed'  # Đánh dấu đã đề xuất
+                    rec.message_post(
+                        body=_("Giá XHĐ mong muốn %s %s nằm ngoài khoảng cho phép. Cần tạo yêu cầu phê duyệt.") %
+                        (format(price, '.2f'), rec.currency_id.symbol)
+                    )
 
         return res
 
@@ -878,23 +952,40 @@ class DptExportImportLine(models.Model):
                 rec.dpt_system_price = rec.dpt_price_min_allowed
                 
                 # Gán giá trị ban đầu cho dpt_actual_price nếu chưa có
-                if not rec.dpt_actual_price:
-                    rec.dpt_actual_price = rec.dpt_system_price
+                # và chưa có yêu cầu phê duyệt được chấp nhận
+                if not rec.dpt_actual_price or rec.price_status in ['new', 'calculated']:
+                    if not rec.approval_request_id or rec.approval_request_id.request_status != 'approved':
+                        # Làm tròn giá thực tế lên đến chục đồng
+                        rec.dpt_actual_price = self._round_up_to_ten(rec.dpt_system_price)
             else:
                 rec.dpt_price_min_allowed = 0
                 rec.dpt_price_max_allowed = 0
                 rec.dpt_system_price = 0
                 if not rec.dpt_actual_price:
                     rec.dpt_actual_price = 0
+                    
+    @api.onchange('dpt_exchange_rate_basic')
+    def onchange_dpt_exchange_rate_basic_final(self):
+        for rec in self:
+            rec.dpt_exchange_rate_basic_final = rec.dpt_exchange_rate_basic
 
     @api.onchange('dpt_price_unit')
     def _onchange_price_unit(self):
-        """Kiểm tra giá và hiển thị cảnh báo nếu giá nằm ngoài khoảng cho phép"""
+        """Kiểm tra giá và hiển thị cảnh báo"""
         for rec in self:
             # Bỏ qua khi giá trống hoặc bằng 0
             if not rec.dpt_price_unit:
                 rec.price_outside_range = False
                 continue
+            
+            # Kiểm tra nếu giá không phải số chẵn chục
+            if rec.dpt_price_unit % 10 != 0:
+                return {
+                    'warning': {
+                        'title': _('Cảnh báo về giá xuất hóa đơn'),
+                        'message': _('Giá xuất hóa đơn mong muốn phải là số chẵn chục đồng! Vui lòng điều chỉnh.')
+                    }
+                }
                 
             # Kiểm tra nếu giá nằm ngoài khoảng cho phép
             if rec.dpt_price_unit < rec.dpt_price_min_allowed or rec.dpt_price_unit > rec.dpt_price_max_allowed:
@@ -922,6 +1013,21 @@ class DptExportImportLine(models.Model):
         """Mở wizard xác nhận phê duyệt giá"""
         self.ensure_one()
         
+        # Nếu đã có yêu cầu phê duyệt đã được chấp nhận, hiển thị thông báo
+        if self.approval_request_id and self.approval_request_id.request_status == 'approved':
+            raise UserError(_("Giá XHĐ đã được phê duyệt và không thể thay đổi."))
+        
+        # Nếu đang có yêu cầu đang chờ, mở yêu cầu đó
+        if self.approval_request_id and self.approval_request_id.request_status == 'pending':
+            return {
+                'name': _('Yêu cầu phê duyệt giá'),
+                'type': 'ir.actions.act_window',
+                'res_model': 'approval.request',
+                'res_id': self.approval_request_id.id,
+                'view_mode': 'form',
+                'target': 'current',
+            }
+        
         # Thiết lập wizard với giá trị đầu vào
         return {
             'name': _('Giá nằm ngoài khoảng cho phép'),
@@ -942,6 +1048,13 @@ class DptExportImportLine(models.Model):
     def _create_price_approval_request(self):
         """Tạo yêu cầu phê duyệt giá"""
         self.ensure_one()
+        
+        # Kiểm tra xem có thể tạo phiếu phê duyệt mới không
+        if self.approval_request_id:
+            # Chỉ cho phép tạo mới nếu phiếu cũ đã bị từ chối hoặc hủy
+            if self.approval_request_id.request_status not in ['refused', 'cancel']:
+                raise UserError(_("Đã có yêu cầu phê duyệt đang hoạt động. Không thể tạo thêm yêu cầu mới."))
+        
         approval_category = self.env.ref('dpt_export_import.approval_category_dpt_price_approval')
         
         if not approval_category:
@@ -969,21 +1082,60 @@ class DptExportImportLine(models.Model):
         }
         
         approval_request = self.env['approval.request'].create(request_vals)
+        
+        # Cập nhật trạng thái thành pending sau khi tạo
+        approval_request.sudo().write({'request_status': 'pending'})
+        
         self.write({
-            'approval_request_id': approval_request.id
+            'approval_request_id': approval_request.id,
+            'price_status': 'pending_approval'  # Cập nhật trạng thái giá
         })
+        
+        # Thêm thông báo
+        self.message_post(body=_("Đã tạo yêu cầu phê duyệt giá %s.") % approval_request.name)
+        
         return approval_request
+
+    @api.onchange('approval_status')
+    def _onchange_approval_status(self):
+        """Xử lý khi trạng thái phê duyệt thay đổi"""
+        for rec in self:
+            if rec.approval_status == 'approved':
+                rec.action_approve_price()
+            elif rec.approval_status == 'refused':
+                rec.action_reject_price()
 
     def action_approve_price(self):
         """Xử lý sau khi phê duyệt - Cập nhật giá thực tế và xóa cờ cảnh báo"""
         self.ensure_one()
+        # Làm tròn giá mong muốn lên đến chục đồng trước khi phê duyệt
+        rounded_price = self._round_up_to_ten(self.dpt_price_unit)
         self.write({
-            'dpt_actual_price': self.dpt_price_unit,
-            'price_revalidation_required': False
+            'dpt_actual_price': rounded_price,
+            'price_revalidation_required': False,
+            'price_status': 'approved'  # Chỉ dùng trạng thái "đã phê duyệt"
         })
+        
+        # Thêm thông báo
+        self.message_post(body=_("Giá XHĐ %s %s đã được phê duyệt và không thể thay đổi.") % 
+                        (format(rounded_price, '.2f'), self.currency_id.symbol))
+
+    def action_reject_price(self):
+        """Xử lý khi phê duyệt bị từ chối"""
+        self.ensure_one()
+        # Làm tròn giá hệ thống lên đến chục đồng
+        rounded_system_price = self._round_up_to_ten(self.dpt_system_price)
+        self.write({
+            'dpt_actual_price': rounded_system_price,
+            'price_status': 'rejected'
+        })
+        
+        # Thêm thông báo
+        self.message_post(body=_("Yêu cầu phê duyệt giá đã bị từ chối. Giá XHĐ thực tế là %s %s.") %
+                        (format(rounded_system_price, '.2f'), self.currency_id.symbol))
 
     @api.depends('declaration_type', 'dpt_price_usd', 'dpt_price_cny_vnd', 'dpt_price_krw_vnd',
-             'dpt_exchange_rate', 'dpt_amount_tax_import', 'dpt_amount_tax_other', 'dpt_tax')
+             'dpt_exchange_rate', 'dpt_amount_tax_import', 'dpt_amount_tax_other', 'dpt_tax', 'dpt_sl1')
     def _compute_tax_vat_customs(self):
         for rec in self:
             # Xác định giá khai báo dựa trên loại tiền
@@ -995,8 +1147,9 @@ class DptExportImportLine(models.Model):
             elif rec.declaration_type == 'krw':
                 price = rec.dpt_price_krw_vnd
             
-            # Tiền thuế VAT (HQ) = (Giá khai + Tiền thuế NK + Tiền thuế Khác) * Tỉ giá HQ * VAT(%)
-            base_amount = (price + rec.dpt_amount_tax_import + rec.dpt_amount_tax_other) * rec.dpt_exchange_rate
+            # Tiền thuế VAT (HQ) = (Giá khai * Tỉ giá HQ * Số lượng + Tiền thuế NK + Tiền thuế Khác) * VAT(%)
+            price_vnd = price * rec.dpt_exchange_rate * rec.dpt_sl1
+            base_amount = price_vnd + rec.dpt_amount_tax_import + rec.dpt_amount_tax_other
             rec.dpt_amount_tax_vat_customs = base_amount * rec.dpt_tax
 
     @api.depends('dpt_actual_price', 'dpt_sl1', 'dpt_tax')
@@ -1004,4 +1157,41 @@ class DptExportImportLine(models.Model):
         for rec in self:
             # Tiền VAT (Thu khách) = Giá XHĐ thực tế * số lượng 1 * VAT(%)
             rec.dpt_amount_tax_vat_customer = rec.dpt_actual_price * rec.dpt_sl1 * rec.dpt_tax
+
+    @api.constrains('dpt_price_unit', 'approval_request_id', 'price_status')
+    def _check_price_constraints(self):
+        """Kiểm tra các ràng buộc về giá"""
+        for rec in self:
+            # Nếu đã có yêu cầu phê duyệt được duyệt, phải ở trạng thái approved
+            if rec.approval_request_id and rec.approval_request_id.request_status == 'approved':
+                if rec.price_status != 'approved':
+                    raise ValidationError(_("Giá XHĐ đã được phê duyệt nhưng trạng thái không phù hợp. Vui lòng liên hệ quản trị viên."))
+
+    @api.depends('approval_status')
+    def _compute_approval_status_change(self):
+        """Theo dõi thay đổi trạng thái phê duyệt"""
+        for rec in self:
+            # Field này chỉ là để đảm bảo computed field hoạt động
+            # Việc xử lý trạng thái đã được thực hiện trong ApprovalRequest.write()
+            pass
+
+    @api.constrains('dpt_price_unit')
+    def _check_price_unit_multiple_of_ten(self):
+        """Kiểm tra giá xuất hóa đơn mong muốn phải là số chẵn chục"""
+        for rec in self:
+            if rec.dpt_price_unit and rec.dpt_price_unit % 10 != 0:
+                raise ValidationError(_("Giá xuất hóa đơn mong muốn phải là số chẵn chục đồng!"))
+
+    # Sửa phương thức làm tròn để làm tròn lên đến chục đồng gần nhất
+    def _round_up_to_ten(self, value):
+        """Làm tròn giá trị lên đến chục đồng gần nhất
+        Ví dụ: 20091 -> 20100, 20011 -> 20020, 284672 -> 284680
+        """
+        if not value:
+            return 0
+        # Làm tròn lên đến chục đồng gần nhất
+        remainder = value % 10
+        if remainder > 0:
+            return value + (10 - remainder)
+        return value
 

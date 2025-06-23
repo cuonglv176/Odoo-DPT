@@ -21,6 +21,11 @@ class DPTExpenseAllocation(models.Model):
     sale_ids = fields.Many2many('sale.order', string='Đơn bán hàng', compute="_compute_order_shipping")
     state = fields.Selection([('draft', 'Draft'), ('allocated', 'Allocated')], string='Trạng thái', default='draft')
     allocation_move_ids = fields.One2many('account.move', 'expense_allocation_id', string='Hóa đơn phân bổ')
+    allocation_move_count = fields.Integer(string='Allocation Moves Count', compute="_compute_allocation_move_count")
+
+    def _compute_allocation_move_count(self):
+        for item in self:
+            item.allocation_move_count = len(item.allocation_move_ids)
 
     @api.depends('purchase_order_ids')
     def _compute_order_shipping(self):
@@ -90,17 +95,17 @@ class DPTExpenseAllocation(models.Model):
                 total_revenue += service_combo_id.amount_total
                 if revenue_group_by_uom.get(service_combo_id.compute_uom_id):
                     revenue_group_by_uom[service_combo_id.compute_uom_id] = revenue_group_by_uom[
-                                                                               service_combo_id.compute_uom_id] + service_combo_id.amount_total
+                                                                                service_combo_id.compute_uom_id] + service_combo_id.amount_total
                 else:
                     revenue_group_by_uom[service_combo_id.compute_uom_id] = service_combo_id.amount_total
                 if quantity_group_by_uom.get(service_combo_id.compute_uom_id):
                     quantity_group_by_uom[service_combo_id.compute_uom_id] = quantity_group_by_uom[
-                                                                                service_combo_id.compute_uom_id] + service_combo_id.compute_value
+                                                                                 service_combo_id.compute_uom_id] + service_combo_id.compute_value
                 else:
                     quantity_group_by_uom[service_combo_id.compute_uom_id] = service_combo_id.compute_value
                 if uom_quantity.get(service_combo_id.compute_uom_id):
                     uom_quantity[service_combo_id.compute_uom_id] = uom_quantity[
-                                                                       service_combo_id.compute_uom_id] + service_combo_id.compute_value
+                                                                        service_combo_id.compute_uom_id] + service_combo_id.compute_value
                 else:
                     uom_quantity[service_combo_id.compute_uom_id] = service_combo_id.compute_value
             if uom_quantity:
@@ -121,6 +126,9 @@ class DPTExpenseAllocation(models.Model):
 
         if not expense_by_value:
             raise ValidationError("Không có chi phí nào để phân bổ!!")
+        _logger.info('revenue_group_by_uom: %s' % revenue_group_by_uom)
+        _logger.info('quantity_group_by_uom: %s' % quantity_group_by_uom)
+        _logger.info('expense_by_value: %s' % expense_by_value)
         move_line_vals = []
         for partner_expense, total_expense in expense_by_value.items():
             expense_allocated = 0
@@ -146,6 +154,7 @@ class DPTExpenseAllocation(models.Model):
                             expense = total_expense - expense_allocated
                         expense_by_order[sale_id] = expense
                         index += 1
+                    _logger.info('expense_by_order: %s' % expense_by_order)
                     if expense_by_order:
                         for sale_id, expense in expense_by_order.items():
                             move_line_vals.append((0, 0, {
@@ -176,3 +185,8 @@ class DPTExpenseAllocation(models.Model):
             'line_ids': move_line_vals
         })
         move_id.action_post()
+
+    def action_view_invoice(self):
+        action = self.env.ref('account.action_move_in_invoice_type').sudo().read()[0]
+        action['domain'] = [('expense_allocation_id', '=', self.id)]
+        return action

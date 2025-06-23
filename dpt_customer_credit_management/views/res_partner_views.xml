@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Partner Form View Extension -->
+    <record id="view_partner_form_credit_management" model="ir.ui.view">
+        <field name="name">res.partner.form.credit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <!-- Add Credit Management tab -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Credit Management" name="credit_management"
+                      invisible="not is_company or not customer_rank">
+                    <group>
+                        <group string="Credit Limits">
+                            <field name="credit_limit" widget="monetary"/>
+                            <field name="current_debt" widget="monetary" readonly="1"/>
+                            <field name="available_credit" widget="monetary" readonly="1"/>
+                            <field name="credit_utilization" widget="percentage" readonly="1"/>
+                        </group>
+                        <group string="Credit Status">
+                            <field name="credit_status" widget="badge"/>
+                            <field name="overdue_amount" widget="monetary" readonly="1"/>
+                            <field name="days_overdue" readonly="1"/>
+                            <field name="last_payment_date" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="Interest Settings">
+                            <field name="interest_rate" widget="percentage"/>
+                            <field name="auto_calculate_interest"/>
+                        </group>
+                        <group string="Credit Control">
+                            <field name="block_sales_on_credit_limit"/>
+                            <field name="require_approval_over_limit"/>
+                        </group>
+                    </group>
+
+                    <group string="Notes">
+                        <field name="credit_notes" nolabel="1" placeholder="Credit management notes..."/>
+                    </group>
+
+                    <!-- Credit History -->
+                    <group string="Credit History">
+                        <field name="credit_history_ids" nolabel="1" readonly="1">
+                            <tree>
+                                <field name="date"/>
+                                <field name="action"/>
+                                <field name="old_credit_limit" widget="monetary"/>
+                                <field name="new_credit_limit" widget="monetary"/>
+                                <field name="user_id"/>
+                                <field name="notes"/>
+                            </tree>
+                        </field>
+                    </group>
+
+                    <!-- Interest Calculations -->
+                    <group string="Interest Calculations">
+                        <field name="interest_calculation_ids" nolabel="1" readonly="1">
+                            <tree>
+                                <field name="calculation_date"/>
+                                <field name="period_start"/>
+                                <field name="period_end"/>
+                                <field name="outstanding_balance" widget="monetary"/>
+                                <field name="interest_days"/>
+                                <field name="interest_amount" widget="monetary"/>
+                                <field name="state" widget="badge"/>
+                            </tree>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+
+            <!-- Add smart buttons -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_credit_history"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-history"
+                        invisible="not is_company or not customer_rank">
+                    <field name="credit_history_count" widget="statinfo" string="Credit History"/>
+                </button>
+
+                <button name="action_view_interest_calculations"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-calculator"
+                        invisible="not is_company or not customer_rank">
+                    <field name="interest_calculation_count" widget="statinfo" string="Interest Calc"/>
+                </button>
+
+                <button name="action_request_credit_approval"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-check-circle"
+                        invisible="credit_status != 'blocked'">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Request</span>
+                        <span class="o_stat_text">Approval</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Partner Tree View Extension -->
+    <record id="view_partner_tree_credit" model="ir.ui.view">
+        <field name="name">res.partner.tree.credit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='display_name']" position="after">
+                <field name="credit_limit" widget="monetary" optional="hide"/>
+                <field name="current_debt" widget="monetary" optional="hide"/>
+                <field name="credit_status" widget="badge" optional="show"/>
+                <field name="overdue_amount" widget="monetary" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

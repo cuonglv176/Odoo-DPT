@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Credit Approval Wizard -->
+    <record id="view_credit_approval_wizard_form" model="ir.ui.view">
+        <field name="name">credit.approval.wizard.form</field>
+        <field name="model">credit.approval.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Request Credit Approval">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="current_credit_limit" widget="monetary" readonly="1"/>
+                            <field name="requested_credit_limit" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="reason" nolabel="1" placeholder="Please provide reason for credit limit increase..."/>
+                    </group>
+                    <group>
+                        <field name="supporting_documents" widget="many2many_binary"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Submit for Approval" name="action_submit_approval" type="object" class="oe_highlight"/>
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Credit Override Wizard -->
+    <record id="view_credit_override_wizard_form" model="ir.ui.view">
+        <field name="name">credit.override.wizard.form</field>
+        <field name="model">credit.override.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Credit Override">
+                <sheet>
+                    <div class="alert alert-warning" role="alert">
+                        <strong>Warning:</strong> This customer has exceeded their credit limit.
+                        Please review the information below before proceeding.
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="order_amount" widget="monetary" readonly="1"/>
+                            <field name="credit_limit" widget="monetary" readonly="1"/>
+                            <field name="current_debt" widget="monetary" readonly="1"/>
+                            <field name="excess_amount" widget="monetary" readonly="1" class="text-danger"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <field name="override_reason" nolabel="1" placeholder="Please provide reason for credit override..." required="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Override Credit Limit" name="action_override_credit" type="object" class="btn-danger"/>
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

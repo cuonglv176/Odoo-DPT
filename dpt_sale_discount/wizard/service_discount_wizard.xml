@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Service Discount Wizard Form View -->
+    <record id="view_service_discount_wizard_form" model="ir.ui.view">
+        <field name="name">service.discount.wizard.form</field>
+        <field name="model">service.discount.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Áp dụng chiết khấu dịch vụ">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Áp dụng chiết khấu cho đơn hàng</h1>
+                    </div>
+
+                    <group>
+                        <group name="order_info">
+                            <field name="order_id" readonly="1"/>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="total_amount" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group name="discount_summary">
+                            <field name="total_estimated_discount" readonly="1"
+                                   widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Chính sách có thể áp dụng" name="available_policies">
+                            <field name="available_policy_ids" readonly="1">
+                                <tree decoration-success="can_apply == True"
+                                      decoration-muted="can_apply == False">
+                                    <field name="name"/>
+                                    <field name="policy_type" widget="badge"/>
+                                    <field name="discount_type"/>
+                                    <field name="discount_value"/>
+                                    <field name="estimated_discount" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="can_apply" widget="boolean_toggle"/>
+                                    <field name="currency_id" invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <page string="Chi tiết áp dụng" name="line_details">
+                            <field name="line_ids">
+                                <tree editable="bottom" decoration-success="apply_discount == True">
+                                    <field name="order_line_id" readonly="1"/>
+                                    <field name="service_management_id" readonly="1" invisible="parent.line_ids == []"/>
+                                    <field name="service_combo_id" readonly="1" invisible="parent.line_ids == []"/>
+                                    <field name="quantity" readonly="1"/>
+                                    <field name="price_subtotal" readonly="1" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="selected_policy_id"
+                                           domain="[('id', 'in', parent.available_policy_ids.mapped('policy_id').ids)]"/>
+                                    <field name="discount_amount" readonly="1" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="apply_discount" widget="boolean_toggle"/>
+                                    <field name="currency_id" invisible="1"/>
+                                </tree>
+                                <form>
+                                    <group>
+                                        <group name="line_info">
+                                            <field name="order_line_id" readonly="1"/>
+                                            <field name="service_management_id" readonly="1"/>
+                                            <field name="service_combo_id" readonly="1"/>
+                                            <field name="quantity" readonly="1"/>
+                                            <field name="price_subtotal" readonly="1"/>
+                                        </group>
+                                        <group name="discount_info">
+                                            <field name="selected_policy_id"/>
+                                            <field name="discount_amount" readonly="1"/>
+                                            <field name="apply_discount"/>
+                                        </group>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+
+                        <page string="Tóm tắt chiết khấu" name="discount_summary">
+                            <group>
+                                <div class="alert alert-info" role="alert">
+                                    <strong>Thông tin chiết khấu:</strong>
+                                    <ul>
+                                        <li>Số dòng được áp dụng:
+                                            <field name="line_ids" readonly="1" widget="statinfo" string="dòng"
+                                                domain="[('apply_discount', '=', True)]"/>
+                                        </li>
+                                        <li>Tổng chiết khấu ước tính:
+                                            <field name="total_estimated_discount" readonly="1" widget="monetary"
+                                                options="{'currency_field': 'currency_id'}"/>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                <footer>
+                    <button name="action_apply_discounts"
+                            string="Áp dụng chiết khấu"
+                            type="object"
+                            class="btn-primary"
+                            invisible="total_estimated_discount == 0"/>
+                    <button name="action_preview_discounts"
+                            string="Xem trước"
+                            type="object"
+                            class="btn-secondary"/>
+                    <button string="Hủy" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Service Discount Wizard Action -->
+    <record id="action_service_discount_wizard" model="ir.actions.act_window">
+        <field name="name">Apply Service Discounts</field>
+        <field name="res_model">service.discount.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_service_discount_wizard_form"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">form</field>
+    </record>
+
+</odoo>

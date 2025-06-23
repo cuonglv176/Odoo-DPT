@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Cron Job for Interest Calculation -->
+    <record id="cron_calculate_interest_penalties" model="ir.cron">
+        <field name="name">Calculate Interest Penalties</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="state">code</field>
+        <field name="code">model.calculate_interest_penalties()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="active" eval="True"/>
+        <field name="doall" eval="False"/>
+    </record>
+
+    <!-- Cron Job for Credit Status Update -->
+    <record id="cron_update_credit_status" model="ir.cron">
+        <field name="name">Update Customer Credit Status</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="state">code</field>
+        <field name="code">
+            partners = model.search([('is_company', '=', True), ('credit_limit', '>', 0)])
+            for partner in partners:
+            partner._update_credit_status()
+        </field>
+        <field name="interval_number">6</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="active" eval="True"/>
+        <field name="doall" eval="False"/>
+    </record>
+
+    <!-- Cron Job for Overdue Notifications -->
+    <record id="cron_send_overdue_notifications" model="ir.cron">
+        <field name="name">Send Overdue Payment Notifications</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="state">code</field>
+        <field name="code">
+            # Tìm khách hàng có khoản quá hạn
+            partners = model.search([
+            ('overdue_amount', '>', 0),
+            ('days_overdue', '>', 0)
+            ])
+
+            # Gửi email thông báo (có thể customize)
+            for partner in partners:
+            if partner.days_overdue in [7, 15, 30, 60]: # Gửi vào các ngày cụ thể
+            # Logic gửi email thông báo
+            pass
+        </field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="active" eval="True"/>
+        <field name="doall" eval="False"/>
+    </record>
+
+
+    <record id="cron_auto_create_interest_calculation" model="ir.cron">
+        <field name="name">Auto Create Monthly Interest Calculation</field>
+        <field name="model_id" ref="model_interest_calculation"/>
+        <field name="state">code</field>
+        <field name="code">model.auto_create_monthly_calculations()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">months</field>
+        <field name="numbercall">-1</field>
+        <field name="active" eval="True"/>
+        <field name="doall" eval="False"/>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).replace(day=1, hour=1, minute=0, second=0)"/>
+    </record>
+
+    <!-- Cron Job cập nhật tính toán lãi hàng ngày -->
+    <record id="cron_update_interest_calculation" model="ir.cron">
+        <field name="name">Update Interest Calculations Daily</field>
+        <field name="model_id" ref="model_interest_calculation"/>
+        <field name="state">code</field>
+        <field name="code">
+            # Cập nhật các bản ghi draft và calculated
+            records = model.search([('state', 'in', ['draft', 'calculated'])])
+            for record in records:
+            record._compute_balances()
+            record._compute_interest_dates()
+            record._compute_interest_calculation()
+        </field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="active" eval="True"/>
+        <field name="doall" eval="False"/>
+        <field name="nextcall" eval="DateTime.now() + timedelta(hours=2)"/>
+    </record>
+</odoo>

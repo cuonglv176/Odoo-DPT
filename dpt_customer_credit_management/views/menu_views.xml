@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main Menu -->
+    <menuitem id="menu_credit_management_root"
+              name="Credit Management"
+              sequence="50" web_icon="dpt_customer_credit_management,static/description/icon.png"/>
+
+    <!-- Customer Credit Menu -->
+    <menuitem id="menu_customer_credit"
+              name="Customer Credit"
+              parent="menu_credit_management_root"
+              sequence="10"/>
+
+    <menuitem id="menu_customers_with_credit"
+              name="Customers"
+              parent="menu_customer_credit"
+              action="base.action_partner_form"
+              sequence="10"/>
+
+    <menuitem id="menu_credit_history"
+              name="Credit History"
+              parent="menu_customer_credit"
+              action="action_credit_history"
+              sequence="20"/>
+
+     <!-- Interest Calculation Menu -->
+    <menuitem id="menu_interest_calculation"
+              name="Interest Calculation"
+              parent="menu_credit_management_root"
+              sequence="15"/>
+
+    <menuitem id="menu_interest_calculations"
+              name="Interest Calculations"
+              parent="menu_interest_calculation"
+              action="action_interest_calculation"
+              sequence="10"/>
+
+    <menuitem id="menu_create_interest_calculation"
+              name="Create Calculation"
+              parent="menu_interest_calculation"
+              action="action_create_interest_calculation_wizard"
+              sequence="20"/>
+
+    <!-- Reports Menu -->
+    <menuitem id="menu_credit_reports"
+              name="Reports"
+              parent="menu_credit_management_root"
+              sequence="20"/>
+
+    <menuitem id="menu_credit_summary_report"
+              name="Credit Summary"
+              parent="menu_credit_reports"
+              action="action_credit_summary_report"
+              sequence="10"/>
+
+    <menuitem id="menu_overdue_report"
+              name="Overdue Analysis"
+              parent="menu_credit_reports"
+              action="action_overdue_analysis_report"
+              sequence="20"/>
+
+    <menuitem id="menu_blocked_customers_report"
+              name="Blocked Customers"
+              parent="menu_credit_reports"
+              action="action_blocked_customers_report"
+              sequence="30"/>
+
+    <!-- Configuration Menu -->
+    <menuitem id="menu_credit_configuration"
+              name="Configuration"
+              parent="menu_credit_management_root"
+              sequence="90"
+              groups="group_credit_manager"/>
+
+    <menuitem id="menu_credit_settings"
+              name="Settings"
+              parent="menu_credit_configuration"
+              action="action_credit_config_settings"
+              sequence="10"/>
+</odoo>

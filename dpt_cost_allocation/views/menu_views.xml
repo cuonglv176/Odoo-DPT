@@ -3,7 +3,7 @@
     <data>
         <!-- App root menu -->
         <menuitem id="menu_dpt_cost_allocation_root"
-                  name="Phân bổ chi phí"
+                  name="Phân bổ chi phí (XHĐ)"
                   web_icon="dpt_cost_allocation,static/description/icon.png"
                   sequence="100"/>
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "DPT Cost Allocation",
+    'name': "Phân bổ chi phí (XHĐ)",
     'summary': "Quản lý và phân bổ chi phí từ Đơn mua hàng (PO) vào Tờ khai",
     'description': """
         Module cho phép tính toán và phân bổ chi phí từ các đơn mua hàng (PO)

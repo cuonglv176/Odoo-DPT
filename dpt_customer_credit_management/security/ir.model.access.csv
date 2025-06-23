@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_credit_history_admin,dpt.credit.history.admin,model_dpt_credit_history,,1,1,1,1
+access_credit_config_manager,credit.config.settings.manager,model_credit_config_settings,,1,1,1,0
+access_credit_config_admin,credit.config.settings.admin,model_credit_config_settings,,1,1,1,1
+access_interest.calculation,interest.calculation,model_interest_calculation,,1,1,1,1
+access_interest.calculation_line,interest.calculation.line,model_interest_calculation_line,,1,1,1,1

@@ -58,6 +58,10 @@ class AccountPaymentType(models.Model):
     rule_ids = fields.One2many('dpt.account.payment.type.rule', 'type_id', string='Rules')
     default_partner_id = fields.Many2one('res.partner', "Default Partner")
     is_cn_payment = fields.Boolean('Là thanh toán phí nội địa TQ')
+    show_transfer_money = fields.Boolean('Hiển thị Phí chuyển tiền')
+    show_refund_date = fields.Boolean('Hiển thị Ngày hoàn ứng')
+    show_user_detail = fields.Boolean('Hiển thị Chi tiết User')
+    show_journal = fields.Boolean('Hiển thị Sổ nhật ký')
 
 
 class AccountPaymentTypeRule(models.Model):
@@ -142,6 +146,11 @@ class AccountPayment(models.Model):
                                             ('other', 'Khác')], string='Loại liên hệ')
 
     hide_in_cn_payment = fields.Boolean('Ẩn với thanh toán phí nội địa TQ', compute="compute_hide_in_cn_payment")
+    show_transfer_money = fields.Boolean(related="type_id.show_transfer_money")
+    show_refund_date = fields.Boolean(related="type_id.show_refund_date")
+    show_user_detail = fields.Boolean(related="type_id.show_user_detail")
+    show_journal = fields.Boolean(related="type_id.show_journal")
+    transfer_amount = fields.Float('Phí chuyển tiền')
 
     @api.depends('type_id', 'type_id.is_cn_payment')
     def compute_hide_in_cn_payment(self):
@@ -152,6 +161,8 @@ class AccountPayment(models.Model):
                 show_groups = ["dpt_security.group_dpt_accountant", "dpt_security.group_dpt_accountant",
                                "dpt_security.group_dpt_ke_toan_truong", "dpt_security.group_dpt_ke_toan_tong_hop",
                                "dpt_security.group_dpt_ke_toan_hang_hoa", "dpt_security.group_dpt_director"]
+                if self.env.user.id == item.create_uid:
+                    item.hide_in_cn_payment = True
                 if any([self.env.user.has_group(group) for group in show_groups]):
                     item.hide_in_cn_payment = False
                 else:
@@ -162,7 +173,9 @@ class AccountPayment(models.Model):
             lock_status = 'open'
             if self.env.user != rec.create_uid or rec.request_status == 'approved':
                 lock_status = 'locked'
-            accountant_groups = ["dpt_security.group_dpt_accountant","dpt_security.group_dpt_accountant","dpt_security.group_dpt_ke_toan_truong","dpt_security.group_dpt_ke_toan_tong_hop","dpt_security.group_dpt_ke_toan_hang_hoa"]
+            accountant_groups = ["dpt_security.group_dpt_accountant", "dpt_security.group_dpt_accountant",
+                                 "dpt_security.group_dpt_ke_toan_truong", "dpt_security.group_dpt_ke_toan_tong_hop",
+                                 "dpt_security.group_dpt_ke_toan_hang_hoa"]
             if any([self.env.user.has_group(item) for item in accountant_groups]):
                 lock_status = 'open'
             rec.lock_status = lock_status
@@ -196,9 +209,9 @@ class AccountPayment(models.Model):
                 user_view_ids.append(approver_id.user_id.id)
             rec.user_view_ids = [(6, 0, user_view_ids)]
 
-    @api.onchange('last_rate_currency', 'amount_request')
+    @api.onchange('last_rate_currency', 'amount_request', 'transfer_amount', 'transfer_amount_rate')
     def onchange_update_amount(self):
-        self.amount = self.amount_request * self.last_rate_currency
+        self.amount = self.amount_request * self.last_rate_currency + self.transfer_amount if self.transfer_amount_rate else self.amount_request * self.last_rate_currency
 
     @api.depends('amount')
     def _compute_amount_in_text(self):
