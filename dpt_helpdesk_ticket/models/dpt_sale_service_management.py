@@ -31,7 +31,7 @@ class DPTSaleServiceManagement(models.Model):
                 updates.append("qty = %s")
                 params.append(vals.get('compute_value'))
             updates.append("amount_total = %s")
-            params.append(self.amount_total)
+            params.append(item.amount_total)
             if updates:
                 update_query = f"""
                     UPDATE dpt_helpdesk_servie_line
