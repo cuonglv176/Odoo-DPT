@@ -100,14 +100,14 @@ class DPTExpenseAllocation(models.Model):
                     revenue_group_by_uom[service_combo_id.compute_uom_id] = service_combo_id.amount_total
                 if quantity_group_by_uom.get(service_combo_id.compute_uom_id):
                     quantity_group_by_uom[service_combo_id.compute_uom_id] = quantity_group_by_uom[
-                                                                                 service_combo_id.compute_uom_id] + service_combo_id.compute_value
+                                                                                 service_combo_id.compute_uom_id] + service_combo_id.qty
                 else:
-                    quantity_group_by_uom[service_combo_id.compute_uom_id] = service_combo_id.compute_value
+                    quantity_group_by_uom[service_combo_id.compute_uom_id] = service_combo_id.qty
                 if uom_quantity.get(service_combo_id.compute_uom_id):
                     uom_quantity[service_combo_id.compute_uom_id] = uom_quantity[
-                                                                        service_combo_id.compute_uom_id] + service_combo_id.compute_value
+                                                                        service_combo_id.compute_uom_id] + service_combo_id.qty
                 else:
-                    uom_quantity[service_combo_id.compute_uom_id] = service_combo_id.compute_value
+                    uom_quantity[service_combo_id.compute_uom_id] = service_combo_id.qty
 
             if uom_quantity:
                 uom_by_order.update({
