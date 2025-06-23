@@ -42,6 +42,8 @@
                 <field name="dpt_tax_other" widget="percentage"/>
                 <field name="dpt_amount_tax_other"/>
                 <field name="dpt_exchange_rate"/>
+                <field name="dpt_exchange_rate_basic"/>
+                <field name="customs_price_type"/>
                 <field name="dpt_total_vat"/>
                 <field name="dpt_total_usd_vnd"/>
                 <field name="dpt_total_cny_vnd"/>
@@ -50,6 +52,7 @@
                 <field name="active" invisible="1"/>
                 <!-- dunghq: Thêm trường risk_reason để hiển thị lý do rủi ro -->
                 <field name="risk_reason" optional="show"/>
+                <field name="price_revalidation_required" invisible="1"/>
                 <button string="Unlink" type="object" name="action_unlink" class="btn-primary"
                         groups="sales_team.group_sale_salesman_all_leads"/>
             </tree>
@@ -76,7 +79,11 @@
                             groups="dpt_security.group_dpt_employee_sale,dpt_security.group_dpt_employee_cskh"/>
                 </header>
                 <sheet>
-                    <!-- dunghq: Thêm cảnh báo khi có lý do rủi ro -->
+                    <!-- Banner cảnh báo khi cần định giá lại -->
+                    <div class="alert alert-danger" role="alert" invisible="not price_revalidation_required">
+                        <strong>Cảnh báo:</strong> Giá vốn đã thay đổi, cần định giá lại.
+                    </div>
+                    <!-- Banner cảnh báo khi có lý do rủi ro -->
                     <div class="alert alert-danger" role="alert" invisible="risk_reason == False">
                         <field name="risk_reason" readonly="1"/>
                     </div>
@@ -89,6 +96,7 @@
                     <group>
                         <group>
                             <field name="id" invisible="1"/>
+                            <field name="can_request_price_approval" invisible="1"/>
                             <field name="sale_user_id"/>
                             <field name="sale_id"/>
                             <field name="lot_code" invisible="1"/>
@@ -120,6 +128,8 @@
                             <field name="dpt_total_usd_vnd" invisible="declaration_type != 'usd'"/>
                             <field name="dpt_price_cny_vnd" invisible="declaration_type != 'cny'"/>
                             <field name="dpt_total_cny_vnd" invisible="declaration_type != 'cny'"/>
+                            <field name="dpt_price_krw_vnd" invisible="declaration_type != 'krw'"/>
+                            <field name="dpt_total_krw_vnd" invisible="declaration_type != 'krw'"/>
                             <field name="dpt_price_kd"/>
                         </group>
                         <group>
@@ -146,6 +156,52 @@
                             <field name="dpt_g_w_kg"/>
                              <!-- dunghq: Thêm trường risk_reason vào form view với widget selection -->
                             <field name="risk_reason" widget="selection"/>
+                            <!-- Thêm các trường tỷ giá và thuế xuất hóa đơn -->
+                            <separator string="Xuất hóa đơn"/>
+                            <field name="dpt_exchange_rate_basic" string="Tỉ giá XHĐ"/>
+                            <field name="dpt_exchange_rate_basic_final" string="Tỷ giá NH (cuối cùng)"/>
+                            <field name="dpt_basic_value" string="Giá trị cơ bản"/>
+                            <field name="dpt_amount_tax_import_basic"/>
+                            <field name="dpt_amount_tax_other_basic"/>
+                            <field name="dpt_amount_tax_vat_basic"/>
+                            <field name="dpt_amount_tax_vat_customs" string="Tiền thuế VAT (HQ)"/>
+                            <field name="dpt_amount_tax_vat_customer" string="Tiền VAT (Thu khách)"/>
+                            <field name="dpt_total_tax_basic" class="oe_subtotal_footer_separator"/>
+                            <!-- Thêm các trường chi phí phân bổ và giá vốn -->
+                            <field name="dpt_allocated_cost_general"/>
+                            <field name="dpt_allocated_cost_specific"/>
+                            <field name="dpt_total_allocated_cost"/>
+                            <field name="dpt_cost_of_goods"/>
+                            <field name="dpt_unit_cost"/>
+                        </group>
+                        <!-- Thêm nhóm trường định giá xuất hóa đơn -->
+                        <group name="pricing" string="Định giá xuất hóa đơn">
+                            <field name="price_outside_range" invisible="1"/>
+                            <field name="price_temp" invisible="1"/>
+                            
+                            <!-- Thêm banner cảnh báo và nút khi giá ngoài khoảng -->
+                            <div class="alert alert-warning" role="alert" invisible="not price_outside_range">
+                                <strong>Cảnh báo!</strong> Giá XHĐ mong muốn nằm ngoài khoảng cho phép.
+                            </div>
+                            <div invisible="not price_outside_range" class="text-center mb-3">
+                                <button name="action_open_price_approval_wizard" 
+                                        type="object" 
+                                        string="Xác nhận phê duyệt giá" 
+                                        class="btn btn-warning btn-lg"/>
+                            </div>
+                            
+                            <field name="dpt_price_min_allowed" readonly="1"/>
+                            <field name="dpt_price_max_allowed" readonly="1"/>
+                            <field name="dpt_system_price" readonly="1"/>
+                            <field name="dpt_price_unit" readonly="approval_status == 'pending'"/>
+                            <field name="approval_status" widget="badge" 
+                                   decoration-info="approval_status == 'pending'"
+                                   decoration-success="approval_status == 'approved'"
+                                   decoration-danger="approval_status == 'refused'"
+                                   invisible="approval_request_id == False"/>
+                            <field name="approval_request_id" invisible="approval_request_id == False"/>
+                            <field name="dpt_actual_price" readonly="1"/>
+                            <field name="price_revalidation_required" invisible="1"/>
                         </group>
                     </group>
                 </sheet>
@@ -201,7 +257,7 @@
                 <field name="dpt_tax_other" widget="percentage"/>
                 <field name="dpt_amount_tax_other"/>
                 <field name="dpt_exchange_rate"/>
-                <!-- dunghq: Thêm trường customs_price_type vào tree view -->
+                <field name="dpt_exchange_rate_basic"/>
                 <field name="customs_price_type"/>
                 <field name="dpt_total_vat"/>
                 <field name="dpt_total_usd_vnd"/>
@@ -210,6 +266,7 @@
                 <field name="dpt_is_new" widget="boolean_toggle"/>
                 <field name="currency_id" invisible="1"/>
                 <field name="active" invisible="1"/>
+                <field name="price_revalidation_required" invisible="1"/>
                 <button string="Unlink" type="object" name="action_unlink" class="btn-primary"
                         groups="sales_team.group_sale_salesman_all_leads"/>
             </tree>
@@ -238,8 +295,8 @@
             <form>
                 <group>
                     <field name="is_readonly_item_description" invisible="1"/>
-                    <field name="item_description_vn" widget="html" readonly="is_readonly_item_description == True"/>
-                    <field name="item_description_en" widget="html" readonly="is_readonly_item_description == True"/>
+                    <field name="item_description_vn" widget="html" readonly="is_readonly_item_description"/>
+                    <field name="item_description_en" widget="html" readonly="is_readonly_item_description"/>
                 </group>
                 <footer>
                     <button string="Xác nhận" class="btn-primary" name="button_confirm_item_description" type="object"/>

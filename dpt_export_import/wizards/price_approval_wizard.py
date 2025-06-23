@@ -1,0 +1,65 @@
+# -*- coding: utf-8 -*-
+from odoo import models, fields, api, _
+
+class PriceApprovalWizard(models.TransientModel):
+    _name = 'dpt.price.approval.wizard'
+    _description = 'Wizard Xác nhận phê duyệt giá'
+
+    export_import_line_id = fields.Many2one('dpt.export.import.line', string='Dòng tờ khai', readonly=True)
+    product_id = fields.Many2one(related='export_import_line_id.product_id', string='Sản phẩm', readonly=True)
+    current_price = fields.Monetary(string='Giá muốn áp dụng', currency_field='currency_id', readonly=True)
+    min_price = fields.Monetary(string='Giá tối thiểu', currency_field='currency_id', readonly=True)
+    max_price = fields.Monetary(string='Giá tối đa', currency_field='currency_id', readonly=True)
+    system_price = fields.Monetary(string='Giá hệ thống', currency_field='currency_id', readonly=True)
+    currency_id = fields.Many2one('res.currency', string='Tiền tệ', readonly=True)
+    
+    # Thêm hai trường tính thuế mới
+    corporate_income_tax = fields.Monetary(
+        string='Thuế TNDN 20%',
+        currency_field='currency_id',
+        compute='_compute_tax_amounts',
+        readonly=True
+    )
+    additional_vat_tax = fields.Monetary(
+        string='Thuế VAT thu thêm',
+        currency_field='currency_id',
+        compute='_compute_tax_amounts',
+        readonly=True
+    )
+    
+    @api.depends('current_price', 'max_price', 'export_import_line_id')
+    def _compute_tax_amounts(self):
+        for record in self:
+            line = record.export_import_line_id
+            price_diff = record.current_price - record.max_price
+            
+            if line and price_diff > 0:
+                # Tính thuế TNDN 20%
+                record.corporate_income_tax = price_diff * line.dpt_exchange_rate_basic_final * line.dpt_sl1 * 0.2
+                
+                # Tính thuế VAT thu thêm
+                record.additional_vat_tax = price_diff * line.dpt_exchange_rate_basic_final * line.dpt_sl1 * (line.dpt_tax or 0)
+            else:
+                record.corporate_income_tax = 0
+                record.additional_vat_tax = 0
+    
+    def action_send_approval(self):
+        """Gửi yêu cầu phê duyệt giá"""
+        self.ensure_one()
+        approval_request = self.export_import_line_id._create_price_approval_request()
+        # Đóng wizard sau khi tạo yêu cầu phê duyệt
+        return {
+            'type': 'ir.actions.act_window_close'
+        }
+    
+    def action_cancel(self):
+        """Hủy thay đổi giá và quay lại giá hệ thống"""
+        self.ensure_one()
+        self.export_import_line_id.write({
+            'dpt_price_unit': self.system_price,
+            'price_outside_range': False
+        })
+        # Hiện thông báo và đóng wizard
+        return {
+            'type': 'ir.actions.act_window_close'
+        } 
