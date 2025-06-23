@@ -16,6 +16,8 @@ class PurchaseOrder(models.Model):
                                                compute="_compute_order_expense")
     expense_allocation_count = fields.Integer('Số lượng phiếu phân bổ',
                                               compute="_compute_expense_allocation_information")
+    expense_move_count = fields.Integer('Số lượng bút toán phân bổ',
+                                              compute="_compute_expense_allocation_information")
 
     @api.depends('shipping_slip_ids', 'order_expense_ids')
     def _compute_order_expense(self):
@@ -26,6 +28,8 @@ class PurchaseOrder(models.Model):
         for item in self:
             item.expense_allocation_count = self.env['dpt.expense.allocation'].search_count(
                 [('purchase_order_ids', 'in', item.ids)])
+            item.expense_move_count = len(self.env['dpt.expense.allocation'].search(
+                [('purchase_order_ids', 'in', item.ids)]).mapped('allocation_move_ids'))
 
     def action_view_expense_allocation(self):
         action = self.env.ref('dpt_expense.dpt_expense_allocation_action').sudo().read()[0]

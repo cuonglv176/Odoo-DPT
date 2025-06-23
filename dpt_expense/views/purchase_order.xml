@@ -39,8 +39,8 @@
                     <field name="expense_allocation_count" widget="statinfo" string="Phân bổ chi phí"/>
                 </button>
                 <button type="object" name="action_view_expense_account_move" class="oe_stat_button"
-                        icon="fa-pencil-square-o" invisible="invoice_count == 0">
-                    <field name="invoice_count" widget="statinfo" string="Bút toán phân bổ"/>
+                        icon="fa-pencil-square-o" invisible="expense_move_count == 0">
+                    <field name="expense_move_count" widget="statinfo" string="Bút toán phân bổ"/>
                 </button>
             </xpath>
             <field name="state" position="before">
