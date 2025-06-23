@@ -131,3 +131,4 @@ class SaleOrder(models.Model):
             sale_service_ids_data[1][2]['sequence'] = -99
 
         self.sale_service_ids = sale_service_ids_data
+        self.planned_sale_service_ids = sale_service_ids_data
