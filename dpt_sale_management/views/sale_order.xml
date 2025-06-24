@@ -49,7 +49,7 @@
                             <field name="description"/>
                             <field name="compute_uom_id" readonly="1"/>
                             <field name="qty"/>
-                            <field name="price" sum="Đơn giá"/>
+                            <field name="price" sum="Đơn giá 1"/>
                             <field name="amount_discount" string="Khuyến mãi"/>
                             <field name="amount_total" sum="Thành tiền"/>
                             <field name="is_price_fixed" widget="boolean_toggle"/>
@@ -68,9 +68,8 @@
                             <field name="compute_uom_id" force_save="1"/>
                             <field name="qty" column_invisible="1" force_save="1"/>
                             <field name="uom_ids" column_invisible="1"/>
-                            <field name="price" readonly="0" force_save="1" context="{'check_price': True}"/>
+                            <field name="price" readonly="0" force_save="1" context="{'check_price': True}" string="Đơn giá 1"/>
                             <field name="price_cny" readonly="0" force_save="1"/>
-                            <field name="old_price" column_invisible="0" force_save="1"/>
                             <field name="amount_total" readonly="1" force_save="1"/>
                             <field name="department_id" context="{'dpt_sale_management': 1}"/>
                             <field name="note"/>
@@ -98,7 +97,7 @@
                             <field name="code"/>
                             <field name="description"/>
                             <field name="qty"/>
-                            <field name="price" sum="Đơn giá"/>
+                            <field name="price" sum="Đơn giá 1"/>
                             <field name="amount_discount" string="Khuyến mãi"/>
                             <field name="amount_total" sum="Thành tiền"/>
                         </tree>
@@ -116,9 +115,8 @@
                             <field name="compute_uom_id" force_save="1"/>
                             <field name="qty" column_invisible="1" force_save="1"/>
                             <field name="uom_ids" column_invisible="1"/>
-                            <field name="price" readonly="0" force_save="1" context="{'check_price': True}"/>
+                            <field name="price" readonly="0" force_save="1" context="{'check_price': True}" string="Đơn giá 1"/>
                             <field name="price_cny" readonly="0" force_save="1"/>
-                            <field name="old_price" column_invisible="0" force_save="1"/>
                             <field name="amount_total" readonly="1" force_save="1"/>
                             <field name="department_id" context="{'dpt_sale_management': 1}"/>
                             <field name="is_bao_giao" widget="boolean_toggle"/>
