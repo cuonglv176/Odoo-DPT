@@ -71,10 +71,28 @@ class SaleOrderField(models.Model):
                 raise ValidationError(_("Please fill required fields: %s!!!") % r.fields_id.display_name)
 
     def write(self, vals):
+        # Xác định các thay đổi có liên quan đến giá trị
+        value_changes = {}
+        for field in ['value_char', 'value_integer', 'value_date', 'selection_value_id']:
+            if field in vals:
+                old_value = None
+                if field == 'selection_value_id':
+                    if self.selection_value_id:
+                        old_value = self.selection_value_id.name
+                    selection = self.env['dpt.sale.order.fields.selection'].browse(vals[field]) if vals[field] else None
+                    value_changes[field] = (old_value, selection.name if selection else None)
+                else:
+                    old_value = getattr(self, field)
+                    value_changes[field] = (old_value, vals[field])
+        
+        # Thực hiện cập nhật dữ liệu
         res = super(SaleOrderField, self).write(vals)
+        
+        # Kiểm tra trường bắt buộc sau khi ghi
         if 'value_char' in vals or 'value_integer' in vals or 'value_date' in vals:
-            # self.sale_id.action_calculation()
             self.check_required_fields()
+            
+        # Cập nhật sale_service_id_key
         if 'sale_service_id' in vals and vals.get('sale_service_id'):
             for record in self:
                 if record.sale_service_id:
@@ -95,16 +113,39 @@ class SaleOrderField(models.Model):
                     export_import_lines.write({
                         'payment_flow': selection_value.name
                     })
-                    
+        
+        # Ghi log thay đổi nếu có
+        if value_changes and self.sale_id:
+            message_parts = []
+            for field, (old_val, new_val) in value_changes.items():
+                if old_val != new_val:
+                    field_display = self.fields_id.name or self.fields_id.display_name or "Trường dữ liệu"
+                    if field == 'value_char':
+                        message_parts.append(_("- %s: '%s' → '%s'") % (field_display, old_val or '', new_val or ''))
+                    elif field == 'value_integer':
+                        message_parts.append(_("- %s: %s → %s") % (field_display, old_val or '0', new_val or '0'))
+                    elif field == 'value_date':
+                        old_date = old_val.strftime('%d/%m/%Y') if old_val else ''
+                        new_date = new_val.strftime('%d/%m/%Y') if isinstance(new_val, datetime) else new_val or ''
+                        message_parts.append(_("- %s: %s → %s") % (field_display, old_date, new_date))
+                    elif field == 'selection_value_id':
+                        message_parts.append(_("- %s: '%s' → '%s'") % (field_display, old_val or '', new_val or ''))
+            
+            if message_parts:
+                header = _("<strong>Cập nhật thông tin bổ sung</strong>")
+                message = header + "<br/>" + "<br/>".join(message_parts)
+                self.sale_id.message_post(body=message)
+                
         return res
 
     @api.model
     def create(self, vals_list):
         res = super(SaleOrderField, self).create(vals_list)
         res.check_required_fields()
+        
         if isinstance(vals_list, dict) and vals_list.get('sale_service_id'):
             res.sale_service_id_key = res.sale_service_id.id
-            
+        
         # Cập nhật luồng thanh toán khi tạo mới với trường là luồng thanh toán
         if res.fields_id.is_payment_flow and res.selection_value_id:
             # Cập nhật sale.order
@@ -118,6 +159,31 @@ class SaleOrderField(models.Model):
                 export_import_lines.write({
                     'payment_flow': res.selection_value_id.name
                 })
+        
+        # Ghi log khi tạo trường mới có giá trị
+        if res.sale_id and res.fields_id:
+            has_value = False
+            message_parts = []
+            field_display = res.fields_id.name or res.fields_id.display_name or "Trường dữ liệu"
+            
+            if res.fields_type == 'char' and res.value_char:
+                message_parts.append(_("- %s: '%s'") % (field_display, res.value_char))
+                has_value = True
+            elif res.fields_type == 'integer' and res.value_integer:
+                message_parts.append(_("- %s: %s") % (field_display, res.value_integer))
+                has_value = True
+            elif res.fields_type == 'date' and res.value_date:
+                date_str = res.value_date.strftime('%d/%m/%Y') if res.value_date else ''
+                message_parts.append(_("- %s: %s") % (field_display, date_str))
+                has_value = True
+            elif res.fields_type == 'selection' and res.selection_value_id:
+                message_parts.append(_("- %s: '%s'") % (field_display, res.selection_value_id.name))
+                has_value = True
+            
+            if has_value:
+                header = _("<strong>Thêm thông tin bổ sung</strong>")
+                message = header + "<br/>" + "<br/>".join(message_parts)
+                res.sale_id.message_post(body=message)
                 
         return res
 
