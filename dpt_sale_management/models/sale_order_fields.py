@@ -79,6 +79,23 @@ class SaleOrderField(models.Model):
             for record in self:
                 if record.sale_service_id:
                     record.sale_service_id_key = record.sale_service_id.id
+        
+        # Cập nhật luồng thanh toán khi thay đổi giá trị selection trong trường là luồng thanh toán
+        if 'selection_value_id' in vals and self.fields_id.is_payment_flow:
+            selection_value = self.env['dpt.sale.order.fields.selection'].browse(vals['selection_value_id'])
+            if selection_value:
+                # Cập nhật sale.order
+                self.sale_id.write({
+                    'payment_flow': selection_value.name
+                })
+                
+                # Cập nhật dpt.export.import.line
+                export_import_lines = self.env['dpt.export.import.line'].search([('sale_id', '=', self.sale_id.id)])
+                if export_import_lines:
+                    export_import_lines.write({
+                        'payment_flow': selection_value.name
+                    })
+                    
         return res
 
     @api.model
@@ -87,6 +104,21 @@ class SaleOrderField(models.Model):
         res.check_required_fields()
         if isinstance(vals_list, dict) and vals_list.get('sale_service_id'):
             res.sale_service_id_key = res.sale_service_id.id
+            
+        # Cập nhật luồng thanh toán khi tạo mới với trường là luồng thanh toán
+        if res.fields_id.is_payment_flow and res.selection_value_id:
+            # Cập nhật sale.order
+            res.sale_id.write({
+                'payment_flow': res.selection_value_id.name
+            })
+            
+            # Cập nhật dpt.export.import.line
+            export_import_lines = res.env['dpt.export.import.line'].search([('sale_id', '=', res.sale_id.id)])
+            if export_import_lines:
+                export_import_lines.write({
+                    'payment_flow': res.selection_value_id.name
+                })
+                
         return res
 
     @api.depends('fields_id', 'fields_id.type')
