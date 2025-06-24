@@ -81,6 +81,7 @@ class SaleOrder(models.Model):
         ('dpt', 'DPT'),
         ('ltv', 'LTV')
     ], string='Pháp nhân', default='dpt', tracking=True)
+    payment_flow = fields.Char(string='Luồng thanh toán', tracking=True, help='Luồng thanh toán được chọn từ các trường dịch vụ')
 
     @api.depends('planned_sale_service_ids.amount_total')
     def _compute_planned_service_amount(self):
