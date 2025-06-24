@@ -77,6 +77,10 @@ class SaleOrder(models.Model):
         ('thuong', 'Báo giá thường'),
         ('dac_biet', 'Báo giá đặc biệt')
     ], string='Loại báo giá', default='thuong', tracking=True)
+    legal_entity = fields.Selection([
+        ('dpt', 'DPT'),
+        ('ltv', 'LTV')
+    ], string='Pháp nhân', default='dpt', tracking=True)
 
     @api.depends('planned_sale_service_ids.amount_total')
     def _compute_planned_service_amount(self):

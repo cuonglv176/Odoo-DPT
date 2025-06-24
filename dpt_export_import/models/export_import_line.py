@@ -25,6 +25,7 @@ class DptExportImportLine(models.Model):
                                              compute="_compute_domain_picking_package")
     sale_user_id = fields.Many2one('res.users', string='User Sale', compute="compute_sale_user")
     partner_id = fields.Many2one('res.partner', string='Sale Partner', related='sale_id.partner_id')
+    sale_legal_entity = fields.Selection(related="sale_id.legal_entity", string="Pháp nhân", store=True)
     sale_line_id = fields.Many2one('sale.order.line', string='Sale order line', domain=[('order_id', '=', 'sale_id')])
     product_tmpl_id = fields.Many2one('product.template', string='Product Template',
                                       related='product_id.product_tmpl_id')

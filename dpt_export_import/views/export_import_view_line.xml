@@ -17,6 +17,7 @@
                 <field name="available_picking_ids" invisible="1"/>
                 <field name="stock_picking_ids" widget="many2many_tags"/>
                 <field name="partner_id"/>
+                <field name="sale_legal_entity"/>
                 <field name="product_id"/>
                 <field name="dpt_english_name"/>
                 <field name="dpt_description"/>
@@ -103,6 +104,7 @@
                             <field name="available_picking_ids" invisible="1"/>
                             <field name="stock_picking_ids" widget="many2many_tags"/>
                             <field name="partner_id"/>
+                            <field name="sale_legal_entity"/>
                             <field name="product_id"/>
                             <field name="product_history_id" domain="[('product_id','=', product_id), ('id', '!=', id)]"
                                    context="{'tree_view_ref': 'dpt_export_import.view_dpt_export_import_line_tree_search'}"
@@ -232,6 +234,7 @@
                 <field name="available_picking_ids" invisible="1"/>
                 <field name="stock_picking_ids" widget="many2many_tags"/>
                 <field name="partner_id"/>
+                <field name="sale_legal_entity"/>
                 <field name="product_id"/>
                 <field name="dpt_english_name"/>
                 <field name="dpt_description"/>
@@ -273,11 +276,44 @@
         </field>
     </record>
 
+    <record id="view_dpt_export_import_line_search" model="ir.ui.view">
+        <field name="name">dpt.export.import.line.search</field>
+        <field name="model">dpt.export.import.line</field>
+        <field name="arch" type="xml">
+            <search string="Search Export Import Line">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="product_id"/>
+                <field name="dpt_description"/>
+                <field name="hs_code_id"/>
+                <field name="sale_id"/>
+                <field name="sale_legal_entity"/>
+                <separator/>
+                <filter string="Drafts" name="draft" domain="[('state','=','draft')]"/>
+                <filter string="Waiting Confirmation" name="wait_confirm" domain="[('state','=','wait_confirm')]"/>
+                <filter string="Confirmed" name="confirmed" domain="[('state','=','confirmed')]"/>
+                <filter string="Eligible" name="eligible" domain="[('state','=','eligible')]"/>
+                <filter string="Cancelled" name="cancelled" domain="[('state','=','cancelled')]"/>
+                <separator/>
+                <filter string="DPT" name="dpt" domain="[('sale_legal_entity','=','dpt')]"/>
+                <filter string="LTV" name="ltv" domain="[('sale_legal_entity','=','ltv')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Partner" name="partner_id" context="{'group_by':'partner_id'}"/>
+                    <filter string="Product" name="product_id" context="{'group_by':'product_id'}"/>
+                    <filter string="Status" name="state" context="{'group_by':'state'}"/>
+                    <filter string="Sale Order" name="sale_id" context="{'group_by':'sale_id'}"/>
+                    <filter string="Pháp nhân" name="sale_legal_entity" context="{'group_by':'sale_legal_entity'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <record id="action_dpt_export_import_line_management" model="ir.actions.act_window">
         <field name="name">Export import</field>
         <field name="res_model">dpt.export.import.line</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('is_history','=',False)]</field>
+        <field name="search_view_id" ref="view_dpt_export_import_line_search"/>
     </record>
 
 
