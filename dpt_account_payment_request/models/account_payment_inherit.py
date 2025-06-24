@@ -209,9 +209,9 @@ class AccountPayment(models.Model):
                 user_view_ids.append(approver_id.user_id.id)
             rec.user_view_ids = [(6, 0, user_view_ids)]
 
-    @api.onchange('last_rate_currency', 'amount_request', 'transfer_amount', 'transfer_amount_rate')
+    @api.onchange('last_rate_currency', 'amount_request', 'transfer_amount', 'show_transfer_money')
     def onchange_update_amount(self):
-        self.amount = self.amount_request * self.last_rate_currency + self.transfer_amount if self.transfer_amount_rate else self.amount_request * self.last_rate_currency
+        self.amount = self.amount_request * self.last_rate_currency + self.transfer_amount if self.show_transfer_money else self.amount_request * self.last_rate_currency
 
     @api.depends('amount')
     def _compute_amount_in_text(self):
