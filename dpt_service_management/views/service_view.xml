@@ -102,6 +102,15 @@
                                 </tree>
                             </field>
                         </page>
+                        <page string="Cấu hình thuế" name="tax_config">
+                            <group>
+                                <group>
+                                    <field name="is_vat_service"/>
+                                    <field name="is_import_tax_service"/>
+                                    <field name="is_other_tax_service"/>
+                                </group>
+                            </group>
+                        </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
