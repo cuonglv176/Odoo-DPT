@@ -19,12 +19,14 @@ class DptExportImportLine(models.Model):
     export_import_id = fields.Many2one('dpt.export.import', string='Export import')
     lot_code = fields.Char(string='Lot code')
     sale_id = fields.Many2one('sale.order', string='Sale order', tracking=True)
+    payment_flow = fields.Char(string='Luồng thanh toán', tracking=True, help='Luồng thanh toán được chọn từ đơn hàng')
     stock_picking_ids = fields.Many2many('stock.picking', string='Lot code',
                                          domain="[('id', 'in', available_picking_ids)]", tracking=True)
     available_picking_ids = fields.Many2many('stock.picking', string='Lot code',
                                              compute="_compute_domain_picking_package")
     sale_user_id = fields.Many2one('res.users', string='User Sale', compute="compute_sale_user")
     partner_id = fields.Many2one('res.partner', string='Sale Partner', related='sale_id.partner_id')
+    sale_legal_entity = fields.Selection(related="sale_id.legal_entity", string="Pháp nhân", store=True)
     sale_line_id = fields.Many2one('sale.order.line', string='Sale order line', domain=[('order_id', '=', 'sale_id')])
     product_tmpl_id = fields.Many2one('product.template', string='Product Template',
                                       related='product_id.product_tmpl_id')
@@ -602,6 +604,10 @@ class DptExportImportLine(models.Model):
     def create(self, vals_list):
         res = super(DptExportImportLine, self).create(vals_list)
         for rec in res:
+            # Set payment_flow if not provided
+            if not rec.payment_flow and rec.sale_id and rec.sale_id.payment_flow:
+                rec.payment_flow = rec.sale_id.payment_flow
+            
             val_update_sale_line = {}
             val_update_sale_line.update({
                 'payment_exchange_rate': rec.dpt_exchange_rate,

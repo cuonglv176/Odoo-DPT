@@ -33,8 +33,10 @@
                 <field name="employee_sale"/>
                 <field name="employee_cs"/>
                 <field name="times_of_quotation" readonly="1"/>
+                <field name="payment_flow" readonly="1"/>
                 <field name="settle_by" widget="radio" options="{'horizontal': True}"/>
                 <field name="quote_type" widget="radio" options="{'horizontal': True}"/>
+                <field name="legal_entity" widget="radio" options="{'horizontal': True}"/>
             </field>
             <xpath expr="//page[@name='order_lines']/field[@name='order_line']/tree/field[@name='product_template_id']"
                    position="before">
