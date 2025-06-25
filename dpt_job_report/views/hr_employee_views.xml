@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit Employee Form View -->
+    <record id="hr_employee_view_form_inherit_job_report" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.job.report</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_view_job_reports" type="object" class="oe_stat_button" icon="fa-tasks"
+                        invisible="job_report_count == 0">
+                    <field name="job_report_count" widget="statinfo" string="Báo cáo công việc"/>
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo> 

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="view_dpt_job_task_form" model="ir.ui.view">
+        <field name="name">dpt.job.task.form</field>
+        <field name="model">dpt.job.task</field>
+        <field name="arch" type="xml">
+            <form string="Công việc tự tạo">
+                <header>
+                    <button name="action_start" string="Bắt đầu" type="object" class="oe_highlight" invisible="state != 'new'"/>
+                    <button name="action_done" string="Đánh dấu hoàn thành" type="object" class="oe_highlight" invisible="state not in ['new', 'in_progress']"/>
+                    <button name="action_cancel" string="Hủy" type="object" invisible="state in ['done', 'cancelled']"/>
+                    <button name="action_reset" string="Đặt về mới" type="object" invisible="state == 'new'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="new,in_progress,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Tên công việc"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="report_id" options="{'no_create': True}"/>
+                            <field name="employee_id"/>
+                            <field name="department_id"/>
+                            <field name="project_task_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="priority" widget="priority"/>
+                            <field name="deadline"/>
+                            <field name="source"/>
+                            <field name="assigned_by" invisible="source != 'assigned'" required="source == 'assigned'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Mô tả" name="description">
+                            <field name="description" placeholder="Thêm mô tả..."/>
+                        </page>
+                        <page string="Thời gian" name="timing">
+                            <group>
+                                <group>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="view_dpt_job_task_tree" model="ir.ui.view">
+        <field name="name">dpt.job.task.tree</field>
+        <field name="model">dpt.job.task</field>
+        <field name="arch" type="xml">
+            <tree string="Công việc tự tạo" decoration-muted="state == 'cancelled'" decoration-success="state == 'done'" decoration-info="state == 'in_progress'" decoration-danger="deadline and deadline &lt; current_date and state not in ['done', 'cancelled']">
+                <field name="name"/>
+                <field name="report_id"/>
+                <field name="employee_id"/>
+                <field name="priority" widget="priority"/>
+                <field name="deadline"/>
+                <field name="source"/>
+                <field name="assigned_by"/>
+                <field name="state"/>
+                <button name="action_start" string="Bắt đầu" type="object" icon="fa-play" invisible="state != 'new'"/>
+                <button name="action_done" string="Hoàn thành" type="object" icon="fa-check" invisible="state not in ['new', 'in_progress']"/>
+                <button name="action_cancel" string="Hủy" type="object" icon="fa-times" invisible="state in ['done', 'cancelled']"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_dpt_job_task_search" model="ir.ui.view">
+        <field name="name">dpt.job.task.search</field>
+        <field name="model">dpt.job.task</field>
+        <field name="arch" type="xml">
+            <search string="Tìm kiếm công việc">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="report_id"/>
+                <filter string="Công việc của tôi" name="my_tasks" domain="[('employee_id.user_id', '=', uid)]"/>
+                <filter string="Mới" name="new" domain="[('state', '=', 'new')]"/>
+                <filter string="Đang thực hiện" name="in_progress" domain="[('state', '=', 'in_progress')]"/>
+                <filter string="Hoàn thành" name="done" domain="[('state', '=', 'done')]"/>
+                <filter string="Đã hủy" name="cancelled" domain="[('state', '=', 'cancelled')]"/>
+                <filter string="Tự tạo" name="self_created" domain="[('source', '=', 'self')]"/>
+                <filter string="Được giao" name="assigned" domain="[('source', '=', 'assigned')]"/>
+                <filter string="Ưu tiên cao" name="high_priority" domain="[('priority', 'in', ['2', '3'])]"/>
+                <filter string="Quá hạn" name="overdue" domain="[('deadline', '&lt;', context_today().strftime('%Y-%m-%d')), ('state', 'not in', ['done', 'cancelled'])]"/>
+                <group expand="0" string="Nhóm theo">
+                    <filter string="Nhân viên" name="employee" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Báo cáo" name="report" context="{'group_by': 'report_id'}"/>
+                    <filter string="Trạng thái" name="status" context="{'group_by': 'state'}"/>
+                    <filter string="Độ ưu tiên" name="priority" context="{'group_by': 'priority'}"/>
+                    <filter string="Nguồn gốc" name="source" context="{'group_by': 'source'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_dpt_job_task" model="ir.actions.act_window">
+        <field name="name">Công việc tự tạo</field>
+        <field name="res_model">dpt.job.task</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_dpt_job_task_search"/>
+        <field name="context">{'search_default_my_tasks': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo công việc đầu tiên của bạn!
+            </p>
+            <p>
+                Tạo công việc để tổ chức công việc và theo dõi tiến độ của bạn.
+            </p>
+        </field>
+    </record>
+</odoo> 
