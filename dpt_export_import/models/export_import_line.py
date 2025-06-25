@@ -985,13 +985,14 @@ class DptExportImportLine(models.Model):
                 continue
             
             # Kiểm tra nếu giá không phải số chẵn chục
-            if rec.dpt_price_unit % 10 != 0:
-                return {
-                    'warning': {
-                        'title': _('Cảnh báo về giá xuất hóa đơn'),
-                        'message': _('Giá xuất hóa đơn mong muốn phải là số chẵn chục đồng! Vui lòng điều chỉnh.')
-                    }
-                }
+            # TEMPORARILY DISABLED - Fix will be implemented later
+            # if rec.dpt_price_unit % 10 != 0:
+            #     return {
+            #         'warning': {
+            #             'title': _('Cảnh báo về giá xuất hóa đơn'),
+            #             'message': _('Giá xuất hóa đơn mong muốn phải là số chẵn chục đồng! Vui lòng điều chỉnh.')
+            #         }
+            #     }
                 
             # Kiểm tra nếu giá nằm ngoài khoảng cho phép
             if rec.dpt_price_unit < rec.dpt_price_min_allowed or rec.dpt_price_unit > rec.dpt_price_max_allowed:
@@ -1184,9 +1185,11 @@ class DptExportImportLine(models.Model):
     @api.constrains('dpt_price_unit')
     def _check_price_unit_multiple_of_ten(self):
         """Kiểm tra giá xuất hóa đơn mong muốn phải là số chẵn chục"""
-        for rec in self:
-            if rec.dpt_price_unit and rec.dpt_price_unit % 10 != 0:
-                raise ValidationError(_("Giá xuất hóa đơn mong muốn phải là số chẵn chục đồng!"))
+        # TEMPORARILY DISABLED - Fix will be implemented later
+        # for rec in self:
+        #     if rec.dpt_price_unit and rec.dpt_price_unit % 10 != 0:
+        #         raise ValidationError(_("Giá xuất hóa đơn mong muốn phải là số chẵn chục đồng!"))
+        pass
 
     # Sửa phương thức làm tròn để làm tròn lên đến chục đồng gần nhất
     def _round_up_to_ten(self, value):
