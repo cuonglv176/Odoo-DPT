@@ -1189,6 +1189,7 @@ class DptExportImportLine(models.Model):
         # for rec in self:
         #     if rec.dpt_price_unit and rec.dpt_price_unit % 10 != 0:
         #         raise ValidationError(_("Giá xuất hóa đơn mong muốn phải là số chẵn chục đồng!"))
+        pass
 
     # Sửa phương thức làm tròn để làm tròn lên đến chục đồng gần nhất
     def _round_up_to_ten(self, value):
