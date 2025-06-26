@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Nhóm CS -->
+        <record id="group_dpt_job_report_user" model="res.groups">
+            <field name="name">Nhân viên CSKH</field>
+            <field name="category_id" ref="base.module_category_human_resources_employees"/>
+        </record>
+        
+        <record id="group_dpt_job_report_manager" model="res.groups">
+            <field name="name">Trưởng nhóm CSKH</field>
+            <field name="category_id" ref="base.module_category_human_resources_employees"/>
+            <field name="implied_ids" eval="[(4, ref('group_dpt_job_report_user'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+    </data>
+</odoo> 

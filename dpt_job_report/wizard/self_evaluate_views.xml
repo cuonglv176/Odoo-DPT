@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="view_dpt_job_report_self_evaluate_wizard_form" model="ir.ui.view">
+        <field name="name">dpt.job.report.self.evaluate.wizard.form</field>
+        <field name="model">dpt.job.report.self.evaluate.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Tự đánh giá báo cáo công việc">
+                <sheet>
+                    <div class="alert alert-info mb16" role="alert">
+                        <p class="mb0">
+                            <strong>Hướng dẫn:</strong> Hãy tự đánh giá công việc của bạn trong kỳ báo cáo này, đánh giá nên tập trung vào kết quả công việc, các mục tiêu đã đạt được, và các thách thức bạn đã vượt qua.
+                        </p>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="report_id" invisible="1"/>
+                            <field name="employee_id"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                        <group>
+                            <field name="completion_rate" widget="percentage"/>
+                            <field name="on_time_rate" widget="percentage"/>
+                        </group>
+                    </group>
+                    <group string="Tự đánh giá">
+                        <field name="self_evaluation" nolabel="1" placeholder="Hãy đánh giá kết quả công việc của bạn trong kỳ này..." colspan="4" required="1"/>
+                    </group>
+                    <group string="Góp ý/Kiến nghị">
+                        <field name="self_comment" nolabel="1" placeholder="Nhập các góp ý, kiến nghị, khó khăn, hoặc đề xuất cải tiến..." colspan="4"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_confirm" string="Xác nhận" type="object" class="btn-primary"/>
+                    <button string="Hủy" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo> 

@@ -148,7 +148,7 @@
                                             </group>
                                         </group>
                                         <notebook>
-                                            <page string="Selection Value" attrs="{'invisible': [('fields_type', '!=', 'selection')]}">
+                                            <page string="Selection Value" invisible="fields_type != 'selection'">
                                                 <field name="selection_value_ids">
                                                     <tree editable="bottom">
                                                         <field name="name"/>

@@ -124,7 +124,8 @@
                                                 <group>
                                                     <field name="description"/>
                                                     <field name="amount" widget="monetary"
-                                                           string="Giá cố định" attrs="{'string': 'Đơn giá', 'invisible': [('price_type', '!=', 'unit_price')]}"/>
+                                                           string="Giá cố định" invisible="price_type != 'unit_price'"
+                                                           string_if="price_type == 'unit_price', 'Đơn giá', 'Giá cố định'"/>
                                                     <field name="currency_id" invisible="1"/>
                                                 </group>
                                             </group>

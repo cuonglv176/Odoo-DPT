@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dpt_job_report_user,dpt.job.report.user,model_dpt_job_report,base.group_user,1,1,1,1
+access_dpt_job_task_user,dpt.job.task.user,model_dpt_job_task,base.group_user,1,1,1,1
+access_dpt_system_task_user,dpt.system.task.user,model_dpt_system_task,base.group_user,1,1,1,1
+access_dpt_assign_task_wizard_user,dpt.assign.task.wizard.user,model_dpt_assign_task_wizard,base.group_user,1,1,1,1

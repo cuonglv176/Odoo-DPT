@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Sequence for job reports -->
+        <record id="seq_dpt_job_report" model="ir.sequence">
+            <field name="name">Job Report Sequence</field>
+            <field name="code">dpt.job.report</field>
+            <field name="prefix">JR/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo> 
