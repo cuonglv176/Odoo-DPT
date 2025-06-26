@@ -134,8 +134,8 @@ class SaleOrderField(models.Model):
             if message_parts:
                 header = _("<strong>Cập nhật thông tin bổ sung</strong>")
                 message = header + "<br/>" + "<br/>".join(message_parts)
-                if self.sale_id:
-                    self.sale_id.message_post(body=message)
+                # if self.sale_id:
+                #     self.sale_id.message_post(body=message)
                 
         return res
 
