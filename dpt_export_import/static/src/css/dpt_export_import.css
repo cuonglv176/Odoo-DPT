@@ -1,0 +1,10 @@
+/* Custom styles for dpt_export_import module */
+.o_list_view .o_data_cell[data-field="dpt_description"],
+.o_list_view th[data-name="dpt_description"] {
+    min-width: 650px !important;
+    width: 650px !important;
+    white-space: normal !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+    padding: 8px !important;
+}
