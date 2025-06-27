@@ -84,7 +84,7 @@
                         <page string="History">
                             <field name="dpt_export_import_line_ids" readonly="1">
                                 <tree>
-                                    <button string="Chứng từ phản hồi" type="object" name="action_update_eligible"
+                                    <button string="Eligible" type="object" name="action_update_eligible"
                                             class="btn-primary"
                                             invisible="state != 'draft'"/>
                                     <field name="state" widget="badge"

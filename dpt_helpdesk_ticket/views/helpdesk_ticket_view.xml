@@ -43,6 +43,7 @@
             </field>
             <field name="priority" position="replace"/>
             <field name="user_id" position="replace"/>
+            <field name="tag_ids" position="replace"/>
 
             <page name="description" position="before">
                 <page name="service_lines_ids" string="Service">
