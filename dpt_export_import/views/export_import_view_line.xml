@@ -7,7 +7,7 @@
         <field name="model">dpt.export.import.line</field>
         <field name="arch" type="xml">
             <tree string="Export Import Line List">
-                <button string="Chứng từ phản hồi" type="object" name="action_update_eligible" class="btn-primary"
+                <button string="Eligible" type="object" name="action_update_eligible" class="btn-primary"
                         invisible="state != 'draft'"
                         groups="dpt_security.group_dpt_document_officer,dpt_security.group_dpt_head_of_document"/>
                 <field name="state" widget="badge"
@@ -236,7 +236,7 @@
         <field name="arch" type="xml">
             <!-- dunghq: Thêm decoration-danger để hiển thị dòng có rủi ro màu đỏ -->
             <tree decoration-danger="risk_reason != False" decoration-muted="is_locked">
-                <button string="Khách xác nhận" type="object" name="action_update_eligible" class="btn-primary"
+                <button string="Eligible" type="object" name="action_update_eligible" class="btn-primary"
                         invisible="state != 'draft'"
                         groups="dpt_security.group_dpt_document_officer,dpt_security.group_dpt_head_of_document"/>
                 <field name="state" widget="badge"
