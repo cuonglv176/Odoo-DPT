@@ -84,12 +84,12 @@
                         <page string="History">
                             <field name="dpt_export_import_line_ids" readonly="1">
                                 <tree>
-                                    <button string="Eligible" type="object" name="action_update_eligible"
+                                    <button string="Chứng từ phản hồi" type="object" name="action_update_eligible"
                                             class="btn-primary"
                                             invisible="state != 'draft'"/>
                                     <field name="state" widget="badge"
                                            decoration-info="state == 'draft'"
-                                           decoration-success="state in ('eligible','declared','released','consulted','post_control')"/>
+                                           decoration-success="state in ('confirmed','declared','released','consulted','post_control')"/>
                                     <field name="sale_user_id"/>
                                     <field name="sale_id"/>
                                     <field name="lot_code" invisible="1"/>

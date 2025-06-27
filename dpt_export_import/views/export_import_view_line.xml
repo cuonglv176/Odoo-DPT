@@ -7,12 +7,12 @@
         <field name="model">dpt.export.import.line</field>
         <field name="arch" type="xml">
             <tree string="Export Import Line List">
-                <button string="Eligible" type="object" name="action_update_eligible" class="btn-primary"
+                <button string="Chứng từ phản hồi" type="object" name="action_update_eligible" class="btn-primary"
                         invisible="state != 'draft'"
                         groups="dpt_security.group_dpt_document_officer,dpt_security.group_dpt_head_of_document"/>
                 <field name="state" widget="badge"
                        decoration-info="state in ('draft','wait_confirm')"
-                       decoration-success="state in ('eligible')"/>
+                       decoration-success="state in ('confirmed')"/>
                 <field name="lot_code" invisible="1"/>
                 <field name="available_picking_ids" invisible="1"/>
                 <field name="stock_picking_ids" widget="many2many_tags"/>
@@ -224,12 +224,12 @@
         <field name="arch" type="xml">
             <!-- dunghq: Thêm decoration-danger để hiển thị dòng có rủi ro màu đỏ -->
             <tree decoration-danger="risk_reason != False">
-                <button string="Eligible" type="object" name="action_update_eligible" class="btn-primary"
+                <button string="Chứng từ phản hồi" type="object" name="action_update_eligible" class="btn-primary"
                         invisible="state != 'draft'"
                         groups="dpt_security.group_dpt_document_officer,dpt_security.group_dpt_head_of_document"/>
                 <field name="state" widget="badge"
                        decoration-info="state in ('draft','wait_confirm')"
-                       decoration-success="state in ('eligible')"/>
+                       decoration-success="state in ('confirmed')"/>
                 <field name="sale_user_id"/>
                 <field name="sale_id"/>
                 <field name="lot_code" invisible="1"/>

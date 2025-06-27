@@ -130,7 +130,7 @@
                                     <field name="sequence" widget="handle"/>
                                     <field name="state" widget="badge"
                                            decoration-info="state == 'draft'"
-                                           decoration-success="state in ('eligible','declared','released','consulted','post_control')"/>
+                                           decoration-success="state in ('confirmed','declared','released','consulted','post_control')"/>
                                     <field name="sale_user_id"/>
                                     <field name="sale_id"/>
                                     <field name="lot_code" invisible="1"/>
