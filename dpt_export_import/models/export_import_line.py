@@ -810,7 +810,7 @@ class DptExportImportLine(models.Model):
 
     def action_update_eligible(self):
         # self.action_check_lot_name()
-        self.state = 'eligible'
+        self.state = 'confirmed'
 
     @api.onchange('sale_line_id')
     def onchange_sale_line_id(self):
@@ -861,7 +861,7 @@ class DptExportImportLine(models.Model):
                 ('dpt_description', '=', record.dpt_description),
                 ('id', '!=', record.id),
                 ('declaration_type', '=', record.declaration_type),
-                ('state', '=', 'eligible'),
+                ('state', '=', 'confirmed'),
             ])
 
             for line in other_lines:
@@ -877,7 +877,7 @@ class DptExportImportLine(models.Model):
                     ('model_id', '=', record.model_id.id),
                     ('id', '!=', record.id),
                     ('declaration_type', '=', record.declaration_type),
-                    ('state', '=', 'eligible'),
+                    ('state', '=', 'confirmed'),
                 ])
 
                 for line in other_lines:
