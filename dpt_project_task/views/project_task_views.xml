@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form view thêm trường priority_level mới -->
+    <record id="dpt_view_task_form2" model="ir.ui.view">
+        <field name="name">project.task.form.priority</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <field name="priority" position="replace">
+                <field name="priority_level" widget="priority"/>
+            </field>
+        </field>
+    </record>
+    
+    <!-- Kanban view thêm trường priority_level mới -->
+    <record id="dpt_view_task_kanban" model="ir.ui.view">
+        <field name="name">project.task.kanban.priority</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='priority']" position="replace">
+                <field name="priority_level"/>
+            </xpath>
+            <xpath expr="//div[hasclass('o_kanban_record_bottom')]//field[@name='priority']" position="replace">
+                <field name="priority_level" widget="priority"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <!-- List view thêm trường priority_level mới -->
+    <record id="dpt_view_task_tree" model="ir.ui.view">
+        <field name="name">project.task.tree.priority</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_tree2"/>
+        <field name="arch" type="xml">
+            <field name="priority" position="replace">
+                <field name="priority_level" widget="priority"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- List view cho công việc đến hạn -->
+    <record id="dpt_upcoming_tasks_tree" model="ir.ui.view">
+        <field name="name">project.task.upcoming.tree</field>
+        <field name="model">project.task</field>
+        <field name="arch" type="xml">
+            <tree string="Công việc đến hạn" decoration-danger="date_deadline &lt; current_date and state not in ['1_done', '1_canceled']" limit="10">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="user_ids" widget="many2many_avatar_user"/>
+                <field name="date_deadline"/>
+                <field name="priority_level" widget="priority"/>
+                <field name="state" widget="badge" decoration-info="state in ('01_in_progress', '04_waiting_normal')" decoration-danger="state == '02_changes_requested'" decoration-success="state == '03_approved' or state == '1_done'" decoration-muted="state == '1_canceled'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- List view cho công việc ưu tiên -->
+    <record id="dpt_priority_tasks_tree" model="ir.ui.view">
+        <field name="name">project.task.priority.tree</field>
+        <field name="model">project.task</field>
+        <field name="arch" type="xml">
+            <tree string="Ưu tiên" decoration-danger="date_deadline &lt; current_date and state not in ['1_done', '1_canceled']" limit="10">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="user_ids" widget="many2many_avatar_user"/>
+                <field name="date_deadline"/>
+                <field name="priority_level" widget="priority"/>
+                <field name="state" widget="badge" decoration-info="state in ('01_in_progress', '04_waiting_normal')" decoration-danger="state == '02_changes_requested'" decoration-success="state == '03_approved' or state == '1_done'" decoration-muted="state == '1_canceled'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Dashboard view cho báo cáo quản lý công việc -->
+    <record id="dpt_task_management_dashboard_view" model="ir.ui.view">
+        <field name="name">project.task.management.dashboard</field>
+        <field name="model">project.task</field>
+        <field name="arch" type="xml">
+            <form string="Báo cáo công việc" js_class="project_task_dashboard_form" create="false" edit="false" delete="false">
+                <header>
+                    <button name="action_create_default_task" type="object" class="btn btn-primary" string="Tạo công việc" data-hotkey="c"/>
+                </header>
+                <group>
+                    <group>
+                        <field name="date_begin" placeholder="Từ ngày..." options="{'datepicker':{'warn_future': true}}"/>
+                        <field name="date_end" placeholder="Đến ngày..." options="{'datepicker':{'warn_future': true}}"/>
+                    </group>
+                    <group>
+                        <field name="user_ids" widget="many2many_tags" placeholder="Chọn người dùng..." domain="[('share', '=', False)]" options="{'no_create': True}"/>
+                    </group>
+                </group>
+                
+                <!-- Các chỉ số KPI -->
+                <div class="row mt16 mb32">
+                    <div class="col-md-3">
+                        <div class="position-relative" style="height: 100%;">
+                            <button name="action_view_all_tasks" type="object" class="btn btn-link position-absolute w-100 h-100 m-0 p-0" style="left: 0; top: 0; z-index: 100; border: none; background: transparent;"/>
+                            <div class="o_stat_info p-3 text-center" style="border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer;" data-toggle="tooltip" title="Xem tất cả công việc">
+                                <field name="total_tasks" class="o_stat_value fw-bold" style="font-size: 36px; color: #875A7B;"/>
+                                <span class="o_stat_text d-block mt-2">Tổng công việc</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="position-relative" style="height: 100%;">
+                            <button name="action_view_in_progress_tasks" type="object" class="btn btn-link position-absolute w-100 h-100 m-0 p-0" style="left: 0; top: 0; z-index: 100; border: none; background: transparent;"/>
+                            <div class="o_stat_info p-3 text-center" style="border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer;" data-toggle="tooltip" title="Xem công việc đang làm">
+                                <field name="in_progress_tasks" class="o_stat_value fw-bold" style="font-size: 36px; color: #3498DB;"/>
+                                <span class="o_stat_text d-block mt-2">Đang làm</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="position-relative" style="height: 100%;">
+                            <button name="action_view_done_tasks" type="object" class="btn btn-link position-absolute w-100 h-100 m-0 p-0" style="left: 0; top: 0; z-index: 100; border: none; background: transparent;"/>
+                            <div class="o_stat_info p-3 text-center" style="border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer;" data-toggle="tooltip" title="Xem công việc đã hoàn thành">
+                                <field name="done_tasks" class="o_stat_value fw-bold" style="font-size: 36px; color: #2ECC71;"/>
+                                <span class="o_stat_text d-block mt-2">Đã xong</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="position-relative" style="height: 100%;">
+                            <button name="action_view_late_tasks" type="object" class="btn btn-link position-absolute w-100 h-100 m-0 p-0" style="left: 0; top: 0; z-index: 100; border: none; background: transparent;"/>
+                            <div class="o_stat_info p-3 text-center" style="border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer;" data-toggle="tooltip" title="Xem công việc trễ hạn">
+                                <field name="late_tasks" class="o_stat_value fw-bold" style="font-size: 36px; color: #E74C3C;"/>
+                                <span class="o_stat_text d-block mt-2">Trễ</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Danh sách Đến hạn và Ưu tiên hiển thị song song -->
+                <div class="row">
+                    <div class="col-12 col-lg-6 mb-4">
+                        <h5 class="fw-bold mb-2">Đến hạn</h5>
+                        <field name="upcoming_task_ids"
+                               widget="one2many"
+                               context="{'tree_view_ref': 'dpt_project_task.dpt_upcoming_tasks_tree'}"
+                               options="{'no_open': False}"
+                               nolabel="1"/>
+                    </div>
+                    <div class="col-12 col-lg-6 mb-4">
+                        <h5 class="fw-bold mb-2">Ưu tiên</h5>
+                        <field name="priority_task_ids"
+                               widget="one2many"
+                               context="{'tree_view_ref': 'dpt_project_task.dpt_priority_tasks_tree'}"
+                               options="{'no_open': False}"
+                               nolabel="1"/>
+                    </div>
+                </div>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Tạo action cho dashboard -->
+    <record id="action_task_management_dashboard" model="ir.actions.act_window">
+        <field name="name">Báo cáo công việc</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="dpt_task_management_dashboard_view"/>
+        <field name="target">current</field>
+    </record>
+</odoo> 

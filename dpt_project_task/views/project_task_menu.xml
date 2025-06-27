@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menu báo cáo công việc -->
+    <menuitem 
+        id="menu_project_task_dashboard" 
+        name="Báo cáo công việc" 
+        action="action_task_management_dashboard" 
+        parent="project.menu_main_pm" 
+        sequence="1"/>
+</odoo> 
