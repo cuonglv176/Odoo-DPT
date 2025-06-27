@@ -834,6 +834,30 @@ class DptExportImportLine(models.Model):
         self.is_locked = True
         self.message_post(body=_("Dòng tờ khai đã được đánh dấu đủ điều kiện khai báo và đã bị khóa."))
         
+        # Tìm và hoàn thành các hoạt động "Yêu cầu khách xác nhận" liên quan đến dòng này
+        activities = self.env['mail.activity'].search([
+            ('res_model', '=', 'dpt.export.import.line'),
+            ('res_id', '=', self.id),
+            ('summary', '=', _("Yêu cầu khách xác nhận"))
+        ])
+        if activities:
+            for activity in activities:
+                activity.action_feedback(
+                    feedback=""
+                )
+            
+            # Thêm thông báo hiển thị cho người dùng
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('Thành công'),
+                    'message': _('Đã đánh dấu dòng tờ khai đã được khách hàng xác nhận.'),
+                    'sticky': False,
+                    'type': 'success',
+                }
+            }
+    
     def action_unlock(self):
         """Mở khóa dòng tờ khai để có thể chỉnh sửa"""
         self.ensure_one()

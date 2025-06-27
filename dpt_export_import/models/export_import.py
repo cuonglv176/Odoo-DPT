@@ -4,6 +4,7 @@ from ast import literal_eval
 from odoo import fields, models, _, api
 import logging
 from odoo.exceptions import AccessError, UserError, ValidationError
+from datetime import datetime, timedelta
 
 _logger = logging.getLogger(__name__)
 
@@ -208,6 +209,66 @@ class DptExportImport(models.Model):
         self.state = 'cancelled'
         # for line_id in self.line_ids:
         #     line_id.state = 'cancelled'
+
+    def action_request_customer_confirmation(self):
+        """
+        Khi người dùng bấm nút "Yêu cầu khách xác nhận" 
+        hệ thống sẽ tạo activities cho sale_user_id của mỗi dòng
+        với deadline là thời gian hiện tại + 3 giờ
+        """
+        # Kiểm tra xem tất cả các dòng có ở trạng thái confirmed không
+        non_confirmed_lines = self.line_ids.filtered(lambda l: l.state != 'confirmed')
+        if non_confirmed_lines:
+            raise UserError(_("Không thể yêu cầu khách xác nhận vì có dòng chưa ở trạng thái 'Chứng từ phản hồi'.\nVui lòng đảm bảo tất cả các dòng đều ở trạng thái 'Chứng từ phản hồi'."))
+        
+        # Kiểm tra nếu có line không có sale_user_id
+        lines_without_user = self.line_ids.filtered(lambda l: not l.sale_user_id)
+        if lines_without_user:
+            raise UserError(_("Một số dòng không có người phụ trách bán hàng. Vui lòng cập nhật người phụ trách cho tất cả các dòng trước khi yêu cầu khách xác nhận."))
+        
+        # Tìm activity type "To Do"
+        activity_type_id = self.env.ref('mail.mail_activity_data_todo').id
+        
+        # Tạo activities cho từng line có sale_user_id
+        now = fields.Datetime.now()
+        deadline = fields.Date.to_string(fields.Datetime.from_string(now) + timedelta(hours=3))
+        model_id = self.env['ir.model']._get('dpt.export.import.line').id
+        
+        created_activities = []
+        
+        for line in self.line_ids:
+            # Kiểm tra xem đã có hoạt động cho người này trên dòng này chưa
+            existing_activity = self.env['mail.activity'].search([
+                ('res_model', '=', 'dpt.export.import.line'),
+                ('res_id', '=', line.id),
+                ('user_id', '=', line.sale_user_id.id),
+                ('summary', '=', _("Yêu cầu khách xác nhận"))
+            ], limit=1)
+            
+            # Nếu chưa có activity, tạo mới
+            if not existing_activity:
+                # Chuẩn bị nội dung note dựa trên thông tin dòng tờ khai
+                note = ""
+                
+                vals = {
+                    'activity_type_id': activity_type_id,
+                    'note': note,
+                    'summary': _("Yêu cầu khách xác nhận"),
+                    'user_id': line.sale_user_id.id,
+                    'date_deadline': deadline,
+                    'res_model_id': model_id,
+                    'res_id': line.id,
+                    'automated': False,
+                }
+                
+                new_activity = self.env['mail.activity'].create(vals)
+                created_activities.append(new_activity)
+        
+        # Thêm vào log của tờ khai chính
+        if created_activities:
+            self.message_post(body=_("Đã tạo %s yêu cầu xác nhận từ khách hàng với thời hạn %s") % (len(created_activities), deadline))
+        else:
+            self.message_post(body=_("Không có yêu cầu xác nhận nào được tạo mới (có thể đã tồn tại trước đó)."))
 
     def action_check_lot_name(self):
         check = False
