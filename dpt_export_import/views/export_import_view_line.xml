@@ -20,7 +20,7 @@
                 <field name="sale_legal_entity"/>
                 <field name="product_id"/>
                 <field name="dpt_english_name"/>
-                <field name="dpt_description"/>
+                <field name="dpt_description" widget="text"/>
                 <field name="dpt_sl1"/>
                 <field name="dpt_uom1_id"/>
                 <field name="dpt_price_kd"/>
@@ -112,7 +112,7 @@
                                    context="{'tree_view_ref': 'dpt_export_import.view_dpt_export_import_line_tree_search'}"
                                    colspan="2"/>
                             <field name="dpt_english_name"/>
-                            <field name="dpt_description"/>
+                            <field name="dpt_description" widget="text"/>
                             <field name="manufacturer"/>
                              <!-- dunghq Thay thế các trường ẩn bằng các trường hiển thị -->
                             <field name="brand" invisible="1"/>
@@ -239,7 +239,7 @@
                 <field name="sale_legal_entity"/>
                 <field name="product_id"/>
                 <field name="dpt_english_name"/>
-                <field name="dpt_description"/>
+                <field name="dpt_description" widget="text"/>
                 <field name="dpt_sl1"/>
                 <field name="dpt_uom1_id"/>
                 <field name="dpt_price_kd"/>
@@ -287,7 +287,7 @@
                 <field name="name"/>
                 <field name="partner_id"/>
                 <field name="product_id"/>
-                <field name="dpt_description"/>
+                <field name="dpt_description" widget="text"/>
                 <field name="hs_code_id"/>
                 <field name="sale_id"/>
                 <field name="sale_legal_entity"/>

@@ -21,5 +21,6 @@
         'views/res_config_settings_views.xml',
         'views/sale_order_view.xml',
         'views/export_import_acfta.xml',
+        'views/assets.xml',
     ],
 }
