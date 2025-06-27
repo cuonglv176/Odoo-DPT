@@ -142,6 +142,9 @@ class DptExportImportLine(models.Model):
         ('cancelled', 'Huỷ')
     ], string='State', default='draft', tracking=True)
 
+    is_locked = fields.Boolean(string='Đã khóa', default=False, tracking=True, 
+                              help='Trường này được đánh dấu khi dòng tờ khai đủ điều kiện khai báo và bị khóa')
+
     declaration_type = fields.Selection([
         ('usd', 'USD'),
         ('cny', 'CNY'),
@@ -634,6 +637,23 @@ class DptExportImportLine(models.Model):
     def write(self, vals):
         # Kiểm tra trước khi ghi để đảm bảo tính nhất quán
         for rec in self:
+            # Kiểm tra nếu bản ghi đã bị khóa (đủ điều kiện khai báo)
+            if rec.is_locked and rec.state == 'eligible':
+                # Nếu đang cố gắng thay đổi trạng thái thì vẫn cho phép (để có thể hủy hoặc chuyển trạng thái khác)
+                if 'state' in vals and vals.get('state') != 'eligible':
+                    continue
+                    
+                # Nếu đang cố gắng thay đổi trường is_locked thì vẫn cho phép (để có thể mở khóa)
+                if 'is_locked' in vals and not vals.get('is_locked'):
+                    continue
+                    
+                # Các trường được phép thay đổi khi đã khóa (nếu cần)
+                allowed_fields = ['message_follower_ids', 'message_ids', 'message_main_attachment_id', 'activity_ids']
+                
+                # Kiểm tra xem có đang cố thay đổi các trường khác không được phép không
+                if any(field for field in vals.keys() if field not in allowed_fields):
+                    raise UserError(_("Dòng tờ khai đã được đánh dấu đủ điều kiện khai báo và đã bị khóa. Không thể chỉnh sửa."))
+            
             # Xử lý khi đã phê duyệt - không cho thay đổi giá
             if rec.approval_request_id and rec.approval_request_id.request_status == 'approved':
                 if 'dpt_price_unit' in vals:
@@ -810,8 +830,17 @@ class DptExportImportLine(models.Model):
 
     def action_update_eligible(self):
         # self.action_check_lot_name()
-        self.state = 'confirmed'
-
+        self.state = 'eligible'
+        self.is_locked = True
+        self.message_post(body=_("Dòng tờ khai đã được đánh dấu đủ điều kiện khai báo và đã bị khóa."))
+        
+    def action_unlock(self):
+        """Mở khóa dòng tờ khai để có thể chỉnh sửa"""
+        self.ensure_one()
+        if self.is_locked:
+            self.is_locked = False
+            self.message_post(body=_("Dòng tờ khai đã được mở khóa và có thể chỉnh sửa."))
+        
     @api.onchange('sale_line_id')
     def onchange_sale_line_id(self):
         self.product_id = self.sale_line_id.product_id
