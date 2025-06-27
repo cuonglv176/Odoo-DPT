@@ -1277,4 +1277,4 @@ msgstr ""
 #: model:ir.model.fields.selection,name:dpt_export_import.selection__dpt_export_import_line__state__eligible
 #: model:ir.model.fields.selection,name:dpt_export_import.selection__sale_order_line__state_export_import_line__eligible
 msgid "Đủ điều kiện khai báo"
-msgstr "Đủ điều kiện khai báo"
+msgstr ""
