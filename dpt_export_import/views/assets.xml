@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Assets for Odoo 17 -->
+    <record id="dpt_export_import_custom_styles" model="ir.asset">
+        <field name="name">DPT Export Import Custom CSS</field>
+        <field name="bundle">web.assets_backend</field>
+        <field name="directive">append</field>
+        <field name="path">dpt_export_import/static/src/css/dpt_export_import.css</field>
+    </record>
+</odoo>

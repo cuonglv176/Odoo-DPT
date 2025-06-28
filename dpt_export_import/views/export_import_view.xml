@@ -53,6 +53,13 @@
                     <button string="Quay về nháp" type="object" name="action_back_to_draft" class="btn-primary"
                             invisible="state != 'cancelled'"/>
                             
+                    <button string="Yêu cầu khách xác nhận" 
+                            type="object" 
+                            name="action_request_customer_confirmation" 
+                            class="btn-primary"
+                            invisible="state in ('wait_confirm', 'cancelled')"
+                            help="Yêu cầu người phụ trách liên hệ khách hàng để xác nhận thông tin từng dòng tờ khai"/>
+                            
                     <button string="Cập nhật tỷ giá theo ngày thông quan" 
                             type="object" 
                             name="action_update_exchange_rates" 
@@ -130,7 +137,7 @@
                                     <field name="sequence" widget="handle"/>
                                     <field name="state" widget="badge"
                                            decoration-info="state == 'draft'"
-                                           decoration-success="state in ('eligible','declared','released','consulted','post_control')"/>
+                                           decoration-success="state in ('confirmed','declared','released','consulted','post_control')"/>
                                     <field name="sale_user_id"/>
                                     <field name="sale_id"/>
                                     <field name="lot_code" invisible="1"/>

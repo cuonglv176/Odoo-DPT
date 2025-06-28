@@ -9,7 +9,7 @@
             <xpath expr="//field[@name='order_line']/tree/field[@name='price_total']" position="after">
                 <field name="state_export_import_line" widget="badge"
                        decoration-info="state_export_import_line == 'draft'"
-                       decoration-success="state_export_import_line in ('eligible','declared','released','consulted','post_control')"/>
+                       decoration-success="state_export_import_line in ('confirmed','declared','released','consulted','post_control')"/>
                 <button string="Update Declaration Line" type="object" name="action_open_dpt_export_import_line"
                         class="btn-primary"/>
             </xpath>
@@ -43,7 +43,7 @@
                             <field name="total_tax_amount"/>
                             <field name="state_export_import_line" widget="badge"
                                    decoration-info="state_export_import_line == 'draft'"
-                                   decoration-success="state_export_import_line in ('eligible','declared','released','consulted','post_control')"/>
+                                   decoration-success="state_export_import_line in ('confirmed','declared','released','consulted','post_control')"/>
                             <button string="Update Declaration Line" type="object"
                                     name="action_open_dpt_export_import_line"
                                     class="btn-primary"/>
