@@ -12,14 +12,15 @@
                         groups="dpt_security.group_dpt_document_officer,dpt_security.group_dpt_head_of_document"/>
                 <field name="state" widget="badge"
                        decoration-info="state in ('draft','wait_confirm')"
-                       decoration-success="state in ('eligible')"/>
+                       decoration-success="state in ('confirmed')"/>
                 <field name="lot_code" invisible="1"/>
                 <field name="available_picking_ids" invisible="1"/>
                 <field name="stock_picking_ids" widget="many2many_tags"/>
                 <field name="partner_id"/>
+                <field name="sale_legal_entity"/>
                 <field name="product_id"/>
                 <field name="dpt_english_name"/>
-                <field name="dpt_description"/>
+                <field name="dpt_description" widget="text"/>
                 <field name="dpt_sl1"/>
                 <field name="dpt_uom1_id"/>
                 <field name="dpt_price_kd"/>
@@ -53,6 +54,7 @@
                 <!-- dunghq: Thêm trường risk_reason để hiển thị lý do rủi ro -->
                 <field name="risk_reason" optional="show"/>
                 <field name="price_revalidation_required" invisible="1"/>
+                <field name="payment_flow"/>
                 <button string="Unlink" type="object" name="action_unlink" class="btn-primary"
                         groups="sales_team.group_sale_salesman_all_leads"/>
             </tree>
@@ -69,6 +71,7 @@
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,wait_confirm,eligible"/>
                     <field name="active" invisible="1"/>
+                    <field name="is_locked" invisible="1"/>
                     <button string="Gửi yêu cầu" type="object" name="action_wait_confirm" class="btn-primary"
                             invisible="state != 'draft'"/>
                     <button string="Gửi phản hồi" type="object" name="action_confirmed" class="btn-primary"
@@ -77,6 +80,12 @@
                     <button string="Khách xác nhận" type="object" name="action_update_eligible" class="btn-primary"
                             invisible="state != 'confirmed'"
                             groups="dpt_security.group_dpt_employee_sale,dpt_security.group_dpt_employee_cskh"/>
+                    <button string="Khóa" type="object" name="action_update_eligible" class="btn-primary"
+                            invisible="state != 'eligible' or is_locked"
+                            groups="dpt_security.group_dpt_document_officer,dpt_security.group_dpt_head_of_document"/>
+                    <button string="Mở khóa" type="object" name="action_unlock" class="btn-warning"
+                            invisible="not is_locked or state != 'eligible'"
+                            groups="dpt_security.group_dpt_document_officer,dpt_security.group_dpt_head_of_document"/>
                 </header>
                 <sheet>
                     <!-- Banner cảnh báo khi cần định giá lại -->
@@ -86,6 +95,10 @@
                     <!-- Banner cảnh báo khi có lý do rủi ro -->
                     <div class="alert alert-danger" role="alert" invisible="risk_reason == False">
                         <field name="risk_reason" readonly="1"/>
+                    </div>
+                    <!-- Banner thông báo khi dòng tờ khai bị khóa -->
+                    <div class="alert alert-info" role="alert" invisible="not is_locked">
+                        <strong>Thông báo:</strong> Dòng tờ khai đã được đánh dấu đủ điều kiện khai báo và đã bị khóa. Để chỉnh sửa, vui lòng sử dụng nút "Mở khóa".
                     </div>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_main_incoming_picking" type="object" class="oe_stat_button"
@@ -99,16 +112,18 @@
                             <field name="can_request_price_approval" invisible="1"/>
                             <field name="sale_user_id"/>
                             <field name="sale_id"/>
+                            <field name="payment_flow"/>
                             <field name="lot_code" invisible="1"/>
                             <field name="available_picking_ids" invisible="1"/>
                             <field name="stock_picking_ids" widget="many2many_tags"/>
                             <field name="partner_id"/>
+                            <field name="sale_legal_entity"/>
                             <field name="product_id"/>
                             <field name="product_history_id" domain="[('product_id','=', product_id), ('id', '!=', id)]"
                                    context="{'tree_view_ref': 'dpt_export_import.view_dpt_export_import_line_tree_search'}"
                                    colspan="2"/>
                             <field name="dpt_english_name"/>
-                            <field name="dpt_description"/>
+                            <field name="dpt_description" widget="text"/>
                             <field name="manufacturer"/>
                              <!-- dunghq Thay thế các trường ẩn bằng các trường hiển thị -->
                             <field name="brand" invisible="1"/>
@@ -131,6 +146,7 @@
                             <field name="dpt_price_krw_vnd" invisible="declaration_type != 'krw'"/>
                             <field name="dpt_total_krw_vnd" invisible="declaration_type != 'krw'"/>
                             <field name="dpt_price_kd"/>
+                            <field name="is_locked" widget="boolean_toggle" readonly="1" groups="dpt_security.group_dpt_document_officer,dpt_security.group_dpt_head_of_document"/>
                         </group>
                         <group>
                             <field name="hs_code_id"/>
@@ -219,22 +235,24 @@
         <field name="model">dpt.export.import.line</field>
         <field name="arch" type="xml">
             <!-- dunghq: Thêm decoration-danger để hiển thị dòng có rủi ro màu đỏ -->
-            <tree decoration-danger="risk_reason != False">
+            <tree decoration-danger="risk_reason != False" decoration-muted="is_locked">
                 <button string="Eligible" type="object" name="action_update_eligible" class="btn-primary"
                         invisible="state != 'draft'"
                         groups="dpt_security.group_dpt_document_officer,dpt_security.group_dpt_head_of_document"/>
                 <field name="state" widget="badge"
                        decoration-info="state in ('draft','wait_confirm')"
-                       decoration-success="state in ('eligible')"/>
+                       decoration-success="state in ('confirmed', 'eligible')"/>
+                <field name="is_locked" widget="boolean_toggle"/>
                 <field name="sale_user_id"/>
                 <field name="sale_id"/>
                 <field name="lot_code" invisible="1"/>
                 <field name="available_picking_ids" invisible="1"/>
                 <field name="stock_picking_ids" widget="many2many_tags"/>
                 <field name="partner_id"/>
+                <field name="sale_legal_entity"/>
                 <field name="product_id"/>
                 <field name="dpt_english_name"/>
-                <field name="dpt_description"/>
+                <field name="dpt_description" widget="text"/>
                 <field name="dpt_sl1"/>
                 <field name="dpt_uom1_id"/>
                 <field name="dpt_price_kd"/>
@@ -267,9 +285,46 @@
                 <field name="currency_id" invisible="1"/>
                 <field name="active" invisible="1"/>
                 <field name="price_revalidation_required" invisible="1"/>
+                <field name="payment_flow"/>
                 <button string="Unlink" type="object" name="action_unlink" class="btn-primary"
                         groups="sales_team.group_sale_salesman_all_leads"/>
             </tree>
+        </field>
+    </record>
+
+    <record id="view_dpt_export_import_line_search" model="ir.ui.view">
+        <field name="name">dpt.export.import.line.search</field>
+        <field name="model">dpt.export.import.line</field>
+        <field name="arch" type="xml">
+            <search string="Search Export Import Line">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="product_id"/>
+                <field name="dpt_description" widget="text"/>
+                <field name="hs_code_id"/>
+                <field name="sale_id"/>
+                <field name="sale_legal_entity"/>
+                <separator/>
+                <filter string="Drafts" name="draft" domain="[('state','=','draft')]"/>
+                <filter string="Waiting Confirmation" name="wait_confirm" domain="[('state','=','wait_confirm')]"/>
+                <filter string="Confirmed" name="confirmed" domain="[('state','=','confirmed')]"/>
+                <filter string="Eligible" name="eligible" domain="[('state','=','eligible')]"/>
+                <filter string="Cancelled" name="cancelled" domain="[('state','=','cancelled')]"/>
+                <separator/>
+                <filter string="Locked" name="locked" domain="[('is_locked','=',True)]"/>
+                <filter string="Unlocked" name="unlocked" domain="[('is_locked','=',False)]"/>
+                <separator/>
+                <filter string="DPT" name="dpt" domain="[('sale_legal_entity','=','dpt')]"/>
+                <filter string="LTV" name="ltv" domain="[('sale_legal_entity','=','ltv')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Partner" name="partner_id" context="{'group_by':'partner_id'}"/>
+                    <filter string="Product" name="product_id" context="{'group_by':'product_id'}"/>
+                    <filter string="Status" name="state" context="{'group_by':'state'}"/>
+                    <filter string="Sale Order" name="sale_id" context="{'group_by':'sale_id'}"/>
+                    <filter string="Pháp nhân" name="sale_legal_entity" context="{'group_by':'sale_legal_entity'}"/>
+                    <filter string="Trạng thái khóa" name="is_locked" context="{'group_by':'is_locked'}"/>
+                </group>
+            </search>
         </field>
     </record>
 
@@ -278,6 +333,7 @@
         <field name="res_model">dpt.export.import.line</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('is_history','=',False)]</field>
+        <field name="search_view_id" ref="view_dpt_export_import_line_search"/>
     </record>
 
 

@@ -19,12 +19,14 @@ class DptExportImportLine(models.Model):
     export_import_id = fields.Many2one('dpt.export.import', string='Export import')
     lot_code = fields.Char(string='Lot code')
     sale_id = fields.Many2one('sale.order', string='Sale order', tracking=True)
+    payment_flow = fields.Char(string='Luồng thanh toán', tracking=True, help='Luồng thanh toán được chọn từ đơn hàng')
     stock_picking_ids = fields.Many2many('stock.picking', string='Lot code',
                                          domain="[('id', 'in', available_picking_ids)]", tracking=True)
     available_picking_ids = fields.Many2many('stock.picking', string='Lot code',
                                              compute="_compute_domain_picking_package")
     sale_user_id = fields.Many2one('res.users', string='User Sale', compute="compute_sale_user")
     partner_id = fields.Many2one('res.partner', string='Sale Partner', related='sale_id.partner_id')
+    sale_legal_entity = fields.Selection(related="sale_id.legal_entity", string="Pháp nhân", store=True)
     sale_line_id = fields.Many2one('sale.order.line', string='Sale order line', domain=[('order_id', '=', 'sale_id')])
     product_tmpl_id = fields.Many2one('product.template', string='Product Template',
                                       related='product_id.product_tmpl_id')
@@ -139,6 +141,9 @@ class DptExportImportLine(models.Model):
         # ('post_control', 'Kiểm tra sau thông quan'),
         ('cancelled', 'Huỷ')
     ], string='State', default='draft', tracking=True)
+
+    is_locked = fields.Boolean(string='Đã khóa', default=False, tracking=True, 
+                              help='Trường này được đánh dấu khi dòng tờ khai đủ điều kiện khai báo và bị khóa')
 
     declaration_type = fields.Selection([
         ('usd', 'USD'),
@@ -602,6 +607,10 @@ class DptExportImportLine(models.Model):
     def create(self, vals_list):
         res = super(DptExportImportLine, self).create(vals_list)
         for rec in res:
+            # Set payment_flow if not provided
+            if not rec.payment_flow and rec.sale_id and rec.sale_id.payment_flow:
+                rec.payment_flow = rec.sale_id.payment_flow
+            
             val_update_sale_line = {}
             val_update_sale_line.update({
                 'payment_exchange_rate': rec.dpt_exchange_rate,
@@ -628,6 +637,23 @@ class DptExportImportLine(models.Model):
     def write(self, vals):
         # Kiểm tra trước khi ghi để đảm bảo tính nhất quán
         for rec in self:
+            # Kiểm tra nếu bản ghi đã bị khóa (đủ điều kiện khai báo)
+            if rec.is_locked and rec.state == 'eligible':
+                # Nếu đang cố gắng thay đổi trạng thái thì vẫn cho phép (để có thể hủy hoặc chuyển trạng thái khác)
+                if 'state' in vals and vals.get('state') != 'eligible':
+                    continue
+                    
+                # Nếu đang cố gắng thay đổi trường is_locked thì vẫn cho phép (để có thể mở khóa)
+                if 'is_locked' in vals and not vals.get('is_locked'):
+                    continue
+                    
+                # Các trường được phép thay đổi khi đã khóa (nếu cần)
+                allowed_fields = ['message_follower_ids', 'message_ids', 'message_main_attachment_id', 'activity_ids']
+                
+                # Kiểm tra xem có đang cố thay đổi các trường khác không được phép không
+                if any(field for field in vals.keys() if field not in allowed_fields):
+                    raise UserError(_("Dòng tờ khai đã được đánh dấu đủ điều kiện khai báo và đã bị khóa. Không thể chỉnh sửa."))
+            
             # Xử lý khi đã phê duyệt - không cho thay đổi giá
             if rec.approval_request_id and rec.approval_request_id.request_status == 'approved':
                 if 'dpt_price_unit' in vals:
@@ -805,7 +831,40 @@ class DptExportImportLine(models.Model):
     def action_update_eligible(self):
         # self.action_check_lot_name()
         self.state = 'eligible'
-
+        self.is_locked = True
+        self.message_post(body=_("Dòng tờ khai đã được đánh dấu đủ điều kiện khai báo và đã bị khóa."))
+        
+        # Tìm và hoàn thành các hoạt động "Yêu cầu khách xác nhận" liên quan đến dòng này
+        activities = self.env['mail.activity'].search([
+            ('res_model', '=', 'dpt.export.import.line'),
+            ('res_id', '=', self.id),
+            ('summary', '=', _("Yêu cầu khách xác nhận"))
+        ])
+        if activities:
+            for activity in activities:
+                activity.action_feedback(
+                    feedback=""
+                )
+            
+            # Thêm thông báo hiển thị cho người dùng
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('Thành công'),
+                    'message': _('Đã đánh dấu dòng tờ khai đã được khách hàng xác nhận.'),
+                    'sticky': False,
+                    'type': 'success',
+                }
+            }
+    
+    def action_unlock(self):
+        """Mở khóa dòng tờ khai để có thể chỉnh sửa"""
+        self.ensure_one()
+        if self.is_locked:
+            self.is_locked = False
+            self.message_post(body=_("Dòng tờ khai đã được mở khóa và có thể chỉnh sửa."))
+        
     @api.onchange('sale_line_id')
     def onchange_sale_line_id(self):
         self.product_id = self.sale_line_id.product_id
@@ -855,7 +914,7 @@ class DptExportImportLine(models.Model):
                 ('dpt_description', '=', record.dpt_description),
                 ('id', '!=', record.id),
                 ('declaration_type', '=', record.declaration_type),
-                ('state', '=', 'eligible'),
+                ('state', '=', 'confirmed'),
             ])
 
             for line in other_lines:
@@ -871,7 +930,7 @@ class DptExportImportLine(models.Model):
                     ('model_id', '=', record.model_id.id),
                     ('id', '!=', record.id),
                     ('declaration_type', '=', record.declaration_type),
-                    ('state', '=', 'eligible'),
+                    ('state', '=', 'confirmed'),
                 ])
 
                 for line in other_lines:
@@ -979,13 +1038,14 @@ class DptExportImportLine(models.Model):
                 continue
             
             # Kiểm tra nếu giá không phải số chẵn chục
-            if rec.dpt_price_unit % 10 != 0:
-                return {
-                    'warning': {
-                        'title': _('Cảnh báo về giá xuất hóa đơn'),
-                        'message': _('Giá xuất hóa đơn mong muốn phải là số chẵn chục đồng! Vui lòng điều chỉnh.')
-                    }
-                }
+            # TEMPORARILY DISABLED - Fix will be implemented later
+            # if rec.dpt_price_unit % 10 != 0:
+            #     return {
+            #         'warning': {
+            #             'title': _('Cảnh báo về giá xuất hóa đơn'),
+            #             'message': _('Giá xuất hóa đơn mong muốn phải là số chẵn chục đồng! Vui lòng điều chỉnh.')
+            #         }
+            #     }
                 
             # Kiểm tra nếu giá nằm ngoài khoảng cho phép
             if rec.dpt_price_unit < rec.dpt_price_min_allowed or rec.dpt_price_unit > rec.dpt_price_max_allowed:
@@ -1178,9 +1238,11 @@ class DptExportImportLine(models.Model):
     @api.constrains('dpt_price_unit')
     def _check_price_unit_multiple_of_ten(self):
         """Kiểm tra giá xuất hóa đơn mong muốn phải là số chẵn chục"""
-        for rec in self:
-            if rec.dpt_price_unit and rec.dpt_price_unit % 10 != 0:
-                raise ValidationError(_("Giá xuất hóa đơn mong muốn phải là số chẵn chục đồng!"))
+        # TEMPORARILY DISABLED - Fix will be implemented later
+        # for rec in self:
+        #     if rec.dpt_price_unit and rec.dpt_price_unit % 10 != 0:
+        #         raise ValidationError(_("Giá xuất hóa đơn mong muốn phải là số chẵn chục đồng!"))
+        pass
 
     # Sửa phương thức làm tròn để làm tròn lên đến chục đồng gần nhất
     def _round_up_to_ten(self, value):

@@ -102,7 +102,7 @@ class BankTransactionImportWizard(models.TransientModel):
                 # Sử dụng xlrd cho .xls
                 workbook = xlrd.open_workbook(file_contents=file_data)
                 worksheet = workbook.sheet_by_index(0)
-                return self._process_xls_preview(worksheet)
+                return self._process_xlsx_preview(worksheet)
 
         except Exception as e:
             raise UserError(_('Lỗi đọc file Excel: %s') % str(e))

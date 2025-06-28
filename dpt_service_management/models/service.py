@@ -196,6 +196,7 @@ class RequiredField(models.Model):
     service_id = fields.Many2one('dpt.service.management', string='Service', ondelete='cascade', tracking=True)
     combo_id = fields.Many2one('dpt.service.combo', string='Combo', ondelete='cascade', tracking=True)
     using_calculation_price = fields.Boolean('Using Calculation Price', tracking=True)
+    is_payment_flow = fields.Boolean('Là luồng thanh toán', tracking=True, help='Đánh dấu trường này là luồng thanh toán')
 
     # Trường đơn vị tính cũ (giữ lại để tương thích ngược)
     uom_id = fields.Many2one('uom.uom', 'Đơn vị tính đơn', tracking=True,
