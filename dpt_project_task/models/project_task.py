@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from datetime import datetime, timedelta
 from odoo.addons.project.models.project_task import CLOSED_STATES
+from odoo.exceptions import UserError
 
 class Task(models.Model):
     _inherit = 'project.task'
@@ -28,6 +29,32 @@ class Task(models.Model):
     priority_task_ids = fields.Many2many('project.task', relation='project_task_priority_rel', 
                                         string='Công việc ưu tiên', compute='_compute_dashboard_data')
     
+    def write(self, vals):
+        """
+        Ghi đè phương thức write để đảm bảo user_ids không bị thay đổi vô tình
+        khi task được mở từ dashboard
+        """
+        # Xác định request có đến từ dashboard không
+        from_dashboard = self.env.context.get('from_task_dashboard')
+        
+        # Nếu đến từ dashboard và có thay đổi user_ids mà không có flag đặc biệt
+        if from_dashboard and 'user_ids' in vals and not self.env.context.get('force_user_ids_update'):
+            # Loại bỏ user_ids khỏi vals để tránh cập nhật
+            vals.pop('user_ids')
+        
+        return super(Task, self).write(vals)
+    
+    @api.onchange('project_id', 'stage_id')
+    def _onchange_protect_user_ids(self):
+        """
+        Phương thức onchange để bảo vệ user_ids khỏi thay đổi khi đến từ dashboard
+        """
+        # Kiểm tra nếu context có nguồn gốc từ dashboard
+        if self.env.context.get('from_task_dashboard') and self.id:
+            # Lấy giá trị user_ids từ database thay vì từ context
+            original_task = self.env['project.task'].sudo().browse(self.id)
+            self.user_ids = original_task.user_ids
+            
     @api.depends('date_begin', 'date_end', 'user_ids')
     def _compute_dashboard_data(self):
         for record in self:
@@ -163,6 +190,7 @@ class Task(models.Model):
                 'default_user_ids': [(6, 0, [self.env.user.id])],
                 'default_date_deadline': fields.Date.today(),
                 'default_priority_level': 'medium',
+                'force_user_ids_update': True,  # Thêm flag đặc biệt để cho phép cập nhật user_ids
             }
         }
         
@@ -181,14 +209,39 @@ class Task(models.Model):
             
         if self.date_end:
             domain.append(('create_date', '<=', self.date_end))
-            
+        
+        # Tìm các task thỏa mãn điều kiện
+        tasks = self.env['project.task'].search(domain)
+        
+        # Nếu chỉ có một task, mở thẳng form view với context tối giản
+        if len(tasks) == 1:
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'project.task',
+                'res_id': tasks.id,
+                'view_mode': 'form',
+                'views': [(False, 'form')],
+                'context': {
+                    'create': False,
+                    'from_task_dashboard': True,
+                },
+                'target': 'current',
+                'flags': {'mode': 'readonly'},  # Mở ở chế độ chỉ đọc ban đầu
+            }
+        
+        # Nếu có nhiều task, mở tree view với context tối giản
         return {
             'name': _('Tất cả công việc'),
             'type': 'ir.actions.act_window',
             'res_model': 'project.task',
+            'domain': [('id', 'in', tasks.ids)],
             'view_mode': 'tree,form,kanban',
-            'domain': domain,
-            'context': {'search_default_my_tasks': 0},
+            'context': {
+                'create': False,
+                'search_default_my_tasks': 0,
+                'from_task_dashboard': True,
+            },
+            'target': 'current',
         }
         
     def action_view_in_progress_tasks(self):
@@ -207,14 +260,39 @@ class Task(models.Model):
             
         if self.date_end:
             domain.append(('create_date', '<=', self.date_end))
-            
+        
+        # Tìm các task thỏa mãn điều kiện
+        tasks = self.env['project.task'].search(domain)
+        
+        # Nếu chỉ có một task, mở thẳng form view với context tối giản
+        if len(tasks) == 1:
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'project.task',
+                'res_id': tasks.id,
+                'view_mode': 'form',
+                'views': [(False, 'form')],
+                'context': {
+                    'create': False,
+                    'from_task_dashboard': True,
+                },
+                'target': 'current',
+                'flags': {'mode': 'readonly'},  # Mở ở chế độ chỉ đọc ban đầu
+            }
+        
+        # Nếu có nhiều task, mở tree view với context tối giản
         return {
             'name': _('Công việc đang làm'),
             'type': 'ir.actions.act_window',
             'res_model': 'project.task',
+            'domain': [('id', 'in', tasks.ids)],
             'view_mode': 'tree,form,kanban',
-            'domain': domain,
-            'context': {'search_default_my_tasks': 0},
+            'context': {
+                'create': False,
+                'search_default_my_tasks': 0,
+                'from_task_dashboard': True,
+            },
+            'target': 'current',
         }
         
     def action_view_done_tasks(self):
@@ -232,14 +310,39 @@ class Task(models.Model):
             
         if self.date_end:
             domain.append(('create_date', '<=', self.date_end))
-            
+        
+        # Tìm các task thỏa mãn điều kiện
+        tasks = self.env['project.task'].search(domain)
+        
+        # Nếu chỉ có một task, mở thẳng form view với context tối giản
+        if len(tasks) == 1:
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'project.task',
+                'res_id': tasks.id,
+                'view_mode': 'form',
+                'views': [(False, 'form')],
+                'context': {
+                    'create': False,
+                    'from_task_dashboard': True,
+                },
+                'target': 'current',
+                'flags': {'mode': 'readonly'},  # Mở ở chế độ chỉ đọc ban đầu
+            }
+        
+        # Nếu có nhiều task, mở tree view với context tối giản
         return {
             'name': _('Công việc đã hoàn thành'),
             'type': 'ir.actions.act_window',
             'res_model': 'project.task',
+            'domain': [('id', 'in', tasks.ids)],
             'view_mode': 'tree,form,kanban',
-            'domain': domain,
-            'context': {'search_default_my_tasks': 0},
+            'context': {
+                'create': False,
+                'search_default_my_tasks': 0,
+                'from_task_dashboard': True,
+            },
+            'target': 'current',
         }
         
     def action_view_late_tasks(self):
@@ -263,12 +366,37 @@ class Task(models.Model):
             
         if self.date_end:
             domain.append(('create_date', '<=', self.date_end))
-            
+        
+        # Tìm các task thỏa mãn điều kiện
+        tasks = self.env['project.task'].search(domain)
+        
+        # Nếu chỉ có một task, mở thẳng form view với context tối giản
+        if len(tasks) == 1:
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'project.task',
+                'res_id': tasks.id,
+                'view_mode': 'form',
+                'views': [(False, 'form')],
+                'context': {
+                    'create': False,
+                    'from_task_dashboard': True,
+                },
+                'target': 'current',
+                'flags': {'mode': 'readonly'},  # Mở ở chế độ chỉ đọc ban đầu
+            }
+        
+        # Nếu có nhiều task, mở tree view với context tối giản
         return {
             'name': _('Công việc trễ hạn'),
             'type': 'ir.actions.act_window',
             'res_model': 'project.task',
+            'domain': [('id', 'in', tasks.ids)],
             'view_mode': 'tree,form,kanban',
-            'domain': domain,
-            'context': {'search_default_my_tasks': 0},
+            'context': {
+                'create': False,
+                'search_default_my_tasks': 0,
+                'from_task_dashboard': True,
+            },
+            'target': 'current',
         } 

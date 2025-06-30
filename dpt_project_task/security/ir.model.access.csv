@@ -1,2 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_project_task_dashboard_all,project.task.dashboard.all,project.model_project_task,,1,1,1,1
